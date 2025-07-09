@@ -12,22 +12,30 @@ const MOCK_DATE = new Date('2024-01-01T00:00:00.000Z');
 const originalDate = Date;
 
 beforeEach(() => {
-  // Mock Date.now() and new Date()
-  const mockDate = jest.spyOn(global, 'Date').mockImplementation(((...args: any[]) => {
-    if (args.length === 0) {
-      return MOCK_DATE as any;
-    }
-    return new originalDate(...(args as ConstructorParameters<typeof Date>)) as any;
-  }) as any);
+  // Simple Date mock - just mock Date.now() 
+  jest.spyOn(Date, 'now').mockReturnValue(MOCK_DATE.getTime());
   
-  mockDate.now = jest.fn(() => MOCK_DATE.getTime()) as any;
-  mockDate.UTC = originalDate.UTC as any;
-  mockDate.parse = originalDate.parse as any;
+  // Mock new Date() to return fixed date when called without arguments
+  const mockConstructor = jest.fn().mockImplementation((...args: any[]) => {
+    if (args.length === 0) {
+      return new originalDate(MOCK_DATE);
+    }
+    return new originalDate(...(args as ConstructorParameters<typeof Date>));
+  });
+  
+  global.Date = mockConstructor as any;
+  // Preserve static methods
+  Object.setPrototypeOf(global.Date, originalDate);
+  global.Date.now = jest.fn(() => MOCK_DATE.getTime());
+  global.Date.UTC = originalDate.UTC;
+  global.Date.parse = originalDate.parse;
 });
 
 afterEach(() => {
   jest.restoreAllMocks();
   jest.clearAllTimers();
+  // Restore original Date
+  global.Date = originalDate;
 });
 
 // Mock external services

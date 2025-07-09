@@ -1,193 +1,310 @@
-# MPLP 架构设计规则
+# MPLP 1.0 架构设计规则
 
-> **文件类型**: Always  
-> **适用范围**: 所有架构设计和模块开发  
-> **最后更新**: 2024-07-09
+> **规则版本**: v2.1  
+> **更新时间**: 2025-07-09T19:04:01+08:00  
+> **适用项目**: Multi-Agent Project Lifecycle Protocol (MPLP) v1.0  
+> **关联文档**: [技术设计文档](../../requirements-docs/01_技术设计文档.md) | [MPLP协议开发专项路线图](../../requirements-docs/mplp_protocol_roadmap.md)  
+> **协议版本**: v1.0 (完全基于Roadmap v1.0架构规范)
 
-## 🏗️ 核心架构原则
+## 🏗️ 核心架构原则（基于Roadmap v1.0）
 
-### 6个核心模块边界
+### 架构理念
+- **模块化设计**: 6个核心模块独立且协作
+- **厂商中立**: 支持多平台集成，避免供应商锁定
+- **可扩展性**: Extension模块支持插件式扩展
+- **高性能**: API响应P95<100ms，协议解析<10ms
+- **高可用**: 系统可用性≥99.9%，支持1000+并发
+
+### 技术架构栈（匹配Roadmap技术栈）
 ```
-Context (上下文) ←→ Plan (规划) ←→ Confirm (确认)
-    ↓                ↓              ↓
-  Trace (追踪) ←→ Role (角色) ←→ Extension (扩展)
+┌─────────────────── 表示层 ───────────────────┐
+│ REST API + GraphQL + WebSocket实时通信       │
+├─────────────────── 应用层 ───────────────────┤
+│ Express.js 4.18+ + Helmet.js安全中间件      │
+├─────────────────── 业务层 ───────────────────┤
+│ 6个核心模块: Context/Plan/Confirm/Trace/   │
+│ Role/Extension + TypeScript 5.0+严格模式   │
+├─────────────────── 持久层 ───────────────────┤
+│ PostgreSQL 14+ + TypeORM + Redis 7+缓存    │
+├─────────────────── 基础层 ───────────────────┤
+│ Node.js 18+ LTS + Docker + Kubernetes      │
+└─────────────────────────────────────────────┘
 ```
 
-**严格模块边界**：
-- **Context模块**: 只负责环境状态、约束条件、目标设定
-- **Plan模块**: 只负责任务分解、步骤生成、依赖分析
-- **Confirm模块**: 只负责用户确认、授权流程、风险评估
-- **Trace模块**: 只负责执行记录、性能监控、历史追踪
-- **Role模块**: 只负责角色定义、权限控制、身份认证
-- **Extension模块**: 只负责扩展管理、插件加载、第三方集成
+## 📋 6个核心模块架构（基于MPLP v1.0协议）
 
-### 协议层次结构
+### Context模块 - 全局状态管理
 ```typescript
-// 协议层 (Protocol Layer)
-interface ProtocolBase {
-  version: string;           // 协议版本
-  timestamp: string;         // ISO 8601时间戳
-  context_id: string;        // 上下文关联ID
-  module_type: ModuleType;   // 模块类型标识
-}
-
-// 实现层 (Implementation Layer)
-interface ImplementationBase {
-  handler: ProtocolHandler<T>;
-  validator: SchemaValidator;
-  storage: DataRepository;
-  monitor: MetricsCollector;
-}
-
-// 应用层 (Application Layer)
-interface ApplicationBase {
-  service: BusinessService;
-  controller: ApiController;
-  middleware: SecurityMiddleware;
-}
+// 架构层次
+Context Service ──→ Context Repository ──→ PostgreSQL
+     ↓                    ↓                    ↓
+Context Cache ────→ Redis Cache ──────→ 状态同步
+     ↓
+WebSocket ────────→ 实时状态推送
 ```
 
-## 📦 模块设计规范
+**设计原则**:
+- 状态查询<5ms，状态更新<10ms
+- 支持跨系统状态同步
+- 实时状态变更通知
+- 会话生命周期管理
 
-### 目录结构标准
-```
-src/
-├── modules/
-│   ├── context/
-│   │   ├── protocol/          # 协议定义
-│   │   ├── implementation/    # 实现层
-│   │   ├── application/       # 应用层
-│   │   └── tests/            # 测试文件
-│   ├── plan/
-│   ├── confirm/
-│   ├── trace/
-│   ├── role/
-│   └── extension/
-├── core/                      # 核心组件
-│   ├── protocol-engine/
-│   ├── schema-validator/
-│   └── security-manager/
-└── adapters/                  # 平台适配器
-    ├── tracepilot/
-    └── coregentis/
-```
-
-### 接口设计约束
+### Plan模块 - 任务规划结构
 ```typescript
-// ✅ 正确: 明确的模块接口
-interface ContextProtocol {
-  context_id: string;
-  version: string;
-  status: 'active' | 'suspended' | 'terminated';
-  shared_state: Record<string, unknown>;
-}
-
-// ❌ 错误: 跨模块职责混合
-interface ContextWithPlan {
-  context_id: string;
-  plans: PlanProtocol[];  // 违反模块边界
-}
+// 任务编排架构
+Plan Engine ──→ Task Scheduler ──→ Dependency Resolver
+     ↓               ↓                    ↓
+Execution Manager ←─ Task Queue ←──── Parallel Executor
+     ↓
+Progress Tracker ──→ Trace模块 ──→ 执行监控
 ```
 
-## 🔌 依赖关系规范
+**设计原则**:
+- 计划解析<8ms，执行调度<15ms
+- 支持串行/并行/条件执行
+- 动态依赖关系解析
+- 失败重试和补偿机制
 
-### 允许的依赖方向
-```
-Context → Core Components
-Plan → Context + Core Components  
-Confirm → Plan + Context + Core Components
-Trace → All Modules + Core Components
-Role → Core Components
-Extension → All Modules + Core Components
-```
-
-### 禁止的循环依赖
-- Plan不能直接依赖Confirm
-- Context不能依赖Plan或其他业务模块
-- 任何模块不能相互循环依赖
-
-## 🛠️ 技术栈约束
-
-### 后端架构
-- **框架**: Express.js 4.18+ (RESTful) + Apollo Server (GraphQL)
-- **数据库**: PostgreSQL 14+ (主库) + Redis 7+ (缓存)
-- **ORM**: TypeORM 0.3+ (类型安全)
-- **验证**: Ajv 8+ (JSON Schema) + Joi 17+ (数据验证)
-
-### API设计模式
+### Confirm模块 - 验证决策机制
 ```typescript
-// REST API 模式
-GET    /api/v1/{module}/{resource}
-POST   /api/v1/{module}/{resource}
-PUT    /api/v1/{module}/{resource}/{id}
-DELETE /api/v1/{module}/{resource}/{id}
-
-// GraphQL 查询模式
-query GetContext($id: ID!) {
-  context(id: $id) {
-    contextId
-    version
-    status
-    sharedState
-  }
-}
+// 审批流程架构
+Approval Engine ──→ Rule Engine ──→ Decision Tree
+     ↓                  ↓               ↓
+Auto Approval ←─── Condition Matcher ←─ Policy Store
+     ↓
+Notification Hub ──→ 审批通知 ──→ 实时提醒
 ```
 
-## 📊 性能架构要求
+**设计原则**:
+- 审批检查<3ms，决策执行<12ms
+- 灵活的审批规则配置
+- 自动审批条件支持
+- 完整的审批轨迹记录
 
-### 响应时间约束
-- **协议解析**: < 10ms
-- **API响应**: P95 < 100ms, P99 < 200ms
-- **数据库查询**: 简单查询 < 50ms, 复杂查询 < 200ms
-- **缓存命中**: < 5ms
-
-### 并发架构
-- **最大TPS**: > 10,000 (水平扩展)
-- **最大并发**: > 1000 用户
-- **连接池**: 最大100个数据库连接
-- **内存使用**: 单实例 < 512MB
-
-## 🔒 安全架构要求
-
-### 认证授权架构
+### Trace模块 - 追踪记录信息
 ```typescript
-// JWT Token 结构
-interface JWTPayload {
-  sub: string;          // 用户ID
-  role: string[];       // 角色列表
-  permissions: string[]; // 权限列表
-  exp: number;          // 过期时间
-  iat: number;          // 签发时间
-}
-
-// RBAC 权限模型
-interface Permission {
-  resource: string;     // 资源类型
-  action: string;       // 操作类型
-  conditions?: object;  // 条件约束
-}
+// 追踪监控架构
+Trace Collector ──→ Performance Monitor ──→ Metrics Store
+     ↓                    ↓                     ↓
+Event Stream ────→ Real-time Analytics ←─── Alert Manager
+     ↓
+Compensation Engine ──→ 错误恢复 ──→ 自动修复
 ```
 
-### 数据加密要求
-- **传输**: TLS 1.3强制加密
-- **存储**: 敏感字段AES-256加密
-- **缓存**: Redis密码保护 + TLS
-- **日志**: 敏感数据脱敏处理
+**设计原则**:
+- 追踪记录<2ms，查询分析<20ms
+- 分布式链路追踪支持
+- 实时性能监控和告警
+- 自动补偿和错误恢复
 
-## ✅ 架构检查清单
+### Role模块 - 角色定义能力
+```typescript
+// 权限管理架构
+RBAC Engine ──→ Permission Cache ──→ Access Control
+     ↓               ↓                   ↓
+Role Inheritance ←─ Capability Store ←─ Policy Engine
+     ↓
+Dynamic Assignment ──→ 权限热更新 ──→ 即时生效
+```
 
-代码提交前必须确认：
-- [ ] 模块边界清晰，无跨模块职责混合
-- [ ] 接口设计符合协议规范
-- [ ] 依赖关系合理，无循环依赖
-- [ ] 性能要求达标
-- [ ] 安全要求满足
-- [ ] 文档同步更新
+**设计原则**:
+- 权限检查<1ms，角色解析<5ms
+- 细粒度权限控制
+- 动态角色继承支持
+- 实时权限变更生效
+
+### Extension模块 - 扩展机制框架
+```typescript
+// 扩展生态架构
+Extension Registry ──→ Lifecycle Manager ──→ Health Monitor
+     ↓                     ↓                    ↓
+Plugin Loader ────→ Capability Publisher ←─── Service Discovery
+     ↓
+Integration Hub ──→ 平台适配器 ──→ TracePilot + Coregentis
+```
+
+**设计原则**:
+- 扩展调用<50ms，健康检查<10ms
+- 标准化扩展接口
+- 热插拔和版本管理
+- 跨平台集成支持
+
+## 🔗 平台集成架构（基于Roadmap集成规划）
+
+### TracePilot集成
+```typescript
+// TracePilot适配器架构
+MPLP Core ──→ TracePilot Adapter ──→ TracePilot API
+     ↓              ↓                     ↓
+Trace Data ──→ Format Converter ──→ 追踪数据同步
+     ↓
+Bidirectional Sync ──→ 双向数据同步 ──→ 实时更新
+```
+
+### Coregentis集成
+```typescript
+// Coregentis平台架构
+MPLP Protocol ──→ Coregentis Gateway ──→ 企业服务
+     ↓                  ↓                    ↓
+Business Logic ──→ Platform Services ──→ 企业级功能
+     ↓
+Management Console ──→ 统一管理界面 ──→ 监控运维
+```
+
+## 🔧 技术实现架构
+
+### 数据架构
+```typescript
+// 数据层设计
+┌─── PostgreSQL 14+ (主数据库) ───┐
+│ - Context状态数据              │
+│ - Plan任务计划                │
+│ - Confirm审批记录             │
+│ - Role权限数据                │
+└─────────────────────────────┘
+         ↕
+┌─── Redis 7+ (缓存层) ──────┐
+│ - 热点数据缓存             │
+│ - 会话状态缓存             │
+│ - 权限缓存                │
+│ - 临时数据存储             │
+└─────────────────────────┘
+```
+
+### API架构层次
+```typescript
+// API服务架构
+┌─── REST API (Express.js) ───┐
+│ - CRUD操作                 │
+│ - 资源管理                 │
+│ - 状态查询                 │
+└─────────────────────────┘
+         ↕
+┌─── GraphQL Schema ─────┐
+│ - 复杂查询            │
+│ - 关联数据获取        │
+│ - 实时订阅            │
+└─────────────────────┘
+         ↕
+┌─── WebSocket ──────────┐
+│ - 实时通信            │
+│ - 状态推送            │
+│ - 事件通知            │
+└─────────────────────┘
+```
+
+## 📊 性能架构设计（基于Roadmap性能要求）
+
+### 性能优化策略
+```typescript
+// 性能优化架构
+┌─── 应用层优化 ───┐    ┌─── 数据层优化 ───┐
+│ - 连接池复用    │    │ - 索引优化      │
+│ - 缓存策略      │    │ - 查询优化      │
+│ - 异步处理      │    │ - 分片策略      │
+└───────────────┘    └───────────────┘
+         ↕                     ↕
+┌─── 网络层优化 ───┐    ┌─── 系统层优化 ───┐
+│ - CDN加速       │    │ - 负载均衡      │
+│ - 压缩传输      │    │ - 容器优化      │
+│ - HTTP/2支持    │    │ - 资源调度      │
+└───────────────┘    └───────────────┘
+```
+
+### 监控架构
+```typescript
+// 监控体系架构
+┌─── 业务监控 ───┐    ┌─── 性能监控 ───┐
+│ - 协议调用量  │    │ - 响应时间     │
+│ - 成功率统计  │    │ - 吞吐量       │
+│ - 错误率分析  │    │ - 资源利用率   │
+└─────────────┘    └─────────────┘
+         ↕                   ↕
+┌─── 安全监控 ───┐    ┌─── 系统监控 ───┐
+│ - 访问控制    │    │ - 服务状态     │
+│ - 异常检测    │    │ - 健康检查     │
+│ - 审计日志    │    │ - 容量规划     │
+└─────────────┘    └─────────────┘
+```
+
+## 🛡️ 安全架构设计
+
+### 安全防护层次
+```typescript
+// 安全架构分层
+┌─── 网络安全层 ───┐
+│ - TLS 1.3加密   │
+│ - WAF防护       │
+│ - DDoS防护      │
+└─────────────────┘
+         ↓
+┌─── 应用安全层 ───┐
+│ - JWT认证       │
+│ - RBAC权限      │
+│ - Rate Limiting │
+└─────────────────┘
+         ↓
+┌─── 数据安全层 ───┐
+│ - AES-256加密   │
+│ - 数据脱敏      │
+│ - 备份加密      │
+└─────────────────┘
+```
+
+## 🚀 部署架构（基于Roadmap部署规划）
+
+### 容器化架构
+```yaml
+# Kubernetes部署架构
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mplp-core
+spec:
+  replicas: 3
+  template:
+    spec:
+      containers:
+      - name: mplp-api
+        image: mplp:v1.0.0
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+```
+
+### 微服务架构演进
+```typescript
+// 未来架构演进方向
+┌─── 当前单体架构 (v1.0) ───┐
+│ MPLP Core Application    │
+│ - 6个核心模块集成        │
+│ - 单一部署单元           │
+└─────────────────────────┘
+         ↓ (演进路径)
+┌─── 微服务架构 (v2.0+) ───┐
+│ Context Service         │
+│ Plan Service           │
+│ Confirm Service        │
+│ Trace Service          │
+│ Role Service           │
+│ Extension Service      │
+└─────────────────────────┘
+```
 
 ---
 
-> **重要**: 违反架构规则的代码将无法通过Review，必须重构后重新提交。
-description:
-globs:
-alwaysApply: false
----
+**架构规则版本**: v2.1  
+**维护团队**: Coregentis MPLP架构团队  
+**审查周期**: 每个开发阶段结束后审查  
+**技术支持**: architecture@coregentis.com
+ 

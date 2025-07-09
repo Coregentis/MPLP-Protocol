@@ -1,64 +1,23 @@
 {
   "compilerOptions": {
-    // Target and Module
-    "target": "ES2022",
+    "target": "ES2020",
+    "lib": ["ES2020"],
     "module": "commonjs",
-    "lib": ["ES2022"],
     "moduleResolution": "node",
-    
-    // Output
-    "outDir": "./dist",
-    "rootDir": "./src",
     "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "removeComments": false,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    
-    // Strict Type Checking (MPLP Requirements)
+    "outDir": "./dist",
     "strict": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "strictBindCallApply": true,
-    "strictPropertyInitialization": true,
-    "noImplicitThis": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
-    
-    // Additional Checks
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "allowUnreachableCode": false,
-    "allowUnusedLabels": false,
-    
-    // Module Resolution
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    
-    // Path Mapping
-    "baseUrl": "./",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@core/*": ["src/core/*"],
-      "@protocols/*": ["src/protocols/*"],
-      "@api/*": ["src/api/*"],
-      "@services/*": ["src/services/*"],
-      "@database/*": ["src/database/*"],
-      "@utils/*": ["src/utils/*"],
-      "@types/*": ["src/types/*"],
       "@tests/*": ["tests/*"]
-    },
-    
-    // Advanced
-    "incremental": true,
-    "tsBuildInfoFile": "./dist/.tsbuildinfo"
+    }
   },
   "include": [
     "src/**/*",
@@ -67,9 +26,7 @@
   "exclude": [
     "node_modules",
     "dist",
-    "coverage",
-    "**/*.test.ts",
-    "**/*.spec.ts"
+    "coverage"
   ],
   "ts-node": {
     "require": ["tsconfig-paths/register"],

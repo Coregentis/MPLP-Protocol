@@ -2,7 +2,9 @@
 
 > **文件类型**: Always  
 > **适用范围**: 所有Trace模块功能和生命周期管理  
-> **最后更新**: 2024-07-09
+> **最后更新**: 2025-07-09T20:30:00+08:00  
+> **治理层状态**: ✅ 完全集成 - TracePilot双向同步已激活  
+> **关联治理**: Plan→Confirm→Trace→Delivery强制流程控制
 
 ## 🔍 追踪生命周期概览
 
@@ -13,15 +15,16 @@
 ├── 🔄 State Change (状态变更)
 ├── ❌ Error Trace (错误追踪)
 ├── 🔧 Compensation (补偿操作)
-└── 📊 Performance Metrics (性能指标)
+├── 📊 Performance Metrics (性能指标)
+└── 🔗 TracePilot Sync (TracePilot同步) **新增**
 ```
 
 ### 生命周期阶段
-- **初始化**: 创建追踪会话，设置上下文
-- **执行**: 记录操作步骤，状态变更
-- **监控**: 实时性能和错误监控
-- **完成**: 生成执行报告，清理资源
-- **归档**: 持久化存储，数据分析
+- **初始化**: 创建追踪会话，设置上下文，**初始化TracePilot连接**
+- **执行**: 记录操作步骤，状态变更，**实时同步到TracePilot**
+- **监控**: 实时性能和错误监控，**TracePilot数据验证**
+- **完成**: 生成执行报告，清理资源，**确认TracePilot同步完整性**
+- **归档**: 持久化存储，数据分析，**TracePilot长期数据保留**
 
 ## 📋 追踪数据结构
 
@@ -797,9 +800,588 @@ export class TraceAnalyzer {
 }
 ```
 
-## ✅ 追踪生命周期检查清单
+## 🔗 **TracePilot集成层（新增）**
 
-追踪实现前确认：
+### TracePilot双向同步协议
+```typescript
+/**
+ * TracePilot集成追踪协议
+ * 
+ * 扩展标准追踪协议，支持与TracePilot平台的双向同步。
+ * 确保所有追踪数据在MPLP和TracePilot之间保持一致性。
+ */
+interface TracePilotIntegratedTrace extends TraceProtocol {
+  /** TracePilot同步标识符 */
+  tracepilot_sync_id: string;
+  
+  /** TracePilot同步状态 */
+  tracepilot_sync_status: 'pending' | 'syncing' | 'synced' | 'failed' | 'retry';
+  
+  /** TracePilot同步时间戳 */
+  tracepilot_sync_timestamp?: string;
+  
+  /** TracePilot同步延迟（毫秒） */
+  tracepilot_sync_latency?: number;
+  
+  /** TracePilot格式转换信息 */
+  tracepilot_format_info: {
+    conversion_time_ms: number;
+    data_size_bytes: number;
+    compression_ratio?: number;
+  };
+  
+  /** TracePilot错误信息 */
+  tracepilot_error_info?: {
+    error_code: string;
+    error_message: string;
+    retry_count: number;
+    last_retry_timestamp: string;
+  };
+}
+
+/**
+ * TracePilot同步性能要求
+ */
+interface TracePilotSyncRequirements {
+  /** 单次同步延迟上限 */
+  max_sync_latency_ms: 100;
+  
+  /** 批量同步吞吐量下限 */
+  min_batch_throughput_tps: 1000;
+  
+  /** 格式转换时间上限 */
+  max_format_conversion_ms: 50;
+  
+  /** 最大重试次数 */
+  max_retry_count: 3;
+  
+  /** 同步成功率要求 */
+  min_sync_success_rate: 0.999; // 99.9%
+}
+```
+
+### TracePilot实时同步管理器
+```typescript
+/**
+ * TracePilot实时同步管理器
+ * 
+ * 管理与TracePilot平台的实时数据同步，确保高性能和高可靠性。
+ */
+export class TracePilotSyncManager {
+  private readonly syncAdapter: TracePilotAdapter;
+  private readonly syncQueue: SyncQueue;
+  private readonly performanceMonitor: SyncPerformanceMonitor;
+  private readonly retryManager: RetryManager;
+
+  constructor(config: TracePilotSyncConfig) {
+    this.syncAdapter = new TracePilotAdapter(config);
+    this.syncQueue = new SyncQueue(config.queue_config);
+    this.performanceMonitor = new SyncPerformanceMonitor();
+    this.retryManager = new RetryManager(config.retry_config);
+  }
+
+  /**
+   * 实时同步追踪数据
+   */
+  public async syncTraceRealtime(trace: TraceProtocol): Promise<TracePilotSyncResult> {
+    const syncStartTime = performance.now();
+    const syncId = this.generateSyncId();
+    
+    try {
+      // 数据格式转换
+      const conversionStartTime = performance.now();
+      const tracePilotFormat = await this.convertToTracePilotFormat(trace);
+      const conversionTime = performance.now() - conversionStartTime;
+      
+      // 验证转换时间
+      if (conversionTime > 50) {
+        throw new TracePilotSyncError('Format conversion exceeded 50ms', {
+          conversion_time: conversionTime,
+          max_allowed: 50
+        });
+      }
+      
+      // 执行同步
+      const syncResult = await this.syncAdapter.uploadTrace(tracePilotFormat);
+      const totalLatency = performance.now() - syncStartTime;
+      
+      // 验证同步性能
+      if (totalLatency > 100) {
+        throw new TracePilotSyncError('Sync latency exceeded 100ms', {
+          actual_latency: totalLatency,
+          max_allowed: 100,
+          sync_id: syncId
+        });
+      }
+      
+      // 记录性能指标
+      await this.performanceMonitor.recordSync({
+        sync_id: syncId,
+        trace_id: trace.trace_id,
+        sync_latency: totalLatency,
+        conversion_time: conversionTime,
+        data_size: this.calculateDataSize(tracePilotFormat),
+        status: 'success'
+      });
+      
+      return {
+        sync_id: syncId,
+        sync_status: 'synced',
+        sync_latency: totalLatency,
+        conversion_time: conversionTime,
+        tracepilot_trace_id: syncResult.trace_id
+      };
+      
+    } catch (error) {
+      // 错误处理和重试逻辑
+      const retryResult = await this.handleSyncError(trace, syncId, error);
+      return retryResult;
+    }
+  }
+
+  /**
+   * 批量同步追踪数据
+   */
+  public async syncTraceBatch(traces: TraceProtocol[]): Promise<BatchSyncResult> {
+    const batchStartTime = performance.now();
+    const batchId = this.generateBatchId();
+    
+    // 验证批量大小
+    if (traces.length > 1000) {
+      throw new TracePilotSyncError('Batch size exceeds limit', {
+        batch_size: traces.length,
+        max_allowed: 1000
+      });
+    }
+    
+    const syncPromises = traces.map(trace => this.syncTraceRealtime(trace));
+    const results = await Promise.allSettled(syncPromises);
+    
+    const batchDuration = performance.now() - batchStartTime;
+    const throughput = traces.length / (batchDuration / 1000); // TPS
+    
+    // 验证吞吐量
+    if (throughput < 1000) {
+      throw new TracePilotSyncError('Batch throughput below requirement', {
+        actual_tps: throughput,
+        required_tps: 1000,
+        batch_id: batchId
+      });
+    }
+    
+    const successCount = results.filter(r => r.status === 'fulfilled').length;
+    const successRate = successCount / traces.length;
+    
+    return {
+      batch_id: batchId,
+      total_traces: traces.length,
+      successful_syncs: successCount,
+      failed_syncs: traces.length - successCount,
+      success_rate: successRate,
+      throughput_tps: throughput,
+      batch_duration_ms: batchDuration
+    };
+  }
+
+  /**
+   * 处理同步错误和重试
+   */
+  private async handleSyncError(
+    trace: TraceProtocol,
+    syncId: string,
+    error: Error
+  ): Promise<TracePilotSyncResult> {
+    const retryCount = await this.retryManager.getRetryCount(syncId);
+    
+    if (retryCount >= 3) {
+      // 超过最大重试次数，记录失败
+      await this.performanceMonitor.recordSyncFailure({
+        sync_id: syncId,
+        trace_id: trace.trace_id,
+        error_message: error.message,
+        final_retry_count: retryCount
+      });
+      
+      return {
+        sync_id: syncId,
+        sync_status: 'failed',
+        error_info: {
+          error_code: error.name,
+          error_message: error.message,
+          retry_count: retryCount
+        }
+      };
+    }
+    
+    // 执行重试
+    await this.retryManager.scheduleRetry(syncId, trace, retryCount + 1);
+    
+    return {
+      sync_id: syncId,
+      sync_status: 'retry',
+      retry_info: {
+        retry_count: retryCount + 1,
+        next_retry_time: await this.retryManager.getNextRetryTime(syncId)
+      }
+    };
+  }
+}
+```
+
+### TracePilot数据格式转换器
+```typescript
+/**
+ * TracePilot数据格式转换器
+ * 
+ * 负责MPLP追踪格式与TracePilot格式之间的双向转换。
+ */
+export class TracePilotFormatConverter {
+  
+  /**
+   * 转换为TracePilot格式
+   */
+  public async convertToTracePilot(mplpTrace: TraceProtocol): Promise<TracePilotTrace> {
+    const conversionStartTime = performance.now();
+    
+    const tracePilotTrace: TracePilotTrace = {
+      // 基础字段映射
+      id: mplpTrace.trace_id,
+      operation: mplpTrace.operation_name,
+      startTime: mplpTrace.start_time,
+      endTime: mplpTrace.end_time,
+      duration: mplpTrace.duration_ms,
+      
+      // 状态映射
+      status: this.mapStatusToTracePilot(mplpTrace.status),
+      
+      // 性能指标转换
+      metrics: {
+        cpu_usage_percent: mplpTrace.performance_metrics.cpu_usage,
+        memory_usage_mb: mplpTrace.performance_metrics.memory_usage_mb,
+        network_io_bytes: mplpTrace.performance_metrics.network_io_bytes,
+        disk_io_bytes: mplpTrace.performance_metrics.disk_io_bytes,
+        database_operations: {
+          query_count: mplpTrace.performance_metrics.db_query_count,
+          total_time_ms: mplpTrace.performance_metrics.db_query_time_ms
+        },
+        api_operations: {
+          call_count: mplpTrace.performance_metrics.api_call_count,
+          total_time_ms: mplpTrace.performance_metrics.api_call_time_ms
+        },
+        custom_metrics: mplpTrace.performance_metrics.custom_metrics
+      },
+      
+      // 错误信息转换
+      error: mplpTrace.error_info ? {
+        type: mplpTrace.error_info.error_type,
+        code: mplpTrace.error_info.error_code,
+        message: mplpTrace.error_info.error_message,
+        severity: mplpTrace.error_info.severity,
+        stack_trace: mplpTrace.error_info.stack_trace,
+        context: mplpTrace.error_info.context_data
+      } : undefined,
+      
+      // 补偿操作转换
+      compensations: mplpTrace.compensation_actions?.map(action => ({
+        id: action.action_id,
+        trigger: action.trigger_condition,
+        operation: action.compensation_operation,
+        status: action.status,
+        execution_time: action.execution_time
+      })),
+      
+      // MPLP特有元数据
+      metadata: {
+        mplp_version: mplpTrace.version,
+        context_id: mplpTrace.context_id,
+        parent_trace_id: mplpTrace.parent_trace_id,
+        trace_type: mplpTrace.trace_type,
+        tags: mplpTrace.tags,
+        source_system: 'mplp-protocol'
+      }
+    };
+    
+    const conversionTime = performance.now() - conversionStartTime;
+    
+    // 验证转换性能
+    if (conversionTime > 50) {
+      throw new FormatConversionError('Conversion time exceeded 50ms', {
+        conversion_time: conversionTime,
+        trace_id: mplpTrace.trace_id
+      });
+    }
+    
+    return tracePilotTrace;
+  }
+
+  /**
+   * 从TracePilot格式转换
+   */
+  public async convertFromTracePilot(tracePilotTrace: TracePilotTrace): Promise<TraceProtocol> {
+    // 反向转换逻辑
+    const mplpTrace: TraceProtocol = {
+      trace_id: tracePilotTrace.id,
+      parent_trace_id: tracePilotTrace.metadata?.parent_trace_id,
+      context_id: tracePilotTrace.metadata?.context_id || 'unknown',
+      version: tracePilotTrace.metadata?.mplp_version || '1.0.0',
+      timestamp: tracePilotTrace.startTime,
+      
+      trace_type: this.mapTraceTypeFromTracePilot(tracePilotTrace.metadata?.trace_type),
+      status: this.mapStatusFromTracePilot(tracePilotTrace.status),
+      operation_name: tracePilotTrace.operation,
+      
+      start_time: tracePilotTrace.startTime,
+      end_time: tracePilotTrace.endTime,
+      duration_ms: tracePilotTrace.duration,
+      
+      input_data: tracePilotTrace.metadata?.input_data,
+      output_data: tracePilotTrace.metadata?.output_data,
+      
+      error_info: tracePilotTrace.error ? {
+        error_type: tracePilotTrace.error.type,
+        error_code: tracePilotTrace.error.code,
+        error_message: tracePilotTrace.error.message,
+        severity: tracePilotTrace.error.severity,
+        stack_trace: tracePilotTrace.error.stack_trace,
+        error_timestamp: tracePilotTrace.startTime,
+        context_data: tracePilotTrace.error.context
+      } : undefined,
+      
+      performance_metrics: {
+        cpu_usage: tracePilotTrace.metrics.cpu_usage_percent,
+        memory_usage_mb: tracePilotTrace.metrics.memory_usage_mb,
+        network_io_bytes: tracePilotTrace.metrics.network_io_bytes,
+        disk_io_bytes: tracePilotTrace.metrics.disk_io_bytes,
+        db_query_count: tracePilotTrace.metrics.database_operations.query_count,
+        db_query_time_ms: tracePilotTrace.metrics.database_operations.total_time_ms,
+        api_call_count: tracePilotTrace.metrics.api_operations.call_count,
+        api_call_time_ms: tracePilotTrace.metrics.api_operations.total_time_ms,
+        custom_metrics: tracePilotTrace.metrics.custom_metrics
+      },
+      
+      compensation_actions: tracePilotTrace.compensations?.map(comp => ({
+        action_id: comp.id,
+        trigger_condition: comp.trigger,
+        compensation_operation: comp.operation,
+        status: comp.status,
+        execution_time: comp.execution_time
+      })),
+      
+      tags: tracePilotTrace.metadata?.tags || {}
+    };
+    
+    return mplpTrace;
+  }
+}
+```
+
+## 🚨 **治理层集成要求（强制执行）**
+
+### Plan→Confirm→Trace→Delivery流程集成
+```typescript
+/**
+ * 治理层集成的追踪会话管理器
+ * 
+ * 集成Plan→Confirm→Trace→Delivery流程控制，确保每个追踪操作
+ * 都遵循治理层的标准化工作流程。
+ */
+export class GovernanceIntegratedTraceSession extends TraceSessionManager {
+  private readonly governanceValidator: GovernanceValidator;
+  private readonly deliveryChecker: DeliveryChecker;
+
+  /**
+   * 开始治理层集成的追踪会话
+   */
+  public async startGovernanceTrace(
+    contextId: string,
+    operationName: string,
+    governancePhase: 'plan' | 'confirm' | 'trace' | 'delivery',
+    input?: Record<string, unknown>
+  ): Promise<GovernanceTraceSession> {
+    
+    // 📋 验证Plan阶段要求
+    if (governancePhase === 'plan') {
+      await this.validatePlanPhase(operationName, input);
+    }
+    
+    // ✅ 验证Confirm阶段要求
+    if (governancePhase === 'confirm') {
+      await this.validateConfirmPhase(operationName, input);
+    }
+    
+    // 📊 执行Trace阶段监控
+    if (governancePhase === 'trace') {
+      await this.initializeTracePhaseMonitoring(operationName);
+    }
+    
+    // 🚀 验证Delivery阶段完整性
+    if (governancePhase === 'delivery') {
+      await this.validateDeliveryPhase(operationName, input);
+    }
+    
+    // 创建标准追踪会话
+    const baseSession = await super.startTrace(contextId, operationName, input);
+    
+    // 增强为治理层会话
+    const governanceSession = new GovernanceTraceSession({
+      ...baseSession,
+      governance_phase: governancePhase,
+      governance_requirements: await this.getGovernanceRequirements(operationName),
+      governance_validation_status: 'pending'
+    });
+    
+    // 初始化TracePilot同步
+    await this.initializeTracePilotSync(governanceSession);
+    
+    return governanceSession;
+  }
+
+  /**
+   * 验证Plan阶段要求
+   */
+  private async validatePlanPhase(
+    operationName: string,
+    input?: Record<string, unknown>
+  ): Promise<void> {
+    const planRequirements = await this.governanceValidator.getPlanRequirements(operationName);
+    
+    // 检查技术方案完整性
+    if (!input?.technical_solution) {
+      throw new GovernanceValidationError('Technical solution required in Plan phase');
+    }
+    
+    // 检查性能目标设定
+    if (!input?.performance_targets) {
+      throw new GovernanceValidationError('Performance targets required in Plan phase');
+    }
+    
+    // 检查风险评估
+    if (!input?.risk_assessment) {
+      throw new GovernanceValidationError('Risk assessment required in Plan phase');
+    }
+    
+    // 检查规则文件引用
+    if (!input?.referenced_rules) {
+      throw new GovernanceValidationError('Referenced .mdc rules required in Plan phase');
+    }
+  }
+
+  /**
+   * 验证Delivery阶段完整性
+   */
+  private async validateDeliveryPhase(
+    operationName: string,
+    input?: Record<string, unknown>
+  ): Promise<void> {
+    const deliveryChecklist = await this.deliveryChecker.getChecklist(operationName);
+    
+    // 验证交付文件
+    if (!input?.delivery_files) {
+      throw new GovernanceValidationError('Delivery files list required');
+    }
+    
+    // 验证性能测试结果
+    if (!input?.performance_test_results) {
+      throw new GovernanceValidationError('Performance test results required');
+    }
+    
+    // 验证TracePilot记录完整性
+    if (!input?.tracepilot_record_id) {
+      throw new GovernanceValidationError('TracePilot record ID required');
+    }
+    
+    // 验证版本影响分析
+    if (!input?.version_impact) {
+      throw new GovernanceValidationError('Version impact analysis required');
+    }
+  }
+}
+```
+
+### 强制性能验证集成
+```typescript
+/**
+ * 治理层性能验证器
+ * 
+ * 集成TracePilot同步性能要求和MPLP性能标准，确保所有操作
+ * 满足治理层定义的性能基准。
+ */
+export class GovernancePerformanceValidator {
+  private readonly performanceStandards: PerformanceStandards;
+  private readonly tracePilotSyncRequirements: TracePilotSyncRequirements;
+
+  /**
+   * 验证操作性能是否符合治理要求
+   */
+  public async validateOperationPerformance(
+    operationName: string,
+    actualDuration: number,
+    tracePilotSyncLatency: number
+  ): Promise<PerformanceValidationResult> {
+    
+    const moduleStandards = this.getModulePerformanceStandards(operationName);
+    const validationResults: PerformanceValidationResult = {
+      operation_name: operationName,
+      actual_duration_ms: actualDuration,
+      target_duration_ms: moduleStandards.target_duration,
+      performance_compliance: true,
+      tracepilot_sync_compliance: true,
+      violations: []
+    };
+    
+    // 验证模块特定性能要求
+    if (actualDuration > moduleStandards.target_duration) {
+      validationResults.performance_compliance = false;
+      validationResults.violations.push({
+        type: 'module_performance',
+        message: `Operation duration ${actualDuration}ms exceeds target ${moduleStandards.target_duration}ms`,
+        severity: 'high',
+        required_action: 'Optimize operation performance'
+      });
+    }
+    
+    // 验证TracePilot同步性能
+    if (tracePilotSyncLatency > 100) {
+      validationResults.tracepilot_sync_compliance = false;
+      validationResults.violations.push({
+        type: 'tracepilot_sync',
+        message: `TracePilot sync latency ${tracePilotSyncLatency}ms exceeds limit 100ms`,
+        severity: 'high',
+        required_action: 'Optimize TracePilot synchronization'
+      });
+    }
+    
+    return validationResults;
+  }
+
+  /**
+   * 获取模块性能标准
+   */
+  private getModulePerformanceStandards(operationName: string): ModulePerformanceStandards {
+    const standards = {
+      'context.create': { target_duration: 5, module: 'Context' },
+      'context.query': { target_duration: 5, module: 'Context' },
+      'context.update': { target_duration: 10, module: 'Context' },
+      'plan.parse': { target_duration: 8, module: 'Plan' },
+      'plan.schedule': { target_duration: 15, module: 'Plan' },
+      'confirm.check': { target_duration: 3, module: 'Confirm' },
+      'confirm.execute': { target_duration: 12, module: 'Confirm' },
+      'trace.record': { target_duration: 2, module: 'Trace' },
+      'trace.query': { target_duration: 20, module: 'Trace' },
+      'role.permission_check': { target_duration: 1, module: 'Role' },
+      'role.resolve': { target_duration: 5, module: 'Role' },
+      'extension.call': { target_duration: 50, module: 'Extension' },
+      'extension.health_check': { target_duration: 10, module: 'Extension' }
+    };
+    
+    return standards[operationName] || { target_duration: 100, module: 'Unknown' };
+  }
+}
+```
+
+## ✅ **增强版追踪生命周期检查清单**
+
+### 追踪实现前确认（增强版）
 - [ ] 追踪数据结构设计合理
 - [ ] 性能指标收集完整
 - [ ] 错误追踪机制完善
@@ -808,11 +1390,40 @@ export class TraceAnalyzer {
 - [ ] 数据存储策略高效
 - [ ] 分析功能实用有效
 - [ ] 告警机制响应及时
+- [ ] **TracePilot集成配置完成**
+- [ ] **双向同步性能验证通过**
+- [ ] **治理层流程集成完整**
+- [ ] **Plan→Confirm→Trace→Delivery符合性检查**
+
+### TracePilot集成检查清单（新增）
+- [ ] TracePilot适配器配置正确
+- [ ] 实时同步延迟 < 100ms
+- [ ] 批量同步吞吐量 > 1000 TPS
+- [ ] 格式转换时间 < 50ms
+- [ ] 重试机制配置合理（最大3次）
+- [ ] 错误处理和监控完整
+- [ ] 数据完整性验证通过
+- [ ] 性能监控和告警配置
+- [ ] 双向数据一致性验证
+- [ ] 治理层集成验证通过
+
+### 治理层集成检查清单（新增）
+- [ ] Plan阶段要求验证机制
+- [ ] Confirm阶段符合性检查
+- [ ] Trace阶段实时监控
+- [ ] Delivery阶段完整性验证
+- [ ] 性能标准自动验证
+- [ ] 规则文件引用检查
+- [ ] 版本影响分析集成
+- [ ] 质量门禁自动化
+- [ ] 治理流程审计追踪
+- [ ] 合规性报告生成
 
 ---
 
-> **重要**: 追踪生命周期管理是系统可观测性的核心，确保所有关键操作都被准确记录和分析。
-description:
-globs:
-alwaysApply: false
----
+> **重要**: 追踪生命周期管理现已完全集成TracePilot平台和治理层机制，确保所有关键操作都被准确记录、实时同步、并符合企业级治理要求。
+> 
+> **治理层状态**: ✅ 完全激活 - TracePilot双向同步 + Plan→Confirm→Trace→Delivery强制流程控制
+> 
+> **性能要求**: TracePilot同步 < 100ms | 批量处理 > 1000 TPS | 格式转换 < 50ms | 治理验证 < 5ms
+ 
