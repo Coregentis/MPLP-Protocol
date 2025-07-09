@@ -1,0 +1,343 @@
+# MPLP 命名约定规则
+
+> **文件类型**: Auto  
+> **适用范围**: 所有代码文件、Schema、变量命名  
+> **最后更新**: 2024-07-09
+
+## 📝 基础命名原则
+
+### 通用规则
+- **英文命名**: 所有标识符使用英文，禁用拼音或中文
+- **语义明确**: 名称应准确描述其用途和功能
+- **避免缩写**: 除非是广泛认知的缩写(id, url, api等)
+- **一致性**: 同类型实体使用统一的命名模式
+
+## 🏗️ 模块命名规范
+
+### 6个核心模块
+```
+context/     # 上下文模块 (小写)
+plan/        # 规划模块  
+confirm/     # 确认模块
+trace/       # 追踪模块
+role/        # 角色模块
+extension/   # 扩展模块
+```
+
+### 子模块命名
+```typescript
+// ✅ 正确: 模块内部组件命名
+context/
+├── context.protocol.ts      # 协议定义
+├── context.handler.ts       # 处理器
+├── context.validator.ts     # 验证器
+├── context.service.ts       # 业务服务
+├── context.controller.ts    # 控制器
+├── context.repository.ts    # 数据仓库
+└── context.types.ts         # 类型定义
+
+// ❌ 错误: 不一致的命名
+├── contextProtocol.ts       # 违反模块前缀规则
+├── ContextHandler.ts        # 违反小写规则
+└── ctx-validator.ts         # 违反分隔符规则
+```
+
+## 📋 JSON Schema 命名规范
+
+### Schema文件命名
+```
+schemas/
+├── base-types.json          # 基础类型定义
+├── context-protocol.json    # Context协议Schema
+├── plan-protocol.json       # Plan协议Schema
+├── confirm-protocol.json    # Confirm协议Schema
+├── trace-protocol.json      # Trace协议Schema
+├── role-protocol.json       # Role协议Schema
+└── extension-protocol.json  # Extension协议Schema
+```
+
+### Schema内部命名
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mplp.dev/schemas/context-protocol.json",
+  "title": "ContextProtocol",
+  "type": "object",
+  "properties": {
+    "context_id": {           // 使用snake_case匹配JSON
+      "type": "string",
+      "format": "uuid"
+    },
+    "lifecycle_stage": {      // 复合词用snake_case
+      "type": "string",
+      "enum": ["planning", "executing", "monitoring", "completed"]
+    }
+  }
+}
+```
+
+## 💻 TypeScript 命名规范
+
+### 接口和类型
+```typescript
+// ✅ 正确: 接口命名 (PascalCase)
+interface ContextProtocol {
+  context_id: string;        // JSON字段使用snake_case
+  version: string;
+  timestamp: string;
+}
+
+interface PlanExecutionResult {
+  execution_id: string;
+  status: ExecutionStatus;
+  metrics: PerformanceMetrics;
+}
+
+// 类型别名 (PascalCase)
+type ProtocolHandler<T> = (protocol: T) => Promise<ValidationResult>;
+type EventCallback = (event: ProtocolEvent) => void;
+
+// 枚举 (PascalCase)
+enum ExecutionStatus {
+  PENDING = 'pending',       // 枚举值使用UPPER_SNAKE_CASE
+  RUNNING = 'running',
+  COMPLETED = 'completed',
+  FAILED = 'failed'
+}
+```
+
+### 类和函数
+```typescript
+// ✅ 正确: 类命名 (PascalCase)
+class ContextHandler {
+  private readonly logger: Logger;
+  private readonly validator: ContextValidator;
+  
+  // 方法命名 (camelCase)
+  public async createContext(data: CreateContextRequest): Promise<ContextProtocol> {
+    // 实现逻辑
+  }
+  
+  public async updateContextStatus(
+    contextId: string, 
+    status: ContextStatus
+  ): Promise<void> {
+    // 实现逻辑
+  }
+}
+
+// 函数命名 (camelCase)
+export function validateContextProtocol(data: unknown): ValidationResult {
+  // 验证逻辑
+}
+
+export function generateUniqueId(): string {
+  return crypto.randomUUID();
+}
+```
+
+### 变量和常量
+```typescript
+// ✅ 正确: 变量命名 (camelCase)
+const contextHandler = new ContextHandler();
+const validationResult = await validator.validate(data);
+const executionMetrics = await collector.getMetrics();
+
+// 常量命名 (UPPER_SNAKE_CASE)
+const DEFAULT_TIMEOUT = 30000;
+const MAX_RETRY_ATTEMPTS = 3;
+const PROTOCOL_VERSION = '1.0';
+const API_BASE_URL = 'https://api.mplp.dev/v1';
+
+// 配置对象 (camelCase)
+const databaseConfig = {
+  host: process.env.DB_HOST,
+  port: parseInt(process.env.DB_PORT || '5432'),
+  database: process.env.DB_NAME,
+  username: process.env.DB_USER,
+  password: process.env.DB_PASSWORD
+};
+```
+
+## 🌐 API 命名规范
+
+### REST API 端点
+```typescript
+// ✅ 正确: RESTful API命名
+GET    /api/v1/contexts                    # 获取上下文列表
+POST   /api/v1/contexts                    # 创建上下文
+GET    /api/v1/contexts/{contextId}        # 获取特定上下文
+PUT    /api/v1/contexts/{contextId}        # 更新上下文
+DELETE /api/v1/contexts/{contextId}        # 删除上下文
+
+GET    /api/v1/contexts/{contextId}/plans  # 获取上下文的计划
+POST   /api/v1/plans                       # 创建计划
+GET    /api/v1/plans/{planId}/traces       # 获取计划的追踪记录
+
+// ❌ 错误: 不规范的API命名
+GET    /api/v1/getContexts                 # 动词应在HTTP方法中
+POST   /api/v1/context/create              # 不应包含动作词
+GET    /api/v1/Context/{id}                # 资源名应小写
+```
+
+### GraphQL 命名
+```graphql
+# ✅ 正确: GraphQL类型命名 (PascalCase)
+type Context {
+  contextId: ID!              # 字段使用camelCase
+  version: String!
+  timestamp: DateTime!
+  lifecycleStage: LifecycleStage!
+  sharedState: JSON
+}
+
+type Plan {
+  planId: ID!
+  contextId: ID!
+  name: String!
+  description: String
+  tasks: [Task!]!
+}
+
+# 查询命名 (camelCase)
+type Query {
+  context(id: ID!): Context
+  contexts(filter: ContextFilter): [Context!]!
+  plan(id: ID!): Plan
+  plansByContext(contextId: ID!): [Plan!]!
+}
+
+# 变更命名 (camelCase)
+type Mutation {
+  createContext(input: CreateContextInput!): Context!
+  updateContextStatus(id: ID!, status: ContextStatus!): Context!
+  deleteContext(id: ID!): Boolean!
+}
+```
+
+## 🗄️ 数据库命名规范
+
+### 表命名
+```sql
+-- ✅ 正确: 表名使用单数形式 + snake_case
+CREATE TABLE context (
+    context_id UUID PRIMARY KEY,
+    version VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE plan (
+    plan_id UUID PRIMARY KEY,
+    context_id UUID REFERENCES context(context_id),
+    name VARCHAR(255) NOT NULL,
+    description TEXT
+);
+
+-- 关联表使用两表名组合
+CREATE TABLE plan_task (
+    plan_id UUID REFERENCES plan(plan_id),
+    task_id UUID REFERENCES task(task_id),
+    PRIMARY KEY (plan_id, task_id)
+);
+```
+
+### 字段命名
+```sql
+-- ✅ 正确: 字段命名规则
+id                  # 主键简写
+context_id          # 外键加上引用表前缀  
+name                # 简单字段
+description         # 完整词汇
+created_at          # 时间戳字段
+updated_at          # 时间戳字段
+is_active          # 布尔字段加is前缀
+execution_status   # 状态字段加后缀
+```
+
+## 📁 文件和目录命名
+
+### 文件命名
+```
+// ✅ 正确: 文件命名 (kebab-case)
+context-protocol.ts
+plan-execution-handler.ts
+trace-collection-service.ts
+role-permission-validator.ts
+
+// Schema文件
+context-protocol.json
+plan-execution-schema.json
+
+// 测试文件
+context-handler.test.ts
+plan-service.integration.ts
+trace-collector.e2e.ts
+
+// 配置文件
+database.config.ts
+redis.config.ts
+app.config.ts
+```
+
+### 目录命名
+```
+src/
+├── modules/           # 小写复数
+├── core/             # 小写单数
+├── adapters/         # 小写复数
+├── utils/            # 小写复数
+├── types/            # 小写复数
+├── tests/            # 小写复数
+└── configs/          # 小写复数
+```
+
+## 📝 注释和文档命名
+
+### JSDoc 注释
+```typescript
+/**
+ * Creates a new context with the provided configuration.
+ * 
+ * @param data - Context creation parameters
+ * @param data.initialState - Initial shared state object
+ * @param data.constraints - Context execution constraints
+ * @returns Promise resolving to the created context protocol
+ * 
+ * @throws {ValidationError} When input data is invalid
+ * @throws {DatabaseError} When context creation fails
+ * 
+ * @example
+ * ```typescript
+ * const context = await createContext({
+ *   initialState: { environment: 'development' },
+ *   constraints: { timeout: 30000 }
+ * });
+ * ```
+ */
+export async function createContext(
+  data: CreateContextRequest
+): Promise<ContextProtocol> {
+  // 实现逻辑
+}
+```
+
+## ✅ 命名检查清单
+
+代码提交前确认：
+- [ ] 模块名使用小写，文件名使用kebab-case
+- [ ] TypeScript接口和类使用PascalCase
+- [ ] 函数和变量使用camelCase
+- [ ] 常量使用UPPER_SNAKE_CASE
+- [ ] JSON Schema字段使用snake_case
+- [ ] API端点遵循RESTful约定
+- [ ] 数据库表和字段使用snake_case
+- [ ] 文档注释完整清晰
+
+---
+
+> **提醒**: 不符合命名约定的代码将触发自动检查失败，必须修正后重新提交。
+description:
+globs:
+alwaysApply: false
+---

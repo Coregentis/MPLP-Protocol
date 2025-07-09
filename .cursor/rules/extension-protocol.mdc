@@ -1,0 +1,849 @@
+# MPLP 扩展协议规则
+
+> **文件类型**: Agent Requested  
+> **适用范围**: 所有第三方工具集成和扩展开发  
+> **最后更新**: 2024-07-09
+
+## 🔌 扩展协议概览
+
+### 扩展架构层次
+```
+🏗️ MPLP Core System
+├── 🔌 Extension Registry (扩展注册)
+├── 📦 Extension Manager (扩展管理)
+├── 🔗 Protocol Adapter (协议适配)
+├── 🛡️ Security Layer (安全层)
+└── 📊 Extension Monitor (扩展监控)
+```
+
+### 扩展类型分类
+- **CLI工具**: 命令行工具集成 (git, npm, docker等)
+- **API服务**: REST/GraphQL API集成
+- **数据库**: 数据源扩展 (MySQL, Redis等)
+- **监控工具**: APM和日志系统集成
+- **AI服务**: LLM和ML服务集成
+- **自定义扩展**: 用户自定义功能模块
+
+## 📋 扩展协议规范
+
+### 核心扩展接口
+```typescript
+/**
+ * MPLP扩展协议接口
+ * 
+ * 定义所有扩展必须实现的标准接口。
+ * 确保扩展与MPLP核心系统的一致性集成。
+ */
+interface ExtensionProtocol extends BaseProtocol {
+  /** 扩展唯一标识符 */
+  extension_id: string;
+  
+  /** 扩展名称 */
+  extension_name: string;
+  
+  /** 扩展类型 */
+  extension_type: ExtensionType;
+  
+  /** 扩展版本 */
+  extension_version: string;
+  
+  /** 扩展描述 */
+  description: string;
+  
+  /** 扩展作者 */
+  author: string;
+  
+  /** 扩展许可证 */
+  license: string;
+  
+  /** 支持的MPLP版本 */
+  supported_mplp_versions: string[];
+  
+  /** 扩展配置schema */
+  config_schema: JsonSchema;
+  
+  /** 扩展能力声明 */
+  capabilities: ExtensionCapability[];
+  
+  /** 安全要求 */
+  security_requirements: SecurityRequirement[];
+  
+  /** 依赖声明 */
+  dependencies: ExtensionDependency[];
+  
+  /** 扩展端点 */
+  endpoints: ExtensionEndpoint[];
+  
+  /** 健康检查配置 */
+  health_check: HealthCheckConfig;
+}
+
+/**
+ * 扩展类型枚举
+ */
+enum ExtensionType {
+  CLI_TOOL = 'cli_tool',
+  API_SERVICE = 'api_service',
+  DATABASE = 'database',
+  MONITORING = 'monitoring',
+  AI_SERVICE = 'ai_service',
+  CUSTOM = 'custom'
+}
+
+/**
+ * 扩展能力接口
+ */
+interface ExtensionCapability {
+  /** 能力名称 */
+  capability_name: string;
+  
+  /** 能力类型 */
+  capability_type: 'read' | 'write' | 'execute' | 'monitor';
+  
+  /** 能力描述 */
+  description: string;
+  
+  /** 输入Schema */
+  input_schema?: JsonSchema;
+  
+  /** 输出Schema */
+  output_schema?: JsonSchema;
+  
+  /** 是否必需 */
+  required: boolean;
+}
+```
+
+### 扩展生命周期管理
+```typescript
+/**
+ * 扩展生命周期接口
+ * 
+ * 定义扩展在MPLP系统中的完整生命周期。
+ */
+interface ExtensionLifecycle {
+  /**
+   * 扩展初始化
+   * 
+   * @param config 扩展配置
+   * @returns Promise<InitializationResult>
+   */
+  initialize(config: ExtensionConfig): Promise<InitializationResult>;
+  
+  /**
+   * 扩展启动
+   * 
+   * @returns Promise<void>
+   */
+  start(): Promise<void>;
+  
+  /**
+   * 扩展停止
+   * 
+   * @returns Promise<void>
+   */
+  stop(): Promise<void>;
+  
+  /**
+   * 扩展健康检查
+   * 
+   * @returns Promise<HealthStatus>
+   */
+  healthCheck(): Promise<HealthStatus>;
+  
+  /**
+   * 扩展配置更新
+   * 
+   * @param newConfig 新配置
+   * @returns Promise<void>
+   */
+  updateConfig(newConfig: Partial<ExtensionConfig>): Promise<void>;
+  
+  /**
+   * 扩展清理
+   * 
+   * @returns Promise<void>
+   */
+  cleanup(): Promise<void>;
+}
+
+/**
+ * 扩展配置接口
+ */
+interface ExtensionConfig {
+  /** 扩展唯一标识 */
+  extension_id: string;
+  
+  /** 扩展特定配置 */
+  settings: Record<string, unknown>;
+  
+  /** 认证配置 */
+  authentication?: AuthenticationConfig;
+  
+  /** 网络配置 */
+  network?: NetworkConfig;
+  
+  /** 资源限制 */
+  resource_limits?: ResourceLimits;
+  
+  /** 日志配置 */
+  logging?: LoggingConfig;
+}
+```
+
+## 🔧 CLI工具集成规范
+
+### CLI扩展接口
+```typescript
+/**
+ * CLI工具扩展接口
+ * 
+ * 专门用于集成命令行工具的扩展接口。
+ */
+interface CLIExtension extends ExtensionLifecycle {
+  /**
+   * 执行CLI命令
+   * 
+   * @param command 命令配置
+   * @returns Promise<CLIExecutionResult>
+   */
+  executeCommand(command: CLICommand): Promise<CLIExecutionResult>;
+  
+  /**
+   * 获取命令帮助信息
+   * 
+   * @param commandName 命令名称
+   * @returns Promise<CLIHelpInfo>
+   */
+  getCommandHelp(commandName: string): Promise<CLIHelpInfo>;
+  
+  /**
+   * 验证命令参数
+   * 
+   * @param command 命令配置
+   * @returns Promise<ValidationResult>
+   */
+  validateCommand(command: CLICommand): Promise<ValidationResult>;
+}
+
+/**
+ * CLI命令配置
+ */
+interface CLICommand {
+  /** 命令名称 */
+  command_name: string;
+  
+  /** 命令参数 */
+  arguments: string[];
+  
+  /** 命令选项 */
+  options: Record<string, string | boolean>;
+  
+  /** 工作目录 */
+  working_directory?: string;
+  
+  /** 环境变量 */
+  environment_variables?: Record<string, string>;
+  
+  /** 超时时间(秒) */
+  timeout_seconds?: number;
+  
+  /** 是否异步执行 */
+  async_execution?: boolean;
+}
+
+/**
+ * CLI执行结果
+ */
+interface CLIExecutionResult {
+  /** 执行状态码 */
+  exit_code: number;
+  
+  /** 标准输出 */
+  stdout: string;
+  
+  /** 标准错误 */
+  stderr: string;
+  
+  /** 执行时间(毫秒) */
+  execution_time_ms: number;
+  
+  /** 是否成功 */
+  success: boolean;
+  
+  /** 错误信息 */
+  error_message?: string;
+}
+```
+
+### Git集成示例
+```typescript
+/**
+ * Git CLI扩展实现
+ * 
+ * 集成Git命令行工具的具体实现。
+ */
+export class GitCLIExtension implements CLIExtension {
+  private config: ExtensionConfig;
+  private isInitialized = false;
+
+  async initialize(config: ExtensionConfig): Promise<InitializationResult> {
+    this.config = config;
+    
+    // 验证Git是否可用
+    const gitVersion = await this.executeCommand({
+      command_name: 'git',
+      arguments: ['--version'],
+      timeout_seconds: 10
+    });
+
+    if (!gitVersion.success) {
+      throw new Error('Git is not available on this system');
+    }
+
+    this.isInitialized = true;
+    
+    return {
+      success: true,
+      message: 'Git CLI extension initialized successfully',
+      version: gitVersion.stdout.trim()
+    };
+  }
+
+  async executeCommand(command: CLICommand): Promise<CLIExecutionResult> {
+    if (!this.isInitialized) {
+      throw new Error('Extension not initialized');
+    }
+
+    const startTime = Date.now();
+    
+    try {
+      // 构建完整命令
+      const fullCommand = ['git', ...command.arguments];
+      const options = this.buildCommandOptions(command);
+      
+      // 执行命令
+      const result = await this.execCommand(fullCommand, options);
+      
+      return {
+        exit_code: result.code || 0,
+        stdout: result.stdout,
+        stderr: result.stderr,
+        execution_time_ms: Date.now() - startTime,
+        success: result.code === 0,
+        error_message: result.code !== 0 ? result.stderr : undefined
+      };
+      
+    } catch (error) {
+      return {
+        exit_code: -1,
+        stdout: '',
+        stderr: error.message,
+        execution_time_ms: Date.now() - startTime,
+        success: false,
+        error_message: error.message
+      };
+    }
+  }
+
+  // Git特定方法
+  async cloneRepository(repoUrl: string, targetDir: string): Promise<CLIExecutionResult> {
+    return await this.executeCommand({
+      command_name: 'git',
+      arguments: ['clone', repoUrl, targetDir],
+      timeout_seconds: 300
+    });
+  }
+
+  async commitChanges(message: string, files?: string[]): Promise<CLIExecutionResult> {
+    if (files && files.length > 0) {
+      // 先添加文件
+      await this.executeCommand({
+        command_name: 'git',
+        arguments: ['add', ...files]
+      });
+    }
+
+    return await this.executeCommand({
+      command_name: 'git',
+      arguments: ['commit', '-m', message]
+    });
+  }
+}
+```
+
+## 🌐 API服务集成规范
+
+### API扩展接口
+```typescript
+/**
+ * API服务扩展接口
+ * 
+ * 用于集成REST API和GraphQL服务的扩展接口。
+ */
+interface APIExtension extends ExtensionLifecycle {
+  /**
+   * 发送HTTP请求
+   * 
+   * @param request API请求配置
+   * @returns Promise<APIResponse>
+   */
+  sendRequest(request: APIRequest): Promise<APIResponse>;
+  
+  /**
+   * 获取API文档
+   * 
+   * @returns Promise<APIDocumentation>
+   */
+  getAPIDocumentation(): Promise<APIDocumentation>;
+  
+  /**
+   * 验证API连接
+   * 
+   * @returns Promise<ConnectionStatus>
+   */
+  validateConnection(): Promise<ConnectionStatus>;
+}
+
+/**
+ * API请求配置
+ */
+interface APIRequest {
+  /** HTTP方法 */
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+  
+  /** 请求URL */
+  url: string;
+  
+  /** 请求头 */
+  headers?: Record<string, string>;
+  
+  /** 请求体 */
+  body?: unknown;
+  
+  /** 查询参数 */
+  query_params?: Record<string, string>;
+  
+  /** 超时时间(毫秒) */
+  timeout_ms?: number;
+  
+  /** 重试配置 */
+  retry_config?: RetryConfig;
+}
+
+/**
+ * API响应
+ */
+interface APIResponse {
+  /** HTTP状态码 */
+  status_code: number;
+  
+  /** 响应头 */
+  headers: Record<string, string>;
+  
+  /** 响应体 */
+  body: unknown;
+  
+  /** 响应时间(毫秒) */
+  response_time_ms: number;
+  
+  /** 是否成功 */
+  success: boolean;
+  
+  /** 错误信息 */
+  error_message?: string;
+}
+```
+
+### GitHub API集成示例
+```typescript
+/**
+ * GitHub API扩展实现
+ * 
+ * 集成GitHub REST API的具体实现。
+ */
+export class GitHubAPIExtension implements APIExtension {
+  private baseURL = 'https://api.github.com';
+  private apiToken: string;
+  private httpClient: HTTPClient;
+
+  async initialize(config: ExtensionConfig): Promise<InitializationResult> {
+    this.apiToken = config.authentication?.token;
+    if (!this.apiToken) {
+      throw new Error('GitHub API token is required');
+    }
+
+    this.httpClient = new HTTPClient({
+      baseURL: this.baseURL,
+      headers: {
+        'Authorization': `Bearer ${this.apiToken}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'User-Agent': 'MPLP-Extension/1.0.0'
+      }
+    });
+
+    // 验证API连接
+    const connectionStatus = await this.validateConnection();
+    if (!connectionStatus.connected) {
+      throw new Error('Failed to connect to GitHub API');
+    }
+
+    return {
+      success: true,
+      message: 'GitHub API extension initialized successfully'
+    };
+  }
+
+  async sendRequest(request: APIRequest): Promise<APIResponse> {
+    const startTime = Date.now();
+    
+    try {
+      const response = await this.httpClient.request({
+        method: request.method,
+        url: request.url,
+        headers: request.headers,
+        data: request.body,
+        params: request.query_params,
+        timeout: request.timeout_ms || 30000
+      });
+
+      return {
+        status_code: response.status,
+        headers: response.headers,
+        body: response.data,
+        response_time_ms: Date.now() - startTime,
+        success: response.status >= 200 && response.status < 300
+      };
+      
+    } catch (error) {
+      return {
+        status_code: error.response?.status || -1,
+        headers: error.response?.headers || {},
+        body: error.response?.data || null,
+        response_time_ms: Date.now() - startTime,
+        success: false,
+        error_message: error.message
+      };
+    }
+  }
+
+  // GitHub特定方法
+  async createRepository(repoConfig: GitHubRepositoryConfig): Promise<APIResponse> {
+    return await this.sendRequest({
+      method: 'POST',
+      url: '/user/repos',
+      body: {
+        name: repoConfig.name,
+        description: repoConfig.description,
+        private: repoConfig.isPrivate,
+        auto_init: repoConfig.autoInit
+      }
+    });
+  }
+
+  async createPullRequest(prConfig: GitHubPullRequestConfig): Promise<APIResponse> {
+    return await this.sendRequest({
+      method: 'POST',
+      url: `/repos/${prConfig.owner}/${prConfig.repo}/pulls`,
+      body: {
+        title: prConfig.title,
+        head: prConfig.head,
+        base: prConfig.base,
+        body: prConfig.description
+      }
+    });
+  }
+}
+```
+
+## 🔒 扩展安全管理
+
+### 安全验证机制
+```typescript
+/**
+ * 扩展安全验证器
+ * 
+ * 负责扩展的安全验证和权限管理。
+ */
+export class ExtensionSecurityValidator {
+  
+  /**
+   * 验证扩展安全性
+   */
+  async validateExtensionSecurity(
+    extension: ExtensionProtocol,
+    config: ExtensionConfig
+  ): Promise<SecurityValidationResult> {
+    const validationResults: SecurityCheckResult[] = [];
+    
+    // 1. 权限验证
+    const permissionCheck = await this.validatePermissions(extension, config);
+    validationResults.push(permissionCheck);
+    
+    // 2. 网络访问验证
+    const networkCheck = await this.validateNetworkAccess(extension, config);
+    validationResults.push(networkCheck);
+    
+    // 3. 数据访问验证
+    const dataCheck = await this.validateDataAccess(extension, config);
+    validationResults.push(dataCheck);
+    
+    // 4. 代码签名验证
+    const signatureCheck = await this.validateCodeSignature(extension);
+    validationResults.push(signatureCheck);
+    
+    const overallResult: SecurityValidationResult = {
+      overall_status: validationResults.every(r => r.passed) ? 'passed' : 'failed',
+      security_score: this.calculateSecurityScore(validationResults),
+      validation_results: validationResults,
+      recommendations: this.generateSecurityRecommendations(validationResults)
+    };
+    
+    return overallResult;
+  }
+
+  /**
+   * 验证扩展权限
+   */
+  private async validatePermissions(
+    extension: ExtensionProtocol,
+    config: ExtensionConfig
+  ): Promise<SecurityCheckResult> {
+    const requestedCapabilities = extension.capabilities;
+    const allowedCapabilities = config.settings.allowed_capabilities as string[];
+    
+    const unauthorizedCapabilities = requestedCapabilities.filter(
+      cap => !allowedCapabilities.includes(cap.capability_name)
+    );
+    
+    return {
+      check_name: 'permission_validation',
+      passed: unauthorizedCapabilities.length === 0,
+      severity: 'high',
+      message: unauthorizedCapabilities.length > 0 
+        ? `Unauthorized capabilities: ${unauthorizedCapabilities.map(c => c.capability_name).join(', ')}`
+        : 'All capabilities are authorized',
+      details: {
+        requested_capabilities: requestedCapabilities.map(c => c.capability_name),
+        allowed_capabilities: allowedCapabilities,
+        unauthorized_capabilities: unauthorizedCapabilities.map(c => c.capability_name)
+      }
+    };
+  }
+
+  /**
+   * 验证网络访问
+   */
+  private async validateNetworkAccess(
+    extension: ExtensionProtocol,
+    config: ExtensionConfig
+  ): Promise<SecurityCheckResult> {
+    const networkConfig = config.network;
+    if (!networkConfig) {
+      return {
+        check_name: 'network_access_validation',
+        passed: true,
+        severity: 'low',
+        message: 'No network access configured'
+      };
+    }
+
+    // 检查是否访问了被禁止的域名
+    const endpoints = extension.endpoints || [];
+    const forbiddenDomains = networkConfig.forbidden_domains || [];
+    
+    const violatingEndpoints = endpoints.filter(endpoint => 
+      forbiddenDomains.some(domain => endpoint.url.includes(domain))
+    );
+    
+    return {
+      check_name: 'network_access_validation',
+      passed: violatingEndpoints.length === 0,
+      severity: 'medium',
+      message: violatingEndpoints.length > 0 
+        ? `Access to forbidden domains detected`
+        : 'Network access validation passed',
+      details: {
+        violating_endpoints: violatingEndpoints.map(e => e.url),
+        forbidden_domains: forbiddenDomains
+      }
+    };
+  }
+}
+```
+
+### 扩展沙箱机制
+```typescript
+/**
+ * 扩展沙箱管理器
+ * 
+ * 提供扩展的隔离执行环境。
+ */
+export class ExtensionSandbox {
+  private sandboxes = new Map<string, SandboxEnvironment>();
+  
+  /**
+   * 创建扩展沙箱
+   */
+  async createSandbox(
+    extensionId: string,
+    config: SandboxConfig
+  ): Promise<SandboxEnvironment> {
+    const sandbox: SandboxEnvironment = {
+      sandbox_id: this.generateSandboxId(),
+      extension_id: extensionId,
+      resource_limits: config.resource_limits,
+      network_restrictions: config.network_restrictions,
+      file_system_access: config.file_system_access,
+      environment_variables: config.environment_variables,
+      created_at: new Date().toISOString(),
+      status: 'created'
+    };
+    
+    this.sandboxes.set(extensionId, sandbox);
+    
+    // 初始化沙箱环境
+    await this.initializeSandbox(sandbox);
+    
+    return sandbox;
+  }
+
+  /**
+   * 在沙箱中执行扩展操作
+   */
+  async executeInSandbox<T>(
+    extensionId: string,
+    operation: () => Promise<T>
+  ): Promise<T> {
+    const sandbox = this.sandboxes.get(extensionId);
+    if (!sandbox) {
+      throw new Error(`Sandbox not found for extension: ${extensionId}`);
+    }
+
+    // 设置资源监控
+    const resourceMonitor = this.startResourceMonitoring(sandbox);
+    
+    try {
+      // 在沙箱环境中执行操作
+      const result = await this.executeWithLimits(operation, sandbox.resource_limits);
+      
+      return result;
+      
+    } catch (error) {
+      // 记录沙箱执行错误
+      await this.recordSandboxError(sandbox, error);
+      throw error;
+      
+    } finally {
+      // 停止资源监控
+      resourceMonitor.stop();
+      
+      // 清理沙箱状态
+      await this.cleanupSandbox(sandbox);
+    }
+  }
+
+  /**
+   * 带资源限制的执行
+   */
+  private async executeWithLimits<T>(
+    operation: () => Promise<T>,
+    limits: ResourceLimits
+  ): Promise<T> {
+    return new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        reject(new Error(`Operation timeout: ${limits.max_execution_time_ms}ms`));
+      }, limits.max_execution_time_ms);
+
+      operation()
+        .then(result => {
+          clearTimeout(timeout);
+          resolve(result);
+        })
+        .catch(error => {
+          clearTimeout(timeout);
+          reject(error);
+        });
+    });
+  }
+}
+```
+
+## 📊 扩展监控与分析
+
+### 扩展性能监控
+```typescript
+/**
+ * 扩展性能监控器
+ * 
+ * 监控扩展的性能指标和健康状态。
+ */
+export class ExtensionMonitor {
+  
+  /**
+   * 收集扩展性能指标
+   */
+  async collectExtensionMetrics(extensionId: string): Promise<ExtensionMetrics> {
+    const extension = await this.getExtension(extensionId);
+    
+    const metrics: ExtensionMetrics = {
+      extension_id: extensionId,
+      timestamp: new Date().toISOString(),
+      uptime_seconds: this.calculateUptime(extension),
+      request_count: await this.getRequestCount(extensionId),
+      error_count: await this.getErrorCount(extensionId),
+      average_response_time_ms: await this.getAverageResponseTime(extensionId),
+      success_rate: await this.getSuccessRate(extensionId),
+      resource_usage: await this.getResourceUsage(extensionId),
+      health_status: await this.getHealthStatus(extensionId)
+    };
+    
+    return metrics;
+  }
+
+  /**
+   * 生成扩展性能报告
+   */
+  async generatePerformanceReport(
+    extensionId: string,
+    timeRange: TimeRange
+  ): Promise<ExtensionPerformanceReport> {
+    const metrics = await this.getMetricsHistory(extensionId, timeRange);
+    
+    const report: ExtensionPerformanceReport = {
+      extension_id: extensionId,
+      report_period: timeRange,
+      summary: {
+        total_requests: metrics.reduce((sum, m) => sum + m.request_count, 0),
+        total_errors: metrics.reduce((sum, m) => sum + m.error_count, 0),
+        average_uptime: this.calculateAverageUptime(metrics),
+        performance_trend: this.analyzePerformanceTrend(metrics)
+      },
+      detailed_metrics: metrics,
+      recommendations: this.generatePerformanceRecommendations(metrics)
+    };
+    
+    return report;
+  }
+}
+```
+
+## ✅ 扩展协议检查清单
+
+扩展开发前确认：
+- [ ] 扩展协议接口实现完整
+- [ ] 安全验证机制配置正确
+- [ ] 沙箱环境隔离有效
+- [ ] 性能监控指标收集
+- [ ] 错误处理机制完善
+- [ ] 文档和示例完整
+- [ ] 版本兼容性验证
+- [ ] 测试覆盖率充分
+
+---
+
+> **重要**: 扩展协议确保第三方工具安全、高效地集成到MPLP系统中，保持系统的稳定性和可扩展性。
+description:
+globs:
+alwaysApply: false
+---

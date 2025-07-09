@@ -1,0 +1,342 @@
+# MPLP 版本管理规则
+
+> **文件类型**: Always  
+> **适用范围**: 所有模块、协议、包版本管理  
+> **最后更新**: 2024-07-09
+
+## 📋 版本管理策略
+
+### SemVer 语义化版本
+MPLP项目严格遵循[语义化版本 2.0.0](https://semver.org/lang/zh-CN/)规范：
+
+```
+主版本号.次版本号.修订号 (MAJOR.MINOR.PATCH)
+```
+
+**版本号递增规则**：
+- **主版本号 (MAJOR)**: 不兼容的API修改
+- **次版本号 (MINOR)**: 向后兼容的功能性新增
+- **修订号 (PATCH)**: 向后兼容的问题修正
+
+### 先行版本标识
+```
+1.0.0-alpha.1     # Alpha版本
+1.0.0-beta.2      # Beta版本
+1.0.0-rc.1        # Release Candidate
+1.0.0             # 正式版本
+```
+
+## 🏗️ 模块版本管理
+
+### 核心模块版本同步
+所有6个核心模块保持版本同步：
+```json
+{
+  "@mplp/context": "1.0.0",
+  "@mplp/plan": "1.0.0",
+  "@mplp/confirm": "1.0.0",
+  "@mplp/trace": "1.0.0",
+  "@mplp/role": "1.0.0",
+  "@mplp/extension": "1.0.0"
+}
+```
+
+### 协议版本管理
+```typescript
+// 协议版本独立管理
+interface ProtocolVersion {
+  context: '1.0.0';      // Context协议版本
+  plan: '1.0.0';         // Plan协议版本
+  confirm: '1.0.0';      // Confirm协议版本
+  trace: '1.0.0';        // Trace协议版本
+  role: '1.0.0';         // Role协议版本
+  extension: '1.0.0';    // Extension协议版本
+}
+```
+
+### 版本兼容性矩阵
+```markdown
+| 协议版本 | 支持的客户端版本 | 状态 |
+|----------|------------------|------|
+| 1.0.x | 1.0.x | ✅ 当前支持 |
+| 1.1.x | 1.0.x, 1.1.x | 🔄 向后兼容 |
+| 2.0.x | 2.0.x | 🚫 破坏性变更 |
+```
+
+## 📊 版本号分配规则
+
+### 主版本号 (MAJOR) 变更
+触发条件：
+- 删除或重命名公共API
+- 修改现有字段的数据类型
+- 删除必填字段
+- 修改字段语义含义
+- 不兼容的协议格式变更
+
+```typescript
+// ❌ 主版本变更: 删除字段
+interface ContextProtocolV1 {
+  context_id: string;
+  version: string;
+  // deprecated_field: string;  // 删除字段
+}
+
+// ❌ 主版本变更: 修改字段类型
+interface ContextProtocolV2 {
+  context_id: string;
+  version: number;  // string -> number
+}
+```
+
+### 次版本号 (MINOR) 变更
+触发条件：
+- 新增可选字段
+- 新增API端点
+- 新增枚举值
+- 新增可选参数
+- 功能增强（向后兼容）
+
+```typescript
+// ✅ 次版本变更: 新增可选字段
+interface ContextProtocolV1_1 {
+  context_id: string;
+  version: string;
+  description?: string;  // 新增可选字段
+}
+
+// ✅ 次版本变更: 新增枚举值
+enum ContextStatus {
+  ACTIVE = 'active',
+  SUSPENDED = 'suspended',
+  TERMINATED = 'terminated',
+  ARCHIVED = 'archived'    // 新增枚举值
+}
+```
+
+### 修订号 (PATCH) 变更
+触发条件：
+- Bug修复
+- 文档更新
+- 代码重构（不影响API）
+- 性能优化
+- 安全修复
+
+```typescript
+// ✅ 修订版变更: 内部实现优化
+class ContextHandler {
+  public async createContext(data: CreateContextRequest): Promise<ContextProtocol> {
+    // 优化：改进验证逻辑，但API不变
+    const validationResult = this.optimizedValidator.validate(data);
+    // ...
+  }
+}
+```
+
+## 📝 变更日志格式
+
+### CHANGELOG.md 标准格式
+```markdown
+# Changelog
+
+所有重要变更都会记录在此文件中。
+
+格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)，
+并遵循 [语义化版本](https://semver.org/lang/zh-CN/) 规范。
+
+## [Unreleased]
+
+### Added
+- 新功能列表
+
+### Changed
+- 变更功能列表
+
+### Fixed
+- 修复bug列表
+
+## [1.2.0] - 2024-07-15
+
+### Added
+- Context模块支持批量操作API
+- 新增Extension模块热插拔功能
+- Plan模块支持条件分支执行
+
+### Changed
+- 优化Trace模块性能监控算法
+- 更新Role模块权限检查逻辑
+
+### Fixed
+- 修复Context状态同步问题
+- 解决Plan任务依赖循环检测bug
+
+### Security
+- 升级JWT库版本，修复安全漏洞
+
+## [1.1.0] - 2024-07-10
+
+### Added
+- Context模块新增共享状态管理
+- 新增API文档自动生成功能
+
+### Changed
+- 改进错误处理机制
+- 优化数据库查询性能
+
+### Fixed
+- 修复时间戳格式不一致问题
+
+## [1.0.0] - 2024-07-09
+
+### Added
+- 初始版本发布
+- 实现6个核心模块：Context, Plan, Confirm, Trace, Role, Extension
+- 完整的REST API和GraphQL支持
+- RBAC权限控制系统
+- 完备的测试覆盖率
+```
+
+### 变更类型分类
+- **Added**: 新增功能
+- **Changed**: 变更现有功能
+- **Deprecated**: 即将废弃的功能
+- **Removed**: 已移除的功能
+- **Fixed**: Bug修复
+- **Security**: 安全修复
+
+## 🏷️ Git标签管理
+
+### 标签命名规范
+```bash
+# 正式版本
+git tag v1.0.0
+git tag v1.1.0
+git tag v2.0.0
+
+# 预发布版本
+git tag v1.1.0-alpha.1
+git tag v1.1.0-beta.2
+git tag v1.1.0-rc.1
+
+# 模块特定版本
+git tag context/v1.0.0
+git tag plan/v1.1.0
+```
+
+### 标签创建流程
+```bash
+# 1. 确保在正确的提交点
+git checkout main
+git pull origin main
+
+# 2. 创建带注释的标签
+git tag -a v1.1.0 -m "Release version 1.1.0
+
+### Added
+- Context模块支持批量操作
+- 新增Extension模块热插拔功能
+
+### Fixed
+- 修复Context状态同步问题
+- 解决Plan任务依赖循环检测bug"
+
+# 3. 推送标签到远程
+git push origin v1.1.0
+```
+
+## 📦 包版本管理
+
+### package.json 版本配置
+```json
+{
+  "name": "@mplp/core",
+  "version": "1.0.0",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "dependencies": {
+    "@mplp/context": "^1.0.0",
+    "@mplp/plan": "^1.0.0",
+    "@mplp/confirm": "^1.0.0",
+    "@mplp/trace": "^1.0.0",
+    "@mplp/role": "^1.0.0",
+    "@mplp/extension": "^1.0.0"
+  }
+}
+```
+
+### NPM发布策略
+```bash
+# 开发版本发布
+npm publish --tag beta
+
+# 正式版本发布
+npm publish --tag latest
+
+# 查看版本历史
+npm view @mplp/core versions --json
+```
+
+## 🔄 版本升级策略
+
+### 自动版本号管理
+```bash
+# 修订版本 (1.0.0 -> 1.0.1)
+npm version patch
+
+# 次版本 (1.0.1 -> 1.1.0)
+npm version minor
+
+# 主版本 (1.1.0 -> 2.0.0)
+npm version major
+
+# 预发布版本 (1.1.0 -> 1.1.1-0)
+npm version prerelease
+```
+
+### 版本发布检查清单
+- [ ] 更新CHANGELOG.md
+- [ ] 通过所有测试
+- [ ] 更新文档版本号
+- [ ] 检查依赖版本兼容性
+- [ ] 创建Git标签
+- [ ] 发布NPM包
+- [ ] 更新README.md版本信息
+- [ ] 通知相关团队成员
+
+## 🔒 版本安全管理
+
+### 敏感版本处理
+```bash
+# 撤回有问题的版本
+npm unpublish @mplp/core@1.0.1
+
+# 废弃特定版本
+npm deprecate @mplp/core@1.0.1 "Security vulnerability fixed in 1.0.2"
+```
+
+### 漏洞版本响应
+1. **立即响应**: 发现安全漏洞后24小时内发布修复版本
+2. **版本废弃**: 立即废弃存在漏洞的版本
+3. **通知机制**: 通过GitHub、NPM、文档等渠道通知用户
+4. **升级指导**: 提供详细的升级指导文档
+
+## ✅ 版本管理检查清单
+
+发布新版本前确认：
+- [ ] 版本号符合SemVer规范
+- [ ] CHANGELOG.md已更新
+- [ ] 所有测试通过
+- [ ] 文档版本同步
+- [ ] Git标签已创建
+- [ ] 向后兼容性检查通过
+- [ ] 依赖项版本检查
+- [ ] 安全扫描通过
+
+---
+
+> **重要**: 严格遵循版本管理规范，确保项目的稳定性和可维护性。
+description:
+globs:
+alwaysApply: false
+---

@@ -1,0 +1,193 @@
+# MPLP 架构设计规则
+
+> **文件类型**: Always  
+> **适用范围**: 所有架构设计和模块开发  
+> **最后更新**: 2024-07-09
+
+## 🏗️ 核心架构原则
+
+### 6个核心模块边界
+```
+Context (上下文) ←→ Plan (规划) ←→ Confirm (确认)
+    ↓                ↓              ↓
+  Trace (追踪) ←→ Role (角色) ←→ Extension (扩展)
+```
+
+**严格模块边界**：
+- **Context模块**: 只负责环境状态、约束条件、目标设定
+- **Plan模块**: 只负责任务分解、步骤生成、依赖分析
+- **Confirm模块**: 只负责用户确认、授权流程、风险评估
+- **Trace模块**: 只负责执行记录、性能监控、历史追踪
+- **Role模块**: 只负责角色定义、权限控制、身份认证
+- **Extension模块**: 只负责扩展管理、插件加载、第三方集成
+
+### 协议层次结构
+```typescript
+// 协议层 (Protocol Layer)
+interface ProtocolBase {
+  version: string;           // 协议版本
+  timestamp: string;         // ISO 8601时间戳
+  context_id: string;        // 上下文关联ID
+  module_type: ModuleType;   // 模块类型标识
+}
+
+// 实现层 (Implementation Layer)
+interface ImplementationBase {
+  handler: ProtocolHandler<T>;
+  validator: SchemaValidator;
+  storage: DataRepository;
+  monitor: MetricsCollector;
+}
+
+// 应用层 (Application Layer)
+interface ApplicationBase {
+  service: BusinessService;
+  controller: ApiController;
+  middleware: SecurityMiddleware;
+}
+```
+
+## 📦 模块设计规范
+
+### 目录结构标准
+```
+src/
+├── modules/
+│   ├── context/
+│   │   ├── protocol/          # 协议定义
+│   │   ├── implementation/    # 实现层
+│   │   ├── application/       # 应用层
+│   │   └── tests/            # 测试文件
+│   ├── plan/
+│   ├── confirm/
+│   ├── trace/
+│   ├── role/
+│   └── extension/
+├── core/                      # 核心组件
+│   ├── protocol-engine/
+│   ├── schema-validator/
+│   └── security-manager/
+└── adapters/                  # 平台适配器
+    ├── tracepilot/
+    └── coregentis/
+```
+
+### 接口设计约束
+```typescript
+// ✅ 正确: 明确的模块接口
+interface ContextProtocol {
+  context_id: string;
+  version: string;
+  status: 'active' | 'suspended' | 'terminated';
+  shared_state: Record<string, unknown>;
+}
+
+// ❌ 错误: 跨模块职责混合
+interface ContextWithPlan {
+  context_id: string;
+  plans: PlanProtocol[];  // 违反模块边界
+}
+```
+
+## 🔌 依赖关系规范
+
+### 允许的依赖方向
+```
+Context → Core Components
+Plan → Context + Core Components  
+Confirm → Plan + Context + Core Components
+Trace → All Modules + Core Components
+Role → Core Components
+Extension → All Modules + Core Components
+```
+
+### 禁止的循环依赖
+- Plan不能直接依赖Confirm
+- Context不能依赖Plan或其他业务模块
+- 任何模块不能相互循环依赖
+
+## 🛠️ 技术栈约束
+
+### 后端架构
+- **框架**: Express.js 4.18+ (RESTful) + Apollo Server (GraphQL)
+- **数据库**: PostgreSQL 14+ (主库) + Redis 7+ (缓存)
+- **ORM**: TypeORM 0.3+ (类型安全)
+- **验证**: Ajv 8+ (JSON Schema) + Joi 17+ (数据验证)
+
+### API设计模式
+```typescript
+// REST API 模式
+GET    /api/v1/{module}/{resource}
+POST   /api/v1/{module}/{resource}
+PUT    /api/v1/{module}/{resource}/{id}
+DELETE /api/v1/{module}/{resource}/{id}
+
+// GraphQL 查询模式
+query GetContext($id: ID!) {
+  context(id: $id) {
+    contextId
+    version
+    status
+    sharedState
+  }
+}
+```
+
+## 📊 性能架构要求
+
+### 响应时间约束
+- **协议解析**: < 10ms
+- **API响应**: P95 < 100ms, P99 < 200ms
+- **数据库查询**: 简单查询 < 50ms, 复杂查询 < 200ms
+- **缓存命中**: < 5ms
+
+### 并发架构
+- **最大TPS**: > 10,000 (水平扩展)
+- **最大并发**: > 1000 用户
+- **连接池**: 最大100个数据库连接
+- **内存使用**: 单实例 < 512MB
+
+## 🔒 安全架构要求
+
+### 认证授权架构
+```typescript
+// JWT Token 结构
+interface JWTPayload {
+  sub: string;          // 用户ID
+  role: string[];       // 角色列表
+  permissions: string[]; // 权限列表
+  exp: number;          // 过期时间
+  iat: number;          // 签发时间
+}
+
+// RBAC 权限模型
+interface Permission {
+  resource: string;     // 资源类型
+  action: string;       // 操作类型
+  conditions?: object;  // 条件约束
+}
+```
+
+### 数据加密要求
+- **传输**: TLS 1.3强制加密
+- **存储**: 敏感字段AES-256加密
+- **缓存**: Redis密码保护 + TLS
+- **日志**: 敏感数据脱敏处理
+
+## ✅ 架构检查清单
+
+代码提交前必须确认：
+- [ ] 模块边界清晰，无跨模块职责混合
+- [ ] 接口设计符合协议规范
+- [ ] 依赖关系合理，无循环依赖
+- [ ] 性能要求达标
+- [ ] 安全要求满足
+- [ ] 文档同步更新
+
+---
+
+> **重要**: 违反架构规则的代码将无法通过Review，必须重构后重新提交。
+description:
+globs:
+alwaysApply: false
+---

@@ -1,0 +1,818 @@
+# MPLP 追踪生命周期规则
+
+> **文件类型**: Always  
+> **适用范围**: 所有Trace模块功能和生命周期管理  
+> **最后更新**: 2024-07-09
+
+## 🔍 追踪生命周期概览
+
+### 追踪数据层次
+```
+🎯 Execution Context (执行上下文)
+├── 📋 Operation Trace (操作追踪)
+├── 🔄 State Change (状态变更)
+├── ❌ Error Trace (错误追踪)
+├── 🔧 Compensation (补偿操作)
+└── 📊 Performance Metrics (性能指标)
+```
+
+### 生命周期阶段
+- **初始化**: 创建追踪会话，设置上下文
+- **执行**: 记录操作步骤，状态变更
+- **监控**: 实时性能和错误监控
+- **完成**: 生成执行报告，清理资源
+- **归档**: 持久化存储，数据分析
+
+## 📋 追踪数据结构
+
+### 核心追踪协议
+```typescript
+/**
+ * MPLP追踪协议接口
+ * 
+ * 定义系统中所有追踪记录的标准结构。
+ * 支持嵌套追踪、性能监控和错误处理。
+ */
+interface TraceProtocol extends BaseProtocol {
+  /** 追踪唯一标识符 */
+  trace_id: string;
+  
+  /** 父追踪ID，支持嵌套追踪 */
+  parent_trace_id?: string;
+  
+  /** 关联的上下文ID */
+  context_id: string;
+  
+  /** 追踪类型 */
+  trace_type: TraceType;
+  
+  /** 追踪状态 */
+  status: TraceStatus;
+  
+  /** 操作名称 */
+  operation_name: string;
+  
+  /** 开始时间戳 */
+  start_time: string;
+  
+  /** 结束时间戳 */
+  end_time?: string;
+  
+  /** 执行持续时间(毫秒) */
+  duration_ms?: number;
+  
+  /** 输入参数 */
+  input_data?: Record<string, unknown>;
+  
+  /** 输出结果 */
+  output_data?: Record<string, unknown>;
+  
+  /** 错误信息 */
+  error_info?: ErrorInfo;
+  
+  /** 性能指标 */
+  performance_metrics: PerformanceMetrics;
+  
+  /** 补偿操作记录 */
+  compensation_actions?: CompensationAction[];
+  
+  /** 标签和元数据 */
+  tags: Record<string, string>;
+}
+
+/**
+ * 追踪类型枚举
+ */
+enum TraceType {
+  OPERATION = 'operation',      // 操作追踪
+  STATE_CHANGE = 'state_change', // 状态变更
+  ERROR = 'error',              // 错误追踪
+  COMPENSATION = 'compensation', // 补偿操作
+  PERFORMANCE = 'performance'   // 性能追踪
+}
+
+/**
+ * 追踪状态枚举
+ */
+enum TraceStatus {
+  STARTED = 'started',        // 已开始
+  RUNNING = 'running',        // 执行中
+  COMPLETED = 'completed',    // 已完成
+  FAILED = 'failed',          // 失败
+  CANCELLED = 'cancelled',    // 已取消
+  COMPENSATED = 'compensated' // 已补偿
+}
+```
+
+### 性能指标结构
+```typescript
+/**
+ * 性能指标接口
+ */
+interface PerformanceMetrics {
+  /** CPU使用率 (%) */
+  cpu_usage: number;
+  
+  /** 内存使用量 (MB) */
+  memory_usage_mb: number;
+  
+  /** 网络IO (字节) */
+  network_io_bytes: number;
+  
+  /** 磁盘IO (字节) */
+  disk_io_bytes: number;
+  
+  /** 数据库查询次数 */
+  db_query_count: number;
+  
+  /** 数据库查询总时间 (ms) */
+  db_query_time_ms: number;
+  
+  /** API调用次数 */
+  api_call_count: number;
+  
+  /** API调用总时间 (ms) */
+  api_call_time_ms: number;
+  
+  /** 自定义指标 */
+  custom_metrics: Record<string, number>;
+}
+
+/**
+ * 错误信息接口
+ */
+interface ErrorInfo {
+  /** 错误类型 */
+  error_type: string;
+  
+  /** 错误代码 */
+  error_code: string;
+  
+  /** 错误消息 */
+  error_message: string;
+  
+  /** 错误堆栈 */
+  stack_trace?: string;
+  
+  /** 错误发生时间 */
+  error_timestamp: string;
+  
+  /** 错误严重级别 */
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  
+  /** 相关上下文数据 */
+  context_data?: Record<string, unknown>;
+}
+```
+
+## 🎯 追踪执行管理
+
+### 追踪会话管理
+```typescript
+/**
+ * 追踪会话管理器
+ * 
+ * 管理追踪会话的完整生命周期，提供统一的追踪接口。
+ */
+export class TraceSessionManager {
+  private activeSessions = new Map<string, TraceSession>();
+  private metricsCollector: MetricsCollector;
+  private storage: TraceStorage;
+
+  /**
+   * 开始新的追踪会话
+   */
+  public async startTrace(
+    contextId: string,
+    operationName: string,
+    input?: Record<string, unknown>
+  ): Promise<TraceSession> {
+    const traceId = this.generateTraceId();
+    
+    const trace: TraceProtocol = {
+      trace_id: traceId,
+      context_id: contextId,
+      version: '1.0.0',
+      timestamp: new Date().toISOString(),
+      trace_type: TraceType.OPERATION,
+      status: TraceStatus.STARTED,
+      operation_name: operationName,
+      start_time: new Date().toISOString(),
+      input_data: input,
+      performance_metrics: this.initializeMetrics(),
+      tags: {}
+    };
+
+    const session = new TraceSession(trace, this.metricsCollector);
+    this.activeSessions.set(traceId, session);
+    
+    // 持久化初始追踪记录
+    await this.storage.saveTrace(trace);
+    
+    return session;
+  }
+
+  /**
+   * 完成追踪会话
+   */
+  public async completeTrace(
+    traceId: string,
+    output?: Record<string, unknown>
+  ): Promise<void> {
+    const session = this.activeSessions.get(traceId);
+    if (!session) {
+      throw new Error(`Trace session not found: ${traceId}`);
+    }
+
+    const endTime = new Date().toISOString();
+    const startTime = new Date(session.trace.start_time);
+    const duration = Date.now() - startTime.getTime();
+
+    // 更新追踪记录
+    session.trace.end_time = endTime;
+    session.trace.duration_ms = duration;
+    session.trace.output_data = output;
+    session.trace.status = TraceStatus.COMPLETED;
+    
+    // 收集最终性能指标
+    session.trace.performance_metrics = await this.metricsCollector.collect();
+
+    // 持久化完成的追踪记录
+    await this.storage.updateTrace(session.trace);
+    
+    // 清理会话
+    this.activeSessions.delete(traceId);
+  }
+
+  /**
+   * 记录追踪失败
+   */
+  public async failTrace(
+    traceId: string,
+    error: Error
+  ): Promise<void> {
+    const session = this.activeSessions.get(traceId);
+    if (!session) {
+      throw new Error(`Trace session not found: ${traceId}`);
+    }
+
+    const errorInfo: ErrorInfo = {
+      error_type: error.constructor.name,
+      error_code: (error as any).code || 'UNKNOWN_ERROR',
+      error_message: error.message,
+      stack_trace: error.stack,
+      error_timestamp: new Date().toISOString(),
+      severity: this.determineErrorSeverity(error),
+      context_data: {
+        operation: session.trace.operation_name,
+        input: session.trace.input_data
+      }
+    };
+
+    session.trace.error_info = errorInfo;
+    session.trace.status = TraceStatus.FAILED;
+    session.trace.end_time = new Date().toISOString();
+    
+    // 持久化错误追踪记录
+    await this.storage.updateTrace(session.trace);
+    
+    // 触发错误处理流程
+    await this.triggerErrorHandling(session.trace);
+    
+    this.activeSessions.delete(traceId);
+  }
+}
+```
+
+### 状态变更追踪
+```typescript
+/**
+ * 状态变更追踪器
+ * 
+ * 记录系统中所有重要的状态变更，支持回滚和审计。
+ */
+export class StateChangeTracker {
+  
+  /**
+   * 记录状态变更
+   */
+  public async recordStateChange(
+    contextId: string,
+    entityType: string,
+    entityId: string,
+    oldState: Record<string, unknown>,
+    newState: Record<string, unknown>,
+    changeReason?: string
+  ): Promise<void> {
+    const trace: TraceProtocol = {
+      trace_id: this.generateTraceId(),
+      context_id: contextId,
+      version: '1.0.0',
+      timestamp: new Date().toISOString(),
+      trace_type: TraceType.STATE_CHANGE,
+      status: TraceStatus.COMPLETED,
+      operation_name: `${entityType}_state_change`,
+      start_time: new Date().toISOString(),
+      end_time: new Date().toISOString(),
+      duration_ms: 0,
+      input_data: {
+        entity_type: entityType,
+        entity_id: entityId,
+        old_state: oldState,
+        new_state: newState,
+        change_reason: changeReason
+      },
+      performance_metrics: {
+        cpu_usage: 0,
+        memory_usage_mb: 0,
+        network_io_bytes: 0,
+        disk_io_bytes: 0,
+        db_query_count: 1,
+        db_query_time_ms: 0,
+        api_call_count: 0,
+        api_call_time_ms: 0,
+        custom_metrics: {}
+      },
+      tags: {
+        entity_type: entityType,
+        entity_id: entityId,
+        change_type: 'state_update'
+      }
+    };
+
+    await this.storage.saveTrace(trace);
+    
+    // 发送状态变更事件
+    await this.eventBus.publish('state_changed', {
+      trace_id: trace.trace_id,
+      entity_type: entityType,
+      entity_id: entityId,
+      old_state: oldState,
+      new_state: newState
+    });
+  }
+
+  /**
+   * 获取状态变更历史
+   */
+  public async getStateHistory(
+    entityType: string,
+    entityId: string,
+    limit: number = 100
+  ): Promise<TraceProtocol[]> {
+    return await this.storage.findTraces({
+      trace_type: TraceType.STATE_CHANGE,
+      tags: {
+        entity_type: entityType,
+        entity_id: entityId
+      }
+    }, limit);
+  }
+}
+```
+
+## ❌ 错误追踪与处理
+
+### 错误追踪管理
+```typescript
+/**
+ * 错误追踪管理器
+ * 
+ * 统一管理系统中的错误追踪、分析和处理。
+ */
+export class ErrorTracker {
+  
+  /**
+   * 记录错误追踪
+   */
+  public async recordError(
+    contextId: string,
+    error: Error,
+    operationName: string,
+    additionalContext?: Record<string, unknown>
+  ): Promise<string> {
+    const traceId = this.generateTraceId();
+    
+    const errorInfo: ErrorInfo = {
+      error_type: error.constructor.name,
+      error_code: (error as any).code || 'UNKNOWN_ERROR',
+      error_message: error.message,
+      stack_trace: error.stack,
+      error_timestamp: new Date().toISOString(),
+      severity: this.determineErrorSeverity(error),
+      context_data: additionalContext
+    };
+
+    const trace: TraceProtocol = {
+      trace_id: traceId,
+      context_id: contextId,
+      version: '1.0.0',
+      timestamp: new Date().toISOString(),
+      trace_type: TraceType.ERROR,
+      status: TraceStatus.FAILED,
+      operation_name: operationName,
+      start_time: new Date().toISOString(),
+      end_time: new Date().toISOString(),
+      duration_ms: 0,
+      error_info: errorInfo,
+      performance_metrics: await this.metricsCollector.collect(),
+      tags: {
+        error_type: errorInfo.error_type,
+        error_code: errorInfo.error_code,
+        severity: errorInfo.severity
+      }
+    };
+
+    await this.storage.saveTrace(trace);
+    
+    // 触发错误分析
+    await this.analyzeError(trace);
+    
+    // 发送错误告警
+    if (errorInfo.severity === 'high' || errorInfo.severity === 'critical') {
+      await this.alertManager.sendAlert(trace);
+    }
+    
+    return traceId;
+  }
+
+  /**
+   * 错误模式分析
+   */
+  private async analyzeError(trace: TraceProtocol): Promise<void> {
+    // 查找相似错误
+    const similarErrors = await this.findSimilarErrors(trace);
+    
+    // 检查错误频率
+    const errorFrequency = await this.calculateErrorFrequency(
+      trace.error_info!.error_type,
+      trace.context_id
+    );
+    
+    // 更新错误统计
+    await this.updateErrorStatistics(trace);
+    
+    // 如果发现错误模式，触发自动修复
+    if (similarErrors.length > 5 && errorFrequency > 0.1) {
+      await this.triggerAutoRecovery(trace);
+    }
+  }
+
+  /**
+   * 错误严重程度判断
+   */
+  private determineErrorSeverity(error: Error): 'low' | 'medium' | 'high' | 'critical' {
+    // 根据错误类型判断严重程度
+    if (error instanceof DatabaseConnectionError) {
+      return 'critical';
+    }
+    if (error instanceof AuthenticationError) {
+      return 'high';
+    }
+    if (error instanceof ValidationError) {
+      return 'medium';
+    }
+    return 'low';
+  }
+}
+```
+
+## 🔧 补偿操作管理
+
+### 补偿动作定义
+```typescript
+/**
+ * 补偿操作接口
+ */
+interface CompensationAction {
+  /** 补偿动作ID */
+  action_id: string;
+  
+  /** 补偿类型 */
+  compensation_type: CompensationType;
+  
+  /** 补偿动作名称 */
+  action_name: string;
+  
+  /** 补偿逻辑 */
+  compensation_logic: CompensationLogic;
+  
+  /** 执行状态 */
+  execution_status: 'pending' | 'executing' | 'completed' | 'failed';
+  
+  /** 执行时间 */
+  execution_time?: string;
+  
+  /** 执行结果 */
+  execution_result?: Record<string, unknown>;
+  
+  /** 重试配置 */
+  retry_config: RetryConfig;
+}
+
+/**
+ * 补偿类型枚举
+ */
+enum CompensationType {
+  ROLLBACK = 'rollback',        // 回滚操作
+  RETRY = 'retry',              // 重试操作
+  ALTERNATIVE = 'alternative',   // 替代方案
+  MANUAL = 'manual',            // 手动干预
+  IGNORE = 'ignore'             // 忽略错误
+}
+
+/**
+ * 补偿逻辑接口
+ */
+interface CompensationLogic {
+  /** 触发条件 */
+  trigger_conditions: TriggerCondition[];
+  
+  /** 执行步骤 */
+  execution_steps: ExecutionStep[];
+  
+  /** 验证规则 */
+  validation_rules: ValidationRule[];
+}
+```
+
+### 补偿执行引擎
+```typescript
+/**
+ * 补偿执行引擎
+ * 
+ * 负责执行补偿操作，确保系统在失败时能够正确恢复。
+ */
+export class CompensationEngine {
+  
+  /**
+   * 执行补偿操作
+   */
+  public async executeCompensation(
+    traceId: string,
+    compensationActions: CompensationAction[]
+  ): Promise<void> {
+    const compensationTrace = await this.createCompensationTrace(traceId);
+    
+    try {
+      for (const action of compensationActions) {
+        await this.executeCompensationAction(action, compensationTrace);
+      }
+      
+      // 更新补偿追踪状态
+      compensationTrace.status = TraceStatus.COMPLETED;
+      await this.storage.updateTrace(compensationTrace);
+      
+    } catch (error) {
+      // 补偿失败，记录错误并触发人工干预
+      compensationTrace.status = TraceStatus.FAILED;
+      compensationTrace.error_info = {
+        error_type: error.constructor.name,
+        error_code: 'COMPENSATION_FAILED',
+        error_message: error.message,
+        error_timestamp: new Date().toISOString(),
+        severity: 'critical'
+      };
+      
+      await this.storage.updateTrace(compensationTrace);
+      await this.triggerManualIntervention(compensationTrace);
+    }
+  }
+
+  /**
+   * 执行单个补偿动作
+   */
+  private async executeCompensationAction(
+    action: CompensationAction,
+    trace: TraceProtocol
+  ): Promise<void> {
+    action.execution_status = 'executing';
+    action.execution_time = new Date().toISOString();
+    
+    let retryCount = 0;
+    const maxRetries = action.retry_config.max_attempts;
+    
+    while (retryCount <= maxRetries) {
+      try {
+        // 执行补偿逻辑
+        const result = await this.executeCompensationLogic(action.compensation_logic);
+        
+        action.execution_status = 'completed';
+        action.execution_result = result;
+        
+        // 记录成功的补偿操作
+        await this.recordCompensationSuccess(action, trace);
+        return;
+        
+      } catch (error) {
+        retryCount++;
+        
+        if (retryCount > maxRetries) {
+          action.execution_status = 'failed';
+          throw new Error(`Compensation action failed after ${maxRetries} retries: ${error.message}`);
+        }
+        
+        // 等待重试间隔
+        await this.sleep(action.retry_config.retry_interval_ms);
+      }
+    }
+  }
+
+  /**
+   * 执行补偿逻辑
+   */
+  private async executeCompensationLogic(
+    logic: CompensationLogic
+  ): Promise<Record<string, unknown>> {
+    const result: Record<string, unknown> = {};
+    
+    for (const step of logic.execution_steps) {
+      const stepResult = await this.executeStep(step);
+      result[step.step_name] = stepResult;
+    }
+    
+    // 验证补偿结果
+    for (const rule of logic.validation_rules) {
+      if (!await this.validateRule(rule, result)) {
+        throw new Error(`Validation failed: ${rule.rule_name}`);
+      }
+    }
+    
+    return result;
+  }
+}
+```
+
+## 📊 性能监控与分析
+
+### 性能指标收集
+```typescript
+/**
+ * 性能指标收集器
+ * 
+ * 实时收集系统性能数据，为追踪提供详细的性能信息。
+ */
+export class MetricsCollector {
+  private startTime: number;
+  private initialMetrics: PerformanceMetrics;
+  
+  /**
+   * 开始性能监控
+   */
+  public startMonitoring(): void {
+    this.startTime = Date.now();
+    this.initialMetrics = this.getCurrentMetrics();
+  }
+
+  /**
+   * 收集当前性能指标
+   */
+  public async collect(): Promise<PerformanceMetrics> {
+    const currentMetrics = this.getCurrentMetrics();
+    
+    return {
+      cpu_usage: currentMetrics.cpu_usage,
+      memory_usage_mb: currentMetrics.memory_usage_mb,
+      network_io_bytes: currentMetrics.network_io_bytes - this.initialMetrics.network_io_bytes,
+      disk_io_bytes: currentMetrics.disk_io_bytes - this.initialMetrics.disk_io_bytes,
+      db_query_count: this.dbQueryCounter.getCount(),
+      db_query_time_ms: this.dbQueryCounter.getTotalTime(),
+      api_call_count: this.apiCallCounter.getCount(),
+      api_call_time_ms: this.apiCallCounter.getTotalTime(),
+      custom_metrics: this.customMetrics.getAll()
+    };
+  }
+
+  /**
+   * 获取当前系统指标
+   */
+  private getCurrentMetrics(): PerformanceMetrics {
+    const usage = process.cpuUsage();
+    const memUsage = process.memoryUsage();
+    
+    return {
+      cpu_usage: this.calculateCpuUsage(usage),
+      memory_usage_mb: memUsage.heapUsed / 1024 / 1024,
+      network_io_bytes: this.getNetworkIO(),
+      disk_io_bytes: this.getDiskIO(),
+      db_query_count: 0,
+      db_query_time_ms: 0,
+      api_call_count: 0,
+      api_call_time_ms: 0,
+      custom_metrics: {}
+    };
+  }
+}
+```
+
+### 追踪数据分析
+```typescript
+/**
+ * 追踪数据分析器
+ * 
+ * 分析追踪数据，提供性能洞察和优化建议。
+ */
+export class TraceAnalyzer {
+  
+  /**
+   * 分析操作性能
+   */
+  public async analyzePerformance(
+    contextId: string,
+    timeRange: TimeRange
+  ): Promise<PerformanceAnalysis> {
+    const traces = await this.storage.findTraces({
+      context_id: contextId,
+      timestamp_range: timeRange
+    });
+
+    const analysis: PerformanceAnalysis = {
+      total_operations: traces.length,
+      success_rate: this.calculateSuccessRate(traces),
+      average_duration: this.calculateAverageDuration(traces),
+      p95_duration: this.calculatePercentile(traces, 95),
+      p99_duration: this.calculatePercentile(traces, 99),
+      error_patterns: this.analyzeErrorPatterns(traces),
+      performance_trends: this.analyzePerformanceTrends(traces),
+      bottlenecks: this.identifyBottlenecks(traces),
+      recommendations: this.generateRecommendations(traces)
+    };
+
+    return analysis;
+  }
+
+  /**
+   * 识别性能瓶颈
+   */
+  private identifyBottlenecks(traces: TraceProtocol[]): Bottleneck[] {
+    const bottlenecks: Bottleneck[] = [];
+    
+    // 分析数据库查询性能
+    const dbBottlenecks = this.analyzeDatabaseBottlenecks(traces);
+    bottlenecks.push(...dbBottlenecks);
+    
+    // 分析API调用性能
+    const apiBottlenecks = this.analyzeAPIBottlenecks(traces);
+    bottlenecks.push(...apiBottlenecks);
+    
+    // 分析内存使用
+    const memoryBottlenecks = this.analyzeMemoryBottlenecks(traces);
+    bottlenecks.push(...memoryBottlenecks);
+    
+    return bottlenecks;
+  }
+
+  /**
+   * 生成优化建议
+   */
+  private generateRecommendations(traces: TraceProtocol[]): Recommendation[] {
+    const recommendations: Recommendation[] = [];
+    
+    // 基于错误模式的建议
+    const errorPatterns = this.analyzeErrorPatterns(traces);
+    for (const pattern of errorPatterns) {
+      if (pattern.frequency > 0.05) {
+        recommendations.push({
+          type: 'error_handling',
+          priority: 'high',
+          description: `Frequent ${pattern.error_type} errors detected`,
+          action: `Implement better error handling for ${pattern.error_type}`
+        });
+      }
+    }
+    
+    // 基于性能的建议
+    const avgDuration = this.calculateAverageDuration(traces);
+    if (avgDuration > 1000) {
+      recommendations.push({
+        type: 'performance',
+        priority: 'medium',
+        description: 'Average operation duration exceeds 1 second',
+        action: 'Consider implementing caching or optimizing database queries'
+      });
+    }
+    
+    return recommendations;
+  }
+}
+```
+
+## ✅ 追踪生命周期检查清单
+
+追踪实现前确认：
+- [ ] 追踪数据结构设计合理
+- [ ] 性能指标收集完整
+- [ ] 错误追踪机制完善
+- [ ] 补偿操作逻辑正确
+- [ ] 状态变更记录准确
+- [ ] 数据存储策略高效
+- [ ] 分析功能实用有效
+- [ ] 告警机制响应及时
+
+---
+
+> **重要**: 追踪生命周期管理是系统可观测性的核心，确保所有关键操作都被准确记录和分析。
+description:
+globs:
+alwaysApply: false
+---

@@ -1,0 +1,492 @@
+# MPLP Pre-commit 检查规则
+
+> **文件类型**: Auto  
+> **适用范围**: 所有代码提交前的自动化检查  
+> **最后更新**: 2024-07-09
+
+## 🔍 Pre-commit 检查概览
+
+### 检查项目清单
+- **代码质量**: ESLint、TypeScript检查、Prettier格式化
+- **测试验证**: 单元测试、集成测试、覆盖率检查
+- **安全扫描**: 依赖漏洞、敏感信息检查
+- **文档检查**: Markdown lint、拼写检查
+- **提交规范**: 提交信息格式、文件大小限制
+
+## 🛠️ 工具配置
+
+### husky + lint-staged 配置
+```json
+{
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-push": "npm run test:ci"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write",
+      "npm run test:affected"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ],
+    "*.md": [
+      "markdownlint --fix",
+      "cspell"
+    ],
+    "package*.json": [
+      "npm audit --audit-level=moderate"
+    ]
+  }
+}
+```
+
+## 📝 代码质量检查
+
+### ESLint 配置
+```typescript
+// .eslintrc.js
+module.exports = {
+  extends: [
+    '@typescript-eslint/recommended',
+    '@typescript-eslint/recommended-requiring-type-checking',
+    'prettier'
+  ],
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    project: './tsconfig.json',
+    tsconfigRootDir: __dirname,
+    sourceType: 'module'
+  },
+  rules: {
+    // MPLP 特定规则
+    '@typescript-eslint/no-explicit-any': 'error',
+    '@typescript-eslint/no-unused-vars': 'error',
+    '@typescript-eslint/explicit-function-return-type': 'warn',
+    '@typescript-eslint/no-floating-promises': 'error',
+    '@typescript-eslint/strict-boolean-expressions': 'error',
+    
+    // 命名约定检查
+    '@typescript-eslint/naming-convention': [
+      'error',
+      {
+        selector: 'interface',
+        format: ['PascalCase'],
+        suffix: ['Protocol', 'Request', 'Response', 'Config']
+      },
+      {
+        selector: 'typeAlias',
+        format: ['PascalCase']
+      },
+      {
+        selector: 'enum',
+        format: ['PascalCase']
+      },
+      {
+        selector: 'enumMember',
+        format: ['UPPER_CASE']
+      }
+    ],
+    
+    // 导入规则
+    'import/order': [
+      'error',
+      {
+        groups: [
+          'builtin',
+          'external',
+          'internal',
+          'parent',
+          'sibling',
+          'index'
+        ],
+        'newlines-between': 'always',
+        alphabetize: {
+          order: 'asc',
+          caseInsensitive: true
+        }
+      }
+    ]
+  }
+};
+```
+
+### TypeScript 检查配置
+```json
+{
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts"]
+}
+```
+
+### Prettier 配置
+```json
+{
+  "semi": true,
+  "trailingComma": "es5",
+  "singleQuote": true,
+  "printWidth": 80,
+  "tabWidth": 2,
+  "useTabs": false,
+  "bracketSpacing": true,
+  "arrowParens": "avoid"
+}
+```
+
+## 🧪 测试验证
+
+### Jest 测试配置
+```javascript
+// jest.config.js
+module.exports = {
+  preset: 'ts-jest',
+  testEnvironment: 'node',
+  roots: ['<rootDir>/src'],
+  testMatch: [
+    '**/__tests__/**/*.test.ts',
+    '**/?(*.)+(spec|test).ts'
+  ],
+  collectCoverageFrom: [
+    'src/**/*.ts',
+    '!src/**/*.d.ts',
+    '!src/**/*.test.ts',
+    '!src/tests/**/*'
+  ],
+  coverageThreshold: {
+    global: {
+      branches: 80,
+      functions: 90,
+      lines: 90,
+      statements: 90
+    },
+    // 模块特定覆盖率要求
+    'src/modules/context/**/*.ts': {
+      branches: 90,
+      functions: 95,
+      lines: 95,
+      statements: 95
+    }
+  },
+  setupFilesAfterEnv: ['<rootDir>/src/tests/setup.ts']
+};
+```
+
+### 测试脚本
+```bash
+#!/bin/bash
+# scripts/run-tests.sh
+
+echo "🧪 Running MPLP tests..."
+
+# 1. 单元测试
+echo "📋 Running unit tests..."
+npm run test:unit || exit 1
+
+# 2. 集成测试
+echo "🔗 Running integration tests..."
+npm run test:integration || exit 1
+
+# 3. 覆盖率检查
+echo "📊 Checking coverage..."
+npm run test:coverage || exit 1
+
+# 4. 性能测试
+echo "⚡ Running performance tests..."
+npm run test:performance || exit 1
+
+echo "✅ All tests passed!"
+```
+
+## 🔒 安全检查
+
+### npm audit 配置
+```bash
+#!/bin/bash
+# scripts/security-check.sh
+
+echo "🔒 Running security checks..."
+
+# 1. 依赖漏洞扫描
+echo "🔍 Scanning dependencies..."
+npm audit --audit-level=moderate || {
+  echo "❌ Security vulnerabilities found!"
+  npm audit fix --force
+  exit 1
+}
+
+# 2. 敏感信息检查
+echo "🕵️ Checking for sensitive information..."
+if grep -r "password\|secret\|token\|key" src/ --exclude-dir=tests; then
+  echo "⚠️ Potential sensitive information found!"
+  exit 1
+fi
+
+# 3. 环境变量检查
+echo "🌍 Validating environment variables..."
+if grep -r "process\.env\." src/ | grep -v "NODE_ENV\|DB_HOST\|DB_PORT"; then
+  echo "⚠️ Hardcoded environment variables found!"
+  exit 1
+fi
+
+echo "✅ Security checks passed!"
+```
+
+### secrets 检测配置
+```yaml
+# .pre-commit-config.yaml
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: detect-private-key
+      - id: detect-aws-credentials
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+      
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        args: ['--baseline', '.secrets.baseline']
+```
+
+## 📚 文档检查
+
+### Markdown lint 配置
+```json
+{
+  "MD013": false,
+  "MD033": {
+    "allowed_elements": ["br", "details", "summary"]
+  },
+  "MD041": false,
+  "MD024": {
+    "allow_different_nesting": true
+  }
+}
+```
+
+### 拼写检查配置
+```json
+{
+  "version": "0.2",
+  "language": "en,zh-CN",
+  "words": [
+    "MPLP",
+    "TracePilot",
+    "Coregentis",
+    "GraphQL",
+    "PostgreSQL",
+    "TypeScript",
+    "ESLint",
+    "APIs",
+    "UUID",
+    "JWT",
+    "RBAC",
+    "SemVer"
+  ],
+  "dictionaries": [
+    "typescript",
+    "node",
+    "npm",
+    "software-terms",
+    "companies"
+  ],
+  "ignorePaths": [
+    "node_modules/**",
+    "dist/**",
+    "*.log"
+  ]
+}
+```
+
+## 🚀 性能检查
+
+### Bundle size 检查
+```javascript
+// scripts/bundle-check.js
+const fs = require('fs');
+const path = require('path');
+
+const MAX_BUNDLE_SIZE = 500 * 1024; // 500KB
+
+function checkBundleSize() {
+  const distPath = path.join(__dirname, '../dist');
+  const files = fs.readdirSync(distPath);
+  
+  for (const file of files) {
+    if (file.endsWith('.js')) {
+      const filePath = path.join(distPath, file);
+      const stats = fs.statSync(filePath);
+      
+      if (stats.size > MAX_BUNDLE_SIZE) {
+        console.error(`❌ Bundle ${file} exceeds size limit: ${stats.size} bytes`);
+        process.exit(1);
+      }
+    }
+  }
+  
+  console.log('✅ Bundle size check passed');
+}
+
+checkBundleSize();
+```
+
+### API性能测试
+```typescript
+// src/tests/performance/api-performance.test.ts
+import { performance } from 'perf_hooks';
+import request from 'supertest';
+import { app } from '../../app';
+
+describe('API Performance Tests', () => {
+  test('Context API response time < 100ms', async () => {
+    const start = performance.now();
+    
+    await request(app)
+      .get('/api/v1/contexts')
+      .expect(200);
+    
+    const duration = performance.now() - start;
+    expect(duration).toBeLessThan(100);
+  });
+  
+  test('Plan creation < 200ms', async () => {
+    const start = performance.now();
+    
+    await request(app)
+      .post('/api/v1/plans')
+      .send({
+        name: 'Test Plan',
+        context_id: 'test-context-id'
+      })
+      .expect(201);
+    
+    const duration = performance.now() - start;
+    expect(duration).toBeLessThan(200);
+  });
+});
+```
+
+## 📊 Git检查
+
+### 提交文件检查
+```bash
+#!/bin/bash
+# scripts/git-checks.sh
+
+echo "📋 Running Git checks..."
+
+# 1. 文件大小检查
+large_files=$(git diff --cached --name-only | xargs ls -la | awk '$5 > 1048576')
+if [ -n "$large_files" ]; then
+  echo "❌ Large files detected (>1MB):"
+  echo "$large_files"
+  exit 1
+fi
+
+# 2. 敏感文件检查
+sensitive_patterns=("*.key" "*.pem" "*.p12" ".env")
+for pattern in "${sensitive_patterns[@]}"; do
+  if git diff --cached --name-only | grep -q "$pattern"; then
+    echo "❌ Sensitive file pattern detected: $pattern"
+    exit 1
+  fi
+done
+
+# 3. 分支命名检查
+current_branch=$(git branch --show-current)
+if [[ ! $current_branch =~ ^(feature|fix|hotfix|release)/.+ ]]; then
+  echo "⚠️ Branch name should follow pattern: feature/*, fix/*, hotfix/*, release/*"
+fi
+
+echo "✅ Git checks passed!"
+```
+
+## 🔄 自动修复
+
+### 自动格式化脚本
+```bash
+#!/bin/bash
+# scripts/auto-fix.sh
+
+echo "🔧 Running auto-fix..."
+
+# 1. 代码格式化
+echo "✨ Formatting code..."
+npx prettier --write "src/**/*.{ts,js,json,md}"
+
+# 2. ESLint 自动修复
+echo "🔍 Fixing ESLint issues..."
+npx eslint "src/**/*.ts" --fix
+
+# 3. 导入排序
+echo "📦 Organizing imports..."
+npx organize-imports-cli "src/**/*.ts"
+
+# 4. Markdown 格式化
+echo "📝 Formatting Markdown..."
+npx markdownlint --fix "**/*.md"
+
+echo "✅ Auto-fix completed!"
+```
+
+## ✅ Pre-commit 检查清单
+
+```bash
+#!/bin/bash
+# .husky/pre-commit
+
+# MPLP Pre-commit Checklist
+echo "🚀 MPLP Pre-commit checks starting..."
+
+# 1. 代码质量
+echo "📋 Code quality checks..."
+npm run lint || exit 1
+npm run type-check || exit 1
+
+# 2. 测试验证
+echo "🧪 Test validation..."
+npm run test:staged || exit 1
+
+# 3. 安全检查
+echo "🔒 Security checks..."
+npm run security:check || exit 1
+
+# 4. 文档检查
+echo "📚 Documentation checks..."
+npm run docs:lint || exit 1
+npm run spell:check || exit 1
+
+# 5. 性能检查
+echo "⚡ Performance checks..."
+npm run performance:check || exit 1
+
+# 6. Git检查
+echo "📋 Git checks..."
+./scripts/git-checks.sh || exit 1
+
+echo "✅ All pre-commit checks passed!"
+```
+
+---
+
+> **重要**: Pre-commit检查确保代码质量和项目标准，任何检查失败都会阻止提交。
+description:
+globs:
+alwaysApply: false
+---

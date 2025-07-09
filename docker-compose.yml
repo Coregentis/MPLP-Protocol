@@ -1,0 +1,162 @@
+version: '3.8'
+
+services:
+  # ===================================
+  # MPLP Application Service
+  # ===================================
+  mplp-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: mplp-v1.0
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3000}:3000"
+      - "${METRICS_PORT:-9090}:9090"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DB_HOST=mplp-postgres
+      - DB_PORT=5432
+      - DB_NAME=${DB_NAME:-mplp_prod}
+      - DB_USERNAME=${DB_USERNAME:-mplp_user}
+      - DB_PASSWORD=${DB_PASSWORD:-changeme}
+      - REDIS_HOST=mplp-redis
+      - REDIS_PORT=6379
+      - JWT_SECRET=${JWT_SECRET:-your-super-secret-jwt-key}
+      - MPLP_PROTOCOL_VERSION=1.0.0
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - METRICS_ENABLED=true
+    depends_on:
+      mplp-postgres:
+        condition: service_healthy
+      mplp-redis:
+        condition: service_healthy
+    volumes:
+      - mplp-logs:/app/logs
+      - mplp-uploads:/app/uploads
+    networks:
+      - mplp-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # ===================================
+  # PostgreSQL Database Service
+  # ===================================
+  mplp-postgres:
+    image: postgres:14-alpine
+    container_name: mplp-postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=${DB_NAME:-mplp_prod}
+      - POSTGRES_USER=${DB_USERNAME:-mplp_user}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-changeme}
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
+    volumes:
+      - mplp-postgres-data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+    networks:
+      - mplp-network
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-mplp_user} -d ${DB_NAME:-mplp_prod}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ===================================
+  # Redis Cache Service
+  # ===================================
+  mplp-redis:
+    image: redis:7-alpine
+    container_name: mplp-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-}
+    volumes:
+      - mplp-redis-data:/data
+    networks:
+      - mplp-network
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # ===================================
+  # Monitoring: Prometheus (Optional)
+  # ===================================
+  mplp-prometheus:
+    image: prom/prometheus:latest
+    container_name: mplp-prometheus
+    restart: unless-stopped
+    profiles: ["monitoring"]
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    volumes:
+      - ./docker/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - mplp-prometheus-data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - mplp-network
+
+  # ===================================
+  # Monitoring: Grafana (Optional)
+  # ===================================
+  mplp-grafana:
+    image: grafana/grafana-oss:latest
+    container_name: mplp-grafana
+    restart: unless-stopped
+    profiles: ["monitoring"]
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - mplp-grafana-data:/var/lib/grafana
+      - ./docker/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./docker/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    ports:
+      - "3001:3000"
+    networks:
+      - mplp-network
+    depends_on:
+      - mplp-prometheus
+
+# ===================================
+# Networks
+# ===================================
+networks:
+  mplp-network:
+    driver: bridge
+    name: mplp-network
+
+# ===================================
+# Volumes
+# ===================================
+volumes:
+  mplp-postgres-data:
+    name: mplp-postgres-data
+  mplp-redis-data:
+    name: mplp-redis-data
+  mplp-logs:
+    name: mplp-logs
+  mplp-uploads:
+    name: mplp-uploads
+  mplp-prometheus-data:
+    name: mplp-prometheus-data
+  mplp-grafana-data:
+    name: mplp-grafana-data 

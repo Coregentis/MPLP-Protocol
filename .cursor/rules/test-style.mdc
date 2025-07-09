@@ -1,0 +1,674 @@
+# MPLP 测试风格规则
+
+> **文件类型**: Manual  
+> **适用范围**: 所有测试代码编写和测试策略  
+> **最后更新**: 2024-07-09
+
+## 🧪 测试策略概览
+
+### 测试金字塔
+```
+    🔺 E2E Tests (10%)
+   🔺🔺 Integration Tests (20%)  
+  🔺🔺🔺 Unit Tests (70%)
+```
+
+**测试分层原则**:
+- **单元测试**: 70% - 测试单个函数/方法
+- **集成测试**: 20% - 测试模块间交互
+- **端到端测试**: 10% - 测试完整业务流程
+
+## 📝 单元测试规范
+
+### 测试文件结构
+```typescript
+// src/modules/context/context.service.test.ts
+import { ContextService } from './context.service';
+import { ContextRepository } from './context.repository';
+import { ValidationError } from '../core/errors';
+
+// Mock配置
+jest.mock('./context.repository');
+const mockRepository = ContextRepository as jest.MockedClass<typeof ContextRepository>;
+
+describe('ContextService', () => {
+  let service: ContextService;
+  let repository: jest.Mocked<ContextRepository>;
+
+  beforeEach(() => {
+    repository = new mockRepository() as jest.Mocked<ContextRepository>;
+    service = new ContextService(repository);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  describe('createContext', () => {
+    it('should create context successfully with valid data', async () => {
+      // Arrange
+      const validInput = {
+        name: 'Test Context',
+        initialState: { env: 'test' }
+      };
+      const expectedOutput = {
+        context_id: 'generated-uuid',
+        ...validInput,
+        status: 'active'
+      };
+      
+      repository.save.mockResolvedValue(expectedOutput);
+
+      // Act
+      const result = await service.createContext(validInput);
+
+      // Assert
+      expect(result).toEqual(expectedOutput);
+      expect(repository.save).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: validInput.name,
+          status: 'active'
+        })
+      );
+    });
+
+    it('should throw ValidationError for invalid input', async () => {
+      // Arrange
+      const invalidInput = {
+        name: '', // 空名称应该失败
+        initialState: {}
+      };
+
+      // Act & Assert
+      await expect(service.createContext(invalidInput))
+        .rejects
+        .toThrow(ValidationError);
+    });
+  });
+});
+```
+
+### 测试命名约定
+```typescript
+// ✅ 正确: 描述性测试名称
+describe('ContextService', () => {
+  describe('createContext', () => {
+    it('should create context successfully with valid data', () => {});
+    it('should throw ValidationError when name is empty', () => {});
+    it('should generate unique context_id for each context', () => {});
+    it('should set default status to active', () => {});
+  });
+});
+
+// ❌ 错误: 不明确的测试名称
+describe('ContextService', () => {
+  it('test1', () => {});
+  it('createContext works', () => {});
+  it('validation', () => {});
+});
+```
+
+### AAA模式（Arrange-Act-Assert）
+```typescript
+it('should update context status successfully', async () => {
+  // 📋 Arrange - 准备测试数据和Mock
+  const contextId = 'test-context-id';
+  const newStatus = 'suspended';
+  const existingContext = {
+    context_id: contextId,
+    status: 'active',
+    name: 'Test Context'
+  };
+  
+  repository.findById.mockResolvedValue(existingContext);
+  repository.update.mockResolvedValue({
+    ...existingContext,
+    status: newStatus
+  });
+
+  // 🎬 Act - 执行被测试的操作
+  const result = await service.updateStatus(contextId, newStatus);
+
+  // ✅ Assert - 验证结果
+  expect(result.status).toBe(newStatus);
+  expect(repository.findById).toHaveBeenCalledWith(contextId);
+  expect(repository.update).toHaveBeenCalledWith(
+    contextId,
+    expect.objectContaining({ status: newStatus })
+  );
+});
+```
+
+## 🎭 Mock和Stub规范
+
+### Repository Mock示例
+```typescript
+// Mock Repository接口
+const mockContextRepository = {
+  save: jest.fn(),
+  findById: jest.fn(),
+  findAll: jest.fn(),
+  update: jest.fn(),
+  delete: jest.fn(),
+} as jest.Mocked<ContextRepository>;
+
+// 使用Builder模式创建测试数据
+class ContextTestDataBuilder {
+  private context: Partial<ContextProtocol> = {};
+
+  withId(id: string): this {
+    this.context.context_id = id;
+    return this;
+  }
+
+  withName(name: string): this {
+    this.context.name = name;
+    return this;
+  }
+
+  withStatus(status: string): this {
+    this.context.status = status;
+    return this;
+  }
+
+  build(): ContextProtocol {
+    return {
+      context_id: this.context.context_id || 'default-id',
+      version: '1.0.0',
+      timestamp: new Date().toISOString(),
+      status: this.context.status || 'active',
+      name: this.context.name || 'Default Context',
+      ...this.context
+    } as ContextProtocol;
+  }
+}
+
+// 使用示例
+const testContext = new ContextTestDataBuilder()
+  .withId('test-id')
+  .withName('Test Context')
+  .withStatus('active')
+  .build();
+```
+
+### HTTP请求Mock
+```typescript
+// 使用nock Mock外部API
+import nock from 'nock';
+
+describe('External API Integration', () => {
+  beforeEach(() => {
+    nock.cleanAll();
+  });
+
+  it('should handle external service response', async () => {
+    // Arrange
+    const mockResponse = { success: true, data: 'test' };
+    
+    nock('https://external-api.com')
+      .get('/api/data')
+      .reply(200, mockResponse);
+
+    // Act
+    const result = await service.fetchExternalData();
+
+    // Assert
+    expect(result).toEqual(mockResponse);
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('should handle network errors gracefully', async () => {
+    // Arrange
+    nock('https://external-api.com')
+      .get('/api/data')
+      .replyWithError('Network error');
+
+    // Act & Assert
+    await expect(service.fetchExternalData())
+      .rejects
+      .toThrow('Network error');
+  });
+});
+```
+
+### 时间相关Mock
+```typescript
+// 使用jest.useFakeTimers Mock时间
+describe('Time-dependent functionality', () => {
+  beforeEach(() => {
+    jest.useFakeTimers();
+    jest.setSystemTime(new Date('2024-07-09T14:30:00Z'));
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
+  it('should expire context after timeout', async () => {
+    // Arrange
+    const context = await service.createContext({
+      name: 'Test Context',
+      timeout: 5000
+    });
+
+    // Act - 快进时间
+    jest.advanceTimersByTime(6000);
+
+    // Assert
+    const expiredContext = await service.getContext(context.context_id);
+    expect(expiredContext.status).toBe('expired');
+  });
+});
+```
+
+## 📊 覆盖率标准
+
+### 覆盖率要求
+```typescript
+// jest.config.js
+module.exports = {
+  collectCoverageFrom: [
+    'src/**/*.ts',
+    '!src/**/*.d.ts',
+    '!src/**/*.test.ts',
+    '!src/tests/**/*'
+  ],
+  coverageThreshold: {
+    global: {
+      branches: 80,      // 分支覆盖率 ≥ 80%
+      functions: 90,     // 函数覆盖率 ≥ 90%
+      lines: 90,         // 行覆盖率 ≥ 90%
+      statements: 90     // 语句覆盖率 ≥ 90%
+    },
+    // 核心模块更高要求
+    'src/modules/context/**/*.ts': {
+      branches: 90,
+      functions: 95,
+      lines: 95,
+      statements: 95
+    },
+    'src/modules/plan/**/*.ts': {
+      branches: 90,
+      functions: 95,
+      lines: 95,
+      statements: 95
+    }
+  },
+  coverageReporters: ['text', 'lcov', 'html']
+};
+```
+
+### 覆盖率检查脚本
+```bash
+#!/bin/bash
+# scripts/coverage-check.sh
+
+echo "📊 Running coverage analysis..."
+
+# 运行测试并生成覆盖率报告
+npm run test:coverage
+
+# 检查覆盖率是否达标
+if [ $? -eq 0 ]; then
+  echo "✅ Coverage thresholds met"
+else
+  echo "❌ Coverage thresholds not met"
+  echo "📋 Opening coverage report..."
+  open coverage/lcov-report/index.html
+  exit 1
+fi
+
+# 生成覆盖率徽章
+npm run coverage:badge
+```
+
+## 🔗 集成测试规范
+
+### API集成测试
+```typescript
+// src/tests/integration/context-api.integration.test.ts
+import request from 'supertest';
+import { app } from '../../app';
+import { DatabaseTestUtils } from '../utils/database-test-utils';
+
+describe('Context API Integration', () => {
+  beforeAll(async () => {
+    await DatabaseTestUtils.setupTestDatabase();
+  });
+
+  afterAll(async () => {
+    await DatabaseTestUtils.cleanupTestDatabase();
+  });
+
+  beforeEach(async () => {
+    await DatabaseTestUtils.clearAllTables();
+  });
+
+  describe('POST /api/v1/contexts', () => {
+    it('should create context and return 201', async () => {
+      // Arrange
+      const newContext = {
+        name: 'Integration Test Context',
+        initialState: { env: 'test' }
+      };
+
+      // Act
+      const response = await request(app)
+        .post('/api/v1/contexts')
+        .send(newContext)
+        .expect(201);
+
+      // Assert
+      expect(response.body).toMatchObject({
+        context_id: expect.any(String),
+        name: newContext.name,
+        status: 'active',
+        version: '1.0.0'
+      });
+
+      // 验证数据库中的数据
+      const savedContext = await DatabaseTestUtils.findContextById(
+        response.body.context_id
+      );
+      expect(savedContext).toBeTruthy();
+    });
+
+    it('should return 400 for invalid input', async () => {
+      // Act
+      const response = await request(app)
+        .post('/api/v1/contexts')
+        .send({ name: '' }) // 无效输入
+        .expect(400);
+
+      // Assert
+      expect(response.body.error).toMatchObject({
+        code: 'VALIDATION_ERROR',
+        message: expect.any(String)
+      });
+    });
+  });
+});
+```
+
+### 数据库集成测试
+```typescript
+// src/tests/integration/context-repository.integration.test.ts
+import { ContextRepository } from '../../modules/context/context.repository';
+import { DatabaseConnection } from '../../core/database';
+
+describe('ContextRepository Integration', () => {
+  let repository: ContextRepository;
+  let connection: DatabaseConnection;
+
+  beforeAll(async () => {
+    connection = await DatabaseConnection.createTestConnection();
+    repository = new ContextRepository(connection);
+  });
+
+  afterAll(async () => {
+    await connection.close();
+  });
+
+  beforeEach(async () => {
+    await connection.query('TRUNCATE TABLE contexts');
+  });
+
+  it('should save and retrieve context from database', async () => {
+    // Arrange
+    const context = {
+      context_id: 'test-id',
+      name: 'Test Context',
+      status: 'active',
+      version: '1.0.0',
+      timestamp: new Date().toISOString()
+    };
+
+    // Act
+    await repository.save(context);
+    const retrieved = await repository.findById('test-id');
+
+    // Assert
+    expect(retrieved).toMatchObject(context);
+  });
+
+  it('should handle concurrent context creation', async () => {
+    // Arrange
+    const contexts = Array.from({ length: 10 }, (_, i) => ({
+      context_id: `context-${i}`,
+      name: `Context ${i}`,
+      status: 'active',
+      version: '1.0.0',
+      timestamp: new Date().toISOString()
+    }));
+
+    // Act
+    await Promise.all(contexts.map(ctx => repository.save(ctx)));
+
+    // Assert
+    const allContexts = await repository.findAll();
+    expect(allContexts).toHaveLength(10);
+  });
+});
+```
+
+## 🎯 端到端测试规范
+
+### E2E测试结构
+```typescript
+// src/tests/e2e/context-lifecycle.e2e.test.ts
+import { Browser, Page } from 'playwright';
+import { E2ETestUtils } from '../utils/e2e-test-utils';
+
+describe('Context Lifecycle E2E', () => {
+  let browser: Browser;
+  let page: Page;
+
+  beforeAll(async () => {
+    browser = await E2ETestUtils.setupBrowser();
+  });
+
+  afterAll(async () => {
+    await browser.close();
+  });
+
+  beforeEach(async () => {
+    page = await browser.newPage();
+    await E2ETestUtils.login(page, 'test-user');
+  });
+
+  afterEach(async () => {
+    await page.close();
+  });
+
+  it('should complete full context lifecycle', async () => {
+    // 1. 创建上下文
+    await page.goto('/contexts/new');
+    await page.fill('[data-testid=context-name]', 'E2E Test Context');
+    await page.click('[data-testid=create-button]');
+    
+    // 验证创建成功
+    await expect(page.locator('[data-testid=success-message]'))
+      .toBeVisible();
+
+    // 2. 更新上下文状态
+    await page.click('[data-testid=suspend-button]');
+    await expect(page.locator('[data-testid=status]'))
+      .toHaveText('suspended');
+
+    // 3. 删除上下文
+    await page.click('[data-testid=delete-button]');
+    await page.click('[data-testid=confirm-delete]');
+    
+    // 验证删除成功
+    await expect(page.locator('[data-testid=context-list]'))
+      .not.toContainText('E2E Test Context');
+  });
+});
+```
+
+## 🚀 性能测试规范
+
+### API性能测试
+```typescript
+// src/tests/performance/api-performance.test.ts
+import { performance } from 'perf_hooks';
+import request from 'supertest';
+import { app } from '../../app';
+
+describe('API Performance Tests', () => {
+  const PERFORMANCE_THRESHOLDS = {
+    CONTEXT_CREATE: 200, // ms
+    CONTEXT_LIST: 100,   // ms
+    PLAN_EXECUTE: 500    // ms
+  };
+
+  it('should create context within performance threshold', async () => {
+    const start = performance.now();
+    
+    await request(app)
+      .post('/api/v1/contexts')
+      .send({
+        name: 'Performance Test Context',
+        initialState: {}
+      })
+      .expect(201);
+    
+    const duration = performance.now() - start;
+    expect(duration).toBeLessThan(PERFORMANCE_THRESHOLDS.CONTEXT_CREATE);
+  });
+
+  it('should handle concurrent requests efficiently', async () => {
+    const concurrentRequests = 50;
+    const start = performance.now();
+    
+    const promises = Array.from({ length: concurrentRequests }, (_, i) =>
+      request(app)
+        .post('/api/v1/contexts')
+        .send({
+          name: `Concurrent Context ${i}`,
+          initialState: {}
+        })
+    );
+    
+    await Promise.all(promises);
+    
+    const duration = performance.now() - start;
+    const avgResponseTime = duration / concurrentRequests;
+    
+    expect(avgResponseTime).toBeLessThan(PERFORMANCE_THRESHOLDS.CONTEXT_CREATE);
+  });
+});
+```
+
+### 内存泄漏测试
+```typescript
+// src/tests/performance/memory-leak.test.ts
+describe('Memory Leak Tests', () => {
+  it('should not leak memory during context operations', async () => {
+    const initialMemory = process.memoryUsage().heapUsed;
+    
+    // 执行大量操作
+    for (let i = 0; i < 1000; i++) {
+      await service.createContext({
+        name: `Memory Test ${i}`,
+        initialState: {}
+      });
+      
+      await service.deleteContext(`context-${i}`);
+    }
+    
+    // 强制垃圾回收
+    if (global.gc) {
+      global.gc();
+    }
+    
+    const finalMemory = process.memoryUsage().heapUsed;
+    const memoryIncrease = (finalMemory - initialMemory) / 1024 / 1024; // MB
+    
+    expect(memoryIncrease).toBeLessThan(50); // 内存增长不超过50MB
+  });
+});
+```
+
+## 📋 测试实用工具
+
+### 测试数据工厂
+```typescript
+// src/tests/utils/test-data-factory.ts
+export class TestDataFactory {
+  static createContext(overrides: Partial<ContextProtocol> = {}): ContextProtocol {
+    return {
+      context_id: faker.string.uuid(),
+      version: '1.0.0',
+      timestamp: new Date().toISOString(),
+      status: 'active',
+      name: faker.lorem.words(3),
+      lifecycle_stage: 'planning',
+      shared_state: {},
+      ...overrides
+    };
+  }
+
+  static createPlan(overrides: Partial<PlanProtocol> = {}): PlanProtocol {
+    return {
+      plan_id: faker.string.uuid(),
+      context_id: faker.string.uuid(),
+      version: '1.0.0',
+      timestamp: new Date().toISOString(),
+      name: faker.lorem.words(2),
+      description: faker.lorem.sentence(),
+      tasks: [],
+      ...overrides
+    };
+  }
+}
+```
+
+### 自定义Matcher
+```typescript
+// src/tests/utils/custom-matchers.ts
+expect.extend({
+  toBeValidUUID(received: string) {
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    const pass = uuidRegex.test(received);
+    
+    return {
+      message: () => `expected ${received} ${pass ? 'not ' : ''}to be a valid UUID`,
+      pass
+    };
+  },
+
+  toBeISOTimestamp(received: string) {
+    const pass = !isNaN(Date.parse(received));
+    
+    return {
+      message: () => `expected ${received} ${pass ? 'not ' : ''}to be a valid ISO timestamp`,
+      pass
+    };
+  }
+});
+
+// 使用示例
+expect(context.context_id).toBeValidUUID();
+expect(context.timestamp).toBeISOTimestamp();
+```
+
+## ✅ 测试检查清单
+
+测试提交前确认：
+- [ ] 所有测试用例都有清晰的描述
+- [ ] 使用AAA模式组织测试
+- [ ] Mock和Stub配置正确
+- [ ] 覆盖率达到要求标准
+- [ ] 集成测试覆盖关键流程
+- [ ] 性能测试验证响应时间
+- [ ] 异常场景测试完整
+- [ ] 测试数据清理机制完善
+
+---
+
+> **重要**: 高质量的测试是代码质量的保障，请严格按照测试规范编写测试代码。
+description:
+globs:
+alwaysApply: false
+---

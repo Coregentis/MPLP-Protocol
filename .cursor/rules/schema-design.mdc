@@ -1,0 +1,479 @@
+# MPLP JSON Schema 设计规则
+
+> **文件类型**: Agent Requested  
+> **适用范围**: 所有JSON Schema文件和数据结构定义  
+> **最后更新**: 2024-07-09
+
+## 📋 Schema 设计原则
+
+### 基础原则
+- **类型安全**: 明确定义所有字段类型，避免any类型
+- **向后兼容**: 新版本Schema必须与旧版本兼容
+- **文档完备**: 每个字段都要有清晰的描述
+- **验证严格**: 使用适当的约束确保数据质量
+
+## 🏗️ Schema 文件结构
+
+### 标准Schema结构
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mplp.dev/schemas/{module}-protocol.json",
+  "title": "{Module}Protocol",
+  "description": "MPLP {Module} module protocol definition",
+  "type": "object",
+  "version": "1.0.0",
+  "required": ["context_id", "version", "timestamp"],
+  "properties": {
+    // 字段定义
+  },
+  "additionalProperties": false,
+  "examples": [
+    // 示例数据
+  ]
+}
+```
+
+### 基础字段标准
+```json
+{
+  "properties": {
+    "context_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique context identifier",
+      "example": "123e4567-e89b-12d3-a456-426614174000"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Protocol version following SemVer",
+      "example": "1.0.0"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp",
+      "example": "2024-07-09T14:30:00Z"
+    }
+  }
+}
+```
+
+## 📝 6个核心模块Schema规范
+
+### Context Protocol Schema
+```json
+{
+  "$id": "https://mplp.dev/schemas/context-protocol.json",
+  "title": "ContextProtocol",
+  "type": "object",
+  "required": ["context_id", "version", "timestamp", "status", "lifecycle_stage"],
+  "properties": {
+    "context_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique context identifier"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Protocol version"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Context creation or update timestamp"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["active", "suspended", "terminated"],
+      "description": "Current context status"
+    },
+    "lifecycle_stage": {
+      "type": "string",
+      "enum": ["planning", "executing", "monitoring", "completed"],
+      "description": "Current lifecycle stage"
+    },
+    "shared_state": {
+      "type": "object",
+      "description": "Shared state data accessible to all modules",
+      "additionalProperties": true
+    },
+    "access_control": {
+      "type": "object",
+      "description": "Access control configuration",
+      "properties": {
+        "permissions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Permission" }
+        },
+        "roles": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Role" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "Permission": {
+      "type": "object",
+      "required": ["resource", "action"],
+      "properties": {
+        "resource": { "type": "string" },
+        "action": { "type": "string" },
+        "conditions": { "type": "object" }
+      }
+    },
+    "Role": {
+      "type": "object",
+      "required": ["role_id", "name"],
+      "properties": {
+        "role_id": { "type": "string", "format": "uuid" },
+        "name": { "type": "string" },
+        "permissions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Permission" }
+        }
+      }
+    }
+  }
+}
+```
+
+### Plan Protocol Schema
+```json
+{
+  "$id": "https://mplp.dev/schemas/plan-protocol.json",
+  "title": "PlanProtocol",
+  "type": "object",
+  "required": ["plan_id", "context_id", "version", "timestamp", "name", "tasks"],
+  "properties": {
+    "plan_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique plan identifier"
+    },
+    "context_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Associated context identifier"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255,
+      "description": "Plan name"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Plan description"
+    },
+    "tasks": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/Task" },
+      "description": "List of tasks in the plan"
+    },
+    "workflow": {
+      "type": "object",
+      "description": "Workflow configuration",
+      "properties": {
+        "execution_strategy": {
+          "type": "string",
+          "enum": ["sequential", "parallel", "conditional"],
+          "description": "Task execution strategy"
+        },
+        "error_handling": {
+          "type": "object",
+          "properties": {
+            "retry_count": { "type": "integer", "minimum": 0, "maximum": 10 },
+            "timeout_ms": { "type": "integer", "minimum": 1000 }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "Task": {
+      "type": "object",
+      "required": ["task_id", "name", "type"],
+      "properties": {
+        "task_id": { "type": "string", "format": "uuid" },
+        "name": { "type": "string", "minLength": 1 },
+        "type": {
+          "type": "string",
+          "enum": ["atomic", "composite", "conditional"]
+        },
+        "dependencies": {
+          "type": "array",
+          "items": { "type": "string", "format": "uuid" }
+        },
+        "estimated_duration": {
+          "type": "string",
+          "pattern": "^\\d+[smhd]$",
+          "description": "Estimated duration (e.g., '30s', '5m', '2h', '1d')"
+        }
+      }
+    }
+  }
+}
+```
+
+## 🎯 字段设计规范
+
+### 字段命名约定
+```json
+{
+  "properties": {
+    // ✅ 正确: 使用snake_case
+    "context_id": { "type": "string" },
+    "lifecycle_stage": { "type": "string" },
+    "execution_status": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" },
+    
+    // ❌ 错误: 不一致的命名风格
+    "contextId": { "type": "string" },        // camelCase不符合JSON约定
+    "lifecycle-stage": { "type": "string" },  // kebab-case不标准
+    "CreatedAt": { "type": "string" }         // PascalCase不符合JSON约定
+  }
+}
+```
+
+### 数据类型规范
+```json
+{
+  "properties": {
+    // 字符串类型
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255,
+      "description": "Name field with length constraints"
+    },
+    
+    // UUID字段
+    "entity_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique entity identifier"
+    },
+    
+    // 时间戳字段
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp"
+    },
+    
+    // 枚举字段
+    "status": {
+      "type": "string",
+      "enum": ["active", "inactive", "pending"],
+      "description": "Status enumeration"
+    },
+    
+    // 数值字段
+    "count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000,
+      "description": "Count with range constraints"
+    },
+    
+    // 布尔字段
+    "is_enabled": {
+      "type": "boolean",
+      "description": "Boolean flag"
+    },
+    
+    // 对象字段
+    "metadata": {
+      "type": "object",
+      "description": "Additional metadata",
+      "additionalProperties": false,
+      "properties": {
+        "source": { "type": "string" },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}
+```
+
+## 🔧 验证约束规范
+
+### 字符串约束
+```json
+{
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255,
+      "pattern": "^[a-zA-Z0-9_-]+$",
+      "description": "Name with alphanumeric, underscore, and hyphen only"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "Valid email address"
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Valid URL"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version (e.g., 1.0.0)"
+    }
+  }
+}
+```
+
+### 数值约束
+```json
+{
+  "properties": {
+    "timeout_ms": {
+      "type": "integer",
+      "minimum": 1000,
+      "maximum": 300000,
+      "multipleOf": 1000,
+      "description": "Timeout in milliseconds (1s to 5min)"
+    },
+    "percentage": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Percentage value (0-100)"
+    },
+    "priority": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 10,
+      "description": "Priority level (1=lowest, 10=highest)"
+    }
+  }
+}
+```
+
+### 数组约束
+```json
+{
+  "properties": {
+    "tags": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 10,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9-]+$"
+      },
+      "description": "Unique tags (lowercase alphanumeric with hyphens)"
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uuid"
+      },
+      "uniqueItems": true,
+      "description": "List of dependency UUIDs"
+    }
+  }
+}
+```
+
+## 📖 文档规范
+
+### 描述字段要求
+```json
+{
+  "properties": {
+    "field_name": {
+      "type": "string",
+      "description": "Clear, concise description of the field purpose",
+      "example": "user@example.com"
+    }
+  }
+}
+```
+
+### 示例数据要求
+```json
+{
+  "examples": [
+    {
+      "context_id": "123e4567-e89b-12d3-a456-426614174000",
+      "version": "1.0.0",
+      "timestamp": "2024-07-09T14:30:00Z",
+      "status": "active",
+      "lifecycle_stage": "planning",
+      "shared_state": {
+        "environment": "development",
+        "debug_mode": true
+      }
+    }
+  ]
+}
+```
+
+## 🔄 版本兼容性
+
+### 向后兼容规则
+```json
+{
+  "version": "1.1.0",
+  "description": "Backward compatible changes only",
+  "properties": {
+    // ✅ 允许: 新增可选字段
+    "new_optional_field": {
+      "type": "string",
+      "description": "New optional field"
+    },
+    
+    // ✅ 允许: 放宽现有约束
+    "name": {
+      "type": "string",
+      "maxLength": 500  // 从255增加到500
+    },
+    
+    // ❌ 禁止: 删除现有字段
+    // "removed_field": { ... }
+    
+    // ❌ 禁止: 修改字段类型
+    // "existing_field": {
+    //   "type": "number"  // 原来是string
+    // }
+  }
+}
+```
+
+## ✅ Schema检查清单
+
+Schema提交前确认：
+- [ ] 使用正确的JSON Schema版本
+- [ ] 包含完整的元数据（$id, title, description, version）
+- [ ] 所有字段都有清晰的描述
+- [ ] 使用snake_case命名字段
+- [ ] 包含适当的验证约束
+- [ ] 提供示例数据
+- [ ] 向后兼容性检查
+- [ ] 通过Schema验证工具检查
+
+---
+
+> **注意**: 所有Schema必须通过Ajv验证器测试才能合并到主分支。
+description:
+globs:
+alwaysApply: false
+---

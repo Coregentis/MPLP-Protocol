@@ -1,0 +1,116 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "sourceType": "module",
+    "project": "./tsconfig.json"
+  },
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "@typescript-eslint/recommended",
+    "@typescript-eslint/recommended-requiring-type-checking"
+  ],
+  "env": {
+    "node": true,
+    "es2022": true,
+    "jest": true
+  },
+  "rules": {
+    // TypeScript Specific (MPLP Requirements)
+    "@typescript-eslint/no-explicit-any": "error",
+    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/no-non-null-assertion": "error",
+    "@typescript-eslint/prefer-nullish-coalescing": "error",
+    "@typescript-eslint/prefer-optional-chain": "error",
+    "@typescript-eslint/no-floating-promises": "error",
+    "@typescript-eslint/await-thenable": "error",
+    "@typescript-eslint/no-misused-promises": "error",
+    "@typescript-eslint/require-await": "error",
+    "@typescript-eslint/no-unsafe-assignment": "error",
+    "@typescript-eslint/no-unsafe-call": "error",
+    "@typescript-eslint/no-unsafe-member-access": "error",
+    "@typescript-eslint/no-unsafe-return": "error",
+    
+    // Code Quality
+    "complexity": ["error", 10],
+    "max-lines-per-function": ["error", 50],
+    "max-depth": ["error", 3],
+    "max-params": ["error", 4],
+    "no-console": "warn",
+    "no-debugger": "error",
+    "no-alert": "error",
+    
+    // Best Practices
+    "eqeqeq": ["error", "always"],
+    "curly": ["error", "all"],
+    "default-case": "error",
+    "no-eval": "error",
+    "no-implied-eval": "error",
+    "no-return-assign": "error",
+    "no-throw-literal": "error",
+    "prefer-promise-reject-errors": "error",
+    
+    // Stylistic
+    "prefer-const": "error",
+    "no-var": "error",
+    "object-shorthand": "error",
+    "prefer-template": "error",
+    
+    // MPLP Naming Conventions
+    "@typescript-eslint/naming-convention": [
+      "error",
+      {
+        "selector": "variableLike",
+        "format": ["camelCase"]
+      },
+      {
+        "selector": "function",
+        "format": ["camelCase"]
+      },
+      {
+        "selector": "method",
+        "format": ["camelCase"]
+      },
+      {
+        "selector": "property",
+        "format": ["camelCase", "snake_case"],
+        "filter": {
+          "regex": "^(context_id|user_id|session_id|plan_id|trace_id|role_id|extension_id|created_at|updated_at|start_time|end_time)$",
+          "match": true
+        }
+      },
+      {
+        "selector": "typeLike",
+        "format": ["PascalCase"]
+      },
+      {
+        "selector": "enumMember",
+        "format": ["UPPER_CASE"]
+      },
+      {
+        "selector": "variable",
+        "modifiers": ["const", "global"],
+        "format": ["UPPER_CASE", "camelCase"]
+      }
+    ]
+  },
+  "ignorePatterns": [
+    "dist/",
+    "coverage/",
+    "node_modules/",
+    "*.js",
+    "*.d.ts"
+  ],
+  "overrides": [
+    {
+      "files": ["**/*.test.ts", "**/*.spec.ts"],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off",
+        "max-lines-per-function": "off"
+      }
+    }
+  ]
+} 

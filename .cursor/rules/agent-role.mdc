@@ -1,0 +1,432 @@
+# MPLP Agent角色规则
+
+> **文件类型**: Agent Requested  
+> **适用范围**: 所有Agent角色定义和权限控制  
+> **最后更新**: 2024-07-09
+
+## 🎭 Agent角色定义
+
+### 角色层次结构
+```typescript
+interface AgentRole {
+  role_id: string;
+  role_name: string;
+  role_type: AgentRoleType;
+  capabilities: Capability[];
+  constraints: Constraint[];
+  execution_scope: ExecutionScope;
+  priority_level: number;
+}
+
+enum AgentRoleType {
+  DEVELOPER = 'developer',
+  ARCHITECT = 'architect', 
+  TESTER = 'tester',
+  DEVOPS = 'devops',
+  REVIEWER = 'reviewer',
+  COORDINATOR = 'coordinator'
+}
+```
+
+### 核心Agent角色
+```markdown
+## 🏗️ Developer Agent
+**能力范围**: 代码开发、功能实现、Bug修复
+**执行权限**: 
+- 创建/修改源代码文件
+- 运行单元测试
+- 提交代码到feature分支
+- 更新技术文档
+
+**约束限制**:
+- 不能修改主分支代码
+- 不能修改CI/CD配置
+- 不能访问生产环境
+- 必须通过代码审查
+
+## 🏛️ Architect Agent  
+**能力范围**: 架构设计、技术选型、系统设计
+**执行权限**:
+- 设计系统架构
+- 定义技术标准
+- 审查代码架构
+- 制定开发规范
+
+**约束限制**:
+- 需要团队审议重大架构决策
+- 架构变更需要文档记录
+- 需考虑向后兼容性
+
+## 🧪 Tester Agent
+**能力范围**: 测试设计、质量保证、缺陷发现
+**执行权限**:
+- 编写测试用例
+- 执行自动化测试
+- 报告质量问题
+- 验证修复结果
+
+**约束限制**:
+- 只能读取源代码
+- 不能修改业务逻辑
+- 测试环境访问限制
+
+## 🚀 DevOps Agent
+**能力范围**: 部署管理、环境配置、监控运维
+**执行权限**:
+- 管理CI/CD流水线
+- 配置部署环境
+- 监控系统性能
+- 处理运维告警
+
+**约束限制**:
+- 生产环境变更需要审批
+- 关键配置修改需要备份
+- 权限操作需要审计日志
+```
+
+## 🔐 权限控制模型
+
+### RBAC权限矩阵
+```typescript
+interface Permission {
+  resource: string;      // 资源类型
+  action: string;        // 操作类型
+  conditions?: object;   // 条件约束
+}
+
+interface RolePermissions {
+  [AgentRoleType.DEVELOPER]: Permission[];
+  [AgentRoleType.ARCHITECT]: Permission[];
+  [AgentRoleType.TESTER]: Permission[];
+  [AgentRoleType.DEVOPS]: Permission[];
+  [AgentRoleType.REVIEWER]: Permission[];
+  [AgentRoleType.COORDINATOR]: Permission[];
+}
+```
+
+### 资源访问权限表
+```markdown
+| 资源类型 | Developer | Architect | Tester | DevOps | Reviewer | Coordinator |
+|----------|-----------|-----------|--------|--------|----------|-------------|
+| 源代码   | 读写      | 读写      | 只读   | 只读   | 读写     | 只读        |
+| 测试代码 | 读写      | 读写      | 读写   | 只读   | 读写     | 只读        |
+| 配置文件 | 部分读写  | 读写      | 只读   | 读写   | 读写     | 只读        |
+| 文档     | 读写      | 读写      | 读写   | 读写   | 读写     | 读写        |
+| CI/CD    | 只读      | 读写      | 只读   | 读写   | 只读     | 只读        |
+| 生产环境 | 禁止      | 只读      | 只读   | 读写   | 只读     | 只读        |
+```
+
+### 操作权限控制
+```typescript
+// 权限检查示例
+async function checkPermission(
+  agent: Agent, 
+  resource: string, 
+  action: string
+): Promise<boolean> {
+  const role = await getRoleByAgent(agent);
+  const permissions = await getPermissionsByRole(role);
+  
+  return permissions.some(permission => 
+    permission.resource === resource && 
+    permission.action === action &&
+    evaluateConditions(permission.conditions, agent)
+  );
+}
+
+// 使用示例
+if (await checkPermission(developerAgent, 'source_code', 'write')) {
+  // 允许修改源代码
+} else {
+  throw new PermissionDeniedError('No write access to source code');
+}
+```
+
+## 🎯 执行边界定义
+
+### 模块边界约束
+```typescript
+interface ExecutionScope {
+  allowed_modules: string[];      // 允许操作的模块
+  forbidden_modules: string[];    // 禁止操作的模块
+  file_patterns: string[];        // 允许操作的文件模式
+  command_whitelist: string[];    // 允许执行的命令
+  environment_access: string[];   // 允许访问的环境
+}
+
+// Developer Agent示例
+const developerScope: ExecutionScope = {
+  allowed_modules: ['context', 'plan', 'confirm', 'trace', 'role', 'extension'],
+  forbidden_modules: ['core/security', 'core/admin'],
+  file_patterns: ['src/**/*.ts', 'tests/**/*.test.ts', 'docs/**/*.md'],
+  command_whitelist: ['npm test', 'npm run lint', 'npm run build'],
+  environment_access: ['development', 'testing']
+};
+```
+
+### 时间边界约束
+```typescript
+interface TimeConstraint {
+  execution_window: {
+    start_time: string;    // "09:00"
+    end_time: string;      // "18:00"
+    timezone: string;      // "Asia/Shanghai"
+  };
+  max_execution_time: number;  // 最大执行时间（秒）
+  cooldown_period: number;     // 冷却期（秒）
+  rate_limit: {
+    requests_per_hour: number;
+    requests_per_day: number;
+  };
+}
+```
+
+### 资源边界约束
+```typescript
+interface ResourceConstraint {
+  max_memory_mb: number;        // 最大内存使用
+  max_cpu_percent: number;      // 最大CPU使用率
+  max_disk_space_mb: number;    // 最大磁盘空间
+  max_file_size_mb: number;     // 单文件最大大小
+  max_concurrent_tasks: number; // 最大并发任务数
+}
+
+// 示例约束
+const standardConstraint: ResourceConstraint = {
+  max_memory_mb: 512,
+  max_cpu_percent: 80,
+  max_disk_space_mb: 1024,
+  max_file_size_mb: 10,
+  max_concurrent_tasks: 3
+};
+```
+
+## 🔒 安全边界控制
+
+### 数据访问控制
+```typescript
+interface DataAccessControl {
+  sensitive_data_access: boolean;
+  encryption_required: boolean;
+  audit_log_required: boolean;
+  data_retention_days: number;
+  allowed_data_operations: DataOperation[];
+}
+
+enum DataOperation {
+  READ = 'read',
+  WRITE = 'write', 
+  DELETE = 'delete',
+  EXPORT = 'export',
+  IMPORT = 'import'
+}
+```
+
+### 网络访问控制
+```typescript
+interface NetworkAccessControl {
+  allowed_domains: string[];
+  blocked_domains: string[];
+  require_vpn: boolean;
+  allowed_ports: number[];
+  proxy_required: boolean;
+}
+
+// 示例配置
+const developerNetworkAccess: NetworkAccessControl = {
+  allowed_domains: ['api.github.com', 'registry.npmjs.org'],
+  blocked_domains: ['*.social-media.com'],
+  require_vpn: false,
+  allowed_ports: [80, 443, 5432],
+  proxy_required: false
+};
+```
+
+## 📊 Agent能力评估
+
+### 能力成熟度模型
+```typescript
+enum CapabilityLevel {
+  NOVICE = 1,      // 新手：基础操作
+  ADVANCED = 2,    // 进阶：复杂操作
+  EXPERT = 3,      // 专家：系统设计
+  MASTER = 4       // 大师：架构决策
+}
+
+interface AgentCapability {
+  capability_name: string;
+  current_level: CapabilityLevel;
+  required_level: CapabilityLevel;
+  assessment_date: string;
+  certification_required: boolean;
+}
+```
+
+### 能力认证机制
+```typescript
+interface CapabilityCertification {
+  certification_id: string;
+  capability: string;
+  level: CapabilityLevel;
+  issued_date: string;
+  expiry_date: string;
+  issuer: string;
+  verification_method: string;
+}
+
+// 能力检查
+async function verifyCapability(
+  agent: Agent, 
+  requiredCapability: AgentCapability
+): Promise<boolean> {
+  const certifications = await getAgentCertifications(agent);
+  
+  return certifications.some(cert => 
+    cert.capability === requiredCapability.capability_name &&
+    cert.level >= requiredCapability.required_level &&
+    new Date(cert.expiry_date) > new Date()
+  );
+}
+```
+
+## 🔄 角色转换机制
+
+### 角色升级路径
+```typescript
+interface RoleUpgradePath {
+  from_role: AgentRoleType;
+  to_role: AgentRoleType;
+  requirements: UpgradeRequirement[];
+  approval_required: boolean;
+  training_required: boolean;
+}
+
+interface UpgradeRequirement {
+  type: 'experience' | 'certification' | 'performance';
+  description: string;
+  threshold: number;
+  unit: string;
+}
+
+// 示例升级路径
+const developerToArchitect: RoleUpgradePath = {
+  from_role: AgentRoleType.DEVELOPER,
+  to_role: AgentRoleType.ARCHITECT,
+  requirements: [
+    {
+      type: 'experience',
+      description: 'Development experience',
+      threshold: 12,
+      unit: 'months'
+    },
+    {
+      type: 'certification',
+      description: 'Architecture certification',
+      threshold: 1,
+      unit: 'certificates'
+    }
+  ],
+  approval_required: true,
+  training_required: true
+};
+```
+
+### 临时权限申请
+```typescript
+interface TemporaryPermissionRequest {
+  request_id: string;
+  agent_id: string;
+  requested_permission: Permission;
+  justification: string;
+  duration_hours: number;
+  approver: string;
+  status: 'pending' | 'approved' | 'denied';
+  expires_at: string;
+}
+
+// 临时权限申请流程
+async function requestTemporaryPermission(
+  agent: Agent,
+  permission: Permission,
+  justification: string,
+  durationHours: number
+): Promise<TemporaryPermissionRequest> {
+  const request: TemporaryPermissionRequest = {
+    request_id: generateRequestId(),
+    agent_id: agent.id,
+    requested_permission: permission,
+    justification,
+    duration_hours: durationHours,
+    approver: await getApprover(permission),
+    status: 'pending',
+    expires_at: new Date(Date.now() + durationHours * 3600000).toISOString()
+  };
+  
+  await submitForApproval(request);
+  return request;
+}
+```
+
+## 📋 监控和审计
+
+### 执行监控
+```typescript
+interface AgentExecutionLog {
+  log_id: string;
+  agent_id: string;
+  action: string;
+  resource: string;
+  timestamp: string;
+  duration_ms: number;
+  status: 'success' | 'failure' | 'timeout';
+  error_message?: string;
+  resource_usage: ResourceUsage;
+}
+
+interface ResourceUsage {
+  memory_mb: number;
+  cpu_percent: number;
+  disk_io_mb: number;
+  network_io_mb: number;
+}
+```
+
+### 异常检测
+```typescript
+interface AnomalyDetection {
+  unusual_access_patterns: boolean;
+  resource_usage_spikes: boolean;
+  permission_escalation_attempts: boolean;
+  off_hours_activity: boolean;
+  suspicious_command_execution: boolean;
+}
+
+// 异常检测规则
+const anomalyRules = {
+  max_failed_attempts: 5,
+  unusual_access_threshold: 0.8,
+  resource_spike_multiplier: 3,
+  off_hours_start: '22:00',
+  off_hours_end: '06:00'
+};
+```
+
+## ✅ Agent角色检查清单
+
+角色配置前确认：
+- [ ] 角色定义清晰明确
+- [ ] 权限范围合理设置
+- [ ] 执行边界明确界定
+- [ ] 安全约束配置完整
+- [ ] 能力要求匹配
+- [ ] 监控审计机制启用
+- [ ] 异常检测规则配置
+- [ ] 升级路径规划合理
+
+---
+
+> **重要**: Agent角色和权限控制是系统安全的基础，必须严格按照最小权限原则配置。
+description:
+globs:
+alwaysApply: false
+---

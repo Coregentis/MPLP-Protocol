@@ -1,0 +1,801 @@
+# MPLP 1.0 AI IDE 开发规则
+
+## 项目概述
+- **项目名称**: MPLP (Multi-Agent Project Lifecycle Protocol)
+- **版本**: 1.0
+- **协议版本**: MPLP 1.0 (6个核心模块架构)
+- **技术栈**: Node.js 18+ + TypeScript 5.0+ + Express.js 4.18+ + PostgreSQL 14+ + Redis 7+
+- **架构**: 模块化分层架构 + 厂商中立适配器
+- **核心模块**: Context、Plan、Confirm、Trace、Role、Extension (6个核心模块)
+- **开发模式**: 测试驱动开发 (TDD) + 持续集成 (CI/CD)
+- **平台集成**: TracePilot, Coregentis
+
+## 🎯 技术标准基线 (强制遵循)
+
+### 核心技术要求
+- **运行环境**: Node.js 18+ LTS版本
+- **开发语言**: TypeScript 5.0+ 严格模式，100%类型覆盖，禁止any类型
+- **Web框架**: Express.js 4.18+ + Helmet.js安全中间件
+- **数据库**: PostgreSQL 14+ + TypeORM，Redis 7+缓存
+- **API设计**: REST API + GraphQL + WebSocket实时通信
+- **JSON Schema**: Draft 7+，Ajv验证器，版本化管理
+
+### 性能标准 (强制达标)
+- **API响应时间**: P95 < 100ms，P99 < 200ms，P999 < 500ms
+- **协议解析性能**: 单次解析 < 10ms
+- **系统吞吐量**: > 10,000 TPS
+- **并发支持**: > 1000并发用户
+- **系统可用性**: ≥ 99.9%
+- **内存使用**: 单实例 < 512MB
+
+### 质量标准 (强制执行)
+- **单元测试覆盖率**: ≥ 90%
+- **集成测试覆盖率**: ≥ 80%
+- **E2E测试覆盖率**: ≥ 60%
+- **安全漏洞**: 0个高危漏洞
+- **代码质量**: ESLint + Prettier + TypeScript严格模式
+
+### 安全标准 (强制实施)
+- **传输安全**: TLS 1.3强制加密
+- **身份认证**: JWT + OAuth 2.0 + RBAC
+- **API安全**: 100%端点认证，Rate Limiting 1000 req/min
+- **数据保护**: 敏感数据AES-256加密
+- **审计**: 完整的操作追踪日志
+
+## 📋 6个核心模块规范
+
+### Context模块 - 全局状态管理
+```typescript
+interface Context extends BaseProtocol {
+  context_id: string;          // UUID格式
+  user_id: string;             // 用户标识
+  session_id: string;          // 会话标识
+  name: string;                // 上下文名称
+  description?: string;        // 描述信息
+  shared_state: Record<string, unknown>; // 共享状态
+  lifecycle_stage: 'planning' | 'executing' | 'monitoring' | 'completed';
+  metadata: ContextMetadata;   // 元数据
+  status: 'active' | 'inactive' | 'suspended';
+  created_at: string;          // ISO 8601时间戳
+  updated_at: string;          // ISO 8601时间戳
+}
+```
+
+### Plan模块 - 任务规划结构
+```typescript
+interface Plan extends BaseProtocol {
+  plan_id: string;
+  context_id: string;          // 关联上下文
+  name: string;
+  description?: string;
+  tasks: PlanTask[];           // 任务列表
+  dependencies: PlanDependency[]; // 依赖关系
+  execution_strategy: 'sequential' | 'parallel' | 'conditional';
+  status: 'draft' | 'approved' | 'executing' | 'completed' | 'failed';
+  priority: 'low' | 'medium' | 'high' | 'critical';
+  estimated_duration: number;  // 预估执行时间(分钟)
+  created_at: string;
+  updated_at: string;
+}
+```
+
+### Confirm模块 - 验证决策机制
+```typescript
+interface Confirm extends BaseProtocol {
+  confirm_id: string;
+  plan_id: string;             // 关联计划
+  confirmation_type: 'approval' | 'validation' | 'verification';
+  status: 'pending' | 'approved' | 'rejected' | 'expired';
+  result: ConfirmationResult;  // 确认结果
+  approvers: ApproverInfo[];   // 审批人信息
+  approval_deadline?: string;  // 审批截止时间
+  auto_approve_conditions?: AutoApprovalRule[]; // 自动审批条件
+  created_at: string;
+}
+```
+
+### Trace模块 - 追踪记录信息
+```typescript
+interface Trace extends BaseProtocol {
+  trace_id: string;
+  parent_trace_id?: string;    // 支持嵌套追踪
+  context_id: string;
+  trace_type: 'operation' | 'state_change' | 'error' | 'compensation' | 'performance';
+  status: 'started' | 'running' | 'completed' | 'failed' | 'cancelled';
+  operation_name: string;
+  start_time: string;
+  end_time?: string;
+  duration_ms?: number;
+  input_data?: Record<string, unknown>;
+  output_data?: Record<string, unknown>;
+  error_info?: ErrorInfo;
+  performance_metrics: PerformanceMetrics;
+  compensation_actions?: CompensationAction[];
+  tags: Record<string, string>;
+}
+```
+
+### Role模块 - 角色定义能力
+```typescript
+interface Role extends BaseProtocol {
+  role_id: string;
+  name: string;
+  description?: string;
+  permissions: Permission[];   // 权限列表
+  capabilities: Capability[];  // 能力声明
+  constraints: Constraint[];   // 约束条件
+  inheritance?: string[];      // 角色继承
+  scope: 'global' | 'context' | 'plan';
+  is_system_role: boolean;     // 是否系统角色
+  created_at: string;
+  updated_at: string;
+}
+```
+
+### Extension模块 - 扩展机制框架
+```typescript
+interface Extension extends BaseProtocol {
+  extension_id: string;
+  extension_name: string;
+  extension_type: 'cli_tool' | 'api_service' | 'database' | 'monitoring' | 'ai_service' | 'custom';
+  extension_version: string;   // SemVer版本
+  description: string;
+  author: string;
+  license: string;
+  supported_mplp_versions: string[];
+  config_schema: JsonSchema;   // 配置Schema
+  capabilities: ExtensionCapability[];
+  security_requirements: SecurityRequirement[];
+  dependencies: ExtensionDependency[];
+  endpoints: ExtensionEndpoint[];
+  health_check: HealthCheckConfig;
+  created_at: string;
+}
+```
+
+## 🔤 命名规范 (严格遵循)
+
+### 文件和目录命名
+- **文件名**: kebab-case (context-service.ts, plan-validator.ts)
+- **目录名**: kebab-case (src/protocols/context/, tests/unit/)
+- **模块文件**: {module}.{type}.ts (context.protocol.ts, plan.handler.ts)
+- **测试文件**: {module}.test.ts 或 {feature}.spec.ts
+
+### TypeScript命名规范
+```typescript
+// ✅ 正确示例
+interface ContextProtocol {       // PascalCase接口
+  context_id: string;             // snake_case JSON字段
+  lifecycleStage: string;         // camelCase TypeScript字段
+}
+
+class ContextService {            // PascalCase类名
+  private readonly logger: Logger; // camelCase属性
+  
+  public async createContext(      // camelCase方法
+    data: CreateContextRequest
+  ): Promise<ContextProtocol> {
+    const contextId = generateUUID(); // camelCase变量
+    return context;
+  }
+}
+
+enum ExecutionStatus {            // PascalCase枚举
+  PENDING = 'pending',            // UPPER_SNAKE_CASE枚举值
+  RUNNING = 'running',
+  COMPLETED = 'completed'
+}
+
+const MAX_RETRY_ATTEMPTS = 3;     // UPPER_SNAKE_CASE常量
+const databaseConfig = {          // camelCase配置对象
+  host: process.env.DB_HOST
+};
+```
+
+### API命名规范
+```typescript
+// ✅ REST API端点 (RESTful设计)
+GET    /api/v1/contexts                    // 获取上下文列表
+POST   /api/v1/contexts                    // 创建上下文
+GET    /api/v1/contexts/{contextId}        // 获取特定上下文
+PUT    /api/v1/contexts/{contextId}        // 更新上下文
+DELETE /api/v1/contexts/{contextId}        // 删除上下文
+POST   /api/v1/contexts/{contextId}/plans  // 在上下文中创建计划
+
+// ✅ GraphQL命名 (PascalCase类型，camelCase字段)
+type Context {
+  contextId: ID!
+  userId: String!
+  sharedState: JSON
+  lifecycleStage: LifecycleStage!
+}
+
+type Query {
+  getContext(contextId: ID!): Context
+  listContexts(filter: ContextFilter): [Context!]!
+}
+```
+
+## 🧪 测试规范 (TDD驱动)
+
+### 测试文件结构 (强制放置在tests/目录)
+```
+tests/                           # 所有测试文件必须在此目录
+├── unit/                        # 单元测试 (70%)
+│   ├── core/                    # 核心模块测试
+│   ├── protocols/               # 协议模块测试
+│   ├── api/                     # API层测试
+│   ├── services/                # 服务层测试
+│   └── utils/                   # 工具函数测试
+├── integration/                 # 集成测试 (20%)
+│   ├── api/                     # API集成测试
+│   ├── database/                # 数据库集成测试
+│   └── protocols/               # 协议集成测试
+├── e2e/                         # 端到端测试 (10%)
+│   ├── scenarios/               # 测试场景
+│   └── fixtures/                # 测试夹具
+├── fixtures/                    # 测试数据
+├── helpers/                     # 测试辅助工具
+├── mocks/                       # Mock对象
+└── setup.ts                     # 测试配置
+```
+
+### 测试编写规范 (AAA模式)
+```typescript
+describe('ContextService', () => {
+  let service: ContextService;
+  let repository: jest.Mocked<ContextRepository>;
+
+  beforeEach(() => {
+    repository = createMockRepository();
+    service = new ContextService(repository);
+  });
+
+  describe('createContext', () => {
+    it('should create context successfully with valid data', async () => {
+      // 📋 Arrange - 准备测试数据
+      const validInput: CreateContextRequest = {
+        name: 'Test Context',
+        user_id: 'test-user-id',
+        initial_state: { env: 'test' }
+      };
+      const expectedOutput: ContextProtocol = {
+        context_id: 'generated-uuid',
+        version: '1.0.0',
+        timestamp: '2024-01-01T00:00:00Z',
+        ...validInput,
+        status: 'active',
+        created_at: '2024-01-01T00:00:00Z',
+        updated_at: '2024-01-01T00:00:00Z'
+      };
+      
+      repository.save.mockResolvedValue(expectedOutput);
+
+      // 🎬 Act - 执行被测试的操作
+      const result = await service.createContext(validInput);
+
+      // ✅ Assert - 验证结果
+      expect(result).toEqual(expectedOutput);
+      expect(repository.save).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: validInput.name,
+          status: 'active'
+        })
+      );
+    });
+
+    it('should throw ValidationError for invalid input', async () => {
+      // Arrange
+      const invalidInput = {
+        name: '', // 空名称应该失败
+        user_id: ''
+      };
+
+      // Act & Assert
+      await expect(service.createContext(invalidInput))
+        .rejects
+        .toThrow(ValidationError);
+    });
+  });
+});
+```
+
+### Mock和Stub规范
+```typescript
+// 使用Builder模式创建测试数据
+class ContextTestDataBuilder {
+  private context: Partial<ContextProtocol> = {};
+
+  withId(id: string): this {
+    this.context.context_id = id;
+    return this;
+  }
+
+  withName(name: string): this {
+    this.context.name = name;
+    return this;
+  }
+
+  build(): ContextProtocol {
+    return {
+      context_id: this.context.context_id || 'default-id',
+      version: '1.0.0',
+      timestamp: new Date().toISOString(),
+      status: this.context.status || 'active',
+      name: this.context.name || 'Default Context',
+      user_id: 'test-user',
+      session_id: 'test-session',
+      shared_state: {},
+      lifecycle_stage: 'planning',
+      metadata: {},
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      ...this.context
+    } as ContextProtocol;
+  }
+}
+```
+
+## 🔌 扩展协议规范
+
+### 扩展接口定义
+```typescript
+interface ExtensionProtocol extends BaseProtocol {
+  extension_id: string;
+  extension_name: string;
+  extension_type: ExtensionType;
+  extension_version: string;       // SemVer版本
+  description: string;
+  author: string;
+  license: string;
+  supported_mplp_versions: string[];
+  config_schema: JsonSchema;
+  capabilities: ExtensionCapability[];
+  security_requirements: SecurityRequirement[];
+  dependencies: ExtensionDependency[];
+  endpoints: ExtensionEndpoint[];
+  health_check: HealthCheckConfig;
+}
+
+enum ExtensionType {
+  CLI_TOOL = 'cli_tool',          // CLI工具集成
+  API_SERVICE = 'api_service',    // API服务集成
+  DATABASE = 'database',          // 数据库扩展
+  MONITORING = 'monitoring',      // 监控工具集成
+  AI_SERVICE = 'ai_service',      // AI服务集成
+  CUSTOM = 'custom'               // 自定义扩展
+}
+```
+
+### 扩展生命周期管理
+```typescript
+interface ExtensionLifecycle {
+  initialize(config: ExtensionConfig): Promise<InitializationResult>;
+  start(): Promise<void>;
+  stop(): Promise<void>;
+  healthCheck(): Promise<HealthStatus>;
+  updateConfig(newConfig: Partial<ExtensionConfig>): Promise<void>;
+  cleanup(): Promise<void>;
+}
+```
+
+## 🔍 追踪生命周期规范
+
+### 追踪数据结构
+```typescript
+interface TraceProtocol extends BaseProtocol {
+  trace_id: string;
+  parent_trace_id?: string;        // 支持嵌套追踪
+  context_id: string;
+  trace_type: TraceType;
+  status: TraceStatus;
+  operation_name: string;
+  start_time: string;
+  end_time?: string;
+  duration_ms?: number;
+  input_data?: Record<string, unknown>;
+  output_data?: Record<string, unknown>;
+  error_info?: ErrorInfo;
+  performance_metrics: PerformanceMetrics;
+  compensation_actions?: CompensationAction[];
+  tags: Record<string, string>;
+}
+
+enum TraceType {
+  OPERATION = 'operation',         // 操作追踪
+  STATE_CHANGE = 'state_change',   // 状态变更
+  ERROR = 'error',                 // 错误追踪
+  COMPENSATION = 'compensation',   // 补偿操作
+  PERFORMANCE = 'performance'      // 性能追踪
+}
+```
+
+### 性能指标收集
+```typescript
+interface PerformanceMetrics {
+  cpu_usage: number;               // CPU使用率 (%)
+  memory_usage_mb: number;         // 内存使用量 (MB)
+  network_io_bytes: number;        // 网络IO (字节)
+  disk_io_bytes: number;           // 磁盘IO (字节)
+  db_query_count: number;          // 数据库查询次数
+  db_query_time_ms: number;        // 数据库查询总时间 (ms)
+  api_call_count: number;          // API调用次数
+  api_call_time_ms: number;        // API调用总时间 (ms)
+  custom_metrics: Record<string, number>; // 自定义指标
+}
+```
+
+## 📝 Git提交规范 (Conventional Commits)
+
+### 提交格式
+```
+<类型>[可选作用域]: <描述>
+
+[可选正文]
+
+[可选脚注]
+```
+
+### 核心类型
+- **feat**: 新功能 (feature)
+- **fix**: Bug修复
+- **docs**: 文档变更
+- **style**: 代码格式修改（不影响功能）
+- **refactor**: 代码重构（不新增功能，不修复bug）
+- **test**: 测试相关变更
+- **chore**: 构建过程或辅助工具的变更
+
+### MPLP扩展类型
+- **protocol**: 协议定义变更
+- **schema**: JSON Schema变更
+- **api**: API接口变更
+- **security**: 安全相关修复
+- **perf**: 性能优化
+
+### 作用域规范
+```
+context:    Context模块相关
+plan:       Plan模块相关
+confirm:    Confirm模块相关
+trace:      Trace模块相关
+role:       Role模块相关
+extension:  Extension模块相关
+api:        API层变更
+database:   数据库相关
+auth:       认证授权
+```
+
+### 提交示例
+```bash
+# ✅ 功能开发
+git commit -m "feat(context): add batch operations support
+
+- Implement batch create, update, and delete operations
+- Add input validation for batch requests
+- Update API documentation
+
+Closes #456"
+
+# ✅ Bug修复
+git commit -m "fix(trace): resolve performance metrics collection issue
+
+Fixed memory leak in metrics collector that caused
+gradual performance degradation.
+
+Fixes #789"
+
+# ✅ 协议变更
+git commit -m "protocol(extension): add health check endpoint
+
+Added mandatory health check endpoint for all extensions
+to support better monitoring and fault detection.
+
+BREAKING CHANGE: Extensions must implement /health endpoint"
+```
+
+## 🔧 开发工具配置
+
+### TypeScript配置 (tsconfig.json)
+```json
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "commonjs",
+    "lib": ["ES2022"],
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true
+  }
+}
+```
+
+### ESLint配置
+```json
+{
+  "extends": [
+    "@typescript-eslint/recommended",
+    "@typescript-eslint/recommended-requiring-type-checking"
+  ],
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "error",
+    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/prefer-nullish-coalescing": "error",
+    "@typescript-eslint/prefer-optional-chain": "error",
+    "complexity": ["error", 10],
+    "max-lines-per-function": ["error", 50],
+    "max-depth": ["error", 3]
+  }
+}
+```
+
+### Jest配置
+```json
+{
+  "preset": "ts-jest",
+  "testEnvironment": "node",
+  "collectCoverageFrom": [
+    "src/**/*.ts",
+    "!src/**/*.d.ts",
+    "!src/**/*.test.ts"
+  ],
+  "coverageThreshold": {
+    "global": {
+      "branches": 90,
+      "functions": 90,
+      "lines": 90,
+      "statements": 90
+    }
+  }
+}
+```
+
+## 🛡️ 安全规则
+
+### 输入验证
+```typescript
+import { IsString, IsUUID, IsOptional, ValidateNested } from 'class-validator';
+
+export class CreateContextDto {
+  @IsString()
+  @IsNotEmpty()
+  @Length(1, 100)
+  name: string;
+
+  @IsUUID()
+  user_id: string;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => Object)
+  initial_state?: Record<string, unknown>;
+}
+```
+
+### 权限控制
+```typescript
+@UseGuards(AuthGuard, RoleGuard)
+@Roles('admin', 'user')
+@Controller('contexts')
+export class ContextController {
+  @Post()
+  @RequirePermission('context:create')
+  @RateLimit(100, 60) // 100请求/分钟
+  async create(@Body() data: CreateContextDto): Promise<ApiResponse<Context>> {
+    // 实现逻辑
+  }
+}
+```
+
+### 错误处理
+```typescript
+// Result模式处理错误
+type Result<T, E = Error> = 
+  | { success: true; data: T }
+  | { success: false; error: E };
+
+// 错误分类
+export class BusinessError extends Error {
+  constructor(
+    message: string,
+    public code: string,
+    public statusCode: number = 400
+  ) {
+    super(message);
+    this.name = 'BusinessError';
+  }
+}
+
+export class ValidationError extends Error {
+  constructor(
+    message: string,
+    public field: string,
+    public value: unknown
+  ) {
+    super(message);
+    this.name = 'ValidationError';
+  }
+}
+```
+
+## 📊 监控和日志
+
+### 结构化日志
+```typescript
+logger.info('Context created successfully', {
+  contextId: context.context_id,
+  userId: context.user_id,
+  timestamp: new Date().toISOString(),
+  duration: performance.now() - startTime,
+  requestId: req.headers['x-request-id']
+});
+
+logger.error('Failed to create context', {
+  error: error.message,
+  stack: error.stack,
+  input: sanitizeInput(data),
+  userId: req.user?.id,
+  traceId: req.headers['x-trace-id']
+});
+```
+
+### 性能监控装饰器
+```typescript
+function Monitor(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+  const originalMethod = descriptor.value;
+  
+  descriptor.value = async function (...args: any[]) {
+    const start = performance.now();
+    const traceId = generateTraceId();
+    
+    try {
+      const result = await originalMethod.apply(this, args);
+      const duration = performance.now() - start;
+      
+      // 记录性能指标
+      metrics.histogram('method_duration', duration, {
+        class: target.constructor.name,
+        method: propertyKey,
+        traceId
+      });
+      
+      return result;
+    } catch (error) {
+      metrics.counter('method_error', 1, {
+        class: target.constructor.name,
+        method: propertyKey,
+        error: error.constructor.name,
+        traceId
+      });
+      throw error;
+    }
+  };
+}
+```
+
+## 🎯 AI IDE 智能提示词规则
+
+### 代码生成提示词模板
+
+#### 基础模板
+```
+根据MPLP协议规范，实现{模块名称}的{功能描述}，要求：
+1. 遵循TypeScript 5.0+严格模式，100%类型覆盖
+2. 基于6个核心模块(Context/Plan/Confirm/Trace/Role/Extension)架构
+3. 包含完整的JSON Schema验证和错误处理
+4. 实现Result<T, E>模式和结构化日志
+5. 添加详细的JSDoc注释和单元测试(覆盖率>90%)
+6. 确保API响应时间P95<100ms，协议解析<10ms
+7. 实现安全认证和RBAC权限控制
+8. 支持TracePilot和Coregentis平台集成
+9. 遵循命名规范和Git提交规范
+10. 包含性能监控和追踪机制
+```
+
+#### Context模块实现
+```
+实现MPLP Context模块的完整功能，包括：
+1. ContextProtocol接口定义（shared_state、lifecycle_stage）
+2. ContextService业务逻辑（CRUD操作、状态管理）
+3. ContextController REST API（认证、验证、错误处理）
+4. ContextRepository数据访问（TypeORM、事务支持）
+5. JSON Schema验证和输入清理
+6. 单元测试和集成测试（AAA模式）
+7. 性能监控和追踪记录
+8. API文档和使用示例
+```
+
+#### Plan模块实现
+```
+实现MPLP Plan模块的任务规划功能，包括：
+1. PlanProtocol接口（tasks、dependencies、execution_strategy）
+2. 任务依赖关系管理和执行策略
+3. 并行/串行/条件执行支持
+4. 计划状态管理和进度追踪
+5. 与Context模块的集成
+6. GraphQL Schema和Subscription
+7. 性能优化（< 10ms协议解析）
+8. 错误恢复和补偿机制
+```
+
+#### Extension扩展开发
+```
+基于MPLP扩展协议开发{扩展类型}扩展，包括：
+1. ExtensionProtocol接口实现
+2. ExtensionLifecycle生命周期管理
+3. 配置Schema和健康检查
+4. 安全要求和依赖管理
+5. 与MPLP核心系统集成
+6. CLI工具/API服务/数据库扩展支持
+7. 错误处理和监控集成
+8. 扩展文档和使用指南
+```
+
+### 代码审查提示词
+```
+请审查以下代码，检查是否符合MPLP项目规范：
+1. TypeScript严格模式和类型安全性
+2. MPLP 6个核心模块协议实现正确性
+3. 命名规范（kebab-case文件、PascalCase类、camelCase方法）
+4. 测试覆盖率和质量（单元测试≥90%）
+5. 安全性（输入验证、权限控制、数据加密）
+6. 性能要求（API响应<100ms、协议解析<10ms）
+7. 错误处理（Result模式、分类错误、结构化日志）
+8. Git提交规范（Conventional Commits）
+9. API设计（RESTful、GraphQL Schema、WebSocket）
+10. 扩展协议兼容性和平台集成支持
+
+如发现问题，请提供具体的修改建议和代码示例。
+```
+
+### 性能优化提示词
+```
+分析并优化MPLP {模块名称}的性能，要求：
+1. API响应时间优化（目标P95<100ms）
+2. 协议解析性能优化（目标<10ms）
+3. 数据库查询优化（索引、连接池、缓存）
+4. 内存使用优化（<512MB单实例）
+5. 并发性能提升（支持1000+用户）
+6. 实时监控和性能指标收集
+7. 瓶颈识别和解决方案
+8. 性能测试用例设计
+```
+
+## 📋 质量检查清单
+
+### 代码提交前检查
+- [ ] TypeScript严格模式编译通过，0个any类型
+- [ ] ESLint和Prettier检查通过
+- [ ] 单元测试覆盖率≥90%，集成测试通过
+- [ ] 安全扫描无高危漏洞
+- [ ] API响应时间P95<100ms
+- [ ] 协议解析性能<10ms
+- [ ] 所有API端点有认证和权限控制
+- [ ] JSON Schema验证完整
+- [ ] Git提交信息符合Conventional Commits规范
+- [ ] 文档同步更新
+- [ ] 性能监控和日志记录正确
+- [ ] 扩展协议兼容性检查
+
+### 发布前检查
+- [ ] 所有测试用例通过（单元/集成/E2E）
+- [ ] 性能基准测试达标
+- [ ] 安全漏洞扫描清零
+- [ ] API文档完整更新
+- [ ] 变更日志(CHANGELOG.md)更新
+- [ ] 版本号符合SemVer规范
+- [ ] 数据库迁移脚本验证
+- [ ] 监控告警配置正确
+- [ ] 回滚方案准备就绪
+
+---
+
+**规则版本**: 1.0.0  
+**最后更新**: 2025-01-27  
+**适用IDE**: Cursor, VS Code, WebStorm  
+**维护团队**: Coregentis MPLP开发团队  
+**技术支持**: mplp-support@coregentis.com

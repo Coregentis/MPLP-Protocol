@@ -1,0 +1,378 @@
+# MPLP 文档风格规则
+
+> **文件类型**: Auto  
+> **适用范围**: 所有Markdown文档、PRD、技术文档  
+> **最后更新**: 2024-07-09
+
+## 📚 文档结构标准
+
+### 标准文档头部
+```markdown
+# 文档标题
+
+> **项目**: Multi-Agent Project Lifecycle Protocol (MPLP)  
+> **版本**: v1.0.0  
+> **创建时间**: 2024-07-09  
+> **更新时间**: 2024-07-09T14:30:00+08:00  
+> **作者**: MPLP团队
+
+## 📖 概述
+
+简要描述文档目的和内容概览...
+```
+
+### 目录结构规范
+```markdown
+## 📋 目录
+
+- [概述](#概述)
+- [技术规范](#技术规范)
+- [实现细节](#实现细节)
+- [API文档](#api文档)
+- [示例代码](#示例代码)
+- [测试说明](#测试说明)
+- [部署指南](#部署指南)
+- [常见问题](#常见问题)
+
+## 🏗️ 技术规范
+
+### 核心模块
+详细描述...
+
+### 接口定义
+详细描述...
+```
+
+## 🎨 Markdown 风格规范
+
+### 标题层级
+```markdown
+# 一级标题 (文档标题，每个文档只有一个)
+## 二级标题 (主要章节)
+### 三级标题 (子章节)
+#### 四级标题 (详细说明)
+##### 五级标题 (最小颗粒度，尽量避免)
+```
+
+### 表情符号使用
+```markdown
+## 📚 概述           # 书籍、文档
+## 🏗️ 架构设计       # 建筑、结构
+## 🔧 配置说明       # 工具、配置
+## 📊 性能指标       # 图表、数据
+## 🔒 安全要求       # 安全、加密
+## 🚀 快速开始       # 启动、开始
+## 📝 使用说明       # 记录、说明
+## ⚠️ 注意事项       # 警告、注意
+## ✅ 检查清单       # 完成、检查
+## 🔍 故障排除       # 搜索、调试
+```
+
+### 代码块规范
+```markdown
+# ✅ 正确: 指定语言
+```typescript
+interface ContextProtocol {
+  context_id: string;
+  version: string;
+}
+```
+
+```json
+{
+  "context_id": "123e4567-e89b-12d3-a456-426614174000",
+  "version": "1.0.0"
+}
+```
+
+```bash
+npm install @mplp/core
+npm start
+```
+
+# ❌ 错误: 不指定语言
+```
+代码内容
+```
+
+### 表格格式规范
+```markdown
+| 字段名 | 类型 | 必填 | 描述 | 示例 |
+|--------|------|------|------|------|
+| context_id | string | ✅ | 上下文唯一标识符 | `123e4567-e89b-12d3-a456-426614174000` |
+| version | string | ✅ | 协议版本号 | `1.0.0` |
+| timestamp | string | ✅ | ISO 8601时间戳 | `2024-07-09T14:30:00Z` |
+```
+
+### 链接和引用规范
+```markdown
+# 内部链接
+参见 [架构设计文档](./01_技术设计文档.md#架构设计)
+
+# 外部链接
+更多信息请访问 [MPLP官网](https://mplp.dev)
+
+# 代码引用
+使用 `context_id` 字段标识上下文
+
+# 文件路径
+配置文件位于 `src/configs/database.config.ts`
+```
+
+## 📋 PRD 文档规范
+
+### PRD 标准结构
+```markdown
+# 产品需求文档 (PRD)
+
+## 📖 产品概述
+- **产品名称**: Multi-Agent Project Lifecycle Protocol (MPLP)
+- **产品版本**: v1.0.0
+- **目标用户**: 开发团队、项目经理、系统架构师
+
+## 🎯 核心需求
+### 功能需求
+1. **Context模块**
+   - 需求描述: 管理项目上下文和共享状态
+   - 优先级: P0 (核心功能)
+   - 接受条件: 
+     - [ ] 支持上下文创建、更新、删除
+     - [ ] 支持共享状态管理
+     - [ ] 支持权限控制
+
+### 非功能需求
+| 指标 | 要求 | 测量方法 |
+|------|------|----------|
+| 响应时间 | P95 < 100ms | API响应时间监控 |
+| 可用性 | 99.9% | 系统可用性监控 |
+| 并发量 | > 1000用户 | 负载测试 |
+
+## 🔄 用户故事
+**作为** 开发者  
+**我希望** 创建一个新的项目上下文  
+**以便** 开始新的开发任务  
+
+**接受条件**:
+- [ ] 可以通过API创建上下文
+- [ ] 上下文包含必要的元数据
+- [ ] 创建后返回唯一标识符
+```
+
+## 💻 代码注释规范
+
+### TypeScript 注释标准
+```typescript
+/**
+ * Context协议处理器
+ * 
+ * 负责处理所有与上下文相关的协议操作，包括创建、更新、删除和查询。
+ * 支持RBAC权限控制和审计日志记录。
+ * 
+ * @version 1.0.0
+ * @since 2024-07-09
+ * 
+ * @example
+ * ```typescript
+ * const handler = new ContextHandler();
+ * const context = await handler.createContext({
+ *   initialState: { environment: 'development' }
+ * });
+ * ```
+ */
+export class ContextHandler {
+  /**
+   * 创建新的上下文
+   * 
+   * @param data - 上下文创建参数
+   * @param data.initialState - 初始共享状态
+   * @param data.permissions - 权限配置
+   * @returns Promise<ContextProtocol> 创建的上下文协议对象
+   * 
+   * @throws {ValidationError} 当输入数据验证失败时抛出
+   * @throws {DatabaseError} 当数据库操作失败时抛出
+   * @throws {PermissionError} 当权限检查失败时抛出
+   * 
+   * @example
+   * ```typescript
+   * const context = await handler.createContext({
+   *   initialState: { 
+   *     environment: 'development',
+   *     debug: true 
+   *   },
+   *   permissions: {
+   *     read: ['developer', 'admin'],
+   *     write: ['admin']
+   *   }
+   * });
+   * ```
+   */
+  public async createContext(
+    data: CreateContextRequest
+  ): Promise<ContextProtocol> {
+    // 1. 验证输入参数
+    const validationResult = this.validator.validate(data);
+    if (!validationResult.isValid) {
+      throw new ValidationError(validationResult.errors);
+    }
+
+    // 2. 检查权限
+    await this.checkPermission('context:create');
+
+    // 3. 生成上下文ID
+    const contextId = this.generateContextId();
+
+    // 4. 创建上下文对象
+    const context: ContextProtocol = {
+      context_id: contextId,
+      version: PROTOCOL_VERSION,
+      timestamp: new Date().toISOString(),
+      status: 'active',
+      lifecycle_stage: 'planning',
+      shared_state: data.initialState || {},
+      access_control: data.permissions
+    };
+
+    // 5. 保存到数据库
+    await this.repository.save(context);
+
+    // 6. 记录审计日志
+    this.auditLogger.log('context_created', {
+      context_id: contextId,
+      user_id: this.getCurrentUserId()
+    });
+
+    return context;
+  }
+}
+```
+
+### JSON Schema 注释
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mplp.dev/schemas/context-protocol.json",
+  "title": "ContextProtocol",
+  "description": "MPLP上下文协议定义，用于管理项目生命周期中的上下文信息",
+  "type": "object",
+  "version": "1.0.0",
+  "required": ["context_id", "version", "timestamp"],
+  "properties": {
+    "context_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "上下文的唯一标识符，使用UUID v4格式",
+      "example": "123e4567-e89b-12d3-a456-426614174000"
+    }
+  }
+}
+```
+
+## 📊 API 文档规范
+
+### API 端点文档
+```markdown
+## POST /api/v1/contexts
+
+创建新的上下文。
+
+### 请求参数
+
+| 参数 | 类型 | 位置 | 必填 | 描述 |
+|------|------|------|------|------|
+| initialState | object | body | ❌ | 初始共享状态 |
+| permissions | object | body | ❌ | 权限配置 |
+
+### 请求示例
+
+```json
+{
+  "initialState": {
+    "environment": "development",
+    "debug": true
+  },
+  "permissions": {
+    "read": ["developer", "admin"],
+    "write": ["admin"]
+  }
+}
+```
+
+### 响应示例
+
+**成功响应 (200)**:
+```json
+{
+  "context_id": "123e4567-e89b-12d3-a456-426614174000",
+  "version": "1.0.0",
+  "timestamp": "2024-07-09T14:30:00Z",
+  "status": "active",
+  "lifecycle_stage": "planning"
+}
+```
+
+**错误响应 (400)**:
+```json
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Invalid input data",
+    "details": [
+      {
+        "field": "permissions",
+        "message": "Must be an object"
+      }
+    ]
+  }
+}
+```
+
+### 错误码说明
+
+| 错误码 | HTTP状态 | 描述 |
+|--------|----------|------|
+| VALIDATION_ERROR | 400 | 输入数据验证失败 |
+| PERMISSION_DENIED | 403 | 权限不足 |
+| INTERNAL_ERROR | 500 | 服务器内部错误 |
+```
+
+## 📝 文档维护规范
+
+### 版本管理
+```markdown
+## 📋 变更历史
+
+| 版本 | 日期 | 变更内容 | 作者 |
+|------|------|----------|------|
+| 1.0.0 | 2024-07-09 | 初始版本 | MPLP团队 |
+| 1.0.1 | 2024-07-10 | 修复API文档错误 | 张三 |
+| 1.1.0 | 2024-07-15 | 新增扩展模块文档 | 李四 |
+```
+
+### 文档状态标记
+```markdown
+> **状态**: 已发布 ✅  
+> **审核**: 已通过 ✅  
+> **最后更新**: 2024-07-09  
+> **下次审核**: 2024-08-09
+```
+
+## ✅ 文档检查清单
+
+文档提交前确认：
+- [ ] 包含标准文档头部信息
+- [ ] 使用正确的表情符号和层级结构
+- [ ] 代码块指定了正确的语言
+- [ ] 表格格式规范，对齐整齐
+- [ ] 内外部链接可用
+- [ ] API文档包含完整的请求/响应示例
+- [ ] 错误处理说明完整
+- [ ] 版本信息和变更历史更新
+- [ ] 通过Markdown lint检查
+
+---
+
+> **提醒**: 文档质量直接影响项目的可维护性，请严格遵循规范要求。
+description:
+globs:
+alwaysApply: false
+---
