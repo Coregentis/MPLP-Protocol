@@ -1,0 +1,249 @@
+description: "MPLP Schema驱动开发规则 - 确保所有开发以Schema定义为核心，避免字段名称和类型混乱"
+globs: ["src/schemas/**", "src/types/**", "src/modules/**", "**/*.ts", "**/*.js"]
+alwaysApply: true
+---
+
+# MPLP Schema驱动开发规则
+
+> **规则版本**: v1.0  
+> **创建时间**: 2025-07-10T13:28:12+08:00  
+> **适用范围**: MPLP项目所有开发任务  
+> **强制等级**: 🚨 **最高优先级** - 违反将导致任务重新执行
+
+## 🎯 Schema驱动开发核心原则
+
+### 📋 **Schema定义为绝对核心**
+```
+所有功能开发必须以src/schemas/目录下的JSON Schema定义为唯一标准：
+- Schema定义是所有模块类型、接口、字段名称、枚举值的权威来源
+- 任何代码实现都必须100%匹配Schema规范
+- Schema定义优先级高于任何现有代码或文档
+```
+
+### 🔄 **强制开发流程**
+```
+每次开发任务必须严格按照以下顺序执行：
+
+1. 📖 读取Schema定义
+   - 必须先读取相关的JSON Schema文件
+   - 确认字段名称、类型结构、枚举值、必填字段
+   - 理解Schema的完整数据模型
+
+2. 🔍 评估现有实现
+   - 检查现有代码与Schema的差异
+   - 识别不符合Schema的字段名称和类型
+   - 制定Schema合规的修正计划
+
+3. 🏗️ 开发顺序
+   Schema → Types/Interfaces → Modules → Protocols → Routes → Services → Core → Tests
+```
+
+### 🚨 **严格禁止行为**
+```
+❌ 禁止在未读取Schema的情况下开始开发
+❌ 禁止使用与Schema不符的字段名称
+❌ 禁止偏离Schema定义的类型结构
+❌ 禁止在Schema不明确前编写测试用例
+❌ 禁止修改Schema定义以适应代码（代码必须适应Schema）
+```
+
+## 📋 Schema文件标准
+
+### Schema文件位置和命名
+```
+src/schemas/
+├── context-protocol.json    # Context模块Schema
+├── plan-protocol.json       # Plan模块Schema
+├── confirm-protocol.json    # Confirm模块Schema
+├── trace-protocol.json      # Trace模块Schema
+├── role-protocol.json       # Role模块Schema
+└── extension-protocol.json  # Extension模块Schema
+```
+
+### Schema合规性检查
+```typescript
+// ✅ 正确：严格按照Schema定义
+interface ConfirmProtocol {
+  confirmation_id: UUID;           // Schema字段: confirmation_id
+  confirmation_type: ConfirmationType; // Schema字段: confirmation_type
+  status: ConfirmStatus;           // Schema字段: status
+  priority: ConfirmPriority;       // Schema字段: priority
+  // 完全匹配Schema结构
+}
+
+// ❌ 错误：偏离Schema定义
+interface ConfirmProtocol {
+  confirmId: string;               // 应为confirmation_id
+  type: string;                    // 应为confirmation_type
+  confirmStatus: string;           // 应为status
+  // 字段名称不符合Schema
+}
+```
+
+## 🔧 类型定义规范
+
+### 基础类型统一性
+```typescript
+// src/types/index.ts - 统一基础类型定义
+export type UUID = string;        // UUID v4格式
+export type Timestamp = string;   // ISO 8601格式
+export type Version = string;     // SemVer格式
+export type Priority = number;    // 1-10优先级
+
+// 使用namespace避免冲突
+export namespace BaseTypes {
+  export type UUID = string;
+  export type Timestamp = string;
+  export type Version = string;
+}
+```
+
+### 模块类型定义规范
+```typescript
+// src/modules/{module}/types.ts - 完全基于Schema
+// 1. 读取对应的Schema文件
+// 2. 字段名称100%匹配Schema属性名
+// 3. 类型结构完全对应Schema定义
+// 4. 枚举值严格按照Schema规范
+
+// 示例：Plan模块types.ts
+export interface PlanProtocol {
+  plan_id: UUID;                   // Schema: plan_id
+  context_id: UUID;               // Schema: context_id  
+  protocol_version: Version;       // Schema: protocol_version
+  timestamp: Timestamp;           // Schema: timestamp
+  name: string;                   // Schema: name
+  description?: string;           // Schema: description (可选)
+  tasks: TaskDefinition[];        // Schema: tasks
+  configuration: PlanConfiguration; // Schema: configuration
+}
+```
+
+## 🧪 测试开发规范
+
+### Schema驱动测试策略
+```typescript
+// 测试必须验证Schema合规性
+describe('Schema Compliance Tests', () => {
+  test('Plan接口完全匹配plan-protocol.json', () => {
+    const planData: PlanProtocol = {
+      plan_id: '123e4567-e89b-12d3-a456-426614174000',
+      context_id: '123e4567-e89b-12d3-a456-426614174001',
+      protocol_version: '1.0.0',
+      timestamp: '2025-07-10T13:28:12+08:00',
+      name: 'Test Plan',
+      tasks: [],
+      configuration: {
+        execution_strategy: 'sequential',
+        failure_handling: {
+          strategy: 'retry',
+          max_retries: 3
+        }
+      }
+    };
+    
+    // 验证所有字段都存在且类型正确
+    expect(typeof planData.plan_id).toBe('string');
+    expect(typeof planData.confirmation_type).toBe('string');
+    // 验证枚举值符合Schema定义
+    expect(['sequential', 'parallel', 'conditional'])
+      .toContain(planData.configuration.execution_strategy);
+  });
+});
+```
+
+### 禁止的测试模式
+```typescript
+// ❌ 禁止：Schema未确认前的测试
+describe('Plan Module', () => {
+  test('should create plan', () => {
+    // 这种测试必须等Schema确认后再写
+  });
+});
+
+// ❌ 禁止：使用非Schema字段的测试
+expect(plan.planId).toBeDefined(); // 应该使用plan.plan_id
+```
+
+## 📊 Schema验证工具
+
+### 自动Schema验证
+```typescript
+// src/core/schema-validator.ts
+import Ajv from 'ajv';
+import planSchema from '../schemas/plan-protocol.json';
+
+export class SchemaValidator {
+  private ajv = new Ajv({ strict: true });
+
+  public validatePlan(data: unknown): boolean {
+    const validate = this.ajv.compile(planSchema);
+    return validate(data);
+  }
+
+  public getValidationErrors(): string[] {
+    return this.ajv.errors?.map(err => err.message) || [];
+  }
+}
+```
+
+### 开发时验证流程
+```bash
+# 1. 验证类型定义与Schema匹配
+npm run schema:validate
+
+# 2. 验证测试数据符合Schema
+npm run test:schema
+
+# 3. 验证API响应符合Schema
+npm run api:validate
+```
+
+## 🔄 Schema演进管理
+
+### Schema版本控制
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mplp.dev/schemas/plan-protocol.json",
+  "version": "1.0.0",
+  "title": "PlanProtocol",
+  "description": "MPLP Plan module protocol definition"
+}
+```
+
+### Schema变更流程
+```
+1. Schema变更提案
+2. 向后兼容性分析  
+3. 代码适配计划制定
+4. Schema版本递增
+5. 相关代码同步更新
+6. 测试用例适配
+7. 文档同步更新
+```
+
+## ✅ Schema合规检查清单
+
+开发前必须确认：
+- [ ] 已读取相关Schema JSON文件
+- [ ] 确认所有字段名称匹配Schema
+- [ ] 确认类型结构符合Schema定义
+- [ ] 确认枚举值符合Schema规范
+- [ ] 确认必填/可选字段正确处理
+- [ ] 完成Schema验证测试
+- [ ] 通过自动Schema验证工具检查
+
+开发后必须验证：
+- [ ] 所有接口100%匹配Schema
+- [ ] 测试用例验证Schema合规性
+- [ ] API响应通过Schema验证
+- [ ] 类型定义文件无Schema冲突
+- [ ] 枚举值和Schema完全一致
+
+---
+
+**规则创建**: MPLP治理层  
+**维护责任**: 所有开发者  
+**执行监督**: AI助手强制检查  
+**违规处理**: 任务重新执行直至Schema合规

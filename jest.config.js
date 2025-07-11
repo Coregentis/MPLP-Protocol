@@ -15,8 +15,8 @@ module.exports = {
     '^.+\\.ts$': 'ts-jest',
   },
   
-  // Path mapping (matches tsconfig.json)
-  moduleNameMapping: {
+  // Path mapping (matches tsconfig.json) - 正确的属性名
+  moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@core/(.*)$': '<rootDir>/src/core/$1',
     '^@protocols/(.*)$': '<rootDir>/src/protocols/$1',

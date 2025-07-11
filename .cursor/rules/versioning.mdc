@@ -1,8 +1,13 @@
+description: "MPLP项目语义化版本管理规则，涵盖模块版本同步、协议兼容性和变更日志标准"
+globs: ["package.json", "VERSION.json", "CHANGELOG.md", "src/version/**/*", "versioning/**/*"]
+alwaysApply: true
+---
+
 # MPLP 版本管理规则
 
 > **文件类型**: Always  
 > **适用范围**: 所有模块、协议、包版本管理  
-> **最后更新**: 2024-07-09
+> **最后更新**: 2025-07-10
 
 ## 📋 版本管理策略
 
@@ -336,8 +341,8 @@ npm deprecate @mplp/core@1.0.1 "Security vulnerability fixed in 1.0.2"
 ---
 
 > **重要**: 严格遵循版本管理规范，确保项目的稳定性和可维护性。
-description:
-globs:
-alwaysApply: false
+description: "MPLP 版本管理规范 - 定义语义化版本控制、Git标签管理和发布流程标准"
+globs: ["package.json", "VERSION.json", "CHANGELOG.md", "**/*.md", "versioning/**"]
+alwaysApply: true
 ---
  

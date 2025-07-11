@@ -1,8 +1,13 @@
+description: "MPLP项目交付质量检查清单，确保代码、测试、文档和部署的完整性和标准化"
+globs: ["**/*.ts", "**/*.js", "**/*.json", "**/*.md", "**/tests/**/*", "**/package.json"]
+alwaysApply: true
+---
+
 # MPLP 交付清单规则
 
 > **文件类型**: Always  
 > **适用范围**: 所有Agent任务交付前的完整性检查  
-> **最后更新**: 2024-07-09
+> **最后更新**: 2025-07-10
 
 ## 📋 交付清单概览
 
@@ -300,10 +305,8 @@
 ```
 
 ---
-
-> **重要**: 交付清单确保每次Agent交付的质量和完整性，必须逐项确认通过后方可交付。
-description:
-globs:
-alwaysApply: false
+description: "MPLP交付检查清单规则 - 定义项目交付前的质量检查标准和验收要求"
+globs: ["**/*.ts", "**/*.js", "**/*.json", "**/package.json", "**/README.md", "**/docs/**"]
+alwaysApply: true
 ---
  

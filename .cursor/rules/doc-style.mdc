@@ -1,8 +1,13 @@
+description: "MPLP项目文档风格和格式标准，统一Markdown文档、代码注释和技术文档的风格"
+globs: ["**/*.md", "**/docs/**/*", "**/*.txt", "README*", "CHANGELOG*"]
+alwaysApply: true
+---
+
 # MPLP 文档风格规则
 
 > **文件类型**: Auto  
 > **适用范围**: 所有Markdown文档、PRD、技术文档  
-> **最后更新**: 2024-07-09
+> **最后更新**: 2025-07-10
 
 ## 📚 文档结构标准
 
@@ -370,10 +375,8 @@ export class ContextHandler {
 - [ ] 通过Markdown lint检查
 
 ---
-
-> **提醒**: 文档质量直接影响项目的可维护性，请严格遵循规范要求。
-description:
-globs:
-alwaysApply: false
+description: "MPLP文档风格规范 - 定义项目文档的格式、结构和写作标准"
+globs: ["**/*.md", "**/docs/**", "**/README.md", "**/*.mdc"]
+alwaysApply: true
 ---
  

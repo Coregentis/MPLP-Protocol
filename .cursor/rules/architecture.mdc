@@ -1,7 +1,12 @@
+description: "MPLP项目系统架构设计原则，定义6个核心模块架构和技术栈规范"
+globs: ["src/**/*.ts", "**/*-service.ts", "**/*-controller.ts", "**/*-manager.ts", "**/architecture/**/*"]
+alwaysApply: true
+---
+
 # MPLP 1.0 架构设计规则
 
-> **规则版本**: v2.1  
-> **更新时间**: 2025-07-09T19:04:01+08:00  
+> **规则版本**: v2.2  
+> **更新时间**: 2025-07-11T23:59:23Z  
 > **适用项目**: Multi-Agent Project Lifecycle Protocol (MPLP) v1.0  
 > **关联文档**: [技术设计文档](../../requirements-docs/01_技术设计文档.md) | [MPLP协议开发专项路线图](../../requirements-docs/mplp_protocol_roadmap.md)  
 > **协议版本**: v1.0 (完全基于Roadmap v1.0架构规范)
@@ -10,10 +15,19 @@
 
 ### 架构理念
 - **模块化设计**: 6个核心模块独立且协作
-- **厂商中立**: 支持多平台集成，避免供应商锁定
+- **厂商中立**: 协议完全中立，支持任何平台集成，避免供应商锁定
+- **开放标准**: 提供通用接口，允许任何第三方工具和平台集成
 - **可扩展性**: Extension模块支持插件式扩展
 - **高性能**: API响应P95<100ms，协议解析<10ms
 - **高可用**: 系统可用性≥99.9%，支持1000+并发
+
+### 厂商中立原则（最高架构优先级）
+```
+MPLP协议是一个完全厂商中立的开放标准，不依赖于任何特定厂商或平台。
+所有核心功能必须独立于任何特定第三方工具或服务实现。
+TracePilot和Coregentis仅作为集成示例，展示如何与MPLP协议集成。
+任何厂商特定的适配器或集成必须通过Extension模块实现，不得侵入核心代码。
+```
 
 ### 技术架构栈（匹配Roadmap技术栈）
 ```
@@ -64,6 +78,7 @@ Progress Tracker ──→ Trace模块 ──→ 执行监控
 - 支持串行/并行/条件执行
 - 动态依赖关系解析
 - 失败重试和补偿机制
+- **failure_resolver智能故障处理** (v1.0.1新增)
 
 ### Confirm模块 - 验证决策机制
 ```typescript
@@ -129,27 +144,36 @@ Integration Hub ──→ 平台适配器 ──→ TracePilot + Coregentis
 - 热插拔和版本管理
 - 跨平台集成支持
 
-## 🔗 平台集成架构（基于Roadmap集成规划）
+## 🔗 第三方集成架构（参考实现示例）
 
-### TracePilot集成
+MPLP协议设计为可与任何第三方平台和工具集成。以下示例展示如何通过标准适配器模式实现集成：
+
+### 参考示例1: TracePilot集成
 ```typescript
-// TracePilot适配器架构
-MPLP Core ──→ TracePilot Adapter ──→ TracePilot API
+// TracePilot适配器架构（参考实现）
+MPLP Core ──→ 标准适配器接口 ──→ TracePilot适配器实现
      ↓              ↓                     ↓
-Trace Data ──→ Format Converter ──→ 追踪数据同步
+Trace Data ──→ 数据格式转换器 ──→ 第三方API调用
      ↓
-Bidirectional Sync ──→ 双向数据同步 ──→ 实时更新
+标准事件系统 ──→ 事件订阅机制 ──→ 双向数据同步
 ```
 
-### Coregentis集成
+### 参考示例2: Coregentis集成
 ```typescript
-// Coregentis平台架构
-MPLP Protocol ──→ Coregentis Gateway ──→ 企业服务
+// Coregentis集成架构（参考实现）
+MPLP Protocol ──→ 标准扩展接口 ──→ Coregentis适配器
      ↓                  ↓                    ↓
-Business Logic ──→ Platform Services ──→ 企业级功能
+标准业务逻辑 ──→ 扩展点实现 ──→ 第三方服务调用
      ↓
-Management Console ──→ 统一管理界面 ──→ 监控运维
+标准事件总线 ──→ 事件处理器 ──→ 外部系统通知
 ```
+
+### 通用集成原则
+- **标准接口**: 所有集成必须通过标准化接口实现
+- **松耦合**: 核心功能不得依赖任何特定第三方实现
+- **可替换性**: 任何集成实现都可以被其他实现替换
+- **隔离性**: 第三方集成故障不应影响核心功能
+- **性能约束**: 集成实现必须满足MPLP性能标准
 
 ## 🔧 技术实现架构
 
@@ -303,8 +327,13 @@ spec:
 
 ---
 
-**架构规则版本**: v2.1  
-**维护团队**: Coregentis MPLP架构团队  
+**架构规则版本**: v2.2  
+**维护团队**: MPLP架构团队  
 **审查周期**: 每个开发阶段结束后审查  
-**技术支持**: architecture@coregentis.com
+**技术支持**: architecture@mplp.dev
+
+description: "MPLP系统架构设计规则 - 定义系统架构原则、模块设计规范和技术实现指导"
+globs: ["**/*.ts", "**/*.js", "**/architecture/**", "**/design/**", "**/modules/**"]
+alwaysApply: true
+---
  

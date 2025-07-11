@@ -48,6 +48,13 @@ export interface TracePilotIntegrationConfig {
   compressionEnabled: boolean;
   encryptionEnabled: boolean;
   auditEnabled: boolean;
+  adapterVersion: 'basic' | 'enhanced';     // 🆕 适配器版本选择
+  enhancedFeatures: {                       // 🆕 增强版功能配置
+    aiIssueDetection: boolean;
+    autoFixSuggestions: boolean;
+    intelligentTaskTracking: boolean;
+    performanceOptimization: boolean;
+  };
 }
 
 /**
@@ -88,7 +95,14 @@ const defaultTracePilotConfig: TracePilotConfig = {
     errorRetry: true,
     compressionEnabled: true,
     encryptionEnabled: false,     // 开发环境默认关闭
-    auditEnabled: true
+    auditEnabled: true,
+    adapterVersion: 'enhanced',   // 🆕 默认使用增强版适配器
+    enhancedFeatures: {           // 🆕 启用所有增强功能
+      aiIssueDetection: true,
+      autoFixSuggestions: true,
+      intelligentTaskTracking: true,
+      performanceOptimization: true
+    }
   }
 };
 
@@ -122,7 +136,14 @@ export function createTracePilotConfig(): TracePilotConfig {
       errorRetry: process.env.TRACEPILOT_RETRY_ENABLED !== 'false',
       compressionEnabled: process.env.TRACEPILOT_COMPRESSION === 'true',
       encryptionEnabled: process.env.TRACEPILOT_ENCRYPTION === 'true',
-      auditEnabled: process.env.TRACEPILOT_AUDIT !== 'false'
+      auditEnabled: process.env.TRACEPILOT_AUDIT !== 'false',
+      adapterVersion: (process.env.TRACEPILOT_ADAPTER_VERSION as 'basic' | 'enhanced') || 'enhanced', // 🆕
+      enhancedFeatures: {           // 🆕 增强版功能环境变量配置
+        aiIssueDetection: process.env.TRACEPILOT_AI_DETECTION !== 'false',
+        autoFixSuggestions: process.env.TRACEPILOT_AUTO_FIX !== 'false',
+        intelligentTaskTracking: process.env.TRACEPILOT_INTELLIGENT_TRACKING !== 'false',
+        performanceOptimization: process.env.TRACEPILOT_PERFORMANCE_OPT !== 'false'
+      }
     }
   };
 

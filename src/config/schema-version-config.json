@@ -1,0 +1,13 @@
+{
+  "enforceFreeze": true,
+  "allowedModifiers": [
+    "build-system",
+    "schema-validator"
+  ],
+  "requireApproval": true,
+  "autoBackup": true,
+  "validateOnStartup": true,
+  "governanceLevel": "STRICT",
+  "createdAt": "2025-07-11T23:59:23Z",
+  "version": "1.0.1"
+}

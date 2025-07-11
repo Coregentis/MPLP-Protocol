@@ -1,8 +1,13 @@
+description: "MPLP项目自动文档生成标准，包含JSDoc注释规范、API文档生成和代码注释要求"
+globs: ["**/*.ts", "**/*.js", "**/*.md", "**/docs/**/*", "**/*.json"]
+alwaysApply: true
+---
+
 # MPLP 自动文档规则
 
 > **文件类型**: Agent Requested  
 > **适用范围**: 所有自动文档生成和代码注释  
-> **最后更新**: 2024-07-09
+> **最后更新**: 2025-07-10
 
 ## 📚 自动文档生成策略
 
@@ -291,6 +296,12 @@ module.exports = {
 ```
 
 ## 📄 OpenAPI 文档生成
+
+### 新增API文档 (v1.0.1)
+- **failure_resolver API**: 故障解决器API文档 (`docs/api/failure-resolver.md`)
+  - Plan模块故障处理机制
+  - TracePilot Enhanced Adapter集成
+  - AI驱动的故障诊断和修复建议
 
 ### Swagger注解示例
 ```typescript
@@ -688,8 +699,8 @@ console.log('📚 Documentation update completed!');
 ---
 
 > **重要**: 自动文档生成确保代码和文档的一致性，减少手动维护工作量，提高文档质量。
-description:
-globs:
-alwaysApply: false
+description: "MPLP自动文档生成规则 - 定义文档自动生成、更新和维护的规范和流程"
+globs: ["**/*.md", "**/docs/**", "**/README.md", "**/*.ts", "**/*.js"]
+alwaysApply: true
 ---
  

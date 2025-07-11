@@ -1,7 +1,7 @@
 # MPLP 项目开发预设指令
 
-> **预设版本**: v2.1  
-> **更新时间**: 2025-07-09T19:04:01+08:00  
+> **预设版本**: v2.3  
+> **更新时间**: 2025-07-10T13:28:12+08:00  
 > **适用项目**: Multi-Agent Project Lifecycle Protocol (MPLP) v1.0  
 
 ## 🎯 AI 助手开发约束
@@ -9,6 +9,16 @@
 你将基于已有的 `.cursor/rules/*.mdc` 项目规范开发 MPLP 协议项目。
 
 ### 📌 强制执行的开发约束：
+
+#### 0. **Schema驱动开发原则（最高优先级）** 🆕
+```
+所有开发任务必须严格遵循Schema驱动原则：
+- 开发前必须先读取相关src/schemas/*.json文件
+- 所有字段名称、类型结构、枚举值必须100%匹配Schema定义
+- 禁止在Schema未确认前编写代码或测试用例
+- 严格按照Schema → Types → Modules → Services → Tests的开发顺序
+参考规则：.cursor/rules/schema-driven-development.mdc
+```
 
 #### 1. **MPLP 生命周期流程（严格执行）**
 ```
@@ -123,17 +133,39 @@
 
 ### 🎯 使用示例
 
+#### **任务1：Plan模块failure_resolver功能实现**
 **用户请求**:
-> 「请你为 `trace` 模块补充 `failure_resolver` 功能，但必须严格走 Plan → Confirm → Trace → Delivery 流程，并遵守相关 `.mdc` 规则。」
+> 「请你为 `plan` 模块补充 `failure_resolver` 功能，但必须严格走 Plan → Confirm → Trace → Delivery 流程，并遵守相关 `.mdc` 规则。」
 
-**AI 助手应该的响应流程**:
-1. **Plan**: 分析 trace 模块规则，设计 failure_resolver 方案
-2. **Confirm**: 确认技术方案符合性能要求 (<2ms)
-3. **Trace**: 记录实施过程，监控开发进度
-4. **Delivery**: 交付代码，更新文档，验证质量
+**AI 助手成功完成的流程**:
+1. **Plan**: 分析 plan 模块规则，设计 failure_resolver 方案（4种恢复策略）
+2. **Confirm**: 确认技术方案符合性能要求 (<10ms)
+3. **Trace**: 记录实施过程，监控开发进度，实现批处理恢复
+4. **Delivery**: 交付代码，创建测试用例，验证覆盖率>90%
+
+**实际交付成果**:
+- 修改 `src/modules/plan/plan-manager.ts` - 添加失败任务恢复机制
+- 增强 `src/modules/plan/types.ts` - 添加失败相关事件类型
+- 创建 `tests/modules/plan/plan-manager.test.ts` - 全面测试覆盖
+
+#### **任务2：TracePilot适配器升级**
+**用户请求**:
+> 「Plan模块没有使用更新的TracePilot MCP方法，需要升级到增强版适配器。」
+
+**AI 助手成功完成的流程**:
+1. **Plan**: 分析现有适配器差异，规划升级路径
+2. **Confirm**: 确认升级方案和兼容性保障
+3. **Trace**: 实施升级，添加AI智能追踪功能
+4. **Delivery**: 完成升级，更新测试，验证兼容性
+
+**实际交付成果**:
+- 升级 `src/modules/plan/plan-manager.ts` - 使用EnhancedTracePilotAdapter
+- 增强 `src/mcp/enhanced-tracepilot-adapter.ts` - 添加向后兼容方法
+- 更新 `tests/modules/plan/plan-manager.test.ts` - 适配增强版测试
 
 ### 📚 参考规则文件
 
+- `.cursor/rules/schema-driven-development.mdc` - **Schema驱动开发核心规则** 🆕
 - `.cursor/rules/core-modules.mdc` - 6个核心模块规范
 - `.cursor/rules/technical-standards.mdc` - 技术标准基线
 - `.cursor/rules/api-design.mdc` - API设计规范
@@ -150,6 +182,25 @@
 
 ---
 
-**预设指令版本**: v2.1  
+**预设指令版本**: v2.2  
 **维护团队**: Coregentis MPLP 项目团队  
 **更新周期**: 每个开发阶段开始前更新 
+
+### 🎯 **审计执行标准与方法**
+
+#### **六维度量化指标**
+```markdown
+<code_block_to_apply_changes_from>
+```
+
+---
+
+## ✅ CONFIRM 阶段 - 审计范围与标准确认
+```markdown
+✅ 架构一致性: 接口命名匹配度>95%, 错误处理模式100%一致
+✅ 版本一致性: 所有版本号100%匹配同步  
+✅ 开发一致性: ESLint零违规, 命名约定匹配度>95%
+✅ 需求一致性: PRD需求实现覆盖率>90%
+✅ 文档一致性: 代码注释覆盖率>80%, API文档匹配度>95%
+✅ 测试一致性: 测试覆盖率>85%, Mock方式统一性>90%
+``` 

@@ -160,12 +160,42 @@ async function configureRoutes(app: Application): Promise<void> {
 async function createApiRoutes(): Promise<express.Router> {
   const router = express.Router();
 
-  // 占位符路由，后续会添加6个核心模块的路由
+  // 导入Context模块
+  const { createContextModule, createDefaultContextConfig } = await import('@/modules/context');
+  const { AppDataSource } = await import('@/database/data-source');
+  
+  // 初始化Context模块
+  try {
+    const contextConfig = createDefaultContextConfig();
+    const contextModule = await createContextModule({
+      dataSource: AppDataSource,
+      config: contextConfig,
+      // Redis和SocketIO稍后集成
+      redisClient: undefined,
+      socketServer: undefined,
+      tracePilotAdapter: router.locals?.tracePilotAdapter
+    });
+
+    // 集成Context路由
+    router.use('/contexts', contextModule.router);
+    
+    logger.info('Context模块已集成到API路由', {
+      module: 'Context',
+      routes: '/api/v1/contexts'
+    });
+
+  } catch (error) {
+    logger.error('Context模块集成失败', {
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+
+  // 模块状态路由
   router.get('/status', (req: Request, res: Response) => {
     res.json({
       success: true,
       modules: {
-        context: 'pending',
+        context: 'active', // Context模块已实现
         plan: 'pending',
         confirm: 'pending',
         trace: 'pending', 

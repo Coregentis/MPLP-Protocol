@@ -1,8 +1,13 @@
+description: "MPLP项目Git提交信息规范，基于Conventional Commits标准的提交格式要求"
+globs: ["**/*", ".git/**/*", "*.md"]
+alwaysApply: true
+---
+
 # MPLP 提交指南规则
 
 > **文件类型**: Always  
 > **适用范围**: 所有Git提交信息  
-> **最后更新**: 2024-07-09
+> **最后更新**: 2025-07-10
 
 ## 📝 提交信息格式
 
@@ -356,8 +361,8 @@ git log --oneline --graph --decorate
 ---
 
 > **重要**: 规范的提交信息有助于自动生成变更日志和版本发布，请严格遵循规范。
-description:
-globs:
-alwaysApply: false
+description: "MPLP代码提交规范指导 - 定义Git提交信息格式、分支策略和代码审查要求"
+globs: ["**/*", ".gitignore", "package.json", "**/*.md"]
+alwaysApply: true
 ---
  

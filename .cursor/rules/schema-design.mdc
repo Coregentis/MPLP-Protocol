@@ -1,8 +1,13 @@
+description: "MPLP项目JSON Schema设计原则和验证规则，确保数据结构的类型安全和向后兼容性"
+globs: ["src/schemas/**/*.json", "src/types/**/*.ts", "**/*-protocol.json", "**/*-schema.json"]
+alwaysApply: true
+---
+
 # MPLP JSON Schema 设计规则
 
 > **文件类型**: Agent Requested  
 > **适用范围**: 所有JSON Schema文件和数据结构定义  
-> **最后更新**: 2024-07-09
+> **最后更新**: 2025-07-10
 
 ## 📋 Schema 设计原则
 
@@ -473,8 +478,8 @@ Schema提交前确认：
 ---
 
 > **注意**: 所有Schema必须通过Ajv验证器测试才能合并到主分支。
-description:
-globs:
-alwaysApply: false
+description: "MPLP Schema设计规范 - 定义JSON Schema设计原则、验证规则和数据模型标准"
+globs: ["**/*.json", "**/schemas/**", "**/*.ts", "**/*.js", "**/types/**"]
+alwaysApply: true
 ---
  

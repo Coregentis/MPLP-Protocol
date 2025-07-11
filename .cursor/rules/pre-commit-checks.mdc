@@ -1,8 +1,13 @@
+description: "MPLP项目Pre-commit自动化检查规则，包含代码质量、测试验证、安全扫描等检查项目"
+globs: ["**/*.ts", "**/*.js", "**/*.json", "package*.json", ".husky/**/*", "lint-staged.config.*"]
+alwaysApply: true
+---
+
 # MPLP Pre-commit 检查规则
 
 > **文件类型**: Auto  
 > **适用范围**: 所有代码提交前的自动化检查  
-> **最后更新**: 2024-07-09
+> **最后更新**: 2025-07-10
 
 ## 🔍 Pre-commit 检查概览
 
@@ -486,8 +491,8 @@ echo "✅ All pre-commit checks passed!"
 ---
 
 > **重要**: Pre-commit检查确保代码质量和项目标准，任何检查失败都会阻止提交。
-description:
-globs:
-alwaysApply: false
+description: "MPLP Pre-commit检查规则 - 定义代码提交前的自动化检查流程和质量标准"
+globs: ["**/*.ts", "**/*.js", "**/*.json", "**/*.md", ".husky/**", "scripts/**"]
+alwaysApply: true
 ---
  

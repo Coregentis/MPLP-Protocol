@@ -2,7 +2,7 @@
 
 > **文件类型**: Auto  
 > **适用范围**: 所有代码文件、Schema、变量命名  
-> **最后更新**: 2024-07-09
+> **最后更新**: 2025-07-11T23:59:23Z
 
 ## 📝 基础命名原则
 
@@ -11,6 +11,7 @@
 - **语义明确**: 名称应准确描述其用途和功能
 - **避免缩写**: 除非是广泛认知的缩写(id, url, api等)
 - **一致性**: 同类型实体使用统一的命名模式
+- **严格遵守**: 所有命名必须100%符合本规范，无例外
 
 ## 🏗️ 模块命名规范
 
@@ -24,22 +25,102 @@ role/        # 角色模块
 extension/   # 扩展模块
 ```
 
-### 子模块命名
-```typescript
-// ✅ 正确: 模块内部组件命名
-context/
-├── context.protocol.ts      # 协议定义
-├── context.handler.ts       # 处理器
-├── context.validator.ts     # 验证器
-├── context.service.ts       # 业务服务
-├── context.controller.ts    # 控制器
-├── context.repository.ts    # 数据仓库
-└── context.types.ts         # 类型定义
+### 模块内部文件命名规则 (严格执行)
+```
+{module-name}-{component-type}.ts
+```
 
-// ❌ 错误: 不一致的命名
-├── contextProtocol.ts       # 违反模块前缀规则
-├── ContextHandler.ts        # 违反小写规则
-└── ctx-validator.ts         # 违反分隔符规则
+其中:
+- `{module-name}` 是模块名称，必须小写
+- `{component-type}` 是组件类型，必须小写
+- 分隔符必须使用连字符(`-`)
+
+### 标准组件类型
+```
+protocol     # 协议定义
+manager      # 管理器
+factory      # 工厂
+handler      # 处理器
+validator    # 验证器
+service      # 业务服务
+controller   # 控制器
+repository   # 数据仓库
+types        # 类型定义
+resolver     # 解析器
+adapter      # 适配器
+helper       # 辅助工具
+util         # 工具函数
+config       # 配置
+middleware   # 中间件
+```
+
+### 模块文件命名示例
+
+#### ✅ 正确: 统一的模块内部组件命名
+```
+context/
+├── context-protocol.ts       # 协议定义
+├── context-manager.ts        # 管理器
+├── context-factory.ts        # 工厂
+├── context-handler.ts        # 处理器
+├── context-validator.ts      # 验证器
+├── context-service.ts        # 业务服务
+├── context-controller.ts     # 控制器
+├── context-repository.ts     # 数据仓库
+├── context-types.ts          # 类型定义
+└── index.ts                  # 模块入口
+
+plan/
+├── plan-protocol.ts          # 协议定义
+├── plan-manager.ts           # 管理器
+├── plan-factory.ts           # 工厂
+├── plan-handler.ts           # 处理器
+├── plan-validator.ts         # 验证器
+├── plan-service.ts           # 业务服务
+├── plan-controller.ts        # 控制器
+├── plan-repository.ts        # 数据仓库
+├── plan-types.ts             # 类型定义
+├── plan-resolver.ts          # 解析器
+├── failure-resolver.ts       # 失败解析器
+└── index.ts                  # 模块入口
+```
+
+#### ❌ 错误: 不一致的命名
+```
+context/
+├── context.protocol.ts       # 错误: 使用点分隔符
+├── contextManager.ts         # 错误: 使用camelCase
+├── Context.handler.ts        # 错误: 首字母大写且使用点分隔符
+├── ContextValidator.ts       # 错误: 使用PascalCase
+└── ctx-validator.ts          # 错误: 使用缩写
+
+plan/
+├── Plan-factory.ts           # 错误: 首字母大写
+├── plan_manager.ts           # 错误: 使用下划线分隔符
+├── planHandler.ts            # 错误: 使用camelCase
+├── Failure-Resolver.ts       # 错误: 使用PascalCase
+└── PlanController.ts         # 错误: 使用PascalCase
+```
+
+### 特殊文件命名规则
+
+#### 子模块命名
+```
+{module-name}/{sub-module-name}/
+├── {module-name}-{sub-module-name}-{component-type}.ts
+```
+
+例如:
+```
+plan/execution/
+├── plan-execution-manager.ts
+├── plan-execution-handler.ts
+```
+
+#### 共享组件命名
+```
+{module-name}/shared/
+├── {module-name}-{component-type}.ts
 ```
 
 ## 📋 JSON Schema 命名规范
@@ -264,6 +345,7 @@ context-protocol.ts
 plan-execution-handler.ts
 trace-collection-service.ts
 role-permission-validator.ts
+failure-resolver.ts
 
 // Schema文件
 context-protocol.json
@@ -273,6 +355,7 @@ plan-execution-schema.json
 context-handler.test.ts
 plan-service.integration.ts
 trace-collector.e2e.ts
+failure-resolver.test.ts
 
 // 配置文件
 database.config.ts
@@ -284,6 +367,12 @@ app.config.ts
 ```
 src/
 ├── modules/           # 小写复数
+│   ├── context/       # 模块名小写
+│   ├── plan/          # 模块名小写
+│   ├── confirm/       # 模块名小写
+│   ├── trace/         # 模块名小写
+│   ├── role/          # 模块名小写
+│   └── extension/     # 模块名小写
 ├── core/             # 小写单数
 ├── adapters/         # 小写复数
 ├── utils/            # 小写复数
@@ -322,10 +411,32 @@ export async function createContext(
 }
 ```
 
+## 🔄 文件重命名指南
+
+### 需要重命名的文件示例
+```
+// ❌ 当前不一致的命名:
+context.controller.ts     → context-controller.ts
+Context.handler.ts        → context-handler.ts
+Plan-factory.ts           → plan-factory.ts
+plan_manager.ts           → plan-manager.ts
+planHandler.ts            → plan-handler.ts
+Failure-Resolver.ts       → failure-resolver.ts
+```
+
+### 重命名执行步骤
+1. 识别所有不符合规范的文件
+2. 创建重命名计划，确保引用更新
+3. 执行重命名，更新所有导入语句
+4. 验证项目编译无错误
+5. 提交更改，注明"refactor: 统一文件命名规范"
+
 ## ✅ 命名检查清单
 
 代码提交前确认：
 - [ ] 模块名使用小写，文件名使用kebab-case
+- [ ] 模块内部组件使用 `{module-name}-{component-type}.ts` 格式
+- [ ] 所有分隔符统一使用连字符(`-`)
 - [ ] TypeScript接口和类使用PascalCase
 - [ ] 函数和变量使用camelCase
 - [ ] 常量使用UPPER_SNAKE_CASE
@@ -334,11 +445,31 @@ export async function createContext(
 - [ ] 数据库表和字段使用snake_case
 - [ ] 文档注释完整清晰
 
+## 🚨 自动检查机制
+
+为确保命名规范的一致性执行，项目将实施以下自动检查机制：
+
+1. **提交前检查**: Git pre-commit钩子检查文件命名
+2. **CI检查**: 持续集成流程中验证命名规范
+3. **ESLint规则**: 自定义ESLint规则验证命名约定
+4. **自动修复**: 提供自动修复脚本修正常见命名问题
+
+```typescript
+// 命名规范检查脚本示例
+function validateFileNaming(filePath: string): boolean {
+  // 检查文件是否符合命名规范
+  const regex = /^[a-z]+-[a-z]+\.ts$/;
+  const fileName = path.basename(filePath);
+  return regex.test(fileName);
+}
+```
+
 ---
 
-> **提醒**: 不符合命名约定的代码将触发自动检查失败，必须修正后重新提交。
-description:
-globs:
-alwaysApply: false
+> **重要**: 不符合命名约定的代码将触发自动检查失败，必须修正后重新提交。所有团队成员必须严格遵守这些命名规范，确保项目的专业性和一致性。
+
+description: "MPLP项目文件命名规范 - 定义统一的文件、模块、类、接口、变量命名标准"
+globs: ["**/*.ts", "**/*.js", "**/*.json", "**/*.md", "src/**/*"]
+alwaysApply: true
 ---
  

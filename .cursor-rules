@@ -1,7 +1,7 @@
 # MPLP 1.0 AI IDE 治理层驯化配置
 
-> **驯化配置版本**: v2.2  
-> **更新时间**: 2025-07-09T20:30:00+08:00  
+> **驯化配置版本**: v2.3  
+> **更新时间**: 2025-07-11T10:15:00+08:00  
 > **适用项目**: Multi-Agent Project Lifecycle Protocol (MPLP) v1.0  
 > **治理层状态**: ✅ **已激活** - Project Governance Layer 完全部署
 > **关联文档**: [PROJECT_GOVERNANCE_REPORT](./PROJECT_GOVERNANCE_REPORT.md) | [MPLP协议开发专项路线图](./requirements-docs/mplp_protocol_roadmap.md)  
@@ -39,9 +39,17 @@
 ### 核心目标
 - 实现企业级多代理项目生命周期协议
 - 6个核心模块：Context/Plan/Confirm/Trace/Role/Extension
-- 内置TracePilot追踪系统和Coregentis平台集成
+- 完全厂商中立的开放标准协议
 - 达到严格的性能和质量标准
 - **新增**: 完整的治理层和AI驯化机制
+
+### 厂商中立原则（最高优先级）
+```
+MPLP协议是一个完全厂商中立的开放标准，不依赖于任何特定厂商或平台。
+所有核心功能必须独立于任何特定第三方工具或服务实现。
+TracePilot和Coregentis仅作为集成示例，展示如何与MPLP协议集成。
+任何厂商特定的适配器或集成必须通过Extension模块实现，不得侵入核心代码。
+```
 
 ### 技术栈标准（与Roadmap v1.0完全匹配）
 - **运行环境**: Node.js 18+ LTS
@@ -50,7 +58,7 @@
 - **数据库**: PostgreSQL 14+ + TypeORM + Redis 7+缓存
 - **API设计**: REST API + GraphQL + WebSocket实时通信
 - **容器化**: Docker + Kubernetes部署
-- **追踪系统**: 内置TracePilot MCP适配器 + 完整trace历史
+- **集成示例**: 标准适配器接口 + 参考实现
 
 ### 性能和质量标准（强制执行）
 - **API响应时间**: P95 < 100ms, P99 < 200ms
@@ -93,8 +101,10 @@
 ### 🔄 **版本管理系统** (versioning/)
 - `VERSION.json` - 自动化版本管理，与Roadmap v1.0对齐
 
-### 🔗 **平台集成适配器** (src/mcp/)
-- `tracepilot-adapter.ts` - TracePilot双向集成适配器
+### 🔗 **集成参考实现** (src/mcp/)
+- `standard-adapter-interface.ts` - 标准适配器接口
+- `tracepilot-adapter.ts` - TracePilot参考适配器实现
+- `coregentis-adapter.ts` - Coregentis参考适配器实现
 
 ## 📋 **强制执行的标准化工作流程**
 
@@ -148,7 +158,7 @@
 **性能监控**: [实际性能数据] (目标：[目标值]) [✅/❌]
 **质量检查**: TypeScript编译状态，ESLint检查状态
 **问题记录**: [遇到的问题和解决方案]
-**TracePilot同步**: [追踪数据同步状态]
+**追踪同步**: [追踪数据同步状态]
 ```
 
 ### 🚀 **Delivery阶段（必须完成）**
@@ -170,7 +180,7 @@
 - [x] 测试覆盖率达标 ([实际值] > [要求值]) ✅
 
 **版本影响**: [版本递增类型和原因]
-**TracePilot记录**: [追踪记录ID和完整性确认]
+**追踪记录**: [追踪记录ID和完整性确认]
 ```
 
 ## 🔧 核心开发规则（严格执行）
@@ -237,36 +247,44 @@ interface TraceProtocol {
   performance_metrics: PerformanceData;
   trace_type: 'operation' | 'state_change' | 'error' | 'compensation';
   compensation_actions?: CompensationAction[];
-  // TracePilot集成字段
-  tracepilot_sync_id?: string;
-  tracepilot_sync_status: 'pending' | 'synced' | 'failed';
+  // 集成字段 - 通用设计，不特定于任何厂商
+  sync_id?: string;
+  sync_status: 'pending' | 'synced' | 'failed';
 }
 ```
 
-### 3. **TracePilot集成规范（新增）**
-**参考规则**: 基于 `src/mcp/tracepilot-adapter.ts`
+### 3. **标准集成接口（厂商中立）**
+**参考规则**: 基于 `src/mcp/standard-adapter-interface.ts`
 
 ```typescript
-// TracePilot同步性能要求
-interface TracePilotSyncRequirements {
-  single_sync_latency: number;    // < 100ms
-  batch_sync_throughput: number;  // > 1000 traces/second
-  format_conversion_time: number; // < 50ms
-  error_retry_count: number;      // max 3 retries
+// 标准集成接口 - 厂商中立设计
+interface StandardAdapterInterface {
+  // 通用同步方法
+  syncData(data: any): Promise<SyncResult>;
+  
+  // 健康检查
+  checkHealth(): Promise<HealthStatus>;
+  
+  // 配置验证
+  validateConfig(): Promise<ValidationResult>;
 }
 
-// 每个Trace操作必须同步到TracePilot
-@PerformanceMonitor.measure('tracepilot.sync')
-async function syncToTracePilot(traceData: MPLPTraceData) {
-  const adapter = new TracePilotAdapter();
-  const result = await adapter.syncTraceData(traceData);
-  
-  // 验证同步性能
-  if (result.sync_latency > 100) {
-    throw new TracePilotSyncError('Sync latency exceeded 100ms');
+// 集成示例实现（仅作参考）
+class SampleAdapterImplementation implements StandardAdapterInterface {
+  async syncData(data: any): Promise<SyncResult> {
+    // 示例实现...
+    return { success: true };
   }
   
-  return result;
+  async checkHealth(): Promise<HealthStatus> {
+    // 示例实现...
+    return { status: 'healthy' };
+  }
+  
+  async validateConfig(): Promise<ValidationResult> {
+    // 示例实现...
+    return { valid: true };
+  }
 }
 ```
 
@@ -297,9 +315,9 @@ interface PerformanceRequirements {
   extension_call: number;         // < 50ms
   extension_health_check: number; // < 10ms
   
-  // TracePilot集成性能要求
-  tracepilot_sync_single: number; // < 100ms
-  tracepilot_sync_batch: number;  // > 1000 TPS
+  // 集成性能要求（通用，不特定于任何厂商）
+  adapter_sync_single: number; // < 100ms
+  adapter_sync_batch: number;  // > 1000 TPS
 }
 
 // 性能测试必须在每个功能实现后执行
@@ -624,8 +642,8 @@ Closes #345, Related to Roadmap Stage 3 TracePilot integration"
 
 ---
 
-**AI驯化配置版本**: v2.2  
+**驯化配置版本**: v2.3  
 **治理层状态**: ✅ 完全激活  
-**维护团队**: Coregentis MPLP AI开发团队  
-**技术支持**: mplp-support@coregentis.com  
+**维护团队**: MPLP项目团队  
+**技术支持**: support@mplp.dev  
 **配置更新**: 与项目发展同步持续更新

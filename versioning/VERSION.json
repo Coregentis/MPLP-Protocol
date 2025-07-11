@@ -1,23 +1,43 @@
 {
   "version_control": {
     "schema_version": "v2.1",
-    "last_updated": "2025-07-09T19:04:01+08:00",
+    "last_updated": "2025-07-11T23:59:23Z",
     "managed_by": "versioning.mdc",
     "project": "Multi-Agent Project Lifecycle Protocol (MPLP) v1.0"
   },
   "current_version": {
     "major": 1,
     "minor": 0,
-    "patch": 0,
+    "patch": 1,
     "prerelease": null,
     "build": null,
-    "full_version": "1.0.0",
+    "full_version": "1.0.1",
     "release_date": "planned_2025-10-01",
     "status": "development"
   },
   "version_history": [
     {
-      "version": "1.0.0-dev",
+      "version": "1.0.1",
+      "date": "2025-07-11T23:59:23Z",
+      "type": "feature",
+      "description": "Added failure_resolver to Plan module",
+      "changes": [
+        "Implemented failure_resolver functionality in Plan module",
+        "Added retry, rollback, skip and manual intervention strategies",
+        "Integrated with PlanManager for automatic failure handling",
+        "Added comprehensive test coverage for failure resolution",
+        "Updated documentation for failure handling capabilities"
+      ],
+      "breaking_changes": [],
+      "performance_impact": "minimal",
+      "security_updates": [],
+      "compliance": [
+        ".cursor/rules/versioning.mdc",
+        ".cursor/rules/schema-driven-development.mdc"
+      ]
+    },
+    {
+      "version": "1.0.0",
       "date": "2025-07-09T19:04:01+08:00",
       "type": "initial",
       "description": "Initial MPLP v1.0 project setup based on Roadmap v1.0",
