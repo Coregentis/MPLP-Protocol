@@ -1,12 +1,15 @@
 /**
  * MPLP v1.0 统一配置管理
  * 
+ * @version v1.1.0
+ * @created 2025-07-09T21:00:00+08:00
+ * @updated 2025-07-16T16:00:00+08:00
  * @compliance .cursor/rules/security-requirements.mdc - 敏感配置管理
- * @compliance .cursor/rules/integration-patterns.mdc - TracePilot配置
+ * @compliance .cursor/rules/vendor-neutral-design.mdc - 厂商中立配置
  */
 
 import { config as dotenvConfig } from 'dotenv';
-import { tracePilotConfig } from './tracepilot';
+import { traceAdapterConfig } from './trace-adapter.config';
 
 // 加载环境变量
 dotenvConfig();
@@ -38,16 +41,27 @@ export const config = {
     password: process.env.REDIS_PASSWORD
   },
   
-  // TracePilot配置（简化版本，兼容适配器）
-  tracepilot: {
-    apiUrl: tracePilotConfig.connection.apiUrl,
-    apiKey: tracePilotConfig.connection.apiKey,
-    timeout: tracePilotConfig.connection.timeout,
-    retryAttempts: tracePilotConfig.connection.retryAttempts,
-    batchSize: tracePilotConfig.performance.batchSize,
-    // 添加integration字段以兼容server.ts
+  // 追踪适配器配置（厂商中立）
+  traceAdapter: {
+    apiUrl: traceAdapterConfig.connection.apiUrl,
+    apiKey: traceAdapterConfig.connection.apiKey,
+    timeout: traceAdapterConfig.connection.timeout,
+    retryAttempts: traceAdapterConfig.connection.retryAttempts,
+    batchSize: traceAdapterConfig.performance.batchSize,
     integration: {
-      enabled: tracePilotConfig.integration.enabled
+      enabled: traceAdapterConfig.integration.enabled
+    }
+  },
+  
+  // 向后兼容字段 - 已废弃，请使用traceAdapter
+  tracepilot: {
+    apiUrl: traceAdapterConfig.connection.apiUrl,
+    apiKey: traceAdapterConfig.connection.apiKey,
+    timeout: traceAdapterConfig.connection.timeout,
+    retryAttempts: traceAdapterConfig.connection.retryAttempts,
+    batchSize: traceAdapterConfig.performance.batchSize,
+    integration: {
+      enabled: traceAdapterConfig.integration.enabled
     }
   },
   

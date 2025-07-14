@@ -12,7 +12,7 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
 import inquirer from 'inquirer';
-import { EnhancedTracePilotAdapter, DevelopmentIssue, TracePilotSuggestion } from '../src/mcp/enhanced-tracepilot-adapter';
+import { EnhancedTracePilotAdapter, DevelopmentIssue, TracePilotSuggestion, TracePilotConfig } from '../src/mcp/enhanced-tracepilot-adapter';
 import { logger } from '../src/utils/logger';
 import * as fs from 'fs/promises';
 import * as path from 'path';
@@ -26,7 +26,17 @@ class TracePilotDoctor {
 
   constructor(projectRoot: string = process.cwd()) {
     this.projectRoot = projectRoot;
-    this.tracePilot = new EnhancedTracePilotAdapter(projectRoot);
+    // 创建适配器配置
+    const config: TracePilotConfig = {
+      project_root: projectRoot,
+      enhanced_features: {
+        intelligent_diagnostics: true,
+        auto_fix: true,
+        suggestion_generation: true,
+        development_metrics: true
+      }
+    };
+    this.tracePilot = new EnhancedTracePilotAdapter(config);
   }
 
   /**
@@ -39,7 +49,9 @@ class TracePilotDoctor {
     
     try {
       // 检测开发问题
-      const issues = await this.tracePilot.detectDevelopmentIssues();
+      const issuesResult = await this.tracePilot.detectDevelopmentIssues();
+      const issues = issuesResult.issues; // 从结果对象中提取issues数组
+      
       spinner.succeed(`检测完成！发现 ${issues.length} 个问题`);
       
       if (issues.length === 0) {
@@ -105,7 +117,9 @@ class TracePilotDoctor {
         if (issue.file_path) {
           console.log(`    ${chalk.gray('文件:')} ${issue.file_path}`);
         }
-        console.log(`    ${chalk.gray('描述:')} ${issue.description}`);
+        if (issue.description) {
+          console.log(`    ${chalk.gray('描述:')} ${issue.description}`);
+        }
         if (issue.auto_fixable) {
           console.log(`    ${chalk.green('✓ 可自动修复')}`);
         } else {
@@ -362,7 +376,8 @@ class TracePilotDoctor {
     const spinner = ora('收集诊断数据...').start();
     
     try {
-      const issues = await this.tracePilot.detectDevelopmentIssues();
+      const issuesResult = await this.tracePilot.detectDevelopmentIssues();
+      const issues = issuesResult.issues;
       const suggestions = await this.tracePilot.generateSuggestions();
       const report = this.tracePilot.getIssueReport();
       
@@ -371,7 +386,8 @@ class TracePilotDoctor {
         project_root: this.projectRoot,
         summary: report,
         issues: issues,
-        suggestions: suggestions
+        suggestions: suggestions,
+        confidence: issuesResult.confidence
       };
       
       const reportPath = path.join(this.projectRoot, 'trace/tracepilot-diagnostic-report.json');

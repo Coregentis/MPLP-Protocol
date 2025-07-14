@@ -1,395 +1,505 @@
 /**
- * TracePilot MCP (Model Context Protocol) Adapter
+ * TracePilotAdapter - TracePilot集成的基础适配器
  * 
- * @version v2.1
- * @created 2025-07-09T19:04:01+08:00
- * @compliance .cursor/rules/integration-patterns.mdc - TracePilot Integration
- * @compliance .cursor/rules/core-modules.mdc - Trace Module Integration
- * @performance Sync latency <100ms, Format conversion <50ms
+ * 该适配器实现了通用ITraceAdapter接口，
+ * 作为MPLP与TracePilot平台集成的参考实现。
+ * 
+ * @version v1.0.2
+ * @created 2025-07-12T14:45:00+08:00
+ * @updated 2025-07-15T20:30:00+08:00
+ * @compliance trace-protocol.json Schema v1.0.0 - 100%合规
+ * @compliance extension-protocol.mdc - 厂商中立设计
+ * @deprecated 推荐使用厂商中立的适配器 (src/adapters/trace/base-trace-adapter.ts)
  */
 
-import { TraceData, MPLPTraceData } from '@/types/trace';
-import { logger } from '@/utils/logger';
-import { PerformanceMonitor } from '@/utils/performance';
+import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
+import { Logger } from '../utils/logger';
+import { Performance } from '../utils/performance';
+import { MPLPTraceData } from '../types/trace';
+import { 
+  ITraceAdapter, 
+  FailureReport, 
+  SyncResult, 
+  AdapterHealth,
+  RecoverySuggestion,
+  SyncError,
+  AdapterType
+} from '../interfaces/trace-adapter.interface';
+import { BaseTraceAdapter } from '../adapters/trace/base-trace-adapter';
 
-/**
- * TracePilot API Client Configuration
- * Following integration-patterns.mdc specifications
- */
+// TracePilot配置接口
 export interface TracePilotConfig {
-  apiUrl: string;
-  apiKey: string;
-  timeout: number;
-  retryAttempts: number;
-  batchSize: number;
+  api_endpoint: string;
+  api_key: string;
+  organization_id: string;
+  project_id?: string;
+  environment?: 'production' | 'staging' | 'development';
+  sync_interval_ms: number;
+  batch_size: number;
 }
 
 /**
- * TracePilot Sync Result Interface
- * Performance tracking for integration monitoring
+ * TracePilot错误类型
  */
-export interface TracePilotSyncResult {
-  success: boolean;
-  sync_latency: number;
-  traces_synced: number;
-  errors: TracePilotError[];
-  timestamp: string;
+export interface TracePilotError {
+  code: string;
+  message: string;
+  details?: unknown;
 }
 
 /**
- * TracePilot Trace Format
- * External platform trace data structure
- */
-export interface TracePilotTrace {
-  id: string;
-  operation: string;
-  startTime: string;
-  endTime?: string;
-  duration: number;
-  status: 'success' | 'error' | 'pending' | 'cancelled';
-  metadata: Record<string, unknown>;
-}
-
-/**
- * TracePilot MCP Adapter Implementation
+ * TracePilotAdapter - 基础TracePilot适配器
  * 
- * Implements bidirectional synchronization between MPLP and TracePilot
- * Performance Requirements:
- * - Sync latency: <100ms P95
- * - Format conversion: <50ms
- * - Batch processing: >1000 traces/second
+ * 实现了通用ITraceAdapter接口，
+ * 提供与TracePilot平台的基础集成功能。
  * 
- * @implements integration-patterns.mdc TracePilot Integration Patterns
+ * 注意：此适配器仅作为参考实现，展示如何通过Extension模块集成第三方服务
+ * 
+ * @deprecated 推荐使用厂商中立的适配器 (src/adapters/trace/base-trace-adapter.ts)
  */
-export class TracePilotAdapter {
-  private readonly apiClient: TracePilotApiClient;
-  private readonly config: TracePilotConfig;
-  private readonly batchQueue: MPLPTraceData[] = [];
-  private syncInProgress = false;
-
+export class TracePilotAdapter implements ITraceAdapter {
+  private config: TracePilotConfig;
+  private logger = new Logger('TracePilotAdapter');
+  private performance = new Performance();
+  private traceEndpoint: string;
+  private batchEndpoint: string;
+  private failureEndpoint: string;
+  private analyticsEndpoint: string;
+  private healthEndpoint: string;
+  private baseAdapter: BaseTraceAdapter | null = null;
+  
   constructor(config: TracePilotConfig) {
     this.config = config;
-    this.apiClient = new TracePilotApiClient({
-      baseUrl: config.apiUrl,
-      apiKey: config.apiKey,
-      timeout: config.timeout
+    
+    // API端点
+    this.traceEndpoint = `${config.api_endpoint}/v1/traces`;
+    this.batchEndpoint = `${config.api_endpoint}/v1/traces/batch`;
+    this.failureEndpoint = `${config.api_endpoint}/v1/failures`;
+    this.analyticsEndpoint = `${config.api_endpoint}/v1/analytics`;
+    this.healthEndpoint = `${config.api_endpoint}/v1/health`;
+    
+    this.logger.info('TracePilotAdapter initialized', {
+      api_endpoint: config.api_endpoint,
+      environment: config.environment || 'development'
     });
-
-    // Initialize batch processing timer
-    this.startBatchProcessor();
-
-    logger.info('TracePilot MCP Adapter initialized', {
-      apiUrl: config.apiUrl,
-      timeout: config.timeout,
-      batchSize: config.batchSize
-    });
+    
+    this.logger.warn('TracePilotAdapter is deprecated, use BaseTraceAdapter instead');
   }
-
+  
   /**
-   * Synchronize single trace data to TracePilot
-   * Performance Target: <100ms sync latency
-   * 
-   * @param traceData - MPLP trace data to synchronize
-   * @returns Promise<TracePilotSyncResult>
+   * 获取适配器信息
    */
-  @PerformanceMonitor.measure('tracepilot.sync_single')
-  async syncTraceData(traceData: MPLPTraceData): Promise<TracePilotSyncResult> {
-    const startTime = performance.now();
-
+  getAdapterInfo(): { type: AdapterType; version: string; capabilities?: string[] } {
+    return {
+      type: AdapterType.CUSTOM,
+      version: '1.0.2',
+      capabilities: ['basic_tracing', 'error_reporting']
+    };
+  }
+  
+  /**
+   * 获取或创建基础适配器
+   * @returns 基础适配器实例
+   */
+  private getBaseAdapter(): BaseTraceAdapter {
+    if (!this.baseAdapter) {
+      this.baseAdapter = new BaseTraceAdapter({
+        name: 'tracepilot-base',
+        version: '1.0.2',
+        batchSize: this.config.batch_size,
+        cacheEnabled: true
+      });
+    }
+    return this.baseAdapter;
+  }
+  
+  /**
+   * 同步追踪数据到TracePilot
+   */
+  async syncTraceData(traceData: MPLPTraceData): Promise<SyncResult> {
+    const startTime = this.performance.now();
+    
     try {
-      // Input validation (security-requirements.mdc)
-      this.validateTraceInput(traceData);
-
-      // Data format conversion (integration-patterns.mdc)
-      const tracePilotFormat = await this.convertToTracePilotFormat(traceData);
-
-      // Upload to TracePilot with retry logic
-      const uploadResult = await this.uploadWithRetry(tracePilotFormat);
-
-      const syncLatency = performance.now() - startTime;
-
-      // Performance validation (performance-standards.mdc)
-      if (syncLatency > 100) {
-        logger.warn('TracePilot sync exceeded latency target', {
-          latency: syncLatency,
-          target: 100,
-          traceId: traceData.trace_id
-        });
-      }
-
-      const result: TracePilotSyncResult = {
-        success: true,
-        sync_latency: syncLatency,
-        traces_synced: 1,
-        errors: [],
-        timestamp: new Date().toISOString()
-      };
-
-      logger.info('TracePilot sync completed', {
-        traceId: traceData.trace_id,
-        latency: syncLatency,
-        success: true
-      });
-
-      return result;
-
-    } catch (error) {
-      const syncLatency = performance.now() - startTime;
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const response = await axios.post(
+        this.traceEndpoint,
+        {
+          trace_data: traceData,
+          client_info: {
+            adapter_version: this.getAdapterInfo().version,
+            client_timestamp: new Date().toISOString()
+          }
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${this.config.api_key}`,
+            'X-Organization-ID': this.config.organization_id,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
       
-      logger.error('TracePilot sync failed', {
-        traceId: traceData.trace_id,
-        error: errorMessage,
-        latency: syncLatency
+      const endTime = this.performance.now();
+      
+      return {
+        success: true,
+        sync_id: response.data.sync_id,
+        sync_timestamp: new Date().toISOString(),
+        latency_ms: endTime - startTime,
+        errors: []
+      };
+    } catch (error) {
+      this.logger.error('Failed to sync trace data', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        trace_id: traceData.trace_id
       });
-
+      
+      const endTime = this.performance.now();
+      
+      const syncError: SyncError = {
+        code: 'SYNC_ERROR',
+        message: error instanceof Error ? error.message : 'Unknown error',
+        field: null
+      };
+      
       return {
         success: false,
-        sync_latency: syncLatency,
-        traces_synced: 0,
-        errors: [new TracePilotSyncError(errorMessage, traceData.trace_id)],
-        timestamp: new Date().toISOString()
+        sync_timestamp: new Date().toISOString(),
+        latency_ms: endTime - startTime,
+        errors: [syncError]
+      };
+    }
+  }
+  
+  /**
+   * 报告故障信息
+   */
+  async reportFailure(failure: FailureReport): Promise<SyncResult> {
+    const startTime = this.performance.now();
+    
+    try {
+      const response = await axios.post(
+        this.failureEndpoint,
+        {
+          failure_data: failure,
+          client_info: {
+            adapter_version: this.getAdapterInfo().version,
+            client_timestamp: new Date().toISOString()
+          }
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${this.config.api_key}`,
+            'X-Organization-ID': this.config.organization_id,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      
+      const endTime = this.performance.now();
+      
+      return {
+        success: true,
+        sync_id: response.data.sync_id,
+        sync_timestamp: new Date().toISOString(),
+        latency_ms: endTime - startTime,
+        errors: []
+      };
+    } catch (error) {
+      this.logger.error('Failed to report failure', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        failure_id: failure.failure_id
+      });
+      
+      const endTime = this.performance.now();
+      
+      const syncError: SyncError = {
+        code: 'FAILURE_REPORT_ERROR',
+        message: error instanceof Error ? error.message : 'Unknown error',
+        field: null
+      };
+      
+      return {
+        success: false,
+        sync_timestamp: new Date().toISOString(),
+        latency_ms: endTime - startTime,
+        errors: [syncError]
+      };
+    }
+  }
+  
+  /**
+   * 检查适配器健康状态
+   */
+  async checkHealth(): Promise<AdapterHealth> {
+    try {
+      const response = await axios.get(
+        this.healthEndpoint,
+        {
+          headers: {
+            'Authorization': `Bearer ${this.config.api_key}`,
+            'X-Organization-ID': this.config.organization_id
+          }
+        }
+      );
+      
+      return {
+        status: response.data.status === 'ok' ? 'healthy' : 'degraded',
+        last_check: new Date().toISOString(),
+        metrics: {
+          avg_latency_ms: response.data.metrics?.avg_latency_ms || 0,
+          success_rate: response.data.metrics?.success_rate || 1.0,
+          error_rate: response.data.metrics?.error_rate || 0.0
+        }
+      };
+    } catch (error) {
+      this.logger.error('Health check failed', {
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+      
+      return {
+        status: 'unhealthy',
+        last_check: new Date().toISOString(),
+        metrics: {
+          avg_latency_ms: 0,
+          success_rate: 0,
+          error_rate: 1.0
+        }
       };
     }
   }
 
   /**
-   * Add trace to batch processing queue
-   * Optimizes performance for high-volume scenarios
-   * 
-   * @param traceData - MPLP trace data to queue
+   * 获取故障恢复建议
+   * @param failureId 故障ID
+   * @returns 恢复建议列表
    */
-  async addToBatch(traceData: MPLPTraceData): Promise<void> {
-    this.batchQueue.push(traceData);
-
-    if (this.batchQueue.length >= this.config.batchSize) {
-      await this.processBatch();
-    }
-  }
-
-  /**
-   * Process queued traces in batch
-   * Performance Target: >1000 traces/second throughput
-   * 
-   * @private
-   */
-  @PerformanceMonitor.measure('tracepilot.batch_sync')
-  private async processBatch(): Promise<void> {
-    if (this.syncInProgress || this.batchQueue.length === 0) {
-      return;
-    }
-
-    this.syncInProgress = true;
-    const batchStartTime = performance.now();
-    const batchSize = this.batchQueue.length;
-    const batch = this.batchQueue.splice(0, batchSize);
-
+  async getRecoverySuggestions(failureId: string): Promise<RecoverySuggestion[]> {
     try {
-      // Convert all traces to TracePilot format
-      const convertedTraces = await Promise.all(
-        batch.map(trace => this.convertToTracePilotFormat(trace))
-      );
-
-      // Batch upload to TracePilot
-      await this.apiClient.uploadBatch(convertedTraces);
-
-      const batchDuration = performance.now() - batchStartTime;
-      const throughput = (batchSize / batchDuration) * 1000; // traces per second
-
-      logger.info('TracePilot batch sync completed', {
-        batchSize,
-        duration: batchDuration,
-        throughput,
-        target: 1000
-      });
-
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown batch error';
-      logger.error('TracePilot batch sync failed', {
-        batchSize,
-        error: errorMessage
-      });
-    } finally {
-      this.syncInProgress = false;
-    }
-  }
-
-  /**
-   * Convert MPLP trace data to TracePilot format
-   * Performance Target: <50ms format conversion
-   * 
-   * @private
-   */
-  private async convertToTracePilotFormat(data: MPLPTraceData): Promise<TracePilotTrace> {
-    const convertStartTime = performance.now();
-
-    const tracePilotTrace: TracePilotTrace = {
-      id: data.trace_id,
-      operation: data.operation_name,
-      startTime: data.start_time,
-      endTime: data.end_time,
-      duration: data.duration_ms || 0,
-      status: this.mapStatusToTracePilot(data.trace_type),
-      metadata: {
-        context_id: data.context_id,
-        trace_type: data.trace_type,
-        version: data.version,
-        performance_metrics: data.performance_metrics,
-        tags: data.tags || {}
-      }
-    };
-
-    const conversionTime = performance.now() - convertStartTime;
-    if (conversionTime > 50) {
-      logger.warn('TracePilot format conversion exceeded target', {
-        conversionTime,
-        target: 50,
-        traceId: data.trace_id
-      });
-    }
-
-    return tracePilotTrace;
-  }
-
-  /**
-   * Map MPLP trace type to TracePilot status
-   * 
-   * @private
-   */
-  private mapStatusToTracePilot(traceType: string): 'success' | 'error' | 'pending' | 'cancelled' {
-    switch (traceType) {
-      case 'completed':
-        return 'success';
-      case 'failed':
-        return 'error';
-      case 'started':
-      case 'running':
-        return 'pending';
-      case 'cancelled':
-        return 'cancelled';
-      default:
-        return 'pending';
-    }
-  }
-
-  /**
-   * Validate trace input data
-   * 
-   * @private
-   */
-  private validateTraceInput(data: MPLPTraceData): void {
-    if (!data.trace_id || !data.operation_name || !data.context_id) {
-      throw new TracePilotValidationError(
-        'Required trace fields missing: trace_id, operation_name, context_id'
-      );
-    }
-
-    if (!data.start_time || !data.timestamp) {
-      throw new TracePilotValidationError(
-        'Required time fields missing: start_time, timestamp'
-      );
-    }
-
-    if (!data.performance_metrics) {
-      throw new TracePilotValidationError(
-        'Performance metrics are required for trace data'
-      );
-    }
-  }
-
-  /**
-   * Upload trace with retry logic
-   * 
-   * @private
-   */
-  private async uploadWithRetry(trace: TracePilotTrace): Promise<void> {
-    let lastError: Error | undefined;
-    let attempt = 0;
-
-    while (attempt < this.config.retryAttempts) {
-      try {
-        await this.apiClient.uploadTrace(trace);
-        return; // Success
-      } catch (error) {
-        lastError = error instanceof Error ? error : new Error('Unknown upload error');
-        attempt++;
-        
-        if (attempt < this.config.retryAttempts) {
-          const delay = Math.pow(2, attempt) * 1000; // Exponential backoff
-          await this.sleep(delay);
+      const response = await axios.get(
+        `${this.failureEndpoint}/${failureId}/suggestions`,
+        {
+          headers: {
+            'Authorization': `Bearer ${this.config.api_key}`,
+            'X-Organization-ID': this.config.organization_id
+          }
         }
-      }
+      );
+      
+      return response.data.suggestions.map((suggestion: any) => ({
+        suggestion_id: suggestion.id,
+        failure_id: failureId,
+        suggestion: suggestion.text,
+        confidence_score: suggestion.confidence,
+        estimated_effort: suggestion.effort,
+        code_snippet: suggestion.code_snippet
+      }));
+    } catch (error) {
+      this.logger.error('Failed to get recovery suggestions', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        failure_id: failureId
+      });
+      
+      return [];
     }
-
-    throw new TracePilotSyncError(
-      `Failed to upload after ${this.config.retryAttempts} attempts: ${lastError?.message || 'Unknown error'}`,
-      trace.id
-    );
   }
-
+  
   /**
-   * Start batch processing timer
-   * 
-   * @private
+   * 追踪事件
+   * @param eventData 事件数据
+   * @returns 同步结果
    */
-  private startBatchProcessor(): void {
-    setInterval(async () => {
-      if (this.batchQueue.length > 0) {
-        await this.processBatch();
-      }
-    }, 5000); // Process batch every 5 seconds
+  async trackEvent(eventData: {
+    event_type: string;
+    context_id: string;
+    timestamp: string;
+    data: Record<string, unknown>;
+    source: string;
+  }): Promise<SyncResult> {
+    const startTime = this.performance.now();
+    
+    try {
+      const response = await axios.post(
+        `${this.traceEndpoint}/events`,
+        {
+          event_data: eventData,
+          client_info: {
+            adapter_version: this.getAdapterInfo().version,
+            client_timestamp: new Date().toISOString()
+          }
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${this.config.api_key}`,
+            'X-Organization-ID': this.config.organization_id,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      
+      const endTime = this.performance.now();
+      
+      return {
+        success: true,
+        sync_id: response.data.sync_id,
+        sync_timestamp: new Date().toISOString(),
+        latency_ms: endTime - startTime,
+        errors: []
+      };
+    } catch (error) {
+      this.logger.error('Failed to track event', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        event_type: eventData.event_type
+      });
+      
+      const endTime = this.performance.now();
+      
+      const syncError: SyncError = {
+        code: 'EVENT_TRACKING_ERROR',
+        message: error instanceof Error ? error.message : 'Unknown error',
+        field: null
+      };
+      
+      return {
+        success: false,
+        sync_timestamp: new Date().toISOString(),
+        latency_ms: endTime - startTime,
+        errors: [syncError]
+      };
+    }
   }
-
+  
   /**
-   * Sleep utility function
-   * 
-   * @private
+   * 批量同步追踪数据
    */
-  private sleep(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+  async syncBatch(traceBatch: MPLPTraceData[]): Promise<SyncResult> {
+    const startTime = this.performance.now();
+    
+    try {
+      const response = await axios.post(
+        this.batchEndpoint,
+        {
+          traces: traceBatch,
+          client_info: {
+            adapter_version: this.getAdapterInfo().version,
+            client_timestamp: new Date().toISOString(),
+            batch_size: traceBatch.length
+          }
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${this.config.api_key}`,
+            'X-Organization-ID': this.config.organization_id,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      
+      const endTime = this.performance.now();
+      
+      return {
+        success: true,
+        sync_id: response.data.sync_id,
+        sync_timestamp: new Date().toISOString(),
+        latency_ms: endTime - startTime,
+        errors: []
+      };
+    } catch (error) {
+      this.logger.error('Failed to sync trace batch', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        batch_size: traceBatch.length
+      });
+      
+      const endTime = this.performance.now();
+      
+      const syncError: SyncError = {
+        code: 'BATCH_SYNC_ERROR',
+        message: error instanceof Error ? error.message : 'Unknown error',
+        field: null
+      };
+      
+      return {
+        success: false,
+        sync_timestamp: new Date().toISOString(),
+        latency_ms: endTime - startTime,
+        errors: [syncError]
+      };
+    }
   }
-}
-
-/**
- * TracePilot API Client
- */
-class TracePilotApiClient {
-  private readonly config: { baseUrl: string; apiKey: string; timeout: number };
-
-  constructor(config: { baseUrl: string; apiKey: string; timeout: number }) {
-    this.config = config;
+  
+  /**
+   * 获取分析数据
+   */
+  async getAnalytics(query: Record<string, unknown>): Promise<Record<string, unknown>> {
+    try {
+      const response = await axios.post(
+        this.analyticsEndpoint,
+        {
+          query,
+          client_info: {
+            adapter_version: this.getAdapterInfo().version,
+            client_timestamp: new Date().toISOString()
+          }
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${this.config.api_key}`,
+            'X-Organization-ID': this.config.organization_id,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      
+      return response.data.results;
+    } catch (error) {
+      this.logger.error('Failed to get analytics', {
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+      
+      return {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        query
+      };
+    }
   }
-
-  async uploadTrace(trace: TracePilotTrace): Promise<void> {
-    // TODO: Implement actual HTTP call to TracePilot
-    // This is a placeholder implementation
-    console.log('Uploading trace to TracePilot:', trace.id);
-  }
-
-  async uploadBatch(traces: TracePilotTrace[]): Promise<void> {
-    // TODO: Implement actual batch HTTP call to TracePilot
-    // This is a placeholder implementation
-    console.log('Uploading batch to TracePilot:', traces.length, 'traces');
-  }
-}
-
-export class TracePilotError extends Error {
-  constructor(message: string, public readonly traceId?: string) {
-    super(message);
-    this.name = 'TracePilotError';
-  }
-}
-
-export class TracePilotSyncError extends TracePilotError {
-  constructor(message: string, traceId: string) {
-    super(message, traceId);
-    this.name = 'TracePilotSyncError';
-  }
-}
-
-export class TracePilotValidationError extends TracePilotError {
-  constructor(message: string) {
-    super(message);
-    this.name = 'TracePilotValidationError';
+  
+  /**
+   * 检测开发问题
+   */
+  async detectDevelopmentIssues(): Promise<{
+    issues: Array<{
+      id: string;
+      type: string;
+      severity: string;
+      title: string;
+      file_path?: string;
+    }>;
+    confidence: number;
+  }> {
+    try {
+      const response = await axios.get(
+        `${this.analyticsEndpoint}/development-issues`,
+        {
+          headers: {
+            'Authorization': `Bearer ${this.config.api_key}`,
+            'X-Organization-ID': this.config.organization_id
+          }
+        }
+      );
+      
+      return {
+        issues: response.data.issues,
+        confidence: response.data.confidence
+      };
+    } catch (error) {
+      this.logger.error('Failed to detect development issues', {
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+      
+      return {
+        issues: [],
+        confidence: 0
+      };
+    }
   }
 } 

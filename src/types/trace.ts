@@ -1,8 +1,9 @@
 /**
  * Trace Types - 追踪相关类型定义
  * 
- * @version v2.0.0
+ * @version v2.1.0
  * @created 2025-01-09T25:10:00+08:00
+ * @updated 2025-07-15T19:50:00+08:00
  * @description 统一的追踪类型定义，与modules/trace/types.ts保持同步
  */
 
@@ -38,6 +39,43 @@ export type EventType =
   | 'user_interaction';
 
 /**
+ * 操作详情接口
+ */
+export interface OperationDetail {
+  name: string;              // 操作名称
+  type: string;              // 操作类型
+  duration_ms: number;       // 操作持续时间
+  status: string;            // 操作状态
+  timestamp: string;         // 操作时间戳
+}
+
+/**
+ * 上下文快照接口
+ */
+export interface ContextSnapshot {
+  variables: Record<string, any>;  // 上下文变量
+  call_stack: Array<{
+    file: string;                  // 文件路径
+    line: number;                  // 行号
+    function: string;              // 函数名
+  }>;
+}
+
+/**
+ * 错误详情接口
+ */
+export interface ErrorInformation {
+  error_type: string;              // 错误类型
+  error_message: string;           // 错误消息
+  stack_trace: Array<{
+    file: string;                  // 文件路径
+    line: number;                  // 行号
+    function: string;              // 函数名
+  }>;
+  timestamp: string;               // 错误时间戳
+}
+
+/**
  * 性能指标接口
  */
 export interface PerformanceMetrics {
@@ -49,6 +87,23 @@ export interface PerformanceMetrics {
   db_query_time_ms?: number;  // 数据库查询总时间 (可选)
   api_call_count?: number;    // API调用次数 (可选)
   api_call_time_ms?: number;  // API调用总时间 (可选)
+  
+  // 资源使用详情
+  resource_usage?: {
+    memory: {
+      peak_usage_mb: number;      // 峰值内存使用
+      average_usage_mb: number;   // 平均内存使用
+      gc_count: number;           // GC次数
+    };
+    cpu: {
+      peak_usage_percent: number; // 峰值CPU使用率
+      average_usage_percent: number; // 平均CPU使用率
+    };
+    network: {
+      total_bytes: number;        // 总传输字节数
+      request_count: number;      // 请求数量
+    };
+  };
 }
 
 /**
@@ -98,9 +153,9 @@ export interface TraceData extends BaseProtocol {
 }
 
 /**
- * TracePilot元数据接口
+ * 适配器元数据接口 - 厂商中立命名
  */
-export interface TracePilotMetadata {
+export interface AdapterMetadata {
   agent_id: string;                    // 代理ID
   session_id: string;                  // 会话ID
   operation_complexity: 'low' | 'medium' | 'high'; // 操作复杂度
@@ -122,7 +177,13 @@ export interface QualityGates {
  * MPLP追踪数据接口 (扩展基础追踪数据)
  */
 export interface MPLPTraceData extends TraceData {
-  tracepilot_metadata: TracePilotMetadata; // TracePilot元数据
+  adapter_metadata: AdapterMetadata;  // 适配器元数据 - 厂商中立命名
+  source?: string;                    // 追踪来源
+  
+  // 增强追踪字段
+  operation?: OperationDetail;        // 操作详情
+  context_snapshot?: ContextSnapshot; // 上下文快照
+  error_information?: ErrorInformation; // 错误详情
 }
 
 /**
@@ -200,8 +261,8 @@ export function isMPLPTraceData(obj: any): obj is MPLPTraceData {
     typeof obj.start_time === 'string' &&
     typeof obj.duration_ms === 'number' &&
     Array.isArray(obj.events) &&
-    obj.tracepilot_metadata &&
-    typeof obj.tracepilot_metadata.agent_id === 'string';
+    obj.adapter_metadata &&
+    typeof obj.adapter_metadata.agent_id === 'string';
 }
 
 export function isTraceEvent(obj: any): obj is TraceEvent {

@@ -1,11 +1,13 @@
 /**
  * MPLP v1.0 Express服务器配置
  * 
- * @version v1.0.0
+ * @version v1.0.2
  * @created 2025-07-09T21:00:00+08:00
+ * @updated 2025-07-16T16:00:00+08:00
  * @compliance .cursor/rules/technical-standards.mdc - Express服务器配置
  * @compliance .cursor/rules/security-requirements.mdc - 安全中间件
  * @compliance .cursor/rules/monitoring-logging.mdc - 监控和日志
+ * @compliance .cursor/rules/vendor-neutral-design.mdc - 厂商中立设计
  * @performance API响应P95<100ms，健康检查<3秒
  */
 
@@ -15,12 +17,17 @@ import cors from 'cors';
 import morgan from 'morgan';
 import compression from 'compression';
 import rateLimit from 'express-rate-limit';
-import { config } from '@/config';
-import { logger } from '@/utils/logger';
-import { PerformanceMonitor } from '@/utils/performance';
-import { TracePilotAdapter } from '@/mcp/tracepilot-adapter';
-import { healthRouter } from '@/routes/health';
-import { metricsRouter } from '@/routes/metrics';
+import { config } from './config';
+import { logger } from './utils/logger';
+import { PerformanceMonitor } from './utils/performance';
+// 更新导入，使用厂商中立的适配器工厂
+import { TraceAdapterFactory } from './adapters/trace/adapter-factory';
+import { healthRouter } from './routes/health';
+import { metricsRouter } from './routes/metrics';
+import { v4 as uuidv4 } from 'uuid';
+import { ITraceAdapter, AdapterType } from './interfaces/trace-adapter.interface';
+import { MPLPTraceData } from './types/trace';
+import { createErrorHandlingSystem, ErrorSeverity } from './core/error';
 
 /**
  * 创建Express应用实例
@@ -28,15 +35,36 @@ import { metricsRouter } from '@/routes/metrics';
 export async function createServer(): Promise<Application> {
   const app = express();
 
-  // 初始化TracePilot适配器
-  const tracePilotAdapter = new TracePilotAdapter(config.tracepilot);
+  // 初始化追踪适配器（厂商中立）
+  const isEnhanced = process.env.TRACE_ADAPTER_ENHANCED === 'true' || process.env.TRACEPILOT_ENHANCED === 'true';
   
-  // 将TracePilot适配器添加到app locals，供其他模块使用
-  app.locals.tracePilotAdapter = tracePilotAdapter;
+  // 获取厂商中立的适配器工厂实例
+  const adapterFactory = TraceAdapterFactory.getInstance();
+  
+  // 创建厂商中立的适配器
+  const traceAdapter = adapterFactory.createAdapter(
+    isEnhanced ? AdapterType.ENHANCED : AdapterType.BASE,
+    {
+      name: isEnhanced ? 'enhanced-trace-adapter' : 'base-trace-adapter',
+      version: '1.0.1',
+      batchSize: config.traceAdapter.batchSize,
+      timeout: config.traceAdapter.timeout,
+      cacheEnabled: true,
+      // 增强型适配器特定配置
+      ...(isEnhanced ? {
+        enableAdvancedAnalytics: true,
+        enableRecoverySuggestions: true,
+        enableDevelopmentIssueDetection: true
+      } : {})
+    }
+  );
+  
+  // 将追踪适配器添加到app locals，供其他模块使用
+  app.locals.traceAdapter = traceAdapter;
 
   logger.info('🔧 配置Express中间件...', {
     environment: config.app.environment,
-    tracePilotEnabled: config.tracepilot.integration.enabled
+    traceAdapterType: isEnhanced ? 'enhanced' : 'base'
   });
 
   // 安全中间件 (security-requirements.mdc)
@@ -91,8 +119,8 @@ export async function createServer(): Promise<Application> {
   // 性能监控中间件 (performance-standards.mdc)
   app.use(performanceMiddleware);
 
-  // TracePilot请求追踪中间件
-  app.use(tracePilotTrackingMiddleware(tracePilotAdapter));
+  // 追踪请求中间件（厂商中立）
+  app.use(traceTrackingMiddleware(traceAdapter));
 
   // 请求ID中间件
   app.use(requestIdMiddleware);
@@ -100,8 +128,18 @@ export async function createServer(): Promise<Application> {
   // 路由配置
   await configureRoutes(app);
 
+  // 创建错误处理系统
+  const { httpErrorMiddleware, notFoundMiddleware } = createErrorHandlingSystem({
+    include_stack_trace: process.env.NODE_ENV !== 'production',
+    localization_enabled: true,
+    default_locale: process.env.DEFAULT_LOCALE || 'en',
+    log_level: process.env.NODE_ENV === 'production' ? ErrorSeverity.ERROR : ErrorSeverity.DEBUG,
+    capture_async_errors: true,
+    max_stack_depth: process.env.NODE_ENV === 'production' ? 5 : 20
+  });
+
   // 全局错误处理中间件
-  app.use(errorHandlerMiddleware);
+  app.use(httpErrorMiddleware);
 
   // 404处理
   app.use(notFoundMiddleware);
@@ -109,12 +147,20 @@ export async function createServer(): Promise<Application> {
   logger.info('✅ Express服务器配置完成', {
     middlewares: [
       'helmet',
-      'cors', 
+      'cors',
       'compression',
       'morgan',
+      'json',
+      'urlencoded',
       'rateLimit',
       'performance',
-      'tracePilot'
+      'traceTracking',
+      'requestId'
+    ],
+    routes: [
+      '/health',
+      '/metrics',
+      '/api/v1/*'
     ]
   });
 
@@ -122,42 +168,33 @@ export async function createServer(): Promise<Application> {
 }
 
 /**
- * 配置应用路由
+ * 配置路由
  */
 async function configureRoutes(app: Application): Promise<void> {
-  logger.info('🛣️  配置应用路由...');
-
   // 健康检查路由
   app.use('/health', healthRouter);
-
-  // 监控指标路由
+  
+  // 指标路由
   app.use('/metrics', metricsRouter);
-
-  // API版本路由
-  app.use('/api/v1', await createApiRoutes());
-
-  // 根路径
-  app.get('/', (req: Request, res: Response) => {
-    res.json({
-      success: true,
-      message: 'MPLP v1.0 API Server',
-      version: config.app.version,
-      timestamp: new Date().toISOString(),
-      tracePilotEnabled: config.tracepilot.integration.enabled,
-      governance: {
-        version: '2.2',
-        plan_confirm_trace_delivery: true
-      }
-    });
+  
+  // API路由
+  const apiRouter = await createApiRoutes(app);
+  app.use('/api/v1', apiRouter);
+  
+  logger.info('🔌 路由已配置', {
+    routes: ['/health', '/metrics', '/api/v1'],
+    traceAdapterEnabled: config.traceAdapter.integration.enabled,
+    governance: {
+      version: '2.2',
+      plan_confirm_trace_delivery: true
+    }
   });
-
-  logger.info('✅ 路由配置完成');
 }
 
 /**
  * 创建API路由
  */
-async function createApiRoutes(): Promise<express.Router> {
+async function createApiRoutes(app: Application): Promise<express.Router> {
   const router = express.Router();
 
   // 导入Context模块
@@ -173,7 +210,8 @@ async function createApiRoutes(): Promise<express.Router> {
       // Redis和SocketIO稍后集成
       redisClient: undefined,
       socketServer: undefined,
-      tracePilotAdapter: router.locals?.tracePilotAdapter
+      // 使用traceAdapter替代tracePilotAdapter
+      tracePilotAdapter: app.locals.traceAdapter
     });
 
     // 集成Context路由
@@ -202,10 +240,9 @@ async function createApiRoutes(): Promise<express.Router> {
         role: 'pending',
         extension: 'pending'
       },
-      tracePilot: {
-        enabled: config.tracepilot.integration.enabled,
-        status: 'connected' // 这里后续会实现真实的连接状态检查
-      }
+      version: config.app.version,
+      environment: config.app.environment,
+      trace_adapter: app.locals.traceAdapter.getAdapterInfo()
     });
   });
 
@@ -213,28 +250,34 @@ async function createApiRoutes(): Promise<express.Router> {
 }
 
 /**
+ * 生成追踪ID
+ */
+function generateTraceId(): string {
+  return uuidv4();
+}
+
+/**
+ * 请求ID中间件
+ */
+function requestIdMiddleware(req: Request, res: Response, next: NextFunction): void {
+  const requestId = req.get('X-Request-ID') || uuidv4();
+  req.requestId = requestId;
+  res.setHeader('X-Request-ID', requestId);
+  next();
+}
+
+/**
  * 性能监控中间件
  */
 function performanceMiddleware(req: Request, res: Response, next: NextFunction): void {
-  const startTime = process.hrtime.bigint();
+  const startTime = Date.now();
   
   res.on('finish', () => {
-    const endTime = process.hrtime.bigint();
-    const responseTimeMs = Number(endTime - startTime) / 1000000;
+    const responseTimeMs = Date.now() - startTime;
     
-    // 记录性能指标
-    logger.info('API请求性能', {
-      method: req.method,
-      url: req.url,
-      statusCode: res.statusCode,
-      responseTime: responseTimeMs,
-      userAgent: req.get('User-Agent'),
-      ip: req.ip
-    });
-    
-    // 性能告警 (performance-standards.mdc)
     if (responseTimeMs > 100) {
-      logger.warn('API响应时间超标', {
+      logger.warn('响应时间超过100ms', {
+        path: req.path,
         method: req.method,
         url: req.url,
         responseTime: responseTimeMs,
@@ -247,15 +290,15 @@ function performanceMiddleware(req: Request, res: Response, next: NextFunction):
 }
 
 /**
- * TracePilot追踪中间件
+ * 追踪中间件（厂商中立）
  */
-function tracePilotTrackingMiddleware(tracePilotAdapter: TracePilotAdapter) {
+function traceTrackingMiddleware(traceAdapter: ITraceAdapter) {
   return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const traceId = req.get('X-Trace-ID') || generateTraceId();
     
     // 添加追踪信息到请求对象
     req.traceId = traceId;
-    req.tracePilotAdapter = tracePilotAdapter;
+    req.traceAdapter = traceAdapter;
     
     // 设置响应头
     res.setHeader('X-Trace-ID', traceId);
@@ -267,44 +310,57 @@ function tracePilotTrackingMiddleware(tracePilotAdapter: TracePilotAdapter) {
       const duration = endTime - startTime;
       
       try {
-        // 同步请求追踪到TracePilot
-        await tracePilotAdapter.syncTraceData({
+        // 同步请求追踪（厂商中立）
+        await traceAdapter.syncTraceData({
           trace_id: traceId,
           operation_name: `${req.method} ${req.path}`,
           start_time: new Date(startTime).toISOString(),
           end_time: new Date(endTime).toISOString(),
           duration_ms: duration,
           context_id: req.get('X-Context-ID') || 'anonymous',
-          version: '1.0.0',
+          protocol_version: '1.0.0',
           timestamp: new Date().toISOString(),
           trace_type: 'operation',
+          source: 'http_server',
           status: res.statusCode >= 400 ? 'failed' : 'completed',
           performance_metrics: {
             cpu_usage: 0, // 后续实现
             memory_usage_mb: process.memoryUsage().heapUsed / 1024 / 1024,
             network_io_bytes: 0,
-            disk_io_bytes: 0,
-            db_query_count: 0,
-            db_query_time_ms: 0,
-            api_call_count: 1,
-            api_call_time_ms: duration,
-            custom_metrics: {
-              http_status_code: res.statusCode,
-              request_size_bytes: parseInt(req.get('Content-Length') || '0', 10)
-            }
+            disk_io_bytes: 0
           },
-          tags: {
+          metadata: {
             method: req.method,
             path: req.path,
-            status_code: res.statusCode.toString(),
-            user_agent: req.get('User-Agent') || 'unknown'
+            status_code: res.statusCode,
+            user_agent: req.get('User-Agent'),
+            ip: req.ip
+          },
+          events: [],
+          error_info: res.statusCode >= 400 ? {
+            error_type: 'HTTP_ERROR',
+            error_message: `HTTP ${res.statusCode}`,
+            stack_trace: '',
+            timestamp: new Date().toISOString()
+          } : null,
+          parent_trace_id: req.get('X-Parent-Trace-ID') || null,
+          adapter_metadata: {
+            agent_id: traceAdapter.getAdapterInfo().type,
+            session_id: req.requestId || uuidv4(),
+            operation_complexity: 'low',
+            expected_duration_ms: 100,
+            quality_gates: {
+              max_duration_ms: 500,
+              max_memory_mb: 100,
+              max_error_rate: 0.01,
+              required_events: []
+            }
           }
         });
       } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'TracePilot sync error';
-        logger.error('TracePilot同步失败', {
-          traceId,
-          error: errorMessage
+        logger.error('Failed to sync trace data', {
+          error: error instanceof Error ? error.message : 'Unknown error',
+          trace_id: traceId
         });
       }
     });
@@ -314,42 +370,21 @@ function tracePilotTrackingMiddleware(tracePilotAdapter: TracePilotAdapter) {
 }
 
 /**
- * 请求ID中间件
+ * 错误处理中间件
  */
-function requestIdMiddleware(req: Request, res: Response, next: NextFunction): void {
-  const requestId = req.get('X-Request-ID') || generateRequestId();
-  req.requestId = requestId;
-  res.setHeader('X-Request-ID', requestId);
-  next();
-}
-
-/**
- * 全局错误处理中间件
- */
-function errorHandlerMiddleware(
-  error: Error,
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void {
-  logger.error('未处理的错误', {
-    error: error.message,
-    stack: error.stack,
+function errorHandlerMiddleware(err: Error, req: Request, res: Response, next: NextFunction): void {
+  logger.error('服务器错误', {
+    error: err.message,
+    stack: err.stack,
+    path: req.path,
     method: req.method,
-    url: req.url,
-    traceId: req.traceId,
-    requestId: req.requestId
+    trace_id: req.traceId
   });
-
-  const statusCode = (error as any).statusCode || 500;
-  const errorMessage = error instanceof Error ? error.message : 'Internal Server Error';
   
-  res.status(statusCode).json({
+  res.status(500).json({
     success: false,
-    error: errorMessage,
-    error_code: (error as any).code || 'INTERNAL_ERROR',
-    timestamp: new Date().toISOString(),
-    request_id: req.requestId,
+    error: 'Internal Server Error',
+    error_code: 'INTERNAL_SERVER_ERROR',
     trace_id: req.traceId
   });
 }
@@ -364,37 +399,21 @@ function notFoundMiddleware(req: Request, res: Response): void {
     ip: req.ip,
     userAgent: req.get('User-Agent')
   });
-
+  
   res.status(404).json({
     success: false,
-    error: 'Route not found',
-    error_code: 'ROUTE_NOT_FOUND',
-    timestamp: new Date().toISOString(),
-    request_id: req.requestId
+    error: 'Not Found',
+    error_code: 'NOT_FOUND'
   });
 }
 
-/**
- * 生成追踪ID
- */
-function generateTraceId(): string {
-  return `trace-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-}
-
-/**
- * 生成请求ID
- */
-function generateRequestId(): string {
-  return `req-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-}
-
-// 扩展Express Request接口
+// 扩展Request接口
 declare global {
   namespace Express {
     interface Request {
-      traceId?: string;
       requestId?: string;
-      tracePilotAdapter?: TracePilotAdapter;
+      traceId?: string;
+      traceAdapter?: ITraceAdapter;
     }
   }
 } 

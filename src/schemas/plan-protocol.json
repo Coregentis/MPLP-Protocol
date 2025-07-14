@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://mplp.dev/schemas/v1.0/plan-protocol.json",
-  "title": "MPLP Plan Protocol v1.0.1",
+  "title": "MPLP Plan Protocol v1.0.2",
   "description": "Plan模块协议Schema - 任务规划和依赖管理",
   "type": "object",
   "$defs": {
@@ -141,16 +141,271 @@
               "description": "最大CPU使用率（百分比）"
             }
           }
+        },
+        "intelligent_diagnostics": {
+          "type": "object",
+          "description": "智能诊断配置",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "是否启用智能诊断"
+            },
+            "min_confidence_score": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "最小置信度分数"
+            },
+            "analysis_depth": {
+              "type": "string",
+              "enum": ["basic", "detailed", "comprehensive"],
+              "description": "分析深度"
+            },
+            "pattern_recognition": {
+              "type": "boolean",
+              "description": "是否启用模式识别"
+            },
+            "historical_analysis": {
+              "type": "boolean",
+              "description": "是否分析历史故障数据"
+            },
+            "max_related_failures": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "最大关联故障数量"
+            }
+          },
+          "required": ["enabled"]
+        },
+        "vendor_integration": {
+          "type": "object",
+          "description": "厂商中立的集成配置",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "是否启用外部集成"
+            },
+            "sync_frequency_ms": {
+              "type": "integer",
+              "minimum": 1000,
+              "description": "同步频率（毫秒）"
+            },
+            "data_retention_days": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "数据保留天数"
+            },
+            "sync_detailed_diagnostics": {
+              "type": "boolean",
+              "description": "是否同步详细诊断信息"
+            },
+            "receive_suggestions": {
+              "type": "boolean",
+              "description": "是否接收恢复建议"
+            },
+            "auto_apply_suggestions": {
+              "type": "boolean",
+              "description": "是否自动应用恢复建议"
+            }
+          }
+        },
+        "proactive_prevention": {
+          "type": "object",
+          "description": "主动故障预防配置",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "是否启用主动故障预防"
+            },
+            "prediction_confidence_threshold": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "预测置信度阈值"
+            },
+            "auto_prevention_enabled": {
+              "type": "boolean",
+              "description": "是否启用自动预防"
+            },
+            "prevention_strategies": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["resource_scaling", "dependency_prefetch", "task_reordering", "early_checkpoint", "load_balancing"]
+              },
+              "description": "预防策略列表"
+            },
+            "monitoring_interval_ms": {
+              "type": "integer",
+              "minimum": 1000,
+              "description": "监控间隔（毫秒）"
+            }
+          },
+          "required": ["enabled"]
+        },
+        "self_learning": {
+          "type": "object",
+          "description": "自学习恢复配置",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "是否启用自学习恢复"
+            },
+            "learning_mode": {
+              "type": "string",
+              "enum": ["passive", "active", "hybrid"],
+              "description": "学习模式"
+            },
+            "min_samples_required": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "最小样本数量要求"
+            },
+            "adaptation_rate": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "适应率（0-1）"
+            },
+            "strategy_effectiveness_metrics": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "策略有效性指标列表"
+            }
+          },
+          "required": ["enabled"]
+        },
+        "enhanced_features": {
+          "type": "object",
+          "description": "增强型故障解决器功能",
+          "properties": {
+            "ai_diagnostics": {
+              "type": "boolean",
+              "description": "是否启用AI诊断"
+            },
+            "failure_prediction": {
+              "type": "boolean",
+              "description": "是否启用故障预测"
+            },
+            "auto_recovery": {
+              "type": "boolean",
+              "description": "是否启用自动恢复"
+            },
+            "performance_optimization": {
+              "type": "boolean",
+              "description": "是否启用性能优化"
+            },
+            "development_issues_detection": {
+              "type": "boolean",
+              "description": "是否启用开发问题检测"
+            },
+            "recovery_suggestions": {
+              "type": "boolean",
+              "description": "是否启用恢复建议"
+            }
+          }
         }
       },
       "required": ["enabled", "strategies"]
+    },
+    "recovery_suggestion": {
+      "type": "string",
+      "description": "恢复建议",
+      "minLength": 5,
+      "maxLength": 1000
+    },
+    "development_issue": {
+      "type": "object",
+      "description": "开发问题",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "问题唯一标识符",
+          "pattern": "^[a-zA-Z0-9_-]+$",
+          "minLength": 3,
+          "maxLength": 50
+        },
+        "type": {
+          "type": "string",
+          "description": "问题类型",
+          "enum": [
+            "performance",
+            "security",
+            "reliability",
+            "maintainability",
+            "scalability",
+            "compatibility",
+            "code_quality",
+            "architecture",
+            "documentation",
+            "testing",
+            "other"
+          ]
+        },
+        "severity": {
+          "type": "string",
+          "description": "问题严重程度",
+          "enum": ["critical", "high", "medium", "low", "info"]
+        },
+        "title": {
+          "type": "string",
+          "description": "问题标题",
+          "minLength": 5,
+          "maxLength": 200
+        },
+        "file_path": {
+          "type": "string",
+          "description": "相关文件路径",
+          "pattern": "^[a-zA-Z0-9_\\-\\.\\\/]+$"
+        },
+        "line_number": {
+          "type": "integer",
+          "description": "相关代码行号",
+          "minimum": 1
+        },
+        "description": {
+          "type": "string",
+          "description": "问题详细描述",
+          "maxLength": 2000
+        },
+        "suggested_fix": {
+          "type": "string",
+          "description": "建议修复方案",
+          "maxLength": 2000
+        },
+        "detected_at": {
+          "$ref": "#/$defs/timestamp",
+          "description": "问题检测时间"
+        },
+        "status": {
+          "type": "string",
+          "description": "问题状态",
+          "enum": ["open", "in_progress", "resolved", "wont_fix", "false_positive"]
+        },
+        "dependencies": {
+          "type": "array",
+          "description": "相关依赖问题ID列表",
+          "items": {
+            "type": "string"
+          }
+        },
+        "confidence_score": {
+          "type": "number",
+          "description": "问题检测置信度",
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "required": ["id", "type", "severity", "title"]
     }
   },
   "properties": {
     "protocol_version": {
       "$ref": "#/$defs/version",
       "description": "MPLP协议版本",
-      "const": "1.0.1"
+      "const": "1.0.2"
     },
     "timestamp": {
       "$ref": "#/$defs/timestamp",
@@ -282,8 +537,40 @@
           },
           "metadata": {
             "type": "object",
-            "description": "任务元数据，包括故障恢复相关信息",
-            "additionalProperties": true
+            "properties": {
+              "tags": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "category": { "type": "string" },
+              "source": { "type": "string" },
+              "complexity_score": { "type": "number", "minimum": 0 },
+              "risk_level": { "type": "string" },
+              "automation_level": { "type": "string" },
+              "retry_count": { "type": "integer", "minimum": 0 },
+              "max_retry_count": { "type": "integer", "minimum": 0 },
+              "intervention_required": { "type": "boolean" },
+              "intervention_reason": { "type": "string" },
+              "intervention_requested_at": { "$ref": "#/$defs/timestamp" },
+              "rollback_reason": { "type": "string" },
+              "rollback_target": { "$ref": "#/$defs/uuid" },
+              "skip_reason": { "type": "string" },
+              "skip_dependents": { "type": "boolean" },
+              "recovery_suggestions": {
+                "type": "array",
+                "items": { "$ref": "#/$defs/recovery_suggestion" },
+                "description": "故障恢复建议列表",
+                "maxItems": 10,
+                "uniqueItems": true
+              },
+              "development_issues": {
+                "type": "array",
+                "items": { "$ref": "#/$defs/development_issue" },
+                "description": "相关开发问题列表",
+                "maxItems": 20,
+                "uniqueItems": true
+              }
+            }
           },
           "started_at": { "$ref": "#/$defs/timestamp" },
           "completed_at": { "$ref": "#/$defs/timestamp" },

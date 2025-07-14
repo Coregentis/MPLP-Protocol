@@ -1,8 +1,9 @@
 /**
  * MPLP协议核心类型定义
  * 
- * @version v1.0.0
+ * @version v1.0.1
  * @created 2025-07-09T24:10:00+08:00
+ * @updated 2025-07-15T20:15:00+08:00
  * @compliance .cursor/rules/technical-standards.mdc - TypeScript严格模式
  */
 
@@ -111,7 +112,7 @@ export { ExtensionTypes };
 // ===== 核心协议类型直接导出 =====
 export type { ContextProtocol } from '../modules/context/types';
 export type { PlanProtocol } from '../modules/plan/types';
-export type { TraceProtocol } from '../modules/trace/types';
+export type { MPLPTraceData } from '../modules/trace/types'; // 使用MPLPTraceData代替不存在的TraceProtocol
 export type { RoleProtocol } from '../modules/role/types';
 export type { ConfirmProtocol } from '../modules/confirm/types';
 export type { ExtensionProtocol } from '../modules/extension/types'; 

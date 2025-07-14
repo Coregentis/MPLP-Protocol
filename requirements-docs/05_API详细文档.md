@@ -396,6 +396,429 @@ Authorization: Bearer {token}
 }
 ```
 
+#### 处理任务失败
+```http
+POST /api/v2/plans/{planId}/tasks/{taskId}/failure
+Content-Type: application/json
+Authorization: Bearer {token}
+
+{
+  "error_message": "数据库连接超时",
+  "error_code": "DB_CONNECTION_TIMEOUT",
+  "error_details": {
+    "connection_url": "db://example.com:5432",
+    "timeout_ms": 5000,
+    "retry_count": 3
+  },
+  "stack_trace": "Error: 数据库连接超时\n    at Database.connect (/src/db/connector.js:42:15)\n    at TaskExecutor.executeTask (/src/executor.js:128:22)",
+  "severity": "high",
+  "diagnostic_data": {
+    "system_metrics": {
+      "cpu_usage": 65,
+      "memory_usage_mb": 1024,
+      "disk_space_available_mb": 10240
+    },
+    "environment_variables": {
+      "NODE_ENV": "production",
+      "DB_TIMEOUT": "5000"
+    }
+  }
+}
+
+# 响应示例
+{
+  "failure_id": "failure-def5678j-e89b-12d3-a456-426614174000",
+  "task_id": "task-123",
+  "plan_id": "plan-456",
+  "status": "diagnosed",
+  "timestamp": "2025-07-12T10:15:30Z",
+  "diagnostics": {
+    "failure_type": "connection_error",
+    "root_cause": "database_timeout",
+    "severity": "high",
+    "impact": "task_blocked",
+    "related_components": ["database", "network"],
+    "recovery_options": [
+      {
+        "strategy": "retry",
+        "confidence": 0.85,
+        "description": "重试任务执行"
+      },
+      {
+        "strategy": "skip",
+        "confidence": 0.65,
+        "description": "跳过此任务，继续执行后续任务"
+      }
+    ]
+  },
+  "adapter_metadata": {
+    "sync_status": "synced",
+    "sync_timestamp": "2025-07-12T10:15:32Z"
+  }
+}
+```
+
+#### 获取任务失败诊断
+```http
+GET /api/v2/plans/{planId}/tasks/{taskId}/diagnostics
+Authorization: Bearer {token}
+
+# 响应示例
+{
+  "failure_id": "failure-def5678j-e89b-12d3-a456-426614174000",
+  "task_id": "task-123",
+  "plan_id": "plan-456",
+  "diagnostics": {
+    "failure_type": "connection_error",
+    "root_cause": "database_timeout",
+    "severity": "high",
+    "impact": "task_blocked",
+    "failure_pattern": "intermittent",
+    "frequency": "occasional",
+    "first_occurrence": "2025-07-12T10:15:30Z",
+    "related_components": ["database", "network"],
+    "system_state": {
+      "cpu_usage": 65,
+      "memory_usage_mb": 1024,
+      "disk_space_available_mb": 10240,
+      "active_connections": 120
+    },
+    "ai_analysis": {
+      "summary": "数据库连接超时可能是由于连接池配置不当或数据库服务器负载过高导致",
+      "confidence": 0.87,
+      "suggested_investigation": [
+        "检查数据库连接池配置",
+        "验证数据库服务器负载",
+        "检查网络延迟"
+      ]
+    }
+  },
+  "recovery_suggestions": [
+    {
+      "suggestion": "增加数据库连接超时设置",
+      "confidence_score": 0.92,
+      "estimated_effort": "low",
+      "implementation_steps": [
+        "在配置文件中将DB_TIMEOUT参数从5000ms增加到10000ms",
+        "重启应用服务"
+      ]
+    },
+    {
+      "suggestion": "实现数据库操作重试机制",
+      "confidence_score": 0.85,
+      "estimated_effort": "medium",
+      "implementation_steps": [
+        "在数据库连接层添加指数退避重试逻辑",
+        "设置最大重试次数为5次"
+      ]
+    },
+    {
+      "suggestion": "优化数据库查询减少超时风险",
+      "confidence_score": 0.78,
+      "estimated_effort": "high",
+      "implementation_steps": [
+        "分析并优化耗时查询",
+        "添加适当的索引"
+      ]
+    }
+  ],
+  "related_failures": [
+    {
+      "failure_id": "failure-abc1234",
+      "timestamp": "2025-07-10T14:22:15Z",
+      "similarity_score": 0.92,
+      "resolution": "increased_timeout"
+    }
+  ]
+}
+```
+
+#### 获取恢复建议
+```http
+GET /api/v2/plans/{planId}/tasks/{taskId}/recovery-suggestions
+Authorization: Bearer {token}
+
+# 响应示例
+{
+  "failure_id": "failure-def5678j-e89b-12d3-a456-426614174000",
+  "task_id": "task-123",
+  "plan_id": "plan-456",
+  "suggestions": [
+    {
+      "suggestion_id": "sugg-1",
+      "suggestion": "增加数据库连接超时设置",
+      "confidence_score": 0.92,
+      "estimated_effort": "low",
+      "implementation_steps": [
+        "在配置文件中将DB_TIMEOUT参数从5000ms增加到10000ms",
+        "重启应用服务"
+      ],
+      "expected_outcome": "减少间歇性连接超时错误",
+      "potential_side_effects": [
+        "可能导致问题检测延迟增加"
+      ]
+    },
+    {
+      "suggestion_id": "sugg-2",
+      "suggestion": "实现数据库操作重试机制",
+      "confidence_score": 0.85,
+      "estimated_effort": "medium",
+      "implementation_steps": [
+        "在数据库连接层添加指数退避重试逻辑",
+        "设置最大重试次数为5次"
+      ],
+      "expected_outcome": "自动恢复短暂连接问题",
+      "potential_side_effects": [
+        "可能增加系统复杂性",
+        "需要处理潜在的重复操作问题"
+      ]
+    },
+    {
+      "suggestion_id": "sugg-3",
+      "suggestion": "优化数据库查询减少超时风险",
+      "confidence_score": 0.78,
+      "estimated_effort": "high",
+      "implementation_steps": [
+        "分析并优化耗时查询",
+        "添加适当的索引"
+      ],
+      "expected_outcome": "从根本上减少超时风险",
+      "potential_side_effects": [
+        "需要较长的实施时间",
+        "可能需要数据库架构变更"
+      ]
+    }
+  ],
+  "metadata": {
+    "generated_at": "2025-07-12T10:20:15Z",
+    "source": "enhanced_trace_adapter",
+    "adapter_version": "2.0.0",
+    "confidence_threshold": 0.75
+  }
+}
+```
+
+#### 应用恢复策略
+```http
+POST /api/v2/plans/{planId}/tasks/{taskId}/resolve
+Content-Type: application/json
+Authorization: Bearer {token}
+
+{
+  "strategy": "retry",
+  "config": {
+    "max_retries": 3,
+    "delay_ms": 1000,
+    "backoff_factor": 2
+  },
+  "notes": "应用增加超时设置后重试任务",
+  "suggestion_id": "sugg-1"
+}
+
+# 响应示例
+{
+  "resolution_id": "res-ghi9012k-e89b-12d3-a456-426614174000",
+  "failure_id": "failure-def5678j-e89b-12d3-a456-426614174000",
+  "task_id": "task-123",
+  "plan_id": "plan-456",
+  "strategy": "retry",
+  "status": "applied",
+  "applied_at": "2025-07-12T10:25:45Z",
+  "result": {
+    "success": true,
+    "new_task_status": "running",
+    "execution_time_ms": 8,
+    "details": {
+      "retry_count": 1,
+      "max_retries": 3
+    }
+  },
+  "adapter_metadata": {
+    "sync_status": "synced",
+    "sync_timestamp": "2025-07-12T10:25:47Z"
+  }
+}
+```
+
+#### 批量解决失败任务
+```http
+POST /api/v2/plans/{planId}/resolve-tasks
+Content-Type: application/json
+Authorization: Bearer {token}
+
+{
+  "task_ids": ["task-123", "task-124", "task-125"],
+  "strategy": "retry",
+  "config": {
+    "max_retries": 3,
+    "delay_ms": 1000,
+    "backoff_factor": 2
+  },
+  "notes": "批量重试数据库相关任务"
+}
+
+# 响应示例
+{
+  "batch_resolution_id": "batch-jkl3456m-e89b-12d3-a456-426614174000",
+  "plan_id": "plan-456",
+  "total_tasks": 3,
+  "successful_resolutions": 2,
+  "failed_resolutions": 1,
+  "applied_at": "2025-07-12T10:30:15Z",
+  "execution_time_ms": 25,
+  "results": [
+    {
+      "task_id": "task-123",
+      "success": true,
+      "new_status": "running",
+      "resolution_id": "res-ghi9012k-e89b-12d3-a456-426614174000"
+    },
+    {
+      "task_id": "task-124",
+      "success": true,
+      "new_status": "running",
+      "resolution_id": "res-mno3456p-e89b-12d3-a456-426614174000"
+    },
+    {
+      "task_id": "task-125",
+      "success": false,
+      "error": "任务已超过最大重试次数",
+      "error_code": "MAX_RETRY_EXCEEDED"
+    }
+  ],
+  "adapter_metadata": {
+    "sync_status": "synced",
+    "sync_timestamp": "2025-07-12T10:30:17Z"
+  }
+}
+```
+
+#### 检测开发问题
+```http
+GET /api/v2/plans/{planId}/development-issues
+Authorization: Bearer {token}
+
+# 响应示例
+{
+  "plan_id": "plan-456",
+  "issues": [
+    {
+      "id": "issue-1",
+      "type": "performance",
+      "severity": "medium",
+      "title": "数据库连接池配置不当",
+      "description": "当前连接池最大连接数配置过低，可能导致高并发场景下连接耗尽",
+      "file_path": "src/config/database.js",
+      "line_number": 42,
+      "detected_at": "2025-07-12T10:35:20Z",
+      "suggested_fix": "将MAX_CONNECTIONS参数从10增加到50",
+      "confidence_score": 0.89,
+      "related_failures": ["failure-def5678j-e89b-12d3-a456-426614174000"]
+    },
+    {
+      "id": "issue-2",
+      "type": "reliability",
+      "severity": "high",
+      "title": "缺少数据库操作错误处理",
+      "description": "数据库操作缺少适当的错误处理和重试机制",
+      "file_path": "src/services/data-service.js",
+      "line_number": 78,
+      "detected_at": "2025-07-12T10:35:20Z",
+      "suggested_fix": "实现try-catch错误处理并添加重试逻辑",
+      "confidence_score": 0.94,
+      "related_failures": ["failure-def5678j-e89b-12d3-a456-426614174000"]
+    },
+    {
+      "id": "issue-3",
+      "type": "security",
+      "severity": "critical",
+      "title": "SQL注入漏洞",
+      "description": "用户输入直接拼接到SQL查询中，存在SQL注入风险",
+      "file_path": "src/repositories/user-repository.js",
+      "line_number": 156,
+      "detected_at": "2025-07-12T10:35:20Z",
+      "suggested_fix": "使用参数化查询替代字符串拼接",
+      "confidence_score": 0.98,
+      "related_failures": []
+    }
+  ],
+  "metadata": {
+    "total_issues": 3,
+    "by_severity": {
+      "critical": 1,
+      "high": 1,
+      "medium": 1,
+      "low": 0,
+      "info": 0
+    },
+    "by_type": {
+      "performance": 1,
+      "reliability": 1,
+      "security": 1
+    },
+    "generated_at": "2025-07-12T10:35:20Z",
+    "source": "enhanced_trace_adapter",
+    "adapter_version": "2.0.0",
+    "confidence_threshold": 0.75
+  }
+}
+```
+
+#### 获取故障统计信息
+```http
+GET /api/v2/plans/{planId}/failure-analytics
+Authorization: Bearer {token}
+
+# 响应示例
+{
+  "plan_id": "plan-456",
+  "analytics_period": {
+    "start": "2025-07-01T00:00:00Z",
+    "end": "2025-07-12T23:59:59Z"
+  },
+  "total_failures": 15,
+  "by_status": {
+    "diagnosed": 3,
+    "resolved": 10,
+    "unresolved": 2
+  },
+  "by_type": {
+    "connection_error": 8,
+    "timeout": 4,
+    "validation_error": 2,
+    "resource_exhaustion": 1
+  },
+  "by_severity": {
+    "critical": 2,
+    "high": 5,
+    "medium": 6,
+    "low": 2
+  },
+  "resolution_stats": {
+    "retry_success_rate": 0.85,
+    "avg_resolution_time_ms": 3250,
+    "most_effective_strategy": "retry",
+    "avg_retries_before_success": 1.8
+  },
+  "failure_trends": {
+    "increasing_types": ["timeout"],
+    "decreasing_types": ["validation_error"],
+    "recurring_patterns": [
+      {
+        "pattern": "database_timeout_during_peak_hours",
+        "confidence": 0.92,
+        "occurrences": 6
+      }
+    ]
+  },
+  "metadata": {
+    "generated_at": "2025-07-12T10:40:30Z",
+    "source": "enhanced_trace_adapter",
+    "adapter_version": "2.0.0"
+  }
+}
+```
+
 ### Confirm 确认模块API
 
 #### 创建确认请求
