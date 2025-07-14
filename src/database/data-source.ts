@@ -3,6 +3,7 @@
  * 
  * @version v1.0.0
  * @created 2025-07-10T00:00:00+08:00
+ * @updated 2025-07-17T21:30:00+08:00
  * @compliance .cursor/rules/architecture.mdc - PostgreSQL数据库规范
  */
 
@@ -12,8 +13,16 @@ import { logger } from '@/utils/logger';
 
 // 导入所有实体
 import { ContextEntity } from '@/modules/context/entities/context.entity';
-import { SharedStateEntity } from '@/modules/context/entities/shared-state.entity';
+import { ContextStateAuditEntity } from '@/modules/context/entities/shared-state.entity';
 import { ContextSessionEntity } from '@/modules/context/entities/context-session.entity';
+
+// 导入迁移文件
+import { CreateContextTables20250709 } from './migrations/20250709_create_context_tables';
+import { CreatePlanTables20250717 } from './migrations/20250717_create_plan_tables';
+import { CreateRoleTables20250717 } from './migrations/20250717_create_role_tables';
+import { CreateConfirmTables20250717 } from './migrations/20250717_create_confirm_tables';
+import { CreateTraceTables20250717 } from './migrations/20250717_create_trace_tables';
+import { CreateExtensionTables20250717 } from './migrations/20250717_create_extension_tables';
 
 /**
  * TypeORM数据源配置
@@ -44,7 +53,7 @@ export const AppDataSource = new DataSource({
   entities: [
     // Context模块实体
     ContextEntity,
-    SharedStateEntity,
+    ContextStateAuditEntity,
     ContextSessionEntity,
     
     // 后续会添加其他模块的实体
@@ -55,9 +64,14 @@ export const AppDataSource = new DataSource({
     // ExtensionEntity
   ],
   
-  // 迁移配置 (暂时禁用以解决构建问题)
+  // 迁移配置
   migrations: [
-    // 'src/database/migrations/*.ts'
+    CreateContextTables20250709,
+    CreatePlanTables20250717,
+    CreateRoleTables20250717,
+    CreateConfirmTables20250717,
+    CreateTraceTables20250717,
+    CreateExtensionTables20250717
   ],
   
   // 订阅者配置
