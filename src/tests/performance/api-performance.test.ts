@@ -6,7 +6,7 @@
 import { performance } from 'perf_hooks';
 import { ContextService } from '../../modules/context/context-service';
 import { PlanManager } from '../../modules/plan/plan-manager';
-import TraceManager from '../../modules/trace/trace-manager';
+import { TraceManager } from '../../modules/trace/trace-manager';
 import { Performance } from '../../utils/performance';
 import { Logger } from '../../utils/logger';
 
