@@ -151,7 +151,9 @@ export class MPLPSchemaValidator {
       this.logger.info(`Schema ${schemaId} v${version} registered in ${duration}ms`);
 
     } catch (error) {
-      this.logger.error(`Failed to register schema ${schemaId}:`, error);
+      this.logger.error(`Failed to register schema ${schemaId}:`, {
+        error: error instanceof Error ? error.message : String(error)
+      });
       throw error;
     }
   }
@@ -170,15 +172,23 @@ export class MPLPSchemaValidator {
         throw new Error(`Schema ${schemaId} not found in registry`);
       }
 
+      // 确保data是一个对象类型
+      if (!data || typeof data !== 'object' || Array.isArray(data)) {
+        throw new Error(`Invalid data type: data must be an object`);
+      }
+
+      // 类型转换
+      const validData = data as Record<string, unknown>;
+
       // Perform validation
-      const valid = validator(data);
+      const valid = validator(validData);
       const validationTime = this.performance.since(validationStart);
 
       // Process errors and warnings
       const { errors, warnings } = this.processValidationErrors(validator.errors || []);
 
       // Run custom business rules
-      const customValidationResults = await this.runCustomValidations(schemaId, data);
+      const customValidationResults = await this.runCustomValidations(schemaId, validData);
       errors.push(...customValidationResults.errors);
       warnings.push(...customValidationResults.warnings);
 
@@ -208,7 +218,9 @@ export class MPLPSchemaValidator {
       return result;
 
     } catch (error) {
-      this.logger.error(`Validation failed for schema ${schemaId}:`, error);
+      this.logger.error(`Validation failed for schema ${schemaId}:`, {
+        error: error instanceof Error ? error.message : String(error)
+      });
       throw error;
     }
   }
@@ -274,7 +286,9 @@ export class MPLPSchemaValidator {
           this.compiledValidators.set(schemaId, validator);
           compiled++;
         } catch (error) {
-          this.logger.error(`Failed to precompile schema ${schemaId}:`, error);
+          this.logger.error(`Failed to precompile schema ${schemaId}:`, {
+            error: error instanceof Error ? error.message : String(error)
+          });
         }
       }
     }
@@ -435,7 +449,9 @@ export class MPLPSchemaValidator {
             }
           }
         } catch (error) {
-          this.logger.error(`Custom rule ${ruleName} execution failed:`, error);
+          this.logger.error(`Custom rule ${ruleName} execution failed:`, {
+            error: error instanceof Error ? error.message : String(error)
+          });
         }
       }
     }

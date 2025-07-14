@@ -86,7 +86,9 @@ export class MPLPSchemaManager {
       this.logger.info(`Schema Manager initialized with ${this.schemas.size} schemas in ${duration}ms`);
 
     } catch (error) {
-      this.logger.error('Failed to initialize Schema Manager:', error);
+      this.logger.error('Failed to initialize Schema Manager:', { 
+        error: error instanceof Error ? error.message : String(error) 
+      });
       throw error;
     }
   }
@@ -177,7 +179,9 @@ export class MPLPSchemaManager {
 
     } catch (error) {
       const loadTime = this.performance.since(startTime);
-      this.logger.error(`Failed to load schema ${moduleId}:`, error);
+      this.logger.error(`Failed to load schema ${moduleId}:`, { 
+        error: error instanceof Error ? error.message : String(error) 
+      });
 
       return {
         success: false,
@@ -197,7 +201,12 @@ export class MPLPSchemaManager {
       throw new Error(`Schema ${schemaId} is not loaded`);
     }
 
-    return await this.validator.validate(schemaId, data);
+    // 确保data是一个对象类型
+    if (!data || typeof data !== 'object' || Array.isArray(data)) {
+      throw new Error(`Invalid data type: data must be an object`);
+    }
+
+    return await this.validator.validate(schemaId, data as Record<string, unknown>);
   }
 
   /**
@@ -211,9 +220,20 @@ export class MPLPSchemaManager {
       if (!this.schemas.has(request.schemaId)) {
         throw new Error(`Schema ${request.schemaId} is not loaded`);
       }
+      
+      // 确保每个请求的data是一个对象类型
+      if (!request.data || typeof request.data !== 'object' || Array.isArray(request.data)) {
+        throw new Error(`Invalid data type for schema ${request.schemaId}: data must be an object`);
+      }
     }
 
-    return await this.validator.batchValidate(requests);
+    // 将请求中的data转换为Record<string, unknown>类型
+    const validRequests = requests.map(req => ({
+      ...req,
+      data: req.data as Record<string, unknown>
+    }));
+
+    return await this.validator.batchValidate(validRequests);
   }
 
   /**
