@@ -1,0 +1,310 @@
+description: "MPLP测试数据生成规范 - 定义测试数据创建、管理和使用的标准和最佳实践"
+globs: ["**/*.test.ts", "**/*.spec.ts", "**/tests/**/*", "**/fixtures/**/*", "**/mocks/**/*"]
+alwaysApply: true
+---
+
+# MPLP 测试数据规则
+
+> **规则版本**: v1.0  
+> **创建时间**: 2025-07-12T10:45:00+08:00  
+> **适用范围**: 所有测试数据、Fixture和Mock  
+> **强制等级**: 🚨 **高优先级** - 所有测试数据必须符合规范
+
+## 🎯 测试数据核心原则
+
+### 基础原则
+- **Schema驱动**: 所有测试数据必须符合Schema定义
+- **数据隔离**: 测试数据不应依赖外部系统或数据库
+- **可重现性**: 测试数据应该是确定性的，每次运行产生相同结果
+- **最小数据集**: 测试数据应该是完成测试所需的最小数据集
+- **边界覆盖**: 测试数据应覆盖边界条件和异常情况
+
+## 📋 测试数据类型
+
+### 1. 固定数据 (Fixtures)
+```typescript
+// 标准Fixture格式
+export const validContextFixture: ContextProtocol = {
+  context_id: '123e4567-e89b-12d3-a456-426614174000',
+  version: '1.0.0',
+  timestamp: '2025-07-12T10:45:00+08:00',
+  status: 'active',
+  lifecycle_stage: 'planning',
+  name: 'Test Context',
+  shared_state: {}
+};
+
+// 边界条件Fixture
+export const maxLengthNameContextFixture: ContextProtocol = {
+  // ...与validContextFixture相同的基础属性
+  name: 'A'.repeat(255), // 最大长度
+  // ...其他属性
+};
+
+// 无效数据Fixture
+export const invalidContextFixture = {
+  // 缺少必填字段
+  version: '1.0.0',
+  timestamp: '2025-07-12T10:45:00+08:00'
+};
+```
+
+### 2. 工厂函数
+```typescript
+// 测试数据工厂
+export function createContextFixture(overrides?: Partial<ContextProtocol>): ContextProtocol {
+  return {
+    context_id: generateUUID(),
+    version: '1.0.0',
+    timestamp: new Date().toISOString(),
+    status: 'active',
+    lifecycle_stage: 'planning',
+    name: 'Test Context',
+    shared_state: {},
+    ...overrides
+  };
+}
+
+// 批量数据生成
+export function createMultipleContexts(count: number): ContextProtocol[] {
+  return Array.from({ length: count }, (_, index) => 
+    createContextFixture({ name: `Test Context ${index + 1}` })
+  );
+}
+```
+
+### 3. Mock数据
+```typescript
+// 服务Mock
+export const mockContextService = {
+  createContext: jest.fn().mockResolvedValue({
+    success: true,
+    data: createContextFixture(),
+    tracepilot_sync_status: 'synced',
+    tracepilot_sync_latency: 45
+  }),
+  
+  getContext: jest.fn().mockImplementation((id: string) => {
+    if (id === 'not-found-id') {
+      return Promise.resolve({ success: false, error: 'Context not found' });
+    }
+    return Promise.resolve({
+      success: true,
+      data: createContextFixture({ context_id: id })
+    });
+  })
+};
+
+// 外部API Mock
+export const mockTracePilotAPI = {
+  syncTrace: jest.fn().mockResolvedValue({ success: true }),
+  getMetrics: jest.fn().mockResolvedValue({
+    performance: {
+      avg_response_time: 45,
+      p95_response_time: 85,
+      p99_response_time: 120
+    }
+  })
+};
+```
+
+## 🔧 测试数据管理
+
+### 文件组织
+```
+tests/
+  fixtures/
+    context.fixtures.ts     # Context模块固定测试数据
+    plan.fixtures.ts        # Plan模块固定测试数据
+    trace.fixtures.ts       # Trace模块固定测试数据
+  factories/
+    context.factory.ts      # Context测试数据工厂
+    plan.factory.ts         # Plan测试数据工厂
+  mocks/
+    services.mock.ts        # 服务Mock
+    api.mock.ts             # API Mock
+```
+
+### 数据共享策略
+```typescript
+// 共享基础数据
+import { baseFixtures } from '../fixtures/base.fixtures';
+
+// 特定测试的数据扩展
+const testSpecificData = {
+  ...baseFixtures.validContext,
+  name: 'Specific Test Context'
+};
+
+// 避免测试间数据污染
+beforeEach(() => {
+  // 重置所有Mock
+  jest.clearAllMocks();
+  
+  // 重置测试数据
+  testData = { ...originalTestData };
+});
+```
+
+## 📊 测试数据验证
+
+### Schema验证
+```typescript
+// 使用AJV验证测试数据符合Schema
+import Ajv from 'ajv';
+import contextSchema from '../../src/schemas/context-protocol.json';
+
+const ajv = new Ajv();
+const validate = ajv.compile(contextSchema);
+
+describe('Context Fixtures', () => {
+  it('should validate against schema', () => {
+    const isValid = validate(validContextFixture);
+    expect(isValid).toBe(true);
+    expect(validate.errors).toBeNull();
+  });
+  
+  it('should detect invalid data', () => {
+    const isValid = validate(invalidContextFixture);
+    expect(isValid).toBe(false);
+  });
+});
+```
+
+### 边界测试数据
+```typescript
+// 边界条件测试数据
+const boundaryTestCases = [
+  { name: 'empty string', value: '', expectedValid: false },
+  { name: 'max length', value: 'A'.repeat(255), expectedValid: true },
+  { name: 'exceeds max length', value: 'A'.repeat(256), expectedValid: false },
+  { name: 'special characters', value: '!@#$%^&*()', expectedValid: true }
+];
+
+describe('Name field validation', () => {
+  test.each(boundaryTestCases)(
+    'validates $name correctly',
+    ({ value, expectedValid }) => {
+      const testData = createContextFixture({ name: value });
+      const isValid = validate(testData);
+      expect(isValid).toBe(expectedValid);
+    }
+  );
+});
+```
+
+## 🔄 测试数据生命周期
+
+### 设置和清理
+```typescript
+// 全局设置
+beforeAll(() => {
+  // 初始化测试数据库
+  initTestDatabase();
+  
+  // 加载共享Fixtures
+  globalFixtures = loadGlobalFixtures();
+});
+
+// 测试前设置
+beforeEach(() => {
+  // 重置Mock
+  jest.clearAllMocks();
+  
+  // 准备测试数据
+  testContext = createContextFixture();
+});
+
+// 测试后清理
+afterEach(() => {
+  // 清理测试数据
+  cleanupTestData();
+});
+
+// 全局清理
+afterAll(() => {
+  // 关闭测试数据库连接
+  closeTestDatabase();
+});
+```
+
+### 数据隔离策略
+```typescript
+// 使用唯一标识符
+const testId = `test-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+// 每个测试使用独立数据
+test('should create context', async () => {
+  const uniqueContext = createContextFixture({
+    name: `Test Context ${testId}`
+  });
+  
+  // 使用隔离的测试数据
+  const result = await service.createContext(uniqueContext);
+  expect(result.success).toBe(true);
+});
+```
+
+## ✅ 测试数据最佳实践
+
+### 应该做的
+- ✅ 使用工厂函数创建测试数据
+- ✅ 验证测试数据符合Schema
+- ✅ 使用TypeScript类型确保类型安全
+- ✅ 覆盖边界条件和异常情况
+- ✅ 保持测试数据最小化和聚焦
+- ✅ 使用确定性的UUID和时间戳
+- ✅ 在测试之间隔离数据
+
+### 不应该做的
+- ❌ 使用真实的外部API或数据库
+- ❌ 创建超出测试需要的大型数据集
+- ❌ 在测试之间共享可变状态
+- ❌ 使用随机数据而不设置种子
+- ❌ 忽略Schema验证
+- ❌ 硬编码敏感数据
+
+## 📚 测试数据模板
+
+### 基础测试数据模板
+```typescript
+// 模块测试数据模板
+export const moduleTestData = {
+  // 有效数据
+  valid: {
+    minimal: { /* 最小有效数据集 */ },
+    complete: { /* 完整有效数据集 */ },
+    edge: { /* 边界条件数据 */ }
+  },
+  
+  // 无效数据
+  invalid: {
+    missingRequired: { /* 缺少必填字段 */ },
+    invalidFormat: { /* 格式错误 */ },
+    outOfRange: { /* 超出范围 */ }
+  }
+};
+```
+
+### 集成测试数据模板
+```typescript
+// 集成测试数据关系
+export const integrationTestData = {
+  context: createContextFixture(),
+  
+  plan: createPlanFixture({
+    context_id: /* 引用上面创建的context.context_id */
+  }),
+  
+  tasks: [
+    createTaskFixture({ plan_id: /* 引用上面创建的plan.plan_id */ }),
+    createTaskFixture({ plan_id: /* 引用上面创建的plan.plan_id */ })
+  ]
+};
+```
+
+---
+
+**规则创建**: MPLP测试团队  
+**维护责任**: 所有开发者  
+**审查周期**: 每个开发阶段结束后审查

@@ -1,9 +1,311 @@
----
+description: "MPLP追踪生命周期管理规则 - 定义追踪数据收集、处理和治理的标准流程"
+globs: ["src/modules/trace/**/*", "**/trace-protocol.json", "**/trace*.ts", "**/tracepilot/**/*", "src/adapters/trace/**/*", "src/interfaces/trace*.ts"]
 alwaysApply: true
 ---
-> **重要**: 追踪生命周期管理现已完全集成TracePilot平台和治理层机制，确保所有关键操作都被准确记录、实时同步、并符合企业级治理要求。
-> 
-> **治理层状态**: ✅ 完全激活 - TracePilot双向同步 + Plan→Confirm→Trace→Delivery强制流程控制
-> 
-> **性能要求**: TracePilot同步 < 100ms | 批量处理 > 1000 TPS | 格式转换 < 50ms | 治理验证 < 5ms
+
+# MPLP 追踪生命周期规则
+
+> **规则版本**: v1.1  
+> **创建时间**: 2025-07-11T16:00:00+08:00  
+> **更新时间**: 2025-07-15T10:30:00+08:00  
+> **适用范围**: 所有追踪数据收集和处理  
+> **强制等级**: 🚨 **最高优先级** - 所有操作必须被追踪记录
+
+## 🎯 追踪生命周期核心原则
+
+### 基础原则
+- **完整记录**: 所有关键操作必须被准确记录和追踪
+- **实时同步**: 追踪数据必须实时同步到治理层和TracePilot平台
+- **性能优先**: 追踪机制不得影响系统性能（<2ms开销）
+- **数据完整性**: 追踪数据必须包含完整的上下文信息
+- **合规性**: 追踪数据收集和处理必须符合企业级治理要求
+
+## 📋 追踪数据模型
+
+### 追踪记录结构
+```typescript
+interface TraceRecord {
+  // 基础信息
+  trace_id: string;                // 追踪唯一标识符
+  correlation_id: string;          // 关联标识符
+  timestamp: string;               // ISO 8601时间戳
+  source: string;                  // 追踪来源
+  
+  // 操作信息
+  operation: {
+    name: string;                  // 操作名称
+    type: TraceType;               // 追踪类型
+    status: 'success' | 'failure'; // 操作状态
+    duration_ms: number;           // 操作耗时
+  };
+  
+  // 上下文信息
+  context: {
+    context_id?: string;           // 上下文ID
+    plan_id?: string;              // 计划ID
+    task_id?: string;              // 任务ID
+    user_id?: string;              // 用户ID
+    environment: string;           // 环境信息
+  };
+  
+  // 性能指标
+  performance_metrics?: {
+    cpu_usage_percent?: number;    // CPU使用率
+    memory_usage_mb?: number;      // 内存使用
+    io_operations?: number;        // IO操作数
+    network_requests?: number;     // 网络请求数
+    response_time_ms?: number;     // 响应时间
+  };
+  
+  // 错误信息
+  error?: {
+    code: string;                  // 错误代码
+    message: string;               // 错误消息
+    stack_trace?: string;          // 堆栈跟踪
+    recovery_action?: string;      // 恢复操作
+  };
+  
+  // 元数据
+  metadata: Record<string, unknown>; // 自定义元数据
+}
+```
+
+### 追踪类型
+```typescript
+enum TraceType {
+  OPERATION = 'operation',           // 业务操作
+  STATE_CHANGE = 'state_change',     // 状态变更
+  PERFORMANCE = 'performance',       // 性能指标
+  ERROR = 'error',                   // 错误事件
+  SECURITY = 'security',             // 安全事件
+  LIFECYCLE = 'lifecycle',           // 生命周期事件
+  INTEGRATION = 'integration',        // 集成事件
+  FAILURE_RESOLUTION = 'failure_resolution' // 故障解决事件
+}
+```
+
+## 🔄 追踪数据流程
+
+### 数据收集流程
+1. **操作拦截**: 通过AOP拦截关键操作
+2. **数据收集**: 收集操作上下文和性能指标
+3. **格式转换**: 转换为标准追踪记录格式
+4. **本地缓存**: 缓存追踪数据减少IO开销
+5. **批量处理**: 批量发送追踪数据提高效率
+
+### 数据处理流程
+1. **数据验证**: 验证追踪数据的完整性和合规性
+2. **数据丰富**: 添加额外上下文和关联信息
+3. **数据分类**: 按类型和优先级分类追踪数据
+4. **数据存储**: 持久化存储追踪数据
+5. **数据分析**: 实时分析追踪数据生成洞察
+
+## 📊 追踪性能要求
+
+### 性能指标
+```
+- 追踪记录: < 2ms
+- 查询分析: < 20ms
+- 批量处理: > 1000 TPS
+- 格式转换: < 50ms
+- 治理验证: < 5ms
+```
+
+### 性能优化策略
+1. **异步处理**: 非关键追踪使用异步处理
+2. **批量操作**: 使用批量API减少网络开销
+3. **数据压缩**: 压缩追踪数据减少传输量
+4. **采样策略**: 高流量场景使用智能采样
+5. **缓存优化**: 多级缓存减少重复计算
+
+## 🔗 追踪适配器架构
+
+### 适配器层次结构
+```
+ITraceAdapter (接口)
+    ↑
+BaseTraceAdapter (基础实现)
+    ↑
+EnhancedTraceAdapter (增强实现)
+    ↑
+具体厂商实现 (如TracePilotAdapter)
+```
+
+### 追踪适配器接口规范
+```typescript
+// 厂商中立的追踪适配器接口
+
+// 1. 通用接口定义 - 必须使用中立命名
+interface ITraceAdapter {  // ✅ 正确：使用I前缀，不包含厂商名称
+  // 核心功能
+  syncTraceData(data: TraceData): Promise<SyncResult>;
+  queryTraces(filter: TraceFilter): Promise<TraceQueryResult>;
+  checkHealth(): Promise<AdapterHealth>;
+  
+  // 故障处理
+  reportFailure(failure: FailureReport): Promise<void>;
+  getRecoverySuggestions(failureId: string): Promise<RecoverySuggestion[]>;
+}
+
+// 2. 核心模块依赖接口而非具体实现
+class TraceManager {
+  private adapter: ITraceAdapter;  // ✅ 正确：依赖通用接口
+  
+  constructor(adapter: ITraceAdapter) {
+    this.adapter = adapter;
+  }
+  
+  // 支持运行时替换适配器
+  setTraceAdapter(adapter: ITraceAdapter): void {
+    this.adapter = adapter;
+  }
+}
+
+// 3. 基础适配器实现 - 提供通用功能
+class BaseTraceAdapter implements ITraceAdapter {
+  // 实现通用功能
+  async syncTraceData(data: TraceData): Promise<SyncResult> {
+    // 基础同步实现
+  }
+  
+  // 其他方法实现...
+}
+
+// 4. 增强适配器实现 - 提供增强功能
+class EnhancedTraceAdapter extends BaseTraceAdapter {
+  // 重写方法提供增强功能
+  async syncTraceData(data: TraceData): Promise<SyncResult> {
+    // 增强同步实现
+  }
+  
+  // 其他增强方法...
+}
+
+// 5. 厂商特定实现 - 放在独立的集成目录
+// src/mcp/tracepilot-adapter.ts
+class TracePilotAdapter implements ITraceAdapter {
+  // 实现接口...
+}
+
+// 6. 增强版厂商适配器 - 保持接口兼容性
+// src/mcp/enhanced-tracepilot-adapter.ts
+class EnhancedTracePilotAdapter implements ITraceAdapter {
+  // 增强功能实现...
+}
+```
+
+### 适配器工厂
+```typescript
+// 适配器工厂 - 创建适配器实例
+class TraceAdapterFactory {
+  // 创建基础适配器
+  static createBaseAdapter(config: AdapterConfig): ITraceAdapter {
+    return new BaseTraceAdapter(config);
+  }
+  
+  // 创建增强适配器
+  static createEnhancedAdapter(config: AdapterConfig): ITraceAdapter {
+    return new EnhancedTraceAdapter(config);
+  }
+  
+  // 根据配置创建适配器
+  static createAdapter(config: AdapterConfig): ITraceAdapter {
+    if (config.useEnhanced) {
+      return this.createEnhancedAdapter(config);
+    }
+    return this.createBaseAdapter(config);
+  }
+}
+```
+
+### 适配器实现要求
+1. **厂商中立**: 核心模块只能依赖通用接口，不能直接引用厂商实现
+2. **接口隔离**: 适配器应隔离核心模块与第三方服务的差异
+3. **错误处理**: 适配器必须处理第三方服务错误，不传播到核心模块
+4. **性能缓冲**: 适配器应实现本地缓存以减少对外部服务的依赖
+5. **优雅降级**: 当第三方服务不可用时，适配器应提供降级策略
+6. **版本兼容**: 适配器应处理不同版本API的兼容性问题
+7. **指标收集**: 适配器应收集与第三方服务交互的性能指标
+
+### 同步机制
+1. **实时同步**: 关键操作实时同步到TracePilot
+2. **批量同步**: 非关键操作批量同步
+3. **增量同步**: 只同步变更的追踪数据
+4. **冲突解决**: 自动解决数据冲突
+5. **断点续传**: 网络中断后自动恢复同步
+
+### 集成配置
+```typescript
+interface TracePilotConfig {
+  // 连接设置
+  api_endpoint: string;             // API端点
+  api_key: string;                  // API密钥
+  organization_id: string;          // 组织ID
+  
+  // 同步设置
+  sync_interval_ms: number;         // 同步间隔
+  batch_size: number;               // 批量大小
+  retry_strategy: {
+    max_attempts: number;           // 最大重试次数
+    backoff_factor: number;         // 退避因子
+  };
+  
+  // 性能设置
+  performance_mode: 'high' | 'balanced' | 'low'; // 性能模式
+  sampling_rate: number;            // 采样率
+  
+  // 安全设置
+  encryption_enabled: boolean;      // 启用加密
+  data_retention_days: number;      // 数据保留天数
+}
+```
+
+## 🛡️ 治理层集成
+
+### 治理流程
+1. **Plan → Confirm → Trace → Delivery** 强制流程控制
+2. **操作审批**: 高风险操作需要治理层审批
+3. **合规检查**: 自动检查追踪数据合规性
+4. **审计日志**: 生成完整的审计日志
+5. **异常处理**: 自动处理和升级异常情况
+
+### 治理策略配置
+```typescript
+interface GovernanceConfig {
+  // 审批设置
+  approval_required_for: string[];  // 需要审批的操作
+  auto_approval_enabled: boolean;   // 启用自动审批
+  approval_timeout_ms: number;      // 审批超时时间
+  
+  // 合规设置
+  compliance_checks: {
+    data_privacy: boolean;          // 数据隐私检查
+    security_scan: boolean;         // 安全扫描
+    performance_check: boolean;     // 性能检查
+  };
+  
+  // 审计设置
+  audit_level: 'basic' | 'standard' | 'comprehensive'; // 审计级别
+  audit_retention_days: number;     // 审计数据保留天数
+}
+```
+
+## ✅ 追踪实施检查清单
+
+追踪实施前确认：
+- [ ] 所有关键操作都有追踪点
+- [ ] 追踪数据符合标准格式
+- [ ] 适配器接口实现完整
+- [ ] 性能符合要求（<2ms开销）
+- [ ] 治理层流程控制已激活
+- [ ] 数据同步机制已测试
+- [ ] 异常处理机制完善
+- [ ] 安全和隐私合规
+
+---
+
+**规则版本**: v1.1  
+**规则创建**: MPLP追踪团队  
+**维护责任**: 追踪和治理团队  
+**审查周期**: 每月安全审查 + 季度深度审计
  

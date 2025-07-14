@@ -113,10 +113,10 @@ async recordTrace(operation: string, data: TraceData): Promise<TraceResult>
   - 集成部署术语（12个定义）
   - 监控运维术语（8个定义）
 
-### 5. **追踪历史系统** (trace/logs/)
+### 5. **追踪历史系统** (src/mcp/trace/logs/)
 
 #### **Trace历史记录**
-- 📁 **文件**: `trace/logs/trace_history.json`
+- 📁 **文件**: `src/mcp/trace/logs/trace_history.json`
 - 🎯 **功能**: 存储所有开发任务的完整生命周期记录
 - 📊 **记录的首个任务**:
 

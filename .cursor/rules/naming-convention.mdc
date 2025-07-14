@@ -1,475 +1,426 @@
 # MPLP 命名约定规则
 
-> **文件类型**: Auto  
-> **适用范围**: 所有代码文件、Schema、变量命名  
-> **最后更新**: 2025-07-11T23:59:23Z
+> **规则版本**: v1.1  
+> **创建时间**: 2025-07-10T08:30:00+08:00  
+> **更新时间**: 2025-07-15T10:30:00+08:00  
+> **适用范围**: 所有代码文件和项目资源  
+> **强制等级**: 🚨 **高优先级** - 所有代码必须符合命名规范
 
-## 📝 基础命名原则
+## 📋 通用命名原则
 
-### 通用规则
-- **英文命名**: 所有标识符使用英文，禁用拼音或中文
-- **语义明确**: 名称应准确描述其用途和功能
-- **避免缩写**: 除非是广泛认知的缩写(id, url, api等)
-- **一致性**: 同类型实体使用统一的命名模式
-- **严格遵守**: 所有命名必须100%符合本规范，无例外
+### 基础原则
+- **一致性**: 在整个代码库中保持命名风格一致
+- **描述性**: 名称应清晰描述其用途或含义
+- **简洁性**: 名称应简洁但不牺牲清晰度
+- **可读性**: 优先考虑可读性而非简短性
+- **避免缩写**: 除非是广泛接受的缩写，否则避免使用
 
-## 🏗️ 模块命名规范
-
-### 6个核心模块
+### 禁止的命名模式
 ```
-context/     # 上下文模块 (小写)
-plan/        # 规划模块  
-confirm/     # 确认模块
-trace/       # 追踪模块
-role/        # 角色模块
-extension/   # 扩展模块
-```
-
-### 模块内部文件命名规则 (严格执行)
-```
-{module-name}-{component-type}.ts
+❌ 单字母名称 (除了循环计数器或数学公式)
+❌ 无意义的名称 (如foo, bar, temp)
+❌ 拼写错误
+❌ 混合命名风格
+❌ 厂商特定前缀/后缀 (如TracePilotManager)
 ```
 
-其中:
-- `{module-name}` 是模块名称，必须小写
-- `{component-type}` 是组件类型，必须小写
-- 分隔符必须使用连字符(`-`)
+## 🏷️ 文件命名约定
 
-### 标准组件类型
+### TypeScript/JavaScript文件
 ```
-protocol     # 协议定义
-manager      # 管理器
-factory      # 工厂
-handler      # 处理器
-validator    # 验证器
-service      # 业务服务
-controller   # 控制器
-repository   # 数据仓库
-types        # 类型定义
-resolver     # 解析器
-adapter      # 适配器
-helper       # 辅助工具
-util         # 工具函数
-config       # 配置
-middleware   # 中间件
+// ✅ 正确
+user-service.ts
+plan-manager.ts
+context-protocol.ts
+trace-adapter.interface.ts
+base-trace-adapter.ts
+enhanced-trace-adapter.ts
+
+// ❌ 错误
+UserService.ts       // 应使用kebab-case
+planManager.ts       // 应使用kebab-case
+Context_Protocol.ts  // 应使用kebab-case
+tracepilotAdapter.ts // 厂商名称不应出现在文件名中
 ```
 
-### 模块文件命名示例
-
-#### ✅ 正确: 统一的模块内部组件命名
+### 目录命名
 ```
-context/
-├── context-protocol.ts       # 协议定义
-├── context-manager.ts        # 管理器
-├── context-factory.ts        # 工厂
-├── context-handler.ts        # 处理器
-├── context-validator.ts      # 验证器
-├── context-service.ts        # 业务服务
-├── context-controller.ts     # 控制器
-├── context-repository.ts     # 数据仓库
-├── context-types.ts          # 类型定义
-└── index.ts                  # 模块入口
+// ✅ 正确
+src/modules/trace/
+src/interfaces/
+src/adapters/trace/
+src/schemas/
+src/utils/
 
-plan/
-├── plan-protocol.ts          # 协议定义
-├── plan-manager.ts           # 管理器
-├── plan-factory.ts           # 工厂
-├── plan-handler.ts           # 处理器
-├── plan-validator.ts         # 验证器
-├── plan-service.ts           # 业务服务
-├── plan-controller.ts        # 控制器
-├── plan-repository.ts        # 数据仓库
-├── plan-types.ts             # 类型定义
-├── plan-resolver.ts          # 解析器
-├── failure-resolver.ts       # 失败解析器
-└── index.ts                  # 模块入口
+// ❌ 错误
+src/Modules/       // 应使用小写
+src/trace_module/  // 应使用kebab-case
+src/TracePilot/    // 厂商名称不应作为核心目录
 ```
 
-#### ❌ 错误: 不一致的命名
+### 特殊文件命名
 ```
-context/
-├── context.protocol.ts       # 错误: 使用点分隔符
-├── contextManager.ts         # 错误: 使用camelCase
-├── Context.handler.ts        # 错误: 首字母大写且使用点分隔符
-├── ContextValidator.ts       # 错误: 使用PascalCase
-└── ctx-validator.ts          # 错误: 使用缩写
+// ✅ 正确
+README.md
+.gitignore
+tsconfig.json
+package.json
+jest.config.js
 
-plan/
-├── Plan-factory.ts           # 错误: 首字母大写
-├── plan_manager.ts           # 错误: 使用下划线分隔符
-├── planHandler.ts            # 错误: 使用camelCase
-├── Failure-Resolver.ts       # 错误: 使用PascalCase
-└── PlanController.ts         # 错误: 使用PascalCase
+// 测试文件
+user-service.test.ts
+plan-manager.spec.ts
+context-protocol.integration.test.ts
 ```
 
-### 特殊文件命名规则
+## 🔤 代码命名约定
 
-#### 子模块命名
-```
-{module-name}/{sub-module-name}/
-├── {module-name}-{sub-module-name}-{component-type}.ts
-```
+### 变量命名
+```typescript
+// ✅ 正确: 使用camelCase
+const userName = 'john_doe';
+const isActive = true;
+const planTaskCount = 42;
 
-例如:
-```
-plan/execution/
-├── plan-execution-manager.ts
-├── plan-execution-handler.ts
-```
-
-#### 共享组件命名
-```
-{module-name}/shared/
-├── {module-name}-{component-type}.ts
+// ❌ 错误
+const UserName = 'john_doe';      // 应使用camelCase
+const is_active = true;           // 应使用camelCase
+const PLANTASKCOUNT = 42;         // 应使用camelCase
 ```
 
-## 📋 JSON Schema 命名规范
+### 常量命名
+```typescript
+// ✅ 正确: 使用UPPER_SNAKE_CASE
+const MAX_RETRY_COUNT = 3;
+const DEFAULT_TIMEOUT_MS = 5000;
+const API_BASE_URL = 'https://api.example.com';
 
-### Schema文件命名
-```
-schemas/
-├── base-types.json          # 基础类型定义
-├── context-protocol.json    # Context协议Schema
-├── plan-protocol.json       # Plan协议Schema
-├── confirm-protocol.json    # Confirm协议Schema
-├── trace-protocol.json      # Trace协议Schema
-├── role-protocol.json       # Role协议Schema
-└── extension-protocol.json  # Extension协议Schema
+// ❌ 错误
+const maxRetryCount = 3;          // 应使用UPPER_SNAKE_CASE
+const DefaultTimeoutMs = 5000;    // 应使用UPPER_SNAKE_CASE
+const api_base_url = 'https://api.example.com'; // 应使用UPPER_SNAKE_CASE
 ```
 
-### Schema内部命名
+### 函数命名
+```typescript
+// ✅ 正确: 使用camelCase，动词开头
+function getUserById(id: string): User;
+function calculateTotalPrice(items: Item[]): number;
+function isValidEmail(email: string): boolean;
+
+// ❌ 错误
+function UserById(id: string): User;           // 应以动词开头
+function Calculate_Total_Price(items: Item[]): number; // 应使用camelCase
+function valid_email(email: string): boolean;  // 应使用camelCase和动词开头
+```
+
+### 类命名
+```typescript
+// ✅ 正确: 使用PascalCase
+class UserService {}
+class PlanManager {}
+class ContextRepository {}
+
+// ❌ 错误
+class userService {}               // 应使用PascalCase
+class plan_manager {}             // 应使用PascalCase
+class CONTEXT_REPOSITORY {}       // 应使用PascalCase
+```
+
+### 接口命名
+```typescript
+// ✅ 正确: 使用I前缀+PascalCase
+interface IUserService {}
+interface IPlanManager {}
+interface ITraceAdapter {}
+
+// ❌ 错误
+interface UserService {}          // 缺少I前缀
+interface i_plan_manager {}       // 应使用I前缀+PascalCase
+interface TracePilotAdapter {}    // 厂商名称不应出现在接口名中
+```
+
+### 类型命名
+```typescript
+// ✅ 正确: 使用PascalCase
+type UserRole = 'admin' | 'user' | 'guest';
+type RequestStatus = 'pending' | 'success' | 'error';
+type UUID = string;
+
+// ❌ 错误
+type userRole = 'admin' | 'user' | 'guest';    // 应使用PascalCase
+type request_status = 'pending' | 'success' | 'error'; // 应使用PascalCase
+type uuid = string;                            // 应使用PascalCase
+```
+
+### 枚举命名
+```typescript
+// ✅ 正确: 枚举名使用PascalCase，值使用UPPER_CASE
+enum HttpStatus {
+  OK = 'OK',
+  NOT_FOUND = 'NOT_FOUND',
+  INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR'
+}
+
+// ✅ 正确: 数字枚举使用PascalCase
+enum Direction {
+  North,
+  East,
+  South,
+  West
+}
+
+// ❌ 错误
+enum httpStatus {}                // 枚举名应使用PascalCase
+enum HTTP_STATUS {}               // 枚举名应使用PascalCase
+enum Direction {
+  north,                          // 枚举值应使用UPPER_CASE或PascalCase
+  EAST,
+  south_east                      // 混合风格
+}
+```
+
+## 📦 模块命名约定
+
+### 核心模块命名
+```typescript
+// ✅ 正确: 6个核心模块名称
+context
+plan
+confirm
+trace
+role
+extension
+
+// ❌ 错误
+contextModule       // 应简洁，不需要Module后缀
+plan-module         // 应简洁，不需要-module后缀
+ConfirmModule       // 应使用小写
+trace_module        // 应使用小写，不需要_module后缀
+```
+
+### 适配器命名
+```typescript
+// ✅ 正确: 接口命名
+interface ITraceAdapter {}
+interface IPlanAdapter {}
+interface IConfirmAdapter {}
+
+// ✅ 正确: 实现命名
+class BaseTraceAdapter implements ITraceAdapter {}
+class EnhancedTraceAdapter extends BaseTraceAdapter {}
+
+// ❌ 错误
+interface TraceAdapter {}                  // 缺少I前缀
+interface TracePilotAdapter {}             // 厂商名称不应出现在接口名中
+class TracePilotTraceAdapter {}            // 厂商名称不应出现在类名中
+```
+
+### 目录结构命名
+```
+// ✅ 正确: 标准目录结构
+src/
+  modules/
+    context/
+    plan/
+    confirm/
+    trace/
+    role/
+    extension/
+  interfaces/
+    trace-adapter.interface.ts
+    plan-adapter.interface.ts
+  adapters/
+    trace/
+      base-trace-adapter.ts
+      enhanced-trace-adapter.ts
+    plan/
+      base-plan-adapter.ts
+  schemas/
+    context-protocol.json
+    plan-protocol.json
+
+// ❌ 错误
+src/
+  Modules/                         // 应使用小写
+  tracepilot/                      // 厂商名称不应作为顶级目录
+  interfaces/
+    TracePilotAdapter.ts           // 厂商名称不应出现在文件名中
+```
+
+## 🔧 Schema命名约定
+
+### JSON Schema文件命名
+```
+// ✅ 正确
+context-protocol.json
+plan-protocol.json
+confirm-protocol.json
+trace-protocol.json
+role-protocol.json
+extension-protocol.json
+
+// ❌ 错误
+ContextProtocol.json              // 应使用kebab-case
+plan_protocol.json               // 应使用kebab-case
+CONFIRM-PROTOCOL.json            // 应使用kebab-case
+tracepilot-protocol.json         // 厂商名称不应出现在Schema文件名中
+```
+
+### Schema字段命名
 ```json
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://mplp.dev/schemas/context-protocol.json",
-  "title": "ContextProtocol",
-  "type": "object",
+  // ✅ 正确: 使用snake_case
+  "context_id": "string",
+  "plan_id": "string",
+  "created_at": "string",
+  "is_active": "boolean",
+
+  // ❌ 错误
+  "contextId": "string",          // 应使用snake_case
+  "PlanId": "string",             // 应使用snake_case
+  "CreatedAt": "string",          // 应使用snake_case
+  "isActive": "boolean"           // 应使用snake_case
+}
+```
+
+### Schema枚举值命名
+```json
+{
   "properties": {
-    "context_id": {           // 使用snake_case匹配JSON
+    // ✅ 正确: 使用snake_case
+    "status": {
       "type": "string",
-      "format": "uuid"
+      "enum": ["pending", "in_progress", "completed", "failed"]
     },
-    "lifecycle_stage": {      // 复合词用snake_case
+    
+    // ❌ 错误
+    "status": {
       "type": "string",
-      "enum": ["planning", "executing", "monitoring", "completed"]
+      "enum": ["PENDING", "IN_PROGRESS", "COMPLETED", "FAILED"]  // 应使用snake_case
     }
   }
 }
 ```
 
-## 💻 TypeScript 命名规范
+## 🌐 API命名约定
 
-### 接口和类型
-```typescript
-// ✅ 正确: 接口命名 (PascalCase)
-interface ContextProtocol {
-  context_id: string;        // JSON字段使用snake_case
-  version: string;
-  timestamp: string;
-}
+### REST API端点
+```
+// ✅ 正确: 使用kebab-case，复数名词
+GET    /api/v1/contexts
+POST   /api/v1/contexts
+GET    /api/v1/contexts/{context_id}
+PUT    /api/v1/contexts/{context_id}
+DELETE /api/v1/contexts/{context_id}
+POST   /api/v1/plans/{plan_id}/tasks
+GET    /api/v1/plans/{plan_id}/tasks/{task_id}
 
-interface PlanExecutionResult {
-  execution_id: string;
-  status: ExecutionStatus;
-  metrics: PerformanceMetrics;
-}
-
-// 类型别名 (PascalCase)
-type ProtocolHandler<T> = (protocol: T) => Promise<ValidationResult>;
-type EventCallback = (event: ProtocolEvent) => void;
-
-// 枚举 (PascalCase)
-enum ExecutionStatus {
-  PENDING = 'pending',       // 枚举值使用UPPER_SNAKE_CASE
-  RUNNING = 'running',
-  COMPLETED = 'completed',
-  FAILED = 'failed'
-}
+// ❌ 错误
+GET    /api/v1/Context                // 应使用小写复数
+POST   /api/v1/CreateContext          // 应使用名词而非动词
+GET    /api/v1/getContextById/{id}    // 应使用名词而非动词
+PUT    /api/v1/contexts/{contextId}   // URL参数应使用snake_case
 ```
 
-### 类和函数
-```typescript
-// ✅ 正确: 类命名 (PascalCase)
-class ContextHandler {
-  private readonly logger: Logger;
-  private readonly validator: ContextValidator;
-  
-  // 方法命名 (camelCase)
-  public async createContext(data: CreateContextRequest): Promise<ContextProtocol> {
-    // 实现逻辑
-  }
-  
-  public async updateContextStatus(
-    contextId: string, 
-    status: ContextStatus
-  ): Promise<void> {
-    // 实现逻辑
-  }
-}
-
-// 函数命名 (camelCase)
-export function validateContextProtocol(data: unknown): ValidationResult {
-  // 验证逻辑
-}
-
-export function generateUniqueId(): string {
-  return crypto.randomUUID();
-}
-```
-
-### 变量和常量
-```typescript
-// ✅ 正确: 变量命名 (camelCase)
-const contextHandler = new ContextHandler();
-const validationResult = await validator.validate(data);
-const executionMetrics = await collector.getMetrics();
-
-// 常量命名 (UPPER_SNAKE_CASE)
-const DEFAULT_TIMEOUT = 30000;
-const MAX_RETRY_ATTEMPTS = 3;
-const PROTOCOL_VERSION = '1.0';
-const API_BASE_URL = 'https://api.mplp.dev/v1';
-
-// 配置对象 (camelCase)
-const databaseConfig = {
-  host: process.env.DB_HOST,
-  port: parseInt(process.env.DB_PORT || '5432'),
-  database: process.env.DB_NAME,
-  username: process.env.DB_USER,
-  password: process.env.DB_PASSWORD
-};
-```
-
-## 🌐 API 命名规范
-
-### REST API 端点
-```typescript
-// ✅ 正确: RESTful API命名
-GET    /api/v1/contexts                    # 获取上下文列表
-POST   /api/v1/contexts                    # 创建上下文
-GET    /api/v1/contexts/{contextId}        # 获取特定上下文
-PUT    /api/v1/contexts/{contextId}        # 更新上下文
-DELETE /api/v1/contexts/{contextId}        # 删除上下文
-
-GET    /api/v1/contexts/{contextId}/plans  # 获取上下文的计划
-POST   /api/v1/plans                       # 创建计划
-GET    /api/v1/plans/{planId}/traces       # 获取计划的追踪记录
-
-// ❌ 错误: 不规范的API命名
-GET    /api/v1/getContexts                 # 动词应在HTTP方法中
-POST   /api/v1/context/create              # 不应包含动作词
-GET    /api/v1/Context/{id}                # 资源名应小写
-```
-
-### GraphQL 命名
+### GraphQL命名
 ```graphql
-# ✅ 正确: GraphQL类型命名 (PascalCase)
+# ✅ 正确: 类型使用PascalCase，字段使用camelCase
 type Context {
-  contextId: ID!              # 字段使用camelCase
-  version: String!
-  timestamp: DateTime!
-  lifecycleStage: LifecycleStage!
-  sharedState: JSON
-}
-
-type Plan {
-  planId: ID!
   contextId: ID!
   name: String!
-  description: String
-  tasks: [Task!]!
+  createdAt: String!
+  isActive: Boolean!
 }
 
-# 查询命名 (camelCase)
 type Query {
-  context(id: ID!): Context
-  contexts(filter: ContextFilter): [Context!]!
-  plan(id: ID!): Plan
-  plansByContext(contextId: ID!): [Plan!]!
+  getContext(contextId: ID!): Context
+  listContexts(limit: Int, offset: Int): [Context!]!
 }
 
-# 变更命名 (camelCase)
 type Mutation {
   createContext(input: CreateContextInput!): Context!
-  updateContextStatus(id: ID!, status: ContextStatus!): Context!
-  deleteContext(id: ID!): Boolean!
+  updateContext(id: ID!, input: UpdateContextInput!): Context!
+}
+
+# ❌ 错误
+type context {}                   # 类型应使用PascalCase
+type Context {
+  context_id: ID!                 # 字段应使用camelCase
+  Name: String!                   # 字段应使用camelCase
 }
 ```
 
-## 🗄️ 数据库命名规范
-
-### 表命名
-```sql
--- ✅ 正确: 表名使用单数形式 + snake_case
-CREATE TABLE context (
-    context_id UUID PRIMARY KEY,
-    version VARCHAR(50) NOT NULL,
-    created_at TIMESTAMP DEFAULT NOW(),
-    updated_at TIMESTAMP DEFAULT NOW()
-);
-
-CREATE TABLE plan (
-    plan_id UUID PRIMARY KEY,
-    context_id UUID REFERENCES context(context_id),
-    name VARCHAR(255) NOT NULL,
-    description TEXT
-);
-
--- 关联表使用两表名组合
-CREATE TABLE plan_task (
-    plan_id UUID REFERENCES plan(plan_id),
-    task_id UUID REFERENCES task(task_id),
-    PRIMARY KEY (plan_id, task_id)
-);
-```
-
-### 字段命名
-```sql
--- ✅ 正确: 字段命名规则
-id                  # 主键简写
-context_id          # 外键加上引用表前缀  
-name                # 简单字段
-description         # 完整词汇
-created_at          # 时间戳字段
-updated_at          # 时间戳字段
-is_active          # 布尔字段加is前缀
-execution_status   # 状态字段加后缀
-```
-
-## 📁 文件和目录命名
-
-### 文件命名
-```
-// ✅ 正确: 文件命名 (kebab-case)
-context-protocol.ts
-plan-execution-handler.ts
-trace-collection-service.ts
-role-permission-validator.ts
-failure-resolver.ts
-
-// Schema文件
-context-protocol.json
-plan-execution-schema.json
-
-// 测试文件
-context-handler.test.ts
-plan-service.integration.ts
-trace-collector.e2e.ts
-failure-resolver.test.ts
-
-// 配置文件
-database.config.ts
-redis.config.ts
-app.config.ts
-```
-
-### 目录命名
-```
-src/
-├── modules/           # 小写复数
-│   ├── context/       # 模块名小写
-│   ├── plan/          # 模块名小写
-│   ├── confirm/       # 模块名小写
-│   ├── trace/         # 模块名小写
-│   ├── role/          # 模块名小写
-│   └── extension/     # 模块名小写
-├── core/             # 小写单数
-├── adapters/         # 小写复数
-├── utils/            # 小写复数
-├── types/            # 小写复数
-├── tests/            # 小写复数
-└── configs/          # 小写复数
-```
-
-## 📝 注释和文档命名
-
-### JSDoc 注释
+### 事件命名
 ```typescript
-/**
- * Creates a new context with the provided configuration.
- * 
- * @param data - Context creation parameters
- * @param data.initialState - Initial shared state object
- * @param data.constraints - Context execution constraints
- * @returns Promise resolving to the created context protocol
- * 
- * @throws {ValidationError} When input data is invalid
- * @throws {DatabaseError} When context creation fails
- * 
- * @example
- * ```typescript
- * const context = await createContext({
- *   initialState: { environment: 'development' },
- *   constraints: { timeout: 30000 }
- * });
- * ```
- */
-export async function createContext(
-  data: CreateContextRequest
-): Promise<ContextProtocol> {
-  // 实现逻辑
-}
+// ✅ 正确: 使用snake_case，过去时态
+context_created
+plan_updated
+task_completed
+role_assigned
+permission_granted
+
+// ❌ 错误
+contextCreated                    // 应使用snake_case
+CreatePlan                        // 应使用过去时态和snake_case
+Task_Complete                     // 应使用过去时态和全小写snake_case
+ROLE_ASSIGNED                     // 应使用小写snake_case
 ```
 
-## 🔄 文件重命名指南
+## 📁 测试命名约定
 
-### 需要重命名的文件示例
+### 测试文件命名
 ```
-// ❌ 当前不一致的命名:
-context.controller.ts     → context-controller.ts
-Context.handler.ts        → context-handler.ts
-Plan-factory.ts           → plan-factory.ts
-plan_manager.ts           → plan-manager.ts
-planHandler.ts            → plan-handler.ts
-Failure-Resolver.ts       → failure-resolver.ts
+// ✅ 正确
+user-service.test.ts
+plan-manager.spec.ts
+context-repository.integration.test.ts
+trace-adapter.unit.test.ts
+
+// ❌ 错误
+UserServiceTest.ts                // 应使用kebab-case
+test_plan_manager.ts              // 应使用kebab-case和.test.ts后缀
+context-repository-tests.ts       // 应使用.test.ts或.spec.ts后缀
 ```
 
-### 重命名执行步骤
-1. 识别所有不符合规范的文件
-2. 创建重命名计划，确保引用更新
-3. 执行重命名，更新所有导入语句
-4. 验证项目编译无错误
-5. 提交更改，注明"refactor: 统一文件命名规范"
+### 测试套件和用例命名
+```typescript
+// ✅ 正确: 描述性命名
+describe('UserService', () => {
+  describe('getUserById', () => {
+    test('should return user when valid ID is provided', () => {});
+    test('should throw NotFoundError when user does not exist', () => {});
+    test('should throw ValidationError when ID is invalid', () => {});
+  });
+});
+
+// ❌ 错误
+describe('test user service', () => {});    // 应使用类名
+test('getUserById works', () => {});        // 不够描述性
+test('test 1', () => {});                   // 无意义的名称
+```
 
 ## ✅ 命名检查清单
 
 代码提交前确认：
-- [ ] 模块名使用小写，文件名使用kebab-case
-- [ ] 模块内部组件使用 `{module-name}-{component-type}.ts` 格式
-- [ ] 所有分隔符统一使用连字符(`-`)
-- [ ] TypeScript接口和类使用PascalCase
-- [ ] 函数和变量使用camelCase
-- [ ] 常量使用UPPER_SNAKE_CASE
-- [ ] JSON Schema字段使用snake_case
-- [ ] API端点遵循RESTful约定
-- [ ] 数据库表和字段使用snake_case
-- [ ] 文档注释完整清晰
-
-## 🚨 自动检查机制
-
-为确保命名规范的一致性执行，项目将实施以下自动检查机制：
-
-1. **提交前检查**: Git pre-commit钩子检查文件命名
-2. **CI检查**: 持续集成流程中验证命名规范
-3. **ESLint规则**: 自定义ESLint规则验证命名约定
-4. **自动修复**: 提供自动修复脚本修正常见命名问题
-
-```typescript
-// 命名规范检查脚本示例
-function validateFileNaming(filePath: string): boolean {
-  // 检查文件是否符合命名规范
-  const regex = /^[a-z]+-[a-z]+\.ts$/;
-  const fileName = path.basename(filePath);
-  return regex.test(fileName);
-}
-```
+- [ ] 所有命名符合对应的命名约定
+- [ ] 没有使用厂商特定名称作为核心组件名
+- [ ] 变量、函数名称清晰描述其用途
+- [ ] 文件名与其内容的主要类/功能一致
+- [ ] 测试名称清晰描述测试场景和预期结果
+- [ ] Schema字段名称使用snake_case
+- [ ] 接口使用I前缀+PascalCase
+- [ ] 没有使用缩写或无意义的名称
+- [ ] 命名风格在整个代码库中保持一致
 
 ---
 
-> **重要**: 不符合命名约定的代码将触发自动检查失败，必须修正后重新提交。所有团队成员必须严格遵守这些命名规范，确保项目的专业性和一致性。
+**规则版本**: v1.1  
+**规则创建**: MPLP架构团队  
+**维护责任**: 所有开发者  
+**审查周期**: 每个开发阶段结束后审查
 
-description: "MPLP项目文件命名规范 - 定义统一的文件、模块、类、接口、变量命名标准"
-globs: ["**/*.ts", "**/*.js", "**/*.json", "**/*.md", "src/**/*"]
+description: "MPLP命名约定规则 - 定义项目中各类命名的标准格式和规范"
+globs: ["**/*.ts", "**/*.js", "**/*.json", "**/README.md", "**/docs/**"]
 alwaysApply: true
----
  

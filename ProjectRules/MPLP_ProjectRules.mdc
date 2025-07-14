@@ -1,438 +1,69 @@
-# MPLP 1.0 项目规则配置
+# MPLP 项目规则
 
-> **配置版本**: v2.5  
-> **更新时间**: 2025-07-11T23:59:23Z  
-> **适用项目**: Multi-Agent Project Lifecycle Protocol (MPLP) v1.0  
-> **治理层状态**: ✅ **已激活** - Project Governance Layer 完全部署  
-> **关联文档**: [PROJECT_GOVERNANCE_REPORT](../docs/architecture/governance-report.md) | [MPLP协议开发专项路线图](../requirements-docs/mplp_protocol_roadmap.md)  
-> **协议版本**: v1.0 (完全基于Roadmap v1.0规划)
+> **规则版本**: v1.2  
+> **创建时间**: 2025-07-10T09:00:00+08:00  
+> **更新时间**: 2025-07-14T15:30:00+08:00  
+> **适用范围**: Multi-Agent Project Lifecycle Protocol (MPLP) v1.0  
+> **强制等级**: 🚨 **最高优先级** - 所有开发必须遵循
 
-## 项目基本信息
+## 📋 核心规则列表
 
-**项目名称**: Multi-Agent Project Lifecycle Protocol (MPLP)  
-**项目版本**: v1.0  
-**项目周期**: 12周 (2025-07-09 至 2025-10-01)  
-**开发模式**: 敏捷开发 + 测试驱动开发 (TDD) + **治理层驱动AI开发** + **Schema驱动开发** 🆕  
-**项目类型**: 开源协议 + 商业平台  
-**治理机制**: Plan→Confirm→Trace→Delivery 强制流程控制
+MPLP项目开发必须遵循以下核心规则:
 
-## 🔍 **项目核心原则**
+1. **[厂商中立设计](.cursor/rules/vendor-neutral-design.mdc)** - 所有设计和实现必须保持厂商中立
+2. **[Schema驱动开发](.cursor/rules/schema-driven-development.mdc)** - 所有开发必须以Schema为唯一标准
+3. **[Plan→Confirm→Trace→Delivery](.cursor/rules/development-workflow.mdc)** - 所有任务必须遵循标准流程
+4. **[自动同步更新](.cursor/rules/auto-sync-update.mdc)** - 所有变更必须触发相关文件同步更新
+5. **[时间追踪规则](.cursor/rules/time-tracking.mdc)** - 所有时间戳必须使用真实时间，禁止使用模拟时间
 
-### ✅ **厂商中立原则（最高优先级）**
-```
-MPLP协议是一个完全厂商中立的开放标准，不依赖于任何特定厂商或平台。
-所有核心功能必须独立于任何特定第三方工具或服务实现。
-TracePilot和Coregentis仅作为集成示例，展示如何与MPLP协议集成。
-任何厂商特定的适配器或集成必须通过Extension模块实现，不得侵入核心代码。
-```
+## 🔄 开发流程规则
 
-### ✅ **开放标准原则**
-```
-MPLP协议提供通用接口，允许任何第三方工具和平台集成。
-所有接口设计必须遵循标准化、可扩展性和可互操作性原则。
-协议规范必须公开透明，避免任何专有技术锁定。
-```
+### Plan阶段
+- **必须**分析需求和相关规则文件
+- **必须**设计符合厂商中立原则的技术方案
+- **必须**评估性能指标和风险因素
+- **必须**使用真实时间戳记录计划阶段的开始和完成
 
-### ✅ **Schema驱动原则**
-```
-所有开发必须以Schema为唯一标准，确保协议一致性。
-Schema定义必须完整、明确且版本化，作为所有实现的基础。
-任何实现必须100%符合Schema定义，不允许偏离。
-```
+### Confirm阶段
+- **必须**验证方案符合Schema定义
+- **必须**确认方案符合厂商中立原则
+- **必须**验证性能预期和测试策略
+- **必须**使用真实时间戳记录确认阶段的开始和完成
 
-## 🏗️ **治理层架构（已完全部署）**
+### Trace阶段
+- **必须**记录详细的实现进度，包含真实时间戳
+- **必须**收集性能指标和质量检查结果
+- **必须**记录遇到的问题和解决方案
+- **必须**使用真实时间戳记录追踪阶段的开始和完成
 
-### ✅ **项目治理层组件状态**
-```
-治理层完成度: 100% ✅
-核心规则文件: 15/15 完成 ✅ (新增schema-driven-development.mdc)
-AI驯化机制: 1/1 完成 ✅
-追踪系统: 1/1 完成 ✅
-标准适配器接口: 1/1 完成 ✅
-集成参考实现: 2/2 完成 ✅
-版本管理: 1/1 完成 ✅
-自动同步机制: 1/1 完成 ✅
-Schema驱动开发: 1/1 完成 ✅
-```
+### Delivery阶段
+- **必须**列出所有修改的文件
+- **必须**验证交付清单合规性
+- **必须**评估版本影响和部署就绪状态
+- **必须**使用真实时间戳记录交付阶段的开始和完成
 
-### 📋 **核心规则文件系统** (.cursor/rules/) - 15个文件
-- `schema-driven-development.mdc` - **Schema驱动开发核心规则（最高优先级）** 🆕
-- `core-modules.mdc` - 6个核心模块规范，性能要求<2ms-50ms
-- `technical-standards.mdc` - 技术标准基线，TypeScript严格模式100%
-- `api-design.mdc` - API设计规范，REST+GraphQL+WebSocket
-- `testing-strategy.mdc` - 测试策略规范，覆盖率≥90%/80%/60%
-- `security-requirements.mdc` - 安全要求规范，0个高危漏洞
-- `performance-standards.mdc` - 性能标准规范，API P95<100ms
-- `integration-patterns.mdc` - 集成模式规范，标准适配器接口
-- `data-management.mdc` - 数据管理规范，PostgreSQL+Redis
-- `monitoring-logging.mdc` - 监控日志规范，结构化日志
-- `deployment-operations.mdc` - 部署运维规范，Docker+K8s
-- `delivery-checklist.mdc` - 交付检查清单，质量门禁
-- `versioning.mdc` - 版本管理规范，语义化版本
-- `development-workflow.mdc` - 开发流程规范，Plan→Confirm→Trace→Delivery
-- `auto-sync-updates.mdc` - 自动同步更新规则，完整性保障
+## 📊 项目统计规则
 
-### 🎯 **AI驯化机制** (.cursor/presets/)
-- `mplp-development.md` - AI助手行为约束和标准化输出格式 (v2.3) 🆕
-- **Schema驱动约束**: 必须先读取Schema再开发，100%字段匹配 🆕
-- **强制流程控制**: 每个任务必须严格遵循 Plan→Confirm→Trace→Delivery
-- **强制规则引用**: 必须明确引用相关.mdc规则文件
-- **强制性能验证**: 每个功能必须验证性能基准达标
-- **强制同步更新**: 必须遵循auto-sync-updates.mdc完整更新
+- 项目统计信息**必须**反映真实状态，包括:
+  - 已完成任务数量
+  - 进行中任务数量
+  - 平均任务时长
+  - 效率和质量评分
+  - 规则合规评分
+  - 最后更新时间(使用真实时间戳)
 
-### 📊 **追踪历史系统** (trace/logs/)
-- `trace_history.json` - 完整开发任务生命周期记录
-- **追踪模板**: Plan/Confirm/Trace/Delivery四阶段标准化记录
-- **度量指标**: 效率评分、质量评分、规则符合度评分
+## 🔍 合规性检查
 
-### 🔗 **集成参考实现** (src/mcp/) - 厂商中立设计
-- `standard-adapter-interface.ts` - 标准适配器接口定义
-- `tracepilot-adapter.ts` - TracePilot参考适配器实现（示例）
-- `enhanced-tracepilot-adapter.ts` - 增强版参考适配器（示例）
-- **实时同步**: 所有追踪数据通过标准接口同步
-- **智能功能**: 问题检测、任务追踪、自动修复建议
-- **性能监控**: 同步延迟监控，批处理>1000 traces/second
-- **错误处理**: 自动重试机制，3次重试上限
-
-## 🚨 **强制执行机制**
-
-### ✅ **Plan→Confirm→Trace→Delivery 流程控制**
-**每个开发任务必须严格遵循四阶段流程：**
-
-#### 📋 **Plan阶段（必须完成）**
-- **引用规则**: 明确引用相关.cursor/rules/*.mdc文件
-- **技术方案**: 详细实现方式和性能目标
-- **风险评估**: 技术风险、性能风险、缓解措施
-- **影响分析**: 根据auto-sync-updates.mdc分析完整影响范围 🆕
-
-#### ✅ **Confirm阶段（必须完成）**
-- **方案确认**: 技术方案可行性确认
-- **规则符合性**: 与.mdc规则文件条款对照
-- **性能目标**: 确认性能指标可达成
-- **测试策略**: 单元/集成/E2E测试规划
-- **同步策略**: 确认需要同步更新的文件列表 🆕
-
-#### 📊 **Trace阶段（必须完成）**
-- **实施进度**: 时间戳标记的详细进度记录
-- **性能监控**: 实际性能数据与目标对比
-- **质量检查**: TypeScript编译、ESLint检查状态
-- **追踪同步**: 通过标准接口同步追踪数据
-- **批量更新**: 按照auto-sync-updates.mdc执行完整更新 🆕
-
-#### 🚀 **Delivery阶段（必须完成）**
-- **交付文件**: 完整的文件路径列表
-- **Checklist验证**: delivery-checklist.mdc完整验证
-- **版本影响**: 版本递增类型和原因说明
-- **追踪记录**: 追踪记录ID和完整性确认
-- **一致性验证**: 所有交叉引用和版本号的正确性检查 🆕
-
-### 🔗 **强制规则引用机制**
-- **引用格式**: `**参考规则**: .cursor/rules/[文件名].mdc - [具体条款]`
-- **违反处理**: 不引用规则文件的响应将被要求重新生成
-- **符合性检查**: 每个实现必须对照相关规则条款验证
-
-### 📊 **强制性能验证机制**
-- **API响应时间**: P95 < 100ms，P99 < 200ms
-- **协议解析**: 单次解析 < 10ms
-- **模块特定要求**: Context<5ms, Plan<8ms, Trace<2ms, Role<1ms, Extension<50ms
-- **适配器性能**: 单次同步<100ms，批处理>1000 TPS
-
-### 🔄 **强制同步更新机制** 🆕
-- **完整性原则**: 任何变更必须触发所有相关文件的同步更新
-- **时间戳统一**: 同批次更新必须使用相同的程序获取时间戳
-- **版本联动**: 功能变更必须伴随相应的版本号递增
-- **交叉引用验证**: 更新后必须验证所有引用的正确性
-
-## 🎯 技术标准基线（基于Roadmap v1.0）
-
-### 核心技术栈
-- **运行环境**: Node.js 18+ LTS
-- **开发语言**: TypeScript 5.0+ 严格模式，100%类型覆盖
-- **Web框架**: Express.js 4.18+ + Helmet.js安全中间件
-- **数据库**: PostgreSQL 14+ + TypeORM + Redis 7+缓存
-- **API设计**: REST API + GraphQL + WebSocket实时通信
-- **容器化**: Docker + Kubernetes部署
-- **集成机制**: 标准适配器接口 + 参考实现
-
-### 性能标准（强制达标）
-- **API响应时间**: P95 < 100ms, P99 < 200ms
-- **协议解析性能**: 单次解析 < 10ms
-- **系统吞吐量**: > 10,000 TPS
-- **并发支持**: > 1000并发用户
-- **系统可用性**: ≥ 99.9%
-- **适配器性能**: 单次<100ms，批处理>1000 TPS
-
-### 质量标准（强制执行）
-- **单元测试覆盖率**: ≥ 90%
-- **集成测试覆盖率**: ≥ 80%
-- **E2E测试覆盖率**: ≥ 60%
-- **代码质量**: ESLint + Prettier + TypeScript严格模式
-- **安全漏洞**: 0个高危漏洞
-- **追踪完整性**: 100%追踪数据记录
-
-### 安全标准（强制实施）
-- **传输安全**: TLS 1.3强制加密
-- **身份认证**: JWT + OAuth 2.0 + RBAC
-- **API安全**: 100%端点认证，Rate Limiting
-- **数据保护**: AES-256敏感数据加密
-- **审计**: 完整操作追踪日志
-- **安全事件**: 实时记录安全事件
-
-## 📋 6个核心模块规范（基于MPLP v1.0协议）
-
-### Context模块 - 全局状态管理
-- **功能**: 跨系统状态同步、会话管理
-- **接口**: context_id, user_id, shared_state, lifecycle_stage
-- **状态**: active/inactive/suspended
-- **性能**: 状态查询<5ms，状态更新<10ms
-- **集成**: 状态变更实时同步，性能监控
-
-### Plan模块 - 任务规划结构 🆕 **已增强**
-- **功能**: 任务编排、依赖管理、执行策略、**失败恢复机制**
-- **接口**: plan_id, tasks[], dependencies[], execution_strategy, **failure_resolver**
-- **执行模式**: sequential/parallel/conditional
-- **恢复策略**: retry/rollback/skip/manual_intervention 🆕
-- **性能**: 计划解析<8ms，执行调度<15ms，**失败恢复<10ms** 🆕
-- **集成**: 通过标准接口集成任何第三方系统
-
-### Confirm模块 - 验证决策机制
-- **功能**: 审批流程、验证规则、决策记录
-- **接口**: confirm_id, confirmation_type, approvers[], auto_approve_conditions[]
-- **类型**: approval/validation/verification
-- **性能**: 审批检查<3ms，决策执行<12ms
-- **集成**: 决策流程追踪，审批时间分析
-
-### Trace模块 - 追踪记录信息
-- **功能**: 操作追踪、性能监控、错误记录、**标准化数据同步**
-- **接口**: trace_id, operation_name, performance_metrics, compensation_actions[]
-- **类型**: operation/state_change/error/compensation/performance
-- **性能**: 追踪记录<2ms，查询分析<20ms
-- **集成**: 通过标准适配器接口与任何追踪系统集成
-
-### Role模块 - 角色定义能力
-- **功能**: 权限管理、角色继承、能力声明
-- **接口**: role_id, permissions[], capabilities[], constraints[], inheritance[]
-- **作用域**: global/context/plan
-- **性能**: 权限检查<1ms，角色解析<5ms
-- **集成**: 权限变更追踪，安全事件记录
-
-### Extension模块 - 扩展机制框架
-- **功能**: 插件集成、生命周期管理、健康检查
-- **接口**: extension_id, extension_type, capabilities[], health_check
-- **类型**: cli_tool/api_service/database/monitoring/ai_service/custom
-- **性能**: 扩展调用<50ms，健康检查<10ms
-- **集成**: 通过标准接口集成任何第三方工具和服务
-
-## 🔧 开发规范（基于Roadmap开发阶段）
-
-### 强制流程规范
-```typescript
-// 每个任务必须遵循标准化请求格式
-// 用户请求示例：
-"请为 [模块名] 实现 [功能描述]，
-严格遵循 Plan→Confirm→Trace→Delivery 流程，
-参考相关 .mdc 规则文件。"
-
-// AI响应必须包含完整四阶段内容：
-// 📋 Plan阶段 - 技术方案和风险评估 + 影响分析
-// ✅ Confirm阶段 - 方案确认和规则符合性 + 同步策略
-// 📊 Trace阶段 - 实施进度和性能监控 + 批量更新
-// 🚀 Delivery阶段 - 交付验证和版本管理 + 一致性验证
-```
-
-### 代码规范
-```typescript
-// 命名规范（强制执行）
-interface ContextProtocol extends BaseProtocol {  // PascalCase接口
-  context_id: string;                             // snake_case JSON字段
-  lifecycleStage: LifecycleStage;                // camelCase TypeScript字段
-  tracepilot_sync_id?: string;                   // TracePilot集成字段
-}
-
-class ContextService {                           // PascalCase类名
-  private readonly logger: Logger;               // camelCase属性
-  private readonly tracePilotAdapter: TracePilotAdapter; // TracePilot集成
-  
-  public async createContext(): Promise<void> {  // camelCase方法
-    const contextId = generateUUID();            // camelCase变量
-    
-    // 强制TracePilot同步
-    await this.tracePilotAdapter.syncContextCreation({
-      context_id: contextId,
-      operation: 'context.create',
-      timestamp: new Date().toISOString()
-    });
-  }
-}
-
-const API_VERSION = '1.0.0';                    // UPPER_SNAKE_CASE常量
-```
-
-### 测试规范（TDD驱动）
-```typescript
-// AAA模式测试（必须包含TracePilot验证）
-describe('ContextService', () => {
-  describe('createContext', () => {
-    it('should create context with TracePilot sync', async () => {
-      // 📋 Arrange - 准备数据
-      const input = { name: 'Test', user_id: 'user-123' };
-      
-      // 🎬 Act - 执行操作
-      const result = await service.createContext(input);
-      
-      // ✅ Assert - 验证结果
-      expect(result.success).toBe(true);
-      expect(result.data.name).toBe(input.name);
-      
-      // 📊 TracePilot Assert - 验证追踪同步
-      expect(result.tracepilot_sync_status).toBe('synced');
-      expect(result.tracepilot_sync_latency).toBeLessThan(100); // <100ms
-    });
-  });
-});
-```
-
-### 性能监控规范（强制实施）
-```typescript
-// 每个操作必须包含性能监控和TracePilot同步
-@PerformanceMonitor.measure('context.create')
-@TracePilotSync('context_creation')
-async function createContext(input: ContextInput): Promise<ContextResult> {
-  const startTime = performance.now();
-  
-  try {
-    const result = await contextRepository.create(input);
-    const duration = performance.now() - startTime;
-    
-    // 性能验证（强制）
-    if (duration > 5) { // Context操作必须<5ms
-      throw new PerformanceViolationError('Context creation exceeded 5ms', {
-        actual: duration,
-        expected: 5,
-        operation: 'context.create'
-      });
-    }
-    
-    // TracePilot性能同步（强制）
-    await tracePilotAdapter.syncPerformanceMetric({
-      operation: 'context.create',
-      duration_ms: duration,
-      target_ms: 5,
-      status: 'success'
-    });
-    
-    return result;
-  } catch (error) {
-    // 错误也必须同步到TracePilot
-    await tracePilotAdapter.syncErrorEvent({
-      operation: 'context.create',
-      error: error.message,
-      timestamp: new Date().toISOString()
-    });
-    throw error;
-  }
-}
-```
-
-## 📊 项目开发阶段（基于Roadmap v1.0）
-
-### 第一阶段：核心架构实现 (第1-2周)
-- **目标**: 基础项目架构和协议框架
-- **交付物**: 项目骨架、数据库设计、基础API框架
-- **里程碑**: 完成项目初始化和核心架构搭建
-- **治理要求**: 建立完整的.mdc规则文件和AI驯化机制
-
-### 第二阶段：6个核心模块实现 (第3-6周)
-- **目标**: 完整实现所有核心协议模块
-- **交付物**: Context、Plan、Confirm、Trace、Role、Extension模块
-- **里程碑**: 通过所有核心模块单元测试
-- **治理要求**: 每个模块严格遵循Plan→Confirm→Trace→Delivery流程
-
-### 第三阶段：集成和API层 (第7-8周)
-- **目标**: API开发和平台集成
-- **交付物**: REST API、GraphQL、**TracePilot和Coregentis集成**
-- **里程碑**: 完成API开发和集成测试
-- **治理要求**: TracePilot实时同步验证，性能基准达标
-
-### 第四阶段：测试和文档 (第9-10周)
-- **目标**: 全面测试和文档完善
-- **交付物**: 完整测试套件、API文档、用户指南
-- **里程碑**: 达到测试覆盖率要求和文档完整性
-- **治理要求**: 完整的E2E测试，包含TracePilot集成测试
-
-### 第五阶段：发布准备 (第11-12周)
-- **目标**: 生产部署准备和正式发布
-- **交付物**: 生产配置、部署脚本、监控告警
-- **里程碑**: 通过生产环境验证和安全审计
-- **治理要求**: 生产环境TracePilot监控，完整的治理流程验证
-
-## 🔄 版本发布规范
-
-### 版本命名（SemVer + 治理层标识）
-- **主版本**: 1.x.x - 重大协议变更或不兼容API变更
-- **次版本**: x.1.x - 新功能添加，向后兼容
-- **修订版**: x.x.1 - Bug修复，安全补丁
-- **治理标识**: 版本标签包含治理层状态和TracePilot集成状态
-
-### 发布周期
-- **稳定版本**: 每3个月发布一次主要版本
-- **功能版本**: 每月发布一次次要版本
-- **修复版本**: 按需发布，紧急安全修复24-72小时内发布
-- **治理验证**: 每个版本发布前必须通过完整的治理流程验证
-
-### 发布检查清单（增强版）
-- [ ] 所有自动化测试通过（单元、集成、E2E）
-- [ ] 代码覆盖率达标（≥90%单元测试）
-- [ ] 性能测试通过（API响应<100ms）
-- [ ] 安全扫描通过（0高危漏洞）
-- [ ] **TracePilot集成测试通过（同步延迟<100ms）**
-- [ ] **Plan→Confirm→Trace→Delivery流程完整验证**
-- [ ] **所有.mdc规则文件符合性检查通过**
-- [ ] 文档更新完整
-- [ ] CHANGELOG.md更新
-- [ ] 版本标签创建
-- [ ] **治理层状态健康检查通过**
-
-## 🚫 **禁止行为（零容忍）**
-
-### 绝对禁止事项
-1. **跳过治理流程**: 禁止跳过Plan/Confirm/Trace/Delivery任何阶段
-2. **忽略规则引用**: 禁止不引用相关.mdc规则文件
-3. **类型安全违规**: 禁止使用`any`类型，必须100%类型覆盖
-4. **性能标准违规**: 任何功能实现后响应时间超标必须优化
-5. **测试覆盖不足**: 单元测试覆盖率低于90%的代码不能合并
-6. **安全漏洞忽视**: 任何高危安全漏洞必须在发现后24小时内修复
-7. **TracePilot集成忽略**: 禁止不同步追踪数据到TracePilot
-8. **架构边界违反**: 违反6个核心模块边界的代码必须重构
-
-### 质量门禁标准
-- **代码提交前**: ESLint + Prettier检查 + TypeScript编译无错误
-- **PR合并前**: 所有自动化测试通过 + 代码覆盖率达标 + 治理流程完整
-- **阶段完成前**: 性能基准测试通过 + TracePilot同步验证 + 安全扫描通过
-- **发布前**: 完整E2E测试套件通过 + 治理层健康检查 + 生产准备验证
-
-## 📞 **联系和支持**
-
-### 治理层支持
-- **治理层技术支持**: governance@coregentis.com
-- **AI驯化机制**: ai-governance@coregentis.com
-- **TracePilot集成**: tracepilot-support@coregentis.com
-
-### 项目支持
-- **技术支持**: mplp-support@coregentis.com
-- **Roadmap相关**: roadmap@coregentis.com
-- **紧急支持**: emergency@coregentis.com
-
-### 文档和资源
-- **治理层报告**: [PROJECT_GOVERNANCE_REPORT.md](../PROJECT_GOVERNANCE_REPORT.md)
-- **AI驯化配置**: [.cursor-rules](../.cursor-rules)
-- **规则文件库**: [.cursor/rules/](../.cursor/rules/)
-- **TracePilot适配器**: [src/mcp/tracepilot-adapter.ts](../src/mcp/tracepilot-adapter.ts)
+所有开发工作必须通过以下合规性检查:
+1. Schema合规性检查
+2. 厂商中立设计检查
+3. 开发流程合规检查
+4. 时间戳真实性检查
+5. 自动同步更新检查
 
 ---
 
-**配置版本**: v2.5  
-**维护团队**: MPLP项目团队  
-**更新周期**: 每个开发阶段结束后更新  
-**技术支持**: support@mplp.dev
+**规则维护**: MPLP治理层  
+**审查周期**: 每周审查  
+**违规处理**: 任务重新执行直至合规
  

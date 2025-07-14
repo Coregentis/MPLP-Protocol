@@ -1,12 +1,13 @@
-description: "MPLP Schema驱动开发规则 - 确保所有开发以Schema定义为核心，避免字段名称和类型混乱"
-globs: ["src/schemas/**", "src/types/**", "src/modules/**", "**/*.ts", "**/*.js"]
+description: "MPLP Schema驱动开发规则 - 定义基于Schema的开发流程和实践标准"
+globs: ["**/*.ts", "**/*.js", "**/schemas/**", "**/types/**", "**/interfaces/**"]
 alwaysApply: true
 ---
 
 # MPLP Schema驱动开发规则
 
-> **规则版本**: v1.0  
+> **规则版本**: v1.1  
 > **创建时间**: 2025-07-10T13:28:12+08:00  
+> **更新时间**: 2025-07-15T10:30:00+08:00  
 > **适用范围**: MPLP项目所有开发任务  
 > **强制等级**: 🚨 **最高优先级** - 违反将导致任务重新执行
 
@@ -80,42 +81,50 @@ interface ConfirmProtocol {
 }
 ```
 
-## 🔧 类型定义规范
+## 🔧 接口定义规范
 
-### 基础类型统一性
+### 基础接口命名约定
 ```typescript
-// src/types/index.ts - 统一基础类型定义
-export type UUID = string;        // UUID v4格式
-export type Timestamp = string;   // ISO 8601格式
-export type Version = string;     // SemVer格式
-export type Priority = number;    // 1-10优先级
-
-// 使用namespace避免冲突
-export namespace BaseTypes {
-  export type UUID = string;
-  export type Timestamp = string;
-  export type Version = string;
+// ✅ 正确：使用I前缀+PascalCase，不包含厂商名称
+interface ITraceAdapter {
+  syncTraceData(data: TraceData): Promise<SyncResult>;
+  checkHealth(): Promise<AdapterHealth>;
 }
+
+// ❌ 错误：接口名称包含厂商名称
+interface TracePilotAdapter { }  // 错误：接口名称包含厂商名称
+
+// ❌ 错误：未使用I前缀
+interface TraceAdapter { }  // 错误：未使用I前缀
 ```
 
-### 模块类型定义规范
+### 适配器接口层次
 ```typescript
-// src/modules/{module}/types.ts - 完全基于Schema
-// 1. 读取对应的Schema文件
-// 2. 字段名称100%匹配Schema属性名
-// 3. 类型结构完全对应Schema定义
-// 4. 枚举值严格按照Schema规范
+// 1. 通用接口定义 - 必须使用中立命名
+interface ITraceAdapter {  // ✅ 正确：使用I前缀，不包含厂商名称
+  // 核心功能
+  syncTraceData(data: TraceData): Promise<SyncResult>;
+  queryTraces(filter: TraceFilter): Promise<TraceQueryResult>;
+  checkHealth(): Promise<AdapterHealth>;
+  
+  // 故障处理 (v1.0.1新增)
+  reportFailure(failure: FailureReport): Promise<void>;
+  getRecoverySuggestions(failureId: string): Promise<RecoverySuggestion[]>;
+}
 
-// 示例：Plan模块types.ts
-export interface PlanProtocol {
-  plan_id: UUID;                   // Schema: plan_id
-  context_id: UUID;               // Schema: context_id  
-  protocol_version: Version;       // Schema: protocol_version
-  timestamp: Timestamp;           // Schema: timestamp
-  name: string;                   // Schema: name
-  description?: string;           // Schema: description (可选)
-  tasks: TaskDefinition[];        // Schema: tasks
-  configuration: PlanConfiguration; // Schema: configuration
+// 2. 基础适配器实现
+class BaseTraceAdapter implements ITraceAdapter {
+  // 实现通用功能...
+}
+
+// 3. 增强适配器实现
+class EnhancedTraceAdapter extends BaseTraceAdapter {
+  // 增强功能实现...
+}
+
+// 4. 厂商特定实现
+class TracePilotAdapter implements ITraceAdapter {
+  // 厂商特定实现...
 }
 ```
 
@@ -206,7 +215,7 @@ npm run api:validate
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://mplp.dev/schemas/plan-protocol.json",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "title": "PlanProtocol",
   "description": "MPLP Plan module protocol definition"
 }
@@ -241,8 +250,99 @@ npm run api:validate
 - [ ] 类型定义文件无Schema冲突
 - [ ] 枚举值和Schema完全一致
 
+## 🔍 Schema驱动开发最佳实践
+
+### 1. 接口定义最佳实践
+```typescript
+// 1. 从Schema生成类型定义
+export interface PlanProtocol {
+  plan_id: string;
+  context_id: string;
+  timestamp: string;
+  // 其他字段...
+}
+
+// 2. 使用类型别名增强可读性
+export type PlanId = string;
+export type ContextId = string;
+
+// 3. 使用枚举匹配Schema定义
+export enum PlanStatus {
+  PENDING = 'pending',
+  ACTIVE = 'active',
+  COMPLETED = 'completed',
+  FAILED = 'failed'
+}
+
+// 4. 使用联合类型匹配Schema约束
+export type ExecutionStrategy = 'sequential' | 'parallel' | 'conditional';
+```
+
+### 2. 错误处理最佳实践
+```typescript
+// 1. 定义Schema验证错误
+export class SchemaValidationError extends Error {
+  constructor(
+    message: string,
+    public readonly errors: string[],
+    public readonly schema: string
+  ) {
+    super(message);
+    this.name = 'SchemaValidationError';
+  }
+}
+
+// 2. 在API层验证请求数据
+app.post('/api/plans', (req, res, next) => {
+  try {
+    const isValid = schemaValidator.validatePlan(req.body);
+    if (!isValid) {
+      throw new SchemaValidationError(
+        'Invalid plan data',
+        schemaValidator.getValidationErrors(),
+        'plan-protocol.json'
+      );
+    }
+    // 处理请求...
+  } catch (error) {
+    next(error);
+  }
+});
+```
+
+### 3. 适配器实现最佳实践
+```typescript
+// 1. 基础适配器实现通用功能
+class BaseTraceAdapter implements ITraceAdapter {
+  // 实现通用功能...
+}
+
+// 2. 增强适配器扩展基础功能
+class EnhancedTraceAdapter extends BaseTraceAdapter {
+  // 实现增强功能...
+}
+
+// 3. 工厂方法创建适配器
+function createTraceAdapter(config: AdapterConfig): ITraceAdapter {
+  if (config.useEnhanced) {
+    return new EnhancedTraceAdapter(config);
+  }
+  return new BaseTraceAdapter(config);
+}
+
+// 4. 依赖注入使用适配器
+class TraceManager {
+  constructor(private adapter: ITraceAdapter) {}
+  
+  setAdapter(adapter: ITraceAdapter): void {
+    this.adapter = adapter;
+  }
+}
+```
+
 ---
 
+**规则版本**: v1.1  
 **规则创建**: MPLP治理层  
 **维护责任**: 所有开发者  
 **执行监督**: AI助手强制检查  
