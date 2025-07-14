@@ -54,6 +54,18 @@ export interface BatchOperationResult<T = Task[]> {
     failed: number;
   };
   execution_time_ms?: number;
+  // 添加错误字段，与PlanOperationResult保持一致
+  errors?: {
+    code: string;
+    message: string;
+    details?: unknown;
+  }[];
+  // 单个错误字段，用于简化错误处理
+  error?: {
+    code: string;
+    message: string;
+    details?: unknown;
+  };
 }
 
 // ===== Plan协议主接口 (Schema根节点) =====
@@ -212,6 +224,15 @@ export interface PlanTask {
     rollback_target?: UUID;
     skip_reason?: string;
     skip_dependents?: boolean;
+    // 增强型追踪适配器功能支持
+    recovery_suggestions?: string[];
+    development_issues?: Array<{
+      id: string;
+      type: string;
+      severity: string;
+      title: string;
+      file_path?: string;
+    }>;
   };
   
   // 执行上下文
@@ -462,6 +483,10 @@ export interface FailureResolver {
   manual_intervention_config?: ManualInterventionConfig;
   notification_channels: NotificationChannel[];
   performance_thresholds: PerformanceThresholds;
+  intelligent_diagnostics?: FailureDiagnosticsConfig;
+  vendor_integration?: GenericFailureSync;
+  proactive_prevention?: ProactiveFailurePrevention;
+  self_learning?: SelfLearningRecovery;
 }
 
 /**
@@ -500,7 +525,7 @@ export interface ManualInterventionConfig {
 /**
  * 通知渠道 (Schema扩展)
  */
-export type NotificationChannel = 'email' | 'slack' | 'webhook' | 'console';
+export type NotificationChannel = 'email' | 'slack' | 'webhook' | 'console' | 'vendor_system';
 
 /**
  * 性能阈值 (Schema扩展)
@@ -509,6 +534,96 @@ export interface PerformanceThresholds {
   max_execution_time_ms: number;
   max_memory_usage_mb: number;
   max_cpu_usage_percent: number;
+}
+
+/**
+ * 智能故障诊断配置
+ * 分析失败原因并提供智能恢复建议
+ */
+export interface FailureDiagnosticsConfig {
+  enabled: boolean;
+  min_confidence_score: number;
+  analysis_depth: 'basic' | 'detailed' | 'comprehensive';
+  pattern_recognition: boolean;
+  historical_analysis: boolean;
+  max_related_failures: number;
+}
+
+/**
+ * 智能故障诊断结果
+ * 分析失败原因并提供智能恢复建议
+ */
+export interface FailureDiagnostics {
+  failure_id: UUID;
+  failure_type: string;
+  root_cause_analysis: string;
+  suggested_strategies: RecoveryStrategy[];
+  confidence_score: number;
+  related_failures: string[];
+  diagnostic_data: Record<string, unknown>;
+}
+
+/**
+ * 故障模式分析
+ * 识别重复出现的故障模式
+ */
+export interface FailurePatternAnalysis {
+  pattern_id: UUID;
+  pattern_name: string;
+  occurrence_count: number;
+  affected_task_types: string[];
+  common_factors: string[];
+  prevention_suggestions: string[];
+}
+
+/**
+ * 外部故障跟踪集成
+ * 将故障信息同步到外部系统进行高级分析
+ * 
+ * 为了保持向后兼容，但移除厂商特定代码
+ * @deprecated 使用通用通知机制代替
+ */
+export interface GenericFailureSync {
+  enabled: boolean;
+  sync_frequency_ms: number;
+  data_retention_days: number;
+  sync_detailed_diagnostics: boolean;
+  receive_suggestions: boolean;
+  auto_apply_suggestions: boolean;
+}
+
+/**
+ * 主动故障预防配置
+ * 预测潜在故障并采取预防措施
+ */
+export interface ProactiveFailurePrevention {
+  enabled: boolean;
+  prediction_confidence_threshold: number;
+  auto_prevention_enabled: boolean;
+  prevention_strategies: PreventionStrategy[];
+  monitoring_interval_ms: number;
+}
+
+/**
+ * 预防策略类型
+ */
+export type PreventionStrategy = 
+  | 'resource_scaling'
+  | 'dependency_prefetch'
+  | 'task_reordering'
+  | 'early_checkpoint'
+  | 'load_balancing';
+
+/**
+ * 自学习故障恢复配置
+ * 通过历史数据学习最佳恢复策略
+ */
+export interface SelfLearningRecovery {
+  enabled: boolean;
+  learning_mode: 'passive' | 'active' | 'hybrid';
+  min_samples_required: number;
+  adaptation_rate: number;
+  strategy_effectiveness_metrics: string[];
 }
 
 // ===== 依赖管理辅助 (Schema扩展) =====
@@ -755,7 +870,7 @@ export interface PlanEvent {
   metadata: {
     source: string;
     severity: string;
-    tracepilot_synced: boolean;
+    external_synced: boolean;
   };
 }
 

@@ -2,366 +2,258 @@
  * MPLP Trace模块类型定义
  * 
  * @version v1.0.1
- * @created 2025-07-10T14:30:00+08:00
- * @compliance 完全匹配trace-protocol.json Schema v1.0.1
+ * @created 2025-07-10T13:30:00+08:00
+ * @compliance trace-protocol.json Schema v1.0.0 - 100%合规
  */
 
-// ===== 导入公共基础类型 =====
-import type { UUID, Timestamp, Version, Priority } from '../../types/index';
-
-// ===== 重新导出基础类型 (确保模块可访问) =====
-export type { UUID, Timestamp, Version, Priority };
-
-// ===== 协议版本常量 =====
-export const PROTOCOL_VERSION = '1.0.1';
-
-// ===== 默认值常量 =====
-export const DEFAULT_SEVERITY: TraceSeverity = 'info';
-export const DEFAULT_TRACE_TYPE: TraceType = 'execution';
-export const DEFAULT_EVENT_CATEGORY: EventCategory = 'system';
-export const DEFAULT_EVENT_TYPE: EventType = 'start';
-export const DEFAULT_SAMPLING_RATE = 1.0;
-
-// ===== 其他常量 =====
-export const TRACE_CONSTANTS = {
-  PROTOCOL_VERSION,
-  MAX_EVENT_NAME_LENGTH: 255,
-  MAX_ERROR_MESSAGE_LENGTH: 1000,
-  MAX_BATCH_SIZE: 100,
-  DEFAULT_FLUSH_INTERVAL_MS: 1000,
-  DEFAULT_HISTORY_SIZE: 10000
-};
-
-// ===== Trace协议主接口 (Schema根节点) =====
+import { UUID, Timestamp } from '../../types';
 
 /**
- * Trace协议主接口
- * 完全符合trace-protocol.json Schema规范
+ * 追踪类型 - 严格匹配Schema定义
  */
-export interface TraceProtocol {
-  // Schema必需字段
-  protocol_version: Version;
-  timestamp: Timestamp;
-  trace_id: UUID;
-  context_id: UUID;
-  plan_id?: UUID;
-  task_id?: UUID;
-  trace_type: TraceType;
-  severity: TraceSeverity;
-  event: TraceEvent;
-  performance_metrics?: PerformanceMetrics;
-  context_snapshot?: ContextSnapshot;
-  error_information?: ErrorInformation;
-  decision_log?: DecisionLog;
-  correlations?: TraceCorrelation[];
-}
-
-// ===== 基础枚举类型 (Schema定义) =====
+export type TraceType = 
+  | 'execution'     // 执行追踪
+  | 'monitoring'    // 监控追踪
+  | 'audit'         // 审计追踪
+  | 'performance'   // 性能追踪
+  | 'error'         // 错误追踪
+  | 'decision';     // 决策追踪
 
 /**
- * 跟踪类型 (Schema定义)
+ * 追踪严重程度 - 严格匹配Schema定义
  */
-export type TraceType = 'execution' | 'monitoring' | 'audit' | 'performance' | 'error' | 'decision';
+export type TraceSeverity =
+  | 'debug'         // 调试级别
+  | 'info'          // 信息级别
+  | 'warn'          // 警告级别
+  | 'error'         // 错误级别
+  | 'critical';     // 关键级别
 
 /**
- * 严重程度 (Schema定义)
+ * 事件类型 - 严格匹配Schema定义
  */
-export type TraceSeverity = 'debug' | 'info' | 'warn' | 'error' | 'critical';
-
-// ===== 事件结构 (Schema定义) =====
+export type EventType =
+  | 'start'         // 开始事件
+  | 'progress'      // 进度事件
+  | 'checkpoint'    // 检查点事件
+  | 'completion'    // 完成事件
+  | 'failure'       // 失败事件
+  | 'timeout'       // 超时事件
+  | 'interrupt';    // 中断事件
 
 /**
- * 跟踪事件 (Schema定义)
+ * 事件类别 - 严格匹配Schema定义
  */
-export interface TraceEvent {
-  type: EventType;
-  name: string;
-  description?: string;
-  category: EventCategory;
-  source: EventSource;
-  data?: Record<string, unknown>;
-}
+export type EventCategory =
+  | 'system'        // 系统事件
+  | 'user'          // 用户事件
+  | 'external'      // 外部事件
+  | 'automatic';    // 自动事件
 
 /**
- * 事件类型 (Schema定义)
+ * 错误类型 - 严格匹配Schema定义
  */
-export type EventType = 'start' | 'progress' | 'checkpoint' | 'completion' | 'failure' | 'timeout' | 'interrupt';
+export type ErrorType =
+  | 'system'        // 系统错误
+  | 'business'      // 业务错误
+  | 'validation'    // 验证错误
+  | 'network'       // 网络错误
+  | 'timeout'       // 超时错误
+  | 'security';     // 安全错误
 
 /**
- * 事件类别 (Schema定义)
+ * 恢复操作类型 - 严格匹配Schema定义
  */
-export type EventCategory = 'system' | 'user' | 'external' | 'automatic';
+export type RecoveryActionType =
+  | 'retry'         // 重试
+  | 'fallback'      // 回退
+  | 'escalate'      // 升级
+  | 'ignore'        // 忽略
+  | 'abort';        // 中止
 
 /**
- * 事件源 (Schema定义)
+ * 关联类型 - 严格匹配Schema定义
  */
-export interface EventSource {
-  component: string;
-  module?: string;
-  function?: string;
-  line_number?: number;
-}
-
-// ===== 性能指标 (Schema定义) =====
+export type CorrelationType =
+  | 'causation'     // 因果关联
+  | 'temporal'      // 时间关联
+  | 'spatial'       // 空间关联
+  | 'logical';      // 逻辑关联
 
 /**
- * 性能指标 (Schema定义)
+ * 指标类型 - 严格匹配Schema定义
  */
-export interface PerformanceMetrics {
-  execution_time?: ExecutionTime;
-  resource_usage?: ResourceUsage;
-  custom_metrics?: Record<string, CustomMetric>;
-}
+export type MetricType =
+  | 'counter'       // 计数器
+  | 'gauge'         // 仪表盘
+  | 'histogram'     // 直方图
+  | 'summary';      // 摘要
 
 /**
- * 执行时间 (Schema定义)
+ * MPLP追踪数据 - 严格匹配Schema定义
  */
-export interface ExecutionTime {
-  start_time: Timestamp;
-  end_time?: Timestamp;
-  duration_ms: number;
-  cpu_time_ms?: number;
-}
-
-/**
- * 资源使用情况 (Schema定义)
- */
-export interface ResourceUsage {
-  memory?: MemoryUsage;
-  cpu?: CpuUsage;
-  network?: NetworkUsage;
-  storage?: StorageUsage;
-}
-
-/**
- * 内存使用 (Schema定义)
- */
-export interface MemoryUsage {
-  peak_usage_mb?: number;
-  average_usage_mb?: number;
-  allocations?: number;
-  deallocations?: number;
-}
-
-/**
- * CPU使用 (Schema定义)
- */
-export interface CpuUsage {
-  utilization_percent?: number;
-  instructions?: number;
-  cache_misses?: number;
-}
-
-/**
- * 网络使用 (Schema定义)
- */
-export interface NetworkUsage {
-  bytes_sent?: number;
-  bytes_received?: number;
-  requests_count?: number;
-  error_count?: number;
-}
-
-/**
- * 存储使用 (Schema定义)
- */
-export interface StorageUsage {
-  reads?: number;
-  writes?: number;
-  bytes_read?: number;
-  bytes_written?: number;
-}
-
-/**
- * 自定义指标 (Schema定义)
- */
-export interface CustomMetric {
-  value: number | string | boolean;
-  unit?: string;
-  type: MetricType;
-}
-
-/**
- * 指标类型 (Schema定义)
- */
-export type MetricType = 'counter' | 'gauge' | 'histogram' | 'summary';
-
-// ===== 上下文快照 (Schema定义) =====
-
-/**
- * 上下文快照 (Schema定义)
- */
-export interface ContextSnapshot {
-  variables?: Record<string, unknown>;
-  environment?: Environment;
-  call_stack?: CallStackFrame[];
-}
-
-/**
- * 环境信息 (Schema定义)
- */
-export interface Environment {
-  os?: string;
-  platform?: string;
-  runtime_version?: string;
-  environment_variables?: Record<string, string>;
-}
-
-/**
- * 调用堆栈帧 (Schema定义)
- */
-export interface CallStackFrame {
-  function: string;
-  file?: string;
-  line?: number;
-  arguments?: Record<string, unknown>;
-}
-
-// ===== 错误信息 (Schema定义) =====
-
-/**
- * 错误信息 (Schema定义)
- */
-export interface ErrorInformation {
-  error_code: string;
-  error_message: string;
-  error_type: ErrorType;
-  stack_trace?: StackTraceFrame[];
-  recovery_actions?: RecoveryAction[];
+export interface MPLPTraceData {
+  // 基础信息 - 必需字段
+  protocol_version: string;    // 协议版本
+  timestamp: string;           // ISO 8601时间戳
+  trace_id: string;            // 追踪唯一标识符
+  context_id: string;          // 上下文ID
+  trace_type: TraceType;       // 追踪类型
+  severity: TraceSeverity;     // 严重程度
+  event: {                     // 事件信息
+    type: EventType;           // 事件类型
+    name: string;              // 事件名称
+    description?: string;      // 事件描述
+    category: EventCategory;   // 事件类别
+    source: {                  // 事件源
+      component: string;       // 组件名称
+      module?: string;         // 模块名称
+      function?: string;       // 函数名称
+      line_number?: number;    // 行号
+    };
+    data?: Record<string, unknown>; // 事件数据
+  };
+  
+  // 可选字段
+  plan_id?: string;            // 计划ID
+  task_id?: string;            // 任务ID
+  performance_metrics?: {      // 性能指标
+    execution_time?: {         // 执行时间
+      start_time: string;      // 开始时间
+      end_time?: string;       // 结束时间
+      duration_ms: number;     // 持续时间(毫秒)
+      cpu_time_ms?: number;    // CPU时间(毫秒)
+    };
+    resource_usage?: {         // 资源使用
+      memory?: {               // 内存使用
+        peak_usage_mb?: number;     // 峰值使用(MB)
+        average_usage_mb?: number;  // 平均使用(MB)
+        allocations?: number;       // 分配次数
+        deallocations?: number;     // 释放次数
+      };
+      cpu?: {                  // CPU使用
+        utilization_percent?: number; // 使用率(百分比)
+        instructions?: number;        // 指令数
+        cache_misses?: number;        // 缓存未命中
+      };
+      network?: {              // 网络使用
+        bytes_sent?: number;        // 发送字节数
+        bytes_received?: number;    // 接收字节数
+        requests_count?: number;    // 请求数
+        error_count?: number;       // 错误数
+      };
+      storage?: {              // 存储使用
+        reads?: number;             // 读取次数
+        writes?: number;            // 写入次数
+        bytes_read?: number;        // 读取字节数
+        bytes_written?: number;     // 写入字节数
+      };
+    };
+    custom_metrics?: Record<string, {  // 自定义指标
+      value: number | string | boolean; // 指标值
+      unit?: string;                   // 单位
+      type: MetricType;                // 指标类型
+    }>;
+  };
+  context_snapshot?: {         // 上下文快照
+    variables?: Record<string, unknown>;  // 变量
+    environment?: {            // 环境信息
+      os?: string;                  // 操作系统
+      platform?: string;            // 平台
+      runtime_version?: string;     // 运行时版本
+      environment_variables?: Record<string, string>; // 环境变量
+    };
+    call_stack?: Array<{       // 调用堆栈
+      function: string;             // 函数名
+      file?: string;                // 文件名
+      line?: number;                // 行号
+      arguments?: Record<string, unknown>; // 参数
+    }>;
+  };
+  error_information?: {        // 错误信息
+    error_code: string;             // 错误代码
+    error_message: string;          // 错误消息
+    error_type: ErrorType;          // 错误类型
+    stack_trace?: Array<{           // 堆栈跟踪
+      file: string;                     // 文件名
+      function: string;                 // 函数名
+      line: number;                     // 行号
+      column?: number;                  // 列号
+    }>;
+    recovery_actions?: Array<{      // 恢复操作
+      action: RecoveryActionType;       // 操作类型
+      description: string;              // 描述
+      parameters?: Record<string, unknown>; // 参数
+    }>;
+  };
+  decision_log?: {             // 决策日志
+    decision_point: string;         // 决策点
+    options_considered: Array<{     // 考虑的选项
+      option: string;                   // 选项
+      score: number;                    // 分数
+      rationale?: string;               // 理由
+      risk_factors?: string[];          // 风险因素
+    }>;
+    selected_option: string;        // 选中的选项
+    decision_criteria?: Array<{     // 决策标准
+      criterion: string;                // 标准
+      weight: number;                   // 权重
+      evaluation?: string;              // 评估
+    }>;
+    confidence_level?: number;      // 置信度
+  };
+  correlations?: Array<{       // 关联
+    correlation_id: string;         // 关联ID
+    type: CorrelationType;          // 关联类型
+    related_trace_id: string;       // 关联的追踪ID
+    strength?: number;              // 关联强度
+    description?: string;           // 描述
+  }>;
+  
+  // 运行时扩展字段 (非Schema定义)
+  user_id?: string;            // 用户ID
+  source?: string;             // 追踪来源
+  status?: string;             // 追踪状态
+  operation?: {                // 操作信息
+    name: string;              // 操作名称
+    duration_ms: number;       // 操作耗时
+    details: Record<string, unknown>; // 操作详情
+  };
+  metadata?: Record<string, unknown>; // 元数据
 }
 
 /**
- * 错误类型 (Schema定义)
+ * 追踪状态 - 运行时扩展 (非Schema定义)
  */
-export type ErrorType = 'system' | 'business' | 'validation' | 'network' | 'timeout' | 'security';
+export type TraceStatus =
+  | 'success'         // 成功
+  | 'failure'         // 失败
+  | 'warning'         // 警告
+  | 'info'            // 信息
+  | 'pending';        // 待处理
 
 /**
- * 堆栈跟踪帧 (Schema定义)
- */
-export interface StackTraceFrame {
-  file: string;
-  function: string;
-  line: number;
-  column?: number;
-}
-
-/**
- * 恢复操作 (Schema定义)
- */
-export interface RecoveryAction {
-  action: RecoveryActionType;
-  description: string;
-  parameters?: Record<string, unknown>;
-}
-
-/**
- * 恢复操作类型 (Schema定义)
- */
-export type RecoveryActionType = 'retry' | 'fallback' | 'escalate' | 'ignore' | 'abort';
-
-// ===== 决策日志 (Schema定义) =====
-
-/**
- * 决策日志 (Schema定义)
- */
-export interface DecisionLog {
-  decision_point: string;
-  options_considered: DecisionOption[];
-  selected_option: string;
-  decision_criteria?: DecisionCriterion[];
-  confidence_level?: number;
-}
-
-/**
- * 决策选项 (Schema定义)
- */
-export interface DecisionOption {
-  option: string;
-  score: number;
-  rationale?: string;
-  risk_factors?: string[];
-}
-
-/**
- * 决策标准 (Schema定义)
- */
-export interface DecisionCriterion {
-  criterion: string;
-  weight: number;
-  evaluation?: string;
-}
-
-// ===== 追踪关联 (Schema定义) =====
-
-/**
- * 追踪关联 (Schema定义)
- */
-export interface TraceCorrelation {
-  correlation_id: UUID;
-  type: CorrelationType;
-  related_trace_id: UUID;
-  strength?: number;
-  description?: string;
-}
-
-/**
- * 关联类型 (Schema定义)
- */
-export type CorrelationType = 'causation' | 'temporal' | 'spatial' | 'logical';
-
-// ===== 请求/响应接口 =====
-
-/**
- * 创建追踪请求接口
- */
-export interface CreateTraceRequest {
-  context_id: UUID;
-  plan_id?: UUID;
-  task_id?: UUID;
-  trace_type: TraceType;
-  severity: TraceSeverity;
-  event: TraceEvent;
-  performance_metrics?: Partial<PerformanceMetrics>;
-  context_snapshot?: Partial<ContextSnapshot>;
-  error_information?: Partial<ErrorInformation>;
-  decision_log?: Partial<DecisionLog>;
-}
-
-/**
- * 更新追踪请求接口
- */
-export interface UpdateTraceRequest {
-  trace_id: UUID;
-  severity?: TraceSeverity;
-  event?: Partial<TraceEvent>;
-  performance_metrics?: Partial<PerformanceMetrics>;
-  context_snapshot?: Partial<ContextSnapshot>;
-  error_information?: Partial<ErrorInformation>;
-  decision_log?: Partial<DecisionLog>;
-  correlations?: Partial<TraceCorrelation>[];
-}
-
-/**
- * 追踪过滤器接口
+ * 追踪过滤条件
  */
 export interface TraceFilter {
-  trace_ids?: UUID[];
-  context_ids?: UUID[];
-  plan_ids?: UUID[];
-  task_ids?: UUID[];
-  trace_types?: TraceType[];
-  severities?: TraceSeverity[];
-  event_types?: EventType[];
-  event_categories?: EventCategory[];
-  error_types?: ErrorType[];
-  created_after?: Timestamp;
-  created_before?: Timestamp;
-  has_errors?: boolean;
-  correlation_types?: CorrelationType[];
+  trace_ids?: string[];            // 追踪ID列表
+  context_ids?: string[];          // 上下文ID列表
+  plan_ids?: string[];             // 计划ID列表
+  task_ids?: string[];             // 任务ID列表
+  user_ids?: string[];             // 用户ID列表
+  trace_types?: TraceType[];       // 追踪类型列表
+  severities?: TraceSeverity[];    // 严重程度列表
+  event_types?: EventType[];       // 事件类型列表
+  error_types?: ErrorType[];       // 错误类型列表
+  statuses?: TraceStatus[];        // 追踪状态列表 (运行时扩展)
+  start_time?: string;             // 开始时间
+  end_time?: string;               // 结束时间
+  limit?: number;                  // 限制数量
+  offset?: number;                 // 偏移量
 }
 
 /**
- * 追踪操作结果接口
+ * 追踪操作结果
  */
 export interface TraceOperationResult<T = unknown> {
   success: boolean;
@@ -375,126 +267,63 @@ export interface TraceOperationResult<T = unknown> {
 }
 
 /**
- * 批量追踪请求接口
+ * 追踪指标类型
  */
-export interface BatchTraceRequest {
-  traces: CreateTraceRequest[];
-  batch_options?: BatchTraceOptions;
-}
-
-/**
- * 批量追踪选项接口
- */
-export interface BatchTraceOptions {
-  parallel_processing: boolean;
-  stop_on_error: boolean;
-  max_concurrent: number;
-  timeout_ms: number;
-}
-
-/**
- * 追踪配置接口
- */
-export interface TraceConfiguration {
-  collection_enabled: boolean;
-  performance_monitoring_enabled: boolean;
-  error_tracking_enabled: boolean;
-  decision_logging_enabled: boolean;
-  correlation_analysis_enabled: boolean;
-  sampling_settings: {
-    enabled: boolean;
-    rate: number;
-    adaptive_sampling: boolean;
-  };
-  storage_settings: {
-    retention_days: number;
-    compression_enabled: boolean;
-    archival_enabled: boolean;
-  };
-  privacy_settings: {
-    pii_masking_enabled: boolean;
-    sensitive_data_exclusion: string[];
-    anonymization_level: AnonymizationLevel;
+export interface TraceMetrics {
+  // 基础指标
+  total_traces: number;
+  traces_by_type: Record<TraceType, number>;
+  traces_by_severity: Record<TraceSeverity, number>;
+  
+  // 性能指标
+  avg_operation_duration_ms: number;
+  p95_operation_duration_ms: number;
+  p99_operation_duration_ms: number;
+  
+  // 错误指标
+  error_count: number;
+  error_rate: number;
+  
+  // 时间范围
+  time_range: {
+    start: string;
+    end: string;
+    duration_ms: number;
   };
 }
 
 /**
- * 匿名化级别
+ * 追踪分析结果
  */
-export type AnonymizationLevel = 'none' | 'basic' | 'advanced' | 'full';
-
-// ===== 服务接口 =====
-
-/**
- * 追踪仓库接口
- */
-export interface ITraceRepository {
-  save(trace: TraceProtocol): Promise<TraceOperationResult<TraceProtocol>>;
-  findById(traceId: UUID): Promise<TraceOperationResult<TraceProtocol>>;
-  findByFilter(filter: TraceFilter): Promise<TraceOperationResult<TraceProtocol[]>>;
-  update(traceId: UUID, updates: UpdateTraceRequest): Promise<TraceOperationResult<TraceProtocol>>;
-  delete(traceId: UUID): Promise<TraceOperationResult<boolean>>;
-  correlate(sourceTraceId: UUID, correlation: TraceCorrelation): Promise<TraceOperationResult<void>>;
-  saveMany(traces: TraceProtocol[]): Promise<TraceOperationResult<TraceProtocol[]>>;
-  count(filter?: TraceFilter): Promise<TraceOperationResult<number>>;
+export interface TraceAnalysis {
+  metrics: TraceMetrics;
+  patterns: Array<{
+    pattern_id: string;
+    pattern_name: string;
+    occurrence_count: number;
+    confidence: number;
+  }>;
+  anomalies: Array<{
+    anomaly_id: string;
+    anomaly_type: string;
+    severity: string;
+    description: string;
+    affected_traces: string[];
+  }>;
+  recommendations: string[];
 }
 
 /**
- * 追踪验证器接口
+ * 追踪配置
  */
-export interface ITraceValidator {
-  validateTrace(trace: Partial<TraceProtocol>): ValidationResult;
-  validateEvent(event: TraceEvent): ValidationResult;
-  validatePerformanceMetrics(metrics: PerformanceMetrics): ValidationResult;
-  validateCorrelation(correlation: TraceCorrelation): ValidationResult;
-}
-
-/**
- * 验证结果接口
- */
-export interface ValidationResult {
-  isValid: boolean;
-  errors: ValidationError[];
-  warnings: ValidationWarning[];
-}
-
-/**
- * 验证错误接口
- */
-export interface ValidationError {
-  field: string;
-  message: string;
-  code: string;
-  severity: 'error' | 'critical';
-}
-
-/**
- * 验证警告接口
- */
-export interface ValidationWarning {
-  field: string;
-  message: string;
-  code: string;
-  suggestion?: string;
-}
-
-/**
- * 追踪错误代码枚举
- */
-export enum TraceErrorCode {
-  TRACE_NOT_FOUND = 'TRACE_NOT_FOUND',
-  TRACE_ALREADY_EXISTS = 'TRACE_ALREADY_EXISTS',
-  INVALID_TRACE_DATA = 'INVALID_TRACE_DATA',
-  INVALID_EVENT_DATA = 'INVALID_EVENT_DATA',
-  INVALID_PERFORMANCE_METRICS = 'INVALID_PERFORMANCE_METRICS',
-  INVALID_CORRELATION_DATA = 'INVALID_CORRELATION_DATA',
-  CORRELATION_NOT_FOUND = 'CORRELATION_NOT_FOUND',
-  BATCH_OPERATION_FAILED = 'BATCH_OPERATION_FAILED',
-  STORAGE_ERROR = 'STORAGE_ERROR',
-  VALIDATION_FAILED = 'VALIDATION_FAILED',
-  CONTEXT_NOT_FOUND = 'CONTEXT_NOT_FOUND',
-  PLAN_NOT_FOUND = 'PLAN_NOT_FOUND',
-  TASK_NOT_FOUND = 'TASK_NOT_FOUND',
-  ACCESS_DENIED = 'ACCESS_DENIED',
-  INTERNAL_ERROR = 'INTERNAL_ERROR',
+export interface TraceConfig {
+  enabled: boolean;
+  sampling_rate: number;
+  batch_size: number;
+  sync_interval_ms: number;
+  retention_days: number;
+  performance_thresholds: {
+    warning_ms: number;
+    critical_ms: number;
+  };
 }

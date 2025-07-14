@@ -36,8 +36,12 @@ import {
   ExtensionResourceLimits,
   ExtensionMetadata,
   ExtensionLifecycle,
-  ValidationRule
+  ValidationRule,
+  ExtensionPointType,
+  TargetModule,
+  ExtensionHealthStatus
 } from './types';
+import { EnhancedExtensionLifecycle } from './extension-lifecycle';
 import { logger } from '../../utils/logger';
 import { Timestamp } from '../../types/index';
 
@@ -376,9 +380,9 @@ export class ExtensionService extends EventEmitter {
 
   /**
    * 更新扩展配置
-   * 目标性能: < 100ms 完成配置验证和更新
+   * 目标性能: < 1000ms 完成配置更新
    */
-  public async updateConfiguration(request: UpdateConfigurationRequest): Promise<void> {
+  public async updateConfiguration(request: UpdateConfigurationRequest): Promise<ExtensionProtocol> {
     const startTime = Date.now();
     const { extension_id, configuration, validate_only = false } = request;
     
@@ -400,9 +404,9 @@ export class ExtensionService extends EventEmitter {
         throw new Error(`Configuration validation failed: ${validationResult.errors.join(', ')}`);
       }
 
-      // 如果只是验证，则到此为止
+      // 如果只是验证，则返回原始扩展对象
       if (validate_only) {
-        return;
+        return extension;
       }
 
       // 2. 更新配置
@@ -434,6 +438,9 @@ export class ExtensionService extends EventEmitter {
         name: extension.name,
         time_ms: Date.now() - startTime
       });
+      
+      // 返回更新后的扩展对象
+      return extension;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       logger.error('扩展配置更新失败', {
@@ -582,7 +589,7 @@ export class ExtensionService extends EventEmitter {
    * 搜索扩展
    * 目标性能: < 20ms 完成搜索
    */
-  public searchExtensions(criteria: ExtensionSearchCriteria): ExtensionProtocol[] {
+  public async searchExtensions(criteria: ExtensionSearchCriteria): Promise<ExtensionProtocol[]> {
     const results: ExtensionProtocol[] = [];
     
     // 如果没有条件，返回所有扩展
@@ -673,23 +680,25 @@ export class ExtensionService extends EventEmitter {
   }
 
   /**
-   * 获取扩展详情
+   * 获取扩展
+   * @param extensionId 扩展ID
    */
-  public getExtension(extensionId: string): ExtensionProtocol | undefined {
-    return this.extensions.get(extensionId);
+  public async getExtension(extensionId: string): Promise<ExtensionProtocol | null> {
+    const extension = this.extensions.get(extensionId);
+    return extension || null;
   }
 
   /**
    * 获取所有扩展
    */
-  public getAllExtensions(): ExtensionProtocol[] {
+  public async getAllExtensions(): Promise<ExtensionProtocol[]> {
     return Array.from(this.extensions.values());
   }
 
   /**
    * 获取扩展统计信息
    */
-  public getStatistics(): ExtensionStatistics {
+  public async getStatistics(): Promise<ExtensionStatistics> {
     // 实时计算统计数据
     const allExtensions = Array.from(this.extensions.values());
     
@@ -709,6 +718,302 @@ export class ExtensionService extends EventEmitter {
     );
 
     return { ...this.statistics };
+  }
+
+  /**
+   * 检查扩展健康状态
+   * @param extensionId 扩展ID
+   * @param fullCheck 是否执行完整检查
+   */
+  public async checkExtensionHealth(extensionId: string, fullCheck = false): Promise<ExtensionHealthStatus> {
+    const startTime = Date.now();
+    
+    try {
+      logger.info('检查扩展健康状态', { extension_id: extensionId, full_check: fullCheck });
+      
+      // 1. 获取扩展
+      const extension = this.extensions.get(extensionId);
+      if (!extension) {
+        throw new Error(`Extension ${extensionId} not found`);
+      }
+      
+      // 2. 准备健康状态对象
+      const healthStatus: ExtensionHealthStatus = {
+        status: 'unknown',
+        is_healthy: false,
+        last_check: new Date().toISOString() as Timestamp,
+        details: {
+          message: '',
+          checks: []
+        }
+      };
+      
+      // 3. 检查扩展状态
+      if (extension.status === 'error' || extension.status === 'disabled') {
+        healthStatus.status = 'unhealthy';
+        healthStatus.is_healthy = false;
+        healthStatus.details.message = `Extension is in ${extension.status} state`;
+        healthStatus.details.checks.push({
+          name: 'status_check',
+          status: 'failed',
+          message: `Extension status is ${extension.status}`
+        });
+      } else {
+        healthStatus.details.checks.push({
+          name: 'status_check',
+          status: 'passed',
+          message: `Extension status is ${extension.status}`
+        });
+      }
+      
+      // 4. 检查扩展处理器
+      const handler = this.extensionHandlers.get(extensionId);
+      if (!handler && extension.status === 'active') {
+        healthStatus.status = 'unhealthy';
+        healthStatus.is_healthy = false;
+        healthStatus.details.checks.push({
+          name: 'handler_check',
+          status: 'failed',
+          message: 'Extension handler not found but status is active'
+        });
+      } else if (handler) {
+        healthStatus.details.checks.push({
+          name: 'handler_check',
+          status: 'passed',
+          message: 'Extension handler available'
+        });
+      }
+      
+      // 5. 执行健康检查
+      if (extension.status === 'active') {
+        try {
+          // 模拟健康检查调用
+          const healthCheckResult = await this.simulateExtensionExecution(
+            { 
+              point_id: uuidv4(),
+              name: 'health_check',
+              type: 'hook' as ExtensionPointType,
+              target_module: 'system' as TargetModule,
+              execution_order: 0,
+              enabled: true,
+              handler: {
+                function_name: 'healthCheck'
+              }
+            },
+            { timestamp: new Date().toISOString() },
+            { 
+              execution_id: uuidv4(),
+              extension_id: extensionId,
+              context_id: extension.context_id,
+              start_time: new Date().toISOString() as Timestamp,
+              timeout_ms: 5000,
+              parameters: {}
+            }
+          );
+          
+          if (!healthCheckResult || (healthCheckResult && 'status' in healthCheckResult && healthCheckResult.status === 'error')) {
+            healthStatus.details.checks.push({
+              name: 'function_check',
+              status: 'failed',
+              message: 'Health check function returned error'
+            });
+          } else {
+            healthStatus.details.checks.push({
+              name: 'function_check',
+              status: 'passed',
+              message: 'Health check function executed successfully'
+            });
+          }
+        } catch (error) {
+          healthStatus.details.checks.push({
+            name: 'function_check',
+            status: 'failed',
+            message: `Health check function execution failed: ${error instanceof Error ? error.message : String(error)}`
+          });
+        }
+      }
+      
+      // 6. 执行完整检查（如果需要）
+      if (fullCheck) {
+        // 收集性能指标
+        const performanceData = this.performanceMonitor.get(extensionId);
+        if (performanceData && performanceData.length > 0) {
+          const avgExecutionTime = performanceData.reduce((sum, time) => sum + time, 0) / performanceData.length;
+          
+          healthStatus.metrics = {
+            response_time_ms: avgExecutionTime,
+            memory_usage_mb: extension.lifecycle?.performance_metrics?.memory_usage_mb || 0,
+            cpu_usage_percent: 0, // 这里需要实际监控数据
+            uptime_seconds: extension.status === 'active' ? 3600 : 0 // 示例值
+          };
+          
+          healthStatus.details.checks.push({
+            name: 'performance_check',
+            status: avgExecutionTime > 500 ? 'warning' : 'passed',
+            message: `Average response time: ${avgExecutionTime.toFixed(2)}ms`
+          });
+        }
+        
+        // 检查配置有效性
+        try {
+          const configResult = await this.validateConfiguration(
+            extension,
+            extension.configuration.current_config
+          );
+          
+          healthStatus.details.checks.push({
+            name: 'config_check',
+            status: configResult.valid ? 'passed' : 'failed',
+            message: configResult.valid ? 'Configuration is valid' : `Configuration errors: ${configResult.errors.join(', ')}`
+          });
+        } catch (error) {
+          healthStatus.details.checks.push({
+            name: 'config_check',
+            status: 'failed',
+            message: `Configuration validation failed: ${error instanceof Error ? error.message : String(error)}`
+          });
+        }
+      }
+      
+      // 7. 确定最终健康状态
+      const failedChecks = healthStatus.details.checks.filter(check => check.status === 'failed').length;
+      const warningChecks = healthStatus.details.checks.filter(check => check.status === 'warning').length;
+      
+      if (failedChecks > 0) {
+        healthStatus.status = 'unhealthy';
+        healthStatus.is_healthy = false;
+        healthStatus.details.message = `Extension has ${failedChecks} failed checks`;
+      } else if (warningChecks > 0) {
+        healthStatus.status = 'warning';
+        healthStatus.is_healthy = true;
+        healthStatus.details.message = `Extension has ${warningChecks} warnings`;
+      } else {
+        healthStatus.status = 'healthy';
+        healthStatus.is_healthy = true;
+        healthStatus.details.message = 'All checks passed';
+      }
+      
+      // 8. 更新健康检查时间
+      if (extension.lifecycle) {
+        // 使用EnhancedExtensionLifecycle接口
+        (extension.lifecycle as EnhancedExtensionLifecycle).last_health_check = healthStatus.last_check;
+      }
+      
+      const duration = Date.now() - startTime;
+      logger.info('扩展健康检查完成', { 
+        extension_id: extensionId, 
+        status: healthStatus.status,
+        duration_ms: duration 
+      });
+      
+      // 添加响应时间到健康状态
+      if (!healthStatus.metrics) {
+        healthStatus.metrics = { response_time_ms: duration };
+      } else {
+        healthStatus.metrics.response_time_ms = duration;
+      }
+      
+      return healthStatus;
+      
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.error('扩展健康检查失败', { 
+        extension_id: extensionId, 
+        error: errorMessage,
+        duration_ms: Date.now() - startTime
+      });
+      
+      // 返回错误状态
+      return {
+        status: 'unhealthy',
+        is_healthy: false,
+        last_check: new Date().toISOString() as Timestamp,
+        details: {
+          message: errorMessage,
+          checks: [{
+            name: 'system_check',
+            status: 'failed',
+            message: errorMessage
+          }]
+        },
+        metrics: {
+          response_time_ms: Date.now() - startTime
+        }
+      };
+    }
+  }
+
+  /**
+   * 更新扩展
+   * @param request 更新请求
+   */
+  public async updateExtension(request: UpdateExtensionRequest): Promise<ExtensionProtocol> {
+    const startTime = Date.now();
+    
+    try {
+      logger.info('开始更新扩展', { extension_id: request.extension_id });
+      
+      // 1. 获取扩展
+      const extension = this.extensions.get(request.extension_id);
+      if (!extension) {
+        throw new Error(`Extension ${request.extension_id} not found`);
+      }
+      
+      // 2. 停用扩展（如果当前是活跃状态）
+      const wasActive = extension.status === 'active';
+      if (wasActive) {
+        await this.activateExtension({
+          extension_id: request.extension_id,
+          activate: false,
+          force: true
+        });
+      }
+      
+      // 3. 更新扩展信息
+      const updatedExtension: ExtensionProtocol = {
+        ...extension,
+        display_name: request.display_name || extension.display_name,
+        description: request.description || extension.description,
+        status: request.status || 'installed',
+        timestamp: new Date().toISOString() as Timestamp
+      };
+      
+      // 4. 保存更新后的扩展
+      this.extensions.set(request.extension_id, updatedExtension);
+      
+      // 5. 重新激活扩展（如果之前是活跃状态）
+      if (wasActive && request.status !== 'inactive' && request.status !== 'disabled') {
+        await this.activateExtension({
+          extension_id: request.extension_id,
+          activate: true
+        });
+      }
+      
+      // 6. 发送更新事件
+      this.emitExtensionEvent(request.extension_id, 'extension_updated', {
+        name: updatedExtension.name,
+        version: updatedExtension.version,
+        update_time: Date.now() - startTime
+      });
+      
+      logger.info('扩展更新成功', {
+        extension_id: request.extension_id,
+        name: updatedExtension.name,
+        version: updatedExtension.version,
+        time_ms: Date.now() - startTime
+      });
+      
+      return updatedExtension;
+      
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.error('扩展更新失败', { 
+        extension_id: request.extension_id, 
+        error: errorMessage,
+        time_ms: Date.now() - startTime
+      });
+      throw error;
+    }
   }
 
   // ================== 私有辅助方法 ==================
@@ -942,21 +1247,49 @@ export class ExtensionService extends EventEmitter {
 
   /**
    * 模拟扩展执行
+   * 
+   * 用于测试和健康检查场景
    */
   private async simulateExtensionExecution(
-    point: ExtensionPoint,
+    point: Partial<ExtensionPoint>,
     eventData: Record<string, unknown>,
-    context: ExtensionExecutionContext
-  ): Promise<unknown> {
-    // 模拟扩展执行
-    const delay = Math.random() * 100; // 0-100ms 随机延迟
-    await new Promise(resolve => setTimeout(resolve, delay));
-    
-    return {
-      point_name: point.name,
-      processed_data: eventData,
-      execution_context: context.execution_id
-    };
+    context: Partial<ExtensionExecutionContext>
+  ): Promise<Record<string, unknown> | null> {
+    try {
+      // 模拟执行延迟
+      await new Promise(resolve => setTimeout(resolve, 10));
+      
+      // 根据扩展点类型返回不同结果
+      switch (point.name) {
+        case 'health_check':
+          return {
+            status: 'ok',
+            timestamp: new Date().toISOString(),
+            version: EXTENSION_CONSTANTS.PROTOCOL_VERSION,
+            message: 'Health check passed'
+          };
+          
+        case 'error_test':
+          return {
+            status: 'error',
+            timestamp: new Date().toISOString(),
+            error: 'Simulated error for testing'
+          };
+          
+        default:
+          return {
+            status: 'ok',
+            timestamp: new Date().toISOString(),
+            data: { processed: true }
+          };
+      }
+    } catch (error) {
+      logger.error('模拟扩展执行失败', {
+        point_name: point.name,
+        error: error instanceof Error ? error.message : String(error)
+      });
+      return null;
+    }
   }
 
   private async registerExtensionPoints(extensionId: string, points: ExtensionPoint[]): Promise<void> {

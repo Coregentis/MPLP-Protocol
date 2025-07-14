@@ -605,3 +605,42 @@ export class InternalError extends ContextError {
     this.name = 'InternalError';
   }
 } 
+
+/**
+ * 上下文事件类型枚举
+ * 定义上下文模块可能发送的所有事件类型
+ */
+export type ContextEventType = 
+  | 'context_created' 
+  | 'context_updated' 
+  | 'context_deleted' 
+  | 'context_terminated'
+  | 'shared_state_changed'
+  | 'status_changed'
+  | 'lifecycle_stage_changed';
+
+/**
+ * 上下文事件接口
+ * 定义上下文模块事件的标准结构
+ * 
+ * @schema_path 事件基于context-protocol.json
+ */
+export interface ContextEvent {
+  /** 事件类型 */
+  event_type: ContextEventType;
+  
+  /** 事件关联的上下文ID */
+  context_id: UUID;
+  
+  /** 事件发生时间戳 */
+  timestamp: Timestamp;
+  
+  /** 事件相关数据 */
+  data?: Record<string, unknown>;
+  
+  /** 源模块 */
+  source?: string;
+  
+  /** 事件发送者ID */
+  sender_id?: string;
+} 

@@ -15,6 +15,8 @@ export * from './types';
 export { RoleManager } from './role-manager';
 export { RoleService } from './role-service';
 export { RoleController } from './role-controller';
+export { RoleFactory } from './role-factory';
+export { InMemoryRoleRepository } from './role-repository';
 
 // 导出常量
 export const ROLE_MODULE_VERSION = '1.0.1';

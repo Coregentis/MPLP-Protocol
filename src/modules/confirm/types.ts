@@ -552,6 +552,11 @@ export interface BatchConfirmResponse {
     failed: number;
     processing_time_ms: number;
   };
+  error?: {
+    code: string;
+    message: string;
+    details?: unknown;
+  };
 }
 
 /**

@@ -1,8 +1,9 @@
 /**
  * MPLP Extension模块类型定义
  * 
- * @version v1.0.1
+ * @version v1.0.2
  * @created 2025-07-10T14:30:00+08:00
+ * @updated 2025-07-16T10:30:00+08:00
  * @compliance 10/10 Schema合规性 - 完全匹配Schema定义
  */
 
@@ -497,6 +498,29 @@ export interface ExtensionExecutionResult {
   memory_usage_mb?: number;
 }
 
+/**
+ * 扩展健康状态 (API接口)
+ */
+export interface ExtensionHealthStatus {
+  status: 'healthy' | 'unhealthy' | 'warning' | 'unknown';
+  is_healthy: boolean;
+  last_check: Timestamp;
+  details: {
+    message: string;
+    checks: Array<{
+      name: string;
+      status: 'passed' | 'failed' | 'warning';
+      message?: string;
+    }>;
+  };
+  metrics?: {
+    response_time_ms: number;
+    memory_usage_mb?: number;
+    cpu_usage_percent?: number;
+    uptime_seconds?: number;
+  };
+}
+
 // ===== 生命周期管理 =====
 
 /**
@@ -517,7 +541,18 @@ export interface LifecycleHandler {
 /**
  * 扩展操作 (生命周期)
  */
-export type ExtensionOperation = 'install' | 'uninstall' | 'activate' | 'deactivate' | 'update' | 'configure' | 'execute' | 'health_check';
+export type ExtensionOperation = 
+  | 'install' 
+  | 'uninstall' 
+  | 'activate' 
+  | 'deactivate' 
+  | 'update' 
+  | 'configure' 
+  | 'execute' 
+  | 'health_check'
+  | 'register_extension_point'
+  | 'unregister_extension_point'
+  | 'check_compatibility';
 
 /**
  * 扩展安装源 (生命周期)
@@ -582,23 +617,41 @@ export interface MarketplaceSettings {
  */
 export const EXTENSION_CONSTANTS = {
   PROTOCOL_VERSION: '1.0.1' as const,
+  MPLP_VERSION: '1.0.0' as const,
+  
+  // 模块版本信息
+  MODULE_VERSIONS: {
+    CONTEXT: '1.0.2' as const,
+    PLAN: '1.0.1' as const,
+    CONFIRM: '1.0.2' as const,
+    TRACE: '1.0.1' as const,
+    ROLE: '1.0.0' as const,
+    EXTENSION: '1.0.2' as const
+  },
+  
+  // 默认值
   DEFAULT_EXTENSION_TYPE: 'plugin' as ExtensionType,
   DEFAULT_EXTENSION_STATUS: 'installed' as ExtensionStatus,
   DEFAULT_TARGET_MODULE: 'system' as TargetModule,
-  DEFAULT_ENFORCEMENT_LEVEL: 'moderate' as string,
-  DEFAULT_MATURITY_LEVEL: 'beta' as string,
-  DEFAULT_SUPPORT_LEVEL: 'community' as string,
-  MAX_NAME_LENGTH: 64,
-  MAX_DISPLAY_NAME_LENGTH: 255,
-  MAX_DESCRIPTION_LENGTH: 2000,
-  DEFAULT_HANDLER_TIMEOUT_MS: 5000,
-  DEFAULT_RETRY_DELAY_MS: 1000,
-  MAX_RETRY_ATTEMPTS: 3,
-  DEFAULT_RATE_LIMIT_RPM: 60,
-  DEFAULT_RETENTION_DAYS: 30,
-  DEFAULT_MAX_MEMORY_MB: 256,
-  DEFAULT_MAX_CPU_PERCENT: 50
-} as const;
+  DEFAULT_EXECUTION_ORDER: 100 as const,
+  DEFAULT_TIMEOUT_MS: 5000 as const,
+  DEFAULT_HANDLER_TIMEOUT_MS: 5000 as const,
+  DEFAULT_RETRY_ATTEMPTS: 3 as const,
+  DEFAULT_RETRY_DELAY_MS: 1000 as const,
+  DEFAULT_BACKOFF_STRATEGY: 'exponential' as BackoffStrategy,
+  DEFAULT_REQUESTS_PER_MINUTE: 60 as const,
+  DEFAULT_BURST_SIZE: 10 as const,
+  DEFAULT_MAX_MEMORY_MB: 256 as const,
+  DEFAULT_MAX_DISK_MB: 50 as const,
+  DEFAULT_MAX_CPU_PERCENT: 50 as const,
+  
+  // 限制
+  MAX_NAME_LENGTH: 100 as const,
+  MAX_DESCRIPTION_LENGTH: 1000 as const,
+  MAX_EXTENSION_POINTS: 50 as const,
+  MAX_API_EXTENSIONS: 20 as const,
+  MAX_EVENT_SUBSCRIPTIONS: 30 as const
+};
 
 /**
  * 扩展错误代码
@@ -628,6 +681,8 @@ export enum ExtensionErrorCode {
 
 // ===== 导出默认值 =====
 export const PROTOCOL_VERSION = EXTENSION_CONSTANTS.PROTOCOL_VERSION;
+export const MPLP_VERSION = EXTENSION_CONSTANTS.MPLP_VERSION;
+export const MODULE_VERSIONS = EXTENSION_CONSTANTS.MODULE_VERSIONS;
 export const DEFAULT_EXTENSION_TYPE: ExtensionType = EXTENSION_CONSTANTS.DEFAULT_EXTENSION_TYPE;
 export const DEFAULT_EXTENSION_STATUS: ExtensionStatus = EXTENSION_CONSTANTS.DEFAULT_EXTENSION_STATUS;
 export const DEFAULT_TARGET_MODULE: TargetModule = EXTENSION_CONSTANTS.DEFAULT_TARGET_MODULE;

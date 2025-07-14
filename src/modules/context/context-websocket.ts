@@ -1,21 +1,23 @@
 /**
  * MPLP Context WebSocket处理器
  * 
- * @version v1.0.0
+ * @version v1.0.1
  * @created 2025-07-09T23:45:00+08:00
+ * @updated 2025-07-15T16:45:00+08:00
  * @compliance .cursor/rules/architecture.mdc - WebSocket实时通信规范
- * @tracepilot_integration WebSocket连接和事件追踪
+ * @compliance .cursor/rules/vendor-neutral-design.mdc - 厂商中立设计
  */
 
 import { Server as SocketIOServer, Socket } from 'socket.io';
-import { logger } from '@/utils/logger';
-import { PerformanceMonitor } from '@/utils/performance';
-import { TracePilotAdapter } from '@/mcp/tracepilot-adapter';
+import { logger } from '../../utils/logger';
+import { PerformanceMonitor } from '../../utils/performance';
+import { ITraceAdapter } from '../../interfaces/trace-adapter.interface';
+import { MPLPTraceData, TraceType, TraceStatus } from '../../types/trace';
 import { ContextService } from './context-service';
 import { 
   ContextEvent, 
   ContextEventType,
-  ContextOperationResult
+  ContextOperationResult 
 } from './types';
 
 /**
@@ -50,7 +52,7 @@ interface ContextSocketEvents {
 export class ContextWebSocketHandler {
   private io: SocketIOServer;
   private contextService: ContextService;
-  private tracePilotAdapter?: TracePilotAdapter;
+  private traceAdapter?: ITraceAdapter;
   private connectedSockets: Map<string, Socket> = new Map();
   private socketContexts: Map<string, Set<string>> = new Map(); // socketId -> contextIds
   private contextSubscriptions: Map<string, Set<string>> = new Map(); // contextId -> socketIds
@@ -58,16 +60,17 @@ export class ContextWebSocketHandler {
   constructor(
     io: SocketIOServer,
     contextService: ContextService,
-    tracePilotAdapter?: TracePilotAdapter
+    traceAdapter?: ITraceAdapter
   ) {
     this.io = io;
     this.contextService = contextService;
-    this.tracePilotAdapter = tracePilotAdapter;
+    this.traceAdapter = traceAdapter;
     this.setupEventHandlers();
 
     logger.info('Context WebSocket处理器初始化完成', {
       module: 'ContextWebSocket',
-      tracepilot_enabled: !!tracePilotAdapter
+      trace_adapter_enabled: !!traceAdapter,
+      trace_adapter_type: traceAdapter?.getAdapterInfo().type
     });
   }
 
@@ -105,7 +108,7 @@ export class ContextWebSocketHandler {
     this.connectedSockets.set(socketId, socket);
     this.socketContexts.set(socketId, new Set());
 
-    // TracePilot追踪
+    // 追踪事件
     await this.trackSocketEvent('websocket_connected', socketId, {
       user_id: userId,
       user_agent: userAgent
@@ -250,7 +253,7 @@ export class ContextWebSocketHandler {
         total_contexts: socketContexts.size
       });
 
-      // TracePilot追踪
+      // 追踪事件
       await this.trackSocketEvent('joined_context', socketId, {
         context_id: contextId,
         total_contexts: socketContexts.size
@@ -309,7 +312,7 @@ export class ContextWebSocketHandler {
         remaining_contexts: socketContexts?.size || 0
       });
 
-      // TracePilot追踪
+      // 追踪事件
       await this.trackSocketEvent('left_context', socketId, {
         context_id: contextId,
         remaining_contexts: socketContexts?.size || 0
@@ -389,7 +392,7 @@ export class ContextWebSocketHandler {
     this.connectedSockets.delete(socketId);
     this.socketContexts.delete(socketId);
 
-    // TracePilot追踪
+    // 追踪事件
     await this.trackSocketEvent('websocket_disconnected', socketId, {
       contexts_count: socketContexts?.size || 0
     });
@@ -493,7 +496,7 @@ export class ContextWebSocketHandler {
       const context = contextResult.data!;
       
       // 简单的权限检查：Context所有者有所有权限
-      if (context.user_id === userId) {
+      if (context.access_control.owner.user_id === userId) {
         return true;
       }
 
@@ -513,28 +516,62 @@ export class ContextWebSocketHandler {
   }
 
   /**
-   * TracePilot事件追踪
+   * 追踪事件
    */
   private async trackSocketEvent(
     eventType: string,
     socketId: string,
     data: Record<string, unknown>
   ): Promise<void> {
-    if (!this.tracePilotAdapter) return;
+    if (!this.traceAdapter) return;
 
     try {
-      await this.tracePilotAdapter.trackEvent({
-        event_type: `websocket_${eventType}`,
-        context_id: socketId,
-        timestamp: new Date().toISOString(),
-        data: {
-          ...data,
-          socket_id: socketId
+      // 创建符合MPLPTraceData接口的追踪数据
+      const traceId = `socket-${socketId}-${Date.now()}`;
+      const timestamp = new Date().toISOString();
+      
+      const traceData = {
+        trace_id: traceId,
+        protocol_version: '1.0.1',
+        timestamp: timestamp,
+        context_id: (data.context_id as string) || 'global',
+        operation_name: `websocket_${eventType}`,
+        start_time: timestamp,
+        end_time: timestamp,
+        duration_ms: 0,
+        trace_type: 'event' as TraceType,
+        status: 'completed' as TraceStatus,
+        metadata: {
+          socket_id: socketId,
+          ...data
         },
-        source: 'context_websocket'
-      });
+        events: [],
+        performance_metrics: {
+          cpu_usage: 0,
+          memory_usage_mb: 0,
+          network_io_bytes: 0,
+          disk_io_bytes: 0
+        },
+        error_info: null,
+        parent_trace_id: null,
+        adapter_metadata: {
+          agent_id: 'context-websocket',
+          session_id: socketId,
+          operation_complexity: 'low' as 'low' | 'medium' | 'high',
+          expected_duration_ms: 0,
+          quality_gates: {
+            max_duration_ms: 0,
+            max_memory_mb: 0,
+            max_error_rate: 0,
+            required_events: []
+          }
+        }
+      };
+      
+      // 使用厂商中立的接口方法
+      await this.traceAdapter.syncTraceData(traceData);
     } catch (error) {
-      logger.warn('WebSocket事件TracePilot追踪失败', {
+      logger.warn('WebSocket事件追踪失败', {
         event_type: eventType,
         socket_id: socketId,
         error: error instanceof Error ? error.message : 'Unknown error'

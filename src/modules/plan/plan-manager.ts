@@ -1,9 +1,9 @@
 /**
  * MPLP Plan模块管理器 - 完全符合Schema规范
  * 
- * @version v1.0.1
+ * @version v1.0.2
  * @created 2025-07-10T13:30:00+08:00
- * @compliance plan-protocol.json Schema v1.0.1 - 100%合规
+ * @compliance plan-protocol.json Schema v1.0.2 - 100%合规
  * @architecture Schema-driven development with complete type safety
  */
 
@@ -11,7 +11,30 @@ import { EventEmitter } from 'events';
 import { v4 as uuidv4 } from 'uuid';
 import { Logger } from '@/utils/logger';
 import { Performance } from '@/utils/performance';
-import { EnhancedTracePilotAdapter, TaskTracker, DevelopmentIssue } from '@/mcp/enhanced-tracepilot-adapter';
+// 移除厂商特定适配器，使用通用类型
+interface TaskTracker {
+  task_id: string;
+  module: string;
+  task_name: string;
+  expected_completion_time: string;
+  status: 'pending' | 'in_progress' | 'completed' | 'blocked';
+  progress_percentage: number;
+  dependencies: string[];
+  blockers: unknown[];
+  quality_checks: unknown[];
+}
+
+interface DevelopmentIssue {
+  id: string;
+  type: string;
+  severity: string;
+  title: string;
+  file_path?: string;
+  dependencies?: string[];
+}
+import { MPLPTraceData } from '@/types/trace'; // Import MPLPTraceData from trace types
+// 使用通用适配器接口，而非特定厂商实现
+import { ITraceAdapter } from '@/interfaces/trace-adapter.interface';
 import {
   PlanProtocol,
   PlanTask,
@@ -30,7 +53,6 @@ import {
   TaskOperationResult,
   TaskDependency,
   BatchOperationResult,
-  PLAN_CONSTANTS,
   UUID,
   Timestamp,
   Version,
@@ -38,10 +60,50 @@ import {
   FailureResolver,
   RetryConfig,
   RollbackConfig,
-  PerformanceThresholds
+  PerformanceThresholds,
+  RecoveryStrategy,
+  ProactiveFailurePrevention,
+  SelfLearningRecovery
 } from './types';
 import { FailureResolverManager, FailureResolverConfig, FailureRecoveryResult } from './failure-resolver';
 import { createDefaultFailureResolver } from './utils';
+
+// 添加RoleManager接口，用于权限检查
+interface IRoleManager {
+  checkPermission(request: {
+    user_id: string;
+    resource: string;
+    action: string;
+    context_id?: string;
+    resource_id?: string;
+  }): Promise<{
+    granted: boolean;
+    reason?: string;
+  }>;
+}
+
+// 添加ContextManager接口，用于上下文管理
+interface IContextManager {
+  getContext(contextId: string): Promise<{
+    success: boolean;
+    data?: {
+      context_id: string;
+      [key: string]: any;
+    };
+  }>;
+}
+
+/**
+ * Plan模块常量
+ */
+const PLAN_CONSTANTS = {
+  PROTOCOL_VERSION: '1.0.2',
+  DEFAULT_TIMEOUT_MS: 30000,
+  MAX_RETRY_ATTEMPTS: 3,
+  RETRY_BACKOFF_FACTOR: 2,
+  DEFAULT_BATCH_SIZE: 10,
+  DEFAULT_PARALLEL_LIMIT: 5
+};
 
 // ================== Schema合规类型扩展 ==================
 
@@ -73,7 +135,7 @@ export interface PlanEvent {
   metadata: {
     source: string;
     severity: 'info' | 'warning' | 'error';
-    tracepilot_synced: boolean;
+    external_synced: boolean;
   };
 }
 
@@ -161,9 +223,12 @@ function PerformanceMonitor(target: string) {
         const duration = performance.since(startTime);
         const metricId = performance.start(`${target}.${propertyKey}`, { error: true });
         performance.end(metricId);
+        
+        // 重新抛出错误
         throw error;
       }
     };
+    return descriptor;
   };
 }
 
@@ -183,19 +248,40 @@ export class PlanManager extends EventEmitter {
   private dependencies: Map<UUID, PlanDependency> = new Map();
   private dependencyGraphs: Map<UUID, TaskDependencyGraph> = new Map();
   private config: PlanConfiguration;
-  private tracePilotAdapter?: EnhancedTracePilotAdapter;
   private performanceMetrics: Map<UUID, PlanPerformanceMetrics> = new Map();
   private taskTrackers: Map<UUID, TaskTracker> = new Map();
   private failureResolver: FailureResolverManager;
+  // 厂商中立的集成适配器
+  private traceAdapter: ITraceAdapter | null = null;
+  private traceService: any = null;
+  // 批量追踪队列
+  private traceBatchQueue: MPLPTraceData[] = [];
+  private batchProcessingInterval: NodeJS.Timeout | null = null;
+  // 批量同步限制
+  private batchLimit: number = 100; // 例如，每批最多同步100条追踪数据
+  
+  // 添加角色管理器和上下文管理器引用
+  private roleManager: IRoleManager | null = null;
+  private contextManager: IContextManager | null = null;
 
-  constructor(config: PlanConfiguration, tracePilotAdapter?: EnhancedTracePilotAdapter) {
+  constructor(config: PlanConfiguration) {
     super();
     this.config = config;
-    this.tracePilotAdapter = tracePilotAdapter;
     
     // 初始化故障解决器
     const failureResolverConfig: FailureResolverConfig = {
-      default_resolver: createDefaultFailureResolver(),
+      default_resolver: {
+        ...createDefaultFailureResolver(),
+            // 通用故障同步配置
+    vendor_integration: {
+      enabled: true,
+      sync_frequency_ms: 5000,
+      data_retention_days: 30,
+      sync_detailed_diagnostics: true,
+      receive_suggestions: true,
+      auto_apply_suggestions: false
+    }
+      },
       notification_handler: this.handleNotification.bind(this),
       manual_intervention_handler: this.handleManualIntervention.bind(this),
       performance_monitor: this.recordPerformanceMetrics.bind(this)
@@ -208,149 +294,87 @@ export class PlanManager extends EventEmitter {
     // 启动任务调度器
     this.startScheduler();
     
-    // 初始化TracePilot任务追踪
-    this.initializeTaskTracking();
-    
-    logger.info('PlanManager initialized with Enhanced TracePilot', {
+    logger.info('PlanManager initialized', {
       config: this.config,
-      tracepilot_enabled: !!tracePilotAdapter,
-      task_tracking_enabled: !!tracePilotAdapter,
       failure_resolver_enabled: this.config.failure_recovery_enabled
     });
   }
 
   /**
-   * 初始化任务追踪
+   * 设置追踪适配器
    */
-  private initializeTaskTracking(): void {
-    if (this.tracePilotAdapter) {
-      // 监听TracePilot的问题检测
-      this.tracePilotAdapter.on('issue_detected', (issue: DevelopmentIssue) => {
-        this.handleDetectedIssue(issue);
+  setTraceAdapter(adapter: ITraceAdapter): void {
+    this.traceAdapter = adapter;
+    
+    // 记录适配器类型
+    const adapterInfo = adapter.getAdapterInfo();
+    
+    logger.info('Trace adapter set for Plan module', { 
+      adapter_type: adapterInfo.type,
+      adapter_version: adapterInfo.version
+    });
+
+    // 检查适配器是否支持增强功能
+    if (adapterInfo.type.includes('enhanced')) {
+      logger.info('Enhanced failure tracking enabled for Plan module');
+      
+      // 更新故障解决器配置，启用AI诊断和自动恢复功能
+      this.failureResolver = new FailureResolverManager({
+        ...this.failureResolver['config'],
+        performance_monitor: (metrics) => this.recordPerformanceMetrics(metrics),
+        trace_adapter: adapter // 将追踪适配器传递给故障解决器
       });
       
-      // 监听自动修复应用
-      this.tracePilotAdapter.on('auto_fix_applied', (data: any) => {
-        this.handleAutoFixApplied(data);
-      });
+      // 启用智能诊断功能
+      this.enableIntelligentDiagnostics();
     }
   }
 
   /**
-   * 处理检测到的问题
+   * 获取当前适配器信息
    */
-  private handleDetectedIssue(issue: DevelopmentIssue): void {
-    logger.info('TracePilot检测到问题', {
-      issue_id: issue.id,
-      type: issue.type,
-      severity: issue.severity,
-      title: issue.title
-    });
-
-    // 如果是Plan模块相关的问题，创建对应的任务追踪
-    if (issue.file_path?.includes('plan') || issue.type === 'incomplete_implementation') {
-      this.createIssueTracker(issue);
+  getAdapterInfo(): { type: string; version: string } | null {
+    if (!this.traceAdapter) {
+      return null;
     }
+    return this.traceAdapter.getAdapterInfo();
   }
 
   /**
-   * 处理自动修复应用
+   * 启用智能诊断功能
    */
-  private handleAutoFixApplied(data: any): void {
-    logger.info('TracePilot自动修复应用', {
-      suggestion_id: data.suggestion_id,
-      title: data.suggestion.title
-    });
-
-    // 更新相关的任务追踪状态
-    this.updateIssueTrackerStatus(data.suggestion_id, 'resolved');
-  }
-
-  /**
-   * 创建问题追踪器
-   */
-  private createIssueTracker(issue: DevelopmentIssue): void {
-    const tracker: TaskTracker = {
-      task_id: `issue-${issue.id}`,
-      module: 'plan',
-      task_name: issue.title,
-      expected_completion_time: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
-      status: 'pending',
-      progress_percentage: 0,
-      dependencies: issue.dependencies || [],
-      blockers: [issue],
-      quality_checks: [{
-        check_id: `check-${issue.id}`,
-        check_type: 'type_safety',
-        status: 'failing',
-        details: issue.description,
-        auto_fixable: issue.auto_fixable
-      }]
-    };
-
-    this.taskTrackers.set(tracker.task_id, tracker);
+  private enableIntelligentDiagnostics(): void {
+    // 更新默认解析器配置
+    const currentConfig = this.failureResolver['config'].default_resolver;
     
-    logger.info('创建问题追踪器', {
-      tracker_id: tracker.task_id,
-      issue_type: issue.type,
-      auto_fixable: issue.auto_fixable
-    });
-  }
-
-  /**
-   * 更新问题追踪器状态
-   */
-  private updateIssueTrackerStatus(suggestionId: string, status: 'resolved' | 'in_progress' | 'blocked'): void {
-    for (const [trackerId, tracker] of this.taskTrackers) {
-      if (tracker.task_id.includes(suggestionId)) {
-        tracker.status = status === 'resolved' ? 'completed' : status;
-        tracker.progress_percentage = status === 'resolved' ? 100 : (status === 'in_progress' ? 50 : 0);
-        tracker.actual_completion_time = status === 'resolved' ? new Date().toISOString() : undefined;
-        
-        // 更新质量检查状态
-        tracker.quality_checks.forEach(check => {
-          if (status === 'resolved') {
-            check.status = 'passing';
-          }
-        });
-        
-        this.taskTrackers.set(trackerId, tracker);
-        break;
-      }
+    // 启用智能诊断
+    if (!currentConfig.intelligent_diagnostics) {
+      currentConfig.intelligent_diagnostics = {
+        enabled: true,
+        min_confidence_score: 0.7,
+        analysis_depth: 'detailed',
+        pattern_recognition: true,
+        historical_analysis: true,
+        max_related_failures: 5
+      };
+    } else {
+      currentConfig.intelligent_diagnostics.enabled = true;
     }
-  }
-
-  /**
-   * 获取任务追踪报告
-   */
-  getTaskTrackingReport(): {
-    total_trackers: number;
-    by_status: Record<string, number>;
-    by_module: Record<string, number>;
-    recent_issues: DevelopmentIssue[];
-  } {
-    const trackers = Array.from(this.taskTrackers.values());
-    const statusCounts = trackers.reduce((acc, tracker) => {
-      acc[tracker.status] = (acc[tracker.status] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
-
-    const moduleCounts = trackers.reduce((acc, tracker) => {
-      acc[tracker.module] = (acc[tracker.module] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
-
-    const recentIssues = trackers
-      .filter(tracker => tracker.blockers.length > 0)
-      .slice(-5)
-      .map(tracker => tracker.blockers[0]);
-
-    return {
-      total_trackers: trackers.length,
-      by_status: statusCounts,
-      by_module: moduleCounts,
-      recent_issues: recentIssues
-    };
+    
+    // 启用主动预防
+    if (!currentConfig.proactive_prevention) {
+      currentConfig.proactive_prevention = {
+        enabled: true,
+        prediction_confidence_threshold: 0.7,
+        auto_prevention_enabled: true,
+        prevention_strategies: ['resource_scaling', 'dependency_prefetch'],
+        monitoring_interval_ms: 5000
+      };
+    } else {
+      currentConfig.proactive_prevention.enabled = true;
+    }
+    
+    logger.info('Intelligent diagnostics and proactive prevention enabled');
   }
 
   /**
@@ -402,8 +426,8 @@ export class PlanManager extends EventEmitter {
 
       const operationTime = performance.now() - startTime;
 
-      // TracePilot同步
-      await this.syncToTracePilot(planId, 'plan_created', {
+      // 外部系统同步
+      await this.syncToExternalSystem(planId, 'plan_created', {
         context_id: contextId,
         name,
         priority,
@@ -550,8 +574,8 @@ export class PlanManager extends EventEmitter {
 
       const operationTime = performance.now() - startTime;
 
-      // TracePilot同步
-      await this.syncToTracePilot(planId, 'task_created', {
+      // 外部系统同步
+      await this.syncToExternalSystem(planId, 'task_created', {
         task_id: taskId,
         title,
         priority,
@@ -700,8 +724,8 @@ export class PlanManager extends EventEmitter {
 
       const operationTime = performance.now() - startTime;
 
-      // TracePilot同步
-      await this.syncToTracePilot(planId, 'dependency_resolved', {
+      // 外部系统同步
+      await this.syncToExternalSystem(planId, 'dependency_resolved', {
         dependency_id: dependencyId,
         source_task_id: sourceTaskId,
         target_task_id: targetTaskId,
@@ -780,6 +804,13 @@ export class PlanManager extends EventEmitter {
         const plan = planId ? this.plans.get(planId) : undefined;
         const failureResolverConfig = plan?.failure_resolver;
         
+        // 记录故障信息
+        logger.info('处理任务故障', {
+          task_id: taskId,
+          plan_id: planId,
+          error_message: errorMessage || 'Task execution failed'
+        });
+        
         // 应用故障解决策略
         const recoveryResult = await this.failureResolver.handleTaskFailure(
           planId,
@@ -803,12 +834,21 @@ export class PlanManager extends EventEmitter {
             retry_count: recoveryResult.retry_count
           }, taskId);
           
-          logger.info('Task failure successfully resolved', {
+          logger.info('任务故障成功解决', {
             task_id: taskId,
             plan_id: planId,
             strategy: recoveryResult.strategy_used,
             new_status: newStatus
           });
+          
+          // 同步故障恢复结果到外部系统
+          await this.syncToExternalSystem(planId, 'task_failure_resolved', {
+            task_id: taskId,
+            strategy_used: recoveryResult.strategy_used,
+            execution_time_ms: recoveryResult.execution_time_ms,
+            new_status: newStatus
+          }, taskId);
+          
         } else if (recoveryResult.intervention_required) {
           // 需要人工干预，保持失败状态但标记为需要干预
           task.metadata = {
@@ -816,6 +856,135 @@ export class PlanManager extends EventEmitter {
             intervention_required: true,
             intervention_reason: recoveryResult.error_message
           };
+          
+          // 如果有增强型追踪适配器，尝试获取恢复建议
+          if (this.traceAdapter && typeof this.failureResolver.getRecoverySuggestions === 'function') {
+            try {
+              const suggestions = await this.failureResolver.getRecoverySuggestions(recoveryResult.task_id);
+              
+              if (suggestions && suggestions.length > 0) {
+                // 将恢复建议添加到任务元数据
+                task.metadata = {
+                  ...task.metadata,
+                  recovery_suggestions: suggestions
+                };
+                
+                logger.info('获取到恢复建议', {
+                  task_id: taskId,
+                  plan_id: planId,
+                  suggestions_count: suggestions.length
+                });
+              }
+            } catch (error) {
+              logger.warn('获取恢复建议失败', {
+                task_id: taskId,
+                error: error instanceof Error ? error.message : 'Unknown error'
+              });
+            }
+          }
+          
+          // 检测相关开发问题
+          if (this.traceAdapter && typeof this.failureResolver.detectDevelopmentIssues === 'function') {
+            try {
+              // 修复：正确处理返回值结构，使用issuesResult对象而不是直接访问length属性
+              const issuesResult = await this.failureResolver.detectDevelopmentIssues();
+              
+              // 增强：添加详细日志，记录调用结果
+              logger.debug('开发问题检测结果', {
+                task_id: taskId,
+                plan_id: planId,
+                has_issues: issuesResult && issuesResult.issues && issuesResult.issues.length > 0,
+                issues_count: issuesResult?.issues?.length || 0,
+                confidence: issuesResult?.confidence || 0
+              });
+              
+              // 检查issues数组是否存在且有内容
+              if (issuesResult && issuesResult.issues && issuesResult.issues.length > 0) {
+                // 将开发问题添加到任务元数据
+                task.metadata = {
+                  ...task.metadata,
+                  development_issues: issuesResult.issues
+                };
+                
+                // 将置信度信息添加到执行上下文
+                if (!task.execution_context) {
+                  task.execution_context = {};
+                }
+                
+                if (!task.execution_context.variables) {
+                  task.execution_context.variables = {};
+                }
+                
+                // 在变量中存储置信度信息
+                (task.execution_context.variables as Record<string, unknown>).diagnostics_confidence = issuesResult.confidence;
+                
+                logger.info('检测到相关开发问题', {
+                  task_id: taskId,
+                  plan_id: planId,
+                  issues_count: issuesResult.issues.length,
+                  confidence: issuesResult.confidence,
+                  // 增强：记录问题类型分布
+                  issue_types: issuesResult.issues.reduce((acc, issue) => {
+                    acc[issue.type] = (acc[issue.type] || 0) + 1;
+                    return acc;
+                  }, {} as Record<string, number>),
+                  // 增强：记录严重程度分布
+                  severity_distribution: issuesResult.issues.reduce((acc, issue) => {
+                    acc[issue.severity] = (acc[issue.severity] || 0) + 1;
+                    return acc;
+                  }, {} as Record<string, number>)
+                });
+                
+                // 同步开发问题到外部系统
+                await this.syncToExternalSystem(planId, 'development_issues_detected', {
+                  task_id: taskId,
+                  issues_count: issuesResult.issues.length,
+                  confidence: issuesResult.confidence,
+                  issues: issuesResult.issues.map(issue => ({
+                    id: issue.id,
+                    type: issue.type,
+                    severity: issue.severity,
+                    title: issue.title,
+                    file_path: issue.file_path // 增强：包含文件路径信息
+                  }))
+                }, taskId);
+              } else {
+                // 增强：记录没有发现问题的情况
+                logger.debug('未检测到开发问题', {
+                  task_id: taskId,
+                  plan_id: planId
+                });
+              }
+            } catch (error) {
+              // 增强：更详细的错误日志
+              const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+              const errorStack = error instanceof Error ? error.stack : undefined;
+              
+              logger.warn('检测开发问题失败', {
+                task_id: taskId,
+                plan_id: planId,
+                error: errorMessage,
+                error_stack: errorStack,
+                adapter_type: this.traceAdapter.getAdapterInfo().type
+              });
+              
+              // 增强：记录错误到任务元数据
+              if (task.metadata) {
+                // 使用类型断言避免类型错误
+                (task.metadata as Record<string, unknown>).development_issues_detection_error = {
+                  message: errorMessage,
+                  timestamp: new Date().toISOString()
+                };
+              }
+              
+              // 增强：同步错误到外部系统
+              await this.syncToExternalSystem(planId, 'development_issues_detection_error', {
+                task_id: taskId,
+                error: errorMessage,
+                timestamp: new Date().toISOString()
+              }, taskId);
+            }
+          }
         }
       }
 
@@ -865,9 +1034,9 @@ export class PlanManager extends EventEmitter {
 
       const operationTime = performance.now() - startTime;
 
-      // TracePilot同步
+      // 外部系统同步
       if (planId) {
-        await this.syncToTracePilot(planId, 'task_updated', {
+        await this.syncToExternalSystem(planId, 'task_updated', {
         task_id: taskId,
         previous_status: previousStatus,
         new_status: newStatus,
@@ -913,6 +1082,482 @@ export class PlanManager extends EventEmitter {
         },
         task_id: taskId,
         plan_id: task?.plan_id || '',
+        operation_time_ms: operationTime
+      };
+    }
+  }
+
+  /**
+   * 主动预防任务故障
+   * 
+   * 在任务执行前分析潜在故障风险并采取预防措施
+   * Performance Target: <50ms
+   * 
+   * @param taskId 任务ID
+   * @returns 预防结果
+   */
+  @PerformanceMonitor('PlanManager')
+  async preventTaskFailure(taskId: UUID): Promise<TaskOperationResult<{
+    potential_failures: string[];
+    prevention_actions: string[];
+    confidence_score: number;
+  }>> {
+    const startTime = performance.now();
+
+    try {
+      const task = this.tasks.get(taskId);
+      if (!task) {
+        return {
+          success: false,
+          error: {
+            code: 'TASK_NOT_FOUND',
+            message: 'Task not found'
+          },
+          task_id: taskId,
+          plan_id: '',
+          operation_time_ms: performance.now() - startTime
+        };
+      }
+
+      const planId = task.plan_id || '';
+      const plan = planId ? this.plans.get(planId) : undefined;
+      
+      // 获取故障解决器配置
+      const failureResolverConfig = plan?.failure_resolver;
+      
+      // 如果故障解决器未启用或未配置主动预防，返回空结果
+      if (!this.config.failure_recovery_enabled || 
+          !failureResolverConfig?.proactive_prevention?.enabled) {
+        return {
+          success: true,
+          data: {
+            potential_failures: [],
+            prevention_actions: [],
+            confidence_score: 0
+          },
+          task_id: taskId,
+          plan_id: planId,
+          operation_time_ms: performance.now() - startTime
+        };
+      }
+      
+      // 执行主动故障预防
+      const preventionResult = await this.failureResolver.preventPotentialFailure(
+        planId,
+        taskId,
+        task,
+        failureResolverConfig.proactive_prevention
+      );
+      
+      const operationTime = performance.now() - startTime;
+      
+      // 如果发现潜在故障，记录到任务元数据
+      if (preventionResult.potential_failures.length > 0) {
+        // 确保metadata对象存在
+        if (!task.metadata) {
+          task.metadata = {};
+        }
+        
+        // 更新风险级别（使用已定义的字段）
+        task.metadata.risk_level = preventionResult.confidence_score > 0.7 ? 'high' : 
+                                  preventionResult.confidence_score > 0.4 ? 'medium' : 'low';
+        
+        // 将其他预防相关信息存储在自定义字段中
+        task.metadata = {
+          ...task.metadata,
+          tags: [...(task.metadata.tags || []), 'failure_prevention']
+        };
+        
+        // 将预防信息存储在执行上下文中
+        if (!task.execution_context) {
+          task.execution_context = {};
+        }
+        
+        if (!task.execution_context.variables) {
+          task.execution_context.variables = {};
+        }
+        
+        // 在变量中存储预防信息
+        (task.execution_context.variables as Record<string, unknown>).prevention_info = {
+          potential_failures: preventionResult.potential_failures,
+          prevention_actions: preventionResult.prevention_actions,
+          confidence_score: preventionResult.confidence_score,
+          timestamp: new Date().toISOString()
+        };
+        
+        this.tasks.set(taskId, task);
+        
+        // 记录到日志
+        logger.info('检测到潜在故障风险并应用预防措施', {
+          task_id: taskId,
+          plan_id: planId,
+          potential_failures: preventionResult.potential_failures,
+          prevention_actions: preventionResult.prevention_actions,
+          confidence_score: preventionResult.confidence_score
+        });
+      }
+      
+      // 外部系统同步
+      if (planId && preventionResult.potential_failures.length > 0) {
+        await this.syncToExternalSystem(planId, 'task_prevention', {
+          task_id: taskId,
+          potential_failures: preventionResult.potential_failures,
+          prevention_actions: preventionResult.prevention_actions,
+          confidence_score: preventionResult.confidence_score,
+          operation_time_ms: operationTime
+        }, taskId);
+      }
+      
+      return {
+        success: true,
+        data: {
+          potential_failures: preventionResult.potential_failures,
+          prevention_actions: preventionResult.prevention_actions,
+          confidence_score: preventionResult.confidence_score
+        },
+        task_id: taskId,
+        plan_id: planId,
+        operation_time_ms: operationTime
+      };
+      
+    } catch (error) {
+      const operationTime = performance.now() - startTime;
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const task = this.tasks.get(taskId);
+      
+      logger.error('主动故障预防失败', {
+        task_id: taskId,
+        plan_id: task?.plan_id,
+        error: errorMessage
+      });
+      
+      return {
+        success: false,
+        error: {
+          code: 'FAILURE_PREVENTION_FAILED',
+          message: errorMessage
+        },
+        task_id: taskId,
+        plan_id: task?.plan_id || '',
+        operation_time_ms: operationTime
+      };
+    }
+  }
+
+  /**
+   * 优化故障恢复策略
+   * 
+   * 基于历史数据学习最佳恢复策略
+   * Performance Target: <100ms
+   * 
+   * @param planId 计划ID
+   * @returns 优化结果
+   */
+  @PerformanceMonitor('PlanManager')
+  async optimizeFailureRecoveryStrategies(planId: UUID): Promise<PlanOperationResult<{
+    recommended_strategies: RecoveryStrategy[];
+    confidence_scores: Record<string, number>;
+    adaptation_applied: boolean;
+  }>> {
+    const startTime = performance.now();
+    
+    try {
+      const plan = this.plans.get(planId);
+      if (!plan) {
+        return {
+          success: false,
+          error: {
+            code: 'PLAN_NOT_FOUND',
+            message: 'Plan not found'
+          },
+          plan_id: planId,
+          operation_time_ms: performance.now() - startTime
+        };
+      }
+      
+      // 获取故障解决器配置
+      const failureResolverConfig = plan.failure_resolver;
+      
+      // 如果故障解决器未启用或未配置自学习，返回空结果
+      if (!this.config.failure_recovery_enabled || 
+          !failureResolverConfig?.self_learning?.enabled) {
+        return {
+          success: true,
+          data: {
+            recommended_strategies: [],
+            confidence_scores: {},
+            adaptation_applied: false
+          },
+          plan_id: planId,
+          operation_time_ms: performance.now() - startTime
+        };
+      }
+      
+      // 获取计划中的失败任务
+      const failedTasks = Array.from(this.tasks.values())
+        .filter(task => task.plan_id === planId && task.status === 'failed');
+      
+      // 如果没有失败任务，使用最近的任务
+      const targetTask = failedTasks.length > 0 ? 
+        failedTasks[0] : 
+        Array.from(this.tasks.values())
+          .filter(task => task.plan_id === planId)
+          .sort((a, b) => {
+            const aTime = a.updated_at || a.created_at || '';
+            const bTime = b.updated_at || b.created_at || '';
+            return new Date(bTime).getTime() - new Date(aTime).getTime();
+          })[0];
+      
+      if (!targetTask) {
+        return {
+          success: true,
+          data: {
+            recommended_strategies: [],
+            confidence_scores: {},
+            adaptation_applied: false
+          },
+          plan_id: planId,
+          operation_time_ms: performance.now() - startTime
+        };
+      }
+      
+      // 执行自学习恢复优化
+      const learningResult = await this.failureResolver.learnAndOptimizeRecovery(
+        targetTask.task_id,
+        targetTask,
+        targetTask.error_message || 'Unknown error',
+        failureResolverConfig.self_learning
+      );
+      
+      const operationTime = performance.now() - startTime;
+      
+      // 如果有推荐策略，更新计划的故障解决器配置
+      if (learningResult.recommended_strategies.length > 0 && learningResult.adaptation_applied) {
+        // 更新计划的故障解决器策略
+        if (plan.failure_resolver) {
+          plan.failure_resolver.strategies = learningResult.recommended_strategies;
+          this.plans.set(planId, plan);
+          
+          logger.info('已优化故障恢复策略', {
+            plan_id: planId,
+            recommended_strategies: learningResult.recommended_strategies,
+            top_confidence: learningResult.confidence_scores[learningResult.recommended_strategies[0]]
+          });
+        }
+      }
+      
+      // 外部系统同步
+      await this.syncToExternalSystem(planId, 'recovery_optimization', {
+        recommended_strategies: learningResult.recommended_strategies,
+        confidence_scores: learningResult.confidence_scores,
+        adaptation_applied: learningResult.adaptation_applied,
+        operation_time_ms: operationTime
+      });
+      
+      return {
+        success: true,
+        data: {
+          recommended_strategies: learningResult.recommended_strategies,
+          confidence_scores: learningResult.confidence_scores,
+          adaptation_applied: learningResult.adaptation_applied
+        },
+        plan_id: planId,
+        operation_time_ms: operationTime
+      };
+      
+    } catch (error) {
+      const operationTime = performance.now() - startTime;
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      
+      logger.error('故障恢复策略优化失败', {
+        plan_id: planId,
+        error: errorMessage
+      });
+      
+      return {
+        success: false,
+        error: {
+          code: 'RECOVERY_OPTIMIZATION_FAILED',
+          message: errorMessage
+        },
+        plan_id: planId,
+        operation_time_ms: operationTime
+      };
+    }
+  }
+
+  /**
+   * 启用主动故障预防
+   * 
+   * @param planId 计划ID
+   * @param config 预防配置
+   * @returns 操作结果
+   */
+  @PerformanceMonitor('PlanManager')
+  async enableProactiveFailurePrevention(
+    planId: UUID,
+    config?: Partial<ProactiveFailurePrevention>
+  ): Promise<PlanOperationResult<boolean>> {
+    const startTime = performance.now();
+    
+    try {
+      const plan = this.plans.get(planId);
+      if (!plan) {
+        return {
+          success: false,
+          error: {
+            code: 'PLAN_NOT_FOUND',
+            message: 'Plan not found'
+          },
+          plan_id: planId,
+          operation_time_ms: performance.now() - startTime
+        };
+      }
+      
+      // 确保故障解决器存在
+      if (!plan.failure_resolver) {
+        plan.failure_resolver = this.createDefaultFailureResolver();
+      }
+      
+      // 更新主动预防配置
+      plan.failure_resolver.proactive_prevention = {
+        enabled: true,
+        prediction_confidence_threshold: 0.7,
+        auto_prevention_enabled: false,
+        prevention_strategies: ['resource_scaling', 'dependency_prefetch', 'early_checkpoint'],
+        monitoring_interval_ms: 5000,
+        ...config
+      };
+      
+      this.plans.set(planId, plan);
+      
+      const operationTime = performance.now() - startTime;
+      
+      logger.info('已启用主动故障预防', {
+        plan_id: planId,
+        auto_prevention: plan.failure_resolver.proactive_prevention.auto_prevention_enabled,
+        strategies: plan.failure_resolver.proactive_prevention.prevention_strategies
+      });
+      
+      // 外部系统同步
+      await this.syncToExternalSystem(planId, 'prevention_enabled', {
+        config: plan.failure_resolver.proactive_prevention,
+        operation_time_ms: operationTime
+      });
+      
+      return {
+        success: true,
+        data: true,
+        plan_id: planId,
+        operation_time_ms: operationTime
+      };
+      
+    } catch (error) {
+      const operationTime = performance.now() - startTime;
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      
+      logger.error('启用主动故障预防失败', {
+        plan_id: planId,
+        error: errorMessage
+      });
+      
+      return {
+        success: false,
+        error: {
+          code: 'ENABLE_PREVENTION_FAILED',
+          message: errorMessage
+        },
+        plan_id: planId,
+        operation_time_ms: operationTime
+      };
+    }
+  }
+
+  /**
+   * 启用自学习恢复机制
+   * 
+   * @param planId 计划ID
+   * @param config 学习配置
+   * @returns 操作结果
+   */
+  @PerformanceMonitor('PlanManager')
+  async enableSelfLearningRecovery(
+    planId: UUID,
+    config?: Partial<SelfLearningRecovery>
+  ): Promise<PlanOperationResult<boolean>> {
+    const startTime = performance.now();
+    
+    try {
+      const plan = this.plans.get(planId);
+      if (!plan) {
+        return {
+          success: false,
+          error: {
+            code: 'PLAN_NOT_FOUND',
+            message: 'Plan not found'
+          },
+          plan_id: planId,
+          operation_time_ms: performance.now() - startTime
+        };
+      }
+      
+      // 确保故障解决器存在
+      if (!plan.failure_resolver) {
+        plan.failure_resolver = this.createDefaultFailureResolver();
+      }
+      
+      // 更新自学习配置
+      plan.failure_resolver.self_learning = {
+        enabled: true,
+        learning_mode: 'passive',
+        min_samples_required: 10,
+        adaptation_rate: 0.1,
+        strategy_effectiveness_metrics: ['success_rate', 'recovery_time'],
+        ...config
+      };
+      
+      this.plans.set(planId, plan);
+      
+      // 更新故障解决器的自学习配置
+      this.failureResolver.updateSelfLearningConfig(plan.failure_resolver.self_learning);
+      
+      const operationTime = performance.now() - startTime;
+      
+      logger.info('已启用自学习恢复机制', {
+        plan_id: planId,
+        learning_mode: plan.failure_resolver.self_learning.learning_mode,
+        adaptation_rate: plan.failure_resolver.self_learning.adaptation_rate
+      });
+      
+      // 外部系统同步
+      await this.syncToExternalSystem(planId, 'self_learning_enabled', {
+        config: plan.failure_resolver.self_learning,
+        operation_time_ms: operationTime
+      });
+      
+      return {
+        success: true,
+        data: true,
+        plan_id: planId,
+        operation_time_ms: operationTime
+      };
+      
+    } catch (error) {
+      const operationTime = performance.now() - startTime;
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      
+      logger.error('启用自学习恢复机制失败', {
+        plan_id: planId,
+        error: errorMessage
+      });
+      
+      return {
+        success: false,
+        error: {
+          code: 'ENABLE_SELF_LEARNING_FAILED',
+          message: errorMessage
+        },
+        plan_id: planId,
         operation_time_ms: operationTime
       };
     }
@@ -1217,18 +1862,19 @@ export class PlanManager extends EventEmitter {
   }
 
   /**
-   * TracePilot同步
+   * 外部系统同步 - 厂商中立实现
    */
-  private async syncToTracePilot(
+  private async syncToExternalSystem(
     planId: UUID,
     eventType: string,
     data: Record<string, unknown>,
     taskId?: UUID
   ): Promise<void> {
-    if (!this.tracePilotAdapter) return;
+    if (!this.traceAdapter) return;
 
     try {
-      await this.tracePilotAdapter.syncTraceData({
+      // 创建标准的追踪数据
+      const traceData: MPLPTraceData = {
         protocol_version: PLAN_CONSTANTS.PROTOCOL_VERSION,
         trace_id: `plan-${planId}-${taskId || 'plan'}-${Date.now()}`,
         context_id: planId,
@@ -1261,7 +1907,7 @@ export class PlanManager extends EventEmitter {
           plan_id: planId,
           task_id: taskId || 'none'
         },
-        tracepilot_metadata: {
+        adapter_metadata: {
           agent_id: 'plan-manager',
           session_id: planId,
           operation_complexity: 'medium',
@@ -1273,13 +1919,88 @@ export class PlanManager extends EventEmitter {
             required_events: ['trace_start', 'trace_end']
           }
         }
-      });
+      };
+
+      // 使用通用适配器接口同步数据
+      const syncResult = await this.traceAdapter.syncTraceData(traceData);
+      
+      if (!syncResult.success) {
+        logger.warn('追踪数据同步失败', {
+          module: 'Plan',
+          event_type: eventType,
+          errors: syncResult.errors
+        });
+      }
+      
+      // 如果是任务失败相关事件，使用通用接口处理
+      if (eventType === 'task_failure' || eventType === 'task_failure_resolved') {
+        if (eventType === 'task_failure' && taskId) {
+          // 使用通用接口报告故障，不依赖特定厂商实现
+          await this.traceAdapter.reportFailure({
+            failure_id: `failure-${taskId}-${Date.now()}`,
+            task_id: taskId,
+            plan_id: planId,
+            failure_type: data.failure_type as string || 'task_execution_failure',
+            failure_details: data,
+            timestamp: new Date().toISOString(),
+            recovery_suggestions: data.recovery_suggestions as string[] || []
+          });
+          
+          // 记录性能指标
+          this.recordPerformanceMetrics({
+            'trace_sync_latency': syncResult.latency_ms,
+            'failure_report_time': Date.now()
+          });
+        }
+      }
+      
+      // 批量处理优化 - 如果有批处理队列，添加到队列
+      if (this.traceBatchQueue && this.traceBatchQueue.length < this.batchLimit) {
+        this.traceBatchQueue.push(traceData);
+      }
+      
+      // 如果队列达到阈值，执行批量同步
+      if (this.traceBatchQueue && this.traceBatchQueue.length >= this.batchLimit) {
+        this.processBatchQueue();
+      }
     } catch (error) {
-      logger.warn('TracePilot同步失败', {
+      logger.warn('外部系统同步失败', {
         module: 'Plan',
         plan_id: planId,
         task_id: taskId,
         event_type: eventType,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  }
+
+  /**
+   * 处理批量追踪队列
+   * 厂商中立实现 - 使用通用接口
+   */
+  private async processBatchQueue(): Promise<void> {
+    if (!this.traceAdapter || !this.traceBatchQueue || this.traceBatchQueue.length === 0) return;
+    
+    try {
+      const batchToProcess = [...this.traceBatchQueue];
+      this.traceBatchQueue = [];
+      
+      // 使用通用批量同步接口
+      const batchResult = await this.traceAdapter.syncBatch(batchToProcess);
+      
+      if (!batchResult.success) {
+        logger.warn('批量追踪同步失败', {
+          count: batchToProcess.length,
+          errors: batchResult.errors
+        });
+      } else {
+        logger.debug('批量追踪同步成功', {
+          count: batchToProcess.length,
+          latency_ms: batchResult.latency_ms
+        });
+      }
+    } catch (error) {
+      logger.error('批量追踪处理错误', {
         error: error instanceof Error ? error.message : 'Unknown error'
       });
     }
@@ -1304,7 +2025,7 @@ export class PlanManager extends EventEmitter {
       metadata: {
         source: 'plan_manager',
         severity: 'info',
-        tracepilot_synced: !!this.tracePilotAdapter
+        external_synced: !!this.traceAdapter
       }
     };
 
@@ -1373,22 +2094,19 @@ export class PlanManager extends EventEmitter {
   ): Promise<void> {
     logger.info(`Notification [${channel}]: ${message}`, { data });
     
-    // 如果有TracePilot适配器，记录通知
-    if (this.tracePilotAdapter && channel !== 'console') {
-      // 使用emit事件而不是直接调用不存在的方法
-      this.emit('notification', {
-        channel,
-        message,
-        data,
-        timestamp: new Date().toISOString()
-      });
-      
-      // 记录到日志
-      logger.info(`TracePilot notification: ${message}`, {
-        channel,
-        data
-      });
-    }
+    // 通用通知处理
+    this.emit('notification', {
+      channel,
+      message,
+      data,
+      timestamp: new Date().toISOString()
+    });
+    
+    // 记录到日志
+    logger.info(`Notification: ${message}`, {
+      channel,
+      data
+    });
   }
   
   /**
@@ -1408,16 +2126,13 @@ export class PlanManager extends EventEmitter {
     // 在实际实现中，这里应该发送通知给用户界面或其他系统
     // 并等待响应。这里我们简单地模拟一个异步响应
     
-    // 如果有TracePilot适配器，通过事件通知
-    if (this.tracePilotAdapter) {
-      // 发出事件而不是调用不存在的方法
-      this.emit('manual_intervention_needed', {
-        task_id: taskId,
-        plan_id: planId,
-        reason,
-        timestamp: new Date().toISOString()
-      });
-    }
+    // 通过事件通知
+    this.emit('manual_intervention_needed', {
+      task_id: taskId,
+      plan_id: planId,
+      reason,
+      timestamp: new Date().toISOString()
+    });
     
     // 默认情况下，我们假设干预被批准
     return Promise.resolve(true);
@@ -1545,6 +2260,18 @@ export class PlanManager extends EventEmitter {
   }
 
   /**
+   * 启动批处理队列
+   */
+  private startBatchProcessing(): void {
+    if (this.batchProcessingInterval) {
+      clearInterval(this.batchProcessingInterval);
+    }
+    this.batchProcessingInterval = setInterval(() => {
+      this.processBatchQueue();
+    }, 1000); // 每秒处理一次批量队列
+  }
+
+  /**
    * 获取模块统计信息
    */
   getModuleStats(): {
@@ -1608,5 +2335,751 @@ export class PlanManager extends EventEmitter {
       retry_attempts: retryAttempts,
       recovery_success_rate: recoverySuccessRate
     };
+  }
+
+  /**
+   * 设置角色管理器
+   * 
+   * @param roleManager 角色管理器实例
+   */
+  setRoleManager(roleManager: IRoleManager): void {
+    this.roleManager = roleManager;
+    logger.info('RoleManager connected to PlanManager');
+  }
+  
+  /**
+   * 设置上下文管理器
+   * 
+   * @param contextManager 上下文管理器实例
+   */
+  setContextManager(contextManager: IContextManager): void {
+    this.contextManager = contextManager;
+    logger.info('ContextManager connected to PlanManager');
+  }
+  
+  /**
+   * 设置追踪服务
+   * 
+   * @param traceService 追踪服务实例
+   */
+  setTraceService(traceService: any): void {
+    this.traceService = traceService;
+    logger.info('TraceService connected to PlanManager');
+  }
+  
+  /**
+   * 检查用户是否有执行计划的权限
+   * 
+   * @param userId 用户ID
+   * @param planId 计划ID
+   * @returns Promise<boolean> 是否有权限
+   */
+  async checkExecutePermission(userId: string, planId: string): Promise<boolean> {
+    if (!this.roleManager) {
+      logger.warn('RoleManager not connected, skipping permission check');
+      return true; // 如果没有设置角色管理器，默认允许
+    }
+    
+    // 获取计划信息，以便获取上下文ID
+    const plan = this.plans.get(planId);
+    if (!plan) {
+      throw new Error(`Plan not found: ${planId}`);
+    }
+    
+    // 检查权限
+    const permissionResult = await this.roleManager.checkPermission({
+      user_id: userId,
+      resource: 'plan',
+      action: 'execute',
+      context_id: plan.context_id,
+      resource_id: planId
+    });
+    
+    if (!permissionResult.granted) {
+      logger.warn(`Permission denied: User ${userId} cannot execute plan ${planId}`, {
+        reason: permissionResult.reason
+      });
+      return false;
+    }
+    
+    return true;
+  }
+  
+  /**
+   * 检查用户是否有更新计划的权限
+   * 
+   * @param userId 用户ID
+   * @param planId 计划ID
+   * @returns Promise<boolean> 是否有权限
+   */
+  async checkUpdatePermission(userId: string, planId: string): Promise<boolean> {
+    if (!this.roleManager) {
+      logger.warn('RoleManager not connected, skipping permission check');
+      return true; // 如果没有设置角色管理器，默认允许
+    }
+    
+    // 获取计划信息，以便获取上下文ID
+    const plan = this.plans.get(planId);
+    if (!plan) {
+      throw new Error(`Plan not found: ${planId}`);
+    }
+    
+    // 检查权限
+    const permissionResult = await this.roleManager.checkPermission({
+      user_id: userId,
+      resource: 'plan',
+      action: 'write',
+      context_id: plan.context_id,
+      resource_id: planId
+    });
+    
+    if (!permissionResult.granted) {
+      logger.warn(`Permission denied: User ${userId} cannot update plan ${planId}`, {
+        reason: permissionResult.reason
+      });
+      return false;
+    }
+    
+    return true;
+  }
+  
+  /**
+   * 检查用户是否有删除计划的权限
+   * 
+   * @param userId 用户ID
+   * @param planId 计划ID
+   * @returns Promise<boolean> 是否有权限
+   */
+  async checkDeletePermission(userId: string, planId: string): Promise<boolean> {
+    if (!this.roleManager) {
+      logger.warn('RoleManager not connected, skipping permission check');
+      return true; // 如果没有设置角色管理器，默认允许
+    }
+    
+    // 获取计划信息，以便获取上下文ID
+    const plan = this.plans.get(planId);
+    if (!plan) {
+      throw new Error(`Plan not found: ${planId}`);
+    }
+    
+    // 检查权限
+    const permissionResult = await this.roleManager.checkPermission({
+      user_id: userId,
+      resource: 'plan',
+      action: 'delete',
+      context_id: plan.context_id,
+      resource_id: planId
+    });
+    
+    if (!permissionResult.granted) {
+      logger.warn(`Permission denied: User ${userId} cannot delete plan ${planId}`, {
+        reason: permissionResult.reason
+      });
+      return false;
+    }
+    
+    return true;
+  }
+  
+  // 添加一个方法来记录用户操作的审计日志
+  private async recordAuditLog(userId: string, action: string, planId: string, details: Record<string, unknown>): Promise<void> {
+    if (this.traceService) {
+      try {
+        const plan = this.plans.get(planId);
+        if (!plan) return;
+        
+        await this.traceService.recordTrace({
+          trace_id: uuidv4(),
+          context_id: plan.context_id,
+          operation: `plan_${action}`,
+          user_id: userId,
+          timestamp: new Date().toISOString(),
+          data: {
+            plan_id: planId,
+            ...details
+          },
+          metadata: {
+            source: 'PlanManager',
+            type: 'audit_log'
+          }
+        });
+      } catch (error) {
+        logger.error('Failed to record audit log', { error });
+      }
+    }
+  }
+
+  /**
+   * 批量添加任务
+   * 
+   * @param planId 计划ID
+   * @param tasks 任务列表
+   * @returns 批量操作结果
+   */
+  async batchAddTasks(
+    planId: UUID,
+    tasks: Array<{
+      title: string;
+      description: string;
+      priority?: TaskPriority;
+      assigneeId?: string;
+      parentTaskId?: string;
+      estimated_duration?: {
+        value: number;
+        unit: 'minutes' | 'hours' | 'days' | 'weeks';
+      };
+      metadata?: Record<string, unknown>;
+    }>
+  ): Promise<BatchOperationResult<Task>> {
+    const startTime = performance.now();
+    const results: { success: boolean; data?: Task; error?: any }[] = [];
+    let successCount = 0;
+    let failureCount = 0;
+
+    try {
+      // 验证计划存在
+      const planResult = await this.getPlan(planId);
+      if (!planResult.success || !planResult.data) {
+        return {
+          success: false,
+          error: {
+            message: `Plan not found: ${planId}`,
+            code: 'PLAN_NOT_FOUND'
+          },
+          results: [],
+          summary: {
+            total: tasks.length,
+            successful: 0,
+            failed: tasks.length
+          },
+          execution_time_ms: performance.now() - startTime
+        };
+      }
+
+      const plan = planResult.data;
+      
+      // 检查计划状态
+      if (['completed', 'cancelled', 'failed'].includes(plan.status)) {
+        return {
+          success: false,
+          error: {
+            message: `Cannot add tasks to ${plan.status} plan`,
+            code: 'INVALID_PLAN_STATUS'
+          },
+          results: [],
+          summary: {
+            total: tasks.length,
+            successful: 0,
+            failed: tasks.length
+          },
+          execution_time_ms: performance.now() - startTime
+        };
+      }
+
+      // 批量添加任务
+      for (const taskData of tasks) {
+        try {
+          const result = await this.addTask(
+            planId,
+            taskData.title,
+            taskData.description,
+            taskData.priority || 'medium',
+            taskData.assigneeId,
+            taskData.parentTaskId
+          );
+
+          // 如果有额外的元数据或估计时长，更新任务
+          if (result.success && result.data && (taskData.metadata || taskData.estimated_duration)) {
+            const task = this.tasks.get(result.data.task_id);
+            if (task) {
+              if (taskData.metadata) {
+                task.metadata = { ...task.metadata, ...taskData.metadata };
+              }
+              if (taskData.estimated_duration) {
+                // 将估计时间信息保存在自定义属性中
+                task.metadata = {
+                  ...task.metadata,
+                  // 使用现有的合法属性
+                  complexity_score: taskData.estimated_duration.value, // 用复杂度分数存储值
+                  category: `duration_${taskData.estimated_duration.unit}` // 使用类别字段存储单位信息
+                };
+                
+                // 如果任务支持 estimated_effort，则也设置该字段
+                if (task.estimated_effort === undefined) {
+                  task.estimated_effort = {
+                    value: taskData.estimated_duration.value,
+                    unit: taskData.estimated_duration.unit === 'minutes' || 
+                          taskData.estimated_duration.unit === 'hours' ? 
+                          'hours' : 'days'
+                  };
+                }
+              }
+              this.tasks.set(task.task_id, task);
+            }
+          }
+
+          results.push(result);
+          if (result.success) {
+            successCount++;
+          } else {
+            failureCount++;
+          }
+        } catch (error) {
+          results.push({
+            success: false,
+            error: {
+              message: error instanceof Error ? error.message : String(error),
+              code: 'TASK_CREATION_ERROR'
+            }
+          });
+          failureCount++;
+        }
+      }
+
+      // 更新计划进度
+      await this.updatePlanProgress(planId);
+
+      // 发送批量任务创建事件
+      this.emitPlanEvent('plan_updated', planId, {
+        action: 'batch_tasks_added',
+        task_count: tasks.length,
+        success_count: successCount,
+        failure_count: failureCount
+      });
+
+      // 同步到外部系统
+      await this.syncToExternalSystem(planId, 'batch_tasks_added', {
+        task_count: tasks.length,
+        success_count: successCount,
+        failure_count: failureCount
+      });
+
+      return {
+        success: successCount > 0,
+        results,
+        summary: {
+          total: tasks.length,
+          successful: successCount,
+          failed: failureCount
+        },
+        execution_time_ms: performance.now() - startTime
+      };
+    } catch (error) {
+      logger.error('Failed to batch add tasks', {
+        plan_id: planId,
+        task_count: tasks.length,
+        error
+      });
+
+      return {
+        success: false,
+        error: {
+          message: error instanceof Error ? error.message : String(error),
+          code: 'BATCH_OPERATION_ERROR'
+        },
+        results,
+        summary: {
+          total: tasks.length,
+          successful: successCount,
+          failed: failureCount + (tasks.length - successCount - failureCount)
+        },
+        execution_time_ms: performance.now() - startTime
+      };
+    }
+  }
+
+  /**
+   * 批量添加依赖关系
+   * 
+   * @param dependencies 依赖关系列表
+   * @returns 批量操作结果
+   */
+  async batchAddDependencies(
+    dependencies: Array<{
+      sourceTaskId: UUID;
+      targetTaskId: UUID;
+      dependencyType?: DependencyType;
+      condition?: string;
+    }>
+  ): Promise<BatchOperationResult<TaskDependency>> {
+    const startTime = performance.now();
+    const results: { success: boolean; data?: TaskDependency; error?: any }[] = [];
+    let successCount = 0;
+    let failureCount = 0;
+    let planId: UUID | null = null;
+
+    try {
+      // 批量添加依赖
+      for (const dep of dependencies) {
+        try {
+          const result = await this.addDependency(
+            dep.sourceTaskId,
+            dep.targetTaskId,
+            dep.dependencyType || 'finish_to_start',
+            dep.condition
+          );
+
+          results.push(result);
+          if (result.success) {
+            successCount++;
+            // 记录计划ID用于后续更新
+            if (!planId && result.data) {
+              const sourceTask = this.tasks.get(dep.sourceTaskId);
+              if (sourceTask && sourceTask.plan_id) {
+                planId = sourceTask.plan_id;
+              }
+            }
+          } else {
+            failureCount++;
+          }
+        } catch (error) {
+          results.push({
+            success: false,
+            error: {
+              message: error instanceof Error ? error.message : String(error),
+              code: 'DEPENDENCY_CREATION_ERROR'
+            }
+          });
+          failureCount++;
+        }
+      }
+
+      // 如果找到了计划ID，更新依赖图
+      if (planId) {
+        // 重建依赖图
+        const plan = this.plans.get(planId);
+        if (plan) {
+          // plan.tasks 是任务ID数组，而不是任务对象
+          const taskIds = Array.isArray(plan.task_ids) ? plan.task_ids : 
+                        (Array.isArray(plan.tasks) ? plan.tasks : []);
+          
+          // 获取任务对象
+          const tasks = taskIds
+            .map(taskId => typeof taskId === 'string' ? this.tasks.get(taskId) : null)
+            .filter(Boolean) as PlanTask[];
+          
+          // 收集所有依赖关系
+          const deps = tasks.flatMap(task => {
+            // 确保 dependencies 存在且是数组
+            const dependencies = Array.isArray(task.dependencies) ? task.dependencies : [];
+            return dependencies
+              .map(depId => this.dependencies.get(depId))
+              .filter(Boolean);
+          }) as PlanDependency[];
+          
+          // 更新依赖图
+          const graph = this.buildDependencyGraph(tasks, deps);
+          this.dependencyGraphs.set(planId, graph);
+          
+          // 检查循环依赖
+          if (graph.cycles.length > 0) {
+            logger.warn('Circular dependencies detected in plan', {
+              plan_id: planId,
+              cycles: graph.cycles
+            });
+          }
+          
+          // 发送事件
+          this.emitPlanEvent('plan_updated', planId, {
+            action: 'dependency_graph_updated',
+            has_cycles: graph.cycles.length > 0
+          });
+        }
+      }
+
+      return {
+        success: successCount > 0,
+        results,
+        summary: {
+          total: dependencies.length,
+          successful: successCount,
+          failed: failureCount
+        },
+        execution_time_ms: performance.now() - startTime
+      };
+    } catch (error) {
+      logger.error('Failed to batch add dependencies', {
+        dependency_count: dependencies.length,
+        error
+      });
+
+      return {
+        success: false,
+        error: {
+          message: error instanceof Error ? error.message : String(error),
+          code: 'BATCH_OPERATION_ERROR'
+        },
+        results,
+        summary: {
+          total: dependencies.length,
+          successful: successCount,
+          failed: failureCount + (dependencies.length - successCount - failureCount)
+        },
+        execution_time_ms: performance.now() - startTime
+      };
+    }
+  }
+
+  /**
+   * 批量更新任务状态
+   * 
+   * @param updates 状态更新列表
+   * @returns 批量操作结果
+   */
+  async batchUpdateTaskStatus(
+    updates: Array<{
+      taskId: UUID;
+      status: TaskStatus;
+      resultData?: unknown;
+      errorMessage?: string;
+    }>
+  ): Promise<BatchOperationResult<Task>> {
+    const startTime = performance.now();
+    const results: { success: boolean; data?: Task; error?: any }[] = [];
+    let successCount = 0;
+    let failureCount = 0;
+    const affectedPlans = new Set<UUID>();
+
+    try {
+      // 批量更新状态
+      for (const update of updates) {
+        try {
+          const result = await this.updateTaskStatus(
+            update.taskId,
+            update.status,
+            update.resultData,
+            update.errorMessage
+          );
+
+          results.push(result);
+          if (result.success && result.data) {
+            successCount++;
+            // 记录受影响的计划
+            const task = this.tasks.get(update.taskId);
+            if (task && task.plan_id) {
+              affectedPlans.add(task.plan_id);
+            }
+          } else {
+            failureCount++;
+          }
+        } catch (error) {
+          results.push({
+            success: false,
+            error: {
+              message: error instanceof Error ? error.message : String(error),
+              code: 'STATUS_UPDATE_ERROR'
+            }
+          });
+          failureCount++;
+        }
+      }
+
+      // 更新受影响计划的进度
+      for (const planId of affectedPlans) {
+        await this.updatePlanProgress(planId);
+        
+        // 发送批量更新事件
+        this.emitPlanEvent('plan_updated', planId, {
+          action: 'batch_status_updated',
+          update_count: updates.length,
+          success_count: successCount,
+          failure_count: failureCount
+        });
+      }
+
+      return {
+        success: successCount > 0,
+        results,
+        summary: {
+          total: updates.length,
+          successful: successCount,
+          failed: failureCount
+        },
+        execution_time_ms: performance.now() - startTime
+      };
+    } catch (error) {
+      logger.error('Failed to batch update task status', {
+        update_count: updates.length,
+        error
+      });
+
+      return {
+        success: false,
+        error: {
+          message: error instanceof Error ? error.message : String(error),
+          code: 'BATCH_OPERATION_ERROR'
+        },
+        results,
+        summary: {
+          total: updates.length,
+          successful: successCount,
+          failed: failureCount + (updates.length - successCount - failureCount)
+        },
+        execution_time_ms: performance.now() - startTime
+      };
+    }
+  }
+
+  /**
+   * 构建依赖图
+   * 
+   * @param tasks 任务列表
+   * @param dependencies 依赖关系列表
+   * @returns 依赖图
+   */
+  private buildDependencyGraph(tasks: PlanTask[], dependencies: PlanDependency[]): TaskDependencyGraph {
+    const graph: TaskDependencyGraph = {
+      nodes: tasks.map(task => task.task_id),
+      edges: dependencies,
+      entry_points: [],
+      exit_points: [],
+      critical_path: [],
+      cycles: []
+    };
+    
+    // 找出入口点（没有前置依赖的任务）
+    const hasDependents = new Set<UUID>();
+    dependencies.forEach(dep => hasDependents.add(dep.target_task_id));
+    graph.entry_points = tasks
+      .filter(task => !hasDependents.has(task.task_id))
+      .map(task => task.task_id);
+    
+    // 找出出口点（没有后续任务的任务）
+    const hasDependencies = new Set<UUID>();
+    dependencies.forEach(dep => hasDependencies.add(dep.source_task_id));
+    graph.exit_points = tasks
+      .filter(task => !hasDependencies.has(task.task_id))
+      .map(task => task.task_id);
+    
+    // 检测循环依赖
+    graph.cycles = this.detectCycles(tasks, dependencies);
+    
+    // 计算关键路径（简化版本）
+    if (graph.cycles.length === 0) {
+      graph.critical_path = this.calculateCriticalPath(tasks, dependencies);
+    }
+    
+    return graph;
+  }
+
+  /**
+   * 检测循环依赖
+   * 
+   * @param tasks 任务列表
+   * @param dependencies 依赖关系列表
+   * @returns 循环依赖列表
+   */
+  private detectCycles(tasks: PlanTask[], dependencies: PlanDependency[]): UUID[][] {
+    const cycles: UUID[][] = [];
+    
+    // 构建邻接表
+    const adjacencyList = new Map<UUID, UUID[]>();
+    tasks.forEach(task => {
+      adjacencyList.set(task.task_id, []);
+    });
+    
+    dependencies.forEach(dep => {
+      const targets = adjacencyList.get(dep.source_task_id) || [];
+      targets.push(dep.target_task_id);
+      adjacencyList.set(dep.source_task_id, targets);
+    });
+    
+    // DFS检测循环
+    const visited = new Set<UUID>();
+    const recursionStack = new Set<UUID>();
+    
+    const dfs = (nodeId: UUID, path: UUID[] = []): boolean => {
+      if (recursionStack.has(nodeId)) {
+        // 找到循环
+        const cycleStart = path.indexOf(nodeId);
+        if (cycleStart >= 0) {
+          cycles.push(path.slice(cycleStart).concat(nodeId));
+        }
+        return true;
+      }
+      
+      if (visited.has(nodeId)) {
+        return false;
+      }
+      
+      visited.add(nodeId);
+      recursionStack.add(nodeId);
+      path.push(nodeId);
+      
+      const neighbors = adjacencyList.get(nodeId) || [];
+      for (const neighbor of neighbors) {
+        if (dfs(neighbor, [...path])) {
+          return true;
+        }
+      }
+      
+      recursionStack.delete(nodeId);
+      return false;
+    };
+    
+    // 对每个节点运行DFS
+    tasks.forEach(task => {
+      if (!visited.has(task.task_id)) {
+        dfs(task.task_id);
+      }
+    });
+    
+    return cycles;
+  }
+
+  /**
+   * 计算关键路径
+   * 
+   * @param tasks 任务列表
+   * @param dependencies 依赖关系列表
+   * @returns 关键路径
+   */
+  private calculateCriticalPath(tasks: PlanTask[], dependencies: PlanDependency[]): UUID[] {
+    // 简化版本的关键路径计算
+    // 在实际项目中，这里应该实现一个完整的关键路径算法
+    // 例如使用拓扑排序和最长路径算法
+    
+    // 这里只是一个示例实现
+    const entryPoints = this.findEntryPoints(tasks, dependencies);
+    const exitPoints = this.findExitPoints(tasks, dependencies);
+    
+    if (entryPoints.length === 0 || exitPoints.length === 0) {
+      return [];
+    }
+    
+    // 简单起见，返回第一个入口点到第一个出口点的路径
+    return [entryPoints[0], exitPoints[0]];
+  }
+
+  /**
+   * 查找入口点
+   * 
+   * @param tasks 任务列表
+   * @param dependencies 依赖关系列表
+   * @returns 入口点列表
+   */
+  private findEntryPoints(tasks: PlanTask[], dependencies: PlanDependency[]): UUID[] {
+    const hasDependents = new Set<UUID>();
+    dependencies.forEach(dep => hasDependents.add(dep.target_task_id));
+    
+    return tasks
+      .filter(task => !hasDependents.has(task.task_id))
+      .map(task => task.task_id);
+  }
+
+  /**
+   * 查找出口点
+   * 
+   * @param tasks 任务列表
+   * @param dependencies 依赖关系列表
+   * @returns 出口点列表
+   */
+  private findExitPoints(tasks: PlanTask[], dependencies: PlanDependency[]): UUID[] {
+    const hasDependencies = new Set<UUID>();
+    dependencies.forEach(dep => hasDependencies.add(dep.source_task_id));
+    
+    return tasks
+      .filter(task => !hasDependencies.has(task.task_id))
+      .map(task => task.task_id);
   }
 } 

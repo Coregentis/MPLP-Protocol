@@ -488,6 +488,313 @@ export class ContextManager extends EventEmitter {
     }
   }
 
+  /**
+   * 更新上下文共享状态
+   * 
+   * @param contextId 上下文ID
+   * @param path 状态路径，使用点表示法，如"variables.user.preferences"
+   * @param value 状态值
+   * @param userId 用户ID
+   * @returns 操作结果
+   */
+  public async updateSharedState(
+    contextId: UUID,
+    path: string,
+    value: unknown,
+    userId?: string
+  ): Promise<ContextOperationResult<void>> {
+    this.ensureInitialized();
+    
+    const startTime = Date.now();
+    
+    try {
+      // 1. 获取当前上下文
+      const contextResult = await this.contextService.getContext(contextId);
+      if (!contextResult.success || !contextResult.data) {
+        return {
+          success: false,
+          error: contextResult.error,
+          execution_time_ms: Date.now() - startTime
+        };
+      }
+      
+      const context = contextResult.data;
+      
+      // 2. 检查上下文状态
+      if (context.status === 'terminated') {
+        return {
+          success: false,
+          error: new ValidationError('Cannot update shared state of terminated context'),
+          execution_time_ms: Date.now() - startTime
+        };
+      }
+      
+      // 3. 检查用户权限
+      if (userId) {
+        const hasPermission = this.checkWritePermission(context, userId, path);
+        if (!hasPermission) {
+          return {
+            success: false,
+            error: new AccessDeniedError('User does not have permission to update this state path'),
+            execution_time_ms: Date.now() - startTime
+          };
+        }
+      }
+      
+      // 4. 解析路径
+      const pathParts = path.split('.');
+      const rootProperty = pathParts[0];
+      
+      // 5. 验证路径有效性
+      if (!['variables', 'resources', 'dependencies', 'goals'].includes(rootProperty)) {
+        return {
+          success: false,
+          error: new ValidationError(`Invalid shared state root property: ${rootProperty}`),
+          execution_time_ms: Date.now() - startTime
+        };
+      }
+      
+      // 6. 创建更新请求
+      const updateRequest: UpdateContextRequest = {
+        context_id: contextId
+      };
+      
+      // 7. 根据路径设置值
+      if (pathParts.length === 1) {
+        // 更新整个根属性
+        updateRequest.shared_state = {
+          [rootProperty]: value
+        } as Partial<SharedState>;
+      } else {
+        // 更新嵌套属性
+        // 克隆当前状态
+        const currentState = JSON.parse(JSON.stringify(context.shared_state));
+        
+        // 递归更新嵌套属性
+        let current = currentState;
+        for (let i = 0; i < pathParts.length - 1; i++) {
+          const part = pathParts[i];
+          if (current[part] === undefined) {
+            current[part] = {};
+          }
+          current = current[part];
+        }
+        
+        // 设置最终值
+        current[pathParts[pathParts.length - 1]] = value;
+        
+        // 只更新根属性
+        updateRequest.shared_state = {
+          [rootProperty]: currentState[rootProperty]
+        } as Partial<SharedState>;
+      }
+      
+      // 8. 执行更新
+      const updateResult = await this.contextService.updateContext(updateRequest);
+      if (!updateResult.success) {
+        return {
+          success: false,
+          error: updateResult.error,
+          execution_time_ms: Date.now() - startTime
+        };
+      }
+      
+      // 9. 发出状态变更事件
+      this.emit('context.state_changed', {
+        context_id: contextId,
+        timestamp: new Date().toISOString(),
+        user_id: userId,
+        path,
+        value,
+        previous_value: this.getValueAtPath(context.shared_state, path)
+      });
+      
+      return {
+        success: true,
+        execution_time_ms: Date.now() - startTime
+      };
+    } catch (error) {
+      logger.error('Failed to update shared state', {
+        context_id: contextId,
+        path,
+        error
+      });
+      
+      return this.buildManagerErrorResult<void>(error, Date.now() - startTime);
+    }
+  }
+
+  /**
+   * 获取共享状态值
+   * 
+   * @param contextId 上下文ID
+   * @param path 状态路径，使用点表示法
+   * @param userId 用户ID
+   * @returns 操作结果，包含状态值
+   */
+  public async getSharedState(
+    contextId: UUID,
+    path: string,
+    userId?: string
+  ): Promise<ContextOperationResult<unknown>> {
+    this.ensureInitialized();
+    
+    const startTime = Date.now();
+    
+    try {
+      // 1. 获取当前上下文
+      const contextResult = await this.contextService.getContext(contextId);
+      if (!contextResult.success || !contextResult.data) {
+        return {
+          success: false,
+          error: contextResult.error,
+          execution_time_ms: Date.now() - startTime
+        };
+      }
+      
+      const context = contextResult.data;
+      
+      // 2. 检查用户权限
+      if (userId) {
+        const hasPermission = this.checkReadPermission(context, userId, path);
+        if (!hasPermission) {
+          return {
+            success: false,
+            error: new AccessDeniedError('User does not have permission to read this state path'),
+            execution_time_ms: Date.now() - startTime
+          };
+        }
+      }
+      
+      // 3. 获取路径值
+      const value = this.getValueAtPath(context.shared_state, path);
+      
+      return {
+        success: true,
+        data: value,
+        execution_time_ms: Date.now() - startTime
+      };
+    } catch (error) {
+      logger.error('Failed to get shared state', {
+        context_id: contextId,
+        path,
+        error
+      });
+      
+      return this.buildManagerErrorResult<unknown>(error, Date.now() - startTime);
+    }
+  }
+
+  /**
+   * 订阅共享状态变更
+   * 
+   * @param contextId 上下文ID
+   * @param callback 回调函数
+   * @param pathFilter 可选的路径过滤器
+   * @returns 取消订阅函数
+   */
+  public subscribeToStateChanges(
+    contextId: UUID,
+    callback: (update: { 
+      path: string; 
+      value: unknown; 
+      previous_value: unknown; 
+      timestamp: string;
+      user_id?: string;
+    }) => void,
+    pathFilter?: string
+  ): () => void {
+    const handler = (data: any) => {
+      if (data.context_id !== contextId) {
+        return;
+      }
+      
+      if (pathFilter && !data.path.startsWith(pathFilter)) {
+        return;
+      }
+      
+      callback({
+        path: data.path,
+        value: data.value,
+        previous_value: data.previous_value,
+        timestamp: data.timestamp,
+        user_id: data.user_id
+      });
+    };
+    
+    this.on('context.state_changed', handler);
+    
+    // 返回取消订阅函数
+    return () => {
+      this.off('context.state_changed', handler);
+    };
+  }
+
+  /**
+   * 获取上下文变更历史
+   * 
+   * @param contextId 上下文ID
+   * @param options 选项
+   * @returns 操作结果，包含变更历史
+   */
+  public async getContextHistory(
+    contextId: UUID,
+    options: {
+      limit?: number;
+      offset?: number;
+      start_time?: string;
+      end_time?: string;
+      path_filter?: string;
+    } = {}
+  ): Promise<ContextOperationResult<Array<{
+    timestamp: string;
+    path: string;
+    value: unknown;
+    previous_value: unknown;
+    user_id?: string;
+  }>>> {
+    this.ensureInitialized();
+    
+    const startTime = Date.now();
+    
+    try {
+      // 实现上下文变更历史查询
+      // 这里需要与具体的存储实现集成
+      // 为保持厂商中立，使用通用接口
+      
+      const historyResult = await this.contextService.getContextHistory(
+        contextId,
+        options.limit || 100,
+        options.offset || 0,
+        options.start_time,
+        options.end_time,
+        options.path_filter
+      );
+      
+      if (!historyResult.success) {
+        return {
+          success: false,
+          error: historyResult.error,
+          execution_time_ms: Date.now() - startTime
+        };
+      }
+      
+      return {
+        success: true,
+        data: historyResult.data || [],
+        execution_time_ms: Date.now() - startTime
+      };
+    } catch (error) {
+      logger.error('Failed to get context history', {
+        context_id: contextId,
+        options,
+        error
+      });
+      
+      return this.buildManagerErrorResult<any[]>(error, Date.now() - startTime);
+    }
+  }
+
   // ===== 会话管理 =====
 
   /**
@@ -723,5 +1030,120 @@ export class ContextManager extends EventEmitter {
       error: contextError,
       execution_time_ms: executionTime
     };
+  }
+
+  /**
+   * 检查用户是否有读取权限
+   * 
+   * @param context 上下文
+   * @param userId 用户ID
+   * @param path 状态路径
+   * @returns 是否有权限
+   */
+  private checkReadPermission(
+    context: ContextProtocol,
+    userId: string,
+    path: string
+  ): boolean {
+    // 检查是否是拥有者
+    if (context.access_control.owner.user_id === userId) {
+      return true;
+    }
+    
+    // 检查权限列表
+    const permissions = context.access_control.permissions || [];
+    
+    // 查找匹配的权限
+    const userPermissions = permissions.filter(p => 
+      (p.principal === userId || p.principal === '*') && 
+      (p.actions.includes('read') || p.actions.includes('admin'))
+    );
+    
+    if (userPermissions.length === 0) {
+      return false;
+    }
+    
+    // 检查资源路径匹配
+    for (const permission of userPermissions) {
+      // 通配符资源表示所有路径
+      if (permission.resource === '*') {
+        return true;
+      }
+      
+      // 检查路径前缀匹配
+      if (path.startsWith(permission.resource)) {
+        return true;
+      }
+    }
+    
+    return false;
+  }
+
+  /**
+   * 检查用户是否有写入权限
+   * 
+   * @param context 上下文
+   * @param userId 用户ID
+   * @param path 状态路径
+   * @returns 是否有权限
+   */
+  private checkWritePermission(
+    context: ContextProtocol,
+    userId: string,
+    path: string
+  ): boolean {
+    // 检查是否是拥有者
+    if (context.access_control.owner.user_id === userId) {
+      return true;
+    }
+    
+    // 检查权限列表
+    const permissions = context.access_control.permissions || [];
+    
+    // 查找匹配的权限
+    const userPermissions = permissions.filter(p => 
+      (p.principal === userId || p.principal === '*') && 
+      (p.actions.includes('write') || p.actions.includes('admin'))
+    );
+    
+    if (userPermissions.length === 0) {
+      return false;
+    }
+    
+    // 检查资源路径匹配
+    for (const permission of userPermissions) {
+      // 通配符资源表示所有路径
+      if (permission.resource === '*') {
+        return true;
+      }
+      
+      // 检查路径前缀匹配
+      if (path.startsWith(permission.resource)) {
+        return true;
+      }
+    }
+    
+    return false;
+  }
+
+  /**
+   * 根据路径获取值
+   * 
+   * @param obj 对象
+   * @param path 路径
+   * @returns 值
+   */
+  private getValueAtPath(obj: any, path: string): unknown {
+    const parts = path.split('.');
+    let current = obj;
+    
+    for (const part of parts) {
+      if (current === undefined || current === null) {
+        return undefined;
+      }
+      current = current[part];
+    }
+    
+    return current;
   }
 } 

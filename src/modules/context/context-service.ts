@@ -60,6 +60,19 @@ export interface IContextRepository {
   delete(contextId: UUID): Promise<void>;
   exists(contextId: UUID): Promise<boolean>;
   count(filter?: ContextFilter): Promise<number>;
+  getContextHistory(contextId: UUID, options: {
+    limit: number;
+    offset: number;
+    startTime?: string;
+    endTime?: string;
+    pathFilter?: string;
+  }): Promise<Array<{
+    timestamp: string;
+    path: string;
+    value: unknown;
+    previous_value: unknown;
+    user_id?: string;
+  }>>;
 }
 
 /**
@@ -482,6 +495,77 @@ export class ContextService extends EventEmitter {
     }
   }
 
+  /**
+   * 获取上下文变更历史
+   * 
+   * @param contextId 上下文ID
+   * @param limit 限制数量
+   * @param offset 偏移量
+   * @param startTime 开始时间
+   * @param endTime 结束时间
+   * @param pathFilter 路径过滤器
+   * @returns 操作结果，包含变更历史
+   */
+  public async getContextHistory(
+    contextId: UUID,
+    limit: number = 100,
+    offset: number = 0,
+    startTime?: string,
+    endTime?: string,
+    pathFilter?: string
+  ): Promise<ContextOperationResult<Array<{
+    timestamp: string;
+    path: string;
+    value: unknown;
+    previous_value: unknown;
+    user_id?: string;
+  }>>> {
+    const startExecutionTime = Date.now();
+
+    try {
+      // 验证上下文存在
+      const contextExists = await this.repository.exists(contextId);
+      if (!contextExists) {
+        return {
+          success: false,
+          error: new ContextError('Context not found', 'CONTEXT_NOT_FOUND', { contextId }),
+          execution_time_ms: Date.now() - startExecutionTime
+        };
+      }
+
+      // 从存储库获取历史记录
+      // 注意：这里使用通用接口，保持厂商中立
+      const historyResult = await this.repository.getContextHistory(
+        contextId,
+        {
+          limit,
+          offset,
+          startTime,
+          endTime,
+          pathFilter
+        }
+      );
+
+      return {
+        success: true,
+        data: historyResult,
+        execution_time_ms: Date.now() - startExecutionTime
+      };
+    } catch (error) {
+      // Assuming logger is available globally or imported elsewhere
+      // logger.error('Failed to get context history', {
+      //   context_id: contextId,
+      //   error
+      // });
+
+      return {
+        success: false,
+        error: this.mapErrorToContextError(error), // Assuming mapErrorToContextError is defined elsewhere
+        execution_time_ms: Date.now() - startExecutionTime
+      };
+    }
+  }
+
   // ===== 状态管理方法 =====
 
   /**
@@ -518,6 +602,72 @@ export class ContextService extends EventEmitter {
       error: result.error,
       execution_time_ms: result.execution_time_ms
     }));
+  }
+
+  /**
+   * 设置共享状态变量
+   * 
+   * @param contextId Context ID
+   * @param key 状态变量键名
+   * @param value 状态变量值
+   * @param metadata 元数据
+   * @returns 操作结果
+   */
+  public async setSharedState(
+    contextId: UUID, 
+    key: string, 
+    value: unknown,
+    metadata: Record<string, unknown> = {}
+  ): Promise<ContextOperationResult<void>> {
+    const startTime = performance.now();
+    
+    try {
+      // 1. 检查Context是否存在
+      const existingContext = await this.repository.findById(contextId);
+      if (!existingContext) {
+        throw new ContextError(`Context not found: ${contextId}`, 'CONTEXT_NOT_FOUND');
+      }
+
+      // 2. 更新共享状态
+      const newSharedState = { ...existingContext.shared_state };
+      
+      // 确保variables存在
+      if (!newSharedState.variables) {
+        newSharedState.variables = {};
+      }
+      
+      // 设置变量值
+      newSharedState.variables[key] = value;
+      
+      // 3. 更新Context
+      await this.repository.update(contextId, { 
+        shared_state: newSharedState,
+        timestamp: new Date().toISOString() 
+      });
+
+      // 4. 发射事件
+      this.emit('shared_state_changed', {
+        event_type: 'shared_state_changed',
+        context_id: contextId,
+        timestamp: new Date().toISOString(),
+        data: {
+          key,
+          value,
+          metadata
+        },
+        source: metadata.source_module || 'context_service'
+      });
+
+      const executionTime = performance.now() - startTime;
+
+      return {
+        success: true,
+        execution_time_ms: executionTime
+      };
+
+    } catch (error) {
+      return this.buildErrorResult(error, performance.now() - startTime);
+    }
   }
 
   // ===== 私有辅助方法 =====
@@ -602,5 +752,18 @@ export class ContextService extends EventEmitter {
       error: contextError,
       execution_time_ms: executionTime
     };
+  }
+
+  /**
+   * 将外部错误映射到ContextError
+   */
+  private mapErrorToContextError(error: unknown): ContextError {
+    if (error instanceof ContextError) {
+      return error;
+    }
+    if (error instanceof Error) {
+      return new InternalError(error.message, { originalError: error });
+    }
+    return new InternalError('Unknown error occurred', { error });
   }
 } 

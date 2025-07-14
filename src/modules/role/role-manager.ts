@@ -574,4 +574,429 @@ export class RoleManager {
       return v.toString(16);
     });
   }
+
+  /**
+   * 设置角色继承关系
+   * 
+   * @param childRoleId 子角色ID
+   * @param parentRoleId 父角色ID
+   * @param options 继承选项
+   * @returns Promise<boolean> 操作结果
+   */
+  public async setRoleInheritance(
+    childRoleId: UUID,
+    parentRoleId: UUID,
+    options: {
+      inheritanceType: 'full' | 'partial' | 'conditional';
+      excludedPermissions?: UUID[];
+      conditions?: Record<string, unknown>;
+    }
+  ): Promise<boolean> {
+    return this.executeWithMonitoring('setRoleInheritance', async () => {
+      // 验证角色存在
+      const [childRole, parentRole] = await Promise.all([
+        this.getRole(childRoleId),
+        this.getRole(parentRoleId)
+      ]);
+      
+      // 检查循环继承
+      if (await this.wouldCreateInheritanceCycle(childRoleId, parentRoleId)) {
+        throw new Error('Cannot create inheritance cycle');
+      }
+      
+      // 构建更新请求
+      const updateRequest: UpdateRoleRequest = {
+        role_id: childRoleId,
+        inheritance: {
+          parent_roles: [
+            {
+              role_id: parentRoleId,
+              inheritance_type: options.inheritanceType,
+              excluded_permissions: options.excludedPermissions || [],
+              conditions: options.conditions || {}
+            }
+          ]
+        }
+      };
+      
+      // 更新角色
+      const response = await this.roleService.updateRole(childRoleId, updateRequest);
+      if (!response.success) {
+        throw new Error(response.error?.message || 'Failed to set role inheritance');
+      }
+      
+      // 记录事件
+      await this.auditEvent({
+        event_id: this.generateUUID(),
+        event_type: 'role_updated',
+        role_id: childRoleId,
+        user_id: 'system',
+        timestamp: new Date().toISOString(),
+        severity: 'medium' as Severity,
+        details: {
+          action: 'role_inheritance_created',
+          child_role_id: childRoleId,
+          parent_role_id: parentRoleId,
+          inheritance_type: options.inheritanceType
+        }
+      });
+      
+      return true;
+    });
+  }
+
+  /**
+   * 移除角色继承关系
+   * 
+   * @param childRoleId 子角色ID
+   * @param parentRoleId 父角色ID
+   * @returns Promise<boolean> 操作结果
+   */
+  public async removeRoleInheritance(
+    childRoleId: UUID,
+    parentRoleId: UUID
+  ): Promise<boolean> {
+    return this.executeWithMonitoring('removeRoleInheritance', async () => {
+      // 获取当前角色信息
+      const childRole = await this.getRole(childRoleId);
+      
+      // 检查是否存在继承关系
+      const parentRoles = childRole.inheritance?.parent_roles || [];
+      const hasInheritance = parentRoles.some(p => p.role_id === parentRoleId);
+      
+      if (!hasInheritance) {
+        return false; // 不存在继承关系
+      }
+      
+      // 构建更新请求
+      const updateRequest: UpdateRoleRequest = {
+        role_id: childRoleId,
+        inheritance: {
+          parent_roles: parentRoles.filter(p => p.role_id !== parentRoleId)
+        }
+      };
+      
+      // 更新角色
+      const response = await this.roleService.updateRole(childRoleId, updateRequest);
+      if (!response.success) {
+        throw new Error(response.error?.message || 'Failed to remove role inheritance');
+      }
+      
+      // 记录事件
+      await this.auditEvent({
+        event_id: this.generateUUID(),
+        event_type: 'role_updated',
+        role_id: childRoleId,
+        user_id: 'system',
+        timestamp: new Date().toISOString(),
+        severity: 'medium' as Severity,
+        details: {
+          action: 'role_inheritance_removed',
+          child_role_id: childRoleId,
+          parent_role_id: parentRoleId
+        }
+      });
+      
+      return true;
+    });
+  }
+
+  /**
+   * 检查是否会创建继承循环
+   * 
+   * @param childRoleId 子角色ID
+   * @param parentRoleId 父角色ID
+   * @returns Promise<boolean> 是否会创建循环
+   */
+  private async wouldCreateInheritanceCycle(
+    childRoleId: UUID,
+    parentRoleId: UUID
+  ): Promise<boolean> {
+    // 如果子角色和父角色相同，则会创建循环
+    if (childRoleId === parentRoleId) {
+      return true;
+    }
+    
+    try {
+      // 获取父角色的所有父角色
+      const parentRole = await this.getRole(parentRoleId);
+      const parentRoles = parentRole.inheritance?.parent_roles || [];
+      
+      // 递归检查父角色的父角色
+      for (const parent of parentRoles) {
+        if (
+          parent.role_id === childRoleId || 
+          await this.wouldCreateInheritanceCycle(childRoleId, parent.role_id)
+        ) {
+          return true;
+        }
+      }
+      
+      return false;
+    } catch (error) {
+      logger.error('Error checking inheritance cycle', { error });
+      return true; // 安全起见，假设会创建循环
+    }
+  }
+
+  /**
+   * 获取角色继承链
+   * 
+   * @param roleId 角色ID
+   * @returns Promise<RoleProtocol[]> 继承链
+   */
+  public async getRoleInheritanceChain(roleId: UUID): Promise<RoleProtocol[]> {
+    return this.executeWithMonitoring('getRoleInheritanceChain', async () => {
+      const visited = new Set<UUID>();
+      const chain: RoleProtocol[] = [];
+      
+      const traverseInheritance = async (id: UUID): Promise<void> => {
+        if (visited.has(id)) {
+          return;
+        }
+        
+        visited.add(id);
+        
+        try {
+          const role = await this.getRole(id);
+          chain.push(role);
+          
+          const parentRoles = role.inheritance?.parent_roles || [];
+          for (const parent of parentRoles) {
+            await traverseInheritance(parent.role_id);
+          }
+        } catch (error) {
+          logger.error('Error traversing inheritance chain', { role_id: id, error });
+        }
+      };
+      
+      await traverseInheritance(roleId);
+      return chain;
+    });
+  }
+
+  /**
+   * 获取用户活跃委派
+   * 
+   * @param userId 用户ID
+   * @returns Promise<ActiveDelegation[]> 活跃委派列表
+   */
+  public async getUserActiveDelegations(userId: string): Promise<ActiveDelegation[]> {
+    return this.executeWithMonitoring('getUserActiveDelegations', async () => {
+      // 获取用户的所有角色
+      const userRoles = await this.getUserRoles(userId);
+      
+      // 收集所有活跃委派
+      const activeDelegations: ActiveDelegation[] = [];
+      
+      for (const role of userRoles) {
+        const delegations = role.delegation?.active_delegations || [];
+        
+        // 过滤出用户委派给其他人的委派
+        const userDelegations = delegations.filter(d => 
+          d.status === 'active' && 
+          d.end_time && new Date(d.end_time) > new Date()
+        );
+        
+        activeDelegations.push(...userDelegations);
+      }
+      
+      return activeDelegations;
+    });
+  }
+
+  /**
+   * 撤销委派
+   * 
+   * @param delegationId 委派ID
+   * @param userId 撤销用户ID
+   * @returns Promise<boolean> 操作结果
+   */
+  public async revokeDelegation(
+    delegationId: UUID,
+    userId: string
+  ): Promise<boolean> {
+    return this.executeWithMonitoring('revokeDelegation', async () => {
+      // 获取用户的所有角色
+      const userRoles = await this.getUserRoles(userId);
+      
+      // 查找包含此委派的角色
+      let targetRole: RoleProtocol | undefined;
+      let targetDelegation: ActiveDelegation | undefined;
+      
+      for (const role of userRoles) {
+        const delegations = role.delegation?.active_delegations || [];
+        const delegation = delegations.find(d => d.delegation_id === delegationId);
+        
+        if (delegation) {
+          targetRole = role;
+          targetDelegation = delegation;
+          break;
+        }
+      }
+      
+      if (!targetRole || !targetDelegation) {
+        throw new Error(`Delegation ${delegationId} not found for user ${userId}`);
+      }
+      
+      // 检查委派是否可撤销
+      const delegationConstraints = targetRole.delegation?.delegation_constraints;
+      if (delegationConstraints && delegationConstraints.revocable === false) {
+        throw new Error('This delegation cannot be revoked');
+      }
+      
+      // 更新委派状态
+      const updatedDelegations = (targetRole.delegation?.active_delegations || []).map(d => 
+        d.delegation_id === delegationId
+          ? { ...d, status: 'revoked' }
+          : d
+      );
+      
+      // 构建更新请求 - 使用符合UpdateRoleRequest的属性
+      const updateRequest: UpdateRoleRequest = {
+        role_id: targetRole.role_id,
+        // 使用自定义属性来存储委派信息
+        attributes: {
+          ...targetRole.attributes,
+          custom_attributes: {
+            ...(targetRole.attributes?.custom_attributes || {}),
+            active_delegations: JSON.stringify(updatedDelegations)
+          }
+        }
+      };
+      
+      // 更新角色
+      const response = await this.roleService.updateRole(targetRole.role_id, updateRequest);
+      if (!response.success) {
+        throw new Error(response.error?.message || 'Failed to revoke delegation');
+      }
+      
+      // 记录事件
+      await this.auditEvent({
+        event_id: this.generateUUID(),
+        event_type: 'permission_revoked',
+        role_id: targetRole.role_id,
+        user_id: userId,
+        timestamp: new Date().toISOString(),
+        severity: 'medium' as Severity,
+        details: {
+          action: 'delegation_revoked',
+          delegation_id: delegationId,
+          delegated_to: targetDelegation.delegated_to
+        }
+      });
+      
+      return true;
+    });
+  }
+
+  /**
+   * 获取角色冲突
+   * 
+   * @param userId 用户ID
+   * @returns Promise<{conflicting_roles: UUID[][], severity: Severity}[]> 冲突信息
+   */
+  public async getRoleConflicts(userId: string): Promise<{
+    conflicting_roles: UUID[][];
+    severity: Severity;
+    message: string;
+  }[]> {
+    return this.executeWithMonitoring('getRoleConflicts', async () => {
+      // 获取用户的所有角色
+      const userRoles = await this.getUserRoles(userId);
+      
+      // 收集所有角色ID
+      const roleIds = userRoles.map(role => role.role_id);
+      
+      // 收集所有角色的职责分离规则
+      const conflicts: {
+        conflicting_roles: UUID[][];
+        severity: Severity;
+        message: string;
+      }[] = [];
+      
+      for (const role of userRoles) {
+        const separationRules = role.validation_rules?.separation_of_duties || [];
+        
+        for (const rule of separationRules) {
+          // 检查是否存在冲突
+          const conflictingRoleIds = rule.conflicting_roles.filter(id => 
+            roleIds.includes(id) && id !== role.role_id
+          );
+          
+          if (conflictingRoleIds.length > 0) {
+            conflicts.push({
+              conflicting_roles: [[role.role_id], conflictingRoleIds],
+              severity: rule.severity as Severity,
+              message: `User ${userId} has conflicting roles: ${role.name} and ${conflictingRoleIds.length} others`
+            });
+          }
+        }
+      }
+      
+      return conflicts;
+    });
+  }
+
+  /**
+   * 分析权限重叠
+   * 
+   * @param roleIds 角色ID列表
+   * @returns Promise<{resource_type: string, resource_id: string, actions: string[], overlap_count: number}[]> 重叠权限
+   */
+  public async analyzePermissionOverlap(roleIds: UUID[]): Promise<{
+    resource_type: string;
+    resource_id: string;
+    actions: string[];
+    overlap_count: number;
+  }[]> {
+    return this.executeWithMonitoring('analyzePermissionOverlap', async () => {
+      // 获取所有角色
+      const roles = await Promise.all(roleIds.map(id => this.getRole(id)));
+      
+      // 收集所有权限
+      const permissionMap = new Map<string, {
+        resource_type: string;
+        resource_id: string;
+        actions: Set<string>;
+        roles: Set<UUID>;
+      }>();
+      
+      for (const role of roles) {
+        const permissions = role.permissions || [];
+        
+        for (const permission of permissions) {
+          const key = `${permission.resource_type}:${permission.resource_id}`;
+          
+          if (!permissionMap.has(key)) {
+            permissionMap.set(key, {
+              resource_type: permission.resource_type,
+              resource_id: permission.resource_id,
+              actions: new Set(),
+              roles: new Set()
+            });
+          }
+          
+          const entry = permissionMap.get(key)!;
+          
+          // 添加操作和角色
+          permission.actions.forEach(action => entry.actions.add(action));
+          entry.roles.add(role.role_id);
+        }
+      }
+      
+      // 过滤出重叠的权限
+      const overlaps = Array.from(permissionMap.values())
+        .filter(entry => entry.roles.size > 1)
+        .map(entry => ({
+          resource_type: entry.resource_type,
+          resource_id: entry.resource_id,
+          actions: Array.from(entry.actions),
+          overlap_count: entry.roles.size
+        }))
+        .sort((a, b) => b.overlap_count - a.overlap_count);
+      
+      return overlaps;
+    });
+  }
 } 

@@ -4,11 +4,18 @@
  * Context模块负责上下文和全局状态管理
  * 所有导出类型都严格按照 context-protocol.json Schema规范定义
  * 
- * @version v1.0.2
- * @updated 2025-07-10T17:30:00+08:00
+ * @version v1.0.3
+ * @updated 2025-07-16T13:00:00+08:00
  * @compliance 100% Schema合规性 - 完全匹配context-protocol.json Schema定义
  * @schema_path src/schemas/context-protocol.json
  */
+
+// 引入类型
+import type { IContextRepository, IContextValidator } from './context-service';
+import type { ContextManagerConfig } from './context-manager';
+import { ContextService } from './context-service';
+import { ContextManager } from './context-manager';
+import { ContextController } from './context.controller';
 
 // ===== 基础类型重新导出 =====
 export type {
@@ -110,7 +117,7 @@ export {
 // ===== 模块常量 =====
 export const CONTEXT_MODULE_INFO = {
   name: 'Context',
-  version: '1.0.2',
+  version: '1.0.3',
   description: 'MPLP Context Module - Context and Global State Management',
   schema_version: '1.0.1',
   schema_path: 'src/schemas/context-protocol.json',
@@ -245,6 +252,94 @@ export function getContextStatusDescription(context: import('./types').ContextPr
   const stage = stageDescriptions[context.lifecycle_stage] || context.lifecycle_stage;
 
   return `${status} (${stage})`;
+}
+
+/**
+ * 创建默认Context配置
+ * 
+ * @returns 默认Context配置
+ */
+export function createDefaultContextConfig() {
+  return DEFAULT_CONTEXT_CONFIG;
+}
+
+/**
+ * 创建Context模块
+ * 
+ * @param options 模块选项
+ * @returns Context模块实例
+ */
+export async function createContextModule(options: {
+  dataSource: any;
+  config: any;
+  redisClient?: any;
+  socketServer?: any;
+  tracePilotAdapter?: any;
+}) {
+  const { dataSource, config, redisClient, socketServer, tracePilotAdapter } = options;
+  
+  // 导入所需类
+  const { ContextService } = await import('./context-service');
+  const { ContextManager } = await import('./context-manager');
+  const { ContextController } = await import('./context.controller');
+  
+  // 创建必要的依赖项
+  const contextRepository: IContextRepository = {
+    // 简单的存储库实现，实际项目中应该使用真实的存储库
+    save: async (context: any) => {},
+    findById: async (id: string) => null,
+    findByFilter: async (filter: any) => [],
+    update: async (id: string, updates: any) => {},
+    delete: async (id: string) => {},
+    exists: async (id: string) => false,
+    count: async (filter?: any) => 0,
+    getContextHistory: async (contextId: string, options: {
+      limit: number;
+      offset: number;
+      startTime?: string;
+      endTime?: string;
+      pathFilter?: string;
+    }) => {
+      return [];
+    }
+  };
+  
+  const contextValidator: IContextValidator = {
+    // 简单的验证器实现，实际项目中应该使用真实的验证器
+    validateCreate: async (request: any) => ({ valid: true }),
+    validateUpdate: async (request: any) => ({ valid: true }),
+    validateSchema: async (context: any) => ({ valid: true }),
+    validateBatch: async (request: any) => ({ valid: true })
+  };
+  
+  // 创建服务实例
+  const contextService = new ContextService(
+    contextRepository,
+    contextValidator
+  );
+  
+  // 创建管理器实例
+  const contextManager = new ContextManager(
+    contextRepository,
+    contextValidator,
+    config
+  );
+  
+  // 创建控制器实例
+  const contextController = new ContextController(contextService);
+  
+  // 创建WebSocket处理器（如果提供了socketServer）
+  if (socketServer) {
+    // 这里可以初始化WebSocket处理
+  }
+  
+  // 返回模块实例
+  return {
+    service: contextService,
+    manager: contextManager,
+    controller: contextController,
+    router: contextController.getRouter() // 使用公共方法获取路由器
+  };
 }
 
 /**
