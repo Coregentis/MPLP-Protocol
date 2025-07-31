@@ -1,0 +1,205 @@
+description: "MPLP测试验证规则 - 确保所有测试文件在提交前都经过严格验证，没有任何类型错误和运行时错误"
+globs: ["**/*.test.ts", "**/*.spec.ts", "**/tests/**", "**/test/**", "**/mocks/**", "**/fixtures/**"]
+alwaysApply: true
+---
+
+# MPLP 测试验证规则
+
+> **规则版本**: v1.0.0  
+> **创建时间**: 2025-08-21T10:00:00+08:00  
+> **更新时间**: 2025-08-21T10:00:00+08:00  
+> **适用范围**: 所有测试文件  
+> **强制等级**: 🚨 **最高优先级** - 违反将导致任务重新执行
+
+## 🎯 测试验证核心原则
+
+### 基础原则
+- **零错误原则**: 所有测试文件必须没有任何编译错误和运行时错误
+- **类型安全**: 所有测试代码必须类型安全，不允许使用any类型或忽略类型检查
+- **完整验证**: 每个测试文件必须经过编译检查和运行验证
+- **模拟类型匹配**: 所有模拟对象必须与实际接口类型完全匹配
+- **错误处理验证**: 所有错误处理路径必须经过测试验证
+
+## 📋 测试验证流程
+
+### 1. 测试文件编写完成后的强制验证流程
+```
+在测试文件编写完成后，必须执行以下验证步骤：
+
+1. ✅ TypeScript编译检查
+   - 使用tsc --noEmit检查类型错误
+   - 确保没有任何类型错误和警告
+   - 特别关注模拟对象的类型匹配
+
+2. ✅ 运行测试验证
+   - 使用Jest运行测试
+   - 确保所有测试通过
+   - 确保没有任何运行时错误
+
+3. ✅ 覆盖率验证
+   - 检查测试覆盖率
+   - 确保达到项目标准（≥90%）
+```
+
+## 🔍 测试验证检查清单
+
+每次提交测试文件前，必须完成以下验证检查清单：
+
+### 1. 编译检查（强制）
+- [ ] 已使用`tsc --noEmit`检查类型错误
+- [ ] 已确认没有任何类型错误
+- [ ] 已确认所有模拟对象类型正确
+- [ ] 已确认所有导入路径正确
+- [ ] 已确认所有接口实现完整
+
+### 2. 运行测试（强制）
+- [ ] 已使用`jest`运行测试
+- [ ] 已确认所有测试通过
+- [ ] 已确认没有任何运行时错误
+- [ ] 已确认没有任何跳过的测试
+- [ ] 已确认测试执行时间在合理范围内
+
+### 3. 覆盖率检查（强制）
+- [ ] 已使用`jest --coverage`检查覆盖率
+- [ ] 已确认语句覆盖率≥90%
+- [ ] 已确认分支覆盖率≥85%
+- [ ] 已确认函数覆盖率≥95%
+- [ ] 已确认行覆盖率≥90%
+
+## 🛠️ 测试验证工具
+
+### 1. TypeScript编译检查
+```bash
+# 检查单个测试文件
+npx tsc path/to/file.test.ts --noEmit
+
+# 检查所有测试文件
+npx tsc "src/**/*.test.ts" --noEmit
+```
+
+### 2. Jest测试运行
+```bash
+# 运行单个测试文件
+npx jest path/to/file.test.ts
+
+# 运行所有测试
+npx jest
+
+# 检查覆盖率
+npx jest --coverage
+```
+
+## 📝 测试验证最佳实践
+
+### 1. 模拟对象类型安全
+```typescript
+// ✅ 正确：使用模拟工厂函数确保类型安全
+function createMockLifecycleHook(): jest.MockedFunction<LifecycleHook> {
+  return jest.fn().mockImplementation(async () => {}) as jest.MockedFunction<LifecycleHook>;
+}
+
+// ✅ 正确：使用模拟工厂函数处理错误情况
+function createMockLifecycleHookWithError(error: Error): jest.MockedFunction<LifecycleHook> {
+  return jest.fn().mockImplementation(async () => {
+    throw error;
+  }) as jest.MockedFunction<LifecycleHook>;
+}
+
+// ❌ 错误：直接使用jest.fn()可能导致类型不匹配
+const mockHook = jest.fn();
+mockHook.mockRejectedValue(new Error('Test error')); // 类型不安全
+```
+
+### 2. 测试文件顶部验证确认
+```typescript
+/**
+ * {Module}模块 - {Class}单元测试
+ * 
+ * @强制检查确认
+ * - [x] 已完成源代码分析
+ * - [x] 已完成接口检查
+ * - [x] 已完成Schema验证
+ * - [x] 已完成测试数据准备
+ * - [x] 已完成模拟对象创建
+ * - [x] 已完成测试覆盖验证
+ * - [x] 已完成编译和类型检查
+ * - [x] 已完成测试执行验证
+ */
+```
+
+### 3. 错误处理测试
+```typescript
+it('应处理钩子错误', async () => {
+  // 准备测试数据
+  const context = createTestContext({ status: 'active' });
+  const newStatus: ContextStatus = 'suspended';
+  const hookError = new Error('Hook error');
+  
+  // 使用安全的模拟函数创建抛出错误的钩子
+  mockHooks.beforeStatusChange = createMockLifecycleHookWithError(hookError);
+  
+  // 执行测试
+  const result = await lifecycleManager.changeStatus(context, newStatus);
+  
+  // 验证结果
+  expect(result.success).toBe(false);
+  expect(result.error).toBeDefined();
+  expect(result.error?.message).toContain('Hook error');
+  
+  // 验证钩子调用
+  expect(mockHooks.beforeStatusChange).toHaveBeenCalled();
+  expect(mockHooks.afterStatusChange).not.toHaveBeenCalled();
+});
+```
+
+## 📋 测试验证提交前检查清单
+
+在提交测试代码前，必须完成以下检查：
+
+1. **编译检查**: 确保没有任何TypeScript编译错误
+   ```bash
+   npx tsc "src/**/*.test.ts" --noEmit
+   ```
+
+2. **测试执行**: 确保所有测试通过，没有失败或跳过的测试
+   ```bash
+   npx jest
+   ```
+
+3. **覆盖率检查**: 确保测试覆盖率达到要求
+   ```bash
+   npx jest --coverage
+   ```
+
+4. **类型安全**: 确保所有模拟对象类型安全，与实际接口完全匹配
+   - 使用专门的模拟工厂函数
+   - 确保模拟对象实现完整接口
+   - 正确处理异步函数模拟
+   - 正确处理错误模拟
+
+5. **代码质量**: 确保测试代码符合项目代码规范
+   ```bash
+   npx eslint "src/**/*.test.ts"
+   ```
+
+6. **注释完整**: 确保测试文件顶部注释完整，包含所有强制检查确认
+
+**注意**: 任何违反上述规定的测试代码都将被拒绝合并，必须修复所有问题后重新提交。
+
+## 🚨 严格执行规则
+
+1. **零容忍原则**: 对于任何类型错误或运行时错误，采取零容忍原则，必须在提交前解决所有问题。
+
+2. **自动验证**: 在CI/CD流程中添加自动验证步骤，确保所有测试文件通过验证。
+
+3. **提交前检查**: 使用git hooks在提交前自动运行验证检查。
+
+4. **责任明确**: 每个开发者都有责任确保自己提交的测试代码通过所有验证。
+
+5. **持续改进**: 定期审查测试验证流程，不断改进测试质量。
+
+---
+
+**规则创建**: MPLP测试团队  
+**维护责任**: 所有开发者  
+**审查周期**: 每个开发阶段结束后审查

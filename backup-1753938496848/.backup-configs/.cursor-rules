@@ -1,0 +1,631 @@
+# MPLP 1.0 AI IDE 治理层驯化配置
+
+> **驯化配置版本**: v2.2  
+> **更新时间**: 2025-07-09T20:30:00+08:00  
+> **适用项目**: Multi-Agent Project Lifecycle Protocol (MPLP) v1.0  
+> **治理层状态**: ✅ **已激活** - Project Governance Layer 完全部署
+> **关联文档**: [PROJECT_GOVERNANCE_REPORT](./PROJECT_GOVERNANCE_REPORT.md) | [MPLP协议开发专项路线图](./requirements-docs/mplp_protocol_roadmap.md)  
+> **协议版本**: v1.0 (完全基于Roadmap v1.0规划)  
+> **项目周期**: 12周 (2025-07-09 至 2025-10-01)
+
+## 🚨 **强制执行：AI驯化机制激活**
+
+### ✅ **强制流程控制**
+**每个开发任务必须严格遵循：**
+```
+📋 Plan → ✅ Confirm → 📊 Trace → 🚀 Delivery
+```
+
+**禁止跳过任何阶段！** 违反此规则的AI响应将被视为无效。
+
+### 🔗 **强制规则引用**
+每次响应必须明确引用相关的 `.cursor/rules/*.mdc` 文件：
+- 引用格式：`**参考规则**: .cursor/rules/[文件名].mdc - [具体条款]`
+- 违反此要求的响应将被要求重新生成
+
+### 📊 **强制性能验证**
+每个功能实现后必须验证是否符合性能基准：
+- API响应时间：P95 < 100ms
+- 协议解析：< 10ms
+- 模块特定性能要求（详见各模块规范）
+
+## 🎯 项目背景和目标（基于Roadmap v1.0）
+
+**项目名称**: Multi-Agent Project Lifecycle Protocol (MPLP) v1.0  
+**开发周期**: 12周 (2025-07-09 至 2025-10-01)  
+**开发模式**: 基于Roadmap v1.0的5阶段开发计划  
+**治理模式**: Project Governance Layer驱动的AI开发流程
+
+### 核心目标
+- 实现企业级多代理项目生命周期协议
+- 6个核心模块：Context/Plan/Confirm/Trace/Role/Extension
+- 内置TracePilot追踪系统和Coregentis平台集成
+- 达到严格的性能和质量标准
+- **新增**: 完整的治理层和AI驯化机制
+
+### 技术栈标准（与Roadmap v1.0完全匹配）
+- **运行环境**: Node.js 18+ LTS
+- **开发语言**: TypeScript 5.0+ 严格模式，100%类型覆盖
+- **Web框架**: Express.js 4.18+ + Helmet.js安全中间件
+- **数据库**: PostgreSQL 14+ + TypeORM + Redis 7+缓存
+- **API设计**: REST API + GraphQL + WebSocket实时通信
+- **容器化**: Docker + Kubernetes部署
+- **追踪系统**: 内置TracePilot MCP适配器 + 完整trace历史
+
+### 性能和质量标准（强制执行）
+- **API响应时间**: P95 < 100ms, P99 < 200ms
+- **协议解析性能**: 单次解析 < 10ms
+- **系统吞吐量**: > 10,000 TPS
+- **单元测试覆盖率**: ≥ 90%
+- **集成测试覆盖率**: ≥ 80%
+- **E2E测试覆盖率**: ≥ 60%
+- **安全漏洞**: 0个高危漏洞
+
+## 🏗️ **治理层组件（已部署完成）**
+
+### 📋 **核心规则文件系统** (.cursor/rules/) - 13个文件
+- `core-modules.mdc` - 6个核心模块规范
+- `technical-standards.mdc` - 技术标准基线
+- `api-design.mdc` - API设计规范
+- `testing-strategy.mdc` - 测试策略规范
+- `security-requirements.mdc` - 安全要求规范
+- `performance-standards.mdc` - 性能标准规范
+- `integration-patterns.mdc` - 集成模式规范
+- `data-management.mdc` - 数据管理规范
+- `monitoring-logging.mdc` - 监控日志规范
+- `deployment-operations.mdc` - 部署运维规范
+- `delivery-checklist.mdc` - 交付检查清单
+- `versioning.mdc` - 版本管理规范
+- `development-workflow.mdc` - 开发流程规范
+
+### 🎯 **AI驯化机制** (.cursor/presets/)
+- `mplp-development.md` - AI助手行为约束和标准化输出格式
+
+### 📚 **项目模板系统** (.cursor/templates/)
+- `trace-module-template.ts` - 标准化追踪模块实现模板
+
+### 📖 **领域术语系统** (ProjectRules/)
+- `MPLP_DomainGlossary.md` - 统一项目术语定义（153个术语）
+
+### 📊 **追踪历史系统** (trace/logs/)
+- `trace_history.json` - 完整开发任务生命周期记录
+
+### 🔄 **版本管理系统** (versioning/)
+- `VERSION.json` - 自动化版本管理，与Roadmap v1.0对齐
+
+### 🔗 **平台集成适配器** (src/mcp/)
+- `tracepilot-adapter.ts` - TracePilot双向集成适配器
+
+## 📋 **强制执行的标准化工作流程**
+
+### 🎯 **标准任务请求格式**
+用户请求必须使用以下格式：
+```
+请为 [模块名] 实现 [功能描述]，
+严格遵循 Plan→Confirm→Trace→Delivery 流程，
+参考相关 .mdc 规则文件。
+```
+
+### 📋 **Plan阶段（必须完成）**
+```markdown
+## 📋 Plan阶段
+
+**引用规则**: .cursor/rules/[相关规则文件].mdc - [具体条款]
+**任务模块**: [context/plan/confirm/trace/role/extension]
+**预期交付**: [具体功能描述和性能目标]
+
+### 技术方案
+- 实现方式：[详细技术方案]
+- 性能目标：[具体性能指标，参考相关.mdc]
+- 依赖关系：[模块依赖和接口要求]
+
+### 风险评估
+- 技术风险：[潜在技术挑战]
+- 性能风险：[性能相关风险]
+- 缓解措施：[风险应对方案]
+```
+
+### ✅ **Confirm阶段（必须完成）**
+```markdown
+## ✅ Confirm阶段
+
+**方案确认**: [确认技术方案可行性]
+**规则符合性**: 符合 [具体.mdc文件] 中的 [具体要求]
+**性能目标**: [确认性能目标可达成]
+**测试策略**: [单元/集成/E2E测试规划]
+**版本影响**: [major/minor/patch版本递增需求]
+```
+
+### 📊 **Trace阶段（必须完成）**
+```markdown
+## 📊 Trace阶段
+
+**实施进度**: 
+- [时间戳]: [进度描述]
+- [时间戳]: [进度描述]
+- [时间戳]: [进度描述]
+
+**性能监控**: [实际性能数据] (目标：[目标值]) [✅/❌]
+**质量检查**: TypeScript编译状态，ESLint检查状态
+**问题记录**: [遇到的问题和解决方案]
+**TracePilot同步**: [追踪数据同步状态]
+```
+
+### 🚀 **Delivery阶段（必须完成）**
+```markdown
+## 🚀 Delivery阶段
+
+**交付文件**: 
+- [文件路径1]
+- [文件路径2]
+- [测试文件路径]
+
+**模块归属**: [所属核心模块] ([x]/6核心模块)
+
+**Checklist验证**: 
+- [x] delivery-checklist.mdc 符合性 ✅
+- [x] versioning.mdc 版本更新
+- [x] 性能测试通过 ([实际值] < [目标值]) ✅
+- [x] 安全扫描通过 ✅
+- [x] 测试覆盖率达标 ([实际值] > [要求值]) ✅
+
+**版本影响**: [版本递增类型和原因]
+**TracePilot记录**: [追踪记录ID和完整性确认]
+```
+
+## 🔧 核心开发规则（严格执行）
+
+### 1. **技术标准基线（强制遵循）**
+**参考规则**: `.cursor/rules/technical-standards.mdc`
+
+```typescript
+// TypeScript严格模式配置（强制）
+{
+  "compilerOptions": {
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true
+  }
+}
+
+// 禁止使用any类型，要求100%类型覆盖
+// ❌ 错误示例
+const data: any = {};
+
+// ✅ 正确示例
+interface UserData {
+  id: string;
+  name: string;
+  email: string;
+}
+const data: UserData = { id: '1', name: 'User', email: 'user@example.com' };
+```
+
+### 2. **6个核心模块架构规范**
+**参考规则**: `.cursor/rules/core-modules.mdc`
+
+```typescript
+// Context模块 - 全局状态管理（性能：<5ms查询，<10ms更新）
+interface ContextProtocol {
+  context_id: string;
+  user_id: string;
+  shared_state: Record<string, unknown>;
+  lifecycle_stage: 'active' | 'inactive' | 'suspended';
+  created_at: string;
+  updated_at: string;
+}
+
+// Plan模块 - 任务规划结构（性能：<8ms解析，<15ms调度）
+interface PlanProtocol {
+  plan_id: string;
+  context_id: string;
+  tasks: TaskDefinition[];
+  dependencies: DependencyMapping[];
+  execution_strategy: 'sequential' | 'parallel' | 'conditional';
+  estimated_duration: number;
+}
+
+// Trace模块 - 追踪记录信息（性能：<2ms记录，<20ms查询）
+interface TraceProtocol {
+  trace_id: string;
+  operation_name: string;
+  start_time: string;
+  end_time?: string;
+  performance_metrics: PerformanceData;
+  trace_type: 'operation' | 'state_change' | 'error' | 'compensation';
+  compensation_actions?: CompensationAction[];
+  // TracePilot集成字段
+  tracepilot_sync_id?: string;
+  tracepilot_sync_status: 'pending' | 'synced' | 'failed';
+}
+```
+
+### 3. **TracePilot集成规范（新增）**
+**参考规则**: 基于 `src/mcp/tracepilot-adapter.ts`
+
+```typescript
+// TracePilot同步性能要求
+interface TracePilotSyncRequirements {
+  single_sync_latency: number;    // < 100ms
+  batch_sync_throughput: number;  // > 1000 traces/second
+  format_conversion_time: number; // < 50ms
+  error_retry_count: number;      // max 3 retries
+}
+
+// 每个Trace操作必须同步到TracePilot
+@PerformanceMonitor.measure('tracepilot.sync')
+async function syncToTracePilot(traceData: MPLPTraceData) {
+  const adapter = new TracePilotAdapter();
+  const result = await adapter.syncTraceData(traceData);
+  
+  // 验证同步性能
+  if (result.sync_latency > 100) {
+    throw new TracePilotSyncError('Sync latency exceeded 100ms');
+  }
+  
+  return result;
+}
+```
+
+### 4. **性能要求实现规范（强制达标）**
+**参考规则**: `.cursor/rules/performance-standards.mdc`
+
+```typescript
+// 性能监控和基准测试（每个功能必须满足）
+interface PerformanceRequirements {
+  // API响应时间要求
+  api_response_p95: number; // < 100ms
+  api_response_p99: number; // < 200ms
+  
+  // 协议解析性能要求
+  protocol_parsing_time: number; // < 10ms
+  
+  // 模块特定性能要求
+  context_state_query: number;    // < 5ms
+  context_state_update: number;   // < 10ms
+  plan_parsing: number;           // < 8ms
+  plan_execution_scheduling: number; // < 15ms
+  confirm_approval_check: number; // < 3ms
+  confirm_decision_execution: number; // < 12ms
+  trace_recording: number;        // < 2ms
+  trace_query_analysis: number;   // < 20ms
+  role_permission_check: number;  // < 1ms
+  role_resolution: number;        // < 5ms
+  extension_call: number;         // < 50ms
+  extension_health_check: number; // < 10ms
+  
+  // TracePilot集成性能要求
+  tracepilot_sync_single: number; // < 100ms
+  tracepilot_sync_batch: number;  // > 1000 TPS
+}
+
+// 性能测试必须在每个功能实现后执行
+describe('Performance Tests', () => {
+  it('should meet API response time requirements', async () => {
+    const startTime = performance.now();
+    await apiCall();
+    const endTime = performance.now();
+    const responseTime = endTime - startTime;
+    
+    expect(responseTime).toBeLessThan(100); // P95 < 100ms
+  });
+});
+```
+
+### 5. **测试规范（强制执行）**
+**参考规则**: `.cursor/rules/testing-strategy.mdc`
+
+```typescript
+// 测试覆盖率要求（强制达标）
+// 单元测试 ≥ 90%
+// 集成测试 ≥ 80%
+// E2E测试 ≥ 60%
+
+// AAA测试模式（必须遵循）
+describe('ContextService', () => {
+  describe('createContext', () => {
+    it('should create context with valid data and sync to TracePilot', async () => {
+      // 📋 Arrange - 准备测试数据
+      const mockInput = {
+        user_id: 'user-123',
+        shared_state: { key: 'value' }
+      };
+      
+      // 🎬 Act - 执行被测试的操作
+      const result = await contextService.createContext(mockInput);
+      
+      // ✅ Assert - 验证结果
+      expect(result.success).toBe(true);
+      expect(result.data).toMatchObject({
+        context_id: expect.any(String),
+        user_id: mockInput.user_id,
+        lifecycle_stage: 'active'
+      });
+      
+      // 🚀 Performance Assert - 验证性能
+      expect(result.response_time).toBeLessThan(5); // < 5ms
+      
+      // 📊 TracePilot Assert - 验证追踪同步
+      expect(result.tracepilot_sync_status).toBe('synced');
+    });
+  });
+});
+```
+
+### 6. **安全规范（强制实施）**
+**参考规则**: `.cursor/rules/security-requirements.mdc`
+
+```typescript
+// 输入验证和清理（每个API端点必须实现）
+import Joi from 'joi';
+import DOMPurify from 'isomorphic-dompurify';
+
+const contextInputSchema = Joi.object({
+  user_id: Joi.string().uuid().required(),
+  shared_state: Joi.object().max(50).required(),
+  metadata: Joi.object().optional()
+});
+
+// 权限检查（每个操作必须验证）
+export const requirePermission = (permission: string) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user;
+    const hasPermission = await roleService.checkPermission(user.id, permission);
+    
+    if (!hasPermission) {
+      // 记录安全事件到TracePilot
+      await tracePilotAdapter.syncSecurityEvent({
+        event_type: 'unauthorized_access',
+        user_id: user.id,
+        requested_permission: permission,
+        timestamp: new Date().toISOString()
+      });
+      
+      return res.status(403).json({
+        success: false,
+        error: 'Insufficient permissions',
+        required_permission: permission
+      });
+    }
+    
+    next();
+  };
+};
+```
+
+### 7. **API设计规范（REST + GraphQL + WebSocket）**
+**参考规则**: `.cursor/rules/api-design.mdc`
+
+```typescript
+// REST API设计规范（严格遵循）
+// 基础路径: /api/v1/{module}/{resource}
+
+// 统一响应格式（必须遵循）
+interface ApiResponse<T = any> {
+  success: boolean;
+  data?: T;
+  error?: string;
+  error_code?: string;
+  timestamp: string;
+  request_id: string;
+  performance: {
+    response_time_ms: number;
+    trace_id: string;
+    tracepilot_sync_id?: string; // 新增：TracePilot同步ID
+  };
+}
+
+// GraphQL Schema设计规范
+type Query {
+  # Context模块查询
+  context(id: ID!): Context
+  contexts(filter: ContextFilter, pagination: PaginationInput): ContextConnection
+  
+  # Trace查询（集成TracePilot）
+  trace(id: ID!): Trace
+  traces(contextId: ID, filter: TraceFilter): [Trace!]!
+  tracePilotSync(traceId: ID!): TracePilotSyncStatus
+}
+```
+
+### 8. **数据库设计规范（PostgreSQL + Redis）**
+**参考规则**: `.cursor/rules/data-management.mdc`
+
+```typescript
+// TypeORM实体设计规范（必须遵循）
+@Entity('traces')
+@Index(['user_id', 'trace_type'])
+@Index(['created_at'])
+export class TraceEntity {
+  @PrimaryGeneratedColumn('uuid')
+  trace_id!: string;
+  
+  @Column({ type: 'uuid' })
+  @Index()
+  context_id!: string;
+  
+  @Column({ type: 'jsonb' })
+  performance_metrics!: PerformanceMetrics;
+  
+  // 新增：TracePilot集成字段
+  @Column({ type: 'varchar', nullable: true })
+  tracepilot_sync_id?: string;
+  
+  @Column({ 
+    type: 'enum',
+    enum: ['pending', 'synced', 'failed'],
+    default: 'pending'
+  })
+  tracepilot_sync_status!: 'pending' | 'synced' | 'failed';
+  
+  @CreateDateColumn({ type: 'timestamptz' })
+  created_at!: Date;
+}
+```
+
+### 9. **监控和日志规范（必须实现）**
+**参考规则**: `.cursor/rules/monitoring-logging.mdc`
+
+```typescript
+// 统一日志记录规范
+import { createLogger, format, transports } from 'winston';
+
+export const logger = createLogger({
+  level: process.env.LOG_LEVEL || 'info',
+  format: format.combine(
+    format.timestamp(),
+    format.errors({ stack: true }),
+    format.json(),
+    format((info) => {
+      // 添加MPLP协议元数据
+      info.mplp_version = '1.0.0';
+      info.stage = process.env.MPLP_STAGE || 'development';
+      info.trace_id = info.trace_id || generateTraceId();
+      info.tracepilot_enabled = true; // 新增：TracePilot集成标识
+      return info;
+    })()
+  )
+});
+
+// 性能监控（每个操作必须记录）
+export class PerformanceMonitor {
+  static async measureOperation<T>(
+    operationName: string,
+    operation: () => Promise<T>
+  ): Promise<T> {
+    const startTime = performance.now();
+    const traceId = generateTraceId();
+    
+    try {
+      const result = await operation();
+      const duration = performance.now() - startTime;
+      
+      // 同步到TracePilot
+      await tracePilotAdapter.syncPerformanceMetric({
+        operation_name: operationName,
+        trace_id: traceId,
+        duration_ms: duration,
+        status: 'success'
+      });
+      
+      return result;
+    } catch (error) {
+      const duration = performance.now() - startTime;
+      
+      // 错误也要同步到TracePilot
+      await tracePilotAdapter.syncErrorMetric({
+        operation_name: operationName,
+        trace_id: traceId,
+        duration_ms: duration,
+        error: error.message
+      });
+      
+      throw error;
+    }
+  }
+}
+```
+
+### 10. **Git工作流和提交规范**
+**参考规则**: `.cursor/rules/development-workflow.mdc`
+
+```bash
+# 提交信息规范（必须遵循）
+# 格式：<type>[optional scope]: <description>
+
+# 示例提交信息（集成TracePilot）
+git commit -m "feat(trace): implement TracePilot real-time synchronization
+
+- Add bidirectional trace data sync with TracePilot
+- Implement performance monitoring with <100ms sync latency
+- Add automatic retry logic for failed synchronizations
+- Performance: sync latency 85ms P95 (target <100ms) ✅
+
+Module: Trace (3/6) - TracePilot Integration
+TracePilot: ✅ Real-time sync, ✅ Performance monitoring
+Performance: ✅ Sync <100ms, ✅ Throughput >1000 TPS
+Tests: ✅ 94% unit coverage, ✅ Integration tests pass
+
+Closes #345, Related to Roadmap Stage 3 TracePilot integration"
+```
+
+## ❌ **绝对禁止的行为**
+
+### 🚫 **禁止列表（零容忍）**
+1. **跳过流程**: 禁止跳过Plan/Confirm/Trace/Delivery任何阶段
+2. **忽略规则**: 禁止不引用相关.mdc规则文件
+3. **类型违规**: 禁止使用`any`类型或绕过TypeScript严格模式
+4. **性能违规**: 禁止忽略性能基准要求
+5. **测试缺失**: 禁止不编写或跳过单元测试
+6. **安全漏洞**: 禁止忽略安全验证和输入清理
+7. **TracePilot忽略**: 禁止不同步追踪数据到TracePilot
+
+### 🔒 **质量门禁（强制检查）**
+- **代码提交前**: ESLint + Prettier检查必须通过
+- **PR合并前**: 所有自动化测试必须通过，代码覆盖率达标
+- **阶段完成前**: 性能基准测试必须通过，TracePilot同步验证
+- **发布前**: 完整的E2E测试套件必须通过，安全扫描无高危漏洞
+
+## 📚 **主要参考文档和规则文件**
+
+### 🔧 **核心规则文件（.cursor/rules/）**
+- **`core-modules.mdc`** - 6个核心模块详细规范
+- **`technical-standards.mdc`** - 技术标准和编码规范
+- **`api-design.mdc`** - REST/GraphQL/WebSocket API设计
+- **`testing-strategy.mdc`** - 完整测试策略和覆盖率要求
+- **`security-requirements.mdc`** - 安全要求和认证授权
+- **`performance-standards.mdc`** - 性能基准和监控要求
+- **`integration-patterns.mdc`** - TracePilot和Coregentis集成模式
+- **`data-management.mdc`** - 数据库设计和缓存策略
+- **`monitoring-logging.mdc`** - 监控日志和追踪规范
+- **`deployment-operations.mdc`** - 部署运维和容器化
+- **`delivery-checklist.mdc`** - 交付检查清单和质量门禁
+- **`versioning.mdc`** - 版本管理和发布流程
+- **`development-workflow.mdc`** - Git工作流和提交规范
+
+### 📋 **治理层文档**
+- **[PROJECT_GOVERNANCE_REPORT.md](./PROJECT_GOVERNANCE_REPORT.md)** - 治理层完整报告
+- **[DEVELOPMENT_CHECKLIST.md](./DEVELOPMENT_CHECKLIST.md)** - 开发前检查清单
+- **[PROJECT_STATUS.md](./PROJECT_STATUS.md)** - 项目状态跟踪
+- **[GIT_WORKFLOW.md](./GIT_WORKFLOW.md)** - Git工作流指南
+
+### 🎯 **项目规划文档**
+- **[mplp_protocol_roadmap.md](./requirements-docs/mplp_protocol_roadmap.md)** - 项目总体规划
+- **[技术规范统一标准.md](./requirements-docs/技术规范统一标准.md)** - 技术标准基线
+- **[AI IDE使用指南.md](./requirements-docs/08_AI_IDE使用指南.md)** - AI开发配置
+
+### 🔗 **集成和模板**
+- **`src/mcp/tracepilot-adapter.ts`** - TracePilot集成适配器
+- **`.cursor/templates/trace-module-template.ts`** - 标准化模块模板
+- **`ProjectRules/MPLP_DomainGlossary.md`** - 领域术语词汇表
+
+## 🚀 **立即开始标准化开发**
+
+### ✅ **环境就绪验证**
+确认以下组件已激活：
+- [x] 治理层完全部署 ✅
+- [x] 13个.mdc规则文件就绪 ✅
+- [x] AI驯化机制激活 ✅
+- [x] TracePilot适配器部署 ✅
+- [x] 模板和词汇表系统就绪 ✅
+
+### 📋 **首个标准化任务示例**
+```
+请为Context模块实现状态持久化功能，
+严格遵循Plan→Confirm→Trace→Delivery流程，
+参考.cursor/rules/core-modules.mdc和data-management.mdc规范，
+确保性能目标<5ms查询时间，并同步到TracePilot。
+```
+
+**MPLP项目现已完全具备企业级AI驯化开发能力！开始您的第一个标准化任务吧！** 🎯
+
+---
+
+**AI驯化配置版本**: v2.2  
+**治理层状态**: ✅ 完全激活  
+**维护团队**: Coregentis MPLP AI开发团队  
+**技术支持**: mplp-support@coregentis.com  
+**配置更新**: 与项目发展同步持续更新

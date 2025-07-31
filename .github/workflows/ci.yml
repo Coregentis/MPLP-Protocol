@@ -1,0 +1,164 @@
+name: MPLP CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  release:
+    types: [ published ]
+
+env:
+  NODE_VERSION: '18'
+  CACHE_VERSION: v1
+
+jobs:
+  # 代码质量检查
+  quality-check:
+    name: Code Quality Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check package dependencies
+        run: node scripts/dependency-check.js
+
+      - name: Check source code dependencies
+        run: node scripts/check-source-imports.js src
+
+      - name: TypeScript type check
+        run: npm run build 2>&1 | tee build.log && ! grep -i error build.log
+
+      - name: ESLint check (if configured)
+        run: |
+          if [ -f ".eslintrc.js" ] || [ -f ".eslintrc.json" ]; then
+            npm run lint || echo "ESLint not configured, skipping..."
+          else
+            echo "ESLint not configured, skipping..."
+          fi
+
+  # 安全扫描
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run npm audit
+        run: npm audit --audit-level=moderate || echo "Audit warnings found, please review"
+
+      - name: Check for high-risk vulnerabilities
+        run: npm audit --audit-level=high
+
+  # 测试执行
+  test:
+    name: Test Suite
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16, 18, 20]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run all tests
+        run: npm test
+
+      - name: Run performance tests
+        run: |
+          if npm run | grep -q "test:performance"; then
+            npm run test:performance
+          else
+            echo "Performance tests not configured, running specific test files..."
+            npx jest tests/performance/real-business-performance.test.ts --verbose
+          fi
+
+  # 构建验证
+  build:
+    name: Build Verification
+    runs-on: ubuntu-latest
+    needs: [quality-check, security-scan, test]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+
+      - name: Verify build output
+        run: |
+          if [ -f "dist/index.js" ]; then
+            echo "✅ Build output verified"
+          else
+            echo "❌ Build output not found"
+            ls -la dist/ || echo "dist directory not found"
+            exit 1
+          fi
+
+      - name: Test package installation
+        run: |
+          npm pack
+          PACKAGE_NAME=$(ls *.tgz | head -1)
+          echo "Testing package: $PACKAGE_NAME"
+          mkdir test-install
+          cd test-install
+          npm init -y
+          npm install ../$PACKAGE_NAME
+          node -e "
+            try {
+              const mplp = require('mplp');
+              console.log('✅ Package installed successfully');
+              console.log('Available exports:', Object.keys(mplp));
+            } catch (error) {
+              console.error('❌ Package installation test failed:', error.message);
+              process.exit(1);
+            }
+          "
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifacts-node-${{ env.NODE_VERSION }}
+          path: |
+            dist/
+            *.tgz

@@ -1,0 +1,59 @@
+{
+  "totalRules": 10,
+  "passed": 10,
+  "failed": 0,
+  "warnings": 0,
+  "results": [
+    {
+      "rule": "required_files",
+      "status": "pass",
+      "message": "所有必需文件都存在"
+    },
+    {
+      "rule": "forbidden_files",
+      "status": "pass",
+      "message": "未发现禁止的文件"
+    },
+    {
+      "rule": "forbidden_directories",
+      "status": "pass",
+      "message": "未发现禁止的文件"
+    },
+    {
+      "rule": "fake_performance_tests",
+      "status": "pass",
+      "message": "未发现禁止的文件"
+    },
+    {
+      "rule": "sensitive_content",
+      "status": "pass",
+      "message": "未发现敏感信息"
+    },
+    {
+      "rule": "package_json_validation",
+      "status": "pass",
+      "message": "package.json验证通过"
+    },
+    {
+      "rule": "internal_markers",
+      "status": "pass",
+      "message": "未发现匹配的内容"
+    },
+    {
+      "rule": "internal_dependencies",
+      "status": "pass",
+      "message": "未发现匹配的内容"
+    },
+    {
+      "rule": "test_completeness",
+      "status": "pass",
+      "message": "所有必需文件都存在"
+    },
+    {
+      "rule": "documentation_completeness",
+      "status": "pass",
+      "message": "所有必需文件都存在"
+    }
+  ],
+  "summary": "📊 验证报告总结:\n总规则数: 10\n通过: 10 (100.0%)\n失败: 0\n警告: 0\n\n✅ 验证通过！Release版本符合开源发布标准。"
+}

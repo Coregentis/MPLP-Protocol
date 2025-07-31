@@ -1,181 +1,234 @@
 /**
- * MPLP事件类型定义
- * 
- * 定义系统中所有可能的事件类型，确保事件发布和订阅的类型安全。
- * 
- * @version v1.1.0
- * @created 2025-07-15T12:00:00+08:00
- * @updated 2025-07-18T10:00:00+08:00
+ * 事件类型定义
+ * @description 定义系统中使用的事件类型和数据结构
+ * @author MPLP Team
+ * @version 1.0.1
  */
 
 /**
- * 事件类型枚举
+ * 基础事件类型枚举
  */
 export enum EventType {
-  // 模块生命周期事件
-  MODULE_REGISTERED = 'module:registered',
-  MODULE_INITIALIZED = 'module:initialized',
-  MODULE_STARTED = 'module:started',
-  MODULE_STOPPED = 'module:stopped',
-  
-  // 依赖图事件
-  DEPENDENCY_GRAPH_GENERATED = 'dependency:graphGenerated',
-  DEPENDENCY_CYCLE_DETECTED = 'dependency:cycleDetected',
-  DEPENDENCY_ANALYSIS_COMPLETED = 'dependency:analysisCompleted',
-  DEPENDENCY_VALIDATION_FAILED = 'dependency:validationFailed',
-  
-  // Context模块事件
-  CONTEXT_CREATED = 'context:created',
-  CONTEXT_UPDATED = 'context:updated',
-  CONTEXT_DELETED = 'context:deleted',
-  CONTEXT_STATE_CHANGED = 'context:stateChanged',
-  
-  // Plan模块事件
-  PLAN_CREATED = 'plan:created',
-  PLAN_UPDATED = 'plan:updated',
-  PLAN_EXECUTED = 'plan:executed',
-  TASK_STARTED = 'task:started',
-  TASK_COMPLETED = 'task:completed',
-  TASK_FAILED = 'task:failed',
-  
-  // Confirm模块事件
-  APPROVAL_REQUESTED = 'approval:requested',
-  APPROVAL_GRANTED = 'approval:granted',
-  APPROVAL_REJECTED = 'approval:rejected',
-  
-  // Trace模块事件
-  TRACE_RECORDED = 'trace:recorded',
-  TRACE_SYNCED = 'trace:synced',
-  TRACE_ANALYZED = 'trace:analyzed',
-  
-  // Role模块事件
-  ROLE_CREATED = 'role:created',
-  ROLE_UPDATED = 'role:updated',
-  ROLE_DELETED = 'role:deleted',
-  PERMISSION_CHECKED = 'permission:checked',
-  
-  // Extension模块事件
-  EXTENSION_REGISTERED = 'extension:registered',
-  EXTENSION_LOADED = 'extension:loaded',
-  EXTENSION_UNLOADED = 'extension:unloaded',
-  
   // 系统事件
-  SYSTEM_ERROR = 'system:error',
-  SYSTEM_WARNING = 'system:warning',
-  SYSTEM_INFO = 'system:info',
+  SYSTEM_STARTUP = 'system.startup',
+  SYSTEM_SHUTDOWN = 'system.shutdown',
+  SYSTEM_ERROR = 'system.error',
   
-  // 依赖注入事件
-  DI_CONTAINER_INITIALIZED = 'di:containerInitialized',
-  DI_SERVICE_REGISTERED = 'di:serviceRegistered',
-  DI_SERVICE_RESOLVED = 'di:serviceResolved',
-  DI_CIRCULAR_DEPENDENCY = 'di:circularDependency'
+  // 用户事件
+  USER_LOGIN = 'user.login',
+  USER_LOGOUT = 'user.logout',
+  USER_ACTION = 'user.action',
+  
+  // 数据事件
+  DATA_CREATED = 'data.created',
+  DATA_UPDATED = 'data.updated',
+  DATA_DELETED = 'data.deleted',
+  
+  // 工作流事件
+  WORKFLOW_STARTED = 'workflow.started',
+  WORKFLOW_COMPLETED = 'workflow.completed',
+  WORKFLOW_FAILED = 'workflow.failed',
+  
+  // 模块事件
+  MODULE_LOADED = 'module.loaded',
+  MODULE_UNLOADED = 'module.unloaded',
+  MODULE_ERROR = 'module.error',
+  
+  // 缓存事件
+  CACHE_HIT = 'cache.hit',
+  CACHE_MISS = 'cache.miss',
+  CACHE_CLEARED = 'cache.cleared',
+  
+  // 网络事件
+  REQUEST_STARTED = 'request.started',
+  REQUEST_COMPLETED = 'request.completed',
+  REQUEST_FAILED = 'request.failed'
 }
 
 /**
- * 事件数据接口
+ * 事件数据基础接口
  */
 export interface EventData {
   timestamp: string;
-  [key: string]: any;
+  source: string;
+  correlationId?: string;
+  metadata?: Record<string, any>;
 }
 
 /**
- * 模块注册事件数据
+ * 系统事件数据
  */
-export interface ModuleRegisteredEventData extends EventData {
-  module: string;
-  interfaces: string[];
+export interface SystemEventData extends EventData {
+  type: 'startup' | 'shutdown' | 'error';
+  version?: string;
+  environment?: string;
+  error?: {
+    message: string;
+    stack?: string;
+    code?: string;
+  };
 }
 
 /**
- * 依赖图生成事件数据
+ * 用户事件数据
  */
-export interface DependencyGraphGeneratedEventData extends EventData {
-  nodeCount: number;
-  relationCount: number;
-  isValid: boolean;
-  moduleCount?: number;
-  analysisTime?: number;
+export interface UserEventData extends EventData {
+  userId: string;
+  sessionId?: string;
+  action?: string;
+  details?: Record<string, any>;
 }
 
 /**
- * 循环依赖检测事件数据
+ * 数据事件数据
  */
-export interface DependencyCycleDetectedEventData extends EventData {
-  cycles: string[][];
+export interface DataEventData extends EventData {
+  entityType: string;
+  entityId: string;
+  operation: 'create' | 'update' | 'delete';
+  changes?: Record<string, any>;
+  previousValue?: any;
+  newValue?: any;
 }
 
 /**
- * 依赖分析完成事件数据
+ * 工作流事件数据
  */
-export interface DependencyAnalysisCompletedEventData extends EventData {
-  moduleCount: number;
-  nodeCount: number;
-  relationCount: number;
-  cohesionMetrics: Record<string, number>;
-  couplingMetrics: Record<string, number>;
-  analysisTime: number;
+export interface WorkflowEventData extends EventData {
+  workflowId: string;
+  workflowType: string;
+  status: 'started' | 'completed' | 'failed';
+  stageId?: string;
+  result?: any;
+  error?: {
+    message: string;
+    code?: string;
+    details?: any;
+  };
 }
 
 /**
- * 依赖验证失败事件数据
+ * 模块事件数据
  */
-export interface DependencyValidationFailedEventData extends EventData {
-  violations: string[];
-  cycles?: string[][];
+export interface ModuleEventData extends EventData {
+  moduleName: string;
+  moduleVersion: string;
+  operation: 'load' | 'unload' | 'error';
+  dependencies?: string[];
+  error?: {
+    message: string;
+    stack?: string;
+  };
 }
 
 /**
- * 依赖注入容器初始化事件数据
+ * 缓存事件数据
  */
-export interface DIContainerInitializedEventData extends EventData {
-  containerName?: string;
-  registrationCount: number;
-  isRoot: boolean;
+export interface CacheEventData extends EventData {
+  key: string;
+  operation: 'hit' | 'miss' | 'set' | 'delete' | 'clear';
+  ttl?: number;
+  size?: number;
+  pattern?: string;
 }
 
 /**
- * 依赖注入服务注册事件数据
+ * 网络请求事件数据
  */
-export interface DIServiceRegisteredEventData extends EventData {
-  serviceToken: string;
-  isSingleton: boolean;
-  dependencyCount: number;
+export interface RequestEventData extends EventData {
+  requestId: string;
+  method: string;
+  url: string;
+  status?: number;
+  duration?: number;
+  userAgent?: string;
+  ip?: string;
+  error?: {
+    message: string;
+    code?: string;
+  };
 }
 
 /**
- * 依赖注入服务解析事件数据
+ * 性能事件数据
  */
-export interface DIServiceResolvedEventData extends EventData {
-  serviceToken: string;
-  resolutionTime: number;
-  dependencyDepth: number;
+export interface PerformanceEventData extends EventData {
+  operation: string;
+  duration: number;
+  memoryUsage?: {
+    rss: number;
+    heapTotal: number;
+    heapUsed: number;
+    external: number;
+  };
+  cpuUsage?: {
+    user: number;
+    system: number;
+  };
 }
 
 /**
- * 依赖注入循环依赖事件数据
+ * 安全事件数据
  */
-export interface DICircularDependencyEventData extends EventData {
-  cycle: string[];
+export interface SecurityEventData extends EventData {
+  eventType: 'authentication' | 'authorization' | 'intrusion' | 'audit';
+  userId?: string;
+  resource?: string;
+  action?: string;
+  result: 'success' | 'failure';
+  riskLevel: 'low' | 'medium' | 'high' | 'critical';
+  details?: Record<string, any>;
 }
 
 /**
- * 事件数据类型映射
+ * 业务事件数据
  */
-export interface EventDataMap {
-  [EventType.MODULE_REGISTERED]: ModuleRegisteredEventData;
-  [EventType.DEPENDENCY_GRAPH_GENERATED]: DependencyGraphGeneratedEventData;
-  [EventType.DEPENDENCY_CYCLE_DETECTED]: DependencyCycleDetectedEventData;
-  [EventType.DEPENDENCY_ANALYSIS_COMPLETED]: DependencyAnalysisCompletedEventData;
-  [EventType.DEPENDENCY_VALIDATION_FAILED]: DependencyValidationFailedEventData;
-  [EventType.DI_CONTAINER_INITIALIZED]: DIContainerInitializedEventData;
-  [EventType.DI_SERVICE_REGISTERED]: DIServiceRegisteredEventData;
-  [EventType.DI_SERVICE_RESOLVED]: DIServiceResolvedEventData;
-  [EventType.DI_CIRCULAR_DEPENDENCY]: DICircularDependencyEventData;
-  [key: string]: EventData;
+export interface BusinessEventData extends EventData {
+  domain: string;
+  aggregate: string;
+  aggregateId: string;
+  eventVersion: number;
+  payload: Record<string, any>;
 }
 
 /**
- * 事件处理函数类型
+ * 事件类型到数据类型的映射
  */
-export type EventHandler<T extends EventData = EventData> = (data: T) => void; 
+export type EventTypeDataMap = {
+  [EventType.SYSTEM_STARTUP]: SystemEventData;
+  [EventType.SYSTEM_SHUTDOWN]: SystemEventData;
+  [EventType.SYSTEM_ERROR]: SystemEventData;
+  [EventType.USER_LOGIN]: UserEventData;
+  [EventType.USER_LOGOUT]: UserEventData;
+  [EventType.USER_ACTION]: UserEventData;
+  [EventType.DATA_CREATED]: DataEventData;
+  [EventType.DATA_UPDATED]: DataEventData;
+  [EventType.DATA_DELETED]: DataEventData;
+  [EventType.WORKFLOW_STARTED]: WorkflowEventData;
+  [EventType.WORKFLOW_COMPLETED]: WorkflowEventData;
+  [EventType.WORKFLOW_FAILED]: WorkflowEventData;
+  [EventType.MODULE_LOADED]: ModuleEventData;
+  [EventType.MODULE_UNLOADED]: ModuleEventData;
+  [EventType.MODULE_ERROR]: ModuleEventData;
+  [EventType.CACHE_HIT]: CacheEventData;
+  [EventType.CACHE_MISS]: CacheEventData;
+  [EventType.CACHE_CLEARED]: CacheEventData;
+  [EventType.REQUEST_STARTED]: RequestEventData;
+  [EventType.REQUEST_COMPLETED]: RequestEventData;
+  [EventType.REQUEST_FAILED]: RequestEventData;
+};
+
+/**
+ * 事件处理器类型
+ */
+export type EventHandler<T extends EventData = EventData> = (data: T) => void | Promise<void>;
+
+/**
+ * 事件过滤器类型
+ */
+export type EventFilter<T extends EventData = EventData> = (data: T) => boolean;
+
+/**
+ * 事件转换器类型
+ */
+export type EventTransformer<T extends EventData = EventData, R extends EventData = EventData> = (data: T) => R;

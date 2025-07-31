@@ -1,0 +1,492 @@
+description: "MPLP项目开发标准 - 定义架构设计原则、命名规范、Schema驱动开发和工作流程"
+globs: ["**/*.ts", "**/*.js", "**/src/**", "**/schemas/**", "**/modules/**"]
+alwaysApply: true
+---
+
+# MPLP 开发标准规则
+
+> **规则版本**: v2.0.0  
+> **创建时间**: 2025-07-27  
+> **更新时间**: 2025-07-27  
+> **适用范围**: 所有MPLP项目代码和模块  
+> **强制等级**: 🚨 **最高优先级** - 违反将导致任务重新执行
+
+## 🎯 开发核心原则
+
+### 基础原则
+- **Schema驱动开发**: 所有功能开发必须以Schema定义为标准
+- **厂商中立**: 协议完全中立，支持任何平台集成，避免供应商锁定
+- **模块化设计**: 六个核心模块（Context/Plan/Confirm/Trace/Role/Extension）独立且协作
+- **接口分离**: 使用接口抽象实现，确保组件可替换性
+- **开放标准**: 提供通用接口，允许任何第三方工具和平台集成
+- **高性能**: API响应P95<100ms，协议解析<10ms，符合性能目标
+
+## 📋 Schema驱动开发流程
+
+### 1. 开发流程强制顺序
+```
+每次开发任务必须严格按照以下顺序执行：
+
+1. 📖 读取Schema定义
+   - 必须先读取相关的JSON Schema文件
+   - 确认字段名称、类型结构、枚举值、必填字段
+   - 理解Schema的完整数据模型
+
+2. 🔍 评估现有实现
+   - 检查现有代码与Schema的差异
+   - 识别不符合Schema的字段名称和类型
+   - 制定Schema合规的修正计划
+
+3. 🏗️ 开发顺序
+   Schema → Types/Interfaces → Modules → Protocols → Routes → Services → Core → Tests
+```
+
+### 2. Schema合规性检查
+```typescript
+// ✅ 正确：严格按照Schema定义
+interface ConfirmProtocol {
+  confirmation_id: UUID;           // Schema字段: confirmation_id
+  confirmation_type: ConfirmationType; // Schema字段: confirmation_type
+  status: ConfirmStatus;           // Schema字段: status
+  priority: ConfirmPriority;       // Schema字段: priority
+  // 完全匹配Schema结构
+}
+
+// ❌ 错误：偏离Schema定义
+interface ConfirmProtocol {
+  confirmId: string;               // 应为confirmation_id
+  type: string;                    // 应为confirmation_type
+  confirmStatus: string;           // 应为status
+  // 字段名称不符合Schema
+}
+```
+
+### 3. 严格禁止行为
+```
+❌ 禁止在未读取Schema的情况下开始开发
+❌ 禁止使用与Schema不符的字段名称
+❌ 禁止偏离Schema定义的类型结构
+❌ 禁止在Schema不明确前编写测试用例
+❌ 禁止修改Schema定义以适应代码（代码必须适应Schema）
+```
+
+## 🏗️ 架构设计原则
+
+### 1. 厂商中立原则（最高架构优先级）
+```
+MPLP协议是一个完全厂商中立的开放标准，不依赖于任何特定厂商或平台。
+所有核心功能必须独立于任何特定第三方工具或服务实现。
+TracePilot和Coregentis仅作为集成示例，展示如何与MPLP协议集成。
+任何厂商特定的适配器或集成必须通过Extension模块实现，不得侵入核心代码。
+```
+
+### 2. 厂商中立接口设计规范
+```typescript
+// 1. 通用接口命名必须中立
+interface ITraceAdapter {  // 使用I前缀 + PascalCase，不包含厂商名称
+  syncTraceData(data: TraceData): Promise<SyncResult>;
+  checkHealth(): Promise<AdapterHealth>;
+}
+
+// 2. 核心模块只能依赖中立接口，不能直接引用厂商实现
+class PlanManager {
+  private traceAdapter: ITraceAdapter; // ✅ 正确：依赖通用接口
+  
+  setTraceAdapter(adapter: ITraceAdapter): void { // ✅ 正确：参数类型为通用接口
+    this.traceAdapter = adapter;
+  }
+}
+
+// 3. 厂商特定实现必须实现中立接口
+class TracePilotAdapter implements ITraceAdapter { // ✅ 正确：实现通用接口
+  syncTraceData(data: TraceData): Promise<SyncResult> {
+    // 厂商特定实现
+  }
+}
+```
+
+### 3. 适配器层次结构
+```
+接口层: ITraceAdapter, IPlanAdapter, IConfirmAdapter, ...
+    ↑
+基础实现层: BaseTraceAdapter, BasePlanAdapter, ...
+    ↑
+增强实现层: EnhancedTraceAdapter, EnhancedPlanAdapter, ...
+    ↑
+厂商实现层: 具体厂商适配器实现
+```
+
+### 4. 适配器设计原则
+1. **接口中立性**: 通用接口不包含厂商特定术语
+2. **依赖注入**: 使用依赖注入而非直接实例化
+3. **可替换性**: 支持运行时替换适配器实现
+4. **错误隔离**: 适配器错误不应传播到核心模块
+5. **性能缓冲**: 实现本地缓存减少外部依赖
+6. **优雅降级**: 外部服务不可用时提供降级策略
+7. **版本兼容**: 处理不同版本API的兼容性
+
+## 🔤 命名规范
+
+### 1. 文件命名规范
+```
+// 正确的文件命名（kebab-case）
+context-manager.ts
+plan-service.ts
+trace-adapter.interface.ts
+confirm-protocol.json
+
+// 错误的文件命名
+ContextManager.ts      // 不应使用PascalCase
+planService.ts        // 不应使用camelCase
+TRACE_ADAPTER.ts      // 不应使用UPPER_SNAKE_CASE
+```
+
+### 2. 文件类型后缀规范
+```
+接口文件:       *.interface.ts
+类型定义:       *.types.ts
+模型/实体:      *.entity.ts, *.model.ts
+服务:           *.service.ts
+管理器:         *.manager.ts
+控制器:         *.controller.ts
+工厂:           *.factory.ts
+仓库:           *.repository.ts
+工具函数:       *.utils.ts
+常量:           *.constants.ts
+枚举:           *.enum.ts
+配置:           *.config.ts
+中间件:         *.middleware.ts
+测试:           *.test.ts, *.spec.ts
+```
+
+### 3. 标识符命名规范
+```typescript
+// 类和接口: PascalCase
+class ContextManager { }
+interface ITraceAdapter { }
+
+// 变量和函数: camelCase
+const contextId = '123';
+function calculateTotal() { }
+
+// 常量: UPPER_SNAKE_CASE
+const MAX_RETRY_COUNT = 3;
+const API_BASE_URL = 'https://api.example.com';
+
+// 枚举: PascalCase
+enum TaskStatus {
+  Pending = 'pending',
+  Running = 'running',
+  Completed = 'completed',
+  Failed = 'failed'
+}
+
+// 私有成员变量: _camelCase (下划线前缀)
+class UserService {
+  private _httpClient: HttpClient;
+}
+
+// 类型参数: PascalCase, 通常使用T前缀
+function getItem<TItem>(id: string): TItem { }
+```
+
+### 4. 数据库相关命名
+```
+数据库表名:     snake_case，复数形式 (users, plan_tasks)
+主键列名:       id
+外键列名:       {table_name}_id (user_id, plan_id)
+创建时间列名:   created_at
+更新时间列名:   updated_at
+布尔型列名:     is_active, has_permission
+```
+
+### 5. API路径命名
+```
+API端点路径:    kebab-case
+               /api/v1/contexts/{context_id}/shared-state
+               /api/v1/plans/{plan_id}/tasks
+查询参数:       camelCase
+               /api/v1/contexts?pageSize=10&pageNumber=2
+```
+
+## 🔄 Plan→Confirm→Trace→Delivery流程
+
+### 1. Plan阶段（规划）
+```markdown
+## 📋 Plan阶段
+
+**引用规则**: .cursor/rules/development-standards.mdc - Schema驱动开发
+**任务模块**: [context/plan/confirm/trace/role/extension]
+**预期交付**: [具体功能描述和性能目标]
+
+### 技术方案
+- 实现方式：[详细技术方案]
+- 性能目标：[具体性能指标，参考相关.mdc]
+- 依赖关系：[模块依赖和接口要求]
+
+### 风险评估
+- 技术风险：[潜在技术挑战]
+- 性能风险：[性能相关风险]
+- 缓解措施：[风险应对方案]
+```
+
+### 2. Confirm阶段（确认）
+```markdown
+## ✅ Confirm阶段
+
+**方案确认**: [确认技术方案可行性]
+**规则符合性**: 符合 [具体.mdc文件] 中的 [具体要求]
+**性能目标**: [确认性能目标可达成]
+**测试策略**: [单元/集成/E2E测试规划]
+**版本影响**: [major/minor/patch版本递增需求]
+```
+
+### 3. Trace阶段（追踪）
+```markdown
+## 📊 Trace阶段
+
+**实施进度**: 
+- [时间戳]: [进度描述]
+- [时间戳]: [进度描述]
+- [时间戳]: [进度描述]
+
+**性能指标**: 
+- [操作名称]: [实测性能] (目标: [目标性能])
+- [操作名称]: [实测性能] (目标: [目标性能])
+
+**测试结果**: 
+- 单元测试: [通过数]/[总数] (覆盖率: [覆盖率]%)
+- 集成测试: [通过数]/[总数] (覆盖率: [覆盖率]%)
+
+**问题记录**:
+- [问题1描述]: [解决方案]
+- [问题2描述]: [解决方案]
+```
+
+### 4. Delivery阶段（交付）
+```markdown
+## 🚀 Delivery阶段
+
+**交付清单**: 
+- [x] 源代码完整提交
+- [x] 文档更新完成
+- [x] 所有测试通过
+- [x] 覆盖率达标
+- [x] 性能目标达成
+
+**合规性验证**:
+- [x] Schema验证通过
+- [x] 厂商中立验证通过
+- [x] 接口兼容性确认
+
+**发布准备**:
+- 版本号: [版本号]
+- 变更日志: [关键变更]
+- 部署说明: [部署注意事项]
+```
+
+## 🔄 工作流驱动开发
+
+### 1. 工作流系统使用规范
+```
+使用工作流系统是MPLP开发的标准方法，必须严格遵循以下规则：
+
+1. 所有功能开发必须通过Plan→Confirm→Trace→Delivery流程执行
+2. 使用WorkflowService API进行标准化开发，避免直接使用底层实现
+3. 确保工作流适配器遵循厂商中立原则，不依赖特定厂商实现
+4. 所有工作流上下文必须包含完整元数据，便于追踪和审计
+```
+
+### 2. 工作流阶段定义
+```typescript
+// 工作流阶段定义必须遵循以下规范
+enum WorkflowStageType {
+  PLAN = 'plan',         // 规划阶段
+  CONFIRM = 'confirm',   // 确认阶段
+  TRACE = 'trace',       // 追踪阶段
+  DELIVERY = 'delivery'  // 交付阶段
+}
+
+// 每个阶段必须实现标准接口
+interface IWorkflowStage {
+  execute(context: IWorkflowContext): Promise<WorkflowTaskResult>;
+}
+```
+
+### 3. 工作流适配器规范
+```typescript
+// 工作流适配器必须实现以下接口
+interface IWorkflowAdapter {
+  // 初始化适配器
+  initialize(): Promise<void>;
+  
+  // 阶段开始时调用
+  onStageStart(stageType: WorkflowStageType, context: IWorkflowContext): Promise<void>;
+  
+  // 阶段完成时调用
+  onStageComplete(stageType: WorkflowStageType, result: WorkflowTaskResult, context: IWorkflowContext): Promise<void>;
+  
+  // 阶段失败时调用
+  onStageFailed(stageType: WorkflowStageType, error: Error, context: IWorkflowContext): Promise<void>;
+  
+  // 工作流完成时调用
+  onWorkflowComplete(context: IWorkflowContext): Promise<void>;
+  
+  // 健康检查
+  checkHealth(): Promise<{ status: string; details?: any }>;
+}
+```
+
+### 4. 工作流集成最佳实践
+```
+1. 使用依赖注入方式集成MPLP管理器和工作流系统
+2. 确保工作流上下文与MPLP上下文隔离，避免数据污染
+3. 使用事件驱动方式进行系统间通信，而非直接修改状态
+4. 实现适当的错误处理和重试逻辑，确保工作流稳定性
+5. 添加完整的日志和监控，便于问题排查和性能优化
+```
+
+## ✅ 代码质量标准
+
+### 1. 类型安全
+```typescript
+// ✅ 正确: 使用明确的类型
+function processContext(context: ContextProtocol): ContextResult {
+  // 实现...
+}
+
+// ❌ 错误: 使用any类型
+function processContext(context: any): any {
+  // 实现...
+}
+
+// ✅ 正确: 使用泛型确保类型安全
+function getEntityById<T extends BaseEntity>(id: string): Promise<T | null> {
+  // 实现...
+}
+
+// ❌ 错误: 未使用泛型，返回unknown类型
+function getEntityById(id: string): Promise<unknown> {
+  // 实现...
+}
+```
+
+### 2. 错误处理
+```typescript
+// ✅ 正确: 使用类型化错误
+class ValidationError extends Error {
+  constructor(public readonly details: string[]) {
+    super('Validation failed');
+    this.name = 'ValidationError';
+  }
+}
+
+// ✅ 正确: 使用异步错误处理
+async function fetchData(): Promise<Result> {
+  try {
+    const response = await api.get('/data');
+    return { success: true, data: response.data };
+  } catch (error) {
+    logger.error('Failed to fetch data', error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown error'
+    };
+  }
+}
+
+// ❌ 错误: 返回null表示错误
+async function fetchData(): Promise<Data | null> {
+  try {
+    const response = await api.get('/data');
+    return response.data;
+  } catch (error) {
+    return null; // 错误: 丢失错误信息
+  }
+}
+```
+
+### 3. 代码组织
+```typescript
+// ✅ 正确: 单一职责原则
+class ContextService {
+  private repository: ContextRepository;
+  
+  constructor(repository: ContextRepository) {
+    this.repository = repository;
+  }
+  
+  async createContext(data: CreateContextRequest): Promise<ContextResult> {
+    // 创建Context的业务逻辑
+  }
+}
+
+// ❌ 错误: 职责混合
+class ContextService {
+  private db: Database;
+  
+  constructor(db: Database) {
+    this.db = db;
+  }
+  
+  async createContext(data: CreateContextRequest): Promise<ContextResult> {
+    // 直接处理数据库操作，没有分层
+    const sql = 'INSERT INTO contexts ...';
+    await this.db.query(sql, [...]);
+  }
+  
+  // 错误: 不相关功能混合
+  async validateUserPermission(userId: string): Promise<boolean> {
+    // 应该在权限服务中
+  }
+}
+```
+
+### 4. 测试和文档
+```typescript
+/**
+ * 创建新的上下文对象
+ * 
+ * @param request - 创建上下文的请求数据
+ * @param userId - 创建者用户ID
+ * @returns 操作结果，包含创建的上下文或错误信息
+ * 
+ * @example
+ * ```typescript
+ * const result = await contextService.createContext({
+ *   name: "My Context",
+ *   description: "Test context"
+ * }, "user-123");
+ * ```
+ */
+async function createContext(
+  request: CreateContextRequest,
+  userId: string
+): Promise<ContextOperationResult> {
+  // 实现...
+}
+```
+
+## 🔍 代码审查标准
+
+### 代码审查清单
+- [ ] 代码严格遵循Schema定义
+- [ ] 正确的命名规范应用
+- [ ] 适当的类型安全（无any类型）
+- [ ] 完善的错误处理机制
+- [ ] 符合单一职责原则
+- [ ] 通过所有lint检查
+- [ ] 测试覆盖率达标
+- [ ] 性能符合要求
+- [ ] 没有厂商特定依赖
+- [ ] 文档注释完整
+
+---
+
+**规则创建**: MPLP架构团队  
+**维护责任**: 所有开发者  
+**审查周期**: 每个开发阶段结束后审查
+description:
+globs:
+alwaysApply: false
+---

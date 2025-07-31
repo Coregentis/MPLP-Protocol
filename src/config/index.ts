@@ -1,72 +1,47 @@
 /**
- * MPLP v1.0 统一配置管理
+ * MPLP Configuration Module - 厂商中立配置管理
  * 
- * @version v1.1.0
+ * 提供应用程序的配置管理功能，支持环境变量和默认配置
+ * 
+ * @version 1.0.3
  * @created 2025-07-09T21:00:00+08:00
- * @updated 2025-07-16T16:00:00+08:00
- * @compliance .cursor/rules/security-requirements.mdc - 敏感配置管理
- * @compliance .cursor/rules/vendor-neutral-design.mdc - 厂商中立配置
+ * @updated 2025-08-15T20:45:00+08:00
  */
 
-import { config as dotenvConfig } from 'dotenv';
-import { traceAdapterConfig } from './trace-adapter.config';
-
-// 加载环境变量
-dotenvConfig();
-
-export const config = {
+export interface AppConfig {
   app: {
-    name: 'MPLP',
-    version: '1.0.0',
+    name: string;
+    version: string;
+    environment: string;
+  };
+  server: {
+    port: number;
+    host: string;
+  };
+  traceAdapter: {
+    integration: {
+      enabled: boolean;
+    };
+    batchSize: number;
+    timeout: number;
+  };
+}
+
+export const config: AppConfig = {
+  app: {
+    name: process.env.APP_NAME || 'MPLP',
+    version: process.env.APP_VERSION || '1.0.3',
     environment: process.env.NODE_ENV || 'development'
   },
-  
   server: {
     port: parseInt(process.env.PORT || '3000', 10),
-    host: process.env.HOST || '0.0.0.0'
+    host: process.env.HOST || 'localhost'
   },
-  
-  database: {
-    host: process.env.DB_HOST || 'localhost',
-    port: parseInt(process.env.DB_PORT || '5432', 10),
-    database: process.env.DB_NAME || 'mplp',
-    username: process.env.DB_USERNAME || 'mplp',
-    password: process.env.DB_PASSWORD || 'password',
-    synchronize: process.env.NODE_ENV === 'development'
-  },
-  
-  redis: {
-    host: process.env.REDIS_HOST || 'localhost',
-    port: parseInt(process.env.REDIS_PORT || '6379', 10),
-    password: process.env.REDIS_PASSWORD
-  },
-  
-  // 追踪适配器配置（厂商中立）
   traceAdapter: {
-    apiUrl: traceAdapterConfig.connection.apiUrl,
-    apiKey: traceAdapterConfig.connection.apiKey,
-    timeout: traceAdapterConfig.connection.timeout,
-    retryAttempts: traceAdapterConfig.connection.retryAttempts,
-    batchSize: traceAdapterConfig.performance.batchSize,
     integration: {
-      enabled: traceAdapterConfig.integration.enabled
-    }
-  },
-  
-  // 向后兼容字段 - 已废弃，请使用traceAdapter
-  tracepilot: {
-    apiUrl: traceAdapterConfig.connection.apiUrl,
-    apiKey: traceAdapterConfig.connection.apiKey,
-    timeout: traceAdapterConfig.connection.timeout,
-    retryAttempts: traceAdapterConfig.connection.retryAttempts,
-    batchSize: traceAdapterConfig.performance.batchSize,
-    integration: {
-      enabled: traceAdapterConfig.integration.enabled
-    }
-  },
-  
-  jwt: {
-    secret: process.env.JWT_SECRET || 'mplp-dev-secret',
-    expiresIn: process.env.JWT_EXPIRES_IN || '24h'
+      enabled: process.env.TRACE_ADAPTER_ENABLED === 'true' || false
+    },
+    batchSize: parseInt(process.env.TRACE_BATCH_SIZE || '100', 10),
+    timeout: parseInt(process.env.TRACE_TIMEOUT || '5000', 10)
   }
-}; 
+};

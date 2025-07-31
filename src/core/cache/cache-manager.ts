@@ -1,498 +1,404 @@
 /**
- * MPLP缓存管理器
- *
- * 提供缓存管理功能，包括缓存提供者注册、获取、删除等操作。
- * 实现ICacheManager接口，支持多级缓存和缓存策略。
- *
- * @version v1.0.0
- * @created 2025-07-18T10:00:00+08:00
+ * 缓存管理器
+ * @description 提供统一的缓存管理接口，支持多种缓存策略和存储后端
+ * @author MPLP Team
+ * @version 1.0.1
  */
 
-import {
-  ICacheManager,
-  ICacheProvider,
-  CacheItemOptions,
-  CacheStats,
-  CacheLevel
-} from './interfaces';
+import { Logger } from '../../public/utils/logger';
+import { EventBus } from '../event-bus';
+import { EventType } from '../event-types';
 
-/**
- * 缓存管理器配置
- */
 export interface CacheManagerConfig {
-  /**
-   * 默认提供者名称
-   */
-  defaultProviderName?: string;
-
-  /**
-   * 启用多级缓存
-   */
+  defaultTTL?: number;
+  maxSize?: number;
+  cleanupInterval?: number;
+  enableMetrics?: boolean;
+  enableEvents?: boolean;
+  storageBackend?: 'memory' | 'redis' | 'file';
+  redisConfig?: {
+    host: string;
+    port: number;
+    password?: string;
+    db?: number;
+  };
   enableMultiLevelCache?: boolean;
-
-  /**
-   * 自动同步多级缓存
-   */
   autoSyncMultiLevelCache?: boolean;
-
-  /**
-   * 启用统计
-   */
   enableStats?: boolean;
+}
 
-  /**
-   * 日志级别
-   */
-  logLevel?: 'debug' | 'info' | 'warn' | 'error' | 'none';
+export interface CacheEntry<T = any> {
+  key: string;
+  value: T;
+  ttl: number;
+  createdAt: number;
+  accessedAt: number;
+  accessCount: number;
+}
+
+export interface CacheMetrics {
+  hits: number;
+  misses: number;
+  sets: number;
+  deletes: number;
+  evictions: number;
+  totalSize: number;
+  hitRate: number;
 }
 
 /**
- * 缓存管理器
+ * 缓存管理器类
  */
-export class CacheManager implements ICacheManager {
-  private providers: Map<string, ICacheProvider> = new Map();
-  private levelProviders: Map<CacheLevel, ICacheProvider[]> = new Map();
-  private defaultProviderName?: string;
-  private config: Required<CacheManagerConfig>;
+export class CacheManager {
+  private cache = new Map<string, CacheEntry>();
+  private timers = new Map<string, NodeJS.Timeout>();
+  private metrics: CacheMetrics;
+  private logger: Logger;
+  private eventBus?: EventBus;
+  private cleanupTimer?: NodeJS.Timeout;
+  private config: CacheManagerConfig & {
+    defaultTTL: number;
+    maxSize: number;
+    cleanupInterval: number;
+    enableMetrics: boolean;
+    enableEvents: boolean;
+    storageBackend: 'memory' | 'redis' | 'file';
+  };
 
-  /**
-   * 创建缓存管理器
-   * @param config 配置
-   */
-  constructor(config?: CacheManagerConfig) {
+  constructor(
+    config: CacheManagerConfig,
+    eventBus?: EventBus
+  ) {
+    // 设置默认配置
     this.config = {
-      defaultProviderName: config?.defaultProviderName || '',
-      enableMultiLevelCache: config?.enableMultiLevelCache !== undefined ? config.enableMultiLevelCache : true,
-      autoSyncMultiLevelCache: config?.autoSyncMultiLevelCache !== undefined ? config.autoSyncMultiLevelCache : true,
-      enableStats: config?.enableStats !== undefined ? config.enableStats : true,
-      logLevel: config?.logLevel || 'info'
+      defaultTTL: 300,
+      maxSize: 1000,
+      cleanupInterval: 60,
+      enableMetrics: true,
+      enableEvents: true,
+      storageBackend: 'memory',
+      enableMultiLevelCache: false,
+      autoSyncMultiLevelCache: false,
+      enableStats: true,
+      ...config
     };
 
-    // 初始化层级提供者映射
-    Object.values(CacheLevel).forEach(level => {
-      this.levelProviders.set(level as CacheLevel, []);
-    });
+    this.logger = new Logger('CacheManager');
+    this.eventBus = eventBus;
+    this.metrics = {
+      hits: 0,
+      misses: 0,
+      sets: 0,
+      deletes: 0,
+      evictions: 0,
+      totalSize: 0,
+      hitRate: 0
+    };
+
+    this.startCleanupTimer();
+    this.logger.info('Cache manager initialized', { config: this.config });
   }
 
   /**
-   * 注册缓存提供者
-   * @param provider 缓存提供者
-   * @param isDefault 是否设为默认
-   * @returns 是否成功
+   * 获取缓存值
    */
-  public registerProvider(provider: ICacheProvider, isDefault?: boolean): boolean {
-    const name = provider.getName();
-    const level = provider.getLevel();
+  async get<T = any>(key: string): Promise<T | undefined> {
+    const entry = this.cache.get(key);
+    
+    if (!entry) {
+      this.metrics.misses++;
+      this.updateHitRate();
+      this.emitEvent('miss', { key });
+      return undefined;
+    }
 
-    // 检查是否已存在同名提供者
-    if (this.providers.has(name)) {
-      this.log('warn', `Provider with name "${name}" already exists. Skipping registration.`);
+    // 检查是否过期
+    if (this.isExpired(entry)) {
+      await this.delete(key);
+      this.metrics.misses++;
+      this.updateHitRate();
+      this.emitEvent('miss', { key, reason: 'expired' });
+      return undefined;
+    }
+
+    // 更新访问信息
+    entry.accessedAt = Date.now();
+    entry.accessCount++;
+    
+    this.metrics.hits++;
+    this.updateHitRate();
+    this.emitEvent('hit', { key });
+    
+    return entry.value as T;
+  }
+
+  /**
+   * 设置缓存值
+   */
+  async set<T = any>(key: string, value: T, ttl?: number): Promise<boolean> {
+    try {
+      const effectiveTTL = ttl || this.config.defaultTTL;
+      const now = Date.now();
+      
+      // 检查缓存大小限制
+      if (this.cache.size >= this.config.maxSize && !this.cache.has(key)) {
+        await this.evictLRU();
+      }
+
+      const entry: CacheEntry<T> = {
+        key,
+        value,
+        ttl: effectiveTTL,
+        createdAt: now,
+        accessedAt: now,
+        accessCount: 1
+      };
+
+      this.cache.set(key, entry);
+      this.setExpiration(key, effectiveTTL);
+      
+      this.metrics.sets++;
+      this.metrics.totalSize = this.cache.size;
+      this.emitEvent('set', { key, ttl: effectiveTTL });
+      
+      return true;
+    } catch (error) {
+      this.logger.error('Failed to set cache entry', { key, error });
       return false;
     }
+  }
 
-    // 注册提供者
-    this.providers.set(name, provider);
-
-    // 添加到层级映射
-    const levelProviders = this.levelProviders.get(level) || [];
-    levelProviders.push(provider);
-    this.levelProviders.set(level, levelProviders);
-
-    // 设置默认提供者
-    if (isDefault || (!this.defaultProviderName && this.providers.size === 1)) {
-      this.defaultProviderName = name;
-      this.log('info', `Set "${name}" as default cache provider.`);
+  /**
+   * 删除缓存值
+   */
+  async delete(key: string): Promise<boolean> {
+    const deleted = this.cache.delete(key);
+    
+    if (deleted) {
+      this.clearTimer(key);
+      this.metrics.deletes++;
+      this.metrics.totalSize = this.cache.size;
+      this.emitEvent('delete', { key });
     }
+    
+    return deleted;
+  }
 
-    this.log('info', `Registered cache provider "${name}" at level "${level}".`);
+  /**
+   * 检查缓存是否存在
+   */
+  async has(key: string): Promise<boolean> {
+    const entry = this.cache.get(key);
+    
+    if (!entry) {
+      return false;
+    }
+    
+    if (this.isExpired(entry)) {
+      await this.delete(key);
+      return false;
+    }
+    
     return true;
-  }
-
-  /**
-   * 获取缓存提供者
-   * @param name 提供者名称
-   * @returns 缓存提供者
-   */
-  public getProvider(name?: string): ICacheProvider | undefined {
-    const providerName = name || this.defaultProviderName;
-    if (!providerName) {
-      this.log('warn', 'No provider name specified and no default provider set.');
-      return undefined;
-    }
-
-    const provider = this.providers.get(providerName);
-    if (!provider) {
-      this.log('warn', `Provider "${providerName}" not found.`);
-    }
-
-    return provider;
-  }
-
-  /**
-   * 获取指定层级的提供者
-   * @param level 缓存层级
-   * @returns 缓存提供者
-   */
-  public getProviderByLevel(level: CacheLevel): ICacheProvider | undefined {
-    const providers = this.levelProviders.get(level) || [];
-    if (providers.length === 0) {
-      this.log('warn', `No provider found for level "${level}".`);
-      return undefined;
-    }
-
-    // 返回第一个提供者
-    return providers[0];
-  }
-
-  /**
-   * 获取所有缓存提供者
-   * @returns 提供者列表
-   */
-  public getAllProviders(): ICacheProvider[] {
-    return Array.from(this.providers.values());
-  }
-
-  /**
-   * 移除缓存提供者
-   * @param name 提供者名称
-   * @returns 是否成功
-   */
-  public removeProvider(name: string): boolean {
-    const provider = this.providers.get(name);
-    if (!provider) {
-      this.log('warn', `Provider "${name}" not found. Cannot remove.`);
-      return false;
-    }
-
-    // 从提供者映射中移除
-    this.providers.delete(name);
-
-    // 从层级映射中移除
-    const level = provider.getLevel();
-    const levelProviders = this.levelProviders.get(level) || [];
-    const index = levelProviders.findIndex(p => p.getName() === name);
-    if (index !== -1) {
-      levelProviders.splice(index, 1);
-      this.levelProviders.set(level, levelProviders);
-    }
-
-    // 如果是默认提供者，重置默认提供者
-    if (this.defaultProviderName === name) {
-      this.defaultProviderName = this.providers.size > 0 ? 
-        Array.from(this.providers.keys())[0] : undefined;
-      
-      if (this.defaultProviderName) {
-        this.log('info', `Reset default provider to "${this.defaultProviderName}".`);
-      } else {
-        this.log('warn', 'No default provider available after removal.');
-      }
-    }
-
-    this.log('info', `Removed cache provider "${name}".`);
-    return true;
-  }
-
-  /**
-   * 获取缓存项
-   * @param key 缓存键
-   * @param options 缓存选项
-   * @returns 缓存值或undefined
-   */
-  public async get<T = any>(key: string, options?: Partial<CacheItemOptions>): Promise<T | undefined> {
-    const level = options?.level;
-    const namespace = options?.namespace;
-
-    // 如果指定了层级，从该层级获取
-    if (level) {
-      const provider = this.getProviderByLevel(level);
-      if (provider) {
-        return provider.get(key) as Promise<T | undefined>;
-      }
-      return undefined;
-    }
-
-    // 如果启用了多级缓存，从最快的缓存开始查找
-    if (this.config.enableMultiLevelCache) {
-      // 按层级顺序查找（从快到慢）
-      const levels = [CacheLevel.MEMORY, CacheLevel.LOCAL, CacheLevel.DISTRIBUTED, CacheLevel.PERSISTENT];
-      
-      for (const level of levels) {
-        const providers = this.levelProviders.get(level) || [];
-        
-        for (const provider of providers) {
-          const value = await provider.get(key) as T | undefined;
-          
-          if (value !== undefined) {
-            // 如果启用了自动同步，将值同步到更快的缓存
-            if (this.config.autoSyncMultiLevelCache) {
-              await this.syncToFasterCaches(key, value, level, options);
-            }
-            
-            return value;
-          }
-        }
-      }
-      
-      return undefined;
-    }
-
-    // 使用默认提供者
-    const provider = this.getProvider();
-    if (!provider) {
-      this.log('error', 'No cache provider available.');
-      return undefined;
-    }
-
-    return provider.get(key) as Promise<T | undefined>;
-  }
-
-  /**
-   * 设置缓存项
-   * @param key 缓存键
-   * @param value 缓存值
-   * @param options 缓存选项
-   * @returns 是否成功
-   */
-  public async set<T = any>(key: string, value: T, options?: Partial<CacheItemOptions>): Promise<boolean> {
-    const level = options?.level;
-
-    // 如果指定了层级，只设置到该层级
-    if (level) {
-      const provider = this.getProviderByLevel(level);
-      if (provider) {
-        return provider.set(key, value, options);
-      }
-      this.log('warn', `No provider found for level "${level}". Cannot set cache.`);
-      return false;
-    }
-
-    // 如果启用了多级缓存，设置到所有层级
-    if (this.config.enableMultiLevelCache) {
-      let success = true;
-      
-      // 遍历所有提供者
-      for (const provider of this.providers.values()) {
-        const result = await provider.set(key, value, options);
-        if (!result) success = false;
-      }
-      
-      return success;
-    }
-
-    // 使用默认提供者
-    const provider = this.getProvider();
-    if (!provider) {
-      this.log('error', 'No cache provider available.');
-      return false;
-    }
-
-    return provider.set(key, value, options);
-  }
-
-  /**
-   * 删除缓存项
-   * @param key 缓存键
-   * @param options 缓存选项
-   * @returns 是否成功
-   */
-  public async delete(key: string, options?: Partial<CacheItemOptions>): Promise<boolean> {
-    const level = options?.level;
-
-    // 如果指定了层级，只从该层级删除
-    if (level) {
-      const provider = this.getProviderByLevel(level);
-      if (provider) {
-        return provider.delete(key);
-      }
-      this.log('warn', `No provider found for level "${level}". Cannot delete cache.`);
-      return false;
-    }
-
-    // 如果启用了多级缓存，从所有层级删除
-    if (this.config.enableMultiLevelCache) {
-      let success = true;
-      
-      // 遍历所有提供者
-      for (const provider of this.providers.values()) {
-        const result = await provider.delete(key);
-        if (!result) success = false;
-      }
-      
-      return success;
-    }
-
-    // 使用默认提供者
-    const provider = this.getProvider();
-    if (!provider) {
-      this.log('error', 'No cache provider available.');
-      return false;
-    }
-
-    return provider.delete(key);
   }
 
   /**
    * 清空缓存
-   * @param namespace 可选命名空间
-   * @param level 可选缓存层级
-   * @returns 是否成功
    */
-  public async clear(namespace?: string, level?: CacheLevel): Promise<boolean> {
-    // 如果指定了层级，只清空该层级
-    if (level) {
-      const providers = this.levelProviders.get(level) || [];
-      if (providers.length === 0) {
-        this.log('warn', `No provider found for level "${level}". Cannot clear cache.`);
-        return false;
-      }
-      
-      let success = true;
-      for (const provider of providers) {
-        const result = await provider.clear(namespace);
-        if (!result) success = false;
-      }
-      
-      return success;
+  async clear(): Promise<boolean> {
+    try {
+      this.cache.clear();
+      this.clearAllTimers();
+      this.metrics.totalSize = 0;
+      this.emitEvent('clear', {});
+      return true;
+    } catch (error) {
+      this.logger.error('Failed to clear cache', { error });
+      return false;
     }
+  }
 
-    // 清空所有提供者
-    let success = true;
-    for (const provider of this.providers.values()) {
-      const result = await provider.clear(namespace);
-      if (!result) success = false;
+  /**
+   * 按模式删除缓存
+   */
+  async clearPattern(pattern: string): Promise<number> {
+    const regex = new RegExp(pattern);
+    const keysToDelete: string[] = [];
+    
+    for (const key of Array.from(this.cache.keys())) {
+      if (regex.test(key)) {
+        keysToDelete.push(key);
+      }
     }
     
-    return success;
+    for (const key of keysToDelete) {
+      await this.delete(key);
+    }
+    
+    this.emitEvent('clearPattern', { pattern, count: keysToDelete.length });
+    return keysToDelete.length;
   }
 
   /**
    * 获取缓存统计信息
-   * @param providerName 可选提供者名称
-   * @returns 统计信息
    */
-  public async getStats(providerName?: string): Promise<CacheStats> {
-    if (providerName) {
-      const provider = this.getProvider(providerName);
-      if (!provider) {
-        this.log('warn', `Provider "${providerName}" not found. Cannot get stats.`);
-        return this.createEmptyStats();
-      }
-      
-      return provider.getStats();
-    }
-
-    // 使用默认提供者
-    const provider = this.getProvider();
-    if (!provider) {
-      this.log('error', 'No cache provider available.');
-      return this.createEmptyStats();
-    }
-
-    return provider.getStats();
+  getMetrics(): CacheMetrics {
+    return { ...this.metrics };
   }
 
   /**
-   * 获取所有缓存统计信息
-   * @returns 所有提供者的统计信息
+   * 获取所有缓存键
    */
-  public async getAllStats(): Promise<Record<string, CacheStats>> {
-    const stats: Record<string, CacheStats> = {};
-    
-    for (const [name, provider] of this.providers.entries()) {
-      stats[name] = await provider.getStats();
-    }
-    
-    return stats;
+  getKeys(): string[] {
+    return Array.from(this.cache.keys());
   }
 
   /**
-   * 将值同步到更快的缓存
-   * @param key 缓存键
-   * @param value 缓存值
-   * @param sourceLevel 源缓存层级
-   * @param options 缓存选项
-   * @returns 是否成功
+   * 获取缓存大小
    */
-  private async syncToFasterCaches(
-    key: string,
-    value: any,
-    sourceLevel: CacheLevel,
-    options?: Partial<CacheItemOptions>
-  ): Promise<boolean> {
-    // 定义层级优先级（从快到慢）
-    const levels = [CacheLevel.MEMORY, CacheLevel.LOCAL, CacheLevel.DISTRIBUTED, CacheLevel.PERSISTENT];
-    const sourceLevelIndex = levels.indexOf(sourceLevel);
-    
-    if (sourceLevelIndex <= 0) {
-      // 已经是最快的缓存，无需同步
-      return true;
-    }
-    
-    // 同步到更快的缓存
-    let success = true;
-    for (let i = 0; i < sourceLevelIndex; i++) {
-      const level = levels[i];
-      const providers = this.levelProviders.get(level) || [];
-      
-      for (const provider of providers) {
-        const result = await provider.set(key, value, options);
-        if (!result) success = false;
-      }
-    }
-    
-    return success;
+  getSize(): number {
+    return this.cache.size;
   }
 
   /**
-   * 创建空统计信息
-   * @returns 统计信息
+   * 检查条目是否过期
    */
-  private createEmptyStats(): CacheStats {
-    return {
-      hits: 0,
-      misses: 0,
-      hitRatio: 0,
-      itemCount: 0,
-      size: 0,
-      avgAccessTime: 0,
-      expiredCount: 0,
-      evictedCount: 0,
-      namespaceStats: {}
-    };
+  private isExpired(entry: CacheEntry): boolean {
+    if (entry.ttl <= 0) return false; // 永不过期
+    return Date.now() - entry.createdAt > entry.ttl * 1000;
   }
 
   /**
-   * 记录日志
-   * @param level 日志级别
-   * @param message 日志消息
+   * 设置过期定时器
    */
-  private log(level: 'debug' | 'info' | 'warn' | 'error', message: string): void {
-    const logLevels = {
-      debug: 0,
-      info: 1,
-      warn: 2,
-      error: 3,
-      none: 4
-    };
+  private setExpiration(key: string, ttl: number): void {
+    if (ttl <= 0) return; // 永不过期
+    
+    this.clearTimer(key);
+    
+    const timer = setTimeout(async () => {
+      await this.delete(key);
+      this.emitEvent('expire', { key });
+    }, ttl * 1000);
+    
+    this.timers.set(key, timer);
+  }
 
-    if (logLevels[level] >= logLevels[this.config.logLevel]) {
-      const timestamp = new Date().toISOString();
-      const prefix = `[${timestamp}] [CacheManager] [${level.toUpperCase()}]`;
-      
-      switch (level) {
-        case 'debug':
-          console.debug(`${prefix} ${message}`);
-          break;
-        case 'info':
-          console.info(`${prefix} ${message}`);
-          break;
-        case 'warn':
-          console.warn(`${prefix} ${message}`);
-          break;
-        case 'error':
-          console.error(`${prefix} ${message}`);
-          break;
+  /**
+   * 清除定时器
+   */
+  private clearTimer(key: string): void {
+    const timer = this.timers.get(key);
+    if (timer) {
+      clearTimeout(timer);
+      this.timers.delete(key);
+    }
+  }
+
+  /**
+   * 清除所有定时器
+   */
+  private clearAllTimers(): void {
+    for (const timer of Array.from(this.timers.values())) {
+      clearTimeout(timer);
+    }
+    this.timers.clear();
+  }
+
+  /**
+   * LRU淘汰策略
+   */
+  private async evictLRU(): Promise<void> {
+    let oldestKey = '';
+    let oldestTime = Date.now();
+    
+    for (const [key, entry] of Array.from(this.cache.entries())) {
+      if (entry.accessedAt < oldestTime) {
+        oldestTime = entry.accessedAt;
+        oldestKey = key;
       }
     }
+    
+    if (oldestKey) {
+      await this.delete(oldestKey);
+      this.metrics.evictions++;
+      this.emitEvent('evict', { key: oldestKey, reason: 'lru' });
+    }
   }
-} 
+
+  /**
+   * 更新命中率
+   */
+  private updateHitRate(): void {
+    const total = this.metrics.hits + this.metrics.misses;
+    this.metrics.hitRate = total > 0 ? this.metrics.hits / total : 0;
+  }
+
+  /**
+   * 发送事件
+   */
+  private emitEvent(operation: string, data: any): void {
+    if (!this.config.enableEvents || !this.eventBus) return;
+    
+    this.eventBus.publish(EventType.CACHE_HIT, {
+      timestamp: new Date().toISOString(),
+      source: 'CacheManager',
+      operation,
+      ...data
+    });
+  }
+
+  /**
+   * 启动清理定时器
+   */
+  private startCleanupTimer(): void {
+    if (this.config.cleanupInterval <= 0) return;
+    
+    this.cleanupTimer = setInterval(() => {
+      this.cleanup();
+    }, this.config.cleanupInterval * 1000);
+  }
+
+  /**
+   * 清理过期条目
+   */
+  private async cleanup(): Promise<void> {
+    const expiredKeys: string[] = [];
+
+    for (const [key, entry] of Array.from(this.cache.entries())) {
+      if (this.isExpired(entry)) {
+        expiredKeys.push(key);
+      }
+    }
+    
+    for (const key of expiredKeys) {
+      await this.delete(key);
+    }
+    
+    if (expiredKeys.length > 0) {
+      this.logger.debug('Cleaned up expired cache entries', { 
+        count: expiredKeys.length 
+      });
+    }
+  }
+
+  /**
+   * 注册缓存提供者（用于测试）
+   */
+  registerProvider(provider: any, isPrimary: boolean = false): void {
+    // 这是一个测试用的方法，实际实现可以根据需要扩展
+    this.logger.debug('Cache provider registered', { provider: provider.getName?.(), isPrimary });
+  }
+
+  /**
+   * 销毁缓存管理器
+   */
+  destroy(): void {
+    if (this.cleanupTimer) {
+      clearInterval(this.cleanupTimer);
+    }
+    this.clearAllTimers();
+    this.cache.clear();
+    this.logger.info('Cache manager destroyed');
+  }
+}

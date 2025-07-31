@@ -1,0 +1,339 @@
+name: Security Scan
+
+on:
+  schedule:
+    # 每周一凌晨2点运行安全扫描
+    - cron: '0 2 * * 1'
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  dependency-security:
+    name: Dependency Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run npm audit
+        run: |
+          echo "Running npm audit..."
+          npm audit --audit-level=moderate --json > audit-results.json || true
+          
+          # 检查是否有高危漏洞
+          HIGH_VULNS=$(cat audit-results.json | jq '.metadata.vulnerabilities.high // 0')
+          CRITICAL_VULNS=$(cat audit-results.json | jq '.metadata.vulnerabilities.critical // 0')
+          
+          echo "High vulnerabilities: $HIGH_VULNS"
+          echo "Critical vulnerabilities: $CRITICAL_VULNS"
+          
+          if [ "$CRITICAL_VULNS" -gt 0 ]; then
+            echo "❌ Critical vulnerabilities found!"
+            npm audit --audit-level=critical
+            exit 1
+          elif [ "$HIGH_VULNS" -gt 0 ]; then
+            echo "⚠️ High vulnerabilities found, please review"
+            npm audit --audit-level=high
+          else
+            echo "✅ No high or critical vulnerabilities found"
+          fi
+
+      - name: Upload audit results
+        uses: actions/upload-artifact@v3
+        with:
+          name: audit-results
+          path: audit-results.json
+
+  license-compliance:
+    name: License Compliance Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install license checker
+        run: npm install -g license-checker
+
+      - name: Check licenses
+        run: |
+          echo "Checking license compliance..."
+          license-checker --onlyAllow 'MIT;Apache-2.0;BSD-2-Clause;BSD-3-Clause;ISC;0BSD;Unlicense' --excludePrivatePackages > license-report.txt
+          
+          echo "✅ License compliance check passed"
+          echo "Allowed licenses: MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC, 0BSD, Unlicense"
+
+      - name: Generate license summary
+        run: |
+          echo "## License Summary" > license-summary.md
+          echo "" >> license-summary.md
+          license-checker --summary >> license-summary.md
+
+      - name: Upload license reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: license-reports
+          path: |
+            license-report.txt
+            license-summary.md
+
+  secrets-scan:
+    name: Secrets Detection
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run TruffleHog
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --debug --only-verified
+
+  code-security:
+    name: Code Security Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: typescript
+          queries: security-and-quality
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+        with:
+          category: "/language:typescript"
+
+  semgrep-scan:
+    name: Semgrep Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Semgrep
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: >-
+            p/security-audit
+            p/secrets
+            p/typescript
+            p/nodejs
+        env:
+          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+
+  supply-chain-security:
+    name: Supply Chain Security
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check package integrity
+        run: |
+          echo "Checking package integrity..."
+          npm ls --depth=0
+          
+          # 检查是否有未知的依赖
+          echo "Checking for unexpected dependencies..."
+          npm list --json > package-tree.json
+          
+          # 验证关键依赖的完整性
+          echo "Verifying critical dependencies..."
+          if npm list uuid > /dev/null 2>&1; then
+            echo "✅ uuid dependency verified"
+          else
+            echo "❌ uuid dependency missing or corrupted"
+            exit 1
+          fi
+
+      - name: Check for typosquatting
+        run: |
+          echo "Checking for potential typosquatting..."
+          # 检查是否有可疑的包名
+          npm list --json | jq -r '.dependencies | keys[]' | while read pkg; do
+            case "$pkg" in
+              *lodash*|*express*|*react*|*angular*|*vue*)
+                echo "⚠️ Found popular package name variant: $pkg"
+                ;;
+            esac
+          done
+
+      - name: Upload supply chain report
+        uses: actions/upload-artifact@v3
+        with:
+          name: supply-chain-report
+          path: package-tree.json
+
+  security-summary:
+    name: Security Summary
+    runs-on: ubuntu-latest
+    needs: [dependency-security, license-compliance, secrets-scan, code-security, supply-chain-security]
+    if: always()
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+
+      - name: Generate security summary
+        run: |
+          echo "# Security Scan Summary" > security-summary.md
+          echo "" >> security-summary.md
+          echo "**Scan Date:** $(date)" >> security-summary.md
+          echo "" >> security-summary.md
+          
+          # 检查各个扫描的结果
+          echo "## Scan Results" >> security-summary.md
+          echo "" >> security-summary.md
+          
+          if [ "${{ needs.dependency-security.result }}" == "success" ]; then
+            echo "- ✅ Dependency Security: PASSED" >> security-summary.md
+          else
+            echo "- ❌ Dependency Security: FAILED" >> security-summary.md
+          fi
+          
+          if [ "${{ needs.license-compliance.result }}" == "success" ]; then
+            echo "- ✅ License Compliance: PASSED" >> security-summary.md
+          else
+            echo "- ❌ License Compliance: FAILED" >> security-summary.md
+          fi
+          
+          if [ "${{ needs.secrets-scan.result }}" == "success" ]; then
+            echo "- ✅ Secrets Detection: PASSED" >> security-summary.md
+          else
+            echo "- ❌ Secrets Detection: FAILED" >> security-summary.md
+          fi
+          
+          if [ "${{ needs.code-security.result }}" == "success" ]; then
+            echo "- ✅ Code Security Analysis: PASSED" >> security-summary.md
+          else
+            echo "- ❌ Code Security Analysis: FAILED" >> security-summary.md
+          fi
+          
+          if [ "${{ needs.supply-chain-security.result }}" == "success" ]; then
+            echo "- ✅ Supply Chain Security: PASSED" >> security-summary.md
+          else
+            echo "- ❌ Supply Chain Security: FAILED" >> security-summary.md
+          fi
+          
+          echo "" >> security-summary.md
+          echo "## Recommendations" >> security-summary.md
+          echo "" >> security-summary.md
+          echo "- Keep dependencies up to date" >> security-summary.md
+          echo "- Review and approve all new dependencies" >> security-summary.md
+          echo "- Monitor security advisories" >> security-summary.md
+          echo "- Use npm audit regularly" >> security-summary.md
+          
+          cat security-summary.md
+
+      - name: Upload security summary
+        uses: actions/upload-artifact@v3
+        with:
+          name: security-summary
+          path: security-summary.md
+
+      - name: Comment on PR (if applicable)
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const summary = fs.readFileSync('security-summary.md', 'utf8');
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## 🔒 Security Scan Results\n\n${summary}`
+            });
+
+  security-policy-check:
+    name: Security Policy Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for security policy
+        run: |
+          if [ -f "SECURITY.md" ]; then
+            echo "✅ SECURITY.md found"
+          else
+            echo "⚠️ SECURITY.md not found, creating template..."
+            cat > SECURITY.md << 'EOF'
+          # Security Policy
+          
+          ## Supported Versions
+          
+          | Version | Supported          |
+          | ------- | ------------------ |
+          | 1.0.x   | :white_check_mark: |
+          
+          ## Reporting a Vulnerability
+          
+          Please report security vulnerabilities to [security@example.com](mailto:security@example.com).
+          
+          We will respond to security reports within 48 hours.
+          EOF
+            echo "📝 SECURITY.md template created"
+          fi
+
+      - name: Check for vulnerability disclosure
+        run: |
+          if [ -f ".github/SECURITY.md" ] || [ -f "SECURITY.md" ]; then
+            echo "✅ Security disclosure policy found"
+          else
+            echo "⚠️ Consider adding a security disclosure policy"
+          fi

@@ -9,9 +9,9 @@
 
 import * as path from 'path';
 import * as fs from 'fs';
-import { EventBus } from '../core/event-bus';
-import { DependencyAnalyzer } from '../core/dependency-analyzer';
-import { EventType, DependencyGraphGeneratedEventData } from '../core/event-types';
+import { EventBus } from '../public/modules/core/event-bus/event-bus';
+import { DependencyAnalyzer } from '../public/modules/core/dependency-analyzer/dependency-analyzer';
+import { EventType, DependencyGraphGeneratedEventData } from '../public/modules/core/event-bus/event-types';
 
 // 项目根目录
 const rootDir = path.resolve(__dirname, '../..');
@@ -24,6 +24,30 @@ const verbose = args.includes('--verbose') || args.includes('-v');
 // 确保输出目录存在
 if (!fs.existsSync(outputDir)) {
   fs.mkdirSync(outputDir, { recursive: true });
+}
+
+/**
+ * 生成DOT格式内容
+ */
+function generateDotContent(graph: any): string {
+  let dotContent = 'digraph Dependencies {\n';
+  dotContent += '  rankdir=LR;\n';
+  dotContent += '  node [shape=box, style=filled, fillcolor=lightblue];\n\n';
+
+  // 添加节点
+  for (const node of graph.nodes) {
+    dotContent += `  "${node.id}" [label="${node.name}"];\n`;
+  }
+
+  dotContent += '\n';
+
+  // 添加关系
+  for (const relation of graph.relations) {
+    dotContent += `  "${relation.from}" -> "${relation.to}" [label="${relation.type}"];\n`;
+  }
+
+  dotContent += '}\n';
+  return dotContent;
 }
 
 /**
@@ -50,7 +74,8 @@ async function generateDependencyGraph(): Promise<void> {
     });
 
     // 监听事件
-    eventBus.subscribe(EventType.DEPENDENCY_GRAPH_GENERATED, (data: DependencyGraphGeneratedEventData) => {
+    eventBus.subscribe(EventType.DEPENDENCY_GRAPH_GENERATED, (eventData: any) => {
+      const data = eventData.data as DependencyGraphGeneratedEventData;
       console.log(`依赖图生成完成: ${data.nodeCount}个节点, ${data.relationCount}个关系`);
       console.log(`生成时间: ${data.timestamp}`);
       console.log(`验证状态: ${data.isValid ? '✅ 通过' : '❌ 失败'}`);
@@ -58,11 +83,21 @@ async function generateDependencyGraph(): Promise<void> {
 
     // 分析所有模块并生成依赖图
     console.log('开始分析模块依赖关系...');
-    await analyzer.generateGraph();
+    const graph = await analyzer.analyzeDependencies();
+
+    // 发布依赖图生成事件
+    eventBus.publish(EventType.DEPENDENCY_GRAPH_GENERATED, {
+      graphId: `graph_${Date.now()}`,
+      nodeCount: graph.nodes.length,
+      relationCount: graph.relations.length,
+      isValid: true,
+      timestamp: new Date().toISOString()
+    });
 
     // 导出可视化文件
     const dotFilePath = path.join(outputDir, 'dependency-graph.dot');
-    await analyzer.exportGraphVisualization(dotFilePath);
+    const dotContent = generateDotContent(graph);
+    fs.writeFileSync(dotFilePath, dotContent);
     console.log(`依赖图DOT文件已生成: ${dotFilePath}`);
     console.log('可使用Graphviz转换为图像: dot -Tpng dependency-graph.dot -o dependency-graph.png');
 

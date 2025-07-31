@@ -1,0 +1,753 @@
+description: "MPLP工作流协议规范 - 定义工作流系统的接口、状态转换、阶段管理和适配器要求"
+globs: ["**/workflow*.ts", "**/workflow*.json", "src/modules/workflow/**/*", "src/adapters/workflow/**/*"]
+alwaysApply: true
+---
+
+# MPLP 工作流协议规则
+
+> **规则版本**: v1.0  
+> **创建时间**: 2025-07-29T11:30:00+08:00  
+> **适用范围**: 工作流系统、阶段管理和状态转换  
+> **强制等级**: 🚨 **高优先级** - 所有工作流实现必须符合规范
+
+## 🎯 工作流协议核心原则
+
+### 基础原则
+- **标准阶段**: 所有工作流必须支持 Plan→Confirm→Trace→Delivery 四个标准阶段
+- **厂商中立**: 工作流系统不依赖特定厂商或平台
+- **状态透明**: 工作流状态必须完全可观测和可追踪
+- **阶段隔离**: 阶段间状态和数据必须清晰隔离
+- **权限控制**: 阶段转换必须有适当的权限验证
+- **审计追踪**: 所有状态变更必须记录完整审计日志
+
+## 📋 工作流定义规范
+
+### 工作流Schema
+```json
+{
+  "workflow_id": "string",        // 工作流唯一标识符
+  "name": "string",               // 工作流名称
+  "description": "string",        // 工作流描述
+  "version": "string",            // 工作流版本
+  "status": "string",             // 当前状态
+  "created_at": "string",         // 创建时间
+  "updated_at": "string",         // 更新时间
+  "owner_id": "string",           // 所有者ID
+  "stages": [                     // 阶段定义
+    {
+      "stage_id": "string",       // 阶段标识符
+      "type": "string",           // 阶段类型: PLAN/CONFIRM/TRACE/DELIVERY
+      "name": "string",           // 阶段名称
+      "status": "string",         // 阶段状态
+      "start_time": "string",     // 开始时间
+      "end_time": "string",       // 结束时间
+      "context": "object"         // 阶段上下文数据
+    }
+  ],
+  "context": "object",            // 工作流全局上下文
+  "permissions": [                // 权限配置
+    {
+      "role_id": "string",        // 角色ID
+      "actions": ["string"]       // 允许的操作
+    }
+  ],
+  "metadata": "object"            // 元数据
+}
+```
+
+### 工作流状态定义
+```typescript
+enum WorkflowStatus {
+  CREATED = 'created',        // 已创建但未开始
+  PLANNED = 'planned',        // 已完成Plan阶段
+  CONFIRMED = 'confirmed',    // 已完成Confirm阶段
+  TRACED = 'traced',          // 已完成Trace阶段
+  DELIVERED = 'delivered',    // 已完成所有阶段
+  FAILED = 'failed',          // 执行失败
+  CANCELLED = 'cancelled',    // 已取消
+  SUSPENDED = 'suspended'     // 已暂停
+}
+```
+
+### 阶段类型定义
+```typescript
+enum WorkflowStageType {
+  PLAN = 'plan',              // 规划阶段
+  CONFIRM = 'confirm',        // 确认阶段
+  TRACE = 'trace',            // 追踪阶段
+  DELIVERY = 'delivery'       // 交付阶段
+}
+```
+
+### 阶段状态定义
+```typescript
+enum StageStatus {
+  PENDING = 'pending',        // 待执行
+  IN_PROGRESS = 'in_progress',// 执行中
+  COMPLETED = 'completed',    // 已完成
+  FAILED = 'failed',          // 失败
+  SKIPPED = 'skipped'         // 已跳过
+}
+```
+
+## 🔄 工作流状态转换规则
+
+### 1. 标准状态转换
+```
+CREATED → PLANNED → CONFIRMED → TRACED → DELIVERED
+    ↓         ↓          ↓         ↓
+  FAILED    FAILED     FAILED    FAILED
+```
+
+### 2. 状态转换验证规则
+- 必须按顺序完成阶段，不得跳过中间阶段
+- 状态只能向前推进，不允许回退到前一状态
+- 每次状态转换必须验证操作者权限
+- 转换必须原子性完成，避免中间状态
+- 失败状态可恢复到上一个稳定状态
+
+### 3. 状态转换实现
+```typescript
+class WorkflowStateManager {
+  /**
+   * 工作流状态转换
+   * @param workflowId 工作流ID
+   * @param fromStatus 当前状态
+   * @param toStatus 目标状态
+   * @param context 上下文信息
+   * @param actor 执行者
+   */
+  async transition(
+    workflowId: string,
+    fromStatus: WorkflowStatus,
+    toStatus: WorkflowStatus,
+    context: WorkflowContext,
+    actor: string
+  ): Promise<TransitionResult> {
+    // 1. 验证状态转换是否有效
+    if (!this.isValidTransition(fromStatus, toStatus)) {
+      throw new InvalidTransitionError(fromStatus, toStatus);
+    }
+    
+    // 2. 验证操作者权限
+    if (!await this.hasPermission(actor, workflowId, fromStatus, toStatus)) {
+      throw new PermissionDeniedError();
+    }
+    
+    // 3. 记录状态转换前数据（用于审计和回滚）
+    await this.recordPreTransitionState(workflowId, fromStatus, context);
+    
+    try {
+      // 4. 执行状态转换
+      const result = await this.performTransition(workflowId, toStatus, context);
+      
+      // 5. 记录审计日志
+      await this.logTransition(workflowId, fromStatus, toStatus, actor, true);
+      
+      return result;
+    } catch (error) {
+      // 6. 记录失败
+      await this.logTransition(workflowId, fromStatus, toStatus, actor, false, error);
+      
+      // 7. 尝试回滚（如果配置允许）
+      if (context.enableRollback) {
+        await this.rollbackTransition(workflowId, fromStatus);
+      }
+      
+      throw error;
+    }
+  }
+  
+  /**
+   * 验证状态转换是否有效
+   */
+  private isValidTransition(from: WorkflowStatus, to: WorkflowStatus): boolean {
+    const validTransitions = {
+      [WorkflowStatus.CREATED]: [WorkflowStatus.PLANNED, WorkflowStatus.FAILED, WorkflowStatus.CANCELLED],
+      [WorkflowStatus.PLANNED]: [WorkflowStatus.CONFIRMED, WorkflowStatus.FAILED, WorkflowStatus.CANCELLED],
+      [WorkflowStatus.CONFIRMED]: [WorkflowStatus.TRACED, WorkflowStatus.FAILED, WorkflowStatus.CANCELLED],
+      [WorkflowStatus.TRACED]: [WorkflowStatus.DELIVERED, WorkflowStatus.FAILED, WorkflowStatus.CANCELLED],
+      [WorkflowStatus.FAILED]: [WorkflowStatus.CREATED, WorkflowStatus.PLANNED, WorkflowStatus.CONFIRMED, WorkflowStatus.TRACED],
+      [WorkflowStatus.CANCELLED]: [WorkflowStatus.CREATED],
+      [WorkflowStatus.SUSPENDED]: [WorkflowStatus.CREATED, WorkflowStatus.PLANNED, WorkflowStatus.CONFIRMED, WorkflowStatus.TRACED, WorkflowStatus.FAILED]
+    };
+    
+    return validTransitions[from]?.includes(to) || false;
+  }
+}
+```
+
+## 🧩 工作流适配器接口
+
+### 1. 通用工作流适配器接口
+```typescript
+/**
+ * 工作流适配器接口
+ * 实现厂商中立的工作流管理功能
+ */
+interface IWorkflowAdapter {
+  // 工作流生命周期方法
+  initializeWorkflow(definition: WorkflowDefinition): Promise<WorkflowInitResult>;
+  getWorkflowStatus(workflowId: string): Promise<WorkflowStatus>;
+  getWorkflowHistory(workflowId: string): Promise<WorkflowHistoryItem[]>;
+  
+  // 工作流操作方法
+  startWorkflow(workflowId: string): Promise<WorkflowStartResult>;
+  pauseWorkflow(workflowId: string): Promise<WorkflowPauseResult>;
+  resumeWorkflow(workflowId: string): Promise<WorkflowResumeResult>;
+  cancelWorkflow(workflowId: string): Promise<WorkflowCancelResult>;
+  
+  // 阶段管理方法
+  startStage(workflowId: string, stageType: WorkflowStageType): Promise<StageStartResult>;
+  completeStage(workflowId: string, stageType: WorkflowStageType, data: any): Promise<StageCompleteResult>;
+  failStage(workflowId: string, stageType: WorkflowStageType, error: any): Promise<StageFailResult>;
+  
+  // 数据管理方法
+  setWorkflowContext(workflowId: string, context: any): Promise<SetContextResult>;
+  getWorkflowContext(workflowId: string): Promise<GetContextResult>;
+  
+  // 健康检查方法
+  checkHealth(): Promise<HealthCheckResult>;
+}
+```
+
+### 2. 适配器实现要求
+- 必须实现所有接口方法
+- 性能要求：工作流状态转换 < 30ms
+- 阶段开始和完成操作必须原子化
+- 必须保证所有操作都有幂等性
+- 必须在失败时提供详细错误信息
+- 必须记录完整的操作审计日志
+
+### 3. 厂商中立原则实现
+```typescript
+// ✅ 正确：中立适配器实现
+class BaseWorkflowAdapter implements IWorkflowAdapter {
+  constructor(private readonly config: WorkflowAdapterConfig) {}
+  
+  async initializeWorkflow(definition: WorkflowDefinition): Promise<WorkflowInitResult> {
+    const workflowId = uuidv4();
+    const workflow = {
+      workflow_id: workflowId,
+      status: WorkflowStatus.CREATED,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      ...definition
+    };
+    
+    await this.storeWorkflow(workflow);
+    
+    return {
+      workflow_id: workflowId,
+      status: WorkflowStatus.CREATED
+    };
+  }
+  
+  // 其他方法实现...
+}
+
+// ❌ 错误：厂商特定实现
+class VendorXWorkflowAdapter implements IWorkflowAdapter {
+  constructor(private readonly vendorXClient: VendorXClient) {}
+  
+  async initializeWorkflow(definition: WorkflowDefinition): Promise<WorkflowInitResult> {
+    // 直接使用厂商特定API
+    const response = await this.vendorXClient.createProcess({
+      processName: definition.name,
+      processDesc: definition.description,
+      // ...厂商特定字段
+    });
+    
+    return {
+      workflow_id: response.processId, // 厂商特定字段名称
+      status: this.mapVendorStatus(response.processStatus) // 需要映射厂商状态
+    };
+  }
+  
+  // 其他方法实现...
+}
+```
+
+## 📝 工作流事件系统
+
+### 1. 工作流事件类型
+```typescript
+enum WorkflowEventType {
+  // 工作流事件
+  WORKFLOW_CREATED = 'workflow.created',
+  WORKFLOW_STARTED = 'workflow.started',
+  WORKFLOW_COMPLETED = 'workflow.completed',
+  WORKFLOW_FAILED = 'workflow.failed',
+  WORKFLOW_CANCELLED = 'workflow.cancelled',
+  WORKFLOW_PAUSED = 'workflow.paused',
+  WORKFLOW_RESUMED = 'workflow.resumed',
+  
+  // 阶段事件
+  STAGE_STARTED = 'stage.started',
+  STAGE_COMPLETED = 'stage.completed',
+  STAGE_FAILED = 'stage.failed',
+  
+  // 状态转换事件
+  STATE_TRANSITION = 'state.transition',
+  
+  // 错误事件
+  ERROR_OCCURRED = 'error.occurred'
+}
+```
+
+### 2. 事件定义
+```typescript
+interface WorkflowEvent {
+  id: string;               // 事件ID
+  type: WorkflowEventType;  // 事件类型
+  workflow_id: string;      // 工作流ID
+  stage_id?: string;        // 阶段ID (如适用)
+  timestamp: string;        // 事件时间
+  actor: string;            // 触发者
+  data: any;                // 事件数据
+  metadata?: any;           // 元数据
+}
+```
+
+### 3. 事件处理
+```typescript
+interface IWorkflowEventHandler {
+  handleEvent(event: WorkflowEvent): Promise<void>;
+}
+
+class WorkflowEventManager {
+  private handlers: Map<WorkflowEventType, IWorkflowEventHandler[]> = new Map();
+  
+  registerHandler(eventType: WorkflowEventType, handler: IWorkflowEventHandler): void {
+    const handlers = this.handlers.get(eventType) || [];
+    handlers.push(handler);
+    this.handlers.set(eventType, handlers);
+  }
+  
+  async publishEvent(event: WorkflowEvent): Promise<void> {
+    const handlers = this.handlers.get(event.type) || [];
+    
+    // 记录事件
+    await this.logEvent(event);
+    
+    // 并行处理
+    await Promise.all(
+      handlers.map(handler => 
+        handler.handleEvent(event).catch(error => {
+          console.error(`Error handling event ${event.id}:`, error);
+        })
+      )
+    );
+  }
+  
+  private async logEvent(event: WorkflowEvent): Promise<void> {
+    // 将事件写入持久存储
+  }
+}
+```
+
+## 🛡️ 工作流安全与权限
+
+### 1. 工作流权限模型
+```typescript
+enum WorkflowPermission {
+  WORKFLOW_CREATE = 'workflow:create',
+  WORKFLOW_READ = 'workflow:read',
+  WORKFLOW_UPDATE = 'workflow:update',
+  WORKFLOW_DELETE = 'workflow:delete',
+  
+  STAGE_START = 'stage:start',
+  STAGE_COMPLETE = 'stage:complete',
+  STAGE_FAIL = 'stage:fail',
+  
+  TRANSITION_EXECUTE = 'transition:execute'
+}
+
+interface WorkflowAccessControl {
+  workflow_id: string;              // 工作流ID
+  role_permissions: {               // 角色权限映射
+    [role_id: string]: WorkflowPermission[];
+  };
+  user_permissions: {               // 用户权限映射
+    [user_id: string]: WorkflowPermission[];
+  };
+}
+```
+
+### 2. 权限检查实现
+```typescript
+class WorkflowPermissionChecker {
+  /**
+   * 检查用户是否有执行特定操作的权限
+   */
+  async hasPermission(
+    userId: string,
+    workflowId: string,
+    permission: WorkflowPermission
+  ): Promise<boolean> {
+    // 1. 获取用户角色
+    const userRoles = await this.getUserRoles(userId);
+    
+    // 2. 获取工作流访问控制
+    const accessControl = await this.getWorkflowAccessControl(workflowId);
+    
+    // 3. 检查用户直接权限
+    if (accessControl.user_permissions[userId]?.includes(permission)) {
+      return true;
+    }
+    
+    // 4. 检查角色权限
+    for (const roleId of userRoles) {
+      if (accessControl.role_permissions[roleId]?.includes(permission)) {
+        return true;
+      }
+    }
+    
+    return false;
+  }
+  
+  /**
+   * 检查特定阶段操作权限
+   */
+  async hasStagePermission(
+    userId: string,
+    workflowId: string,
+    stageType: WorkflowStageType,
+    operation: 'start' | 'complete' | 'fail'
+  ): Promise<boolean> {
+    const permissionMap = {
+      'start': WorkflowPermission.STAGE_START,
+      'complete': WorkflowPermission.STAGE_COMPLETE,
+      'fail': WorkflowPermission.STAGE_FAIL
+    };
+    
+    return this.hasPermission(userId, workflowId, permissionMap[operation]);
+  }
+}
+```
+
+### 3. 审计日志要求
+```typescript
+interface WorkflowAuditLog {
+  log_id: string;                  // 日志ID
+  workflow_id: string;             // 工作流ID
+  timestamp: string;               // 时间戳
+  actor_id: string;                // 操作者ID
+  action: string;                  // 操作类型
+  stage_id?: string;               // 阶段ID (如适用)
+  status: 'success' | 'failure';   // 操作状态
+  details: any;                    // 详细信息
+  client_info: {                   // 客户端信息
+    ip: string;                    // IP地址
+    user_agent: string;            // 用户代理
+  };
+}
+```
+
+## 📊 工作流性能要求
+
+### 性能基准
+```
+- 工作流初始化: < 50ms
+- 状态转换操作: < 30ms
+- 阶段开始/完成: < 20ms
+- 权限检查: < 5ms
+- 事件发布: < 10ms
+- 状态查询: < 5ms
+```
+
+### 监控指标
+1. **工作流执行时间**: 从创建到完成的总时间
+2. **阶段执行时间**: 每个阶段的执行时间
+3. **状态转换延迟**: 状态转换操作的响应时间
+4. **事件处理延迟**: 事件发布到处理完成的时间
+5. **适配器操作延迟**: 适配器各操作的响应时间
+
+## 📑 测试报告与工作流集成
+
+### 1. 测试报告结构
+```typescript
+interface WorkflowTestReport {
+  report_id: string;                // 报告ID
+  workflow_id: string;              // 关联的工作流ID
+  stage_id: string;                 // 关联的阶段ID
+  module_name: string;              // 模块名称
+  test_type: 'Unit' | 'Integration' | 'E2E' | 'Performance';
+  execution_date: string;           // ISO 8601格式时间戳
+  results: {                        // 测试结果
+    passed: number;                 // 通过测试数
+    failed: number;                 // 失败测试数
+    skipped: number;                // 跳过测试数
+    total: number;                  // 总测试数
+  };
+  coverage: {                       // 覆盖率
+    statements: number;             // 语句覆盖率
+    branches: number;               // 分支覆盖率
+    functions: number;              // 函数覆盖率
+    lines: number;                  // 行覆盖率
+    average: number;                // 平均覆盖率
+  };
+  failures?: TestFailure[];         // 失败详情
+  dependency_issues?: DependencyIssue[]; // 依赖问题
+  artifacts: {                      // 测试产物
+    report_file: string;            // 报告文件路径
+    logs_file?: string;             // 日志文件路径
+    screenshots?: string[];         // 截图路径列表
+  };
+}
+
+interface TestFailure {
+  test_name: string;                // 测试名称
+  error_message: string;            // 错误消息
+  stack_trace: string;              // 堆栈跟踪
+  file_path: string;                // 文件路径
+  line_number: number;              // 行号
+  severity: 'critical' | 'major' | 'minor'; // 严重程度
+  reproducible: boolean;            // 是否可重现
+}
+
+interface DependencyIssue {
+  test_id: string;                  // 测试ID
+  blocked_by: string;               // 阻塞依赖
+  reason: string;                   // 原因描述
+  workaround?: string;              // 临时解决方案
+  planned_resolution_date?: string; // 计划解决日期
+  impact: 'High' | 'Medium' | 'Low'; // 影响程度
+  created_at: string;               // 创建时间
+  reported_by: string;              // 报告人
+}
+```
+
+### 2. Trace阶段测试报告生成
+
+每个测试完成后必须在Trace阶段生成标准化测试报告：
+
+```typescript
+class TraceStageHandler implements IWorkflowStageHandler {
+  async handleStage(workflowId: string, stageContext: StageContext): Promise<StageResult> {
+    // 1. 收集所有测试报告
+    const testReports = await this.collectTestReports(stageContext.moduleNames);
+    
+    // 2. 生成汇总报告
+    const summaryReport = this.generateSummaryReport(testReports);
+    
+    // 3. 收集所有依赖问题
+    const dependencyIssues = await this.collectDependencyIssues(stageContext.moduleNames);
+    
+    // 4. 更新工作流上下文
+    await this.workflowManager.updateWorkflowContext(workflowId, {
+      test_results: summaryReport,
+      dependency_issues: dependencyIssues,
+      trace_completed_at: new Date().toISOString()
+    });
+    
+    // 5. 验证测试结果
+    if (summaryReport.results.failed > 0) {
+      // 记录测试失败，但继续工作流
+      await this.recordTestFailures(workflowId, summaryReport);
+      
+      // 如果是严重失败，则停止工作流
+      if (this.hasCriticalFailures(summaryReport)) {
+        return {
+          success: false,
+          stage_id: stageContext.stageId,
+          status: StageStatus.FAILED,
+          error: new Error('Critical test failures detected'),
+          data: { summaryReport }
+        };
+      }
+    }
+    
+    // 6. 生成Trace阶段报告文件
+    const reportFilePath = await this.generateTraceReport(workflowId, {
+      testReports,
+      dependencyIssues,
+      summaryReport
+    });
+    
+    // 7. 返回成功结果
+    return {
+      success: true,
+      stage_id: stageContext.stageId,
+      status: StageStatus.COMPLETED,
+      data: {
+        test_summary: summaryReport,
+        report_file: reportFilePath,
+        dependency_issues: dependencyIssues.length
+      }
+    };
+  }
+}
+```
+
+### 3. 依赖问题处理
+
+对于依赖问题的记录和管理，必须在工作流中实现：
+
+```typescript
+class DependencyIssueManager {
+  /**
+   * 记录依赖问题
+   */
+  async recordDependencyIssue(
+    workflowId: string,
+    issue: DependencyIssue
+  ): Promise<string> {
+    // 1. 验证问题数据
+    this.validateIssue(issue);
+    
+    // 2. 生成问题ID
+    const issueId = uuidv4();
+    
+    // 3. 记录问题
+    await this.dependencyIssueRepository.save({
+      issue_id: issueId,
+      workflow_id: workflowId,
+      ...issue,
+      status: 'open',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    });
+    
+    // 4. 发布事件
+    await this.eventManager.publishEvent({
+      id: uuidv4(),
+      type: 'dependency.issue.created',
+      workflow_id: workflowId,
+      timestamp: new Date().toISOString(),
+      actor: issue.reported_by,
+      data: { issue_id: issueId, issue }
+    });
+    
+    return issueId;
+  }
+  
+  /**
+   * 获取工作流的依赖问题
+   */
+  async getWorkflowDependencyIssues(
+    workflowId: string
+  ): Promise<DependencyIssue[]> {
+    return this.dependencyIssueRepository.findByWorkflowId(workflowId);
+  }
+  
+  /**
+   * 解决依赖问题
+   */
+  async resolveDependencyIssue(
+    issueId: string,
+    resolution: {
+      resolved_by: string;
+      resolution_details: string;
+      resolution_date: string;
+    }
+  ): Promise<void> {
+    // 更新问题状态为已解决
+    await this.dependencyIssueRepository.update(issueId, {
+      status: 'resolved',
+      resolution,
+      updated_at: new Date().toISOString()
+    });
+    
+    // 发布事件
+    const issue = await this.dependencyIssueRepository.findById(issueId);
+    await this.eventManager.publishEvent({
+      id: uuidv4(),
+      type: 'dependency.issue.resolved',
+      workflow_id: issue.workflow_id,
+      timestamp: new Date().toISOString(),
+      actor: resolution.resolved_by,
+      data: { issue_id: issueId, resolution }
+    });
+  }
+}
+```
+
+### 4. 测试报告和工作流集成
+
+测试报告和依赖问题记录必须与Plan→Confirm→Trace→Delivery工作流紧密集成：
+
+```typescript
+// 在Plan阶段记录测试依赖关系
+async function executePlanStage(workflowId: string, context: PlanContext): Promise<void> {
+  // 分析测试依赖关系
+  const testDependencies = await analyzeTestDependencies(context.moduleNames);
+  
+  // 记录测试依赖到工作流上下文
+  await workflowManager.updateWorkflowContext(workflowId, {
+    test_dependencies: testDependencies
+  });
+}
+
+// 在Confirm阶段验证测试计划
+async function executeConfirmStage(workflowId: string, context: ConfirmContext): Promise<void> {
+  // 获取测试依赖
+  const { test_dependencies } = await workflowManager.getWorkflowContext(workflowId);
+  
+  // 验证测试环境
+  const validationResult = await validateTestEnvironment(test_dependencies);
+  
+  // 更新工作流上下文
+  await workflowManager.updateWorkflowContext(workflowId, {
+    test_validation: validationResult
+  });
+  
+  // 如果存在依赖问题，记录并通知
+  if (validationResult.dependency_issues.length > 0) {
+    for (const issue of validationResult.dependency_issues) {
+      await dependencyIssueManager.recordDependencyIssue(workflowId, issue);
+    }
+  }
+}
+
+// 在Delivery阶段使用测试报告
+async function executeDeliveryStage(workflowId: string, context: DeliveryContext): Promise<void> {
+  // 获取测试报告
+  const { test_results } = await workflowManager.getWorkflowContext(workflowId);
+  
+  // 验证质量门禁
+  if (test_results.coverage.average < 80 || test_results.results.failed > 0) {
+    throw new QualityGateFailedError('测试覆盖率或失败数量未达到交付标准');
+  }
+  
+  // 生成交付报告，包含测试结果
+  const deliveryReport = await generateDeliveryReport(workflowId, {
+    test_results,
+    quality_gates: {
+      test_coverage: test_results.coverage.average >= 80,
+      zero_failures: test_results.results.failed === 0,
+      all_dependencies_resolved: true
+    }
+  });
+  
+  // 更新工作流上下文
+  await workflowManager.updateWorkflowContext(workflowId, {
+    delivery_report: deliveryReport
+  });
+}
+```
+
+## ✅ 工作流开发检查清单
+
+工作流开发前确认：
+- [ ] 工作流定义符合Schema规范
+- [ ] 实现所有必要的状态转换逻辑
+- [ ] 状态转换包含权限检查
+- [ ] 实现完整的事件系统
+- [ ] 审计日志记录完整
+- [ ] 性能符合基准要求
+- [ ] 所有操作都有完整的错误处理
+- [ ] 实现优雅降级机制
+- [ ] 提供健康检查端点
+- [ ] 确保厂商中立实现
+- [ ] 测试报告生成与集成完整
+- [ ] 依赖问题记录与追踪机制实现
+- [ ] 各阶段测试报告使用规范符合要求
+- [ ] 实现测试结果质量门禁检查
+
+---
+
+**规则版本**: v1.0  
+**规则创建**: MPLP工作流团队  
+**维护责任**: 工作流模块开发者  
+**审查周期**: 每个工作流相关版本发布前审查

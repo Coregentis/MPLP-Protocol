@@ -1,0 +1,54 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# 运行ESLint检查
+npm run lint
+
+# 检查文件命名规范
+echo "🔍 检查文件命名规范..."
+node -e "
+const fs = require('fs');
+const path = require('path');
+const { execSync } = require('child_process');
+
+// 获取暂存区中的所有.ts和.js文件
+const stagedFiles = execSync('git diff --cached --name-only --diff-filter=ACMR | grep -E \"\\.ts$|\\.js$\"', { encoding: 'utf-8' }).trim().split('\n').filter(Boolean);
+
+// 检查文件是否符合命名规范
+const CORE_MODULES = ['context', 'plan', 'confirm', 'trace', 'role', 'extension'];
+let hasErrors = false;
+
+for (const file of stagedFiles) {
+  // 检查是否是模块内的文件
+  for (const moduleName of CORE_MODULES) {
+    const modulePattern = new RegExp(\`src/modules/${moduleName}/.*\\.ts$\`);
+    if (modulePattern.test(file)) {
+      const fileName = path.basename(file);
+      
+      // 排除index.ts和测试文件
+      if (fileName === 'index.ts' || fileName.endsWith('.test.ts') || fileName.endsWith('.spec.ts')) {
+        continue;
+      }
+      
+      // 检查文件名是否符合 {module-name}-{component-type}.ts 格式
+      const validPattern = new RegExp(\`^${moduleName}-[a-z-]+\\.ts$\`);
+      if (!validPattern.test(fileName)) {
+        console.error(\`❌ 文件命名不符合规范: \${file}\`);
+        console.error(\`   应该使用格式: \${moduleName}-{component-type}.ts\`);
+        hasErrors = true;
+      }
+    }
+  }
+}
+
+if (hasErrors) {
+  console.error('❌ 文件命名规范检查失败，请修正后重新提交');
+  console.error('提示: 可以运行 \"npm run rename-files\" 自动修复命名问题');
+  process.exit(1);
+}
+
+console.log('✅ 文件命名规范检查通过');
+"
+
+# 运行Schema验证
+npm run schema:check 

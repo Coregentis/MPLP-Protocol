@@ -1,268 +1,184 @@
 /**
- * MPLP适配器注册表 - 厂商中立设计
- * 
- * 提供统一的适配器注册和获取机制，确保厂商中立原则。
- * 所有模块都通过此注册表获取适配器实例，而非直接依赖具体实现。
- * 
- * @version v1.0.0
- * @created 2025-07-15T11:15:00+08:00
- * @compliance .cursor/rules/architecture.mdc - 厂商中立原则
+ * 适配器注册表
+ * @description 管理和注册各种适配器
+ * @author MPLP Team
+ * @version 1.0.1
  */
 
-import { container, Tokens } from './dependency-container';
-import { ITraceAdapter } from '../interfaces/trace-adapter.interface';
-import { IPlanAdapter } from '../interfaces/plan-adapter.interface';
-import { IConfirmAdapter } from '../interfaces/confirm-adapter.interface';
-import { IExtensionAdapter } from '../interfaces/extension-adapter.interface';
-import { logger } from '../utils/logger';
+import { Logger } from '../public/utils/logger';
 
-/**
- * 适配器类型枚举
- */
 export enum AdapterType {
   TRACE = 'trace',
   PLAN = 'plan',
   CONFIRM = 'confirm',
-  EXTENSION = 'extension'
+  EXTENSION = 'extension',
+  CONTEXT = 'context',
+  ROLE = 'role'
 }
 
-/**
- * 适配器配置接口
- */
 export interface AdapterConfig {
-  type: string;
+  name: string;
   version: string;
-  options?: Record<string, unknown>;
+  enabled?: boolean;
+  options?: Record<string, any>;
+}
+
+export interface AdapterHealth {
+  status: 'healthy' | 'degraded' | 'unhealthy';
+  message?: string;
+  details?: Record<string, any>;
+  last_check: string;
+}
+
+export interface IAdapter {
+  getAdapterInfo(): any;
+  initialize(config: AdapterConfig): Promise<void>;
+  checkHealth(): Promise<AdapterHealth>;
+  close(): Promise<void>;
 }
 
 /**
- * 适配器注册表
- * 负责管理和获取厂商中立的适配器实例
+ * 适配器注册表类
  */
 export class AdapterRegistry {
-  private static instance: AdapterRegistry;
-  private adapters: Map<AdapterType, unknown> = new Map();
-  private adapterConfigs: Map<AdapterType, AdapterConfig> = new Map();
+  private adapters: Map<string, IAdapter> = new Map();
+  private logger: Logger;
 
-  /**
-   * 私有构造函数，确保单例模式
-   */
-  private constructor() {}
-
-  /**
-   * 获取适配器注册表实例
-   * @returns 适配器注册表实例
-   */
-  public static getInstance(): AdapterRegistry {
-    if (!AdapterRegistry.instance) {
-      AdapterRegistry.instance = new AdapterRegistry();
-    }
-    return AdapterRegistry.instance;
+  constructor() {
+    this.logger = new Logger('AdapterRegistry');
   }
 
   /**
    * 注册追踪适配器
-   * @param adapter 追踪适配器实例
-   * @param config 适配器配置
    */
-  public registerTraceAdapter(adapter: ITraceAdapter, config: AdapterConfig): void {
-    this.adapters.set(AdapterType.TRACE, adapter);
-    this.adapterConfigs.set(AdapterType.TRACE, config);
-    container.registerInstance(Tokens.ITraceAdapter, adapter);
-    
-    logger.info('Trace adapter registered', {
-      type: config.type,
-      version: config.version
-    });
+  registerTraceAdapter(adapter: IAdapter, config: AdapterConfig): void {
+    const key = `${AdapterType.TRACE}_${config.name}`;
+    this.adapters.set(key, adapter);
+    this.logger.info('Trace adapter registered', { name: config.name });
   }
 
   /**
    * 注册计划适配器
-   * @param adapter 计划适配器实例
-   * @param config 适配器配置
    */
-  public registerPlanAdapter(adapter: IPlanAdapter, config: AdapterConfig): void {
-    this.adapters.set(AdapterType.PLAN, adapter);
-    this.adapterConfigs.set(AdapterType.PLAN, config);
-    container.registerInstance(Tokens.IPlanAdapter, adapter);
-    
-    logger.info('Plan adapter registered', {
-      type: config.type,
-      version: config.version
-    });
+  registerPlanAdapter(adapter: IAdapter, config: AdapterConfig): void {
+    const key = `${AdapterType.PLAN}_${config.name}`;
+    this.adapters.set(key, adapter);
+    this.logger.info('Plan adapter registered', { name: config.name });
   }
 
   /**
    * 注册确认适配器
-   * @param adapter 确认适配器实例
-   * @param config 适配器配置
    */
-  public registerConfirmAdapter(adapter: IConfirmAdapter, config: AdapterConfig): void {
-    this.adapters.set(AdapterType.CONFIRM, adapter);
-    this.adapterConfigs.set(AdapterType.CONFIRM, config);
-    container.registerInstance(Tokens.IConfirmAdapter, adapter);
-    
-    logger.info('Confirm adapter registered', {
-      type: config.type,
-      version: config.version
-    });
+  registerConfirmAdapter(adapter: IAdapter, config: AdapterConfig): void {
+    const key = `${AdapterType.CONFIRM}_${config.name}`;
+    this.adapters.set(key, adapter);
+    this.logger.info('Confirm adapter registered', { name: config.name });
   }
 
   /**
    * 注册扩展适配器
-   * @param adapter 扩展适配器实例
-   * @param config 适配器配置
    */
-  public registerExtensionAdapter(adapter: IExtensionAdapter, config: AdapterConfig): void {
-    this.adapters.set(AdapterType.EXTENSION, adapter);
-    this.adapterConfigs.set(AdapterType.EXTENSION, config);
-    container.registerInstance(Tokens.IExtensionAdapter, adapter);
+  registerExtensionAdapter(adapter: IAdapter, config: AdapterConfig): void {
+    const key = `${AdapterType.EXTENSION}_${config.name}`;
+    this.adapters.set(key, adapter);
+    this.logger.info('Extension adapter registered', { name: config.name });
+  }
+
+  /**
+   * 检查是否有适配器
+   */
+  hasAdapter(type: AdapterType): boolean {
+    for (const key of Array.from(this.adapters.keys())) {
+      if (key.startsWith(type)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * 获取已注册的适配器类型
+   */
+  getRegisteredAdapterTypes(): AdapterType[] {
+    const types = new Set<AdapterType>();
+    for (const key of Array.from(this.adapters.keys())) {
+      const type = key.split('_')[0] as AdapterType;
+      types.add(type);
+    }
+    return Array.from(types);
+  }
+
+  /**
+   * 获取适配器
+   */
+  getAdapter(type: AdapterType, name: string): IAdapter | undefined {
+    const key = `${type}_${name}`;
+    return this.adapters.get(key);
+  }
+
+  /**
+   * 移除适配器
+   */
+  async removeAdapter(type: AdapterType, name: string): Promise<boolean> {
+    const key = `${type}_${name}`;
+    const adapter = this.adapters.get(key);
     
-    logger.info('Extension adapter registered', {
-      type: config.type,
-      version: config.version
-    });
-  }
-
-  /**
-   * 获取追踪适配器
-   * @returns 追踪适配器实例
-   */
-  public getTraceAdapter(): ITraceAdapter {
-    const adapter = this.adapters.get(AdapterType.TRACE) as ITraceAdapter | undefined;
-    if (!adapter) {
-      throw new Error('Trace adapter not registered');
-    }
-    return adapter;
-  }
-
-  /**
-   * 获取计划适配器
-   * @returns 计划适配器实例
-   */
-  public getPlanAdapter(): IPlanAdapter {
-    const adapter = this.adapters.get(AdapterType.PLAN) as IPlanAdapter | undefined;
-    if (!adapter) {
-      throw new Error('Plan adapter not registered');
-    }
-    return adapter;
-  }
-
-  /**
-   * 获取确认适配器
-   * @returns 确认适配器实例
-   */
-  public getConfirmAdapter(): IConfirmAdapter {
-    const adapter = this.adapters.get(AdapterType.CONFIRM) as IConfirmAdapter | undefined;
-    if (!adapter) {
-      throw new Error('Confirm adapter not registered');
-    }
-    return adapter;
-  }
-
-  /**
-   * 获取扩展适配器
-   * @returns 扩展适配器实例
-   */
-  public getExtensionAdapter(): IExtensionAdapter {
-    const adapter = this.adapters.get(AdapterType.EXTENSION) as IExtensionAdapter | undefined;
-    if (!adapter) {
-      throw new Error('Extension adapter not registered');
-    }
-    return adapter;
-  }
-
-  /**
-   * 检查适配器是否已注册
-   * @param type 适配器类型
-   * @returns 是否已注册
-   */
-  public hasAdapter(type: AdapterType): boolean {
-    return this.adapters.has(type);
-  }
-
-  /**
-   * 获取适配器配置
-   * @param type 适配器类型
-   * @returns 适配器配置
-   */
-  public getAdapterConfig(type: AdapterType): AdapterConfig | undefined {
-    return this.adapterConfigs.get(type);
-  }
-
-  /**
-   * 获取所有已注册的适配器类型
-   * @returns 适配器类型数组
-   */
-  public getRegisteredAdapterTypes(): AdapterType[] {
-    return Array.from(this.adapters.keys());
-  }
-
-  /**
-   * 检查适配器健康状态
-   * @returns 健康状态检查结果
-   */
-  public async checkAdaptersHealth(): Promise<Record<AdapterType, { 
-    status: 'healthy' | 'degraded' | 'unhealthy';
-    details?: Record<string, unknown>;
-  }>> {
-    const results: Record<AdapterType, any> = {} as any;
-    
-    // 检查追踪适配器
-    if (this.hasAdapter(AdapterType.TRACE)) {
+    if (adapter) {
       try {
-        const health = await this.getTraceAdapter().checkHealth();
-        results[AdapterType.TRACE] = health;
+        await adapter.close();
+        this.adapters.delete(key);
+        this.logger.info('Adapter removed', { type, name });
+        return true;
       } catch (error) {
-        results[AdapterType.TRACE] = {
-          status: 'unhealthy',
-          details: { error: error instanceof Error ? error.message : String(error) }
-        };
+        this.logger.error('Failed to remove adapter', { type, name, error });
+        return false;
       }
     }
     
-    // 检查计划适配器
-    if (this.hasAdapter(AdapterType.PLAN)) {
+    return false;
+  }
+
+  /**
+   * 获取所有适配器
+   */
+  getAllAdapters(): IAdapter[] {
+    return Array.from(this.adapters.values());
+  }
+
+  /**
+   * 检查所有适配器健康状态
+   */
+  async checkAllAdaptersHealth(): Promise<Map<string, AdapterHealth>> {
+    const healthMap = new Map<string, AdapterHealth>();
+    
+    for (const [key, adapter] of Array.from(this.adapters.entries())) {
       try {
-        const health = await this.getPlanAdapter().checkHealth();
-        results[AdapterType.PLAN] = health;
+        const health = await adapter.checkHealth();
+        healthMap.set(key, health);
       } catch (error) {
-        results[AdapterType.PLAN] = {
+        healthMap.set(key, {
           status: 'unhealthy',
-          details: { error: error instanceof Error ? error.message : String(error) }
-        };
+          message: error instanceof Error ? error.message : 'Unknown error',
+          last_check: new Date().toISOString()
+        });
       }
     }
     
-    // 检查确认适配器
-    if (this.hasAdapter(AdapterType.CONFIRM)) {
-      try {
-        const health = await this.getConfirmAdapter().checkHealth();
-        results[AdapterType.CONFIRM] = health;
-      } catch (error) {
-        results[AdapterType.CONFIRM] = {
-          status: 'unhealthy',
-          details: { error: error instanceof Error ? error.message : String(error) }
-        };
-      }
-    }
+    return healthMap;
+  }
+
+  /**
+   * 清理所有适配器
+   */
+  async cleanup(): Promise<void> {
+    const promises = Array.from(this.adapters.values()).map(adapter => 
+      adapter.close().catch(error => 
+        this.logger.error('Failed to close adapter', { error })
+      )
+    );
     
-    // 检查扩展适配器
-    if (this.hasAdapter(AdapterType.EXTENSION)) {
-      try {
-        const health = await this.getExtensionAdapter().checkHealth();
-        results[AdapterType.EXTENSION] = health;
-      } catch (error) {
-        results[AdapterType.EXTENSION] = {
-          status: 'unhealthy',
-          details: { error: error instanceof Error ? error.message : String(error) }
-        };
-      }
-    }
-    
-    return results;
+    await Promise.all(promises);
+    this.adapters.clear();
+    this.logger.info('All adapters cleaned up');
   }
 }
-
-// 导出单例实例
-export const adapterRegistry = AdapterRegistry.getInstance(); 

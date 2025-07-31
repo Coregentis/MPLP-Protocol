@@ -1,0 +1,372 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mplp.dev/schemas/v1.0/role-protocol.json",
+  "title": "MPLP Role Protocol v1.0",
+  "description": "Role模块协议Schema - 角色定义和权限管理",
+  "type": "object",
+  "$defs": {
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "description": "UUID v4格式的唯一标识符"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601格式的时间戳"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+      "description": "语义化版本号 (SemVer)"
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["critical", "high", "medium", "low"],
+      "description": "优先级枚举"
+    }
+  },
+  "properties": {
+    "protocol_version": {
+      "$ref": "#/$defs/version",
+      "description": "MPLP协议版本",
+      "const": "1.0.1"
+    },
+    "timestamp": {
+      "$ref": "#/$defs/timestamp",
+      "description": "协议消息时间戳"
+    },
+    "role_id": {
+      "$ref": "#/$defs/uuid",
+      "description": "角色唯一标识符"
+    },
+    "context_id": {
+      "$ref": "#/$defs/uuid",
+      "description": "关联的上下文ID"
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_-]+$",
+      "minLength": 1,
+      "maxLength": 64,
+      "description": "角色名称（仅允许字母、数字、下划线和连字符）"
+    },
+    "display_name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255,
+      "description": "角色显示名称"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "角色描述"
+    },
+    "role_type": {
+      "type": "string",
+      "enum": ["system", "organizational", "functional", "project", "temporary"],
+      "description": "角色类型"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["active", "inactive", "deprecated", "suspended"],
+      "description": "角色状态"
+    },
+    "scope": {
+      "type": "object",
+      "properties": {
+        "level": {
+          "type": "string",
+          "enum": ["global", "organization", "project", "team", "individual"],
+          "description": "范围级别"
+        },
+        "context_ids": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/uuid" },
+          "description": "适用的上下文ID列表"
+        },
+        "plan_ids": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/uuid" },
+          "description": "适用的计划ID列表"
+        },
+        "resource_constraints": {
+          "type": "object",
+          "properties": {
+            "max_contexts": { "type": "integer", "minimum": 0 },
+            "max_plans": { "type": "integer", "minimum": 0 },
+            "allowed_resource_types": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      },
+      "required": ["level"],
+      "description": "角色适用范围"
+    },
+    "permissions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "permission_id": { "$ref": "#/$defs/uuid" },
+          "resource_type": {
+            "type": "string",
+            "enum": ["context", "plan", "task", "confirmation", "trace", "role", "extension", "system"]
+          },
+          "resource_id": {
+            "oneOf": [
+              { "$ref": "#/$defs/uuid" },
+              { "type": "string", "const": "*" }
+            ],
+            "description": "资源ID或通配符 *"
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["create", "read", "update", "delete", "execute", "approve", "monitor", "admin"]
+            },
+            "minItems": 1
+          },
+          "conditions": {
+            "type": "object",
+            "properties": {
+              "time_based": {
+                "type": "object",
+                "properties": {
+                  "start_time": { "type": "string", "format": "date-time" },
+                  "end_time": { "type": "string", "format": "date-time" },
+                  "timezone": { "type": "string" },
+                  "days_of_week": {
+                    "type": "array",
+                    "items": { "type": "integer", "minimum": 0, "maximum": 6 }
+                  }
+                }
+              },
+              "location_based": {
+                "type": "object",
+                "properties": {
+                  "allowed_ip_ranges": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  },
+                  "geo_restrictions": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  }
+                }
+              },
+              "context_based": {
+                "type": "object",
+                "properties": {
+                  "required_attributes": { "type": "object" },
+                  "forbidden_attributes": { "type": "object" }
+                }
+              },
+              "approval_required": {
+                "type": "object",
+                "properties": {
+                  "for_actions": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  },
+                  "approval_threshold": { "type": "integer", "minimum": 1 },
+                  "approver_roles": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "grant_type": {
+            "type": "string",
+            "enum": ["direct", "inherited", "delegated", "temporary"],
+            "description": "权限授予类型"
+          },
+          "expiry": {
+            "$ref": "#/$defs/timestamp",
+            "description": "权限过期时间"
+          }
+        },
+        "required": ["permission_id", "resource_type", "resource_id", "actions", "grant_type"]
+      }
+    },
+    "inheritance": {
+      "type": "object",
+      "properties": {
+        "parent_roles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "role_id": { "$ref": "#/$defs/uuid" },
+              "inheritance_type": { "type": "string", "enum": ["full", "partial", "conditional"] },
+              "excluded_permissions": {
+                "type": "array",
+                "items": { "$ref": "#/$defs/uuid" }
+              },
+              "conditions": { "type": "object", "additionalProperties": true }
+            },
+            "required": ["role_id", "inheritance_type"]
+          }
+        },
+        "child_roles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "role_id": { "$ref": "#/$defs/uuid" },
+              "delegation_level": { "type": "integer", "minimum": 1, "maximum": 5 },
+              "can_further_delegate": { "type": "boolean" }
+            },
+            "required": ["role_id", "delegation_level"]
+          }
+        },
+        "inheritance_rules": {
+          "type": "object",
+          "properties": {
+            "merge_strategy": { "type": "string", "enum": ["union", "intersection", "priority", "custom"] },
+            "conflict_resolution": { "type": "string", "enum": ["deny", "allow", "escalate", "most_restrictive", "least_restrictive"] },
+            "max_inheritance_depth": { "type": "integer", "minimum": 1, "maximum": 10 }
+          },
+          "required": ["merge_strategy", "conflict_resolution"]
+        }
+      }
+    },
+    "delegation": {
+      "type": "object",
+      "properties": {
+        "can_delegate": { "type": "boolean" },
+        "delegatable_permissions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/uuid" }
+        },
+        "delegation_constraints": {
+          "type": "object",
+          "properties": {
+            "max_delegation_depth": { "type": "integer", "minimum": 1 },
+            "time_limit": { "type": "integer", "minimum": 1 },
+            "require_approval": { "type": "boolean" },
+            "revocable": { "type": "boolean" }
+          }
+        },
+        "active_delegations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "delegation_id": { "$ref": "#/$defs/uuid" },
+              "delegated_to": { "type": "string" },
+              "permissions": {
+                "type": "array",
+                "items": { "$ref": "#/$defs/uuid" }
+              },
+              "start_time": { "$ref": "#/$defs/timestamp" },
+              "end_time": { "$ref": "#/$defs/timestamp" },
+              "status": {
+                "type": "string",
+                "enum": ["active", "suspended", "revoked", "expired"]
+              }
+            },
+            "required": ["delegation_id", "delegated_to", "permissions", "start_time", "status"]
+          }
+        }
+      },
+      "required": ["can_delegate"]
+    },
+    "attributes": {
+      "type": "object",
+      "properties": {
+        "security_clearance": {
+          "type": "string",
+          "enum": ["public", "internal", "confidential", "secret", "top_secret"]
+        },
+        "department": { "type": "string" },
+        "seniority_level": {
+          "type": "string",
+          "enum": ["junior", "mid", "senior", "lead", "executive"]
+        },
+        "certification_requirements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "certification": { "type": "string" },
+              "level": { "type": "string" },
+              "expiry": { "$ref": "#/$defs/timestamp" },
+              "issuer": { "type": "string" }
+            },
+            "required": ["certification", "level"]
+          }
+        },
+        "custom_attributes": {
+          "type": "object",
+          "additionalProperties": {
+            "oneOf": [
+              { "type": "string" },
+              { "type": "number" },
+              { "type": "boolean" }
+            ]
+          }
+        }
+      }
+    },
+    "validation_rules": {
+      "type": "object",
+      "properties": {
+        "assignment_rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "rule_id": { "$ref": "#/$defs/uuid" },
+              "condition": { "type": "string" },
+              "action": { "type": "string", "enum": ["allow", "deny", "require_approval"] },
+              "message": { "type": "string" }
+            },
+            "required": ["rule_id", "condition", "action"]
+          }
+        },
+        "separation_of_duties": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "conflicting_roles": { "type": "array", "items": { "$ref": "#/$defs/uuid" } },
+              "severity": { "type": "string", "enum": ["warning", "error", "critical"] },
+              "exception_approval_required": { "type": "boolean" }
+            },
+            "required": ["conflicting_roles", "severity"]
+          }
+        }
+      }
+    },
+    "audit_settings": {
+      "type": "object",
+      "properties": {
+        "audit_enabled": { "type": "boolean" },
+        "audit_events": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["assignment", "revocation", "delegation", "permission_change", "login", "action_performed"] }
+        },
+        "retention_period": { "type": "string" },
+        "compliance_frameworks": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["audit_enabled"]
+    }
+  },
+  "required": [
+    "protocol_version",
+    "timestamp",
+    "role_id",
+    "context_id",
+    "name",
+    "role_type",
+    "status",
+    "permissions"
+  ],
+  "additionalProperties": false
+} 

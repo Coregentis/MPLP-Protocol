@@ -1,161 +1,395 @@
 /**
- * MPLP错误处理系统接口定义
- * 
- * 定义错误处理系统的核心接口，确保厂商中立性和可扩展性
- * 严格按照trace-protocol.json中的error_information Schema定义
- * 
- * @version 1.0.0
- * @since 2025-07-23
- * @schema_path src/schemas/trace-protocol.json
+ * 错误处理接口定义
+ * @description 定义MPLP系统的错误处理接口和类型
+ * @author MPLP Team
+ * @version 1.0.1
  */
 
 /**
  * 错误类型枚举
- * 严格匹配Schema定义
  */
-export type ErrorType =
-  | 'system'        // 系统错误
-  | 'business'      // 业务错误
-  | 'validation'    // 验证错误
-  | 'network'       // 网络错误
-  | 'timeout'       // 超时错误
-  | 'security';     // 安全错误
+export enum ErrorType {
+  VALIDATION = 'validation',
+  AUTHENTICATION = 'authentication',
+  AUTHORIZATION = 'authorization',
+  NOT_FOUND = 'not_found',
+  CONFLICT = 'conflict',
+  RATE_LIMIT = 'rate_limit',
+  INTERNAL = 'internal',
+  EXTERNAL = 'external',
+  NETWORK = 'network',
+  TIMEOUT = 'timeout',
+  BUSINESS = 'business',
+  SYSTEM = 'system'
+}
 
 /**
- * 错误恢复动作枚举
- * 严格匹配Schema定义
- */
-export type RecoveryAction =
-  | 'retry'         // 重试操作
-  | 'fallback'      // 使用备选方案
-  | 'escalate'      // 升级处理
-  | 'ignore'        // 忽略错误
-  | 'abort';        // 中止操作
-
-/**
- * 错误严重级别枚举
+ * 错误严重级别
  */
 export enum ErrorSeverity {
-  DEBUG = 'debug',
-  INFO = 'info',
-  WARN = 'warn',
-  ERROR = 'error',
+  LOW = 'low',
+  MEDIUM = 'medium',
+  HIGH = 'high',
   CRITICAL = 'critical'
 }
 
 /**
- * 堆栈跟踪项接口
- * 严格匹配Schema定义
+ * 错误分类
  */
-export interface StackTraceItem {
-  file: string;
-  function: string;
-  line: number;
-  column?: number;
+export enum ErrorCategory {
+  CLIENT = 'client',
+  SERVER = 'server',
+  NETWORK = 'network',
+  BUSINESS = 'business',
+  SYSTEM = 'system',
+  SECURITY = 'security'
 }
 
 /**
- * 错误恢复动作接口
- * 严格匹配Schema定义
+ * 基础错误接口
  */
-export interface RecoveryActionItem {
-  action: RecoveryAction;
-  description: string;
-  parameters?: Record<string, unknown>;
+export interface IError {
+  code: string;
+  message: string;
+  type: ErrorType;
+  severity: ErrorSeverity;
+  category: ErrorCategory;
+  timestamp: string;
+  correlation_id?: string;
+  user_id?: string;
+  session_id?: string;
+  request_id?: string;
+  details?: Record<string, any>;
+  stack?: string;
+  inner_error?: IError;
+  context?: ErrorContext;
 }
 
 /**
- * 错误信息接口
- * 严格匹配Schema定义
+ * 错误上下文
  */
-export interface ErrorInformation {
-  error_code: string;
-  error_message: string;
-  error_type: ErrorType;
-  stack_trace?: StackTraceItem[];
-  recovery_actions?: RecoveryActionItem[];
+export interface ErrorContext {
+  module: string;
+  component: string;
+  operation: string;
+  version: string;
+  environment: string;
+  metadata?: Record<string, any>;
 }
 
 /**
  * 错误处理器接口
  */
 export interface IErrorHandler {
-  /**
-   * 处理错误
-   * @param error 错误对象
-   * @param context 错误上下文
-   * @returns 处理后的错误信息
-   */
-  handleError(error: unknown, context?: ErrorContext): ErrorInformation;
-  
-  /**
-   * 注册错误转换器
-   * @param errorType 错误类型
-   * @param converter 错误转换器
-   */
-  registerErrorConverter(errorType: string, converter: ErrorConverter): void;
-  
-  /**
-   * 获取错误恢复建议
-   * @param error 错误对象
-   * @param context 错误上下文
-   * @returns 错误恢复动作列表
-   */
-  getRecoveryActions(error: unknown, context?: ErrorContext): RecoveryActionItem[];
+  canHandle(error: IError): boolean;
+  handle(error: IError): Promise<ErrorHandlingResult>;
+  getHandlerInfo(): ErrorHandlerInfo;
 }
 
 /**
- * 错误上下文接口
+ * 错误处理结果
  */
-export interface ErrorContext {
-  module?: string;
-  component?: string;
-  function?: string;
-  request_id?: string;
-  user_id?: string;
-  additional_data?: Record<string, unknown>;
+export interface ErrorHandlingResult {
+  handled: boolean;
+  action: ErrorAction;
+  retry_after?: number;
+  recovery_suggestion?: string;
+  escalate?: boolean;
+  notify?: boolean;
+  log_level?: LogLevel;
+  metadata?: Record<string, any>;
 }
 
 /**
- * 错误转换器类型
+ * 错误处理动作
  */
-export type ErrorConverter = (error: unknown, context?: ErrorContext) => ErrorInformation;
+export enum ErrorAction {
+  IGNORE = 'ignore',
+  LOG = 'log',
+  RETRY = 'retry',
+  FALLBACK = 'fallback',
+  ESCALATE = 'escalate',
+  NOTIFY = 'notify',
+  TERMINATE = 'terminate',
+  RECOVER = 'recover'
+}
 
 /**
- * 错误处理配置接口
+ * 日志级别
  */
-export interface ErrorHandlingConfig {
+export enum LogLevel {
+  DEBUG = 'debug',
+  INFO = 'info',
+  WARN = 'warn',
+  ERROR = 'error',
+  FATAL = 'fatal'
+}
+
+/**
+ * 错误处理器信息
+ */
+export interface ErrorHandlerInfo {
+  name: string;
+  version: string;
+  description?: string;
+  supported_types: ErrorType[];
+  supported_categories: ErrorCategory[];
+  priority: number;
+}
+
+/**
+ * 错误恢复策略接口
+ */
+export interface IErrorRecoveryStrategy {
+  canRecover(error: IError): boolean;
+  recover(error: IError, context: any): Promise<RecoveryResult>;
+  getRecoveryInfo(): RecoveryStrategyInfo;
+}
+
+/**
+ * 恢复结果
+ */
+export interface RecoveryResult {
+  recovered: boolean;
+  action_taken: string;
+  new_state?: any;
+  retry_recommended?: boolean;
+  recovery_time?: number;
+  metadata?: Record<string, any>;
+}
+
+/**
+ * 恢复策略信息
+ */
+export interface RecoveryStrategyInfo {
+  name: string;
+  description?: string;
+  supported_errors: ErrorType[];
+  recovery_time_estimate: number;
+  success_rate: number;
+}
+
+/**
+ * 错误报告接口
+ */
+export interface IErrorReporter {
+  report(error: IError): Promise<void>;
+  reportBatch(errors: IError[]): Promise<void>;
+  getReportingConfig(): ErrorReportingConfig;
+}
+
+/**
+ * 错误报告配置
+ */
+export interface ErrorReportingConfig {
+  enabled: boolean;
+  endpoint?: string;
+  api_key?: string;
+  batch_size: number;
+  flush_interval: number;
   include_stack_trace: boolean;
-  localization_enabled: boolean;
-  default_locale: string;
-  log_level: ErrorSeverity;
-  capture_async_errors: boolean;
-  max_stack_depth: number;
+  include_context: boolean;
+  filter_sensitive_data: boolean;
+  retry_policy: RetryPolicy;
 }
 
 /**
- * 错误处理器工厂接口
+ * 重试策略
  */
-export interface IErrorHandlerFactory {
-  /**
-   * 创建错误处理器
-   * @param config 错误处理配置
-   * @returns 错误处理器实例
-   */
-  createErrorHandler(config?: Partial<ErrorHandlingConfig>): IErrorHandler;
+export interface RetryPolicy {
+  max_attempts: number;
+  initial_delay: number;
+  max_delay: number;
+  backoff_factor: number;
+  jitter: boolean;
 }
 
 /**
- * HTTP错误响应接口
+ * 错误监控接口
  */
-export interface HttpErrorResponse {
-  status_code: number;
-  error: {
-    code: string;
-    message: string;
-    type: ErrorType;
-    details?: unknown;
-  };
-  trace_id?: string;
-  timestamp: string;
-} 
+export interface IErrorMonitor {
+  track(error: IError): void;
+  getMetrics(): ErrorMetrics;
+  getErrorRate(timeWindow: number): number;
+  getTopErrors(limit: number): ErrorSummary[];
+  reset(): void;
+}
+
+/**
+ * 错误指标
+ */
+export interface ErrorMetrics {
+  total_errors: number;
+  errors_by_type: Record<ErrorType, number>;
+  errors_by_severity: Record<ErrorSeverity, number>;
+  errors_by_category: Record<ErrorCategory, number>;
+  error_rate: number;
+  average_resolution_time: number;
+  last_error_time?: string;
+}
+
+/**
+ * 错误摘要
+ */
+export interface ErrorSummary {
+  code: string;
+  message: string;
+  type: ErrorType;
+  count: number;
+  first_occurrence: string;
+  last_occurrence: string;
+  affected_users: number;
+}
+
+/**
+ * 错误通知接口
+ */
+export interface IErrorNotifier {
+  notify(error: IError, recipients: string[]): Promise<void>;
+  notifyBatch(errors: IError[], recipients: string[]): Promise<void>;
+  getNotificationConfig(): ErrorNotificationConfig;
+}
+
+/**
+ * 错误通知配置
+ */
+export interface ErrorNotificationConfig {
+  enabled: boolean;
+  channels: NotificationChannel[];
+  severity_threshold: ErrorSeverity;
+  rate_limit: number;
+  template?: string;
+  include_context: boolean;
+}
+
+/**
+ * 通知渠道
+ */
+export interface NotificationChannel {
+  type: 'email' | 'sms' | 'slack' | 'webhook' | 'push';
+  config: Record<string, any>;
+  enabled: boolean;
+}
+
+/**
+ * 错误分析器接口
+ */
+export interface IErrorAnalyzer {
+  analyze(errors: IError[]): ErrorAnalysisResult;
+  findPatterns(errors: IError[]): ErrorPattern[];
+  predictTrends(errors: IError[]): ErrorTrend[];
+  generateRecommendations(analysis: ErrorAnalysisResult): ErrorRecommendation[];
+}
+
+/**
+ * 错误分析结果
+ */
+export interface ErrorAnalysisResult {
+  total_errors: number;
+  unique_errors: number;
+  error_distribution: Record<string, number>;
+  time_distribution: Record<string, number>;
+  patterns: ErrorPattern[];
+  trends: ErrorTrend[];
+  anomalies: ErrorAnomaly[];
+  recommendations: ErrorRecommendation[];
+}
+
+/**
+ * 错误模式
+ */
+export interface ErrorPattern {
+  id: string;
+  description: string;
+  frequency: number;
+  confidence: number;
+  affected_components: string[];
+  time_pattern?: string;
+  conditions: Record<string, any>;
+}
+
+/**
+ * 错误趋势
+ */
+export interface ErrorTrend {
+  type: 'increasing' | 'decreasing' | 'stable' | 'cyclical';
+  direction: 'up' | 'down' | 'flat';
+  rate: number;
+  confidence: number;
+  time_window: string;
+  prediction?: ErrorPrediction;
+}
+
+/**
+ * 错误预测
+ */
+export interface ErrorPrediction {
+  expected_count: number;
+  confidence_interval: [number, number];
+  time_horizon: string;
+  factors: string[];
+}
+
+/**
+ * 错误异常
+ */
+export interface ErrorAnomaly {
+  type: 'spike' | 'drop' | 'pattern_break' | 'new_error';
+  severity: 'low' | 'medium' | 'high';
+  description: string;
+  detected_at: string;
+  affected_metrics: string[];
+  possible_causes: string[];
+}
+
+/**
+ * 错误建议
+ */
+export interface ErrorRecommendation {
+  id: string;
+  type: 'fix' | 'prevention' | 'monitoring' | 'process';
+  priority: 'low' | 'medium' | 'high' | 'critical';
+  title: string;
+  description: string;
+  action_items: string[];
+  estimated_impact: string;
+  implementation_effort: string;
+  related_errors: string[];
+}
+
+/**
+ * 错误上下文构建器接口
+ */
+export interface IErrorContextBuilder {
+  withModule(module: string): IErrorContextBuilder;
+  withComponent(component: string): IErrorContextBuilder;
+  withOperation(operation: string): IErrorContextBuilder;
+  withVersion(version: string): IErrorContextBuilder;
+  withEnvironment(environment: string): IErrorContextBuilder;
+  withMetadata(metadata: Record<string, any>): IErrorContextBuilder;
+  build(): ErrorContext;
+}
+
+/**
+ * 错误工厂接口
+ */
+export interface IErrorFactory {
+  createError(
+    code: string,
+    message: string,
+    type: ErrorType,
+    severity?: ErrorSeverity,
+    category?: ErrorCategory
+  ): IError;
+  
+  createValidationError(message: string, field?: string): IError;
+  createAuthenticationError(message?: string): IError;
+  createAuthorizationError(message?: string): IError;
+  createNotFoundError(resource: string): IError;
+  createConflictError(message: string): IError;
+  createRateLimitError(limit: number, window: string): IError;
+  createInternalError(message: string, cause?: Error): IError;
+  createTimeoutError(operation: string, timeout: number): IError;
+  createNetworkError(message: string, endpoint?: string): IError;
+  createBusinessError(code: string, message: string): IError;
+}

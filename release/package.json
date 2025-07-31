@@ -1,0 +1,70 @@
+{
+  "name": "mplp",
+  "version": "1.0.0",
+  "description": "Multi-Agent Project Lifecycle Protocol - A comprehensive framework for multi-agent collaboration and workflow orchestration",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc && rollup -c",
+    "test": "jest",
+    "test:performance": "jest tests/performance",
+    "test:unit": "jest tests/unit",
+    "test:integration": "jest tests/integration",
+    "test:e2e": "jest tests/e2e",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "docs": "typedoc src/index.ts"
+  },
+  "keywords": [
+    "multi-agent",
+    "workflow",
+    "orchestration",
+    "ai",
+    "performance",
+    "protocol",
+    "lifecycle",
+    "collaboration"
+  ],
+  "author": "MPLP Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/mplp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-org/mplp/issues"
+  },
+  "homepage": "https://github.com/your-org/mplp#readme",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "docs"
+  ],
+  "dependencies": {
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/uuid": "^9.0.0",
+    "@types/jest": "^29.0.0",
+    "@types/node": "^18.0.0",
+    "typescript": "^5.0.0",
+    "jest": "^29.0.0",
+    "ts-jest": "^29.0.0",
+    "eslint": "^8.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "rollup": "^3.0.0",
+    "typedoc": "^0.25.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

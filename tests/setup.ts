@@ -1,156 +1,69 @@
-import 'reflect-metadata';
-import { config } from 'dotenv';
+/**
+ * Jest全局测试设置
+ * 
+ * 用于配置Jest测试环境，包括全局模拟、自定义匹配器等
+ * 
+ * @version v1.0.0
+ * @created 2025-08-21T14:00:00+08:00
+ */
 
-// Load test environment variables
-config({ path: '.env.test' });
+import { jest } from '@jest/globals';
 
-// Global test timeout
-jest.setTimeout(30000);
+// 全局环境设置
+process.env.NODE_ENV = 'test';
 
-// Mock Date for consistent testing
-const MOCK_DATE = new Date('2024-01-01T00:00:00.000Z');
-const originalDate = Date;
-
-beforeEach(() => {
-  // Simple Date mock - just mock Date.now() 
-  jest.spyOn(Date, 'now').mockReturnValue(MOCK_DATE.getTime());
-  
-  // Mock new Date() to return fixed date when called without arguments
-  const mockConstructor = jest.fn().mockImplementation((...args: any[]) => {
-    if (args.length === 0) {
-      return new originalDate(MOCK_DATE);
-    }
-    return new originalDate(...(args as ConstructorParameters<typeof Date>));
-  });
-  
-  global.Date = mockConstructor as any;
-  // Preserve static methods
-  Object.setPrototypeOf(global.Date, originalDate);
-  global.Date.now = jest.fn(() => MOCK_DATE.getTime());
-  global.Date.UTC = originalDate.UTC;
-  global.Date.parse = originalDate.parse;
-});
-
-afterEach(() => {
-  jest.restoreAllMocks();
-  jest.clearAllTimers();
-  // Restore original Date
-  global.Date = originalDate;
-});
-
-// Mock external services
-jest.mock('redis', () => ({
-  createClient: jest.fn(() => ({
-    connect: jest.fn(),
-    disconnect: jest.fn(),
-    get: jest.fn(),
-    set: jest.fn(),
-    del: jest.fn(),
-    exists: jest.fn(),
-    expire: jest.fn(),
-  })),
-}));
-
-// Mock database connection
-jest.mock('typeorm', () => ({
-  ...jest.requireActual('typeorm'),
-  createConnection: jest.fn(),
-  getConnection: jest.fn(),
-  getRepository: jest.fn(),
-}));
-
-// Mock external HTTP requests
-jest.mock('axios', () => ({
-  create: jest.fn(() => ({
-    get: jest.fn(),
-    post: jest.fn(),
-    put: jest.fn(),
-    delete: jest.fn(),
-    patch: jest.fn(),
-  })),
-  get: jest.fn(),
-  post: jest.fn(),
-  put: jest.fn(),
-  delete: jest.fn(),
-  patch: jest.fn(),
-}));
-
-// Global test utilities
-declare global {
-  namespace jest {
-    interface Matchers<R> {
-      toBeValidUUID(): R;
-      toBeValidTimestamp(): R;
-      toMatchMPLPProtocol(): R;
-    }
-  }
-}
-
-// Custom Jest matchers for MPLP
+// 增加全局匹配器
 expect.extend({
-  toBeValidUUID(received: string) {
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  toBeValidUUID(received) {
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     const pass = uuidRegex.test(received);
     
     if (pass) {
       return {
         message: () => `expected ${received} not to be a valid UUID`,
-        pass: true,
+        pass: true
       };
     } else {
       return {
         message: () => `expected ${received} to be a valid UUID`,
-        pass: false,
+        pass: false
       };
     }
   },
   
-  toBeValidTimestamp(received: string) {
-    const date = new Date(received);
-    const pass = !isNaN(date.getTime()) && received.includes('T') && received.includes('Z');
+  toHaveSucceeded(response) {
+    const pass = response && response.success === true;
     
     if (pass) {
       return {
-        message: () => `expected ${received} not to be a valid ISO timestamp`,
-        pass: true,
+        message: () => `expected response not to have succeeded, but it did`,
+        pass: true
       };
     } else {
       return {
-        message: () => `expected ${received} to be a valid ISO timestamp`,
-        pass: false,
+        message: () => `expected response to have succeeded, but it failed with: ${JSON.stringify(response?.error)}`,
+        pass: false
       };
     }
-  },
-  
-  toMatchMPLPProtocol(received: any) {
-    const hasVersion = received.version && typeof received.version === 'string';
-    const hasTimestamp = received.timestamp && typeof received.timestamp === 'string';
-    const pass = hasVersion && hasTimestamp;
-    
-    if (pass) {
-      return {
-        message: () => `expected object not to match MPLP protocol structure`,
-        pass: true,
-      };
-    } else {
-      return {
-        message: () => `expected object to have version and timestamp properties`,
-        pass: false,
-      };
-    }
-  },
+  }
 });
 
-// Silence console output during tests (unless LOG_TESTS=true)
-if (process.env.LOG_TESTS !== 'true') {
-  const mockConsole = {
-    ...console,
-    log: jest.fn(),
-    debug: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
+// 全局模拟
+jest.mock('../src/public/utils/logger', () => {
+  return {
+    Logger: jest.fn().mockImplementation(() => ({
+      info: jest.fn(),
+      warn: jest.fn(),
+      error: jest.fn(),
+      debug: jest.fn(),
+      setLevel: jest.fn(),
+      getLevel: jest.fn(),
+      createSubLogger: jest.fn()
+    }))
   };
-  
-  Object.assign(global.console, mockConsole);
-} 
+});
+
+// 监听未关闭的处理程序
+afterAll(async () => {
+  await new Promise<void>((resolve) => setTimeout(() => resolve(), 500));
+}); 

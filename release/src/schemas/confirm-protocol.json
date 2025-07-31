@@ -1,0 +1,296 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mplp.dev/schemas/v1.0/confirm-protocol.json",
+  "title": "MPLP Confirm Protocol v1.0",
+  "description": "Confirm模块协议Schema - 验证决策和审批管理",
+  "type": "object",
+  "$defs": {
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "description": "UUID v4格式的唯一标识符"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601格式的时间戳"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+      "description": "语义化版本号 (SemVer)"
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["critical", "high", "medium", "low"],
+      "description": "优先级枚举"
+    }
+  },
+  "properties": {
+    "protocol_version": {
+      "$ref": "#/$defs/version",
+      "description": "MPLP协议版本",
+              "const": "1.0.1"
+    },
+    "timestamp": {
+      "$ref": "#/$defs/timestamp",
+      "description": "协议消息时间戳"
+    },
+    "confirm_id": {
+      "$ref": "#/$defs/uuid",
+      "description": "确认唯一标识符"
+    },
+    "context_id": {
+      "$ref": "#/$defs/uuid",
+      "description": "关联的上下文ID"
+    },
+    "plan_id": {
+      "$ref": "#/$defs/uuid",
+      "description": "关联的计划ID"
+    },
+    "confirmation_type": {
+      "type": "string",
+      "enum": ["plan_approval", "task_approval", "milestone_confirmation", "risk_acceptance", "resource_allocation", "emergency_approval"],
+      "description": "确认类型"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["pending", "in_review", "approved", "rejected", "cancelled", "expired"],
+      "description": "确认状态"
+    },
+    "priority": {
+      "$ref": "#/$defs/priority",
+      "description": "确认优先级"
+    },
+    "requester": {
+      "type": "object",
+      "properties": {
+        "user_id": { "type": "string" },
+        "role": { "type": "string" },
+        "department": { "type": "string" },
+        "request_reason": { "type": "string", "maxLength": 1000 }
+      },
+      "required": ["user_id", "role", "request_reason"]
+    },
+    "approval_workflow": {
+      "type": "object",
+      "properties": {
+        "workflow_type": {
+          "type": "string",
+          "enum": ["single_approver", "sequential", "parallel", "consensus", "escalation"]
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "step_id": { "$ref": "#/$defs/uuid" },
+              "step_order": { "type": "integer", "minimum": 1 },
+              "approver": {
+                "type": "object",
+                "properties": {
+                  "user_id": { "type": "string" },
+                  "role": { "type": "string" },
+                  "is_required": { "type": "boolean" },
+                  "delegation_allowed": { "type": "boolean" }
+                },
+                "required": ["user_id", "role", "is_required"]
+              },
+              "approval_criteria": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "criterion": { "type": "string" },
+                    "required": { "type": "boolean" },
+                    "weight": { "type": "number", "minimum": 0, "maximum": 1 }
+                  },
+                  "required": ["criterion", "required"]
+                }
+              },
+              "status": {
+                "type": "string",
+                "enum": ["pending", "approved", "rejected", "delegated", "skipped"]
+              },
+              "decision": {
+                "type": "object",
+                "properties": {
+                  "outcome": { "type": "string", "enum": ["approve", "reject", "request_changes", "delegate"] },
+                  "comments": { "type": "string", "maxLength": 2000 },
+                  "conditions": { "type": "array", "items": { "type": "string" } },
+                  "timestamp": { "$ref": "#/$defs/timestamp" },
+                  "signature": { "type": "string" }
+                },
+                "required": ["outcome", "timestamp"]
+              },
+              "timeout": {
+                "type": "object",
+                "properties": {
+                  "duration": { "type": "integer", "minimum": 1 },
+                  "unit": { "type": "string", "enum": ["minutes", "hours", "days"] },
+                  "action_on_timeout": { "type": "string", "enum": ["auto_approve", "auto_reject", "escalate", "extend"] }
+                },
+                "required": ["duration", "unit", "action_on_timeout"]
+              }
+            },
+            "required": ["step_id", "step_order", "approver", "status"]
+          }
+        },
+        "escalation_rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "trigger": { "type": "string", "enum": ["timeout", "rejection", "manual", "system"] },
+              "escalate_to": {
+                "type": "object",
+                "properties": {
+                  "user_id": { "type": "string" },
+                  "role": { "type": "string" }
+                },
+                "required": ["user_id", "role"]
+              },
+              "notification_delay": { "type": "integer", "minimum": 0 }
+            },
+            "required": ["trigger", "escalate_to"]
+          }
+        }
+      },
+      "required": ["workflow_type", "steps"]
+    },
+    "subject": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 255 },
+        "description": { "type": "string", "maxLength": 2000 },
+        "impact_assessment": {
+          "type": "object",
+          "properties": {
+            "scope": { "type": "string", "enum": ["task", "project", "organization", "external"] },
+            "affected_systems": { "type": "array", "items": { "type": "string" } },
+            "affected_users": { "type": "array", "items": { "type": "string" } },
+            "business_impact": { "type": "string", "enum": ["none", "low", "medium", "high", "critical"] },
+            "technical_impact": { "type": "string", "enum": ["none", "low", "medium", "high", "critical"] }
+          },
+          "required": ["scope", "business_impact", "technical_impact"]
+        },
+        "attachments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "file_id": { "type": "string" },
+              "filename": { "type": "string" },
+              "mime_type": { "type": "string" },
+              "size": { "type": "integer", "minimum": 0 },
+              "description": { "type": "string" }
+            },
+            "required": ["file_id", "filename", "mime_type", "size"]
+          }
+        }
+      },
+      "required": ["title", "description", "impact_assessment"]
+    },
+    "risk_assessment": {
+      "type": "object",
+      "properties": {
+        "overall_risk_level": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+        "risk_factors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "factor": { "type": "string" },
+              "description": { "type": "string" },
+              "probability": { "type": "number", "minimum": 0, "maximum": 1 },
+              "impact": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+              "mitigation": { "type": "string" }
+            },
+            "required": ["factor", "probability", "impact"]
+          }
+        },
+        "compliance_requirements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "regulation": { "type": "string" },
+              "requirement": { "type": "string" },
+              "compliance_status": { "type": "string", "enum": ["compliant", "non_compliant", "partially_compliant", "not_applicable"] },
+              "evidence": { "type": "string" }
+            },
+            "required": ["regulation", "requirement", "compliance_status"]
+          }
+        }
+      },
+      "required": ["overall_risk_level", "risk_factors"]
+    },
+    "notification_settings": {
+      "type": "object",
+      "properties": {
+        "notify_on_events": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["created", "approved", "rejected", "timeout", "escalated", "cancelled"] }
+        },
+        "notification_channels": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["email", "sms", "webhook", "in_app", "slack"] }
+        },
+        "stakeholders": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "user_id": { "type": "string" },
+              "role": { "type": "string" },
+              "notification_preference": { "type": "string", "enum": ["all", "important", "critical", "none"] }
+            },
+            "required": ["user_id", "role", "notification_preference"]
+          }
+        }
+      },
+      "required": ["notify_on_events", "notification_channels"]
+    },
+    "audit_trail": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "event_id": { "$ref": "#/$defs/uuid" },
+          "timestamp": { "$ref": "#/$defs/timestamp" },
+          "event_type": { "type": "string", "enum": ["created", "updated", "approved", "rejected", "escalated", "cancelled", "timeout"] },
+          "actor": {
+            "type": "object",
+            "properties": {
+              "user_id": { "type": "string" },
+              "role": { "type": "string" },
+              "ip_address": { "type": "string" },
+              "user_agent": { "type": "string" }
+            },
+            "required": ["user_id", "role"]
+          },
+          "changes": {
+            "type": "object",
+            "properties": {
+              "field": { "type": "string" },
+              "old_value": { "type": ["string", "number", "boolean", "null"] },
+              "new_value": { "type": ["string", "number", "boolean", "null"] }
+            }
+          },
+          "description": { "type": "string" }
+        },
+        "required": ["event_id", "timestamp", "event_type", "actor"]
+      }
+    }
+  },
+  "required": [
+    "protocol_version",
+    "timestamp",
+    "confirm_id",
+    "context_id",
+    "confirmation_type",
+    "status",
+    "priority"
+  ],
+  "additionalProperties": false
+} 

@@ -1,169 +1,132 @@
 /**
- * 追踪适配器接口 - 厂商中立设计
+ * Trace适配器接口
  * 
- * 定义了MPLP与外部追踪系统集成的标准接口。
- * 所有追踪适配器实现必须遵循此接口。
+ * 定义追踪适配器的标准接口
  * 
- * @version v1.0.3
- * @created 2025-07-10T13:30:00+08:00
- * @updated 2025-07-15T19:45:00+08:00
- * @compliance trace-protocol.json Schema v1.0.0 - 100%合规
- * @compliance extension-protocol.mdc - 厂商中立设计
+ * @version 1.0.0
+ * @created 2025-09-16
  */
 
-import { MPLPTraceData } from '../types/trace';
+import { MPLPTraceData } from '../modules/trace/types';
 
-/**
- * 适配器类型枚举
- */
 export enum AdapterType {
   BASE = 'base',
-  ENHANCED = 'enhanced',
-  CUSTOM = 'custom'
+  CONSOLE = 'console',
+  FILE = 'file',
+  DATABASE = 'database',
+  REMOTE = 'remote',
+  CUSTOM = 'custom',
+  ENHANCED = 'enhanced'
 }
 
-/**
- * 基础适配器配置接口
- */
 export interface AdapterConfig {
-  name?: string;
-  version?: string;
-  type?: AdapterType;
-  batchSize?: number;
-  cacheEnabled?: boolean;
-  retryAttempts?: number;
-  retryDelay?: number;
-  timeout?: number;
+  name: string;
+  version: string;
+  enabled?: boolean;
+  options?: Record<string, any>;
 }
 
-/**
- * 故障报告接口
- */
-export interface FailureReport {
-  failure_id: string;
-  task_id: string;
-  plan_id: string;
-  failure_type: string;
-  failure_details: Record<string, unknown>;
-  timestamp: string;
-  recovery_suggestions?: string[];
-  // 增强属性 - 用于故障分析和恢复
-  component?: string;         // 失败的组件名称
-  error_type?: string;        // 错误类型
-  dependency?: string;        // 依赖项名称
-  resource?: string;          // 资源名称
-  code_location?: string;     // 代码位置
+export interface AdapterInfo {
+  type: string;
+  version: string;
+  name: string;
+  description?: string;
+  capabilities?: string[];
+  status: 'active' | 'inactive' | 'error';
 }
 
-/**
- * 同步结果错误接口
- */
-export interface SyncError {
-  code: string;
-  message: string;
-  field: string | null;
-}
-
-/**
- * 同步结果接口
- */
-export interface SyncResult {
-  success: boolean;
-  sync_id?: string;
-  sync_timestamp: string;
-  latency_ms: number;
-  errors: SyncError[];
-}
-
-/**
- * 适配器健康状态接口
- */
 export interface AdapterHealth {
   status: 'healthy' | 'degraded' | 'unhealthy';
+  message?: string;
+  details?: Record<string, any>;
   last_check: string;
-  metrics: {
-    avg_latency_ms: number;
-    success_rate: number;
-    error_rate: number;
-  };
 }
 
-/**
- * 恢复建议接口
- */
+export interface SyncResult {
+  success: boolean;
+  synced_count: number;
+  failed_count: number;
+  errors?: string[];
+  duration_ms: number;
+}
+
+export interface FailureReport {
+  error_code: string;
+  error_message: string;
+  timestamp: string;
+  context?: Record<string, any>;
+}
+
 export interface RecoverySuggestion {
-  suggestion_id: string;
-  failure_id: string;
-  suggestion: string;
-  confidence_score: number;
-  estimated_effort: 'low' | 'medium' | 'high';
-  code_snippet?: string;
-  code_reference?: string;    // 代码引用路径
+  action: string;
+  description: string;
+  priority: 'low' | 'medium' | 'high' | 'critical';
+  estimated_time?: string;
+}
+
+export interface TraceHistoryOptions {
+  start_time?: string;
+  end_time?: string;
+  trace_types?: string[];
+  severities?: string[];
+  page_size?: number;
+  page?: number;
+}
+
+export interface TraceHistoryResult {
+  history: MPLPTraceData[];
+  total_count: number;
+  page: number;
+  page_size: number;
+  has_more: boolean;
 }
 
 /**
- * 追踪适配器接口 - 厂商中立
+ * 追踪适配器接口
  */
 export interface ITraceAdapter {
   /**
    * 获取适配器信息
-   * @returns 包含适配器类型、版本和能力的对象
    */
-  getAdapterInfo(): { type: AdapterType; version: string; capabilities?: string[] };
-  
+  getAdapterInfo(): AdapterInfo;
+
   /**
-   * 同步单条追踪数据
-   * @param traceData 追踪数据
-   * @returns 同步结果
+   * 初始化适配器
    */
-  syncTraceData(traceData: MPLPTraceData): Promise<SyncResult>;
-  
+  initialize(config: AdapterConfig): Promise<void>;
+
   /**
-   * 批量同步追踪数据
-   * @param traceBatch 追踪数据数组
-   * @returns 批量同步结果
+   * 记录追踪数据
    */
-  syncBatch(traceBatch: MPLPTraceData[]): Promise<SyncResult>;
-  
+  recordTrace(traceData: Partial<MPLPTraceData>): Promise<{ success: boolean; data?: MPLPTraceData; error?: string }>;
+
   /**
-   * 报告故障信息
-   * @param failure 故障报告
-   * @returns 同步结果
+   * 批量记录追踪数据
    */
-  reportFailure(failure: FailureReport): Promise<SyncResult>;
-  
+  batchRecordTrace(traceDataList: Partial<MPLPTraceData>[]): Promise<SyncResult>;
+
   /**
-   * 检查适配器健康状态
-   * @returns 健康状态信息
+   * 获取追踪历史
+   */
+  getTraceHistory(contextId: string, options?: TraceHistoryOptions): Promise<TraceHistoryResult>;
+
+  /**
+   * 检查健康状态
    */
   checkHealth(): Promise<AdapterHealth>;
-  
+
   /**
-   * 获取故障恢复建议
-   * @param failureId 故障ID
-   * @returns 恢复建议列表
+   * 同步数据
    */
-  getRecoverySuggestions?(failureId: string): Promise<RecoverySuggestion[]>;
-  
+  sync(): Promise<SyncResult>;
+
   /**
-   * 获取分析数据
-   * @param query 查询参数
-   * @returns 分析结果
+   * 清理过期数据
    */
-  getAnalytics?(query: Record<string, unknown>): Promise<Record<string, unknown>>;
-  
+  cleanup(olderThanDays: number): Promise<{ deleted_count: number }>;
+
   /**
-   * 检测开发问题
-   * @returns 开发问题列表及置信度
+   * 关闭适配器
    */
-  detectDevelopmentIssues?(): Promise<{
-    issues: Array<{
-      id: string;
-      type: string;
-      severity: string;
-      title: string;
-      file_path?: string;
-    }>;
-    confidence: number;
-  }>;
-} 
+  close(): Promise<void>;
+}

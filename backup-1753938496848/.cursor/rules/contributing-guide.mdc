@@ -1,0 +1,352 @@
+description: "MPLP贡献指南 - 项目贡献流程、代码规范和PR提交要求"
+globs: ["**/*.ts", "**/*.md", "**/*.json", "**/*.js"]
+alwaysApply: true
+---
+
+# MPLP 1.0 贡献指南
+
+> **指南版本**: v2.1  
+> **更新时间**: 2025-07-09T19:04:01+08:00  
+> **适用项目**: Multi-Agent Project Lifecycle Protocol (MPLP) v1.0  
+> **关联文档**: [技术规范统一标准](../requirements-docs/技术规范统一标准.md) | [MPLP协议开发专项路线图](../requirements-docs/mplp_protocol_roadmap.md)  
+> **协议版本**: v1.0 (完全基于Roadmap v1.0规划)
+
+感谢您对MPLP项目的贡献！本指南将帮助您了解如何参与项目开发，确保代码质量和团队协作效率。
+
+## 🎯 技术标准基线（强制遵循）
+
+在开始贡献之前，请**必须阅读**以下文档：
+- **[技术规范统一标准.md](../requirements-docs/技术规范统一标准.md)** - 项目技术标准基线
+- **[开发规范文档.md](../requirements-docs/02_开发规范文档.md)** - 详细开发规范
+- **[MPLP协议正式规范.md](../requirements-docs/07_MPLP协议正式规范.md)** - 协议实现规范
+
+### 核心技术要求（匹配Roadmap技术栈）
+- **运行环境**: Node.js 18+ LTS版本
+- **开发语言**: TypeScript 5.0+ 严格模式，100%类型覆盖，禁止any类型
+- **Web框架**: Express.js 4.18+ + Helmet.js安全中间件
+- **数据库**: PostgreSQL 14+ + TypeORM，Redis 7+缓存
+- **API设计**: REST API + GraphQL + WebSocket实时通信
+
+### 性能标准（基于Roadmap v1.0性能基准）
+- **API响应时间**: P95 < 100ms，P99 < 200ms
+- **协议解析性能**: 单次解析 < 10ms
+- **系统吞吐量**: > 10,000 TPS
+- **测试覆盖率**: 单元测试≥90%，集成测试≥80%
+
+## 📋 开发流程（基于Roadmap开发阶段）
+
+### 开发阶段规划
+当前项目按照Roadmap v1.0的5个开发阶段进行：
+1. **核心架构实现** (第1-2周) - 基础架构和协议框架
+2. **6个核心模块实现** (第3-6周) - Context、Plan、Confirm、Trace、Role、Extension
+3. **集成和API层** (第7-8周) - API开发和平台集成
+4. **测试和文档** (第9-10周) - 全面测试和文档完善
+5. **发布准备** (第11-12周) - 部署准备和发布
+
+### 分支管理策略
+```bash
+main                    # 主分支 - 稳定版本
+├── develop            # 开发分支 - 集成分支
+├── feature/context    # 功能分支 - Context模块开发
+├── feature/plan       # 功能分支 - Plan模块开发
+├── feature/confirm    # 功能分支 - Confirm模块开发
+├── feature/trace      # 功能分支 - Trace模块开发
+├── feature/role       # 功能分支 - Role模块开发
+├── feature/extension  # 功能分支 - Extension模块开发
+├── hotfix/v1.0.1      # 紧急修复分支
+└── release/v1.0.0     # 发布分支
+```
+
+### 提交规范（Conventional Commits）
+```bash
+# 格式：<类型>[可选作用域]: <描述>
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer]
+```
+
+#### 提交类型（基于MPLP模块）
+- **feat**: 新功能开发
+- **fix**: Bug修复
+- **docs**: 文档更新
+- **style**: 代码格式修改
+- **refactor**: 代码重构
+- **test**: 测试相关
+- **chore**: 构建或辅助工具变更
+- **protocol**: 协议定义变更
+- **security**: 安全相关修复
+- **perf**: 性能优化
+
+#### 作用域规范
+```
+context:    Context模块相关
+plan:       Plan模块相关
+confirm:    Confirm模块相关
+trace:      Trace模块相关
+role:       Role模块相关
+extension:  Extension模块相关
+api:        API层变更
+database:   数据库相关
+auth:       认证授权
+monitor:    监控相关
+```
+
+#### 提交示例
+```bash
+# ✅ 功能开发
+git commit -m "feat(context): implement batch operations support
+
+- Add batch create, update, and delete operations
+- Implement input validation for batch requests
+- Update API documentation and JSON Schema
+- Add comprehensive unit tests with 95% coverage
+
+Performance: Batch operations achieve <50ms P95 response time
+Closes #123"
+
+# ✅ 协议变更
+git commit -m "protocol(extension): add health check endpoint
+
+Added mandatory health check endpoint for all extensions
+to support better monitoring and fault detection.
+
+BREAKING CHANGE: Extensions must implement /health endpoint"
+```
+
+## 🔧 代码质量要求
+
+### TypeScript规范
+```typescript
+// ✅ 正确示例 - 严格类型定义
+interface ContextProtocol extends BaseProtocol {
+  context_id: string;           // UUID格式
+  user_id: string;             // 用户标识
+  session_id: string;          // 会话标识
+  shared_state: Record<string, unknown>; // 共享状态
+  lifecycle_stage: 'planning' | 'executing' | 'monitoring' | 'completed';
+  metadata: ContextMetadata;   // 元数据
+  status: 'active' | 'inactive' | 'suspended';
+  created_at: string;          // ISO 8601时间戳
+  updated_at: string;          // ISO 8601时间戳
+}
+
+// ✅ 服务层实现示例
+class ContextService {
+  private readonly logger: Logger;
+  private readonly repository: ContextRepository;
+
+  constructor(
+    repository: ContextRepository,
+    logger: Logger
+  ) {
+    this.repository = repository;
+    this.logger = logger;
+  }
+
+  @Monitor // 性能监控装饰器
+  @Validate(CreateContextDto) // 输入验证装饰器
+  public async createContext(
+    data: CreateContextRequest
+  ): Promise<Result<ContextProtocol, ValidationError>> {
+    try {
+      const context = await this.repository.create(data);
+      
+      this.logger.info('Context created successfully', {
+        contextId: context.context_id,
+        userId: context.user_id,
+        timestamp: new Date().toISOString()
+      });
+
+      return { success: true, data: context };
+    } catch (error) {
+      this.logger.error('Failed to create context', {
+        error: error.message,
+        input: sanitizeInput(data)
+      });
+      
+      return { 
+        success: false, 
+        error: new ValidationError(error.message, 'context', data) 
+      };
+    }
+  }
+}
+```
+
+### 测试规范（TDD驱动）
+```typescript
+describe('ContextService', () => {
+  let service: ContextService;
+  let repository: jest.Mocked<ContextRepository>;
+  let logger: jest.Mocked<Logger>;
+
+  beforeEach(() => {
+    repository = createMockRepository();
+    logger = createMockLogger();
+    service = new ContextService(repository, logger);
+  });
+
+  describe('createContext', () => {
+    it('should create context successfully with valid data', async () => {
+      // 📋 Arrange
+      const validInput: CreateContextRequest = {
+        name: 'Test Context',
+        user_id: 'test-user-id',
+        shared_state: { env: 'test' }
+      };
+      
+      const expectedOutput = new ContextTestDataBuilder()
+        .withName(validInput.name)
+        .withUserId(validInput.user_id)
+        .build();
+      
+      repository.create.mockResolvedValue(expectedOutput);
+
+      // 🎬 Act
+      const result = await service.createContext(validInput);
+
+      // ✅ Assert
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toEqual(expectedOutput);
+        expect(result.data.name).toBe(validInput.name);
+      }
+      
+      expect(repository.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: validInput.name,
+          user_id: validInput.user_id
+        })
+      );
+    });
+
+    it('should handle validation errors gracefully', async () => {
+      // Arrange
+      const invalidInput = { name: '', user_id: '' };
+
+      // Act
+      const result = await service.createContext(invalidInput);
+
+      // Assert
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error).toBeInstanceOf(ValidationError);
+      }
+    });
+  });
+});
+```
+
+## 🔍 Pull Request流程
+
+### PR提交前检查清单
+- [ ] **技术规范检查**
+  - [ ] TypeScript严格模式编译通过，0个any类型
+  - [ ] ESLint和Prettier检查通过
+  - [ ] 所有接口符合MPLP协议规范
+
+- [ ] **测试和质量**
+  - [ ] 单元测试覆盖率≥90%，集成测试覆盖率≥80%
+  - [ ] 所有测试用例通过
+  - [ ] 性能测试通过（API响应P95<100ms，协议解析<10ms）
+
+- [ ] **安全和权限**
+  - [ ] 安全扫描无高危漏洞
+  - [ ] 所有API端点有认证和权限控制
+  - [ ] 输入验证和数据清理完整
+
+- [ ] **文档和规范**
+  - [ ] API文档更新（OpenAPI 3.0规范）
+  - [ ] JSON Schema验证完整
+  - [ ] Git提交信息符合Conventional Commits规范
+
+### PR模板
+```markdown
+## 📋 变更描述
+<!-- 简要描述本次PR的变更内容 -->
+
+## 🎯 变更类型
+- [ ] 新功能 (feature)
+- [ ] Bug修复 (fix)
+- [ ] 文档更新 (docs)
+- [ ] 代码重构 (refactor)
+- [ ] 性能优化 (perf)
+- [ ] 协议变更 (protocol)
+
+## 🔧 影响模块
+- [ ] Context模块
+- [ ] Plan模块
+- [ ] Confirm模块
+- [ ] Trace模块
+- [ ] Role模块
+- [ ] Extension模块
+- [ ] API层
+- [ ] 数据库
+
+## ✅ 检查清单
+- [ ] 通过所有自动化测试
+- [ ] 代码覆盖率达标（≥90%）
+- [ ] 性能测试通过（API响应<100ms）
+- [ ] 安全扫描通过
+- [ ] 文档已更新
+- [ ] 符合Git提交规范
+
+## 📊 测试信息
+<!-- 描述测试策略和覆盖范围 -->
+
+## 🔗 相关Issue
+<!-- 关联的Issue编号 -->
+Closes #XXX
+```
+
+## 🚀 开发环境设置
+
+### 环境要求
+```bash
+# 检查Node.js版本
+node --version  # 要求 18+
+
+# 检查TypeScript版本
+npx tsc --version  # 要求 5.0+
+
+# 安装项目依赖
+npm install
+
+# 验证开发环境
+npm run validate
+```
+
+### 开发脚本
+```bash
+# 开发模式
+npm run dev
+
+# 代码质量检查
+npm run lint
+npm run typecheck
+npm run format
+
+# 测试执行
+npm test
+npm run test:watch
+npm run test:coverage
+
+# 构建和部署
+npm run build
+npm run docker:build
+```
+
+## 📞 支持和联系
+
+- **技术支持**: mplp-support@coregentis.com
+- **项目讨论**: GitHub Discussions
+- **Bug报告**: GitHub Issues
+- **安全漏洞**: security@coregentis.com
+
+---
+
+**贡献指南版本**: v2.1  
+**维护团队**: Coregentis MPLP项目团队  
+**更新周期**: 重大变更时或每月定期更新
