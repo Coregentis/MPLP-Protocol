@@ -147,8 +147,8 @@ export { WorkflowTemplates };
 export const CORE_MODULE_INFO = {
   name: 'core',
   version: '1.0.0',
-  description: 'MPLP Core Runtime Orchestrator - 协调和调度6个核心协议模块',
-  dependencies: ['context', 'plan', 'confirm', 'trace', 'role', 'extension'],
+  description: 'MPLP Core Runtime Orchestrator - 协调和调度所有9个协议模块',
+  dependencies: ['context', 'plan', 'confirm', 'trace', 'role', 'extension', 'collab', 'dialog', 'network'],
   capabilities: [
     'workflow_orchestration',
     'module_coordination',

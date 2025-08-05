@@ -55,6 +55,15 @@ export class ExtensionManagementService {
    */
   async createExtension(request: CreateExtensionRequest): Promise<OperationResult<Extension>> {
     try {
+      // 输入验证
+      const validationError = this.validateCreateExtensionRequest(request);
+      if (validationError) {
+        return {
+          success: false,
+          error: validationError
+        };
+      }
+
       // 验证扩展名称唯一性
       const isUnique = await this.extensionRepository.isNameUnique(request.name, request.context_id);
       if (!isUnique) {
@@ -73,7 +82,7 @@ export class ExtensionManagementService {
         request.name,
         request.version,
         request.type,
-        'installed',
+        'inactive',
         now,
         now,
         now,
@@ -129,6 +138,15 @@ export class ExtensionManagementService {
    */
   async activateExtension(extensionId: UUID): Promise<OperationResult<Extension>> {
     try {
+      // 验证扩展ID
+      const validationError = this.validateExtensionId(extensionId);
+      if (validationError) {
+        return {
+          success: false,
+          error: validationError
+        };
+      }
+
       const extension = await this.extensionRepository.findById(extensionId);
       
       if (!extension) {
@@ -167,6 +185,15 @@ export class ExtensionManagementService {
    */
   async deactivateExtension(extensionId: UUID): Promise<OperationResult<Extension>> {
     try {
+      // 验证扩展ID
+      const validationError = this.validateExtensionId(extensionId);
+      if (validationError) {
+        return {
+          success: false,
+          error: validationError
+        };
+      }
+
       const extension = await this.extensionRepository.findById(extensionId);
       
       if (!extension) {
@@ -331,10 +358,58 @@ export class ExtensionManagementService {
   }
 
   /**
+   * 删除扩展（别名方法）
+   */
+  async deleteExtension(extensionId: UUID): Promise<OperationResult<void>> {
+    return this.uninstallExtension(extensionId);
+  }
+
+  /**
+   * 获取扩展列表（别名方法）
+   */
+  async getExtensions(
+    filter?: ExtensionFilter,
+    pagination?: PaginationOptions
+  ): Promise<OperationResult<{ items: Extension[], total: number, totalPages?: number }>> {
+    try {
+      const result = await this.queryExtensions(filter || {}, pagination);
+      if (result.success && result.data) {
+        return {
+          success: true,
+          data: {
+            items: result.data.items,
+            total: result.data.total,
+            totalPages: result.data.total_pages // 映射total_pages到totalPages
+          }
+        };
+      } else {
+        return {
+          success: false,
+          error: result.error || '获取扩展列表失败'
+        };
+      }
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : '获取扩展列表失败'
+      };
+    }
+  }
+
+  /**
    * 卸载扩展
    */
   async uninstallExtension(extensionId: UUID): Promise<OperationResult<void>> {
     try {
+      // 验证扩展ID
+      const validationError = this.validateExtensionId(extensionId);
+      if (validationError) {
+        return {
+          success: false,
+          error: validationError
+        };
+      }
+
       const extension = await this.extensionRepository.findById(extensionId);
       
       if (!extension) {
@@ -401,5 +476,52 @@ export class ExtensionManagementService {
       const v = c === 'x' ? r : (r & 0x3 | 0x8);
       return v.toString(16);
     });
+  }
+
+  /**
+   * 验证创建扩展请求
+   */
+  private validateCreateExtensionRequest(request: CreateExtensionRequest): string | null {
+    // 检查请求是否为空
+    if (!request) {
+      return '请求参数不能为空';
+    }
+
+    // 检查上下文ID
+    if (!request.context_id || request.context_id.trim() === '') {
+      return '上下文ID不能为空';
+    }
+
+    // 检查扩展名称
+    if (!request.name || request.name.trim() === '') {
+      return '扩展名称不能为空';
+    }
+
+    if (request.name.length > 100) {
+      return '名称长度不能超过100个字符';
+    }
+
+    // 检查版本
+    if (!request.version || request.version.trim() === '') {
+      return '扩展版本不能为空';
+    }
+
+    // 检查扩展类型
+    const validTypes: ExtensionType[] = ['plugin', 'adapter', 'connector', 'middleware', 'hook', 'transformer'];
+    if (!validTypes.includes(request.type)) {
+      return `无效的扩展类型: ${request.type}`;
+    }
+
+    return null;
+  }
+
+  /**
+   * 验证扩展ID
+   */
+  private validateExtensionId(extensionId: UUID): string | null {
+    if (!extensionId || extensionId.trim() === '') {
+      return '扩展ID不能为空';
+    }
+    return null;
   }
 }

@@ -3,8 +3,9 @@
  *
  * 导出Role模块的公共API
  *
- * @version 1.0.0
+ * @version 2.0.0
  * @created 2025-09-16
+ * @updated 2025-08-04 22:19
  * @architecture DDD (Domain-Driven Design)
  */
 
@@ -33,6 +34,9 @@ export { IRoleRepository, RoleFilter } from './domain/repositories/role-reposito
 
 // ===== 类型定义导出 =====
 export * from './types';
+
+// ===== 适配器导出 =====
+export { RoleModuleAdapter } from './infrastructure/adapters/role-module.adapter';
 
 // ===== DDD架构完成，旧架构文件已清理 =====
 // 所有功能现在通过新的DDD架构提供

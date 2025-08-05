@@ -1,6 +1,6 @@
 # MPLP v1.0 Documentation
 
-Welcome to the comprehensive documentation for MPLP (Multi-Agent Project Lifecycle Protocol) v1.0.
+Welcome to the comprehensive documentation for MPLP (Multi-Agent Project Lifecycle Protocol - L4 Intelligent Agent Operating System) v1.0.
 
 ## 📚 Documentation Structure
 

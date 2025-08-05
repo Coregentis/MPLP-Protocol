@@ -1,0 +1,330 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mplp.dev/schemas/v1.0/mplp-network.json",
+  "title": "MPLP Network Protocol v1.0",
+  "description": "Network模块协议Schema - Agent网络拓扑和连接管理",
+  "version": "1.0.0",
+  "lastUpdated": "2025-08-04",
+  "type": "object",
+  "$defs": {
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "description": "UUID v4格式的唯一标识符"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601格式的时间戳"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+      "description": "语义化版本号 (SemVer)"
+    },
+    "entityStatus": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive",
+        "pending",
+        "completed",
+        "failed",
+        "cancelled"
+      ],
+      "description": "实体状态枚举"
+    }
+  },
+  "properties": {
+    "network_id": {
+      "$ref": "#/$defs/uuid",
+      "description": "网络唯一标识符"
+    },
+    "version": {
+      "$ref": "#/$defs/version",
+      "description": "协议版本号"
+    },
+    "timestamp": {
+      "$ref": "#/$defs/timestamp",
+      "description": "网络创建时间戳"
+    },
+    "context_id": {
+      "$ref": "#/$defs/uuid",
+      "description": "关联的上下文ID"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255,
+      "description": "网络名称"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1024,
+      "description": "网络描述"
+    },
+    "topology": {
+      "type": "string",
+      "enum": ["star", "mesh", "tree", "ring", "bus", "hybrid", "hierarchical"],
+      "description": "网络拓扑类型"
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "node_id": {
+            "$ref": "#/$defs/uuid",
+            "description": "节点唯一标识符"
+          },
+          "agent_id": {
+            "$ref": "#/$defs/uuid",
+            "description": "Agent唯一标识符"
+          },
+          "node_type": {
+            "type": "string",
+            "enum": [
+              "coordinator",
+              "worker",
+              "gateway",
+              "relay",
+              "monitor",
+              "backup"
+            ],
+            "description": "节点类型"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "online",
+              "offline",
+              "connecting",
+              "disconnecting",
+              "error",
+              "maintenance"
+            ],
+            "description": "节点状态"
+          },
+          "capabilities": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "compute",
+                "storage",
+                "network",
+                "coordination",
+                "monitoring",
+                "security"
+              ]
+            },
+            "maxItems": 10,
+            "description": "节点能力列表"
+          },
+          "address": {
+            "type": "object",
+            "properties": {
+              "host": {
+                "type": "string",
+                "description": "主机地址"
+              },
+              "port": {
+                "type": "number",
+                "minimum": 1,
+                "maximum": 65535,
+                "description": "端口号"
+              },
+              "protocol": {
+                "type": "string",
+                "enum": ["http", "https", "ws", "wss", "tcp", "udp"],
+                "description": "通信协议"
+              }
+            },
+            "required": ["host", "port", "protocol"],
+            "additionalProperties": false,
+            "description": "节点地址信息"
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "节点元数据"
+          }
+        },
+        "required": ["node_id", "agent_id", "node_type", "status"],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "maxItems": 1000,
+      "description": "网络节点列表"
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "edge_id": {
+            "$ref": "#/$defs/uuid",
+            "description": "连接唯一标识符"
+          },
+          "source_node_id": {
+            "$ref": "#/$defs/uuid",
+            "description": "源节点ID"
+          },
+          "target_node_id": {
+            "$ref": "#/$defs/uuid",
+            "description": "目标节点ID"
+          },
+          "edge_type": {
+            "type": "string",
+            "enum": ["data", "control", "monitoring", "backup"],
+            "description": "连接类型"
+          },
+          "direction": {
+            "type": "string",
+            "enum": ["unidirectional", "bidirectional"],
+            "description": "连接方向"
+          },
+          "status": {
+            "$ref": "#/$defs/entityStatus",
+            "description": "连接状态"
+          },
+          "weight": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "连接权重"
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "连接元数据"
+          }
+        },
+        "required": [
+          "edge_id",
+          "source_node_id",
+          "target_node_id",
+          "edge_type",
+          "direction",
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 10000,
+      "description": "网络连接列表"
+    },
+    "discovery_mechanism": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "static",
+            "dynamic",
+            "hybrid",
+            "dns",
+            "registry",
+            "broadcast"
+          ],
+          "description": "发现机制类型"
+        },
+        "registry_config": {
+          "type": "object",
+          "properties": {
+            "endpoint": {
+              "type": "string",
+              "format": "uri",
+              "description": "注册中心端点"
+            },
+            "authentication": {
+              "type": "boolean",
+              "default": false,
+              "description": "是否需要身份验证"
+            },
+            "refresh_interval": {
+              "type": "number",
+              "minimum": 1,
+              "description": "刷新间隔(秒)"
+            }
+          },
+          "additionalProperties": false,
+          "description": "注册中心配置"
+        }
+      },
+      "required": ["type"],
+      "additionalProperties": false,
+      "description": "节点发现机制"
+    },
+    "routing_strategy": {
+      "type": "object",
+      "properties": {
+        "algorithm": {
+          "type": "string",
+          "enum": [
+            "shortest_path",
+            "load_balanced",
+            "priority_based",
+            "custom"
+          ],
+          "description": "路由算法"
+        },
+        "load_balancing": {
+          "type": "object",
+          "properties": {
+            "method": {
+              "type": "string",
+              "enum": [
+                "round_robin",
+                "weighted",
+                "least_connections",
+                "random"
+              ],
+              "description": "负载均衡方法"
+            }
+          },
+          "additionalProperties": false,
+          "description": "负载均衡配置"
+        }
+      },
+      "required": ["algorithm"],
+      "additionalProperties": false,
+      "description": "路由策略"
+    },
+    "status": {
+      "$ref": "#/$defs/entityStatus",
+      "description": "网络状态"
+    },
+    "created_at": {
+      "$ref": "#/$defs/timestamp",
+      "description": "网络创建时间"
+    },
+    "updated_at": {
+      "$ref": "#/$defs/timestamp",
+      "description": "网络最后更新时间"
+    },
+    "created_by": {
+      "$ref": "#/$defs/uuid",
+      "description": "网络创建者ID"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "网络元数据"
+    }
+  },
+  "required": [
+    "network_id",
+    "version",
+    "timestamp",
+    "context_id",
+    "name",
+    "topology",
+    "nodes",
+    "discovery_mechanism",
+    "routing_strategy",
+    "status",
+    "created_at",
+    "created_by"
+  ],
+  "additionalProperties": false
+}

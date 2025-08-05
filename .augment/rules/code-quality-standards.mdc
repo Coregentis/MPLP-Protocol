@@ -1,0 +1,250 @@
+---
+type: "always_apply"
+description: "Code quality standards for MPLP v1.0 development"
+priority: "high"
+---
+
+# Code Quality Standards
+
+## 🎯 **代码质量核心原则**
+
+### 1. 可读性优先
+```markdown
+RULE: 代码必须易于理解和维护
+- 使用有意义的变量和函数名
+- 保持函数简洁，单一职责
+- 添加必要的注释和文档
+- 遵循一致的代码风格
+```
+
+### 2. 类型安全 - 零any类型政策
+```typescript
+RULE: 确保完整的类型安全，绝对禁止any类型
+// ✅ 正确示例
+interface CreateUserRequest {
+  name: string;
+  email: string;
+  role: UserRole;
+}
+
+async function createUser(request: CreateUserRequest): Promise<User> {
+  // 类型安全的实现
+}
+
+// ❌ 绝对禁止的示例
+async function createUser(data: any): Promise<any> {
+  // 缺乏类型安全 - 立即修复
+}
+
+❌ ZERO TOLERANCE VIOLATIONS:
+- 使用any类型 (立即修复)
+- 使用@ts-ignore绕过检查 (立即修复)
+- TypeScript编译错误 (立即修复)
+- ESLint错误或警告 (立即修复)
+
+✅ MANDATORY REQUIREMENTS:
+- 所有函数必须有明确的类型签名
+- 所有接口必须完整定义
+- 使用类型守卫处理unknown类型
+- 错误处理必须有正确的类型
+```
+
+### 3. 错误处理
+```typescript
+RULE: 完整和正确的错误处理
+// ✅ 正确示例
+try {
+  const result = await this.processData(data);
+  return { success: true, data: result };
+} catch (error) {
+  this.logger.error('Processing failed', { 
+    error: error.message, 
+    data, 
+    stack: error.stack 
+  });
+  return { 
+    success: false, 
+    error: `Processing failed: ${error.message}` 
+  };
+}
+
+// ❌ 错误示例
+try {
+  const result = await this.processData(data);
+  return result;
+} catch (error) {
+  // 忽略错误或空的catch块
+}
+```
+
+## 🏗️ **架构质量标准**
+
+### 1. 模块化设计
+```markdown
+RULE: 保持模块的独立性和可测试性
+- 每个模块有明确的职责边界
+- 模块间通过接口通信
+- 避免循环依赖
+- 支持独立测试和部署
+```
+
+### 2. 依赖管理
+```typescript
+RULE: 正确管理依赖关系
+// ✅ 正确示例 - 依赖注入
+export class UserService {
+  constructor(
+    private readonly userRepository: IUserRepository,
+    private readonly emailService: IEmailService,
+    private readonly logger: ILogger
+  ) {}
+}
+
+// ❌ 错误示例 - 硬编码依赖
+export class UserService {
+  private userRepository = new UserRepository();
+  private emailService = new EmailService();
+}
+```
+
+### 3. 配置管理
+```typescript
+RULE: 外部化配置，避免硬编码
+// ✅ 正确示例
+interface DatabaseConfig {
+  host: string;
+  port: number;
+  database: string;
+  username: string;
+  password: string;
+}
+
+class DatabaseConnection {
+  constructor(private config: DatabaseConfig) {}
+}
+
+// ❌ 错误示例
+class DatabaseConnection {
+  private host = 'localhost';
+  private port = 5432;
+}
+```
+
+## 🧪 **测试质量标准**
+
+### 1. 测试覆盖率
+```markdown
+RULE: 维护高质量的测试覆盖率
+- 单元测试覆盖率 > 90%
+- 集成测试覆盖关键业务流程
+- 端到端测试覆盖用户场景
+- 测试必须基于实际Schema编写
+```
+
+### 2. 测试质量
+```typescript
+RULE: 编写高质量的测试
+// ✅ 正确示例
+describe('UserService', () => {
+  let userService: UserService;
+  let mockUserRepository: jest.Mocked<IUserRepository>;
+
+  beforeEach(() => {
+    mockUserRepository = {
+      create: jest.fn(),
+      findById: jest.fn(),
+      update: jest.fn(),
+      delete: jest.fn()
+    };
+    userService = new UserService(mockUserRepository);
+  });
+
+  it('should create user with valid data', async () => {
+    const userData = { name: 'John', email: 'john@example.com' };
+    const expectedUser = { id: '1', ...userData };
+    
+    mockUserRepository.create.mockResolvedValue(expectedUser);
+    
+    const result = await userService.createUser(userData);
+    
+    expect(result).toEqual(expectedUser);
+    expect(mockUserRepository.create).toHaveBeenCalledWith(userData);
+  });
+});
+```
+
+## 📊 **性能质量标准**
+
+### 1. 响应时间
+```markdown
+RULE: 保持高性能标准
+- API响应时间 < 100ms (简单查询)
+- API响应时间 < 500ms (复杂查询)
+- 数据库查询优化
+- 适当使用缓存策略
+```
+
+### 2. 内存管理
+```typescript
+RULE: 避免内存泄漏和过度消耗
+// ✅ 正确示例 - 及时清理资源
+export class DataProcessor {
+  private connections: Connection[] = [];
+
+  async process(data: any[]): Promise<void> {
+    try {
+      // 处理数据
+    } finally {
+      // 清理连接
+      await Promise.all(
+        this.connections.map(conn => conn.close())
+      );
+      this.connections = [];
+    }
+  }
+}
+```
+
+## 🚫 **禁止的代码模式**
+
+### 代码反模式
+```markdown
+❌ 绝对禁止:
+- 使用any类型逃避类型检查
+- 忽略编译错误和警告
+- 空的catch块或忽略错误
+- 硬编码配置值
+- 全局变量和状态
+- 过长的函数（>50行）
+- 深层嵌套（>4层）
+- 重复代码（DRY原则）
+```
+
+## ✅ **质量检查清单**
+
+### 代码提交前检查
+```bash
+# 必须通过的检查
+□ TypeScript编译无错误: npm run typecheck
+□ ESLint检查通过: npm run lint
+□ 单元测试通过: npm run test
+□ 测试覆盖率 > 90%: npm run test:coverage
+□ 性能测试通过: npm run test:performance
+```
+
+### 代码审查检查
+```markdown
+□ 代码逻辑正确性
+□ 类型安全性
+□ 错误处理完整性
+□ 测试覆盖充分性
+□ 文档和注释准确性
+□ 性能和安全性考虑
+```
+
+---
+
+**ENFORCEMENT**: 这些代码质量标准是**强制性的**，任何违反将导致代码被拒绝。
+
+**VERSION**: 1.0.0  
+**EFFECTIVE**: August 2, 2025

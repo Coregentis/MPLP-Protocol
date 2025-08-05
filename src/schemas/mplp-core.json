@@ -1,0 +1,436 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mplp.dev/schemas/v1.0/mplp-core.json",
+  "title": "MPLP Core Protocol v1.0",
+  "description": "Core协议Schema - MPLP协议簇的统一协调和工作流管理",
+  "version": "1.0.0",
+  "lastUpdated": "2025-08-04",
+  "type": "object",
+  "$defs": {
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "description": "UUID v4格式的唯一标识符"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601格式的时间戳"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+      "description": "语义化版本号 (SemVer)"
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["critical", "high", "medium", "low"],
+      "description": "优先级枚举"
+    },
+    "workflow_stage": {
+      "type": "string",
+      "enum": ["context", "plan", "confirm", "trace", "role", "extension", "collab", "dialog", "network"],
+      "description": "工作流阶段，对应MPLP的9个协议模块"
+    },
+    "workflow_status": {
+      "type": "string",
+      "enum": ["created", "in_progress", "completed", "failed", "cancelled", "paused"],
+      "description": "工作流执行状态"
+    },
+    "execution_mode": {
+      "type": "string",
+      "enum": ["sequential", "parallel", "conditional", "hybrid"],
+      "description": "工作流执行模式"
+    }
+  },
+  "properties": {
+    "protocol_version": {
+      "$ref": "#/$defs/version",
+      "description": "MPLP Core协议版本",
+      "const": "1.0.0"
+    },
+    "timestamp": {
+      "$ref": "#/$defs/timestamp",
+      "description": "协议消息时间戳"
+    },
+    "workflow_id": {
+      "$ref": "#/$defs/uuid",
+      "description": "工作流唯一标识符"
+    },
+    "orchestrator_id": {
+      "$ref": "#/$defs/uuid",
+      "description": "协调器实例标识符"
+    },
+    "workflow_config": {
+      "type": "object",
+      "description": "工作流配置",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255,
+          "description": "工作流名称"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 1000,
+          "description": "工作流描述"
+        },
+        "stages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/workflow_stage"
+          },
+          "minItems": 1,
+          "uniqueItems": true,
+          "description": "工作流包含的阶段列表"
+        },
+        "execution_mode": {
+          "$ref": "#/$defs/execution_mode",
+          "description": "工作流执行模式"
+        },
+        "timeout_ms": {
+          "type": "integer",
+          "minimum": 1000,
+          "maximum": 3600000,
+          "description": "工作流超时时间（毫秒）"
+        },
+        "max_concurrent_executions": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "description": "最大并发执行数"
+        },
+        "retry_policy": {
+          "type": "object",
+          "properties": {
+            "max_attempts": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10,
+              "description": "最大重试次数"
+            },
+            "delay_ms": {
+              "type": "integer",
+              "minimum": 100,
+              "maximum": 60000,
+              "description": "重试延迟（毫秒）"
+            },
+            "backoff_factor": {
+              "type": "number",
+              "minimum": 1.0,
+              "maximum": 5.0,
+              "description": "退避因子"
+            }
+          },
+          "required": ["max_attempts", "delay_ms"],
+          "additionalProperties": false,
+          "description": "重试策略配置"
+        }
+      },
+      "required": ["name", "stages", "execution_mode"],
+      "additionalProperties": false
+    },
+    "execution_context": {
+      "type": "object",
+      "description": "工作流执行上下文",
+      "properties": {
+        "user_id": {
+          "type": "string",
+          "description": "用户标识符"
+        },
+        "session_id": {
+          "$ref": "#/$defs/uuid",
+          "description": "会话标识符"
+        },
+        "request_id": {
+          "$ref": "#/$defs/uuid",
+          "description": "请求标识符"
+        },
+        "priority": {
+          "$ref": "#/$defs/priority",
+          "description": "执行优先级"
+        },
+        "metadata": {
+          "type": "object",
+          "description": "扩展元数据",
+          "additionalProperties": true
+        },
+        "variables": {
+          "type": "object",
+          "description": "工作流变量",
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "execution_status": {
+      "type": "object",
+      "description": "工作流执行状态",
+      "properties": {
+        "status": {
+          "$ref": "#/$defs/workflow_status",
+          "description": "当前执行状态"
+        },
+        "current_stage": {
+          "$ref": "#/$defs/workflow_stage",
+          "description": "当前执行阶段"
+        },
+        "completed_stages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/workflow_stage"
+          },
+          "description": "已完成的阶段列表"
+        },
+        "stage_results": {
+          "type": "object",
+          "description": "各阶段执行结果",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "enum": ["pending", "running", "completed", "failed", "skipped"]
+              },
+              "start_time": {
+                "$ref": "#/$defs/timestamp"
+              },
+              "end_time": {
+                "$ref": "#/$defs/timestamp"
+              },
+              "duration_ms": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "result": {
+                "type": "object",
+                "description": "阶段执行结果数据"
+              },
+              "error": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string"
+                  },
+                  "message": {
+                    "type": "string"
+                  },
+                  "details": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "required": ["status"]
+          }
+        },
+        "start_time": {
+          "$ref": "#/$defs/timestamp",
+          "description": "工作流开始时间"
+        },
+        "end_time": {
+          "$ref": "#/$defs/timestamp",
+          "description": "工作流结束时间"
+        },
+        "duration_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "工作流执行时长（毫秒）"
+        },
+        "retry_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "重试次数"
+        }
+      },
+      "required": ["status"],
+      "additionalProperties": false
+    },
+    "module_coordination": {
+      "type": "object",
+      "description": "模块协调配置",
+      "properties": {
+        "module_adapters": {
+          "type": "object",
+          "description": "模块适配器配置",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "adapter_type": {
+                "type": "string",
+                "description": "适配器类型"
+              },
+              "config": {
+                "type": "object",
+                "description": "适配器配置",
+                "additionalProperties": true
+              },
+              "timeout_ms": {
+                "type": "integer",
+                "minimum": 1000,
+                "maximum": 300000,
+                "description": "模块超时时间（毫秒）"
+              },
+              "retry_policy": {
+                "type": "object",
+                "properties": {
+                  "max_attempts": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  },
+                  "delay_ms": {
+                    "type": "integer",
+                    "minimum": 100,
+                    "maximum": 10000
+                  }
+                },
+                "required": ["max_attempts", "delay_ms"]
+              }
+            },
+            "required": ["adapter_type"],
+            "additionalProperties": false
+          }
+        },
+        "data_flow": {
+          "type": "object",
+          "description": "模块间数据流配置",
+          "properties": {
+            "input_mappings": {
+              "type": "object",
+              "description": "输入数据映射",
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "source_stage": {
+                    "$ref": "#/$defs/workflow_stage"
+                  },
+                  "source_field": {
+                    "type": "string"
+                  },
+                  "target_field": {
+                    "type": "string"
+                  },
+                  "transformation": {
+                    "type": "string",
+                    "description": "数据转换规则"
+                  }
+                },
+                "required": ["source_stage", "source_field", "target_field"]
+              }
+            },
+            "output_mappings": {
+              "type": "object",
+              "description": "输出数据映射",
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "target_stage": {
+                    "$ref": "#/$defs/workflow_stage"
+                  },
+                  "source_field": {
+                    "type": "string"
+                  },
+                  "target_field": {
+                    "type": "string"
+                  },
+                  "transformation": {
+                    "type": "string",
+                    "description": "数据转换规则"
+                  }
+                },
+                "required": ["target_stage", "source_field", "target_field"]
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "event_handling": {
+      "type": "object",
+      "description": "事件处理配置",
+      "properties": {
+        "event_listeners": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "event_type": {
+                "type": "string",
+                "enum": [
+                  "workflow.created",
+                  "workflow.started",
+                  "workflow.completed",
+                  "workflow.failed",
+                  "workflow.cancelled",
+                  "stage.started",
+                  "stage.completed",
+                  "stage.failed",
+                  "module.connected",
+                  "module.disconnected",
+                  "data.transferred"
+                ],
+                "description": "事件类型"
+              },
+              "handler": {
+                "type": "string",
+                "description": "事件处理器标识"
+              },
+              "config": {
+                "type": "object",
+                "description": "处理器配置",
+                "additionalProperties": true
+              }
+            },
+            "required": ["event_type", "handler"],
+            "additionalProperties": false
+          },
+          "description": "事件监听器配置"
+        },
+        "event_routing": {
+          "type": "object",
+          "description": "事件路由配置",
+          "properties": {
+            "default_handler": {
+              "type": "string",
+              "description": "默认事件处理器"
+            },
+            "routing_rules": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "condition": {
+                    "type": "string",
+                    "description": "路由条件表达式"
+                  },
+                  "handler": {
+                    "type": "string",
+                    "description": "目标处理器"
+                  }
+                },
+                "required": ["condition", "handler"]
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "protocol_version",
+    "timestamp",
+    "workflow_id",
+    "orchestrator_id",
+    "workflow_config",
+    "execution_context",
+    "execution_status"
+  ],
+  "additionalProperties": false,
+  "vendorNeutral": true
+}

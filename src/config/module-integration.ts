@@ -24,7 +24,7 @@ export interface ModuleInfo {
 }
 
 /**
- * 所有MPLP模块的信息
+ * 所有MPLP模块的信息 - 完整的10个模块注册
  */
 export const MODULE_REGISTRY: Record<string, ModuleInfo> = {
   context: {
@@ -124,11 +124,59 @@ export const MODULE_REGISTRY: Record<string, ModuleInfo> = {
     status: 'stable'
   },
   
+  collab: {
+    name: 'collab',
+    version: '1.0.0',
+    description: 'Multi-agent collaboration and decision-making',
+    dependencies: ['context', 'plan', 'role'],
+    capabilities: [
+      'collaboration_management',
+      'decision_coordination',
+      'consensus_building',
+      'conflict_resolution',
+      'team_formation'
+    ],
+    dddLayers: ['api', 'application', 'domain', 'infrastructure'],
+    status: 'stable'
+  },
+
+  dialog: {
+    name: 'dialog',
+    version: '1.0.0',
+    description: 'Dialog-driven development and memory',
+    dependencies: ['context', 'trace'],
+    capabilities: [
+      'dialog_management',
+      'conversation_context',
+      'memory_persistence',
+      'natural_language_processing',
+      'intent_recognition'
+    ],
+    dddLayers: ['api', 'application', 'domain', 'infrastructure'],
+    status: 'stable'
+  },
+
+  network: {
+    name: 'network',
+    version: '1.0.0',
+    description: 'Agent network topology and routing',
+    dependencies: ['role', 'collab'],
+    capabilities: [
+      'network_topology',
+      'agent_discovery',
+      'message_routing',
+      'load_balancing',
+      'fault_tolerance'
+    ],
+    dddLayers: ['api', 'application', 'domain', 'infrastructure'],
+    status: 'stable'
+  },
+
   core: {
     name: 'core',
     version: '1.0.0',
     description: 'Runtime orchestrator and coordinator',
-    dependencies: ['context', 'plan', 'confirm', 'trace', 'role', 'extension'],
+    dependencies: ['context', 'plan', 'confirm', 'trace', 'role', 'extension', 'collab', 'dialog', 'network'],
     capabilities: [
       'workflow_orchestration',
       'module_coordination',
@@ -142,7 +190,7 @@ export const MODULE_REGISTRY: Record<string, ModuleInfo> = {
 };
 
 /**
- * 模块初始化顺序
+ * 模块初始化顺序 - 完整的10个模块初始化序列
  * 基于依赖关系确定的正确初始化顺序
  */
 export const MODULE_INITIALIZATION_ORDER = [
@@ -152,6 +200,9 @@ export const MODULE_INITIALIZATION_ORDER = [
   'plan',       // 依赖context
   'confirm',    // 依赖context，可选依赖plan
   'extension',  // 依赖role，可选依赖其他模块
+  'dialog',     // 依赖context和trace
+  'network',    // 依赖role
+  'collab',     // 依赖context、plan、role
   'core'        // 依赖所有其他模块，最后初始化
 ];
 

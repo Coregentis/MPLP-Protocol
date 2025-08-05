@@ -327,16 +327,19 @@ export const MPLP_INFO = {
   name: 'MPLP',
   version: '1.0.0',
   fullName: 'Multi-Agent Project Lifecycle Protocol',
-  description: 'A comprehensive protocol framework for AI Agent ecosystem infrastructure',
+  description: 'L4 Intelligent Agent Operating System with 10 complete modules',
   architecture: 'Domain-Driven Design (DDD)',
   modules: [
     'context',   // Context management and lifecycle
-    'plan',      // Planning and task orchestration  
+    'plan',      // Planning and task orchestration
     'confirm',   // Approval and confirmation workflows
     'trace',     // Monitoring and event tracking
     'role',      // Role-based access control
     'extension', // Plugin and extension management
-    'core'       // Runtime orchestrator
+    'collab',    // Multi-agent collaboration and decision-making
+    'dialog',    // Dialog-driven development and memory
+    'network',   // Agent network topology and routing
+    'core'       // Runtime orchestrator and coordinator
   ],
   capabilities: [
     'multi_agent_coordination',

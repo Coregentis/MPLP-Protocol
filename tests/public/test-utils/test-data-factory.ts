@@ -120,6 +120,28 @@ export class ContextTestDataFactory extends BaseTestDataFactory {
       ...overrides
     };
   }
+
+  /**
+   * 创建有效的Context请求数据（用于集成测试）
+   */
+  static createValidContextRequest(overrides: Partial<any> = {}): any {
+    return {
+      name: `Valid Context ${this.generateRandomString()}`,
+      description: `Valid context description for testing`,
+      lifecycleStage: ContextLifecycleStage.INITIALIZATION,
+      status: EntityStatus.ACTIVE,
+      configuration: {
+        maxSessions: 10,
+        timeout: 30000
+      },
+      metadata: {
+        test: true,
+        created_by: 'test-factory',
+        priority: 'normal'
+      },
+      ...overrides
+    };
+  }
 }
 
 /**
@@ -167,6 +189,34 @@ export class PlanTestDataFactory extends BaseTestDataFactory {
       goals: [`Test goal`],
       execution_strategy: 'sequential',
       priority: 'medium',
+      ...overrides
+    };
+  }
+
+  /**
+   * 创建有效的Plan请求数据（用于集成测试）
+   */
+  static createValidPlanRequest(overrides: Partial<any> = {}): any {
+    return {
+      contextId: overrides.contextId || this.generateUUID(),
+      name: `Valid Plan ${this.generateRandomString()}`,
+      description: `Valid plan description for testing`,
+      type: 'basic',
+      goals: [`Complete project setup`, `Implement core features`],
+      tasks: [],
+      dependencies: [],
+      execution_strategy: 'sequential',
+      priority: 'high',
+      estimated_duration: { value: 120, unit: 'minutes' },
+      configuration: {
+        auto_start: false,
+        notifications: true
+      },
+      metadata: {
+        test: true,
+        created_by: 'test-factory',
+        project_type: 'development'
+      },
       ...overrides
     };
   }
@@ -317,5 +367,52 @@ export const TestDataFactory = {
   Trace: TraceTestDataFactory,
   Role: RoleTestDataFactory,
   Extension: ExtensionTestDataFactory,
-  Manager: TestDataManager
+  Manager: TestDataManager,
+
+  // 集成测试专用方法
+  createValidContextRequest: (overrides?: any) => ContextTestDataFactory.createValidContextRequest(overrides),
+  createValidPlanRequest: (overrides?: any) => PlanTestDataFactory.createValidPlanRequest(overrides),
+  createValidRoleRequest: (overrides?: any) => RoleTestDataFactory.createRoleData(overrides),
+  createValidCollabRequest: (overrides?: any) => ({
+    participants: [
+      { id: BaseTestDataFactory.generateUUID(), role: 'coordinator' },
+      { id: BaseTestDataFactory.generateUUID(), role: 'participant' }
+    ],
+    collaboration_type: 'decision_making',
+    context_id: BaseTestDataFactory.generateUUID(),
+    name: `Test Collaboration ${BaseTestDataFactory.generateRandomString()}`,
+    ...overrides
+  }),
+  createValidDialogRequest: (overrides?: any) => ({
+    name: `Test Dialog ${BaseTestDataFactory.generateRandomString()}`,
+    participants: [
+      { id: BaseTestDataFactory.generateUUID(), role: 'moderator' },
+      { id: BaseTestDataFactory.generateUUID(), role: 'participant' }
+    ],
+    capabilities: {
+      message_format: { type: 'text' },
+      moderation: { enabled: true }
+    },
+    context_id: BaseTestDataFactory.generateUUID(),
+    ...overrides
+  }),
+  createValidMessage: (overrides?: any) => ({
+    id: BaseTestDataFactory.generateUUID(),
+    content: `Test message content ${BaseTestDataFactory.generateRandomString()}`,
+    sender_id: BaseTestDataFactory.generateUUID(),
+    timestamp: BaseTestDataFactory.generateTimestamp(),
+    type: 'text',
+    ...overrides
+  }),
+  createCompleteWorkflowData: (overrides?: any) => ({
+    workflow_id: BaseTestDataFactory.generateUUID(),
+    context: ContextTestDataFactory.createValidContextRequest(),
+    plan: PlanTestDataFactory.createValidPlanRequest(),
+    stages: ['context', 'plan', 'confirm', 'trace'],
+    metadata: {
+      test: true,
+      created_by: 'test-factory'
+    },
+    ...overrides
+  })
 };

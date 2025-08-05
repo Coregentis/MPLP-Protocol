@@ -4,7 +4,7 @@
  * @version v1.1.0
  * @created 2025-07-09T21:30:00+08:00
  * @updated 2025-08-13T01:45:00+08:00
- * @compliance role-protocol.json Schema v1.0.1 - 100%合规
+ * @compliance mplp-role.json Schema v1.0.1 - 100%合规
  * @compliance .cursor/rules/development-standards.mdc - Schema驱动开发
  * @compliance .cursor/rules/development-standards.mdc - 厂商中立原则
  */
@@ -19,8 +19,8 @@ export type { UUID, Timestamp, Version };
 
 /**
  * Role协议主接口
- * 完全符合role-protocol.json Schema规范
- * @schema role-protocol.json
+ * 完全符合mplp-role.json Schema规范
+ * @schema mplp-role.json
  */
 export interface RoleProtocol {
   // Schema必需字段
@@ -42,6 +42,11 @@ export interface RoleProtocol {
   attributes?: RoleAttributes;  // 角色属性
   validation_rules?: ValidationRules; // 验证规则
   audit_settings?: AuditSettings; // 审计设置
+
+  // Agent管理相关字段 (Schema新增)
+  agents?: Agent[];             // 管理的Agent列表
+  agent_management?: AgentManagement; // Agent管理配置
+  team_configuration?: TeamConfiguration; // 团队配置
 }
 
 // ===== 基础枚举类型 (Schema定义) =====
@@ -432,7 +437,7 @@ export interface BatchPermissionCheckResult {
  * 角色操作结果
  * @implementation 应用层接口，基于Schema定义
  */
-export interface RoleOperationResult<T = any> {
+export interface RoleOperationResult<T = unknown> {
   success: boolean;
   data?: T;
   error?: {
@@ -585,4 +590,180 @@ export enum RoleErrorCode {
   DELEGATION_DEPTH_EXCEEDED = 'ROLE-010',
   SEPARATION_OF_DUTIES_VIOLATION = 'ROLE-011',
   INTERNAL_ERROR = 'ROLE-999'
-} 
+}
+
+// ===== Agent管理相关类型定义 (Schema新增) =====
+
+/**
+ * Agent类型 (Schema定义)
+ */
+export type AgentType = 'core' | 'specialist' | 'stakeholder' | 'coordinator' | 'custom';
+
+/**
+ * Agent状态 (Schema定义)
+ */
+export type AgentStatus = 'active' | 'inactive' | 'busy' | 'error' | 'maintenance' | 'retired';
+
+/**
+ * 专业技能水平 (Schema定义)
+ */
+export type ExpertiseLevel = 'beginner' | 'intermediate' | 'advanced' | 'expert' | 'master';
+
+/**
+ * 沟通风格 (Schema定义)
+ */
+export type CommunicationStyle = 'formal' | 'casual' | 'technical' | 'collaborative' | 'directive';
+
+/**
+ * 冲突解决策略 (Schema定义)
+ */
+export type ConflictResolutionStrategy = 'consensus' | 'majority' | 'authority' | 'compromise' | 'avoidance';
+
+/**
+ * 优先级类型 (Schema定义)
+ */
+export type Priority = 'critical' | 'high' | 'medium' | 'low';
+
+/**
+ * 重试策略 (Schema定义)
+ */
+export interface RetryPolicy {
+  max_retries: number;
+  backoff_ms: number;
+  backoff_multiplier?: number;
+  max_backoff_ms?: number;
+}
+
+/**
+ * Agent定义 (Schema定义)
+ */
+export interface Agent {
+  agent_id: UUID;
+  name: string;
+  type: AgentType;
+  domain: string;
+  status: AgentStatus;
+  capabilities: AgentCapabilities;
+  configuration?: AgentConfiguration;
+  performance_metrics?: PerformanceMetrics;
+  created_at: Timestamp;
+  updated_at?: Timestamp;
+  created_by: string;
+}
+
+/**
+ * Agent能力定义 (Schema定义)
+ */
+export interface AgentCapabilities {
+  core: {
+    critical_thinking: boolean;
+    scenario_validation: boolean;
+    ddsc_dialog: boolean;
+    mplp_protocols: string[];
+  };
+  specialist: {
+    domain: string;
+    expertise_level: ExpertiseLevel;
+    knowledge_areas: string[];
+    tools?: string[];
+  };
+  collaboration: {
+    communication_style: CommunicationStyle;
+    conflict_resolution: ConflictResolutionStrategy;
+    decision_weight: number;
+    trust_level: number;
+  };
+  learning: {
+    experience_accumulation: boolean;
+    pattern_recognition: boolean;
+    adaptation_mechanism: boolean;
+    performance_optimization: boolean;
+  };
+}
+
+/**
+ * Agent配置 (Schema定义)
+ */
+export interface AgentConfiguration {
+  basic: {
+    max_concurrent_tasks: number;
+    timeout_ms: number;
+    retry_policy?: RetryPolicy;
+    priority_level?: Priority;
+  };
+  communication: {
+    protocols: string[];
+    message_format: string;
+    encryption_enabled?: boolean;
+    compression_enabled?: boolean;
+  };
+  performance?: {
+    cache_enabled?: boolean;
+    batch_processing?: boolean;
+    parallel_execution?: boolean;
+    resource_limits?: {
+      max_memory_mb?: number;
+      max_cpu_percent?: number;
+    };
+  };
+  security: {
+    authentication_required: boolean;
+    authorization_level?: string;
+    audit_logging: boolean;
+    data_encryption?: boolean;
+  };
+}
+
+/**
+ * 性能指标 (Schema定义)
+ */
+export interface PerformanceMetrics {
+  response_time_ms?: number;
+  throughput_ops_per_sec?: number;
+  success_rate?: number;
+  error_rate?: number;
+  resource_utilization?: {
+    cpu_percent?: number;
+    memory_mb?: number;
+    network_kb_per_sec?: number;
+  };
+  last_updated?: Timestamp;
+}
+
+/**
+ * Agent管理配置 (Schema定义)
+ */
+export interface AgentManagement {
+  max_agents?: number;
+  auto_scaling?: boolean;
+  load_balancing?: boolean;
+  health_check_interval_ms?: number;
+  default_agent_config?: AgentConfiguration;
+}
+
+/**
+ * 团队配置 (Schema定义)
+ */
+export interface TeamConfiguration {
+  max_team_size?: number;
+  collaboration_rules?: CollaborationRule[];
+  decision_mechanism?: DecisionMechanism;
+}
+
+/**
+ * 协作规则 (Schema定义)
+ */
+export interface CollaborationRule {
+  rule_name: string;
+  rule_type: 'communication' | 'decision' | 'conflict_resolution' | 'resource_sharing';
+  rule_config?: Record<string, unknown>;
+}
+
+/**
+ * 决策机制 (Schema定义)
+ */
+export interface DecisionMechanism {
+  type: 'consensus' | 'majority' | 'weighted' | 'authority';
+  threshold?: number;
+  timeout_ms?: number;
+}

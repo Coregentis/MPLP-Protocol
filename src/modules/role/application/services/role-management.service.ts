@@ -286,12 +286,20 @@ export class RoleManagementService {
    */
   async deleteRole(roleId: UUID): Promise<OperationResult<void>> {
     try {
-      const exists = await this.roleRepository.exists(roleId);
-      
-      if (!exists) {
+      const role = await this.roleRepository.findById(roleId);
+
+      if (!role) {
         return {
           success: false,
           error: '角色不存在'
+        };
+      }
+
+      // 检查是否是系统角色
+      if (role.role_type === 'system') {
+        return {
+          success: false,
+          error: '不能删除系统角色'
         };
       }
 

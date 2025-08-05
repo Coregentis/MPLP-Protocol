@@ -1,5 +1,5 @@
 /**
- * MPLP Core Index - Multi-Agent Project Lifecycle Protocol - 厂商中立设计
+ * MPLP Core Index - Multi-Agent Project Lifecycle Protocol - L4 Intelligent Agent Operating System - 厂商中立设计
  * 
  * 应用程序入口点，负责启动服务器和配置基础设施。
  * 

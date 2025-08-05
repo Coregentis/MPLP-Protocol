@@ -1,0 +1,293 @@
+---
+type: "always_apply"
+description: "Core development standards for MPLP v1.0 - L4 Intelligent Agent Operating System with 9-Module Architecture"
+---
+
+# Core Development Standards - MPLP v1.0
+
+## 🏗️ **MPLP Project Context**
+
+**CRITICAL**: MPLP v1.0 is a **production-ready L4 Intelligent Agent Operating System** with **10 complete modules**, not a theoretical framework. All development must acknowledge this reality.
+
+### MPLP Architecture Reality
+```
+✅ ACTUAL STATUS: 10 Complete Modules
+- Context: Context management and lifecycle (92.4% test coverage)
+- Plan: Planning and task orchestration (91.8% test coverage)
+- Confirm: Approval and confirmation workflows (95.0% test coverage)
+- Trace: Monitoring and event tracking (88.5% test coverage)
+- Role: RBAC and permission management (89.2% test coverage)
+- Extension: Plugin and extension management (87.6% test coverage)
+- Collab: Multi-agent collaboration & decision-making (90.3% test coverage)
+- Dialog: Dialog-driven development & memory (91.7% test coverage)
+- Network: Agent network topology & routing (88.9% test coverage)
+- Core: Workflow orchestration & module coordination (92.1% test coverage)
+
+✅ PRODUCTION METRICS:
+- 367/367 tests passing (100%)
+- 89.2% overall test coverage
+- 5.49ms response time, 33,969 ops/sec throughput
+- Complete DDD architecture across all modules
+```
+
+## 🎯 Fundamental Principles
+
+### 1. Absolute Honesty Principle
+```markdown
+RULE: Maintain complete transparency in all development work
+- Report all problems, errors, and limitations truthfully
+- Accurately reflect actual completion status and test results
+- Never hide technical debt or potential risks
+- Acknowledge and promptly correct wrong judgments
+- CRITICAL: Recognize MPLP's actual production-ready status with 10 complete modules
+```
+
+### 2. Technical Correctness Principle
+```markdown
+RULE: Use correct technical solutions only
+- Prohibit shortcuts and temporary fixes
+- Prohibit skipping validation and quality checks
+- Prohibit deceptive implementation methods
+- Choose solutions following best practices
+- **ABSOLUTE PROHIBITION**: Never use `any` type in production code
+- **ZERO TECHNICAL DEBT**: All modules must pass TypeScript and ESLint checks with 0 errors/warnings
+```
+
+### 3. Quality First Principle
+```markdown
+RULE: Code quality takes precedence over development speed
+- Strictly follow established technical standards
+- Never compromise quality for quick completion
+- Fully implement all required functionality
+- Ensure long-term maintainability
+```
+
+## 🔧 Technical Standards
+
+### Schema-Driven Development
+```typescript
+RULE: All protocols must strictly follow JSON Schema standards
+✅ Correct approach:
+- Use standard JSON Schema keywords only
+- Strictly validate all input data
+- Generate TypeScript types from Schema
+
+❌ Prohibited practices:
+- Skipping Schema validation
+- Using non-standard Schema keywords (e.g., "version")
+- Bypassing data validation processes
+
+// Example: Correct Schema validation
+const validationResult = this.validator.validateSchema(protocol.schema);
+if (!validationResult.valid) {
+  throw new Error(`Invalid protocol schema: ${validationResult.errors.join(', ')}`);
+}
+```
+
+### TypeScript Strict Mode
+```typescript
+RULE: Must enable TypeScript strict mode and all strict checks
+✅ Required tsconfig.json:
+{
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true
+  }
+}
+
+❌ ABSOLUTELY PROHIBITED practices:
+- Using 'any' type to escape type checking (ZERO TOLERANCE)
+- Ignoring TypeScript compilation errors (MUST BE 0 ERRORS)
+- Using type assertions to bypass checks
+- Commenting out TypeScript errors
+- Using @ts-ignore or @ts-expect-error without explicit justification
+- Disabling strict mode or any strict checks
+
+✅ MANDATORY DEVELOPMENT WORKFLOW:
+1. Run `npm run typecheck` before every commit (MUST PASS)
+2. Run `npm run lint` before every commit (MUST PASS)
+3. Fix ALL TypeScript errors immediately
+4. Fix ALL ESLint warnings immediately
+5. ZERO technical debt tolerance
+```
+
+### Error Handling Standards
+```typescript
+RULE: Complete and correct error handling
+✅ Correct approach:
+try {
+  const result = await this.processData(data);
+  return { success: true, data: result };
+} catch (error) {
+  this.logger.error('Processing failed', { 
+    error: error.message, 
+    data, 
+    stack: error.stack 
+  });
+  return { 
+    success: false, 
+    error: `Processing failed: ${error.message}` 
+  };
+}
+
+❌ Prohibited practices:
+- Ignoring or hiding errors
+- Using empty catch blocks
+- Returning false success results
+```
+
+## 📊 Quality Gates
+
+### Mandatory Quality Checks
+```bash
+RULE: All code must pass quality checks before acceptance
+Required checks:
+□ TypeScript compilation without errors: npm run typecheck
+□ ESLint checks pass: npm run lint
+□ Unit test coverage > 90%: npm run test:coverage
+□ All integration tests pass: npm test
+□ Schema validation works correctly
+□ Performance benchmarks met
+
+ZERO TECHNICAL DEBT REQUIREMENTS:
+□ 0 TypeScript errors (MANDATORY)
+□ 0 ESLint errors (MANDATORY)
+□ 0 ESLint warnings (MANDATORY)
+□ 0 any types in production code (MANDATORY)
+□ 0 @ts-ignore without justification (MANDATORY)
+□ 0 commented out TypeScript errors (MANDATORY)
+
+DEVELOPMENT WORKFLOW ENFORCEMENT:
+□ Pre-commit hooks must pass all checks
+□ CI/CD pipeline must enforce all quality gates
+□ Code review must verify zero technical debt
+□ No merge allowed with any quality gate failures
+```
+
+### Schema File Validation
+```javascript
+RULE: Automated validation of all schema files
+// Required schema structure
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://mplp.dev/schemas/[category]/[protocol]/v[version]",
+  "title": "MPLP [Protocol Name] Protocol",
+  "description": "Multi-Agent Project Lifecycle Protocol - L4 Intelligent Agent Operating System - [Description] v[version]",
+  "type": "object",
+  "properties": { /* ... */ },
+  "required": ["version", "id", "timestamp"],
+  "additionalProperties": false
+}
+
+// Validation script
+schemas.forEach(file => {
+  const schema = JSON.parse(fs.readFileSync(file, 'utf8'));
+  if (schema.version) throw new Error(`Non-standard field 'version' in: ${file}`);
+  if (!schema.$schema || !schema.$id || !schema.title) {
+    throw new Error(`Missing required fields in: ${file}`);
+  }
+});
+```
+
+## 🚫 Strictly Prohibited Practices
+
+### Technical Level Prohibitions
+```markdown
+❌ ABSOLUTELY PROHIBITED:
+- Skipping Schema validation to make tests pass
+- Modifying test expectations to fit wrong implementations
+- Using 'any' type to escape type checking (ZERO TOLERANCE)
+- Ignoring compilation errors and warnings (MUST BE 0 ERRORS)
+- Hard-coding temporary solutions
+- Commenting out failed tests
+- Returning false success status
+- Hiding problems or technical debt
+- Using @ts-ignore or @ts-expect-error without explicit justification
+- Disabling ESLint rules without proper justification
+- Committing code with TypeScript or ESLint errors
+- Using type assertions (as) to bypass proper typing
+- Creating technical debt for "temporary" solutions
+```
+
+### Testing Standards
+```typescript
+RULE: Real and effective test validation
+✅ Correct test implementation:
+it('should validate collaboration requires at least 2 participants', async () => {
+  const invalidRequest = { participants: [{ id: 'single-participant' }] };
+  
+  await expect(collabManager.initiate(invalidRequest))
+    .rejects
+    .toThrow('Collaboration requires at least 2 participants');
+});
+
+❌ Prohibited practices:
+- Modifying tests to fit wrong implementations
+- Skipping failed tests
+- Using fake test data
+- Lowering test standards to improve pass rates
+```
+
+## ✅ Execution Process
+
+### Pre-Development Validation
+```markdown
+Before starting development:
+1. Clarify technical requirements and quality standards
+2. Confirm Schema and interface definitions
+3. Develop testing strategies and validation methods
+4. Assess technical risks and dependencies
+```
+
+### Development Process Validation
+```markdown
+During development:
+1. Continuously run type checking and tests
+2. Fix discovered problems promptly
+3. Follow established architecture patterns
+4. Document important technical decisions
+```
+
+### Completion Validation
+```markdown
+After task completion:
+1. Run complete quality check process
+2. Verify all functions correctly implemented
+3. Confirm documentation and code synchronization
+4. Perform real end-to-end testing
+```
+
+## 🔄 Quality Assurance Integration
+
+### Automated Quality Gates
+```bash
+# Pre-commit validation
+npm run typecheck && npm run lint && npm run test:coverage
+
+# Schema validation
+node scripts/validate-schemas.js
+
+# Complete quality check
+npm run quality:gate
+```
+
+### Continuous Monitoring
+```markdown
+RULE: Continuous quality monitoring and improvement
+- Weekly review of quality standard execution
+- Monthly update of standards and processes
+- Quarterly evaluation of effectiveness
+- Annual comprehensive upgrades
+```
+
+---
+
+**ENFORCEMENT**: These standards are **mandatory** and **non-negotiable**. Any code violating these standards will be rejected and must be re-implemented according to these rules.
+
+**VERSION**: 2.0.0  
+**EFFECTIVE**: August 1, 2025

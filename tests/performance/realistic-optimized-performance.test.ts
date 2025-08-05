@@ -7,7 +7,7 @@
  */
 
 import { performance } from 'perf_hooks';
-import { CoreOrchestrator } from '../../src/modules/core/orchestrator/core-orchestrator';
+import { CoreOrchestrator } from '../../src/public/modules/core/orchestrator/core-orchestrator';
 import {
   WorkflowStage,
   OrchestratorConfiguration,

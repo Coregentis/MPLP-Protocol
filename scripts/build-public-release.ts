@@ -341,7 +341,7 @@ export class PublicReleaseBuilder {
     const publicPackageJson = {
       name: 'mplp',
       version: this.config.version,
-      description: 'Multi-Agent Project Lifecycle Protocol - Open Source Framework',
+      description: 'Multi-Agent Project Lifecycle Protocol - L4 Intelligent Agent Operating System - Open Source Framework',
       main: 'dist/index.js',
       types: 'dist/index.d.ts',
       repository: {
@@ -396,7 +396,7 @@ export class PublicReleaseBuilder {
    */
   private async generateIndexFile(): Promise<void> {
     const indexContent = `/**
- * MPLP - Multi-Agent Project Lifecycle Protocol
+ * MPLP - Multi-Agent Project Lifecycle Protocol - L4 Intelligent Agent Operating System
  * Open Source Framework for Multi-Agent Collaboration
  * 
  * @version ${this.config.version}
@@ -452,7 +452,7 @@ export { PerformanceEnhancedOrchestrator as EnhancedOrchestrator } from './core/
   private async generateReadme(): Promise<void> {
     // 这里应该生成开源版本的README
     // 可以基于模板或从现有README修改
-    const readmeContent = `# MPLP - Multi-Agent Project Lifecycle Protocol
+    const readmeContent = `# MPLP - Multi-Agent Project Lifecycle Protocol - L4 Intelligent Agent Operating System
 
 🤖 Open Source Framework for Multi-Agent Collaboration
 

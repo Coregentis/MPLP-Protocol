@@ -3,8 +3,9 @@
  *
  * 导出Confirm模块的公共API
  *
- * @version 1.0.0
+ * @version 2.0.0
  * @created 2025-09-16
+ * @updated 2025-08-04 23:32
  * @architecture DDD (Domain-Driven Design)
  */
 
@@ -25,6 +26,9 @@ export * from './domain/services/confirm-validation.service';
 
 // 基础设施层
 export * from './infrastructure/repositories/confirm.repository';
+
+// ===== 适配器导出 =====
+export { ConfirmModuleAdapter } from './infrastructure/adapters/confirm-module.adapter';
 
 // 模块集成
 export * from './module';

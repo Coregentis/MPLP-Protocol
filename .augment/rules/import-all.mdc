@@ -1,0 +1,181 @@
+---
+type: "always_apply"
+description: "Import all development rules and standards for MPLP v1.0 - L4 Intelligent Agent Operating System"
+---
+
+# Augment Agent Development Rules - Complete Import
+
+## 🏗️ **MPLP v1.0 Context**
+
+**CRITICAL RECOGNITION**: MPLP v1.0 is a **production-ready L4 Intelligent Agent Operating System** with 10 complete modules (Context, Plan, Confirm, Trace, Role, Extension, Collab, Dialog, Network, Core), 367 passing tests (301 functional + 66 core), and 89.2% coverage. All development must acknowledge this reality.
+
+## 📋 Core Rules Import
+
+```markdown
+@import augment-rules/core-development-standards.mdc
+@import augment-rules/mplp-project-standards.mdc
+@import augment-rules/critical-thinking-methodology.mdc
+@import augment-rules/typescript-standards.mdc
+@import augment-rules/code-quality-standards.mdc
+@import augment-rules/zero-technical-debt.mdc
+@import augment-rules/development-workflow.mdc
+@import augment-rules/testing-strategy.mdc
+@import augment-rules/circleci-workflow.mdc
+@import augment-rules/release-management.mdc
+@import augment-rules/public-release-strategy.mdc
+```
+
+## 🎯 Core Principles Summary
+
+### 1. Absolute Honesty Principle (MANDATORY)
+- Report all problems, errors, and limitations truthfully
+- Accurately reflect actual completion status and test results
+- Never hide technical debt or potential risks
+- Acknowledge and promptly correct wrong judgments
+
+### 2. Technical Correctness Principle (MANDATORY)
+- Prohibit shortcuts and temporary fixes
+- Prohibit skipping validation and quality checks
+- Prohibit deceptive implementation methods
+- Choose solutions following best practices
+- **ABSOLUTE PROHIBITION**: Never use `any` type in production code
+- **ZERO TECHNICAL DEBT**: All modules must pass TypeScript and ESLint checks with 0 errors/warnings
+
+### 3. Quality First Principle (MANDATORY)
+- Code quality takes precedence over development speed
+- Strictly follow established technical standards
+- Never compromise quality for quick completion
+- Ensure long-term maintainability
+
+### 4. Zero Technical Debt Principle (MANDATORY)
+- **ABSOLUTE PROHIBITION**: Never use `any` type in production code (ZERO TOLERANCE)
+- **MANDATORY**: TypeScript compilation must return 0 errors
+- **MANDATORY**: ESLint checks must return 0 errors and 0 warnings
+- **MANDATORY**: All modules must pass type checking before commit
+- **MANDATORY**: Pre-commit hooks must enforce all quality gates
+- **MANDATORY**: CI/CD pipeline must block deployment on any quality gate failure
+
+### 4. Critical Thinking Methodology (MANDATORY)
+- Apply systematic self-questioning before, during, and after development
+- Use three-layer problem analysis: surface → root cause → solution boundary
+- Validate solutions from multiple user perspectives
+- Ensure system-wide completeness and integration
+
+### 4. Schema-Driven Development (ENHANCED)
+- All protocols must strictly follow JSON Schema standards
+- Prohibit using non-standard Schema keywords
+- Strictly validate all input data
+- Generate TypeScript types from Schema
+
+### 5. Information Gathering Priority
+- Use codebase-retrieval and git-commit-retrieval tools
+- Thoroughly understand existing code structure and historical changes
+- Analyze dependency relationships and interface design
+
+### 6. Vendor-Neutral Design
+- Use adapter pattern to isolate vendor-specific implementations
+- Define common interfaces and abstraction layers
+- Support multi-vendor switching and extension
+
+### 7. MPLP Proven Testing Methodology
+- Testing's fundamental purpose is to discover and fix source code problems
+- When source code errors are found, immediately fix the source code
+- Four-layer testing system: Functional Scenarios (90%+) + Unit + Integration + E2E
+- Chain-based source code repair methodology
+- Based on real user scenarios and actual implementation
+- Successfully validated: 301 functional tests + 353 unit tests, 12 source code issues fixed
+
+### 8. Four-Layer Testing System (ENHANCED)
+- Layer 1: Functional Scenario Tests (90%+ coverage) - Discover source code issues
+- Layer 2: Unit Tests (90%+ coverage) - Test individual components
+- Layer 3: Integration Tests (20%) - Test module collaboration
+- Layer 4: End-to-end Tests (10%) - Test complete business processes
+
+### 9. MPLP 10-Module Architecture Recognition
+- Always acknowledge MPLP has 10 complete modules (including Core protocol)
+- Recognize production-ready status with 367 passing tests (301 functional + 66 core)
+- Build upon existing L4 capabilities (Collab, Dialog, Network) and Core orchestration
+- Avoid reinventing existing functionality
+
+### 10. CircleCI MCP Tools Priority
+- Use CircleCI MCP tools for CI/CD operations
+- Configuration validation priority, progressive deployment strategy
+- Complete workflow design and monitoring
+
+### 11. Dual Repository Release Strategy
+- Development and open source versions completely separated
+- Semantic versioning and strict quality gates
+- Automated release process and security checks
+
+### 12. TypeScript Strict Mode (ENHANCED)
+- Enable all strict type checking options
+- Prohibit using any type to escape type checking
+- Interface-first design, reasonable use of generics
+- DDD layered architecture and dependency injection patterns
+
+## 🚫 Absolutely Prohibited Practices
+
+### Technical Level
+```markdown
+❌ NEVER:
+- Skip Schema validation to make tests pass
+- Modify test expectations to fit wrong implementations
+- Use 'any' type to escape TypeScript checking
+- Ignore compilation errors and warnings
+- Hard-code temporary solutions
+- Comment out failed tests
+- Return false success status
+- Hide problems or technical debt
+```
+
+### Reporting Level
+```markdown
+❌ NEVER:
+- Exaggerate actual completion status
+- Hide known problems and risks
+- Make false claims about test pass rates
+- Cover up technical debt
+- Provide misleading progress reports
+```
+
+## ✅ Mandatory Quality Gates
+
+```bash
+# Required before any commit
+npm run typecheck    # Must pass without errors
+npm run lint         # Must pass without warnings
+npm run test:coverage # Must achieve > 90% coverage
+
+# Schema validation
+node scripts/validate-schemas.js
+
+# Complete quality check
+npm run quality:gate
+```
+
+## 🎯 Execution Standards
+
+### Pre-Development
+1. Clarify technical requirements and quality standards
+2. Confirm Schema and interface definitions
+3. Develop testing strategies and validation methods
+4. Assess technical risks and dependencies
+
+### During Development
+1. Continuously run type checking and tests
+2. Fix discovered problems promptly
+3. Follow established architecture patterns
+4. Document important technical decisions
+
+### Post-Completion
+1. Run complete quality check process
+2. Verify all functions correctly implemented
+3. Confirm documentation and code synchronization
+4. Perform real end-to-end testing
+
+---
+
+**CRITICAL**: These rules are **mandatory** and **non-negotiable**. Any violation will result in code rejection and required re-implementation.
+
+**VERSION**: 2.0.0
+**LAST UPDATED**: August 2, 2025

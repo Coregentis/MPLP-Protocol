@@ -1,18 +1,19 @@
 /**
  * Core模块类型定义
- * 
+ *
  * 定义Core运行时调度器的核心类型
- * 
- * @version 1.0.0
+ *
+ * @version 2.0.0
  * @created 2025-09-16
+ * @updated 2025-08-04
  */
 
 import { UUID, Timestamp } from '../../../shared/types';
 
 /**
- * 工作流阶段
+ * 工作流阶段 - 支持完整的10个模块
  */
-export type WorkflowStage = 'context' | 'plan' | 'confirm' | 'trace';
+export type WorkflowStage = 'context' | 'plan' | 'confirm' | 'trace' | 'role' | 'extension' | 'collab' | 'dialog' | 'network';
 
 /**
  * 执行状态
@@ -20,9 +21,9 @@ export type WorkflowStage = 'context' | 'plan' | 'confirm' | 'trace';
 export type ExecutionStatus = 'pending' | 'running' | 'completed' | 'failed' | 'cancelled';
 
 /**
- * 协议模块类型
+ * 协议模块类型 - 支持完整的10个模块
  */
-export type ProtocolModule = 'context' | 'plan' | 'confirm' | 'trace' | 'role' | 'extension';
+export type ProtocolModule = 'context' | 'plan' | 'confirm' | 'trace' | 'role' | 'extension' | 'collab' | 'dialog' | 'network';
 
 /**
  * 工作流配置

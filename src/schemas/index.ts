@@ -13,7 +13,7 @@ import { Logger } from '../public/utils/logger';
 // 创建日志记录器实例
 const logger = new Logger('SchemaValidator');
 
-// Schema文件路径 - 6个核心模块 (使用require避免编译问题)
+// Schema文件路径 - 6个核心协议模块 (使用require避免编译问题)
 const contextProtocolSchema = require('./context-protocol.json');
 const planProtocolSchema = require('./plan-protocol.json');
 const confirmProtocolSchema = require('./confirm-protocol.json');
@@ -53,7 +53,7 @@ export class MPLPSchemaValidator {
   }
 
   /**
-   * 注册所有Schema - 6个核心模块
+   * 注册所有Schema - 10个完整模块的协议Schema
    */
   private registerSchemas(): void {
     const schemas = [
@@ -63,6 +63,7 @@ export class MPLPSchemaValidator {
       { name: 'trace-protocol', schema: traceProtocolSchema },
       { name: 'role-protocol', schema: roleProtocolSchema },
       { name: 'extension-protocol', schema: extensionProtocolSchema }
+      // TODO: 添加 collab, dialog, network, core 协议的Schema
     ];
 
     for (const { name, schema } of schemas) {
@@ -126,6 +127,34 @@ export class MPLPSchemaValidator {
    */
   validateExtensionProtocol(data: any): ValidationResult {
     return this.validate('extension-protocol', data);
+  }
+
+  /**
+   * 验证Collab Protocol数据
+   */
+  validateCollabProtocol(data: any): ValidationResult {
+    return this.validate('collab-protocol', data);
+  }
+
+  /**
+   * 验证Dialog Protocol数据
+   */
+  validateDialogProtocol(data: any): ValidationResult {
+    return this.validate('dialog-protocol', data);
+  }
+
+  /**
+   * 验证Network Protocol数据
+   */
+  validateNetworkProtocol(data: any): ValidationResult {
+    return this.validate('network-protocol', data);
+  }
+
+  /**
+   * 验证Core Protocol数据
+   */
+  validateCoreProtocol(data: any): ValidationResult {
+    return this.validate('core-protocol', data);
   }
 
   /**
@@ -200,12 +229,20 @@ export class MPLPSchemaValidator {
 // 单例实例
 export const schemaValidator = new MPLPSchemaValidator();
 
-// 便捷验证函数 - 6个核心模块
+// 便捷验证函数 - 10个协议模块
 export const validateContextProtocol = (data: any) => schemaValidator.validateContextProtocol(data);
 export const validatePlanProtocol = (data: any) => schemaValidator.validatePlanProtocol(data);
 export const validateConfirmProtocol = (data: any) => schemaValidator.validateConfirmProtocol(data);
 export const validateTraceProtocol = (data: any) => schemaValidator.validateTraceProtocol(data);
 export const validateRoleProtocol = (data: any) => schemaValidator.validateRoleProtocol(data);
 export const validateExtensionProtocol = (data: any) => schemaValidator.validateExtensionProtocol(data);
+
+// L4智能模块
+export const validateCollabProtocol = (data: any) => schemaValidator.validateCollabProtocol(data);
+export const validateDialogProtocol = (data: any) => schemaValidator.validateDialogProtocol(data);
+export const validateNetworkProtocol = (data: any) => schemaValidator.validateNetworkProtocol(data);
+
+// 核心协调模块
+export const validateCoreProtocol = (data: any) => schemaValidator.validateCoreProtocol(data);
 
 export default schemaValidator; 

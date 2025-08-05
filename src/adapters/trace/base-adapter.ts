@@ -170,7 +170,7 @@ export class BaseTraceAdapter implements ITraceAdapter {
     } = options;
 
     // 过滤追踪数据
-    let filteredTraces = Array.from(this.traces.values()).filter(trace => {
+    const filteredTraces = Array.from(this.traces.values()).filter(trace => {
       if (trace.context_id !== contextId) return false;
       
       if (start_time && trace.timestamp < start_time) return false;

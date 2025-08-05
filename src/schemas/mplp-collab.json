@@ -1,0 +1,279 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mplp.dev/schemas/v1.0/mplp-collab.json",
+  "title": "MPLP Collab Protocol v1.0",
+  "description": "Collab模块协议Schema - 多Agent协作调度和协调",
+  "version": "1.0.0",
+  "lastUpdated": "2025-08-04",
+  "type": "object",
+  "$defs": {
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "description": "UUID v4格式的唯一标识符"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601格式的时间戳"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+      "description": "语义化版本号 (SemVer)"
+    },
+    "entityStatus": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive",
+        "pending",
+        "completed",
+        "failed",
+        "cancelled"
+      ],
+      "description": "实体状态枚举"
+    },
+    "decision_algorithm": {
+      "type": "string",
+      "enum": ["majority_vote", "consensus", "weighted_vote", "pbft", "custom"],
+      "description": "决策算法类型"
+    },
+    "voting_mechanism": {
+      "type": "object",
+      "description": "投票机制配置",
+      "properties": {
+        "anonymity": { "type": "boolean", "description": "是否匿名投票" },
+        "transparency": { "type": "boolean", "description": "是否透明投票" },
+        "revision_allowed": { "type": "boolean", "description": "是否允许修改投票" },
+        "time_limit_ms": { "type": "integer", "minimum": 1000, "description": "投票时间限制(毫秒)" }
+      },
+      "required": ["anonymity", "transparency", "revision_allowed"],
+      "additionalProperties": false
+    },
+    "weighting_strategy": {
+      "type": "object",
+      "description": "权重策略配置",
+      "properties": {
+        "strategy": {
+          "type": "string",
+          "enum": ["equal", "expertise_based", "role_based", "performance_based"],
+          "description": "权重策略类型"
+        },
+        "weights": {
+          "type": "object",
+          "additionalProperties": { "type": "number", "minimum": 0, "maximum": 1 },
+          "description": "参与者权重映射"
+        }
+      },
+      "required": ["strategy"],
+      "additionalProperties": false
+    },
+    "consensus_requirements": {
+      "type": "object",
+      "description": "共识要求配置",
+      "properties": {
+        "threshold": { "type": "number", "minimum": 0, "maximum": 1, "description": "共识阈值(0-1)" },
+        "quorum": { "type": "integer", "minimum": 1, "description": "最小参与者数量" },
+        "unanimity_required": { "type": "boolean", "description": "是否需要一致同意" }
+      },
+      "required": ["threshold", "quorum"],
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "collaboration_id": {
+      "$ref": "#/$defs/uuid",
+      "description": "协作唯一标识符"
+    },
+    "version": {
+      "$ref": "#/$defs/version",
+      "description": "协议版本号"
+    },
+    "timestamp": {
+      "$ref": "#/$defs/timestamp",
+      "description": "协作创建时间戳"
+    },
+    "context_id": {
+      "$ref": "#/$defs/uuid",
+      "description": "关联的上下文ID"
+    },
+    "plan_id": {
+      "$ref": "#/$defs/uuid",
+      "description": "关联的计划ID"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255,
+      "description": "协作名称"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1024,
+      "description": "协作描述"
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["sequential", "parallel", "hybrid", "pipeline", "mesh"],
+      "description": "协作执行模式"
+    },
+    "participants": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "participant_id": {
+            "$ref": "#/$defs/uuid",
+            "description": "参与者唯一标识符"
+          },
+          "agent_id": {
+            "$ref": "#/$defs/uuid",
+            "description": "Agent唯一标识符"
+          },
+          "role_id": {
+            "$ref": "#/$defs/uuid",
+            "description": "角色唯一标识符"
+          },
+          "status": {
+            "$ref": "#/$defs/entityStatus",
+            "description": "参与者状态"
+          },
+          "capabilities": {
+            "type": "array",
+            "items": { "type": "string" },
+            "maxItems": 20,
+            "description": "参与者能力列表"
+          },
+          "priority": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "参与者优先级"
+          },
+          "weight": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "参与者权重"
+          },
+          "joined_at": {
+            "$ref": "#/$defs/timestamp",
+            "description": "参与者加入时间"
+          }
+        },
+        "required": ["participant_id", "agent_id", "role_id", "status"],
+        "additionalProperties": false
+      },
+      "minItems": 2,
+      "maxItems": 100,
+      "description": "协作参与者列表"
+    },
+    "coordination_strategy": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "centralized",
+            "distributed",
+            "hierarchical",
+            "peer-to-peer"
+          ],
+          "description": "协调策略类型"
+        },
+        "coordinator_id": {
+          "$ref": "#/$defs/uuid",
+          "description": "协调者ID"
+        },
+        "decision_making": {
+          "type": "string",
+          "enum": ["consensus", "majority", "weighted", "coordinator"],
+          "description": "决策机制"
+        }
+      },
+      "required": ["type", "decision_making"],
+      "additionalProperties": false,
+      "description": "协调策略配置"
+    },
+    "status": {
+      "$ref": "#/$defs/entityStatus",
+      "description": "协作状态"
+    },
+    "created_at": {
+      "$ref": "#/$defs/timestamp",
+      "description": "协作创建时间"
+    },
+    "updated_at": {
+      "$ref": "#/$defs/timestamp",
+      "description": "协作最后更新时间"
+    },
+    "created_by": {
+      "$ref": "#/$defs/uuid",
+      "description": "协作创建者ID"
+    },
+    "decision_making": {
+      "type": "object",
+      "description": "决策制定配置",
+      "properties": {
+        "enabled": { "type": "boolean", "description": "是否启用决策功能" },
+        "algorithm": { "$ref": "#/$defs/decision_algorithm" },
+        "voting": { "$ref": "#/$defs/voting_mechanism" },
+        "weighting": { "$ref": "#/$defs/weighting_strategy" },
+        "consensus": { "$ref": "#/$defs/consensus_requirements" }
+      },
+      "required": ["enabled"],
+      "additionalProperties": false
+    },
+    "council_configuration": {
+      "type": "object",
+      "description": "决策议会配置",
+      "properties": {
+        "council_type": {
+          "type": "string",
+          "enum": ["advisory", "executive", "judicial", "mixed"],
+          "description": "议会类型"
+        },
+        "session_management": {
+          "type": "object",
+          "properties": {
+            "max_session_duration_ms": { "type": "integer", "minimum": 60000 },
+            "quorum_enforcement": { "type": "boolean" },
+            "automatic_adjournment": { "type": "boolean" }
+          },
+          "required": ["max_session_duration_ms", "quorum_enforcement"]
+        },
+        "voting_rules": {
+          "type": "object",
+          "properties": {
+            "multiple_rounds_allowed": { "type": "boolean" },
+            "abstention_allowed": { "type": "boolean" },
+            "delegation_allowed": { "type": "boolean" }
+          },
+          "required": ["multiple_rounds_allowed", "abstention_allowed"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "协作元数据"
+    }
+  },
+  "required": [
+    "collaboration_id",
+    "version",
+    "timestamp",
+    "context_id",
+    "plan_id",
+    "name",
+    "mode",
+    "participants",
+    "coordination_strategy",
+    "status",
+    "created_at",
+    "created_by"
+  ],
+  "additionalProperties": false
+}

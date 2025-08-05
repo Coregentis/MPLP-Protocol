@@ -162,7 +162,7 @@ npm test -- tests/performance/realistic-optimized-performance.test.ts
 
 **README.md结构**:
 ```markdown
-# MPLP - Multi-Agent Project Lifecycle Protocol
+# MPLP - Multi-Agent Project Lifecycle Protocol - L4 Intelligent Agent Operating System
 ## 🚀 特性
 ## 📦 安装
 ## 🎯 快速开始

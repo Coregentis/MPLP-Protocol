@@ -273,8 +273,17 @@ export class ModuleCoordinator {
         initialize: async () => {
           this.logger.info(`Module initialized: ${moduleName}`);
         },
-        execute: async (context: any) => {
+        executeStage: async (context: any) => {
           return await adapter.execute(context);
+        },
+        executeBusinessCoordination: async (request: any) => {
+          return await adapter.execute(request);
+        },
+        validateInput: async (input: any) => {
+          return { is_valid: true, errors: [], warnings: [] };
+        },
+        handleError: async (error: any, context: any) => {
+          return { handled: true, recovery_action: 'retry' };
         },
         cleanup: async () => {
           this.logger.info(`Module cleaned up: ${moduleName}`);

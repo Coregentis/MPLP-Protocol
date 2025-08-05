@@ -1,7 +1,7 @@
 {
   "name": "mplp",
   "version": "1.0.0",
-  "description": "MPLP v1.0 - Multi-Agent Project Lifecycle Protocol with Domain-Driven Design Architecture",
+  "description": "MPLP v1.0 - L4 Intelligent Agent Operating System with 10 complete modules and Domain-Driven Design Architecture",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
@@ -44,6 +44,21 @@
       "import": "./dist/src/modules/extension/index.js",
       "require": "./dist/src/modules/extension/index.js",
       "types": "./dist/src/modules/extension/index.d.ts"
+    },
+    "./collab": {
+      "import": "./dist/src/modules/collab/index.js",
+      "require": "./dist/src/modules/collab/index.js",
+      "types": "./dist/src/modules/collab/index.d.ts"
+    },
+    "./dialog": {
+      "import": "./dist/src/modules/dialog/index.js",
+      "require": "./dist/src/modules/dialog/index.js",
+      "types": "./dist/src/modules/dialog/index.d.ts"
+    },
+    "./network": {
+      "import": "./dist/src/modules/network/index.js",
+      "require": "./dist/src/modules/network/index.js",
+      "types": "./dist/src/modules/network/index.d.ts"
     },
     "./types": {
       "import": "./dist/src/public/shared/types/index.js",

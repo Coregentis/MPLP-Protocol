@@ -1,0 +1,213 @@
+---
+type: "always_apply"
+description: "TypeScript programming standards for MPLP v1.0 development"
+priority: "high"
+---
+
+# TypeScript Programming Standards
+
+## 🎯 **TypeScript核心原则**
+
+### 1. 严格类型检查 + 零any类型政策
+```typescript
+RULE: 启用所有严格类型检查选项 + 绝对禁止any类型
+// tsconfig.json配置
+{
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true
+  }
+}
+
+❌ ABSOLUTELY PROHIBITED - 绝对禁止:
+- any类型的任何使用 (ZERO TOLERANCE)
+- Record<string, any>
+- Function类型（使用具体函数签名）
+- object类型（使用具体接口）
+- {}类型（使用具体接口）
+- @ts-ignore或@ts-expect-error（除非有明确注释说明）
+- 类型断言绕过检查 (as any)
+
+MANDATORY DEVELOPMENT WORKFLOW:
+1. npm run typecheck 必须返回0错误
+2. npm run lint 必须返回0错误和警告
+3. 所有any类型必须立即修复
+4. 提交前必须通过所有类型检查
+
+// ✅ 正确示例
+interface CreateContextRequest {
+  sessionId: string;
+  agentId: string;
+  configuration: ContextConfiguration;
+  metadata?: Record<string, unknown>;
+}
+
+function createContext(request: CreateContextRequest): Promise<Context> {
+  // 类型安全的实现
+}
+
+// ❌ 错误示例
+function createContext(request: any): any {
+  // 缺乏类型安全
+}
+```
+
+### 2. 接口优先设计
+```typescript
+RULE: 使用接口定义契约和抽象
+- 为所有公共API定义接口
+- 使用接口而不是类型别名定义对象结构
+- 保持接口的单一职责
+- 使用继承和组合构建复杂接口
+
+// ✅ 正确示例
+interface IContextRepository {
+  create(context: Context): Promise<Context>;
+  findById(id: string): Promise<Context | null>;
+  update(id: string, updates: Partial<Context>): Promise<Context>;
+  delete(id: string): Promise<void>;
+}
+
+interface IContextService {
+  createContext(request: CreateContextRequest): Promise<Context>;
+  getContext(id: string): Promise<Context>;
+  updateContext(id: string, updates: UpdateContextRequest): Promise<Context>;
+  deleteContext(id: string): Promise<void>;
+}
+
+// 接口组合
+interface IContextManagementService extends IContextService {
+  validateContext(context: Context): Promise<ValidationResult>;
+  archiveContext(id: string): Promise<void>;
+}
+```
+
+### 3. 泛型和类型安全
+```typescript
+RULE: 合理使用泛型提高代码复用性
+- 使用泛型约束确保类型安全
+- 为泛型参数提供有意义的名称
+- 避免过度复杂的泛型嵌套
+- 使用默认泛型参数简化使用
+
+// ✅ 正确示例
+interface Repository<TEntity, TKey = string> {
+  create(entity: Omit<TEntity, 'id'>): Promise<TEntity>;
+  findById(id: TKey): Promise<TEntity | null>;
+  update(id: TKey, updates: Partial<TEntity>): Promise<TEntity>;
+  delete(id: TKey): Promise<void>;
+}
+
+interface BaseEntity {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+class ContextRepository implements Repository<Context> {
+  // 类型安全的实现
+}
+```
+
+## 🏗️ **DDD架构标准**
+
+### 1. 分层架构
+```typescript
+RULE: 遵循4层DDD架构
+src/modules/{module}/
+├── api/                 # API Layer
+│   ├── controllers/     # REST controllers
+│   └── dto/            # Data transfer objects
+├── application/         # Application Layer
+│   ├── services/       # Application services
+│   ├── commands/       # Command handlers
+│   └── queries/        # Query handlers
+├── domain/             # Domain Layer
+│   ├── entities/       # Domain entities
+│   ├── repositories/   # Repository interfaces
+│   └── services/       # Domain services
+└── infrastructure/     # Infrastructure Layer
+    ├── repositories/   # Repository implementations
+    └── adapters/       # External adapters
+```
+
+### 2. 依赖注入
+```typescript
+RULE: 使用依赖注入提高可测试性
+- 构造函数注入依赖
+- 依赖接口而不是具体实现
+- 使用工厂模式创建复杂对象
+- 避免静态依赖和全局状态
+
+// ✅ 正确示例
+export class ContextManagementService {
+  constructor(
+    private readonly contextRepository: IContextRepository,
+    private readonly validator: ISchemaValidator,
+    private readonly logger: ILogger
+  ) {}
+
+  async createContext(request: CreateContextRequest): Promise<Context> {
+    // 依赖注入的实现
+  }
+}
+```
+
+## 🚫 **禁止的做法**
+
+### 技术层面
+```markdown
+❌ 绝对禁止:
+- 使用any类型逃避类型检查
+- 忽略TypeScript编译错误
+- 跳过类型定义
+- 使用非空断言(!)绕过检查
+- 硬编码魔法数字和字符串
+- 创建循环依赖
+```
+
+### 架构层面
+```markdown
+❌ 绝对禁止:
+- 跨层直接调用（如API直接调用Infrastructure）
+- 在Domain层引入外部依赖
+- 在Entity中包含业务逻辑以外的代码
+- 违反单一职责原则
+- 创建God类或God接口
+```
+
+## ✅ **质量检查**
+
+### 编译时检查
+```bash
+# 必须通过的检查
+npm run typecheck    # TypeScript编译检查
+npm run lint         # ESLint代码规范检查
+npm run test         # 单元测试检查
+```
+
+### 代码质量指标
+```markdown
+- TypeScript严格模式: 100%启用
+- 类型覆盖率: > 95%
+- 接口定义完整性: 100%
+- 循环依赖: 0个
+- any类型使用: 0个（除非有明确justification）
+```
+
+---
+
+**ENFORCEMENT**: 这些TypeScript标准是**强制性的**，任何违反将导致代码被拒绝。
+
+**VERSION**: 1.0.0  
+**EFFECTIVE**: August 2, 2025

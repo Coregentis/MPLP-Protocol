@@ -61,6 +61,7 @@ temp/
 
 # Documentation
 docs/api/
+docs/others/
 
 # Test artifacts
 test-results/

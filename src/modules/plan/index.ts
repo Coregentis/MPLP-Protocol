@@ -1,10 +1,11 @@
 /**
  * Plan模块入口
- * 
+ *
  * 导出模块的公共API
- * 
- * @version v1.0.0
+ *
+ * @version v2.0.0
  * @created 2025-07-26T19:55:00+08:00
+ * @updated 2025-08-04 23:09
  * @compliance 100% Schema合规性 - 完全匹配plan-protocol.json
  */
 
@@ -35,11 +36,13 @@ export * from './infrastructure/repositories/plan-repository.impl';
 export * from './infrastructure/persistence/plan.entity';
 export * from './infrastructure/persistence/plan.mapper';
 
+// ===== 适配器导出 =====
+export { PlanModuleAdapter } from './infrastructure/adapters/plan-module.adapter';
+
 /**
  * 初始化Plan模块
  */
 export async function initializePlanModule(): Promise<void> {
   // 在这里可以添加模块初始化代码
   // 例如：设置依赖注入、初始化数据库连接等
-  console.log('Plan module initialized');
-} 
+}

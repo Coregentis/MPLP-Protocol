@@ -1,0 +1,900 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mplp.dev/schemas/v1.0/mplp-plan.json",
+  "title": "MPLP Plan Protocol v1.0",
+  "description": "Plan模块协议Schema - 任务规划和依赖管理",
+  "version": "1.0.0",
+  "lastUpdated": "2025-08-04",
+  "type": "object",
+  "$defs": {
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "description": "UUID v4格式的唯一标识符"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601格式的时间戳"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+      "description": "语义化版本号 (SemVer)"
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["critical", "high", "medium", "low"],
+      "description": "优先级枚举"
+    },
+    "failure_resolver": {
+      "type": "object",
+      "description": "任务失败解决器配置",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "是否启用故障解决器"
+        },
+        "strategies": {
+          "type": "array",
+          "description": "恢复策略列表，按优先级排序",
+          "items": {
+            "type": "string",
+            "enum": ["retry", "rollback", "skip", "manual_intervention"],
+            "description": "恢复策略"
+          }
+        },
+        "retry_config": {
+          "type": "object",
+          "description": "重试策略配置",
+          "properties": {
+            "max_attempts": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10,
+              "description": "最大重试次数"
+            },
+            "delay_ms": {
+              "type": "integer",
+              "minimum": 100,
+              "description": "初始重试延迟（毫秒）"
+            },
+            "backoff_factor": {
+              "type": "number",
+              "minimum": 1.0,
+              "description": "退避因子，每次重试延迟增加的倍数"
+            },
+            "max_delay_ms": {
+              "type": "integer",
+              "minimum": 1000,
+              "description": "最大重试延迟（毫秒）"
+            }
+          },
+          "required": ["max_attempts", "delay_ms"]
+        },
+        "rollback_config": {
+          "type": "object",
+          "description": "回滚策略配置",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "是否启用回滚"
+            },
+            "checkpoint_frequency": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "检查点频率（每N个任务创建一个检查点）"
+            },
+            "max_rollback_depth": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "最大回滚深度（可回滚的任务数量）"
+            }
+          },
+          "required": ["enabled"]
+        },
+        "manual_intervention_config": {
+          "type": "object",
+          "description": "人工干预配置",
+          "properties": {
+            "timeout_ms": {
+              "type": "integer",
+              "minimum": 1000,
+              "description": "等待人工干预的超时时间（毫秒）"
+            },
+            "escalation_levels": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "升级级别，按优先级排序"
+            },
+            "approval_required": {
+              "type": "boolean",
+              "description": "是否需要批准"
+            }
+          }
+        },
+        "notification_channels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "通知渠道列表"
+        },
+        "performance_thresholds": {
+          "type": "object",
+          "description": "性能阈值",
+          "properties": {
+            "max_execution_time_ms": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "最大执行时间（毫秒）"
+            },
+            "max_memory_usage_mb": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "最大内存使用量（MB）"
+            },
+            "max_cpu_usage_percent": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "description": "最大CPU使用率（百分比）"
+            }
+          }
+        },
+        "intelligent_diagnostics": {
+          "type": "object",
+          "description": "智能诊断配置",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "是否启用智能诊断"
+            },
+            "min_confidence_score": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "最小置信度分数"
+            },
+            "analysis_depth": {
+              "type": "string",
+              "enum": ["basic", "detailed", "comprehensive"],
+              "description": "分析深度"
+            },
+            "pattern_recognition": {
+              "type": "boolean",
+              "description": "是否启用模式识别"
+            },
+            "historical_analysis": {
+              "type": "boolean",
+              "description": "是否分析历史故障数据"
+            },
+            "max_related_failures": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "最大关联故障数量"
+            }
+          },
+          "required": ["enabled"]
+        },
+        "vendor_integration": {
+          "type": "object",
+          "description": "厂商中立的集成配置",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "是否启用外部集成"
+            },
+            "sync_frequency_ms": {
+              "type": "integer",
+              "minimum": 1000,
+              "description": "同步频率（毫秒）"
+            },
+            "data_retention_days": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "数据保留天数"
+            },
+            "sync_detailed_diagnostics": {
+              "type": "boolean",
+              "description": "是否同步详细诊断信息"
+            },
+            "receive_suggestions": {
+              "type": "boolean",
+              "description": "是否接收恢复建议"
+            },
+            "auto_apply_suggestions": {
+              "type": "boolean",
+              "description": "是否自动应用恢复建议"
+            }
+          }
+        },
+        "proactive_prevention": {
+          "type": "object",
+          "description": "主动故障预防配置",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "是否启用主动故障预防"
+            },
+            "prediction_confidence_threshold": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "预测置信度阈值"
+            },
+            "auto_prevention_enabled": {
+              "type": "boolean",
+              "description": "是否启用自动预防"
+            },
+            "prevention_strategies": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "resource_scaling",
+                  "dependency_prefetch",
+                  "task_reordering",
+                  "early_checkpoint",
+                  "load_balancing"
+                ]
+              },
+              "description": "预防策略列表"
+            },
+            "monitoring_interval_ms": {
+              "type": "integer",
+              "minimum": 1000,
+              "description": "监控间隔（毫秒）"
+            }
+          },
+          "required": ["enabled"]
+        },
+        "self_learning": {
+          "type": "object",
+          "description": "自学习恢复配置",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "是否启用自学习恢复"
+            },
+            "learning_mode": {
+              "type": "string",
+              "enum": ["passive", "active", "hybrid"],
+              "description": "学习模式"
+            },
+            "min_samples_required": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "最小样本数量要求"
+            },
+            "adaptation_rate": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "适应率（0-1）"
+            },
+            "strategy_effectiveness_metrics": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "策略有效性指标列表"
+            }
+          },
+          "required": ["enabled"]
+        },
+        "enhanced_features": {
+          "type": "object",
+          "description": "增强型故障解决器功能",
+          "properties": {
+            "ai_diagnostics": {
+              "type": "boolean",
+              "description": "是否启用AI诊断"
+            },
+            "failure_prediction": {
+              "type": "boolean",
+              "description": "是否启用故障预测"
+            },
+            "auto_recovery": {
+              "type": "boolean",
+              "description": "是否启用自动恢复"
+            },
+            "performance_optimization": {
+              "type": "boolean",
+              "description": "是否启用性能优化"
+            },
+            "development_issues_detection": {
+              "type": "boolean",
+              "description": "是否启用开发问题检测"
+            },
+            "recovery_suggestions": {
+              "type": "boolean",
+              "description": "是否启用恢复建议"
+            }
+          }
+        }
+      },
+      "required": ["enabled", "strategies"]
+    },
+    "recovery_suggestion": {
+      "type": "string",
+      "description": "恢复建议",
+      "minLength": 5,
+      "maxLength": 1000
+    },
+    "development_issue": {
+      "type": "object",
+      "description": "开发问题",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "问题唯一标识符",
+          "pattern": "^[a-zA-Z0-9_-]+$",
+          "minLength": 3,
+          "maxLength": 50
+        },
+        "type": {
+          "type": "string",
+          "description": "问题类型",
+          "enum": [
+            "performance",
+            "security",
+            "reliability",
+            "maintainability",
+            "scalability",
+            "compatibility",
+            "code_quality",
+            "architecture",
+            "documentation",
+            "testing",
+            "other"
+          ]
+        },
+        "severity": {
+          "type": "string",
+          "description": "问题严重程度",
+          "enum": ["critical", "high", "medium", "low", "info"]
+        },
+        "title": {
+          "type": "string",
+          "description": "问题标题",
+          "minLength": 5,
+          "maxLength": 200
+        },
+        "file_path": {
+          "type": "string",
+          "description": "相关文件路径",
+          "pattern": "^[a-zA-Z0-9_\\-\\.\\/]+$"
+        },
+        "line_number": {
+          "type": "integer",
+          "description": "相关代码行号",
+          "minimum": 1
+        },
+        "description": {
+          "type": "string",
+          "description": "问题详细描述",
+          "maxLength": 2000
+        },
+        "suggested_fix": {
+          "type": "string",
+          "description": "建议修复方案",
+          "maxLength": 2000
+        },
+        "detected_at": {
+          "$ref": "#/$defs/timestamp",
+          "description": "问题检测时间"
+        },
+        "status": {
+          "type": "string",
+          "description": "问题状态",
+          "enum": [
+            "open",
+            "in_progress",
+            "resolved",
+            "wont_fix",
+            "false_positive"
+          ]
+        },
+        "dependencies": {
+          "type": "array",
+          "description": "相关依赖问题ID列表",
+          "items": {
+            "type": "string"
+          }
+        },
+        "confidence_score": {
+          "type": "number",
+          "description": "问题检测置信度",
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "required": ["id", "type", "severity", "title"]
+    }
+  },
+  "properties": {
+    "protocol_version": {
+      "$ref": "#/$defs/version",
+      "description": "MPLP协议版本",
+      "const": "1.0.2"
+    },
+    "timestamp": {
+      "$ref": "#/$defs/timestamp",
+      "description": "协议消息时间戳"
+    },
+    "plan_id": {
+      "$ref": "#/$defs/uuid",
+      "description": "计划唯一标识符"
+    },
+    "context_id": {
+      "$ref": "#/$defs/uuid",
+      "description": "关联的上下文ID"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255,
+      "description": "计划名称"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 2000,
+      "description": "计划详细描述"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "approved",
+        "active",
+        "paused",
+        "completed",
+        "cancelled",
+        "failed"
+      ],
+      "description": "计划状态"
+    },
+    "priority": {
+      "$ref": "#/$defs/priority",
+      "description": "计划优先级"
+    },
+    "timeline": {
+      "type": "object",
+      "properties": {
+        "start_date": { "$ref": "#/$defs/timestamp" },
+        "end_date": { "$ref": "#/$defs/timestamp" },
+        "estimated_duration": {
+          "type": "object",
+          "properties": {
+            "value": { "type": "number", "minimum": 0 },
+            "unit": {
+              "type": "string",
+              "enum": ["minutes", "hours", "days", "weeks", "months"]
+            }
+          },
+          "required": ["value", "unit"]
+        },
+        "actual_duration": {
+          "type": "object",
+          "properties": {
+            "value": { "type": "number", "minimum": 0 },
+            "unit": {
+              "type": "string",
+              "enum": ["minutes", "hours", "days", "weeks", "months"]
+            }
+          },
+          "required": ["value", "unit"]
+        }
+      },
+      "required": ["estimated_duration"]
+    },
+    "tasks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "task_id": { "$ref": "#/$defs/uuid" },
+          "name": { "type": "string", "minLength": 1, "maxLength": 255 },
+          "description": { "type": "string", "maxLength": 1000 },
+          "type": {
+            "type": "string",
+            "enum": ["atomic", "composite", "milestone", "checkpoint"]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "ready",
+              "running",
+              "blocked",
+              "completed",
+              "failed",
+              "skipped"
+            ]
+          },
+          "priority": { "$ref": "#/$defs/priority" },
+          "assignee": {
+            "type": "object",
+            "properties": {
+              "user_id": { "type": "string" },
+              "role": { "type": "string" },
+              "team": { "type": "string" }
+            }
+          },
+          "estimated_effort": {
+            "type": "object",
+            "properties": {
+              "value": { "type": "number", "minimum": 0 },
+              "unit": {
+                "type": "string",
+                "enum": ["hours", "days", "story_points"]
+              }
+            },
+            "required": ["value", "unit"]
+          },
+          "actual_effort": {
+            "type": "object",
+            "properties": {
+              "value": { "type": "number", "minimum": 0 },
+              "unit": {
+                "type": "string",
+                "enum": ["hours", "days", "story_points"]
+              }
+            },
+            "required": ["value", "unit"]
+          },
+          "resources_required": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "resource_type": { "type": "string" },
+                "amount": { "type": "number", "minimum": 0 },
+                "unit": { "type": "string" },
+                "availability": {
+                  "type": "string",
+                  "enum": ["required", "preferred", "optional"]
+                }
+              },
+              "required": ["resource_type", "amount", "unit", "availability"]
+            }
+          },
+          "acceptance_criteria": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": { "$ref": "#/$defs/uuid" },
+                "description": { "type": "string" },
+                "type": {
+                  "type": "string",
+                  "enum": ["functional", "non_functional", "quality"]
+                },
+                "status": {
+                  "type": "string",
+                  "enum": ["pending", "met", "not_met"]
+                },
+                "verification_method": {
+                  "type": "string",
+                  "enum": ["manual", "automated", "review"]
+                }
+              },
+              "required": ["id", "description", "type", "status"]
+            }
+          },
+          "sub_tasks": {
+            "type": "array",
+            "items": { "$ref": "#/properties/tasks/items" }
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "tags": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "category": { "type": "string" },
+              "source": { "type": "string" },
+              "complexity_score": { "type": "number", "minimum": 0 },
+              "risk_level": { "type": "string" },
+              "automation_level": { "type": "string" },
+              "retry_count": { "type": "integer", "minimum": 0 },
+              "max_retry_count": { "type": "integer", "minimum": 0 },
+              "intervention_required": { "type": "boolean" },
+              "intervention_reason": { "type": "string" },
+              "intervention_requested_at": { "$ref": "#/$defs/timestamp" },
+              "rollback_reason": { "type": "string" },
+              "rollback_target": { "$ref": "#/$defs/uuid" },
+              "skip_reason": { "type": "string" },
+              "skip_dependents": { "type": "boolean" },
+              "recovery_suggestions": {
+                "type": "array",
+                "items": { "$ref": "#/$defs/recovery_suggestion" },
+                "description": "故障恢复建议列表",
+                "maxItems": 10,
+                "uniqueItems": true
+              },
+              "development_issues": {
+                "type": "array",
+                "items": { "$ref": "#/$defs/development_issue" },
+                "description": "相关开发问题列表",
+                "maxItems": 20,
+                "uniqueItems": true
+              }
+            }
+          },
+          "started_at": { "$ref": "#/$defs/timestamp" },
+          "completed_at": { "$ref": "#/$defs/timestamp" },
+          "progress_percentage": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "任务进度百分比"
+          },
+          "actual_duration_minutes": {
+            "type": "number",
+            "minimum": 0,
+            "description": "实际执行时间（分钟）"
+          },
+          "error_message": {
+            "type": "string",
+            "description": "失败时的错误信息"
+          },
+          "result_data": {
+            "type": "object",
+            "description": "任务执行结果数据",
+            "additionalProperties": true
+          }
+        },
+        "required": ["task_id", "name", "type", "status", "priority"]
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "$ref": "#/$defs/uuid" },
+          "source_task_id": { "$ref": "#/$defs/uuid" },
+          "target_task_id": { "$ref": "#/$defs/uuid" },
+          "dependency_type": {
+            "type": "string",
+            "enum": [
+              "finish_to_start",
+              "start_to_start",
+              "finish_to_finish",
+              "start_to_finish"
+            ]
+          },
+          "lag": {
+            "type": "object",
+            "properties": {
+              "value": { "type": "number" },
+              "unit": { "type": "string", "enum": ["minutes", "hours", "days"] }
+            },
+            "required": ["value", "unit"]
+          },
+          "criticality": {
+            "type": "string",
+            "enum": ["blocking", "important", "nice_to_have"]
+          },
+          "condition": {
+            "type": "string",
+            "description": "依赖条件描述"
+          }
+        },
+        "required": [
+          "id",
+          "source_task_id",
+          "target_task_id",
+          "dependency_type",
+          "criticality"
+        ]
+      }
+    },
+    "milestones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "$ref": "#/$defs/uuid" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "target_date": { "$ref": "#/$defs/timestamp" },
+          "status": {
+            "type": "string",
+            "enum": ["upcoming", "at_risk", "achieved", "missed"]
+          },
+          "success_criteria": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "metric": { "type": "string" },
+                "target_value": { "type": ["string", "number", "boolean"] },
+                "actual_value": { "type": ["string", "number", "boolean"] },
+                "status": {
+                  "type": "string",
+                  "enum": ["pending", "achieved", "not_achieved"]
+                }
+              },
+              "required": ["metric", "target_value", "status"]
+            }
+          }
+        },
+        "required": ["id", "name", "target_date", "status"]
+      }
+    },
+    "optimization": {
+      "type": "object",
+      "properties": {
+        "strategy": {
+          "type": "string",
+          "enum": [
+            "time_optimal",
+            "resource_optimal",
+            "cost_optimal",
+            "quality_optimal",
+            "balanced"
+          ]
+        },
+        "constraints": {
+          "type": "object",
+          "properties": {
+            "max_duration": {
+              "type": "object",
+              "properties": {
+                "value": { "type": "number", "minimum": 0 },
+                "unit": { "type": "string", "enum": ["hours", "days", "weeks"] }
+              },
+              "required": ["value", "unit"]
+            },
+            "max_cost": { "type": "number", "minimum": 0 },
+            "min_quality": { "type": "number", "minimum": 0, "maximum": 100 },
+            "available_resources": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        },
+        "parameters": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      },
+      "required": ["strategy"]
+    },
+    "risk_assessment": {
+      "type": "object",
+      "properties": {
+        "overall_risk_level": {
+          "type": "string",
+          "enum": ["low", "medium", "high", "critical"]
+        },
+        "risks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "$ref": "#/$defs/uuid" },
+              "name": { "type": "string" },
+              "description": { "type": "string" },
+              "level": {
+                "type": "string",
+                "enum": ["low", "medium", "high", "critical"]
+              },
+              "category": {
+                "type": "string",
+                "enum": [
+                  "technical",
+                  "resource",
+                  "schedule",
+                  "scope",
+                  "external"
+                ]
+              },
+              "probability": { "type": "number", "minimum": 0, "maximum": 1 },
+              "impact": { "type": "number", "minimum": 0, "maximum": 1 },
+              "status": {
+                "type": "string",
+                "enum": ["identified", "mitigated", "accepted", "closed"]
+              },
+              "mitigation_plan": { "type": "string" },
+              "contingency_plan": { "type": "string" }
+            },
+            "required": ["id", "name", "level", "category", "status"]
+          }
+        }
+      },
+      "required": ["overall_risk_level", "risks"]
+    },
+    "failure_resolver": {
+      "$ref": "#/$defs/failure_resolver",
+      "description": "计划级别的故障解决器配置"
+    },
+    "configuration": {
+      "type": "object",
+      "properties": {
+        "auto_scheduling_enabled": { "type": "boolean" },
+        "dependency_validation_enabled": { "type": "boolean" },
+        "risk_monitoring_enabled": { "type": "boolean" },
+        "failure_recovery_enabled": { "type": "boolean" },
+        "performance_tracking_enabled": { "type": "boolean" },
+        "notification_settings": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "channels": { "type": "array", "items": { "type": "string" } },
+            "events": { "type": "array", "items": { "type": "string" } },
+            "task_completion": { "type": "boolean" }
+          },
+          "required": ["enabled"]
+        },
+        "optimization_settings": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "strategy": {
+              "type": "string",
+              "enum": [
+                "time_optimal",
+                "resource_optimal",
+                "cost_optimal",
+                "quality_optimal",
+                "balanced"
+              ]
+            },
+            "auto_reoptimize": { "type": "boolean" }
+          },
+          "required": ["enabled", "strategy"]
+        },
+        "timeout_settings": {
+          "type": "object",
+          "properties": {
+            "default_task_timeout_ms": { "type": "integer", "minimum": 1000 },
+            "plan_execution_timeout_ms": { "type": "integer", "minimum": 1000 },
+            "dependency_resolution_timeout_ms": {
+              "type": "integer",
+              "minimum": 1000
+            }
+          }
+        },
+        "parallel_execution_limit": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "计划元数据，可以包含任何附加信息"
+    },
+    "created_at": {
+      "$ref": "#/$defs/timestamp",
+      "description": "计划创建时间"
+    },
+    "updated_at": {
+      "$ref": "#/$defs/timestamp",
+      "description": "计划最后更新时间"
+    },
+    "created_by": {
+      "type": "string",
+      "description": "创建者ID"
+    },
+    "updated_by": {
+      "type": "string",
+      "description": "最后更新者ID"
+    }
+  },
+  "required": [
+    "protocol_version",
+    "timestamp",
+    "plan_id",
+    "context_id",
+    "name",
+    "status",
+    "tasks"
+  ],
+  "additionalProperties": false
+}

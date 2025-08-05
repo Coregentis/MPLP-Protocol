@@ -190,7 +190,7 @@ async function main() {
   
   if (success) {
     console.log('\n🎉 MPLP集成测试全部通过！');
-    console.log('✅ 所有6个核心模块的DDD架构重构完成');
+    console.log('✅ 所有6个核心协议模块的DDD架构重构完成');
     console.log('✅ Core运行时调度器功能正常');
     console.log('✅ 模块间集成和协调工作正常');
     process.exit(0);

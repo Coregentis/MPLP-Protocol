@@ -146,7 +146,7 @@ import { PerformanceEnhancedOrchestrator } from '@mplp/performance';
 #### 📖 主要文档结构
 
 ```markdown
-# MPLP - Multi-Agent Project Lifecycle Protocol
+# MPLP - Multi-Agent Project Lifecycle Protocol - L4 Intelligent Agent Operating System
 
 ## 🚀 快速开始
 
@@ -264,7 +264,7 @@ v1.2.0 - 生态扩展版本
 {
   "name": "mplp",
   "version": "1.0.0",
-  "description": "Multi-Agent Project Lifecycle Protocol",
+  "description": "Multi-Agent Project Lifecycle Protocol - L4 Intelligent Agent Operating System",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {

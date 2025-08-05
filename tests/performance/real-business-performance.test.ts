@@ -7,7 +7,7 @@
  */
 
 import { performance } from 'perf_hooks';
-import { CoreOrchestrator } from '../../src/modules/core/orchestrator/core-orchestrator';
+import { CoreOrchestrator } from '../../src/public/modules/core/orchestrator/core-orchestrator';
 import {
   WorkflowStage,
   OrchestratorConfiguration,
@@ -16,11 +16,11 @@ import {
   ModuleStatus
 } from '../../src/modules/core/types/core.types';
 import { TestDataFactory } from '../test-utils/test-data-factory';
-import { 
-  IntelligentCacheManager, 
-  BatchProcessor, 
-  BusinessPerformanceMonitor 
-} from '../../src/core/performance/real-performance-optimizer';
+import {
+  IntelligentCacheManager,
+  BatchProcessor,
+  BusinessPerformanceMonitor
+} from '../../src/public/performance/real-performance-optimizer';
 
 describe('真实业务场景性能测试', () => {
   let orchestrator: CoreOrchestrator;

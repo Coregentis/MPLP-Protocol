@@ -367,12 +367,66 @@ export class TraceManagementService {
   }
 
   /**
+   * 记录事件
+   */
+  async recordEvent(request: {
+    trace_id: UUID;
+    event_type: string;
+    level: 'debug' | 'info' | 'warn' | 'error' | 'critical';
+    timestamp: Date;
+    data?: Record<string, any>;
+  }): Promise<OperationResult<any>> {
+    try {
+      const trace = await this.traceRepository.findById(request.trace_id);
+
+      if (!trace) {
+        return {
+          success: false,
+          error: '追踪不存在'
+        };
+      }
+
+      // 更新追踪的元数据以记录事件
+      const existingEvents = Array.isArray(trace.metadata?.events) ? trace.metadata.events : [];
+      const updatedMetadata = {
+        ...trace.metadata,
+        events: [
+          ...existingEvents,
+          {
+            event_type: request.event_type,
+            level: request.level,
+            timestamp: request.timestamp.toISOString(),
+            data: request.data
+          }
+        ]
+      };
+
+      // 更新追踪
+      trace.updateMetadata(updatedMetadata);
+      await this.traceRepository.save(trace);
+
+      return {
+        success: true,
+        data: {
+          event_id: `${request.trace_id}_${Date.now()}`,
+          recorded_at: request.timestamp.toISOString()
+        }
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : '记录事件失败'
+      };
+    }
+  }
+
+  /**
    * 清理过期追踪
    */
   async cleanupExpiredTraces(olderThanDays: number): Promise<OperationResult<number>> {
     try {
       const deletedCount = await this.traceRepository.cleanupExpiredTraces(olderThanDays);
-      
+
       return {
         success: true,
         data: deletedCount

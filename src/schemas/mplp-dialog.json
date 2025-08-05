@@ -1,0 +1,296 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mplp.dev/schemas/v1.0/mplp-dialog.json",
+  "title": "MPLP Dialog Protocol v1.0 - Unified Interface",
+  "description": "Dialog协议统一标准接口Schema - 支持从简单对话到智能分析的所有对话需求",
+  "version": "1.0.0",
+  "lastUpdated": "2025-08-04",
+  "type": "object",
+  "$defs": {
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "description": "UUID v4格式的唯一标识符"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601格式的时间戳"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+      "description": "语义化版本号 (SemVer)"
+    },
+    "dialogCapabilities": {
+      "type": "object",
+      "description": "对话能力配置 - 核心参数化设计",
+      "properties": {
+        "basic": {
+          "type": "object",
+          "description": "基础对话能力（默认启用）",
+          "properties": {
+            "enabled": { "type": "boolean", "const": true },
+            "messageHistory": { "type": "boolean" },
+            "participantManagement": { "type": "boolean" }
+          },
+          "required": ["enabled", "messageHistory", "participantManagement"],
+          "additionalProperties": false
+        },
+        "intelligentControl": {
+          "type": "object",
+          "description": "智能对话控制（可选）",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "adaptiveRounds": { "type": "boolean" },
+            "dynamicStrategy": { "type": "boolean" },
+            "completenessEvaluation": { "type": "boolean" }
+          },
+          "required": ["enabled"],
+          "additionalProperties": false
+        },
+        "criticalThinking": {
+          "type": "object",
+          "description": "批判性思维分析（可选）",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "analysisDepth": {
+              "type": "string",
+              "enum": ["surface", "moderate", "deep"]
+            },
+            "questionGeneration": { "type": "boolean" },
+            "logicValidation": { "type": "boolean" }
+          },
+          "required": ["enabled"],
+          "additionalProperties": false
+        },
+        "knowledgeSearch": {
+          "type": "object",
+          "description": "知识搜索集成（可选）",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "realTimeSearch": { "type": "boolean" },
+            "knowledgeValidation": { "type": "boolean" },
+            "sourceVerification": { "type": "boolean" }
+          },
+          "required": ["enabled"],
+          "additionalProperties": false
+        },
+        "multimodal": {
+          "type": "object",
+          "description": "多模态交互（可选）",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "supportedModalities": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["text", "audio", "image", "video", "file"]
+              }
+            },
+            "crossModalTranslation": { "type": "boolean" }
+          },
+          "required": ["enabled"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["basic"],
+      "additionalProperties": false
+    },
+    "dialogStrategy": {
+      "type": "object",
+      "description": "对话策略配置",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["fixed", "adaptive", "goal_driven", "exploratory"]
+        },
+        "rounds": {
+          "type": "object",
+          "properties": {
+            "min": { "type": "integer", "minimum": 1 },
+            "max": { "type": "integer", "minimum": 1 },
+            "target": { "type": "integer", "minimum": 1 }
+          },
+          "additionalProperties": false
+        },
+        "exitCriteria": {
+          "type": "object",
+          "properties": {
+            "completenessThreshold": { "type": "number", "minimum": 0, "maximum": 1 },
+            "userSatisfactionThreshold": { "type": "number", "minimum": 0, "maximum": 1 },
+            "timeLimit": { "type": "integer", "minimum": 1 }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": ["type"],
+      "additionalProperties": false
+    },
+    "dialogContent": {
+      "type": "object",
+      "description": "对话内容定义",
+      "properties": {
+        "text": { "type": "string" },
+        "multimodal": {
+          "type": "object",
+          "properties": {
+            "audio": { "type": "object" },
+            "image": { "type": "object" },
+            "video": { "type": "object" },
+            "file": { "type": "object" }
+          },
+          "additionalProperties": false
+        },
+        "type": {
+          "type": "string",
+          "enum": ["message", "question", "command", "feedback"]
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["low", "normal", "high", "urgent"]
+        }
+      },
+      "required": ["type"],
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "dialogId": {
+      "$ref": "#/$defs/uuid",
+      "description": "对话唯一标识符"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255,
+      "description": "对话名称"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1024,
+      "description": "对话描述"
+    },
+    "participants": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "maxItems": 100,
+      "description": "对话参与者ID列表"
+    },
+    "capabilities": {
+      "$ref": "#/$defs/dialogCapabilities",
+      "description": "对话能力配置"
+    },
+    "strategy": {
+      "$ref": "#/$defs/dialogStrategy",
+      "description": "对话策略配置"
+    },
+    "context": {
+      "type": "object",
+      "description": "对话上下文配置",
+      "properties": {
+        "sessionId": { "type": "string" },
+        "contextId": { "type": "string" },
+        "knowledgeBase": { "type": "string" },
+        "previousDialogs": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": true
+    },
+    "configuration": {
+      "type": "object",
+      "description": "对话配置",
+      "properties": {
+        "timeout": { "type": "integer", "minimum": 1000 },
+        "maxParticipants": { "type": "integer", "minimum": 1, "maximum": 100 },
+        "retryPolicy": {
+          "type": "object",
+          "properties": {
+            "maxRetries": { "type": "integer", "minimum": 0 },
+            "backoffMs": { "type": "integer", "minimum": 100 }
+          },
+          "additionalProperties": false
+        },
+        "security": {
+          "type": "object",
+          "properties": {
+            "encryption": { "type": "boolean" },
+            "authentication": { "type": "boolean" },
+            "auditLogging": { "type": "boolean" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "对话元数据"
+    }
+  },
+  "required": [
+    "dialogId",
+    "name",
+    "participants",
+    "capabilities"
+  ],
+  "additionalProperties": false,
+  "examples": [
+    {
+      "dialogId": "550e8400-e29b-41d4-a716-446655440000",
+      "name": "简单客服对话",
+      "participants": ["user-001", "support-agent-001"],
+      "capabilities": {
+        "basic": {
+          "enabled": true,
+          "messageHistory": true,
+          "participantManagement": true
+        }
+      }
+    },
+    {
+      "dialogId": "550e8400-e29b-41d4-a716-446655440001",
+      "name": "TracePilot智能需求分析对话",
+      "participants": ["user-001", "product-owner-agent", "architect-agent"],
+      "capabilities": {
+        "basic": {
+          "enabled": true,
+          "messageHistory": true,
+          "participantManagement": true
+        },
+        "intelligentControl": {
+          "enabled": true,
+          "adaptiveRounds": true,
+          "dynamicStrategy": true,
+          "completenessEvaluation": true
+        },
+        "criticalThinking": {
+          "enabled": true,
+          "analysisDepth": "deep",
+          "questionGeneration": true,
+          "logicValidation": true
+        },
+        "knowledgeSearch": {
+          "enabled": true,
+          "realTimeSearch": true,
+          "knowledgeValidation": true,
+          "sourceVerification": true
+        }
+      },
+      "strategy": {
+        "type": "adaptive",
+        "rounds": { "min": 3, "max": 7, "target": 5 },
+        "exitCriteria": {
+          "completenessThreshold": 0.85,
+          "userSatisfactionThreshold": 0.8
+        }
+      }
+    }
+  ]
+}

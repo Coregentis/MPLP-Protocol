@@ -203,7 +203,7 @@ export class Extension {
    * 检查是否可以卸载
    */
   canUninstall(): boolean {
-    return ['inactive', 'disabled', 'error'].includes(this._status);
+    return ['installed', 'inactive', 'disabled', 'error'].includes(this._status);
   }
 
   /**
