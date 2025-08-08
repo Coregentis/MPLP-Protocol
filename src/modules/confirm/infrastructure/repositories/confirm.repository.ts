@@ -29,7 +29,7 @@ export class ConfirmRepository implements IConfirmRepository {
    * 保存确认
    */
   async save(confirm: Confirm): Promise<void> {
-    this.confirms.set(confirm.confirm_id, confirm);
+    this.confirms.set(confirm.confirmId, confirm);
   }
 
   /**
@@ -44,7 +44,7 @@ export class ConfirmRepository implements IConfirmRepository {
    */
   async findByContextId(contextId: UUID): Promise<Confirm[]> {
     return Array.from(this.confirms.values())
-      .filter(confirm => confirm.context_id === contextId);
+      .filter(confirm => confirm.contextId === contextId);
   }
 
   /**
@@ -52,7 +52,7 @@ export class ConfirmRepository implements IConfirmRepository {
    */
   async findByPlanId(planId: UUID): Promise<Confirm[]> {
     return Array.from(this.confirms.values())
-      .filter(confirm => confirm.plan_id === planId);
+      .filter(confirm => confirm.planId === planId);
   }
 
   /**
@@ -65,16 +65,16 @@ export class ConfirmRepository implements IConfirmRepository {
     let results = Array.from(this.confirms.values());
 
     // 应用过滤器
-    if (filter.context_id) {
-      results = results.filter(confirm => confirm.context_id === filter.context_id);
+    if (filter.contextId) {
+      results = results.filter(confirm => confirm.contextId === filter.contextId);
     }
 
-    if (filter.plan_id) {
-      results = results.filter(confirm => confirm.plan_id === filter.plan_id);
+    if (filter.planId) {
+      results = results.filter(confirm => confirm.planId === filter.planId);
     }
 
-    if (filter.confirmation_type) {
-      results = results.filter(confirm => confirm.confirmation_type === filter.confirmation_type);
+    if (filter.confirmationType) {
+      results = results.filter(confirm => confirm.confirmationType === filter.confirmationType);
     }
 
     if (filter.status) {
@@ -86,15 +86,15 @@ export class ConfirmRepository implements IConfirmRepository {
     }
 
     if (filter.requester_user_id) {
-      results = results.filter(confirm => confirm.requester.user_id === filter.requester_user_id);
+      results = results.filter(confirm => confirm.requester.userId === filter.requester_user_id);
     }
 
     if (filter.created_after) {
-      results = results.filter(confirm => confirm.created_at >= filter.created_after!);
+      results = results.filter(confirm => confirm.createdAt >= filter.created_after!);
     }
 
     if (filter.created_before) {
-      results = results.filter(confirm => confirm.created_at <= filter.created_before!);
+      results = results.filter(confirm => confirm.createdAt <= filter.created_before!);
     }
 
     if (filter.expires_after) {
@@ -149,7 +149,7 @@ export class ConfirmRepository implements IConfirmRepository {
     if (userId) {
       // 这里应该根据用户角色和审批工作流来过滤
       // 简化实现：只返回该用户创建的确认
-      results = results.filter(confirm => confirm.requester.user_id === userId);
+      results = results.filter(confirm => confirm.requester.userId === userId);
     }
 
     return results;
@@ -168,7 +168,7 @@ export class ConfirmRepository implements IConfirmRepository {
    * 更新确认
    */
   async update(confirm: Confirm): Promise<void> {
-    this.confirms.set(confirm.confirm_id, confirm);
+    this.confirms.set(confirm.confirmId, confirm);
   }
 
   /**
@@ -210,7 +210,7 @@ export class ConfirmRepository implements IConfirmRepository {
     let confirms = Array.from(this.confirms.values());
     
     if (contextId) {
-      confirms = confirms.filter(confirm => confirm.context_id === contextId);
+      confirms = confirms.filter(confirm => confirm.contextId === contextId);
     }
 
     const total = confirms.length;
@@ -221,7 +221,7 @@ export class ConfirmRepository implements IConfirmRepository {
     }, {} as Record<ConfirmStatus, number>);
 
     const by_type = confirms.reduce((acc, confirm) => {
-      acc[confirm.confirmation_type] = (acc[confirm.confirmation_type] || 0) + 1;
+      acc[confirm.confirmationType] = (acc[confirm.confirmationType] || 0) + 1;
       return acc;
     }, {} as Record<ConfirmationType, number>);
 
@@ -244,15 +244,15 @@ export class ConfirmRepository implements IConfirmRepository {
   private getPropertyValue(confirm: Confirm, property: string): string {
     switch (property) {
       case 'created_at':
-        return confirm.created_at;
+        return confirm.createdAt;
       case 'updated_at':
-        return confirm.updated_at;
+        return confirm.updatedAt;
       case 'priority':
         return confirm.priority;
       case 'status':
         return confirm.status;
       default:
-        return confirm.created_at;
+        return confirm.createdAt;
     }
   }
 }

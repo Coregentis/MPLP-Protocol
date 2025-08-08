@@ -136,7 +136,7 @@ export class WorkflowManager {
   /**
    * 完成工作流阶段
    */
-  async completeStage(workflow_id: string, stage: WorkflowStageType, result?: any): Promise<{ stage_id: string; status: string }> {
+  async completeStage(workflow_id: string, stage: WorkflowStageType, result?: Record<string, unknown>): Promise<{ stage_id: string; status: string }> {
     const execution = this.executions.get(workflow_id);
     if (!execution) {
       throw new Error(`Workflow not found: ${workflow_id}`);
@@ -147,8 +147,8 @@ export class WorkflowManager {
 
     // 更新上下文
     if (result) {
-      execution.context.stage_results = execution.context.stage_results || {} as Record<WorkflowStageType, any>;
-      (execution.context.stage_results as any)[stage] = result;
+      execution.context.stage_results = execution.context.stage_results || {} as Record<WorkflowStageType, Record<string, unknown>>;
+      (execution.context.stage_results as Record<WorkflowStageType, Record<string, unknown>>)[stage] = result;
     }
 
     this.emitEvent('stage.completed', { workflow_id, stage, stage_id, result });
@@ -367,7 +367,7 @@ export class WorkflowManager {
   /**
    * 发送事件
    */
-  private emitEvent(eventType: string, data: any): void {
+  private emitEvent(eventType: string, data: Record<string, unknown>): void {
     if (!this.eventBus) return;
 
     this.eventBus.publish(EventType.WORKFLOW_STARTED, {
@@ -376,5 +376,29 @@ export class WorkflowManager {
       eventType,
       ...data
     });
+  }
+
+  /**
+   * 停止工作流管理器
+   */
+  async stop(): Promise<void> {
+    this.logger.info('Stopping WorkflowManager...');
+
+    // 清理所有执行中的工作流
+    this.executions.clear();
+
+    // 清理阶段处理器
+    this.stageHandlers.clear();
+
+    // 重置指标
+    this.metrics = {
+      total_executions: 0,
+      successful_executions: 0,
+      failed_executions: 0,
+      current_active: 0,
+      average_execution_time: 0
+    };
+
+    this.logger.info('WorkflowManager stopped successfully');
   }
 }

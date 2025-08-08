@@ -9,15 +9,15 @@
  */
 
 // 基础操作结果类型
-export interface OperationResult<T = any> {
+export interface OperationResult<T = unknown> {
   success: boolean;
   data?: T;
-  error?: string | any[];
+  error?: string | unknown[];
   message?: string;
 }
 
 // Context相关类型
-export interface ContextOperationResult<T = any> extends OperationResult<T> {
+export interface ContextOperationResult<T = unknown> extends OperationResult<T> {
   contextId?: string;
   timestamp?: string;
 }
@@ -26,7 +26,7 @@ export interface ContextOperationResult<T = any> extends OperationResult<T> {
 export interface ErrorInfo {
   code: string;
   message: string;
-  details?: any;
+  details?: unknown;
 }
 
 // UUID类型
@@ -40,7 +40,7 @@ export type ISO8601DateTime = string;
 export type Version = string;
 
 // 通用结果类型
-export type Result<T = any> = OperationResult<T>;
+export type Result<T = unknown> = OperationResult<T>;
 
 // 分页参数
 export interface PaginationParams {
@@ -52,7 +52,7 @@ export interface PaginationParams {
 }
 
 // 分页结果
-export interface PaginatedResult<T = any> {
+export interface PaginatedResult<T = unknown> {
   data: T[];
   items: T[];  // 兼容性别名
   total: number;

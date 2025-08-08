@@ -7,7 +7,7 @@
 
 import { Logger } from '../public/utils/logger';
 
-export interface ServiceToken<T = any> {
+export interface ServiceToken<T = unknown> {
   name: string;
   type: string;
 }
@@ -23,9 +23,9 @@ export function createInterfaceToken<T>(name: string): ServiceToken<T> {
  * 依赖注入容器类
  */
 export class DependencyContainer {
-  private services = new Map<string, any>();
-  private factories = new Map<string, () => any>();
-  private singletons = new Map<string, any>();
+  private services = new Map<string, unknown>();
+  private factories = new Map<string, () => unknown>();
+  private singletons = new Map<string, unknown>();
   private logger: Logger;
 
   constructor() {
@@ -62,20 +62,20 @@ export class DependencyContainer {
   resolve<T>(token: ServiceToken<T>): T {
     // 检查单例
     if (this.singletons.has(token.name)) {
-      return this.singletons.get(token.name);
+      return this.singletons.get(token.name) as T;
     }
 
     // 检查工厂
     if (this.factories.has(token.name)) {
       const factory = this.factories.get(token.name);
       if (factory) {
-        return factory();
+        return factory() as T;
       }
     }
 
     // 检查普通服务
     if (this.services.has(token.name)) {
-      return this.services.get(token.name);
+      return this.services.get(token.name) as T;
     }
 
     throw new Error(`Service not registered: ${token.name}`);

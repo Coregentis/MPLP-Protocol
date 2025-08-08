@@ -45,12 +45,12 @@ export class ConfirmManagementService {
     try {
       // 验证请求
       const validation = this.validationService.validateCreateRequest(
-        request.context_id,
-        request.confirmation_type,
+        request.contextId,
+        request.confirmationType,
         request.priority,
         request.subject,
         request.requester,
-        request.approval_workflow
+        request.approvalWorkflow
       );
 
       if (!validation.isValid) {

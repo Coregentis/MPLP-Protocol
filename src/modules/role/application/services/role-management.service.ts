@@ -54,7 +54,7 @@ export class RoleManagementService {
   async createRole(request: CreateRoleRequest): Promise<OperationResult<Role>> {
     try {
       // 验证角色名称唯一性
-      const isUnique = await this.roleRepository.isNameUnique(request.name, request.context_id);
+      const isUnique = await this.roleRepository.isNameUnique(request.name, request.contextId);
       if (!isUnique) {
         return {
           success: false,
@@ -66,16 +66,16 @@ export class RoleManagementService {
       const now = new Date().toISOString();
       const role = new Role(
         this.generateUUID(),
-        request.context_id,
+        request.contextId,
         '1.0.0',
         request.name,
-        request.role_type,
+        request.roleType,
         'active',
         request.permissions || [],
         now,
         now,
         now,
-        request.display_name,
+        request.displayName,
         request.description
       );
 
@@ -296,7 +296,7 @@ export class RoleManagementService {
       }
 
       // 检查是否是系统角色
-      if (role.role_type === 'system') {
+      if (role.roleType === 'system') {
         return {
           success: false,
           error: '不能删除系统角色'

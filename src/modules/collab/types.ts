@@ -21,22 +21,22 @@ export type EntityStatus =
  * 协作实体
  */
 export interface CollabEntity {
-  collaboration_id: string;
+  collaborationId: string;
   version: string;
   timestamp: string;
-  context_id: string;
-  plan_id: string;
+  contextId: string;
+  planId: string;
   name: string;
   description?: string;
   mode: CollabMode;
   participants: CollabParticipant[];
-  coordination_strategy: CoordinationStrategy;
+  coordinationStrategy: CoordinationStrategy;
   status: EntityStatus;
-  created_at: string;
-  updated_at: string;
-  created_by: string;
-  decision_making?: DecisionMakingConfig; // 决策制定配置
-  council_configuration?: CouncilConfiguration; // 决策议会配置
+  createdAt: string;
+  updatedAt: string;
+  createdBy: string;
+  decisionMaking?: DecisionMakingConfig; // 决策制定配置
+  councilConfiguration?: CouncilConfiguration; // 决策议会配置
   metadata?: Record<string, unknown>;
 }
 
@@ -45,8 +45,8 @@ export interface CollabEntity {
  */
 export interface CollabParticipant {
   participant_id: string;
-  agent_id: string;
-  role_id: string;
+  agentId: string;
+  roleId: string;
   status: EntityStatus;
   capabilities: string[];
   priority: number;
@@ -60,7 +60,7 @@ export interface CollabParticipant {
 export interface CoordinationStrategy {
   type: CoordinationType;
   coordinator_id?: string;
-  decision_making: DecisionMaking;
+  decisionMaking: DecisionMaking;
 }
 
 // ==================== 枚举类型 ====================
@@ -127,15 +127,15 @@ export type CouncilType =
  * 创建协作请求
  */
 export interface CreateCollabRequest {
-  context_id: string;
-  plan_id: string;
+  contextId: string;
+  planId: string;
   name: string;
   description?: string;
   mode: CollabMode;
   participants: Omit<CollabParticipant, 'participant_id' | 'joined_at'>[];
-  coordination_strategy: CoordinationStrategy;
-  decision_making?: DecisionMakingConfig; // 决策制定配置
-  council_configuration?: CouncilConfiguration; // 决策议会配置
+  coordinationStrategy: CoordinationStrategy;
+  decisionMaking?: DecisionMakingConfig; // 决策制定配置
+  councilConfiguration?: CouncilConfiguration; // 决策议会配置
   metadata?: Record<string, unknown>;
 }
 
@@ -143,11 +143,11 @@ export interface CreateCollabRequest {
  * 更新协作请求
  */
 export interface UpdateCollabRequest {
-  collaboration_id: string;
+  collaborationId: string;
   name?: string;
   description?: string;
   mode?: CollabMode;
-  coordination_strategy?: Partial<CoordinationStrategy>;
+  coordinationStrategy?: Partial<CoordinationStrategy>;
   metadata?: Record<string, unknown>;
 }
 
@@ -155,11 +155,11 @@ export interface UpdateCollabRequest {
  * 协作查询参数
  */
 export interface CollabQueryParams {
-  context_id?: string;
-  plan_id?: string;
+  contextId?: string;
+  planId?: string;
   status?: EntityStatus;
   mode?: CollabMode;
-  created_by?: string;
+  createdBy?: string;
   limit?: number;
   offset?: number;
   sort_by?: 'created_at' | 'updated_at' | 'name';
@@ -197,9 +197,9 @@ export interface CollabListResponse {
  * 添加参与者请求
  */
 export interface AddParticipantRequest {
-  collaboration_id: string;
-  agent_id: string;
-  role_id: string;
+  collaborationId: string;
+  agentId: string;
+  roleId: string;
   capabilities: string[];
   priority: number;
   weight: number;
@@ -209,7 +209,7 @@ export interface AddParticipantRequest {
  * 移除参与者请求
  */
 export interface RemoveParticipantRequest {
-  collaboration_id: string;
+  collaborationId: string;
   participant_id: string;
   reason?: string;
 }
@@ -218,7 +218,7 @@ export interface RemoveParticipantRequest {
  * 更新参与者请求
  */
 export interface UpdateParticipantRequest {
-  collaboration_id: string;
+  collaborationId: string;
   participant_id: string;
   capabilities?: string[];
   priority?: number;
@@ -299,7 +299,7 @@ export interface CouncilConfiguration {
  * 协调操作请求
  */
 export interface CoordinationRequest {
-  collaboration_id: string;
+  collaborationId: string;
   operation: CoordinationOperation;
   parameters?: Record<string, unknown>;
   initiated_by: string;
@@ -323,7 +323,7 @@ export type CoordinationOperation =
 export interface CoordinationResult {
   success: boolean;
   operation: CoordinationOperation;
-  collaboration_id: string;
+  collaborationId: string;
   result?: unknown;
   error?: string;
   timestamp: string;
@@ -336,7 +336,7 @@ export interface CoordinationResult {
  */
 export interface CollabEvent {
   event_id: string;
-  collaboration_id: string;
+  collaborationId: string;
   event_type: CollabEventType;
   data: unknown;
   timestamp: string;
@@ -380,7 +380,7 @@ export interface CollabModuleConfig {
  * 协作性能指标
  */
 export interface CollabPerformanceMetrics {
-  collaboration_id: string;
+  collaborationId: string;
   total_participants: number;
   active_participants: number;
   coordination_latency: number;

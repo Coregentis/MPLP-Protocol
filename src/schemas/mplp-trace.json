@@ -1,10 +1,8 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://mplp.dev/schemas/v1.0/mplp-trace.json",
   "title": "MPLP Trace Protocol v1.0",
   "description": "Trace模块协议Schema - 追踪记录和监控分析",
-  "version": "1.0.0",
-  "lastUpdated": "2025-08-04",
   "type": "object",
   "$defs": {
     "uuid": {
@@ -24,7 +22,12 @@
     },
     "priority": {
       "type": "string",
-      "enum": ["critical", "high", "medium", "low"],
+      "enum": [
+        "critical",
+        "high",
+        "medium",
+        "low"
+      ],
       "description": "优先级枚举"
     }
   },
@@ -68,7 +71,13 @@
     },
     "severity": {
       "type": "string",
-      "enum": ["debug", "info", "warn", "error", "critical"],
+      "enum": [
+        "debug",
+        "info",
+        "warn",
+        "error",
+        "critical"
+      ],
       "description": "严重程度"
     },
     "event": {
@@ -86,21 +95,43 @@
             "interrupt"
           ]
         },
-        "name": { "type": "string", "maxLength": 255 },
-        "description": { "type": "string", "maxLength": 1000 },
+        "name": {
+          "type": "string",
+          "maxLength": 255
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 1000
+        },
         "category": {
           "type": "string",
-          "enum": ["system", "user", "external", "automatic"]
+          "enum": [
+            "system",
+            "user",
+            "external",
+            "automatic"
+          ]
         },
         "source": {
           "type": "object",
           "properties": {
-            "component": { "type": "string" },
-            "module": { "type": "string" },
-            "function": { "type": "string" },
-            "line_number": { "type": "integer", "minimum": 1 }
+            "component": {
+              "type": "string"
+            },
+            "module": {
+              "type": "string"
+            },
+            "function": {
+              "type": "string"
+            },
+            "line_number": {
+              "type": "integer",
+              "minimum": 1
+            }
           },
-          "required": ["component"]
+          "required": [
+            "component"
+          ]
         },
         "data": {
           "type": "object",
@@ -108,7 +139,12 @@
           "additionalProperties": true
         }
       },
-      "required": ["type", "name", "category", "source"]
+      "required": [
+        "type",
+        "name",
+        "category",
+        "source"
+      ]
     },
     "performance_metrics": {
       "type": "object",
@@ -116,12 +152,25 @@
         "execution_time": {
           "type": "object",
           "properties": {
-            "start_time": { "$ref": "#/$defs/timestamp" },
-            "end_time": { "$ref": "#/$defs/timestamp" },
-            "duration_ms": { "type": "number", "minimum": 0 },
-            "cpu_time_ms": { "type": "number", "minimum": 0 }
+            "start_time": {
+              "$ref": "#/$defs/timestamp"
+            },
+            "end_time": {
+              "$ref": "#/$defs/timestamp"
+            },
+            "duration_ms": {
+              "type": "number",
+              "minimum": 0
+            },
+            "cpu_time_ms": {
+              "type": "number",
+              "minimum": 0
+            }
           },
-          "required": ["start_time", "duration_ms"]
+          "required": [
+            "start_time",
+            "duration_ms"
+          ]
         },
         "resource_usage": {
           "type": "object",
@@ -129,10 +178,22 @@
             "memory": {
               "type": "object",
               "properties": {
-                "peak_usage_mb": { "type": "number", "minimum": 0 },
-                "average_usage_mb": { "type": "number", "minimum": 0 },
-                "allocations": { "type": "integer", "minimum": 0 },
-                "deallocations": { "type": "integer", "minimum": 0 }
+                "peak_usage_mb": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "average_usage_mb": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "allocations": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "deallocations": {
+                  "type": "integer",
+                  "minimum": 0
+                }
               }
             },
             "cpu": {
@@ -143,26 +204,56 @@
                   "minimum": 0,
                   "maximum": 100
                 },
-                "instructions": { "type": "integer", "minimum": 0 },
-                "cache_misses": { "type": "integer", "minimum": 0 }
+                "instructions": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "cache_misses": {
+                  "type": "integer",
+                  "minimum": 0
+                }
               }
             },
             "network": {
               "type": "object",
               "properties": {
-                "bytes_sent": { "type": "integer", "minimum": 0 },
-                "bytes_received": { "type": "integer", "minimum": 0 },
-                "requests_count": { "type": "integer", "minimum": 0 },
-                "error_count": { "type": "integer", "minimum": 0 }
+                "bytes_sent": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "bytes_received": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "requests_count": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "error_count": {
+                  "type": "integer",
+                  "minimum": 0
+                }
               }
             },
             "storage": {
               "type": "object",
               "properties": {
-                "reads": { "type": "integer", "minimum": 0 },
-                "writes": { "type": "integer", "minimum": 0 },
-                "bytes_read": { "type": "integer", "minimum": 0 },
-                "bytes_written": { "type": "integer", "minimum": 0 }
+                "reads": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "writes": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "bytes_read": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "bytes_written": {
+                  "type": "integer",
+                  "minimum": 0
+                }
               }
             }
           }
@@ -172,14 +263,30 @@
           "additionalProperties": {
             "type": "object",
             "properties": {
-              "value": { "type": ["number", "string", "boolean"] },
-              "unit": { "type": "string" },
+              "value": {
+                "type": [
+                  "number",
+                  "string",
+                  "boolean"
+                ]
+              },
+              "unit": {
+                "type": "string"
+              },
               "type": {
                 "type": "string",
-                "enum": ["counter", "gauge", "histogram", "summary"]
+                "enum": [
+                  "counter",
+                  "gauge",
+                  "histogram",
+                  "summary"
+                ]
               }
             },
-            "required": ["value", "type"]
+            "required": [
+              "value",
+              "type"
+            ]
           }
         }
       }
@@ -195,12 +302,20 @@
         "environment": {
           "type": "object",
           "properties": {
-            "os": { "type": "string" },
-            "platform": { "type": "string" },
-            "runtime_version": { "type": "string" },
+            "os": {
+              "type": "string"
+            },
+            "platform": {
+              "type": "string"
+            },
+            "runtime_version": {
+              "type": "string"
+            },
             "environment_variables": {
               "type": "object",
-              "additionalProperties": { "type": "string" }
+              "additionalProperties": {
+                "type": "string"
+              }
             }
           }
         },
@@ -209,12 +324,24 @@
           "items": {
             "type": "object",
             "properties": {
-              "function": { "type": "string" },
-              "file": { "type": "string" },
-              "line": { "type": "integer", "minimum": 1 },
-              "arguments": { "type": "object", "additionalProperties": true }
+              "function": {
+                "type": "string"
+              },
+              "file": {
+                "type": "string"
+              },
+              "line": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "arguments": {
+                "type": "object",
+                "additionalProperties": true
+              }
             },
-            "required": ["function"]
+            "required": [
+              "function"
+            ]
           }
         }
       }
@@ -222,8 +349,13 @@
     "error_information": {
       "type": "object",
       "properties": {
-        "error_code": { "type": "string" },
-        "error_message": { "type": "string", "maxLength": 1000 },
+        "error_code": {
+          "type": "string"
+        },
+        "error_message": {
+          "type": "string",
+          "maxLength": 1000
+        },
         "error_type": {
           "type": "string",
           "enum": [
@@ -240,12 +372,26 @@
           "items": {
             "type": "object",
             "properties": {
-              "file": { "type": "string" },
-              "function": { "type": "string" },
-              "line": { "type": "integer", "minimum": 1 },
-              "column": { "type": "integer", "minimum": 1 }
+              "file": {
+                "type": "string"
+              },
+              "function": {
+                "type": "string"
+              },
+              "line": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "column": {
+                "type": "integer",
+                "minimum": 1
+              }
             },
-            "required": ["file", "function", "line"]
+            "required": [
+              "file",
+              "function",
+              "line"
+            ]
           }
         },
         "recovery_actions": {
@@ -255,66 +401,142 @@
             "properties": {
               "action": {
                 "type": "string",
-                "enum": ["retry", "fallback", "escalate", "ignore", "abort"]
+                "enum": [
+                  "retry",
+                  "fallback",
+                  "escalate",
+                  "ignore",
+                  "abort"
+                ]
               },
-              "description": { "type": "string" },
-              "parameters": { "type": "object", "additionalProperties": true }
+              "description": {
+                "type": "string"
+              },
+              "parameters": {
+                "type": "object",
+                "additionalProperties": true
+              }
             },
-            "required": ["action", "description"]
+            "required": [
+              "action",
+              "description"
+            ]
           }
         }
       },
-      "required": ["error_code", "error_message", "error_type"]
+      "required": [
+        "error_code",
+        "error_message",
+        "error_type"
+      ]
     },
     "decision_log": {
       "type": "object",
       "properties": {
-        "decision_point": { "type": "string" },
+        "decision_point": {
+          "type": "string"
+        },
         "options_considered": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-              "option": { "type": "string" },
-              "score": { "type": "number", "minimum": 0, "maximum": 1 },
-              "rationale": { "type": "string" },
-              "risk_factors": { "type": "array", "items": { "type": "string" } }
+              "option": {
+                "type": "string"
+              },
+              "score": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "rationale": {
+                "type": "string"
+              },
+              "risk_factors": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
             },
-            "required": ["option", "score"]
+            "required": [
+              "option",
+              "score"
+            ]
           }
         },
-        "selected_option": { "type": "string" },
+        "selected_option": {
+          "type": "string"
+        },
         "decision_criteria": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-              "criterion": { "type": "string" },
-              "weight": { "type": "number", "minimum": 0, "maximum": 1 },
-              "evaluation": { "type": "string" }
+              "criterion": {
+                "type": "string"
+              },
+              "weight": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "evaluation": {
+                "type": "string"
+              }
             },
-            "required": ["criterion", "weight"]
+            "required": [
+              "criterion",
+              "weight"
+            ]
           }
         },
-        "confidence_level": { "type": "number", "minimum": 0, "maximum": 1 }
+        "confidence_level": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
       },
-      "required": ["decision_point", "options_considered", "selected_option"]
+      "required": [
+        "decision_point",
+        "options_considered",
+        "selected_option"
+      ]
     },
     "correlations": {
       "type": "array",
       "items": {
         "type": "object",
         "properties": {
-          "correlation_id": { "$ref": "#/$defs/uuid" },
+          "correlation_id": {
+            "$ref": "#/$defs/uuid"
+          },
           "type": {
             "type": "string",
-            "enum": ["causation", "temporal", "spatial", "logical"]
+            "enum": [
+              "causation",
+              "temporal",
+              "spatial",
+              "logical"
+            ]
           },
-          "related_trace_id": { "$ref": "#/$defs/uuid" },
-          "strength": { "type": "number", "minimum": 0, "maximum": 1 },
-          "description": { "type": "string" }
+          "related_trace_id": {
+            "$ref": "#/$defs/uuid"
+          },
+          "strength": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "description": {
+            "type": "string"
+          }
         },
-        "required": ["correlation_id", "type", "related_trace_id"]
+        "required": [
+          "correlation_id",
+          "type",
+          "related_trace_id"
+        ]
       }
     }
   },

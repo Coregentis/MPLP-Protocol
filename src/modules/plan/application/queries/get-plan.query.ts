@@ -16,7 +16,7 @@ import { UUID } from '../../../../public/shared/types/plan-types';
  * 获取计划查询接口
  */
 export interface GetPlanQuery {
-  plan_id: UUID;
+  planId: UUID;
 }
 
 /**
@@ -31,6 +31,6 @@ export class GetPlanQueryHandler {
    * @returns 操作结果
    */
   async execute(query: GetPlanQuery): Promise<OperationResult<Plan>> {
-    return this.planManagementService.getPlan(query.plan_id);
+    return this.planManagementService.getPlan(query.planId);
   }
 } 

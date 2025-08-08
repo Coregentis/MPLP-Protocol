@@ -29,7 +29,7 @@ import { ExtensionManagementService } from '../../../../modules/extension/applic
  * 模块适配器接口
  */
 interface ModuleAdapter {
-  execute(context: ExecutionContext): Promise<any>;
+  execute(context: ExecutionContext): Promise<unknown>;
   getStatus(): ModuleStatus;
 }
 
@@ -39,7 +39,7 @@ interface ModuleAdapter {
 class ContextModuleAdapter implements ModuleAdapter {
   constructor(private contextService: ContextManagementService) {}
 
-  async execute(context: ExecutionContext): Promise<any> {
+  async execute(context: ExecutionContext): Promise<unknown> {
     // 从执行上下文获取或创建Context
     const contextData = context.metadata.contextData || {
       name: `Execution-${context.execution_id}`,
@@ -60,7 +60,7 @@ class ContextModuleAdapter implements ModuleAdapter {
       module_name: 'context',
       status: 'idle',
       error_count: 0,
-      performance_metrics: {
+      performanceMetrics: {
         average_execution_time_ms: 100,
         total_executions: 0,
         success_rate: 1.0,
@@ -77,7 +77,7 @@ class ContextModuleAdapter implements ModuleAdapter {
 class PlanModuleAdapter implements ModuleAdapter {
   constructor(private planService: PlanManagementService) {}
 
-  async execute(context: ExecutionContext): Promise<any> {
+  async execute(context: ExecutionContext): Promise<unknown> {
     // 获取Context结果
     const contextResult = context.stage_results.get('context');
     if (!contextResult) {
@@ -85,7 +85,7 @@ class PlanModuleAdapter implements ModuleAdapter {
     }
 
     const planData = context.metadata.planData || {
-      context_id: contextResult.context_id,
+      contextId: contextResult.contextId,
       name: `Plan-${context.execution_id}`,
       description: 'Auto-generated plan for workflow execution',
       tasks: []
@@ -104,7 +104,7 @@ class PlanModuleAdapter implements ModuleAdapter {
       module_name: 'plan',
       status: 'idle',
       error_count: 0,
-      performance_metrics: {
+      performanceMetrics: {
         average_execution_time_ms: 200,
         total_executions: 0,
         success_rate: 1.0,
@@ -121,7 +121,7 @@ class PlanModuleAdapter implements ModuleAdapter {
 class ConfirmModuleAdapter implements ModuleAdapter {
   constructor(private confirmService: ConfirmManagementService) {}
 
-  async execute(context: ExecutionContext): Promise<any> {
+  async execute(context: ExecutionContext): Promise<unknown> {
     // 获取Context和Plan结果
     const contextResult = context.stage_results.get('context');
     const planResult = context.stage_results.get('plan');
@@ -131,21 +131,21 @@ class ConfirmModuleAdapter implements ModuleAdapter {
     }
 
     const confirmData = context.metadata.confirmData || {
-      context_id: contextResult.context_id,
-      plan_id: planResult.plan_id,
-      confirmation_type: 'plan_approval',
+      contextId: contextResult.contextId,
+      planId: planResult.planId,
+      confirmationType: 'plan_approval',
       priority: 'medium',
       subject: {
-        title: `Approval for Plan-${planResult.plan_id}`,
+        title: `Approval for Plan-${planResult.planId}`,
         description: 'Auto-generated confirmation for workflow execution'
       },
       requester: {
-        user_id: 'system',
+        userId: 'system',
         role: 'system',
         request_reason: 'Automated workflow execution'
       },
-      approval_workflow: {
-        workflow_type: 'sequential',
+      approvalWorkflow: {
+        workflowType: 'sequential',
         steps: [{
           step_name: 'Auto Approval',
           step_order: 1,
@@ -168,7 +168,7 @@ class ConfirmModuleAdapter implements ModuleAdapter {
       module_name: 'confirm',
       status: 'idle',
       error_count: 0,
-      performance_metrics: {
+      performanceMetrics: {
         average_execution_time_ms: 150,
         total_executions: 0,
         success_rate: 1.0,
@@ -185,7 +185,7 @@ class ConfirmModuleAdapter implements ModuleAdapter {
 class TraceModuleAdapter implements ModuleAdapter {
   constructor(private traceService: TraceManagementService) {}
 
-  async execute(context: ExecutionContext): Promise<any> {
+  async execute(context: ExecutionContext): Promise<unknown> {
     // 获取Context结果
     const contextResult = context.stage_results.get('context');
     if (!contextResult) {
@@ -193,8 +193,8 @@ class TraceModuleAdapter implements ModuleAdapter {
     }
 
     const traceData = context.metadata.traceData || {
-      context_id: contextResult.context_id,
-      trace_type: 'execution',
+      contextId: contextResult.contextId,
+      traceType: 'execution',
       severity: 'info',
       event: {
         type: 'completion',
@@ -206,7 +206,7 @@ class TraceModuleAdapter implements ModuleAdapter {
         },
         data: {
           execution_id: context.execution_id,
-          stages: context.workflow_config.stages
+          stages: context.workflowConfig.stages
         }
       }
     };
@@ -224,7 +224,7 @@ class TraceModuleAdapter implements ModuleAdapter {
       module_name: 'trace',
       status: 'idle',
       error_count: 0,
-      performance_metrics: {
+      performanceMetrics: {
         average_execution_time_ms: 50,
         total_executions: 0,
         success_rate: 1.0,
@@ -273,16 +273,16 @@ export class ModuleCoordinator {
         initialize: async () => {
           this.logger.info(`Module initialized: ${moduleName}`);
         },
-        executeStage: async (context: any) => {
+        executeStage: async (context: unknown) => {
           return await adapter.execute(context);
         },
-        executeBusinessCoordination: async (request: any) => {
+        executeBusinessCoordination: async (request: unknown) => {
           return await adapter.execute(request);
         },
-        validateInput: async (input: any) => {
+        validateInput: async (input: unknown) => {
           return { is_valid: true, errors: [], warnings: [] };
         },
-        handleError: async (error: any, context: any) => {
+        handleError: async (error: unknown, context: unknown) => {
           return { handled: true, recovery_action: 'retry' };
         },
         cleanup: async () => {

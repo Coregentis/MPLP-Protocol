@@ -188,7 +188,7 @@ export class InfrastructureManager {
 
     // 监控Cache性能
     const originalGet = this.cache.get.bind(this.cache);
-    this.cache.get = async (key: string) => {
+    this.cache.get = async <T = unknown>(key: string): Promise<T | undefined> => {
       const start = Date.now();
       const result = await originalGet(key);
       const duration = Date.now() - start;
@@ -198,7 +198,7 @@ export class InfrastructureManager {
         duration,
         result !== undefined
       );
-      return result;
+      return result as T | undefined;
     };
 
     const originalSet = this.cache.set.bind(this.cache);

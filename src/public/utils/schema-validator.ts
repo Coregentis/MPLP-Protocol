@@ -29,7 +29,7 @@ export interface SchemaValidationResult {
   /**
    * 错误信息（如果验证失败）
    */
-  errors?: any[];
+  errors?: unknown[];
   
   /**
    * 警告信息（不影响验证结果）
@@ -39,7 +39,7 @@ export interface SchemaValidationResult {
   /**
    * 附加信息
    */
-  info?: Record<string, any>;
+  info?: Record<string, unknown>;
 }
 
 /**
@@ -123,7 +123,7 @@ export class SchemaValidator {
    * @param schemaName Schema名称
    * @returns 验证结果
    */
-  public validateSchemaStructure(schema: any, schemaName: string): SchemaValidationResult {
+  public validateSchemaStructure(schema: unknown, schemaName: string): SchemaValidationResult {
     const errors = [];
     const warnings = [];
     
@@ -161,19 +161,19 @@ export class SchemaValidator {
       warnings.push('推荐设置additionalProperties为false以确保数据严格符合Schema');
     }
     
-    // 检查protocol_version
-    if (schema.properties && !schema.properties.protocol_version) {
+    // 检查protocolVersion
+    if (schema.properties && !schema.properties.protocolVersion) {
       errors.push({
-        message: '缺少protocol_version字段定义',
-        field: 'properties.protocol_version'
+        message: '缺少protocolVersion字段定义',
+        field: 'properties.protocolVersion'
       });
     }
     
-    // 检查必需字段是否包含protocol_version、timestamp
+    // 检查必需字段是否包含protocolVersion、timestamp
     const requiredFields = schema.required || [];
-    if (!requiredFields.includes('protocol_version')) {
+    if (!requiredFields.includes('protocolVersion')) {
       errors.push({
-        message: 'protocol_version应为必填字段',
+        message: 'protocolVersion应为必填字段',
         field: 'required'
       });
     }
@@ -220,7 +220,7 @@ export class SchemaValidator {
    * @param errors 错误数组
    * @param path 当前路径
    */
-  private validateFieldNamingStyle(properties: any, errors: any[], path: string): void {
+  private validateFieldNamingStyle(properties: unknown, errors: unknown[], path: string): void {
     const snakeCasePattern = /^[a-z][a-z0-9]*(_[a-z0-9]+)*$/;
     
     for (const key of Object.keys(properties)) {
@@ -249,7 +249,7 @@ export class SchemaValidator {
    * @param schema Schema对象
    * @param warnings 警告数组
    */
-  private validateVendorNeutrality(schema: any, warnings: string[]): void {
+  private validateVendorNeutrality(schema: unknown, warnings: string[]): void {
     // 厂商特定关键词列表
     const vendorKeywords = [
       'aws', 'amazon', 'azure', 'microsoft', 'gcp', 'google', 'alibaba', 
@@ -273,12 +273,12 @@ export class SchemaValidator {
    * @param schema Schema对象
    * @returns 统计信息
    */
-  private getSchemaStats(schema: any): SchemaStats {
+  private getSchemaStats(schema: unknown): SchemaStats {
     let propCount = 0;
     let enumCount = 0;
     
     // 递归计算属性数
-    const countProps = (obj: any) => {
+    const countProps = (obj: unknown) => {
       if (!obj || typeof obj !== 'object') return;
       
       // 计数属性

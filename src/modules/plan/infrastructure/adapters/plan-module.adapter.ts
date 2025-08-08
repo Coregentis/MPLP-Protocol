@@ -27,11 +27,34 @@ import {
 import { PlanManagementService } from '../../application/services/plan-management.service';
 import { PlanExecutionService } from '../../application/services/plan-execution.service';
 import { Logger } from '../../../../public/utils/logger';
-import { 
+import {
   ExecutionStrategy,
   Priority,
   UUID
 } from '../../../../public/shared/types/plan-types';
+import { OperationResult } from '../../../../public/shared/types';
+
+/**
+ * 规划协调请求接口
+ */
+interface CoordinationRequest {
+  context_id: string;
+  strategy?: string;
+  parameters?: {
+    max_parallel_tasks?: number;
+    timeout_ms?: number;
+  };
+}
+
+/**
+ * 规划协调结果接口
+ */
+interface CoordinationResult {
+  planId: string;
+  strategy: string;
+  tasks_allocated: number;
+  estimated_duration: number;
+}
 
 /**
  * Plan模块适配器类
@@ -183,7 +206,7 @@ export class PlanModuleAdapter implements ModuleInterface {
     const planData = await this.generatePlanData(request, plan_id);
 
     // 创建计划
-    const createResult = await this.planManagementService.createPlan(planData);
+    const createResult = await this.planManagementService.createPlan(planData as unknown as Parameters<typeof this.planManagementService.createPlan>[0]);
     if (!createResult.success || !createResult.data) {
       throw new Error(`Failed to create plan: ${createResult.error}`);
     }
@@ -191,35 +214,36 @@ export class PlanModuleAdapter implements ModuleInterface {
     const plan = createResult.data;
 
     // 执行任务分解
-    const taskBreakdown = await this.executeTaskDecomposition(request, plan);
+    const taskBreakdown = await this.executeTaskDecomposition(request, plan as unknown as Record<string, unknown>);
 
     // 分配资源
     const resourceAllocation = this.allocateResources(request, taskBreakdown);
 
     return {
+      planId: plan_id as UUID,
       plan_id: plan_id as UUID,
       task_breakdown: taskBreakdown,
       resource_allocation: resourceAllocation,
-      timestamp: timestamp as any
+      timestamp: timestamp as string
     };
   }
 
   /**
    * 生成计划数据
    */
-  private async generatePlanData(request: PlanningCoordinationRequest, plan_id: string): Promise<any> {
+  private async generatePlanData(request: PlanningCoordinationRequest, plan_id: string): Promise<Record<string, unknown>> {
     const strategy = this.mapStrategyToExecutionStrategy(request.planning_strategy);
     const priority = this.determinePriority(request);
 
     return {
-      plan_id,
-      context_id: request.contextId,
+      planId: plan_id,
+      contextId: request.contextId,
       name: `Plan-${request.planning_strategy}-${plan_id.substring(0, 8)}`,
       description: `Plan created using ${request.planning_strategy} strategy`,
       goals: request.parameters.decomposition_rules || ['Complete project objectives'],
-      execution_strategy: strategy,
+      executionStrategy: strategy,
       priority: priority,
-      estimated_duration: request.parameters.resource_constraints?.time_limit 
+      estimatedDuration: request.parameters.resource_constraints?.time_limit
         ? { value: request.parameters.resource_constraints.time_limit, unit: 'minutes' }
         : undefined,
       configuration: {
@@ -256,9 +280,9 @@ export class PlanModuleAdapter implements ModuleInterface {
   /**
    * 执行任务分解
    */
-  private async executeTaskDecomposition(request: PlanningCoordinationRequest, plan: any): Promise<{
+  private async executeTaskDecomposition(request: PlanningCoordinationRequest, plan: Record<string, unknown>): Promise<{
     tasks: Array<{
-      task_id: UUID;
+      taskId: UUID;
       name: string;
       dependencies: UUID[];
       priority: number;
@@ -271,14 +295,15 @@ export class PlanModuleAdapter implements ModuleInterface {
 
     // 根据分解规则生成任务
     const decompositionRules = request.parameters.decomposition_rules || ['default_task'];
-    
+    const planName = (plan.name as string) || 'Unknown Plan';
+
     for (let i = 0; i < decompositionRules.length; i++) {
       const taskId = uuidv4();
       const rule = decompositionRules[i];
-      
+
       tasks.push({
-        task_id: taskId as UUID,
-        name: `Task: ${rule}`,
+        taskId: taskId as UUID,
+        name: `${planName}-Task: ${rule}`,
         dependencies: i > 0 && request.planning_strategy === 'sequential' ? [taskIds[i - 1]] : [],
         priority: this.calculateTaskPriority(request, i),
         estimated_duration: this.estimateTaskDuration(request, rule)
@@ -299,8 +324,8 @@ export class PlanModuleAdapter implements ModuleInterface {
   /**
    * 分配资源
    */
-  private allocateResources(request: PlanningCoordinationRequest, taskBreakdown: any): Record<string, any> {
-    const allocation: Record<string, any> = {
+  private allocateResources(request: PlanningCoordinationRequest, taskBreakdown: { tasks: unknown[] }): Record<string, unknown> {
+    const allocation: Record<string, unknown> = {
       strategy: request.planning_strategy,
       total_tasks: taskBreakdown.tasks.length,
       resource_constraints: request.parameters.resource_constraints || {},
@@ -311,7 +336,7 @@ export class PlanModuleAdapter implements ModuleInterface {
     switch (request.planning_strategy) {
       case 'parallel':
         allocation.parallel_slots = Math.min(taskBreakdown.tasks.length, 5);
-        allocation.resource_per_task = 1.0 / allocation.parallel_slots;
+        allocation.resource_per_task = 1.0 / (allocation.parallel_slots as number);
         break;
       
       case 'sequential':
@@ -388,9 +413,14 @@ export class PlanModuleAdapter implements ModuleInterface {
       return undefined;
     }
 
-    // 简化估算：平均分配时间
+    // 简化估算：平均分配时间，根据规则复杂度调整
     const decompositionRules = request.parameters.decomposition_rules || ['default_task'];
-    return Math.floor(constraints.time_limit / decompositionRules.length);
+    const baseTime = Math.floor(constraints.time_limit / decompositionRules.length);
+
+    // 根据规则复杂度调整时间（简单的启发式方法）
+    const complexityMultiplier = rule.length > 50 ? 1.5 : rule.length > 20 ? 1.2 : 1.0;
+
+    return Math.floor(baseTime * complexityMultiplier);
   }
 
   /**
@@ -425,19 +455,19 @@ export class PlanModuleAdapter implements ModuleInterface {
     try {
       this.logger.info('Executing Plan stage', {
         executionId: context.execution_id,
-        contextId: context.context_id
+        contextId: context.contextId
       });
 
       // 从工作流上下文创建业务协调请求
       const businessRequest: BusinessCoordinationRequest = {
         coordination_id: uuidv4() as UUID,
-        context_id: context.context_id,
+        contextId: context.contextId,
         module: 'plan',
         coordination_type: 'planning_coordination',
         input_data: context.data_store.global_data.input || {
           data_type: 'planning_data',
           data_version: '1.0.0',
-          payload: { context_id: context.context_id },
+          payload: { context_id: context.contextId },
           metadata: {
             source_module: 'plan',
             target_modules: ['plan'],
@@ -451,8 +481,8 @@ export class PlanModuleAdapter implements ModuleInterface {
         previous_stage_results: [],
         configuration: {
           timeout_ms: 30000,
-          retry_policy: { max_attempts: 3, delay_ms: 1000 },
-          validation_rules: [],
+          retryPolicy: { max_attempts: 3, delay_ms: 1000 },
+          validationRules: [],
           output_format: 'planning_data'
         }
       };
@@ -465,8 +495,8 @@ export class PlanModuleAdapter implements ModuleInterface {
         status: businessResult.status === 'completed' ? 'completed' : 'failed',
         result: businessResult.output_data,
         duration_ms: Date.now() - startTime,
-        started_at: new Date(startTime).toISOString(),
-        completed_at: new Date().toISOString()
+        startedAt: new Date(startTime).toISOString(),
+        completedAt: new Date().toISOString()
       };
 
     } catch (error) {
@@ -475,8 +505,8 @@ export class PlanModuleAdapter implements ModuleInterface {
         status: 'failed',
         error: error instanceof Error ? error : new Error(String(error)),
         duration_ms: Date.now() - startTime,
-        started_at: new Date(startTime).toISOString(),
-        completed_at: new Date().toISOString()
+        startedAt: new Date(startTime).toISOString(),
+        completedAt: new Date().toISOString()
       };
     }
   }
@@ -490,17 +520,24 @@ export class PlanModuleAdapter implements ModuleInterface {
     try {
       this.logger.info('Executing Plan business coordination', {
         coordinationId: request.coordination_id,
-        contextId: request.context_id
+        contextId: request.contextId
       });
 
       // 转换业务协调请求为Plan协调请求
       const planRequest: PlanningCoordinationRequest = {
-        contextId: request.context_id,
-        planning_strategy: request.input_data.payload.planning_strategy || 'sequential',
-        parameters: request.input_data.payload.parameters || {
+        contextId: request.contextId,
+        planning_strategy: (request.input_data.payload.planning_strategy as 'sequential' | 'parallel' | 'adaptive' | 'hierarchical') || 'sequential',
+        parameters: (request.input_data.payload.parameters as { [key: string]: unknown }) || {
           decomposition_rules: ['Complete project objectives'],
-          resource_constraints: {},
-          priority_weights: {}
+          resource_constraints: {
+            time_limit: 3600000,
+            resource_limit: 100
+          },
+          priority_weights: {
+            'high': 3,
+            'medium': 2,
+            'low': 1
+          }
         }
       };
 
@@ -511,7 +548,7 @@ export class PlanModuleAdapter implements ModuleInterface {
       const outputData: BusinessData = {
         data_type: 'planning_data',
         data_version: '1.0.0',
-        payload: planResult,
+        payload: planResult as unknown as Record<string, unknown>,
         metadata: {
           source_module: 'plan',
           target_modules: ['confirm'],
@@ -519,8 +556,8 @@ export class PlanModuleAdapter implements ModuleInterface {
           validation_status: 'valid',
           security_level: 'internal'
         },
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
       };
 
       return {
@@ -627,7 +664,7 @@ export class PlanModuleAdapter implements ModuleInterface {
     this.logger.error('Handling Plan module error', {
       errorId: error.error_id,
       errorType: error.error_type,
-      contextId: context.context_id
+      contextId: context.contextId
     });
 
     // 根据错误类型决定恢复策略
@@ -649,6 +686,34 @@ export class PlanModuleAdapter implements ModuleInterface {
           handled: false,
           recovery_action: 'escalate'
         };
+    }
+  }
+
+  /**
+   * 规划协调功能
+   */
+  async coordinatePlanning(coordinationRequest: CoordinationRequest): Promise<OperationResult<CoordinationResult>> {
+    try {
+      this.logger.debug('Coordinating planning', { coordinationRequest });
+
+      // 模拟规划协调功能
+      const result = {
+        planId: `plan-${Date.now()}`,
+        strategy: coordinationRequest.strategy || 'adaptive',
+        tasks_allocated: coordinationRequest.parameters?.max_parallel_tasks || 3,
+        estimated_duration: coordinationRequest.parameters?.timeout_ms || 30000
+      };
+
+      return {
+        success: true,
+        data: result
+      };
+    } catch (error: unknown) {
+      this.logger.error('Planning coordination failed', { error, coordinationRequest });
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Planning coordination failed'
+      };
     }
   }
 }

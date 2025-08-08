@@ -29,7 +29,7 @@ export class ExtensionRepository implements IExtensionRepository {
    * 保存扩展
    */
   async save(extension: Extension): Promise<void> {
-    this.extensions.set(extension.extension_id, extension);
+    this.extensions.set(extension.extensionId, extension);
   }
 
   /**
@@ -44,7 +44,7 @@ export class ExtensionRepository implements IExtensionRepository {
    */
   async findByName(name: string, contextId?: UUID): Promise<Extension | null> {
     for (const extension of this.extensions.values()) {
-      if (extension.name === name && (!contextId || extension.context_id === contextId)) {
+      if (extension.name === name && (!contextId || extension.contextId === contextId)) {
         return extension;
       }
     }
@@ -56,7 +56,7 @@ export class ExtensionRepository implements IExtensionRepository {
    */
   async findByContextId(contextId: UUID): Promise<Extension[]> {
     return Array.from(this.extensions.values())
-      .filter(extension => extension.context_id === contextId);
+      .filter(extension => extension.contextId === contextId);
   }
 
   /**
@@ -69,8 +69,8 @@ export class ExtensionRepository implements IExtensionRepository {
     let results = Array.from(this.extensions.values());
 
     // 应用过滤器
-    if (filter.context_id) {
-      results = results.filter(ext => ext.context_id === filter.context_id);
+    if (filter.contextId) {
+      results = results.filter(ext => ext.contextId === filter.contextId);
     }
 
     if (filter.type) {
@@ -85,7 +85,7 @@ export class ExtensionRepository implements IExtensionRepository {
       const pattern = new RegExp(filter.name_pattern, 'i');
       results = results.filter(ext => 
         pattern.test(ext.name) || 
-        (ext.display_name && pattern.test(ext.display_name))
+        (ext.displayName && pattern.test(ext.displayName))
       );
     }
 
@@ -99,22 +99,22 @@ export class ExtensionRepository implements IExtensionRepository {
 
     if (filter.has_api_extensions !== undefined) {
       results = results.filter(ext => 
-        (ext.api_extensions.length > 0) === filter.has_api_extensions
+        (ext.apiExtensions.length > 0) === filter.has_api_extensions
       );
     }
 
     if (filter.has_extension_points !== undefined) {
       results = results.filter(ext => 
-        (ext.extension_points.length > 0) === filter.has_extension_points
+        (ext.extensionPoints.length > 0) === filter.has_extension_points
       );
     }
 
     if (filter.created_after) {
-      results = results.filter(ext => ext.created_at >= filter.created_after!);
+      results = results.filter(ext => ext.createdAt >= filter.created_after!);
     }
 
     if (filter.created_before) {
-      results = results.filter(ext => ext.created_at <= filter.created_before!);
+      results = results.filter(ext => ext.createdAt <= filter.created_before!);
     }
 
     // 排序
@@ -155,7 +155,7 @@ export class ExtensionRepository implements IExtensionRepository {
       .filter(extension => extension.isActive());
 
     if (contextId) {
-      results = results.filter(extension => extension.context_id === contextId);
+      results = results.filter(extension => extension.contextId === contextId);
     }
 
     return results;
@@ -169,7 +169,7 @@ export class ExtensionRepository implements IExtensionRepository {
       .filter(extension => extension.type === type);
 
     if (contextId) {
-      results = results.filter(extension => extension.context_id === contextId);
+      results = results.filter(extension => extension.contextId === contextId);
     }
 
     return results;
@@ -181,7 +181,7 @@ export class ExtensionRepository implements IExtensionRepository {
   async findByExtensionPoint(pointName: string): Promise<Extension[]> {
     return Array.from(this.extensions.values())
       .filter(extension => 
-        extension.extension_points.some(ep => ep.name === pointName)
+        extension.extensionPoints.some(ep => ep.name === pointName)
       );
   }
 
@@ -190,10 +190,10 @@ export class ExtensionRepository implements IExtensionRepository {
    */
   async findWithApiExtensions(contextId?: UUID): Promise<Extension[]> {
     let results = Array.from(this.extensions.values())
-      .filter(extension => extension.api_extensions.length > 0);
+      .filter(extension => extension.apiExtensions.length > 0);
 
     if (contextId) {
-      results = results.filter(extension => extension.context_id === contextId);
+      results = results.filter(extension => extension.contextId === contextId);
     }
 
     return results;
@@ -203,7 +203,7 @@ export class ExtensionRepository implements IExtensionRepository {
    * 更新扩展
    */
   async update(extension: Extension): Promise<void> {
-    this.extensions.set(extension.extension_id, extension);
+    this.extensions.set(extension.extensionId, extension);
   }
 
   /**
@@ -239,8 +239,8 @@ export class ExtensionRepository implements IExtensionRepository {
   async isNameUnique(name: string, contextId: UUID, excludeExtensionId?: UUID): Promise<boolean> {
     for (const extension of this.extensions.values()) {
       if (extension.name === name && 
-          extension.context_id === contextId && 
-          extension.extension_id !== excludeExtensionId) {
+          extension.contextId === contextId && 
+          extension.extensionId !== excludeExtensionId) {
         return false;
       }
     }
@@ -259,7 +259,7 @@ export class ExtensionRepository implements IExtensionRepository {
     let extensions = Array.from(this.extensions.values());
     
     if (contextId) {
-      extensions = extensions.filter(ext => ext.context_id === contextId);
+      extensions = extensions.filter(ext => ext.contextId === contextId);
     }
 
     const total = extensions.length;
@@ -289,7 +289,7 @@ export class ExtensionRepository implements IExtensionRepository {
   async findDependents(extensionId: UUID): Promise<Extension[]> {
     return Array.from(this.extensions.values())
       .filter(extension => 
-        extension.compatibility?.dependencies?.some(dep => dep.extension_id === extensionId)
+        extension.compatibility?.dependencies?.some(dep => dep.extensionId === extensionId)
       );
   }
 
@@ -306,7 +306,7 @@ export class ExtensionRepository implements IExtensionRepository {
 
     if (extension.compatibility?.dependencies) {
       for (const dependency of extension.compatibility.dependencies) {
-        const dependentExt = await this.findById(dependency.extension_id);
+        const dependentExt = await this.findById(dependency.extensionId);
         if (!dependentExt) {
           missing.push(dependency.name);
         } else if (!dependentExt.isActive()) {
@@ -317,7 +317,7 @@ export class ExtensionRepository implements IExtensionRepository {
 
     if (extension.compatibility?.conflicts) {
       for (const conflict of extension.compatibility.conflicts) {
-        const conflictExt = await this.findById(conflict.extension_id);
+        const conflictExt = await this.findById(conflict.extensionId);
         if (conflictExt && conflictExt.isActive()) {
           conflicts.push(conflict.name);
         }
@@ -339,9 +339,9 @@ export class ExtensionRepository implements IExtensionRepository {
       case 'name':
         return extension.name;
       case 'created_at':
-        return extension.created_at;
+        return extension.createdAt;
       case 'updated_at':
-        return extension.updated_at;
+        return extension.updatedAt;
       case 'type':
         return extension.type;
       case 'status':
@@ -349,7 +349,7 @@ export class ExtensionRepository implements IExtensionRepository {
       case 'version':
         return extension.version;
       default:
-        return extension.created_at;
+        return extension.createdAt;
     }
   }
 }

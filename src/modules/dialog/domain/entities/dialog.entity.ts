@@ -43,12 +43,27 @@ export class Dialog {
   private _created_by: string;
   private _metadata?: Record<string, any>;
 
-  constructor(data: Partial<DialogEntity>) {
-    this._dialog_id = data.dialog_id || uuidv4();
+    /**
+   * 能力列表
+   */
+  public capabilities?: string[];
+
+  /**
+   * 策略配置
+   */
+  public strategy?: Record<string, unknown>;
+
+  /**
+   * 配置信息
+   */
+  public configuration?: Record<string, unknown>;
+
+constructor(data: Partial<DialogEntity>) {
+    this._dialog_id = data.dialogId || uuidv4();
     this._version = data.version || '1.0.0';
     this._timestamp = data.timestamp || new Date().toISOString();
-    this._session_id = data.session_id!;
-    this._context_id = data.context_id!;
+    this._session_id = data.sessionId!;
+    this._context_id = data.contextId!;
     this._name = data.name!;
     this._description = data.description;
     this._participants = data.participants || [];
@@ -56,9 +71,9 @@ export class Dialog {
     this._conversation_context = data.conversation_context;
     this._security_policy = data.security_policy;
     this._status = data.status || 'pending';
-    this._created_at = data.created_at || new Date().toISOString();
-    this._updated_at = data.updated_at || new Date().toISOString();
-    this._created_by = data.created_by!;
+    this._created_at = data.createdAt || new Date().toISOString();
+    this._updated_at = data.updatedAt || new Date().toISOString();
+    this._created_by = data.createdBy!;
     this._metadata = data.metadata;
 
     this.validate();
@@ -66,7 +81,7 @@ export class Dialog {
 
   // ==================== Getters ====================
 
-  get dialog_id(): string {
+  get dialogId(): string {
     return this._dialog_id;
   }
   get version(): string {
@@ -75,10 +90,10 @@ export class Dialog {
   get timestamp(): string {
     return this._timestamp;
   }
-  get session_id(): string {
+  get sessionId(): string {
     return this._session_id;
   }
-  get context_id(): string {
+  get contextId(): string {
     return this._context_id;
   }
   get name(): string {
@@ -104,13 +119,13 @@ export class Dialog {
   get status(): DialogStatus {
     return this._status;
   }
-  get created_at(): string {
+  get createdAt(): string {
     return this._created_at;
   }
-  get updated_at(): string {
+  get updatedAt(): string {
     return this._updated_at;
   }
-  get created_by(): string {
+  get createdBy(): string {
     return this._created_by;
   }
   get metadata(): Record<string, any> | undefined {
@@ -131,7 +146,7 @@ export class Dialog {
     }
 
     // 验证Agent不重复
-    if (this._participants.some(p => p.agent_id === participant.agent_id)) {
+    if (this._participants.some(p => p.agentId === participant.agentId)) {
       throw new Error('Agent已经是对话参与者');
     }
 
@@ -217,7 +232,7 @@ export class Dialog {
       throw new Error('参与者不存在');
     }
 
-    if (updates.role_id !== undefined) {participant.role_id = updates.role_id;}
+    if (updates.roleId !== undefined) {participant.roleId = updates.roleId;}
     if (updates.status !== undefined) {participant.status = updates.status;}
     if (updates.permissions !== undefined)
       {participant.permissions = updates.permissions;}
@@ -234,7 +249,7 @@ export class Dialog {
 
     // 如果没找到，再尝试通过agent_id查找
     if (!participant) {
-      participant = this._participants.find(p => p.agent_id === id);
+      participant = this._participants.find(p => p.agentId === id);
     }
 
     if (!participant) {
@@ -456,11 +471,11 @@ export class Dialog {
    */
   toObject(): DialogEntity {
     return {
-      dialog_id: this._dialog_id,
+      dialogId: this._dialog_id,
       version: this._version,
       timestamp: this._timestamp,
-      session_id: this._session_id,
-      context_id: this._context_id,
+      sessionId: this._session_id,
+      contextId: this._context_id,
       name: this._name,
       description: this._description,
       participants: [...this._participants],
@@ -472,9 +487,9 @@ export class Dialog {
         ? { ...this._security_policy }
         : undefined,
       status: this._status,
-      created_at: this._created_at,
-      updated_at: this._updated_at,
-      created_by: this._created_by,
+      createdAt: this._created_at,
+      updatedAt: this._updated_at,
+      createdBy: this._created_by,
       metadata: this._metadata ? { ...this._metadata } : undefined,
     };
   }

@@ -7,7 +7,7 @@
  * @created 2025-09-16
  */
 
-import { ContextLifecycleStage } from '../../../../public/shared/types/context-types';
+import { ContextLifecycleStage } from '../../types';
 import { EntityStatus } from '../../../../public/shared/types';
 
 /**

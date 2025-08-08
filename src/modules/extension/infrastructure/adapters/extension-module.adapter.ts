@@ -75,7 +75,7 @@ export class ExtensionModuleAdapter implements ModuleInterface {
     const startedAt = new Date().toISOString();
 
     try {
-      this.logger.info('Executing extension stage', { context_id: context.context_id });
+      this.logger.info('Executing extension stage', { context_id: context.contextId });
 
       // 处理扩展阶段
       const result = await this.processExtensionStage(context);
@@ -97,7 +97,7 @@ export class ExtensionModuleAdapter implements ModuleInterface {
       const duration = Date.now() - startTime;
 
       this.logger.error('Extension stage execution failed', { 
-        context_id: context.context_id, 
+        context_id: context.contextId, 
         error: error instanceof Error ? error.message : 'Unknown error' 
       });
 
@@ -106,7 +106,7 @@ export class ExtensionModuleAdapter implements ModuleInterface {
         status: 'failed',
         result: {
           error: error instanceof Error ? error.message : 'Unknown error',
-          context_id: context.context_id,
+          context_id: context.contextId,
           timestamp: new Date().toISOString()
         },
         duration_ms: duration,
@@ -363,7 +363,7 @@ export class ExtensionModuleAdapter implements ModuleInterface {
    */
   private async processExtensionStage(context: WorkflowExecutionContext): Promise<Record<string, unknown>> {
     // 输入验证
-    if (!context.context_id) {
+    if (!context.contextId) {
       throw new Error('Invalid context: missing context_id');
     }
 

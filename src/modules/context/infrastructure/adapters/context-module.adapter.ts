@@ -75,7 +75,7 @@ export class ContextModuleAdapter implements ModuleInterface {
     const startedAt = new Date().toISOString();
 
     try {
-      this.logger.info('Executing context stage', { context_id: context.context_id });
+      this.logger.info('Executing context stage', { context_id: context.contextId });
 
       // 处理上下文阶段
       const result = await this.processContextStage(context);
@@ -88,8 +88,8 @@ export class ContextModuleAdapter implements ModuleInterface {
         status: 'completed',
         result,
         duration_ms: duration,
-        started_at: startedAt,
-        completed_at: completedAt
+        startedAt: startedAt,
+        completedAt: completedAt
       };
     } catch (error) {
       this.errorCount++;
@@ -97,7 +97,7 @@ export class ContextModuleAdapter implements ModuleInterface {
       const duration = Date.now() - startTime;
 
       this.logger.error('Context stage execution failed', { 
-        context_id: context.context_id, 
+        context_id: context.contextId, 
         error: error instanceof Error ? error.message : 'Unknown error' 
       });
 
@@ -106,12 +106,12 @@ export class ContextModuleAdapter implements ModuleInterface {
         status: 'failed',
         result: {
           error: error instanceof Error ? error.message : 'Unknown error',
-          context_id: context.context_id,
+          context_id: context.contextId,
           timestamp: new Date().toISOString()
         },
         duration_ms: duration,
-        started_at: startedAt,
-        completed_at: completedAt
+        startedAt: startedAt,
+        completedAt: completedAt
       };
     }
   }
@@ -147,8 +147,8 @@ export class ContextModuleAdapter implements ModuleInterface {
             validation_status: 'valid',
             security_level: 'internal'
           },
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
         },
         execution_metrics: {
           start_time: new Date(startTime).toISOString(),
@@ -187,8 +187,8 @@ export class ContextModuleAdapter implements ModuleInterface {
             validation_status: 'invalid',
             security_level: 'internal'
           },
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
         },
         execution_metrics: {
           start_time: new Date(startTime).toISOString(),
@@ -235,7 +235,7 @@ export class ContextModuleAdapter implements ModuleInterface {
           });
         }
 
-        if (!inputObj.lifecycle_stage) {
+        if (!inputObj.lifecycleStage) {
           errors.push({
             error_code: 'MISSING_FIELDS',
             error_message: 'lifecycle_stage field is required',
@@ -327,8 +327,8 @@ export class ContextModuleAdapter implements ModuleInterface {
             validation_status: 'valid',
             security_level: 'internal'
           },
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
         }
       };
     } catch (recoveryError) {
@@ -375,7 +375,7 @@ export class ContextModuleAdapter implements ModuleInterface {
    */
   private async processContextStage(context: WorkflowExecutionContext): Promise<Record<string, unknown>> {
     // 输入验证
-    if (!context.context_id) {
+    if (!context.contextId) {
       throw new Error('Invalid context: missing context_id');
     }
 
@@ -385,7 +385,7 @@ export class ContextModuleAdapter implements ModuleInterface {
 
     // 模拟上下文处理
     return {
-      context_id: context.context_id,
+      context_id: context.contextId,
       lifecycle_stage: 'active',
       status: 'initialized',
       session_count: 1,
@@ -407,7 +407,7 @@ export class ContextModuleAdapter implements ModuleInterface {
 
     // 模拟业务协调处理
     return {
-      context_id: request.context_id,
+      context_id: request.contextId,
       coordination_type: request.coordination_type,
       lifecycle_stage: 'active',
       context_initialized: true,

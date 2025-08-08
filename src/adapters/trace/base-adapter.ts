@@ -81,9 +81,9 @@ export class BaseTraceAdapter implements ITraceAdapter {
       const fullTraceData: MPLPTraceData = {
         protocol_version: '1.0.1',
         timestamp: new Date().toISOString(),
-        trace_id: traceData.trace_id || `trace_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-        context_id: traceData.context_id || '',
-        trace_type: traceData.trace_type || 'execution',
+        trace_id: traceData.traceId || `trace_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        context_id: traceData.contextId || '',
+        trace_type: traceData.traceType || 'execution',
         severity: traceData.severity || 'info',
         event: traceData.event || {
           type: 'start',
@@ -94,12 +94,12 @@ export class BaseTraceAdapter implements ITraceAdapter {
         ...traceData
       };
 
-      this.traces.set(fullTraceData.trace_id, fullTraceData);
+      this.traces.set(fullTraceData.traceId, fullTraceData);
       
       this.logger.debug('记录追踪数据', {
-        trace_id: fullTraceData.trace_id,
-        context_id: fullTraceData.context_id,
-        trace_type: fullTraceData.trace_type
+        trace_id: fullTraceData.traceId,
+        context_id: fullTraceData.contextId,
+        trace_type: fullTraceData.traceType
       });
 
       return {
@@ -171,12 +171,12 @@ export class BaseTraceAdapter implements ITraceAdapter {
 
     // 过滤追踪数据
     const filteredTraces = Array.from(this.traces.values()).filter(trace => {
-      if (trace.context_id !== contextId) return false;
+      if (trace.contextId !== contextId) return false;
       
       if (start_time && trace.timestamp < start_time) return false;
       if (end_time && trace.timestamp > end_time) return false;
       
-      if (trace_types && trace_types.length > 0 && !trace_types.includes(trace.trace_type)) return false;
+      if (trace_types && trace_types.length > 0 && !trace_types.includes(trace.traceType)) return false;
       if (severities && severities.length > 0 && !severities.includes(trace.severity)) return false;
       
       return true;

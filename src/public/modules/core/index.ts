@@ -86,8 +86,8 @@ export async function initializeCoreModule(
     default_workflow: options.default_workflow_template 
       ? workflowManager.getTemplate(options.default_workflow_template) || WorkflowTemplates.STANDARD_MPLP
       : WorkflowTemplates.STANDARD_MPLP,
-    module_timeout_ms: 30000,
-    max_concurrent_executions: 10,
+    moduleTimeoutMs: 30000,
+    maxConcurrentExecutions: 10,
     enable_performance_monitoring: options.enable_performance_monitoring ?? true,
     enable_event_logging: options.enable_event_logging ?? true
   };

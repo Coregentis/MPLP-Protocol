@@ -1,10 +1,8 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://mplp.dev/schemas/v1.0/mplp-plan.json",
   "title": "MPLP Plan Protocol v1.0",
   "description": "Plan模块协议Schema - 任务规划和依赖管理",
-  "version": "1.0.0",
-  "lastUpdated": "2025-08-04",
   "type": "object",
   "$defs": {
     "uuid": {
@@ -24,7 +22,12 @@
     },
     "priority": {
       "type": "string",
-      "enum": ["critical", "high", "medium", "low"],
+      "enum": [
+        "critical",
+        "high",
+        "medium",
+        "low"
+      ],
       "description": "优先级枚举"
     },
     "failure_resolver": {
@@ -40,7 +43,12 @@
           "description": "恢复策略列表，按优先级排序",
           "items": {
             "type": "string",
-            "enum": ["retry", "rollback", "skip", "manual_intervention"],
+            "enum": [
+              "retry",
+              "rollback",
+              "skip",
+              "manual_intervention"
+            ],
             "description": "恢复策略"
           }
         },
@@ -61,7 +69,7 @@
             },
             "backoff_factor": {
               "type": "number",
-              "minimum": 1.0,
+              "minimum": 1,
               "description": "退避因子，每次重试延迟增加的倍数"
             },
             "max_delay_ms": {
@@ -70,7 +78,10 @@
               "description": "最大重试延迟（毫秒）"
             }
           },
-          "required": ["max_attempts", "delay_ms"]
+          "required": [
+            "max_attempts",
+            "delay_ms"
+          ]
         },
         "rollback_config": {
           "type": "object",
@@ -91,7 +102,9 @@
               "description": "最大回滚深度（可回滚的任务数量）"
             }
           },
-          "required": ["enabled"]
+          "required": [
+            "enabled"
+          ]
         },
         "manual_intervention_config": {
           "type": "object",
@@ -160,7 +173,11 @@
             },
             "analysis_depth": {
               "type": "string",
-              "enum": ["basic", "detailed", "comprehensive"],
+              "enum": [
+                "basic",
+                "detailed",
+                "comprehensive"
+              ],
               "description": "分析深度"
             },
             "pattern_recognition": {
@@ -177,7 +194,9 @@
               "description": "最大关联故障数量"
             }
           },
-          "required": ["enabled"]
+          "required": [
+            "enabled"
+          ]
         },
         "vendor_integration": {
           "type": "object",
@@ -249,7 +268,9 @@
               "description": "监控间隔（毫秒）"
             }
           },
-          "required": ["enabled"]
+          "required": [
+            "enabled"
+          ]
         },
         "self_learning": {
           "type": "object",
@@ -261,7 +282,11 @@
             },
             "learning_mode": {
               "type": "string",
-              "enum": ["passive", "active", "hybrid"],
+              "enum": [
+                "passive",
+                "active",
+                "hybrid"
+              ],
               "description": "学习模式"
             },
             "min_samples_required": {
@@ -283,7 +308,9 @@
               "description": "策略有效性指标列表"
             }
           },
-          "required": ["enabled"]
+          "required": [
+            "enabled"
+          ]
         },
         "enhanced_features": {
           "type": "object",
@@ -316,7 +343,10 @@
           }
         }
       },
-      "required": ["enabled", "strategies"]
+      "required": [
+        "enabled",
+        "strategies"
+      ]
     },
     "recovery_suggestion": {
       "type": "string",
@@ -355,7 +385,13 @@
         "severity": {
           "type": "string",
           "description": "问题严重程度",
-          "enum": ["critical", "high", "medium", "low", "info"]
+          "enum": [
+            "critical",
+            "high",
+            "medium",
+            "low",
+            "info"
+          ]
         },
         "title": {
           "type": "string",
@@ -412,7 +448,12 @@
           "maximum": 1
         }
       },
-      "required": ["id", "type", "severity", "title"]
+      "required": [
+        "id",
+        "type",
+        "severity",
+        "title"
+      ]
     }
   },
   "properties": {
@@ -464,44 +505,88 @@
     "timeline": {
       "type": "object",
       "properties": {
-        "start_date": { "$ref": "#/$defs/timestamp" },
-        "end_date": { "$ref": "#/$defs/timestamp" },
+        "start_date": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "end_date": {
+          "$ref": "#/$defs/timestamp"
+        },
         "estimated_duration": {
           "type": "object",
           "properties": {
-            "value": { "type": "number", "minimum": 0 },
+            "value": {
+              "type": "number",
+              "minimum": 0
+            },
             "unit": {
               "type": "string",
-              "enum": ["minutes", "hours", "days", "weeks", "months"]
+              "enum": [
+                "minutes",
+                "hours",
+                "days",
+                "weeks",
+                "months"
+              ]
             }
           },
-          "required": ["value", "unit"]
+          "required": [
+            "value",
+            "unit"
+          ]
         },
         "actual_duration": {
           "type": "object",
           "properties": {
-            "value": { "type": "number", "minimum": 0 },
+            "value": {
+              "type": "number",
+              "minimum": 0
+            },
             "unit": {
               "type": "string",
-              "enum": ["minutes", "hours", "days", "weeks", "months"]
+              "enum": [
+                "minutes",
+                "hours",
+                "days",
+                "weeks",
+                "months"
+              ]
             }
           },
-          "required": ["value", "unit"]
+          "required": [
+            "value",
+            "unit"
+          ]
         }
       },
-      "required": ["estimated_duration"]
+      "required": [
+        "estimated_duration"
+      ]
     },
     "tasks": {
       "type": "array",
       "items": {
         "type": "object",
         "properties": {
-          "task_id": { "$ref": "#/$defs/uuid" },
-          "name": { "type": "string", "minLength": 1, "maxLength": 255 },
-          "description": { "type": "string", "maxLength": 1000 },
+          "task_id": {
+            "$ref": "#/$defs/uuid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 1000
+          },
           "type": {
             "type": "string",
-            "enum": ["atomic", "composite", "milestone", "checkpoint"]
+            "enum": [
+              "atomic",
+              "composite",
+              "milestone",
+              "checkpoint"
+            ]
           },
           "status": {
             "type": "string",
@@ -515,51 +600,95 @@
               "skipped"
             ]
           },
-          "priority": { "$ref": "#/$defs/priority" },
+          "priority": {
+            "$ref": "#/$defs/priority"
+          },
           "assignee": {
             "type": "object",
             "properties": {
-              "user_id": { "type": "string" },
-              "role": { "type": "string" },
-              "team": { "type": "string" }
+              "user_id": {
+                "type": "string"
+              },
+              "role": {
+                "type": "string"
+              },
+              "team": {
+                "type": "string"
+              }
             }
           },
           "estimated_effort": {
             "type": "object",
             "properties": {
-              "value": { "type": "number", "minimum": 0 },
+              "value": {
+                "type": "number",
+                "minimum": 0
+              },
               "unit": {
                 "type": "string",
-                "enum": ["hours", "days", "story_points"]
+                "enum": [
+                  "hours",
+                  "days",
+                  "story_points"
+                ]
               }
             },
-            "required": ["value", "unit"]
+            "required": [
+              "value",
+              "unit"
+            ]
           },
           "actual_effort": {
             "type": "object",
             "properties": {
-              "value": { "type": "number", "minimum": 0 },
+              "value": {
+                "type": "number",
+                "minimum": 0
+              },
               "unit": {
                 "type": "string",
-                "enum": ["hours", "days", "story_points"]
+                "enum": [
+                  "hours",
+                  "days",
+                  "story_points"
+                ]
               }
             },
-            "required": ["value", "unit"]
+            "required": [
+              "value",
+              "unit"
+            ]
           },
           "resources_required": {
             "type": "array",
             "items": {
               "type": "object",
               "properties": {
-                "resource_type": { "type": "string" },
-                "amount": { "type": "number", "minimum": 0 },
-                "unit": { "type": "string" },
+                "resource_type": {
+                  "type": "string"
+                },
+                "amount": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "unit": {
+                  "type": "string"
+                },
                 "availability": {
                   "type": "string",
-                  "enum": ["required", "preferred", "optional"]
+                  "enum": [
+                    "required",
+                    "preferred",
+                    "optional"
+                  ]
                 }
               },
-              "required": ["resource_type", "amount", "unit", "availability"]
+              "required": [
+                "resource_type",
+                "amount",
+                "unit",
+                "availability"
+              ]
             }
           },
           "acceptance_criteria": {
@@ -567,67 +696,131 @@
             "items": {
               "type": "object",
               "properties": {
-                "id": { "$ref": "#/$defs/uuid" },
-                "description": { "type": "string" },
+                "id": {
+                  "$ref": "#/$defs/uuid"
+                },
+                "description": {
+                  "type": "string"
+                },
                 "type": {
                   "type": "string",
-                  "enum": ["functional", "non_functional", "quality"]
+                  "enum": [
+                    "functional",
+                    "non_functional",
+                    "quality"
+                  ]
                 },
                 "status": {
                   "type": "string",
-                  "enum": ["pending", "met", "not_met"]
+                  "enum": [
+                    "pending",
+                    "met",
+                    "not_met"
+                  ]
                 },
                 "verification_method": {
                   "type": "string",
-                  "enum": ["manual", "automated", "review"]
+                  "enum": [
+                    "manual",
+                    "automated",
+                    "review"
+                  ]
                 }
               },
-              "required": ["id", "description", "type", "status"]
+              "required": [
+                "id",
+                "description",
+                "type",
+                "status"
+              ]
             }
           },
           "sub_tasks": {
             "type": "array",
-            "items": { "$ref": "#/properties/tasks/items" }
+            "items": {
+              "$ref": "#/properties/tasks/items"
+            }
           },
           "metadata": {
             "type": "object",
             "properties": {
               "tags": {
                 "type": "array",
-                "items": { "type": "string" }
+                "items": {
+                  "type": "string"
+                }
               },
-              "category": { "type": "string" },
-              "source": { "type": "string" },
-              "complexity_score": { "type": "number", "minimum": 0 },
-              "risk_level": { "type": "string" },
-              "automation_level": { "type": "string" },
-              "retry_count": { "type": "integer", "minimum": 0 },
-              "max_retry_count": { "type": "integer", "minimum": 0 },
-              "intervention_required": { "type": "boolean" },
-              "intervention_reason": { "type": "string" },
-              "intervention_requested_at": { "$ref": "#/$defs/timestamp" },
-              "rollback_reason": { "type": "string" },
-              "rollback_target": { "$ref": "#/$defs/uuid" },
-              "skip_reason": { "type": "string" },
-              "skip_dependents": { "type": "boolean" },
+              "category": {
+                "type": "string"
+              },
+              "source": {
+                "type": "string"
+              },
+              "complexity_score": {
+                "type": "number",
+                "minimum": 0
+              },
+              "risk_level": {
+                "type": "string"
+              },
+              "automation_level": {
+                "type": "string"
+              },
+              "retry_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "max_retry_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "intervention_required": {
+                "type": "boolean"
+              },
+              "intervention_reason": {
+                "type": "string"
+              },
+              "intervention_requested_at": {
+                "$ref": "#/$defs/timestamp"
+              },
+              "rollback_reason": {
+                "type": "string"
+              },
+              "rollback_target": {
+                "$ref": "#/$defs/uuid"
+              },
+              "skip_reason": {
+                "type": "string"
+              },
+              "skip_dependents": {
+                "type": "boolean"
+              },
               "recovery_suggestions": {
                 "type": "array",
-                "items": { "$ref": "#/$defs/recovery_suggestion" },
+                "items": {
+                  "$ref": "#/$defs/recovery_suggestion"
+                },
                 "description": "故障恢复建议列表",
                 "maxItems": 10,
                 "uniqueItems": true
               },
               "development_issues": {
                 "type": "array",
-                "items": { "$ref": "#/$defs/development_issue" },
+                "items": {
+                  "$ref": "#/$defs/development_issue"
+                },
                 "description": "相关开发问题列表",
                 "maxItems": 20,
                 "uniqueItems": true
               }
             }
           },
-          "started_at": { "$ref": "#/$defs/timestamp" },
-          "completed_at": { "$ref": "#/$defs/timestamp" },
+          "started_at": {
+            "$ref": "#/$defs/timestamp"
+          },
+          "completed_at": {
+            "$ref": "#/$defs/timestamp"
+          },
           "progress_percentage": {
             "type": "number",
             "minimum": 0,
@@ -649,7 +842,13 @@
             "additionalProperties": true
           }
         },
-        "required": ["task_id", "name", "type", "status", "priority"]
+        "required": [
+          "task_id",
+          "name",
+          "type",
+          "status",
+          "priority"
+        ]
       }
     },
     "dependencies": {
@@ -657,9 +856,15 @@
       "items": {
         "type": "object",
         "properties": {
-          "id": { "$ref": "#/$defs/uuid" },
-          "source_task_id": { "$ref": "#/$defs/uuid" },
-          "target_task_id": { "$ref": "#/$defs/uuid" },
+          "id": {
+            "$ref": "#/$defs/uuid"
+          },
+          "source_task_id": {
+            "$ref": "#/$defs/uuid"
+          },
+          "target_task_id": {
+            "$ref": "#/$defs/uuid"
+          },
           "dependency_type": {
             "type": "string",
             "enum": [
@@ -672,14 +877,30 @@
           "lag": {
             "type": "object",
             "properties": {
-              "value": { "type": "number" },
-              "unit": { "type": "string", "enum": ["minutes", "hours", "days"] }
+              "value": {
+                "type": "number"
+              },
+              "unit": {
+                "type": "string",
+                "enum": [
+                  "minutes",
+                  "hours",
+                  "days"
+                ]
+              }
             },
-            "required": ["value", "unit"]
+            "required": [
+              "value",
+              "unit"
+            ]
           },
           "criticality": {
             "type": "string",
-            "enum": ["blocking", "important", "nice_to_have"]
+            "enum": [
+              "blocking",
+              "important",
+              "nice_to_have"
+            ]
           },
           "condition": {
             "type": "string",
@@ -700,32 +921,72 @@
       "items": {
         "type": "object",
         "properties": {
-          "id": { "$ref": "#/$defs/uuid" },
-          "name": { "type": "string" },
-          "description": { "type": "string" },
-          "target_date": { "$ref": "#/$defs/timestamp" },
+          "id": {
+            "$ref": "#/$defs/uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "target_date": {
+            "$ref": "#/$defs/timestamp"
+          },
           "status": {
             "type": "string",
-            "enum": ["upcoming", "at_risk", "achieved", "missed"]
+            "enum": [
+              "upcoming",
+              "at_risk",
+              "achieved",
+              "missed"
+            ]
           },
           "success_criteria": {
             "type": "array",
             "items": {
               "type": "object",
               "properties": {
-                "metric": { "type": "string" },
-                "target_value": { "type": ["string", "number", "boolean"] },
-                "actual_value": { "type": ["string", "number", "boolean"] },
+                "metric": {
+                  "type": "string"
+                },
+                "target_value": {
+                  "type": [
+                    "string",
+                    "number",
+                    "boolean"
+                  ]
+                },
+                "actual_value": {
+                  "type": [
+                    "string",
+                    "number",
+                    "boolean"
+                  ]
+                },
                 "status": {
                   "type": "string",
-                  "enum": ["pending", "achieved", "not_achieved"]
+                  "enum": [
+                    "pending",
+                    "achieved",
+                    "not_achieved"
+                  ]
                 }
               },
-              "required": ["metric", "target_value", "status"]
+              "required": [
+                "metric",
+                "target_value",
+                "status"
+              ]
             }
           }
         },
-        "required": ["id", "name", "target_date", "status"]
+        "required": [
+          "id",
+          "name",
+          "target_date",
+          "status"
+        ]
       }
     },
     "optimization": {
@@ -747,13 +1008,33 @@
             "max_duration": {
               "type": "object",
               "properties": {
-                "value": { "type": "number", "minimum": 0 },
-                "unit": { "type": "string", "enum": ["hours", "days", "weeks"] }
+                "value": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "unit": {
+                  "type": "string",
+                  "enum": [
+                    "hours",
+                    "days",
+                    "weeks"
+                  ]
+                }
               },
-              "required": ["value", "unit"]
+              "required": [
+                "value",
+                "unit"
+              ]
             },
-            "max_cost": { "type": "number", "minimum": 0 },
-            "min_quality": { "type": "number", "minimum": 0, "maximum": 100 },
+            "max_cost": {
+              "type": "number",
+              "minimum": 0
+            },
+            "min_quality": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
             "available_resources": {
               "type": "object",
               "additionalProperties": true
@@ -765,26 +1046,44 @@
           "additionalProperties": true
         }
       },
-      "required": ["strategy"]
+      "required": [
+        "strategy"
+      ]
     },
     "risk_assessment": {
       "type": "object",
       "properties": {
         "overall_risk_level": {
           "type": "string",
-          "enum": ["low", "medium", "high", "critical"]
+          "enum": [
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ]
         },
         "risks": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-              "id": { "$ref": "#/$defs/uuid" },
-              "name": { "type": "string" },
-              "description": { "type": "string" },
+              "id": {
+                "$ref": "#/$defs/uuid"
+              },
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
               "level": {
                 "type": "string",
-                "enum": ["low", "medium", "high", "critical"]
+                "enum": [
+                  "low",
+                  "medium",
+                  "high",
+                  "critical"
+                ]
               },
               "category": {
                 "type": "string",
@@ -796,20 +1095,46 @@
                   "external"
                 ]
               },
-              "probability": { "type": "number", "minimum": 0, "maximum": 1 },
-              "impact": { "type": "number", "minimum": 0, "maximum": 1 },
+              "probability": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "impact": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
               "status": {
                 "type": "string",
-                "enum": ["identified", "mitigated", "accepted", "closed"]
+                "enum": [
+                  "identified",
+                  "mitigated",
+                  "accepted",
+                  "closed"
+                ]
               },
-              "mitigation_plan": { "type": "string" },
-              "contingency_plan": { "type": "string" }
+              "mitigation_plan": {
+                "type": "string"
+              },
+              "contingency_plan": {
+                "type": "string"
+              }
             },
-            "required": ["id", "name", "level", "category", "status"]
+            "required": [
+              "id",
+              "name",
+              "level",
+              "category",
+              "status"
+            ]
           }
         }
       },
-      "required": ["overall_risk_level", "risks"]
+      "required": [
+        "overall_risk_level",
+        "risks"
+      ]
     },
     "failure_resolver": {
       "$ref": "#/$defs/failure_resolver",
@@ -818,25 +1143,53 @@
     "configuration": {
       "type": "object",
       "properties": {
-        "auto_scheduling_enabled": { "type": "boolean" },
-        "dependency_validation_enabled": { "type": "boolean" },
-        "risk_monitoring_enabled": { "type": "boolean" },
-        "failure_recovery_enabled": { "type": "boolean" },
-        "performance_tracking_enabled": { "type": "boolean" },
+        "auto_scheduling_enabled": {
+          "type": "boolean"
+        },
+        "dependency_validation_enabled": {
+          "type": "boolean"
+        },
+        "risk_monitoring_enabled": {
+          "type": "boolean"
+        },
+        "failure_recovery_enabled": {
+          "type": "boolean"
+        },
+        "performance_tracking_enabled": {
+          "type": "boolean"
+        },
         "notification_settings": {
           "type": "object",
           "properties": {
-            "enabled": { "type": "boolean" },
-            "channels": { "type": "array", "items": { "type": "string" } },
-            "events": { "type": "array", "items": { "type": "string" } },
-            "task_completion": { "type": "boolean" }
+            "enabled": {
+              "type": "boolean"
+            },
+            "channels": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "events": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "task_completion": {
+              "type": "boolean"
+            }
           },
-          "required": ["enabled"]
+          "required": [
+            "enabled"
+          ]
         },
         "optimization_settings": {
           "type": "object",
           "properties": {
-            "enabled": { "type": "boolean" },
+            "enabled": {
+              "type": "boolean"
+            },
             "strategy": {
               "type": "string",
               "enum": [
@@ -847,22 +1200,36 @@
                 "balanced"
               ]
             },
-            "auto_reoptimize": { "type": "boolean" }
+            "auto_reoptimize": {
+              "type": "boolean"
+            }
           },
-          "required": ["enabled", "strategy"]
+          "required": [
+            "enabled",
+            "strategy"
+          ]
         },
         "timeout_settings": {
           "type": "object",
           "properties": {
-            "default_task_timeout_ms": { "type": "integer", "minimum": 1000 },
-            "plan_execution_timeout_ms": { "type": "integer", "minimum": 1000 },
+            "default_task_timeout_ms": {
+              "type": "integer",
+              "minimum": 1000
+            },
+            "plan_execution_timeout_ms": {
+              "type": "integer",
+              "minimum": 1000
+            },
             "dependency_resolution_timeout_ms": {
               "type": "integer",
               "minimum": 1000
             }
           }
         },
-        "parallel_execution_limit": { "type": "integer", "minimum": 1 }
+        "parallel_execution_limit": {
+          "type": "integer",
+          "minimum": 1
+        }
       }
     },
     "metadata": {

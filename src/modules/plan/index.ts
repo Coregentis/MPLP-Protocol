@@ -17,7 +17,11 @@ export * from './api/dtos/plan.dto';
 export * from './application/services/plan-management.service';
 export * from './application/services/plan-execution.service';
 export * from './application/commands/create-plan.command';
+export * from './application/commands/update-plan.command';
+export * from './application/commands/delete-plan.command';
 export * from './application/queries/get-plan.query';
+export * from './application/queries/get-plans.query';
+export * from './application/queries/get-plan-by-id.query';
 
 // 领域层
 export * from './domain/entities/plan.entity';

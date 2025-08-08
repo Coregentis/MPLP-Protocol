@@ -8,6 +8,7 @@
  */
 
 import { Logger } from '../../public/utils/logger';
+import { DataSource } from 'typeorm/data-source/DataSource';
 
 // Infrastructure层
 import { PlanRepositoryImpl } from './infrastructure/repositories/plan-repository.impl';
@@ -19,6 +20,14 @@ import { PlanFactoryService } from './domain/services/plan-factory.service';
 
 // API层
 import { PlanController } from './api/controllers/plan.controller';
+import { CreatePlanCommandHandler } from './application/commands/create-plan.command';
+import { UpdatePlanCommandHandler } from './application/commands/update-plan.command';
+import { DeletePlanCommandHandler } from './application/commands/delete-plan.command';
+import { GetPlanQueryHandler } from './application/queries/get-plan.query';
+import { GetPlanByIdQueryHandler } from './application/queries/get-plan-by-id.query';
+import { GetPlansQueryHandler } from './application/queries/get-plans.query';
+import { PlanExecutionService } from './application/services/plan-execution.service';
+import { PlanModuleAdapter } from './infrastructure/adapters/plan-module.adapter';
 
 /**
  * 模块配置选项
@@ -27,7 +36,7 @@ export interface PlanModuleOptions {
   enableLogging?: boolean;
   enableTaskValidation?: boolean;
   enableProgressTracking?: boolean;
-  dataSource?: any; // 数据源配置，生产环境中应该是真实的数据库连接
+  dataSource?: unknown; // 数据源配置，生产环境中应该是真实的数据库连接
 }
 
 /**
@@ -50,10 +59,10 @@ export async function initializePlanModule(
     // 创建基础设施层组件
     const mockDataSource = options.dataSource || {
       getRepository: () => ({
-        save: async (entity: any) => entity,
+        save: async (entity: unknown) => entity,
         findOne: async () => null,
         find: async () => [],
-        remove: async (entity: any) => entity,
+        remove: async (entity: unknown) => entity,
         createQueryBuilder: () => ({
           where: () => ({ getMany: async () => [] }),
           orderBy: () => ({ getMany: async () => [] })
@@ -61,7 +70,7 @@ export async function initializePlanModule(
       })
     };
 
-    const planRepository = new PlanRepositoryImpl(mockDataSource);
+    const planRepository = new PlanRepositoryImpl(mockDataSource as DataSource);
     const planValidationService = new PlanValidationService();
     const planFactoryService = new PlanFactoryService();
 
@@ -75,21 +84,47 @@ export async function initializePlanModule(
     // 创建API层组件 - 使用mock对象
     const mockCreatePlanCommandHandler = {
       planManagementService,
-      execute: async () => ({ success: true })
-    } as any;
+      execute: async () => ({ success: true, data: null })
+    } as unknown as CreatePlanCommandHandler;
 
     const mockGetPlanQueryHandler = {
-      execute: async () => ({ success: true })
-    } as any;
+      execute: async () => ({ success: true, data: null })
+    } as unknown as GetPlanQueryHandler;
 
     const mockPlanExecutionService = {
       executePlan: async () => ({ success: true })
-    } as any;
+    } as unknown as PlanExecutionService;
+
+    // 创建必需的mock handlers
+    const mockUpdatePlanCommandHandler = {
+      execute: async () => ({ success: true })
+    } as unknown as UpdatePlanCommandHandler;
+
+    const mockDeletePlanCommandHandler = {
+      execute: async () => ({ success: true })
+    } as unknown as DeletePlanCommandHandler;
+
+    const mockGetPlanByIdQueryHandler = {
+      execute: async () => ({ success: true })
+    } as unknown as GetPlanByIdQueryHandler;
+
+    const mockGetPlansQueryHandler = {
+      execute: async () => ({ success: true })
+    } as unknown as GetPlansQueryHandler;
+
+    const mockPlanModuleAdapter = {
+      coordinatePlanning: async () => ({ success: true })
+    } as unknown as PlanModuleAdapter;
 
     const planController = new PlanController(
       mockCreatePlanCommandHandler,
-      mockGetPlanQueryHandler,
+      mockUpdatePlanCommandHandler,
+      mockDeletePlanCommandHandler,
+      mockGetPlanByIdQueryHandler,
+      mockGetPlansQueryHandler,
       planManagementService,
+      mockPlanModuleAdapter,
+      mockGetPlanQueryHandler,
       mockPlanExecutionService
     );
     

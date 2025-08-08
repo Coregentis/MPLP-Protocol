@@ -35,7 +35,7 @@ export class ContextResponse {
    * 生命周期阶段
    * @example "initialization"
    */
-  lifecycle_stage!: 'initialization' | 'active' | 'maintenance' | 'completion';
+  lifecycle_stage!: 'planning' | 'executing' | 'monitoring' | 'completed';
 
   /**
    * 状态
@@ -68,44 +68,38 @@ export class ContextResponse {
   shared_state_count?: number;
   
   /**
-   * 配置信息
+   * 配置信息（Schema格式 - snake_case）
    */
   configuration?: {
     /**
-     * 是否允许共享
-     * @example true
+     * 超时设置
      */
-    allow_sharing: boolean;
-    
+    timeout_settings?: {
+      default_timeout: number;
+      max_timeout: number;
+      cleanup_timeout?: number;
+    };
+
     /**
-     * 最大会话数
-     * @example 10
+     * 通知设置
      */
-    max_sessions: number;
-    
+    notification_settings?: {
+      enabled: boolean;
+      channels?: Array<'email' | 'webhook' | 'sms' | 'push'>;
+      events?: Array<'created' | 'updated' | 'completed' | 'failed' | 'timeout'>;
+    };
+
     /**
-     * 过期策略
-     * @example "never"
+     * 持久化设置
      */
-    expiration_policy: string;
-    
-    /**
-     * 自动暂停时间（毫秒）
-     * @example 3600000
-     */
-    auto_suspend_after_inactivity: number | null;
-    
-    /**
-     * 是否允许匿名访问
-     * @example false
-     */
-    allow_anonymous_access: boolean;
-    
-    /**
-     * 特性列表
-     * @example ["feature1", "feature2"]
-     */
-    features: string[];
+    persistence?: {
+      enabled: boolean;
+      storage_backend: 'memory' | 'database' | 'file' | 'redis';
+      retention_policy?: {
+        duration: string;
+        max_versions?: number;
+      };
+    };
   };
   
   /**

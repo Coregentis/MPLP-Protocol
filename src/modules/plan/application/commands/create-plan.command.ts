@@ -11,28 +11,33 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Plan } from '../../domain/entities/plan.entity';
 import { PlanManagementService, OperationResult } from '../services/plan-management.service';
-import { 
-  UUID, 
-  ExecutionStrategy, 
-  Priority 
-} from '../../../../public/shared/types/plan-types';
+import { UUID } from '../../../../public/shared/types';
+import {
+  ExecutionStrategy,
+  Priority,
+  PlanTask,
+  PlanDependency,
+  Duration
+} from '../../types';
+import { PlanConfiguration } from '../../domain/value-objects/plan-configuration.value-object';
 
 /**
  * 创建计划命令接口
+ * Application层使用camelCase命名约定
  */
 export interface CreatePlanCommand {
-  plan_id?: UUID;
-  context_id: UUID;
-  name: string;
-  description: string;
-  goals?: string[];
-  tasks?: any[];
-  dependencies?: any[];
-  execution_strategy?: ExecutionStrategy;
-  priority?: Priority;
-  estimated_duration?: { value: number; unit: string };
-  configuration?: any;
-  metadata?: Record<string, unknown>;
+  planId?: UUID;                    // 对应Schema: plan_id
+  contextId: UUID;                  // 对应Schema: context_id
+  name: string;                     // 对应Schema: name
+  description: string;              // 对应Schema: description
+  goals?: string[];                 // 对应Schema: goals
+  tasks?: PlanTask[];               // 对应Schema: tasks
+  dependencies?: PlanDependency[];  // 对应Schema: dependencies
+  executionStrategy?: ExecutionStrategy; // 对应Schema: execution_strategy
+  priority?: Priority;              // 对应Schema: priority
+  estimatedDuration?: Duration;     // 对应Schema: estimated_duration
+  configuration?: PlanConfiguration; // 对应Schema: configuration
+  metadata?: Record<string, unknown>; // 对应Schema: metadata
 }
 
 /**
@@ -48,20 +53,21 @@ export class CreatePlanCommandHandler {
    */
   async execute(command: CreatePlanCommand): Promise<OperationResult<Plan>> {
     // 生成计划ID（如果未提供）
-    const planId = command.plan_id || uuidv4();
+    const planId = command.planId || uuidv4();
     
     // 执行创建计划操作
+    // Application层(camelCase) → Service层(snake_case)映射
     return this.planManagementService.createPlan({
-      plan_id: planId,
-      context_id: command.context_id,
+      planId: planId,
+      contextId: command.contextId,
       name: command.name,
       description: command.description,
       goals: command.goals,
       tasks: command.tasks,
       dependencies: command.dependencies,
-      execution_strategy: command.execution_strategy,
+      executionStrategy: command.executionStrategy,
       priority: command.priority,
-      estimated_duration: command.estimated_duration,
+      estimatedDuration: command.estimatedDuration,
       configuration: command.configuration,
       metadata: command.metadata
     });

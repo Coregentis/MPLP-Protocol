@@ -6,7 +6,7 @@
  */
 
 import { Logger } from '../../public/utils/logger';
-import { createAjv, validateData, ValidationResult, AjvConfig } from './ajv-config';
+import { createAjv, ValidationResult, AjvConfig } from './ajv-config';
 import Ajv from 'ajv';
 
 export interface SchemaValidatorConfig {
@@ -55,7 +55,7 @@ export class SchemaValidator {
   /**
    * 验证数据
    */
-  async validate<T = any>(schema: object, data: unknown, schemaId?: string): Promise<ValidationResult> {
+  async validate(schema: object, data: unknown, schemaId?: string): Promise<ValidationResult> {
     const startTime = Date.now();
     this.metrics.total_validations++;
 
@@ -246,7 +246,7 @@ export class SchemaValidator {
 
     // 添加自定义关键字
     if (this.config.customKeywords) {
-      Object.entries(this.config.customKeywords).forEach(([name, keyword]) => {
+      Object.entries(this.config.customKeywords).forEach(([, keyword]) => {
         ajv.addKeyword(keyword);
       });
     }

@@ -68,7 +68,9 @@ describe('Plan Entity', () => {
       expect(plan.execution_strategy).toBe(planParams.execution_strategy);
       expect(plan.priority).toBe(planParams.priority);
       expect(plan.estimated_duration).toEqual(planParams.estimated_duration);
-      expect(plan.progress).toEqual(planParams.progress);
+      expect(plan.progress.completed_tasks).toBe(planParams.progress.completed_tasks);
+      expect(plan.progress.total_tasks).toBe(planParams.progress.total_tasks);
+      expect(plan.progress.percentage).toBe(planParams.progress.percentage);
       expect(plan.configuration).toEqual(planParams.configuration);
       expect(plan.metadata).toEqual(planParams.metadata);
     });

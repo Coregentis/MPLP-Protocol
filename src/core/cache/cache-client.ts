@@ -43,7 +43,7 @@ export class CacheClient {
   /**
    * 获取缓存值
    */
-  async get<T = any>(key: string): Promise<T | null> {
+  async get<T = unknown>(key: string): Promise<T | null> {
     try {
       const fullKey = this.buildKey(key);
       const value = await this.cacheManager.get<string>(fullKey);
@@ -62,7 +62,7 @@ export class CacheClient {
   /**
    * 设置缓存值
    */
-  async set<T = any>(key: string, value: T, options: CacheOptions = {}): Promise<boolean> {
+  async set<T = unknown>(key: string, value: T, options: CacheOptions = {}): Promise<boolean> {
     try {
       const fullKey = this.buildKey(key);
       const serializedValue = this.serialize(value);
@@ -104,7 +104,7 @@ export class CacheClient {
   /**
    * 获取或设置缓存值
    */
-  async getOrSet<T = any>(
+  async getOrSet<T = unknown>(
     key: string, 
     factory: () => Promise<T> | T, 
     options: CacheOptions = {}
@@ -134,7 +134,7 @@ export class CacheClient {
   /**
    * 批量获取
    */
-  async mget<T = any>(keys: string[]): Promise<Map<string, T | null>> {
+  async mget<T = unknown>(keys: string[]): Promise<Map<string, T | null>> {
     const result = new Map<string, T | null>();
     
     await Promise.all(
@@ -150,7 +150,7 @@ export class CacheClient {
   /**
    * 批量设置
    */
-  async mset<T = any>(entries: Map<string, T>, options: CacheOptions = {}): Promise<boolean[]> {
+  async mset<T = unknown>(entries: Map<string, T>, options: CacheOptions = {}): Promise<boolean[]> {
     const results = await Promise.all(
       Array.from(entries.entries()).map(([key, value]) =>
         this.set(key, value, options)
@@ -220,7 +220,7 @@ export class CacheClient {
    */
   private serialize<T>(value: T): string {
     if (!this.config.enableSerialization) {
-      return value as any;
+      return String(value);
     }
     
     try {
@@ -236,14 +236,14 @@ export class CacheClient {
    */
   private deserialize<T>(value: string): T {
     if (!this.config.enableSerialization) {
-      return value as any;
+      return value as unknown as T;
     }
-    
+
     try {
-      return JSON.parse(value);
+      return JSON.parse(value) as T;
     } catch (error) {
       // 如果解析失败，返回原始字符串
-      return value as any;
+      return value as unknown as T;
     }
   }
 

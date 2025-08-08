@@ -83,7 +83,7 @@ export class TraceAnalysisService {
     const correlations: Correlation[] = [];
 
     for (const otherTrace of allTraces) {
-      if (otherTrace.trace_id === trace.trace_id) continue;
+      if (otherTrace.traceId === trace.traceId) continue;
 
       // 时间关联检测
       const temporalCorrelation = this.detectTemporalCorrelation(trace, otherTrace);
@@ -136,7 +136,7 @@ export class TraceAnalysisService {
     const slowestOperations = performanceTraces
       .filter(t => t.getExecutionDuration()! > p95)
       .map(t => ({
-        trace_id: t.trace_id,
+        trace_id: t.traceId,
         duration_ms: t.getExecutionDuration()!,
         operation: t.event.name
       }))
@@ -200,8 +200,8 @@ export class TraceAnalysisService {
     // 如果时间差小于5秒，认为有时间关联
     if (timeDiff < 5000) {
       return {
-        correlation_id: `temporal_${trace1.trace_id}_${trace2.trace_id}`,
-        related_trace_id: trace2.trace_id,
+        correlation_id: `temporal_${trace1.traceId}_${trace2.traceId}`,
+        related_trace_id: trace2.traceId,
         type: 'temporal',
         strength: Math.max(0.1, 1 - timeDiff / 5000),
         description: `时间相近的追踪记录 (相差${timeDiff}ms)`
@@ -219,8 +219,8 @@ export class TraceAnalysisService {
     if (trace1.event.type === 'start' && trace2.event.type === 'completion' &&
         trace1.event.source.component === trace2.event.source.component) {
       return {
-        correlation_id: `causation_${trace1.trace_id}_${trace2.trace_id}`,
-        related_trace_id: trace2.trace_id,
+        correlation_id: `causation_${trace1.traceId}_${trace2.traceId}`,
+        related_trace_id: trace2.traceId,
         type: 'causation',
         strength: 0.8,
         description: '开始-完成事件对'
@@ -238,8 +238,8 @@ export class TraceAnalysisService {
     if (trace1.event.source.component === trace2.event.source.component &&
         this.calculateStringSimilarity(trace1.event.name, trace2.event.name) > 0.7) {
       return {
-        correlation_id: `logical_${trace1.trace_id}_${trace2.trace_id}`,
-        related_trace_id: trace2.trace_id,
+        correlation_id: `logical_${trace1.traceId}_${trace2.traceId}`,
+        related_trace_id: trace2.traceId,
         type: 'logical',
         strength: 0.6,
         description: '相似的逻辑操作'
@@ -272,7 +272,7 @@ export class TraceAnalysisService {
         clusters.push({
           pattern_type: 'error_cluster',
           description: `组件 ${component} 出现错误聚集`,
-          traces: componentErrors.map(t => t.trace_id),
+          traces: componentErrors.map(t => t.traceId),
           severity: 'error',
           confidence: Math.min(1.0, componentErrors.length / 10)
         });
@@ -301,7 +301,7 @@ export class TraceAnalysisService {
       return {
         pattern_type: 'performance_degradation',
         description: `性能退化：平均执行时间从 ${firstHalfAvg.toFixed(2)}ms 增加到 ${secondHalfAvg.toFixed(2)}ms`,
-        traces: secondHalf.map(t => t.trace_id),
+        traces: secondHalf.map(t => t.traceId),
         severity: 'warn',
         confidence: 0.7
       };
@@ -323,7 +323,7 @@ export class TraceAnalysisService {
       }
       const entry = eventCounts.get(eventKey)!;
       entry.count++;
-      entry.traces.push(trace.trace_id);
+      entry.traces.push(trace.traceId);
     });
 
     const patterns: TracePattern[] = [];

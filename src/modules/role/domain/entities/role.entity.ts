@@ -45,67 +45,82 @@ export class Role {
   private _created_at: Timestamp;
   private _updated_at: Timestamp;
 
-  constructor(
-    role_id: UUID,
-    context_id: UUID,
-    protocol_version: string,
+    /**
+   * 代理列表
+   */
+  public agents?: unknown[];
+
+  /**
+   * 代理管理
+   */
+  public agentManagement?: Record<string, unknown>;
+
+  /**
+   * 团队配置
+   */
+  public teamConfiguration?: Record<string, unknown>;
+
+constructor(
+    roleId: UUID,
+    contextId: UUID,
+    protocolVersion: string,
     name: string,
-    role_type: RoleType,
+    roleType: RoleType,
     status: RoleStatus,
     permissions: Permission[],
     timestamp: Timestamp,
-    created_at: Timestamp,
-    updated_at: Timestamp,
-    display_name?: string,
+    createdAt: Timestamp,
+    updatedAt: Timestamp,
+    displayName?: string,
     description?: string,
     scope?: RoleScope,
     inheritance?: RoleInheritance,
     delegation?: RoleDelegation,
     attributes?: RoleAttributes,
-    validation_rules?: ValidationRules,
-    audit_settings?: AuditSettings
+    validationRules?: ValidationRules,
+    auditSettings?: AuditSettings
   ) {
-    this._role_id = role_id;
-    this._context_id = context_id;
-    this._protocol_version = protocol_version;
+    this._role_id = roleId;
+    this._context_id = contextId;
+    this._protocol_version = protocolVersion;
     this._name = name;
-    this._role_type = role_type;
+    this._role_type = roleType;
     this._status = status;
     this._permissions = permissions;
     this._timestamp = timestamp;
-    this._created_at = created_at;
-    this._updated_at = updated_at;
-    this._display_name = display_name;
+    this._created_at = createdAt;
+    this._updated_at = updatedAt;
+    this._display_name = displayName;
     this._description = description;
     this._scope = scope;
     this._inheritance = inheritance;
     this._delegation = delegation;
     this._attributes = attributes;
-    this._validation_rules = validation_rules;
-    this._audit_settings = audit_settings;
+    this._validation_rules = validationRules;
+    this._audit_settings = auditSettings;
 
     this.validateInvariants();
   }
 
   // Getters
-  get role_id(): UUID { return this._role_id; }
-  get context_id(): UUID { return this._context_id; }
-  get protocol_version(): string { return this._protocol_version; }
+  get roleId(): UUID { return this._role_id; }
+  get contextId(): UUID { return this._context_id; }
+  get protocolVersion(): string { return this._protocol_version; }
   get name(): string { return this._name; }
-  get role_type(): RoleType { return this._role_type; }
+  get roleType(): RoleType { return this._role_type; }
   get status(): RoleStatus { return this._status; }
   get permissions(): Permission[] { return [...this._permissions]; }
-  get display_name(): string | undefined { return this._display_name; }
+  get displayName(): string | undefined { return this._display_name; }
   get description(): string | undefined { return this._description; }
   get scope(): RoleScope | undefined { return this._scope; }
   get inheritance(): RoleInheritance | undefined { return this._inheritance; }
   get delegation(): RoleDelegation | undefined { return this._delegation; }
   get attributes(): RoleAttributes | undefined { return this._attributes; }
-  get validation_rules(): ValidationRules | undefined { return this._validation_rules; }
-  get audit_settings(): AuditSettings | undefined { return this._audit_settings; }
+  get validationRules(): ValidationRules | undefined { return this._validation_rules; }
+  get auditSettings(): AuditSettings | undefined { return this._audit_settings; }
   get timestamp(): Timestamp { return this._timestamp; }
-  get created_at(): Timestamp { return this._created_at; }
-  get updated_at(): Timestamp { return this._updated_at; }
+  get createdAt(): Timestamp { return this._created_at; }
+  get updatedAt(): Timestamp { return this._updated_at; }
 
   /**
    * 更新角色状态
@@ -289,24 +304,24 @@ export class Role {
    */
   toProtocol(): any {
     return {
-      protocol_version: this._protocol_version,
+      protocolVersion: this._protocol_version,
       timestamp: this._timestamp,
-      role_id: this._role_id,
-      context_id: this._context_id,
+      roleId: this._role_id,
+      contextId: this._context_id,
       name: this._name,
-      role_type: this._role_type,
+      roleType: this._role_type,
       status: this._status,
       permissions: this._permissions,
-      display_name: this._display_name,
+      displayName: this._display_name,
       description: this._description,
       scope: this._scope,
       inheritance: this._inheritance,
       delegation: this._delegation,
       attributes: this._attributes,
-      validation_rules: this._validation_rules,
-      audit_settings: this._audit_settings,
-      created_at: this._created_at,
-      updated_at: this._updated_at
+      validationRules: this._validation_rules,
+      auditSettings: this._audit_settings,
+      createdAt: this._created_at,
+      updatedAt: this._updated_at
     };
   }
 
@@ -315,24 +330,24 @@ export class Role {
    */
   static fromProtocol(protocol: any): Role {
     return new Role(
-      protocol.role_id,
-      protocol.context_id,
-      protocol.protocol_version,
+      protocol.roleId,
+      protocol.contextId,
+      protocol.protocolVersion,
       protocol.name,
-      protocol.role_type,
+      protocol.roleType,
       protocol.status,
       protocol.permissions || [],
       protocol.timestamp,
-      protocol.created_at,
-      protocol.updated_at,
-      protocol.display_name,
+      protocol.createdAt,
+      protocol.updatedAt,
+      protocol.displayName,
       protocol.description,
       protocol.scope,
       protocol.inheritance,
       protocol.delegation,
       protocol.attributes,
-      protocol.validation_rules,
-      protocol.audit_settings
+      protocol.validationRules,
+      protocol.auditSettings
     );
   }
 }

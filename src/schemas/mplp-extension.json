@@ -1,10 +1,8 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://mplp.dev/schemas/v1.0/mplp-extension.json",
   "title": "MPLP Extension Protocol v1.0",
   "description": "Extension模块协议Schema - 扩展机制和插件管理",
-  "version": "1.0.0",
-  "lastUpdated": "2025-08-04",
   "type": "object",
   "$defs": {
     "uuid": {
@@ -24,7 +22,12 @@
     },
     "priority": {
       "type": "string",
-      "enum": ["critical", "high", "medium", "low"],
+      "enum": [
+        "critical",
+        "high",
+        "medium",
+        "low"
+      ],
       "description": "优先级枚举"
     }
   },
@@ -116,10 +119,16 @@
                   "extension"
                 ]
               },
-              "min_version": { "$ref": "#/$defs/version" },
-              "max_version": { "$ref": "#/$defs/version" }
+              "min_version": {
+                "$ref": "#/$defs/version"
+              },
+              "max_version": {
+                "$ref": "#/$defs/version"
+              }
             },
-            "required": ["module"]
+            "required": [
+              "module"
+            ]
           }
         },
         "dependencies": {
@@ -127,12 +136,24 @@
           "items": {
             "type": "object",
             "properties": {
-              "extension_id": { "$ref": "#/$defs/uuid" },
-              "name": { "type": "string" },
-              "version_range": { "type": "string" },
-              "optional": { "type": "boolean" }
+              "extension_id": {
+                "$ref": "#/$defs/uuid"
+              },
+              "name": {
+                "type": "string"
+              },
+              "version_range": {
+                "type": "string"
+              },
+              "optional": {
+                "type": "boolean"
+              }
             },
-            "required": ["extension_id", "name", "version_range"]
+            "required": [
+              "extension_id",
+              "name",
+              "version_range"
+            ]
           }
         },
         "conflicts": {
@@ -140,15 +161,27 @@
           "items": {
             "type": "object",
             "properties": {
-              "extension_id": { "$ref": "#/$defs/uuid" },
-              "name": { "type": "string" },
-              "reason": { "type": "string" }
+              "extension_id": {
+                "$ref": "#/$defs/uuid"
+              },
+              "name": {
+                "type": "string"
+              },
+              "reason": {
+                "type": "string"
+              }
             },
-            "required": ["extension_id", "name", "reason"]
+            "required": [
+              "extension_id",
+              "name",
+              "reason"
+            ]
           }
         }
       },
-      "required": ["mplp_version"]
+      "required": [
+        "mplp_version"
+      ]
     },
     "configuration": {
       "type": "object",
@@ -173,26 +206,45 @@
           "items": {
             "type": "object",
             "properties": {
-              "rule": { "type": "string" },
-              "message": { "type": "string" },
+              "rule": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
               "severity": {
                 "type": "string",
-                "enum": ["error", "warning", "info"]
+                "enum": [
+                  "error",
+                  "warning",
+                  "info"
+                ]
               }
             },
-            "required": ["rule", "message", "severity"]
+            "required": [
+              "rule",
+              "message",
+              "severity"
+            ]
           }
         }
       },
-      "required": ["schema", "current_config"]
+      "required": [
+        "schema",
+        "current_config"
+      ]
     },
     "extension_points": {
       "type": "array",
       "items": {
         "type": "object",
         "properties": {
-          "point_id": { "$ref": "#/$defs/uuid" },
-          "name": { "type": "string" },
+          "point_id": {
+            "$ref": "#/$defs/uuid"
+          },
+          "name": {
+            "type": "string"
+          },
           "type": {
             "type": "string",
             "enum": [
@@ -215,36 +267,68 @@
               "system"
             ]
           },
-          "event_name": { "type": "string" },
-          "execution_order": { "type": "integer", "minimum": 1 },
-          "enabled": { "type": "boolean" },
+          "event_name": {
+            "type": "string"
+          },
+          "execution_order": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "enabled": {
+            "type": "boolean"
+          },
           "handler": {
             "type": "object",
             "properties": {
-              "function_name": { "type": "string" },
-              "parameters": { "type": "object", "additionalProperties": true },
-              "timeout_ms": { "type": "integer", "minimum": 100 },
+              "function_name": {
+                "type": "string"
+              },
+              "parameters": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "timeout_ms": {
+                "type": "integer",
+                "minimum": 100
+              },
               "retry_policy": {
                 "type": "object",
                 "properties": {
-                  "max_retries": { "type": "integer", "minimum": 0 },
-                  "retry_delay_ms": { "type": "integer", "minimum": 100 },
+                  "max_retries": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "retry_delay_ms": {
+                    "type": "integer",
+                    "minimum": 100
+                  },
                   "backoff_strategy": {
                     "type": "string",
-                    "enum": ["fixed", "exponential", "linear"]
+                    "enum": [
+                      "fixed",
+                      "exponential",
+                      "linear"
+                    ]
                   }
                 }
               }
             },
-            "required": ["function_name"]
+            "required": [
+              "function_name"
+            ]
           },
           "conditions": {
             "type": "object",
             "properties": {
-              "when": { "type": "string", "description": "条件表达式" },
+              "when": {
+                "type": "string",
+                "description": "条件表达式"
+              },
               "required_permissions": {
                 "type": "array",
-                "items": { "type": "string" }
+                "items": {
+                  "type": "string"
+                }
               },
               "context_filters": {
                 "type": "object",
@@ -269,25 +353,57 @@
       "items": {
         "type": "object",
         "properties": {
-          "endpoint_id": { "$ref": "#/$defs/uuid" },
-          "path": { "type": "string", "pattern": "^/[a-zA-Z0-9/_-]*$" },
+          "endpoint_id": {
+            "$ref": "#/$defs/uuid"
+          },
+          "path": {
+            "type": "string",
+            "pattern": "^/[a-zA-Z0-9/_-]*$"
+          },
           "method": {
             "type": "string",
-            "enum": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"]
+            "enum": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE",
+              "OPTIONS",
+              "HEAD"
+            ]
           },
-          "description": { "type": "string" },
-          "handler": { "type": "string" },
-          "middleware": { "type": "array", "items": { "type": "string" } },
-          "authentication_required": { "type": "boolean" },
+          "description": {
+            "type": "string"
+          },
+          "handler": {
+            "type": "string"
+          },
+          "middleware": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "authentication_required": {
+            "type": "boolean"
+          },
           "required_permissions": {
             "type": "array",
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           },
           "rate_limit": {
             "type": "object",
             "properties": {
-              "requests_per_minute": { "type": "integer", "minimum": 1 },
-              "burst_size": { "type": "integer", "minimum": 1 }
+              "requests_per_minute": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "burst_size": {
+                "type": "integer",
+                "minimum": 1
+              }
             }
           },
           "request_schema": {
@@ -315,8 +431,12 @@
       "items": {
         "type": "object",
         "properties": {
-          "subscription_id": { "$ref": "#/$defs/uuid" },
-          "event_pattern": { "type": "string" },
+          "subscription_id": {
+            "$ref": "#/$defs/uuid"
+          },
+          "event_pattern": {
+            "type": "string"
+          },
           "source_module": {
             "type": "string",
             "enum": [
@@ -330,16 +450,24 @@
               "*"
             ]
           },
-          "handler": { "type": "string" },
+          "handler": {
+            "type": "string"
+          },
           "filter_conditions": {
             "type": "object",
             "additionalProperties": true
           },
           "delivery_guarantees": {
             "type": "string",
-            "enum": ["at_least_once", "at_most_once", "exactly_once"]
+            "enum": [
+              "at_least_once",
+              "at_most_once",
+              "exactly_once"
+            ]
           },
-          "dead_letter_queue": { "type": "boolean" }
+          "dead_letter_queue": {
+            "type": "boolean"
+          }
         },
         "required": [
           "subscription_id",
@@ -353,68 +481,137 @@
     "lifecycle": {
       "type": "object",
       "properties": {
-        "install_date": { "$ref": "#/$defs/timestamp" },
-        "last_update": { "$ref": "#/$defs/timestamp" },
-        "activation_count": { "type": "integer", "minimum": 0 },
-        "error_count": { "type": "integer", "minimum": 0 },
+        "install_date": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "last_update": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "activation_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "error_count": {
+          "type": "integer",
+          "minimum": 0
+        },
         "last_error": {
           "type": "object",
           "properties": {
-            "timestamp": { "$ref": "#/$defs/timestamp" },
-            "error_type": { "type": "string" },
-            "message": { "type": "string" },
-            "stack_trace": { "type": "string" }
+            "timestamp": {
+              "$ref": "#/$defs/timestamp"
+            },
+            "error_type": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "stack_trace": {
+              "type": "string"
+            }
           }
         },
         "performance_metrics": {
           "type": "object",
           "properties": {
-            "average_execution_time_ms": { "type": "number", "minimum": 0 },
-            "total_executions": { "type": "integer", "minimum": 0 },
-            "success_rate": { "type": "number", "minimum": 0, "maximum": 1 },
-            "memory_usage_mb": { "type": "number", "minimum": 0 }
+            "average_execution_time_ms": {
+              "type": "number",
+              "minimum": 0
+            },
+            "total_executions": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "success_rate": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "memory_usage_mb": {
+              "type": "number",
+              "minimum": 0
+            }
           }
         },
         "health_check": {
           "type": "object",
           "properties": {
-            "endpoint": { "type": "string" },
-            "interval_seconds": { "type": "integer", "minimum": 1 },
-            "timeout_ms": { "type": "integer", "minimum": 100 },
-            "failure_threshold": { "type": "integer", "minimum": 1 }
+            "endpoint": {
+              "type": "string"
+            },
+            "interval_seconds": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "timeout_ms": {
+              "type": "integer",
+              "minimum": 100
+            },
+            "failure_threshold": {
+              "type": "integer",
+              "minimum": 1
+            }
           }
         }
       },
-      "required": ["install_date", "activation_count", "error_count"]
+      "required": [
+        "install_date",
+        "activation_count",
+        "error_count"
+      ]
     },
     "security": {
       "type": "object",
       "properties": {
-        "sandbox_enabled": { "type": "boolean" },
+        "sandbox_enabled": {
+          "type": "boolean"
+        },
         "resource_limits": {
           "type": "object",
           "properties": {
-            "max_memory_mb": { "type": "integer", "minimum": 1 },
+            "max_memory_mb": {
+              "type": "integer",
+              "minimum": 1
+            },
             "max_cpu_percent": {
               "type": "integer",
               "minimum": 1,
               "maximum": 100
             },
-            "max_file_size_mb": { "type": "integer", "minimum": 1 },
-            "network_access": { "type": "boolean" },
+            "max_file_size_mb": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "network_access": {
+              "type": "boolean"
+            },
             "file_system_access": {
               "type": "string",
-              "enum": ["none", "read_only", "sandbox", "full"]
+              "enum": [
+                "none",
+                "read_only",
+                "sandbox",
+                "full"
+              ]
             }
           }
         },
         "code_signing": {
           "type": "object",
           "properties": {
-            "required": { "type": "boolean" },
-            "signature": { "type": "string" },
-            "certificate": { "type": "string" },
-            "timestamp": { "$ref": "#/$defs/timestamp" }
+            "required": {
+              "type": "boolean"
+            },
+            "signature": {
+              "type": "string"
+            },
+            "certificate": {
+              "type": "string"
+            },
+            "timestamp": {
+              "$ref": "#/$defs/timestamp"
+            }
           }
         },
         "permissions": {
@@ -422,39 +619,90 @@
           "items": {
             "type": "object",
             "properties": {
-              "permission": { "type": "string" },
-              "justification": { "type": "string" },
-              "approved": { "type": "boolean" },
-              "approved_by": { "type": "string" },
-              "approval_date": { "$ref": "#/$defs/timestamp" }
+              "permission": {
+                "type": "string"
+              },
+              "justification": {
+                "type": "string"
+              },
+              "approved": {
+                "type": "boolean"
+              },
+              "approved_by": {
+                "type": "string"
+              },
+              "approval_date": {
+                "$ref": "#/$defs/timestamp"
+              }
             },
-            "required": ["permission", "justification", "approved"]
+            "required": [
+              "permission",
+              "justification",
+              "approved"
+            ]
           }
         }
       },
-      "required": ["sandbox_enabled", "resource_limits"]
+      "required": [
+        "sandbox_enabled",
+        "resource_limits"
+      ]
     },
     "metadata": {
       "type": "object",
       "properties": {
-        "author": { "type": "string" },
-        "organization": { "type": "string" },
-        "license": { "type": "string" },
-        "homepage": { "type": "string", "format": "uri" },
-        "repository": { "type": "string", "format": "uri" },
-        "documentation": { "type": "string", "format": "uri" },
-        "support_contact": { "type": "string" },
-        "keywords": { "type": "array", "items": { "type": "string" } },
-        "categories": { "type": "array", "items": { "type": "string" } },
+        "author": {
+          "type": "string"
+        },
+        "organization": {
+          "type": "string"
+        },
+        "license": {
+          "type": "string"
+        },
+        "homepage": {
+          "type": "string",
+          "format": "uri"
+        },
+        "repository": {
+          "type": "string",
+          "format": "uri"
+        },
+        "documentation": {
+          "type": "string",
+          "format": "uri"
+        },
+        "support_contact": {
+          "type": "string"
+        },
+        "keywords": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "screenshots": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-              "url": { "type": "string", "format": "uri" },
-              "caption": { "type": "string" }
+              "url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "caption": {
+                "type": "string"
+              }
             },
-            "required": ["url"]
+            "required": [
+              "url"
+            ]
           }
         }
       }

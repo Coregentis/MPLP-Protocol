@@ -8,95 +8,219 @@
  * @compliance 100% Schema合规性 - 完全匹配plan-protocol.json
  */
 
-import { PlanStatus, TaskStatus, ExecutionStrategy, Priority, UUID, Timestamp } from '../../../../public/shared/types/plan-types';
-import { PlanTask } from '../value-objects/plan-task.value-object';
-import { PlanDependency } from '../value-objects/plan-dependency.value-object';
+import { UUID, Timestamp } from '../../../../public/shared/types';
+import {
+  PlanStatus,
+  TaskStatus,
+  ExecutionStrategy,
+  Priority,
+  PlanTask,
+  PlanDependency,
+  Duration,
+  RiskAssessment
+} from '../../types';
 import { PlanConfiguration } from '../value-objects/plan-configuration.value-object';
 import { Timeline } from '../value-objects/timeline.value-object';
-import { RiskAssessment } from '../value-objects/risk-assessment.value-object';
 
 /**
  * Plan领域实体
  */
 export class Plan {
-  private _plan_id: UUID;
-  private _context_id: UUID;
-  private _name: string;
-  private _description: string;
-  private _status: PlanStatus;
-  private _version: string;
-  private _created_at: Timestamp;
-  private _updated_at: Timestamp;
-  private _goals: string[];
-  private _tasks: PlanTask[];
-  private _dependencies: PlanDependency[];
-  private _execution_strategy: ExecutionStrategy;
-  private _priority: Priority;
-  private _estimated_duration?: { value: number; unit: string };
-  private _progress: {
-    completed_tasks: number;
-    total_tasks: number;
+  // Domain层使用camelCase命名约定 (DDD架构标准)
+  private _planId: UUID;                    // 对应Schema: plan_id
+  private _contextId: UUID;                 // 对应Schema: context_id
+  private _name: string;                    // 对应Schema: name
+  private _description: string;             // 对应Schema: description
+  private _status: PlanStatus;              // 对应Schema: status
+  private _version: string;                 // 对应Schema: version
+  private _createdAt: Timestamp;            // 对应Schema: created_at
+  private _updatedAt: Timestamp;            // 对应Schema: updated_at
+  private _goals: string[];                 // 对应Schema: goals
+  private _tasks: PlanTask[];               // 对应Schema: tasks
+  private _dependencies: PlanDependency[];  // 对应Schema: dependencies
+  private _executionStrategy: ExecutionStrategy; // 对应Schema: execution_strategy
+  private _priority: Priority;              // 对应Schema: priority
+  private _estimatedDuration?: Duration;    // 对应Schema: estimated_duration
+  private _progress: {                      // 对应Schema: progress
+    completedTasks: number;                 // camelCase for Domain layer
+    totalTasks: number;
     percentage: number;
   };
-  private _timeline?: Timeline;
-  private _configuration: PlanConfiguration;
-  private _metadata?: Record<string, unknown>;
-  private _risk_assessment?: RiskAssessment;
+  private _timeline?: Timeline;             // 对应Schema: timeline
+  private _configuration: PlanConfiguration; // 对应Schema: configuration
+  private _metadata?: Record<string, unknown>; // 对应Schema: metadata
+  private _riskAssessment?: RiskAssessment; // 对应Schema: risk_assessment
 
-  constructor(params: {
-    plan_id: UUID;
-    context_id: UUID;
+    /**
+   * 里程碑列表
+   */
+  public milestones?: unknown[];
+
+  /**
+   * 优化配置
+   */
+  public optimization?: Record<string, unknown>;
+
+  /**
+   * 失败解决器
+   */
+  public failureResolver?: Record<string, unknown>;
+
+  /**
+   * 创建者
+   */
+  public createdBy: string;
+
+  /**
+   * 更新者
+   */
+  public updatedBy?: string;
+
+constructor(params: Record<string, unknown>) {
+    // 验证必需字段
+    this.validateRequiredFields(params);
+
+    // 转换snake_case到camelCase参数
+    const normalizedParams = this.normalizeParams(params);
+
+    // Domain层属性赋值，使用camelCase
+    this._planId = normalizedParams.planId;
+    this._contextId = normalizedParams.contextId;
+    this._name = normalizedParams.name;
+    this._description = normalizedParams.description;
+    this._status = normalizedParams.status;
+    this._version = normalizedParams.version;
+    this._createdAt = normalizedParams.createdAt;
+    this._updatedAt = normalizedParams.updatedAt;
+    this._goals = normalizedParams.goals;
+    this._tasks = normalizedParams.tasks;
+    this._dependencies = normalizedParams.dependencies;
+    this._executionStrategy = normalizedParams.executionStrategy;
+    this._priority = normalizedParams.priority;
+    this._estimatedDuration = normalizedParams.estimatedDuration;
+    this._progress = normalizedParams.progress;
+    this._timeline = normalizedParams.timeline;
+    this._configuration = normalizedParams.configuration;
+    this._metadata = normalizedParams.metadata;
+    this._riskAssessment = normalizedParams.riskAssessment;
+    this.createdBy = normalizedParams.createdBy || 'system';
+    this.updatedBy = normalizedParams.updatedBy;
+  }
+
+  /**
+   * 验证必需字段
+   */
+  private validateRequiredFields(params: Record<string, unknown>): void {
+    const planId = params.planId || params.plan_id;
+    const contextId = params.contextId || params.context_id;
+    const name = params.name;
+
+    if (!planId) {
+      throw new Error('Plan ID is required');
+    }
+
+    if (!contextId) {
+      throw new Error('Context ID is required');
+    }
+
+    if (!name) {
+      throw new Error('Plan name is required');
+    }
+
+    // 验证字段类型
+    if (params.priority && !Object.values(Priority).includes(params.priority as Priority)) {
+      throw new Error('Invalid priority value');
+    }
+  }
+
+  /**
+   * 标准化参数，支持snake_case到camelCase转换
+   */
+  private normalizeParams(params: Record<string, unknown>): {
+    planId: UUID;
+    contextId: UUID;
     name: string;
     description: string;
     status: PlanStatus;
     version: string;
-    created_at: Timestamp;
-    updated_at: Timestamp;
+    createdAt: Timestamp;
+    updatedAt: Timestamp;
     goals: string[];
     tasks: PlanTask[];
     dependencies: PlanDependency[];
-    execution_strategy: ExecutionStrategy;
+    executionStrategy: ExecutionStrategy;
     priority: Priority;
-    estimated_duration?: { value: number; unit: string };
+    estimatedDuration?: Duration;
     progress: {
-      completed_tasks: number;
-      total_tasks: number;
+      completedTasks: number;
+      totalTasks: number;
       percentage: number;
     };
     timeline?: Timeline;
     configuration: PlanConfiguration;
     metadata?: Record<string, unknown>;
-    risk_assessment?: RiskAssessment;
-  }) {
-    this._plan_id = params.plan_id;
-    this._context_id = params.context_id;
-    this._name = params.name;
-    this._description = params.description;
-    this._status = params.status;
-    this._version = params.version;
-    this._created_at = params.created_at;
-    this._updated_at = params.updated_at;
-    this._goals = params.goals;
-    this._tasks = params.tasks;
-    this._dependencies = params.dependencies;
-    this._execution_strategy = params.execution_strategy;
-    this._priority = params.priority;
-    this._estimated_duration = params.estimated_duration;
-    this._progress = params.progress;
-    this._timeline = params.timeline;
-    this._configuration = params.configuration;
-    this._metadata = params.metadata;
-    this._risk_assessment = params.risk_assessment;
+    riskAssessment?: RiskAssessment;
+    createdBy?: string;
+    updatedBy?: string;
+  } {
+    const now = new Date().toISOString();
+
+    return {
+      planId: (params.planId || params.plan_id) as UUID,
+      contextId: (params.contextId || params.context_id) as UUID,
+      name: params.name as string,
+      description: params.description as string,
+      status: (params.status || PlanStatus.DRAFT) as PlanStatus,
+      version: (params.version || '1.0.0') as string,
+      createdAt: (params.createdAt || params.created_at || params.timestamp || now) as Timestamp,
+      updatedAt: (params.updatedAt || params.updated_at || params.timestamp || now) as Timestamp,
+      goals: (params.goals || []) as string[],
+      tasks: (params.tasks || []) as PlanTask[],
+      dependencies: (params.dependencies || []) as PlanDependency[],
+      executionStrategy: (params.executionStrategy || params.execution_strategy || 'sequential') as ExecutionStrategy,
+      priority: params.priority as Priority,
+      estimatedDuration: (params.estimatedDuration || params.estimated_duration) as Duration,
+      progress: this.normalizeProgress((params.progress as Record<string, unknown>) || {}),
+      timeline: params.timeline as Timeline,
+      configuration: (params.configuration || {}) as PlanConfiguration,
+      metadata: params.metadata as Record<string, unknown>,
+      riskAssessment: (params.riskAssessment || params.risk_assessment) as RiskAssessment,
+      createdBy: (params.createdBy || params.created_by) as string,
+      updatedBy: (params.updatedBy || params.updated_by) as string
+    };
+  }
+
+  /**
+   * 标准化progress对象
+   */
+  private normalizeProgress(progress: Record<string, unknown> | undefined): {
+    completedTasks: number;
+    totalTasks: number;
+    percentage: number;
+  } {
+    if (!progress) {
+      return {
+        completedTasks: 0,
+        totalTasks: 0,
+        percentage: 0
+      };
+    }
+
+    return {
+      completedTasks: (progress.completedTasks || progress.completed_tasks || 0) as number,
+      totalTasks: (progress.totalTasks || progress.total_tasks || 0) as number,
+      percentage: (progress.percentage || 0) as number
+    };
   }
 
   // ===== 获取器 =====
 
-  get plan_id(): UUID {
-    return this._plan_id;
+  get planId(): UUID {
+    return this._planId;
   }
 
-  get context_id(): UUID {
-    return this._context_id;
+  get contextId(): UUID {
+    return this._contextId;
   }
 
   get name(): string {
@@ -115,12 +239,12 @@ export class Plan {
     return this._version;
   }
 
-  get created_at(): Timestamp {
-    return this._created_at;
+  get createdAt(): Timestamp {
+    return this._createdAt;
   }
 
-  get updated_at(): Timestamp {
-    return this._updated_at;
+  get updatedAt(): Timestamp {
+    return this._updatedAt;
   }
 
   get goals(): string[] {
@@ -131,24 +255,39 @@ export class Plan {
     return [...this._tasks];
   }
 
-  get dependencies(): PlanDependency[] {
-    return [...this._dependencies];
+  get dependencies(): (PlanDependency & { source_task_id: string; target_task_id: string })[] {
+    return this._dependencies.map(dep => ({
+      ...dep,
+      source_task_id: dep.sourceTaskId,
+      target_task_id: dep.targetTaskId
+    }));
   }
 
-  get execution_strategy(): ExecutionStrategy {
-    return this._execution_strategy;
+  get executionStrategy(): ExecutionStrategy {
+    return this._executionStrategy;
   }
 
   get priority(): Priority {
     return this._priority;
   }
 
-  get estimated_duration(): { value: number; unit: string } | undefined {
-    return this._estimated_duration ? { ...this._estimated_duration } : undefined;
+  get estimatedDuration(): Duration | undefined {
+    return this._estimatedDuration ? { ...this._estimatedDuration } : undefined;
   }
 
-  get progress(): { completed_tasks: number; total_tasks: number; percentage: number } {
-    return { ...this._progress };
+  get progress(): {
+    completedTasks: number;
+    totalTasks: number;
+    percentage: number;
+    // 兼容snake_case访问
+    completed_tasks: number;
+    total_tasks: number;
+  } {
+    return {
+      ...this._progress,
+      completed_tasks: this._progress.completedTasks,
+      total_tasks: this._progress.totalTasks
+    };
   }
 
   get timeline(): Timeline | undefined {
@@ -163,9 +302,41 @@ export class Plan {
     return this._metadata ? { ...this._metadata } : undefined;
   }
 
-  get risk_assessment(): RiskAssessment | undefined {
-    return this._risk_assessment ? { ...this._risk_assessment } : undefined;
+  get riskAssessment(): RiskAssessment | undefined {
+    return this._riskAssessment ? { ...this._riskAssessment } : undefined;
   }
+
+  // ===== Snake_case 兼容性获取器 (用于测试) =====
+
+  get plan_id(): UUID {
+    return this._planId;
+  }
+
+  get context_id(): UUID {
+    return this._contextId;
+  }
+
+  get execution_strategy(): ExecutionStrategy {
+    return this._executionStrategy;
+  }
+
+  get estimated_duration(): { value: number; unit: string } | undefined {
+    return this._estimatedDuration;
+  }
+
+  get created_at(): Timestamp {
+    return this._createdAt;
+  }
+
+  get updated_at(): Timestamp {
+    return this._updatedAt;
+  }
+
+  get risk_assessment(): RiskAssessment | undefined {
+    return this._riskAssessment ? { ...this._riskAssessment } : undefined;
+  }
+
+
 
   // ===== 业务方法 =====
 
@@ -174,30 +345,61 @@ export class Plan {
    * @param newStatus 新状态
    * @returns 成功或失败
    */
-  updateStatus(newStatus: PlanStatus): boolean {
+  updateStatus(newStatus: PlanStatus): { success: boolean; error?: string } {
     // 验证状态转换是否有效
     if (!this.isValidStatusTransition(this._status, newStatus)) {
-      return false;
+      return {
+        success: false,
+        error: `Invalid status transition from ${this._status} to ${newStatus}`
+      };
     }
 
     this._status = newStatus;
-    this._updated_at = new Date().toISOString();
-    return true;
+    this._updatedAt = new Date().toISOString();
+    return { success: true };
   }
 
   /**
    * 添加任务
    * @param task 任务
    */
-  addTask(task: PlanTask): void {
-    // 检查任务ID是否已存在
-    if (this._tasks.some(t => t.task_id === task.task_id)) {
-      throw new Error(`Task with ID ${task.task_id} already exists`);
+  addTask(task: PlanTask): { success: boolean; error?: string } {
+    // 获取任务ID，支持两种字段名
+    const taskId = task.taskId || (task as unknown as { task_id?: string }).task_id;
+
+    if (!taskId) {
+      return {
+        success: false,
+        error: 'Task ID is required'
+      };
     }
 
-    this._tasks.push(task);
-    this._updated_at = new Date().toISOString();
+    // 检查任务ID是否已存在
+    if (this._tasks.some(t =>
+      t.taskId === taskId || (t as unknown as { task_id?: string }).task_id === taskId
+    )) {
+      return {
+        success: false,
+        error: `Task with ID ${taskId} already exists`
+      };
+    }
+
+    // 确保任务有正确的taskId字段，但不重复添加
+    const normalizedTask: PlanTask = {
+      ...task,
+      taskId: taskId
+    };
+
+    // 如果原始任务使用task_id，移除taskId字段以避免重复
+    if ((task as unknown as { task_id?: string }).task_id && !task.taskId) {
+      delete (normalizedTask as unknown as { taskId?: string }).taskId;
+    }
+
+    this._tasks.push(normalizedTask);
+    this._updatedAt = new Date().toISOString();
     this.recalculateProgress();
+
+    return { success: true };
   }
 
   /**
@@ -206,26 +408,69 @@ export class Plan {
    * @param updates 更新内容
    * @returns 成功或失败
    */
-  updateTask(taskId: UUID, updates: Partial<PlanTask>): boolean {
-    const taskIndex = this._tasks.findIndex(t => t.task_id === taskId);
+  updateTask(taskId: UUID, updates: Partial<PlanTask>): { success: boolean; error?: string } {
+    const taskIndex = this._tasks.findIndex(t =>
+      t.taskId === taskId || (t as unknown as { task_id?: string }).task_id === taskId
+    );
     if (taskIndex === -1) {
-      return false;
+      return {
+        success: false,
+        error: `Task with ID ${taskId} not found`
+      };
     }
+
+    const currentTask = this._tasks[taskIndex];
 
     // 如果更新包含状态，验证状态转换是否有效
-    if (updates.status && !this.isValidTaskStatusTransition(this._tasks[taskIndex].status, updates.status)) {
-      return false;
+    if (updates.status && currentTask.status) {
+      if (!this.isValidTaskStatusTransition(currentTask.status, updates.status)) {
+        return {
+          success: false,
+          error: `Invalid task status transition from ${currentTask.status} to ${updates.status}`
+        };
+      }
     }
 
-    // 更新任务
+    // 更新任务，确保保持必要的字段
     this._tasks[taskIndex] = {
-      ...this._tasks[taskIndex],
-      ...updates
+      ...currentTask,
+      ...updates,
+      // 确保taskId不被覆盖
+      taskId: currentTask.taskId
     };
 
-    this._updated_at = new Date().toISOString();
+    this._updatedAt = new Date().toISOString();
     this.recalculateProgress();
-    return true;
+    return { success: true };
+  }
+
+  /**
+   * 删除任务
+   * @param taskId 任务ID
+   * @returns 成功或失败
+   */
+  removeTask(taskId: UUID): { success: boolean; error?: string } {
+    const taskIndex = this._tasks.findIndex(t =>
+      t.taskId === taskId || (t as unknown as { task_id?: string }).task_id === taskId
+    );
+    if (taskIndex === -1) {
+      return {
+        success: false,
+        error: `Task with ID ${taskId} not found`
+      };
+    }
+
+    // 删除任务
+    this._tasks.splice(taskIndex, 1);
+
+    // 删除相关的依赖关系
+    this._dependencies = this._dependencies.filter(dep =>
+      dep.sourceTaskId !== taskId && dep.targetTaskId !== taskId
+    );
+
+    this._updatedAt = new Date().toISOString();
+    this.recalculateProgress();
+    return { success: true };
   }
 
   /**
@@ -234,28 +479,48 @@ export class Plan {
    * @returns 成功或失败
    */
   addDependency(dependency: PlanDependency): boolean {
+    // 支持snake_case字段名
+    const depWithSnakeCase = dependency as unknown as {
+      source_task_id?: string;
+      target_task_id?: string;
+    };
+
+    const sourceTaskId = dependency.sourceTaskId || depWithSnakeCase.source_task_id;
+    const targetTaskId = dependency.targetTaskId || depWithSnakeCase.target_task_id;
+
+    if (!sourceTaskId || !targetTaskId) {
+      return false;
+    }
+
     // 检查依赖的任务是否存在
-    const sourceTaskExists = this._tasks.some(t => t.task_id === dependency.source_task_id);
-    const targetTaskExists = this._tasks.some(t => t.task_id === dependency.target_task_id);
+    const sourceTaskExists = this._tasks.some(t => t.taskId === sourceTaskId);
+    const targetTaskExists = this._tasks.some(t => t.taskId === targetTaskId);
 
     if (!sourceTaskExists || !targetTaskExists) {
       return false;
     }
 
     // 检查是否已存在相同的依赖
-    if (this._dependencies.some(d => 
-      d.source_task_id === dependency.source_task_id && 
-      d.target_task_id === dependency.target_task_id)) {
+    if (this._dependencies.some(d =>
+      d.sourceTaskId === sourceTaskId &&
+      d.targetTaskId === targetTaskId)) {
       return false;
     }
+
+    // 创建标准化的依赖对象
+    const normalizedDependency: PlanDependency = {
+      ...dependency,
+      sourceTaskId: sourceTaskId,
+      targetTaskId: targetTaskId
+    };
 
     // 检查是否会形成循环依赖
-    if (this.wouldFormCycle(dependency)) {
+    if (this.wouldFormCycle(normalizedDependency)) {
       return false;
     }
 
-    this._dependencies.push(dependency);
-    this._updated_at = new Date().toISOString();
+    this._dependencies.push(normalizedDependency);
+    this._updatedAt = new Date().toISOString();
     return true;
   }
 
@@ -268,7 +533,7 @@ export class Plan {
       ...this._configuration,
       ...updates
     };
-    this._updated_at = new Date().toISOString();
+    this._updatedAt = new Date().toISOString();
   }
 
   /**
@@ -280,7 +545,7 @@ export class Plan {
       ...this._metadata || {},
       ...updates
     };
-    this._updated_at = new Date().toISOString();
+    this._updatedAt = new Date().toISOString();
   }
 
   /**
@@ -288,8 +553,8 @@ export class Plan {
    * @param assessment 风险评估
    */
   updateRiskAssessment(assessment: RiskAssessment): void {
-    this._risk_assessment = assessment;
-    this._updated_at = new Date().toISOString();
+    this._riskAssessment = assessment;
+    this._updatedAt = new Date().toISOString();
   }
 
   /**
@@ -301,21 +566,140 @@ export class Plan {
     const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
 
     this._progress = {
-      completed_tasks: completed,
-      total_tasks: total,
+      completedTasks: completed,
+      totalTasks: total,
       percentage
     };
   }
 
   /**
    * 判断计划是否可执行
+   * @returns 是否可执行
+   */
+  isExecutable(): boolean {
+    // 检查状态 - 允许ACTIVE和APPROVED状态执行
+    if (this._status !== PlanStatus.ACTIVE && this._status !== PlanStatus.APPROVED) {
+      return false;
+    }
+
+    // 检查是否有任务
+    if (this._tasks.length === 0) {
+      return false;
+    }
+
+    // 检查是否有无效依赖
+    const invalidDeps = this.validateDependencies();
+    if (invalidDeps.length > 0) {
+      return false;
+    }
+
+    // 检查是否有循环依赖
+    if (this.hasCyclicDependencies()) {
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * 计算计划的总估计时长
+   * @returns 总时长（毫秒）
+   */
+  getTotalEstimatedDuration(): number {
+    return this._tasks.reduce((total, task) => {
+      // 支持两种字段名
+      const estimatedDuration = task.estimatedDuration ||
+                               (task as unknown as { estimated_duration?: number }).estimated_duration;
+
+      if (typeof estimatedDuration === 'number') {
+        return total + estimatedDuration;
+      } else if (estimatedDuration && typeof estimatedDuration === 'object' && 'value' in estimatedDuration) {
+        return total + (estimatedDuration as Duration).value;
+      }
+
+      return total;
+    }, 0);
+  }
+
+  /**
+   * 获取计划的任务统计
+   * @returns 任务统计信息
+   */
+  getTaskStatistics(): {
+    total: number;
+    pending: number;
+    in_progress: number;
+    completed: number;
+    failed: number;
+  } {
+    const stats = {
+      total: this._tasks.length,
+      pending: 0,
+      in_progress: 0,
+      completed: 0,
+      failed: 0
+    };
+
+    this._tasks.forEach(task => {
+      switch (task.status) {
+        case TaskStatus.PENDING:
+          stats.pending++;
+          break;
+        case TaskStatus.IN_PROGRESS:
+          stats.in_progress++;
+          break;
+        case TaskStatus.COMPLETED:
+          stats.completed++;
+          break;
+        case TaskStatus.FAILED:
+          stats.failed++;
+          break;
+      }
+    });
+
+    return stats;
+  }
+
+  /**
+   * 验证任务依赖的有效性
+   * @returns 验证结果
+   */
+  validateTaskDependencies(): { success: boolean; error?: string } {
+    const errors = this.validateDependencies();
+    if (errors.length > 0) {
+      return {
+        success: false,
+        error: errors.join('; ')
+      };
+    }
+    return { success: true };
+  }
+
+  /**
+   * 支持计划的序列化
+   * @returns JSON对象
+   */
+  toJSON(): Record<string, unknown> {
+    return this.toObject();
+  }
+
+  /**
+   * 支持计划的克隆
+   * @returns 克隆的计划实例
+   */
+  clone(): Plan {
+    return new Plan(this.toObject());
+  }
+
+  /**
+   * 获取计划可执行性详情
    * @returns 是否可执行及原因
    */
-  isExecutable(): { executable: boolean; reasons: string[] } {
+  getExecutabilityDetails(): { executable: boolean; reasons: string[] } {
     const reasons: string[] = [];
 
-    // 检查状态
-    if (this._status !== 'active' && this._status !== 'approved') {
+    // 检查状态 - 允许ACTIVE和APPROVED状态执行
+    if (this._status !== PlanStatus.ACTIVE && this._status !== PlanStatus.APPROVED) {
       reasons.push(`Plan status must be 'active' or 'approved', current status: ${this._status}`);
     }
 
@@ -328,6 +712,11 @@ export class Plan {
     const invalidDeps = this.validateDependencies();
     if (invalidDeps.length > 0) {
       reasons.push(`Plan has invalid dependencies: ${invalidDeps.join(', ')}`);
+    }
+
+    // 检查是否有循环依赖
+    if (this.hasCyclicDependencies()) {
+      reasons.push('Plan has cyclic dependencies');
     }
 
     return {
@@ -347,16 +736,16 @@ export class Plan {
   private isValidStatusTransition(from: PlanStatus, to: PlanStatus): boolean {
     // 有效的状态转换映射
     const validTransitions: Record<PlanStatus, PlanStatus[]> = {
-      draft: ['active', 'cancelled', 'approved'],
-      approved: ['active', 'cancelled'],
-      active: ['paused', 'completed', 'cancelled', 'failed'],
-      paused: ['active', 'cancelled'],
-      completed: ['archived'],
-      cancelled: ['archived'],
-      failed: ['draft', 'active'],
-      archived: []
+      [PlanStatus.DRAFT]: [PlanStatus.APPROVED, PlanStatus.ACTIVE, PlanStatus.CANCELLED],
+      [PlanStatus.APPROVED]: [PlanStatus.ACTIVE, PlanStatus.CANCELLED],
+      [PlanStatus.ACTIVE]: [PlanStatus.PAUSED, PlanStatus.COMPLETED, PlanStatus.FAILED, PlanStatus.CANCELLED],
+      [PlanStatus.PAUSED]: [PlanStatus.ACTIVE, PlanStatus.CANCELLED],
+      [PlanStatus.COMPLETED]: [PlanStatus.ARCHIVED],
+      [PlanStatus.FAILED]: [PlanStatus.DRAFT, PlanStatus.ACTIVE, PlanStatus.CANCELLED, PlanStatus.ARCHIVED],
+      [PlanStatus.CANCELLED]: [PlanStatus.ARCHIVED],
+      [PlanStatus.ARCHIVED]: [] // 归档状态是终态
     };
-    
+
     return validTransitions[from]?.includes(to) || false;
   }
 
@@ -369,17 +758,17 @@ export class Plan {
   private isValidTaskStatusTransition(from: TaskStatus, to: TaskStatus): boolean {
     // 有效的状态转换映射
     const validTransitions: Record<TaskStatus, TaskStatus[]> = {
-      pending: ['in_progress', 'blocked', 'cancelled', 'skipped', 'ready'],
-      in_progress: ['completed', 'failed', 'blocked', 'cancelled', 'pending_intervention'],
-      blocked: ['in_progress', 'cancelled', 'skipped', 'ready'],
-      completed: [],
-      failed: ['pending', 'in_progress', 'skipped', 'cancelled'],
-      skipped: [],
-      cancelled: [],
-      ready: ['in_progress', 'blocked', 'cancelled'],
-      pending_intervention: ['in_progress', 'failed', 'cancelled']
+      [TaskStatus.PENDING]: [TaskStatus.READY, TaskStatus.IN_PROGRESS, TaskStatus.BLOCKED, TaskStatus.CANCELLED, TaskStatus.SKIPPED],
+      [TaskStatus.READY]: [TaskStatus.IN_PROGRESS, TaskStatus.BLOCKED, TaskStatus.CANCELLED, TaskStatus.SKIPPED],
+      [TaskStatus.IN_PROGRESS]: [TaskStatus.COMPLETED, TaskStatus.FAILED, TaskStatus.BLOCKED, TaskStatus.CANCELLED, TaskStatus.PENDING_INTERVENTION],
+      [TaskStatus.COMPLETED]: [], // 完成状态是终态
+      [TaskStatus.BLOCKED]: [TaskStatus.READY, TaskStatus.IN_PROGRESS, TaskStatus.CANCELLED, TaskStatus.SKIPPED],
+      [TaskStatus.FAILED]: [TaskStatus.PENDING, TaskStatus.READY, TaskStatus.IN_PROGRESS, TaskStatus.CANCELLED, TaskStatus.SKIPPED],
+      [TaskStatus.SKIPPED]: [], // 跳过状态是终态
+      [TaskStatus.CANCELLED]: [], // 取消状态是终态
+      [TaskStatus.PENDING_INTERVENTION]: [TaskStatus.READY, TaskStatus.IN_PROGRESS, TaskStatus.FAILED, TaskStatus.CANCELLED]
     };
-    
+
     return validTransitions[from]?.includes(to) || false;
   }
 
@@ -394,16 +783,29 @@ export class Plan {
     
     // 初始化图
     this._tasks.forEach(task => {
-      graph[task.task_id] = [];
+      const taskId = task.taskId || (task as unknown as { task_id?: string }).task_id;
+      if (taskId) {
+        graph[taskId] = [];
+      }
     });
-    
+
     // 添加现有依赖
     this._dependencies.forEach(dep => {
-      graph[dep.source_task_id].push(dep.target_task_id);
+      const sourceId = dep.sourceTaskId || (dep as unknown as { source_task_id?: string }).source_task_id;
+      const targetId = dep.targetTaskId || (dep as unknown as { target_task_id?: string }).target_task_id;
+
+      if (sourceId && targetId && graph[sourceId]) {
+        graph[sourceId].push(targetId);
+      }
     });
-    
+
     // 添加新依赖
-    graph[newDep.source_task_id].push(newDep.target_task_id);
+    const newSourceId = newDep.sourceTaskId || (newDep as unknown as { source_task_id?: string }).source_task_id;
+    const newTargetId = newDep.targetTaskId || (newDep as unknown as { target_task_id?: string }).target_task_id;
+
+    if (newSourceId && newTargetId && graph[newSourceId]) {
+      graph[newSourceId].push(newTargetId);
+    }
     
     // 检查是否有循环
     const visited = new Set<string>();
@@ -452,26 +854,147 @@ export class Plan {
    */
   private validateDependencies(): string[] {
     const errors: string[] = [];
-    
-    // 检查每个依赖
+
+    // 检查计划级别的依赖
     this._dependencies.forEach(dep => {
+      const sourceId = dep.sourceTaskId || (dep as unknown as { source_task_id?: string }).source_task_id;
+      const targetId = dep.targetTaskId || (dep as unknown as { target_task_id?: string }).target_task_id;
+
+      if (!sourceId || !targetId) {
+        errors.push(`Invalid dependency: missing source or target task ID`);
+        return;
+      }
+
       // 检查源任务是否存在
-      if (!this._tasks.some(t => t.task_id === dep.source_task_id)) {
-        errors.push(`Source task ${dep.source_task_id} does not exist`);
+      if (!this._tasks.some(t =>
+        t.taskId === sourceId || (t as unknown as { task_id?: string }).task_id === sourceId
+      )) {
+        errors.push(`Source task ${sourceId} does not exist`);
       }
-      
+
       // 检查目标任务是否存在
-      if (!this._tasks.some(t => t.task_id === dep.target_task_id)) {
-        errors.push(`Target task ${dep.target_task_id} does not exist`);
+      if (!this._tasks.some(t =>
+        t.taskId === targetId || (t as unknown as { task_id?: string }).task_id === targetId
+      )) {
+        errors.push(`Target task ${targetId} does not exist`);
       }
-      
+
       // 检查源和目标是否相同
-      if (dep.source_task_id === dep.target_task_id) {
-        errors.push(`Self-dependency detected: ${dep.source_task_id}`);
+      if (sourceId === targetId) {
+        errors.push(`Self-dependency detected: ${sourceId}`);
       }
     });
-    
+
+    // 检查任务级别的依赖
+    this._tasks.forEach(task => {
+      const taskId = task.taskId || (task as unknown as { task_id?: string }).task_id;
+      const dependencies = task.dependencies || (task as unknown as { dependencies?: string[] }).dependencies || [];
+
+      if (taskId && dependencies.length > 0) {
+        dependencies.forEach(depId => {
+          // 检查依赖的任务是否存在
+          if (!this._tasks.some(t =>
+            t.taskId === depId || (t as unknown as { task_id?: string }).task_id === depId
+          )) {
+            errors.push(`Task ${taskId} depends on non-existent task: ${depId}`);
+          }
+
+          // 检查自依赖
+          if (taskId === depId) {
+            errors.push(`Self-dependency detected in task: ${taskId}`);
+          }
+        });
+      }
+    });
+
     return errors;
+  }
+
+  /**
+   * 检查是否存在循环依赖
+   * @returns 是否存在循环依赖
+   */
+  hasCyclicDependencies(): boolean {
+    // 使用深度优先搜索检测循环
+    const visited = new Set<string>();
+    const recursionStack = new Set<string>();
+
+    // 构建邻接表，基于任务的依赖关系
+    const graph: Record<string, string[]> = {};
+
+    // 初始化图
+    this._tasks.forEach(task => {
+      const taskId = task.taskId || (task as unknown as { task_id?: string }).task_id;
+      if (taskId) {
+        graph[taskId] = [];
+      }
+    });
+
+    // 添加任务级别的依赖关系
+    this._tasks.forEach(task => {
+      const taskId = task.taskId || (task as unknown as { task_id?: string }).task_id;
+      const dependencies = task.dependencies || (task as unknown as { dependencies?: string[] }).dependencies || [];
+
+      if (taskId && dependencies.length > 0) {
+        graph[taskId] = [...dependencies];
+      }
+    });
+
+    // 添加计划级别的依赖关系
+    this._dependencies.forEach(dep => {
+      const sourceId = dep.sourceTaskId || (dep as unknown as { source_task_id?: string }).source_task_id;
+      const targetId = dep.targetTaskId || (dep as unknown as { target_task_id?: string }).target_task_id;
+
+      if (sourceId && targetId && graph[sourceId]) {
+        graph[sourceId].push(targetId);
+      }
+    });
+
+    // 对每个节点进行DFS
+    for (const taskId of Object.keys(graph)) {
+      if (this.hasCycleDFS(taskId, graph, visited, recursionStack)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * 深度优先搜索检测循环
+   * @param node 当前节点
+   * @param graph 图
+   * @param visited 已访问节点
+   * @param recursionStack 递归栈
+   * @returns 是否存在循环
+   */
+  private hasCycleDFS(
+    node: string,
+    graph: Record<string, string[]>,
+    visited: Set<string>,
+    recursionStack: Set<string>
+  ): boolean {
+    if (recursionStack.has(node)) {
+      return true; // 发现循环
+    }
+
+    if (visited.has(node)) {
+      return false; // 已经访问过，没有循环
+    }
+
+    visited.add(node);
+    recursionStack.add(node);
+
+    // 访问所有邻居
+    const neighbors = graph[node] || [];
+    for (const neighbor of neighbors) {
+      if (this.hasCycleDFS(neighbor, graph, visited, recursionStack)) {
+        return true;
+      }
+    }
+
+    recursionStack.delete(node);
+    return false;
   }
 
   /**
@@ -479,25 +1002,25 @@ export class Plan {
    */
   toObject() {
     return {
-      plan_id: this._plan_id,
-      context_id: this._context_id,
+      planId: this._planId,
+      contextId: this._contextId,
       name: this._name,
       description: this._description,
       status: this._status,
       version: this._version,
-      created_at: this._created_at,
-      updated_at: this._updated_at,
+      createdAt: this._createdAt,
+      updatedAt: this._updatedAt,
       goals: [...this._goals],
       tasks: this._tasks.map(task => ({ ...task })),
       dependencies: this._dependencies.map(dep => ({ ...dep })),
-      execution_strategy: this._execution_strategy,
+      executionStrategy: this._executionStrategy,
       priority: this._priority,
-      estimated_duration: this._estimated_duration ? { ...this._estimated_duration } : undefined,
+      estimatedDuration: this._estimatedDuration ? { ...this._estimatedDuration } : undefined,
       progress: { ...this._progress },
       timeline: this._timeline ? { ...this._timeline } : undefined,
       configuration: { ...this._configuration },
       metadata: this._metadata ? { ...this._metadata } : undefined,
-      risk_assessment: this._risk_assessment ? { ...this._risk_assessment } : undefined
+      riskAssessment: this._riskAssessment ? { ...this._riskAssessment } : undefined
     };
   }
 } 

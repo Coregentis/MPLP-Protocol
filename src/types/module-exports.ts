@@ -11,6 +11,13 @@
 export type UUID = string;
 export type Timestamp = string;
 
+// ===== 导入共享类型 =====
+import {
+  PlanStatus,
+  TaskStatus,
+  Priority as TaskPriority
+} from '../public/shared/types/plan-types';
+
 // ===== 通用操作结果 =====
 export interface OperationResult<T> {
   success: boolean;
@@ -62,15 +69,15 @@ export interface ContextController {
 }
 
 export interface Context {
-  context_id: UUID;
+  contextId: UUID;
   name: string;
   description?: string;
   status: ContextStatus;
   metadata: Record<string, any>;
   tags: string[];
-  parent_context_id?: UUID;
-  created_at: Timestamp;
-  updated_at: Timestamp;
+  parentContextId?: UUID;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
 export type ContextStatus = 'draft' | 'active' | 'inactive' | 'completed' | 'archived' | 'cancelled';
@@ -80,7 +87,7 @@ export interface CreateContextRequest {
   description?: string;
   metadata?: Record<string, any>;
   tags?: string[];
-  parent_context_id?: UUID;
+  parentContextId?: UUID;
 }
 
 export interface UpdateContextRequest {
@@ -94,7 +101,7 @@ export interface ContextFilter {
   name?: string;
   status?: ContextStatus | ContextStatus[];
   tags?: string[];
-  parent_context_id?: UUID;
+  parentContextId?: UUID;
   created_after?: Timestamp;
   created_before?: Timestamp;
 }
@@ -122,38 +129,41 @@ export interface PlanController {
 }
 
 export interface Plan {
-  plan_id: UUID;
-  context_id: UUID;
+  planId: UUID;
+  contextId: UUID;
   name: string;
   description?: string;
   status: PlanStatus;
   tasks: Task[];
   metadata: Record<string, any>;
-  created_at: Timestamp;
-  updated_at: Timestamp;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
 export interface Task {
-  task_id: UUID;
-  plan_id: UUID;
+  taskId: UUID;
+  planId: UUID;
   name: string;
   description?: string;
   status: TaskStatus;
   priority: TaskPriority;
-  estimated_duration?: number;
-  actual_duration?: number;
+  estimatedDuration?: number;
+  actualDuration?: number;
   dependencies: UUID[];
-  assigned_to?: string;
-  created_at: Timestamp;
-  updated_at: Timestamp;
+  assignedTo?: string;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
-export type PlanStatus = 'draft' | 'active' | 'paused' | 'completed' | 'cancelled';
-export type TaskStatus = 'pending' | 'in_progress' | 'completed' | 'blocked' | 'cancelled';
-export type TaskPriority = 'low' | 'medium' | 'high' | 'critical';
+// 重新导出共享类型，避免重复定义
+export {
+  PlanStatus,
+  TaskStatus,
+  TaskPriority
+};
 
 export interface CreatePlanRequest {
-  context_id: UUID;
+  contextId: UUID;
   name: string;
   description?: string;
   tasks: CreateTaskRequest[];
@@ -164,9 +174,9 @@ export interface CreateTaskRequest {
   name: string;
   description?: string;
   priority: TaskPriority;
-  estimated_duration?: number;
+  estimatedDuration?: number;
   dependencies?: UUID[];
-  assigned_to?: string;
+  assignedTo?: string;
 }
 
 export interface UpdatePlanRequest {
@@ -196,8 +206,8 @@ export interface ConfirmController {
 
 export interface Confirmation {
   confirmation_id: UUID;
-  context_id: UUID;
-  plan_id?: UUID;
+  contextId: UUID;
+  planId?: UUID;
   type: ConfirmationType;
   title: string;
   description?: string;
@@ -207,8 +217,8 @@ export interface Confirmation {
   approvals: Approval[];
   deadline?: Timestamp;
   metadata: Record<string, any>;
-  created_at: Timestamp;
-  updated_at: Timestamp;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
 export interface Approval {
@@ -225,8 +235,8 @@ export type ConfirmationStatus = 'pending' | 'approved' | 'rejected' | 'expired'
 export type ApprovalDecision = 'approve' | 'reject' | 'abstain';
 
 export interface CreateConfirmationRequest {
-  context_id: UUID;
-  plan_id?: UUID;
+  contextId: UUID;
+  planId?: UUID;
   type: ConfirmationType;
   title: string;
   description?: string;
@@ -257,24 +267,24 @@ export interface TraceController {
 }
 
 export interface Trace {
-  trace_id: UUID;
-  context_id: UUID;
+  traceId: UUID;
+  contextId: UUID;
   execution_id?: UUID;
-  trace_type: TraceType;
+  traceType: TraceType;
   name: string;
   description?: string;
   status: TraceStatus;
   events: Event[];
   metadata: Record<string, any>;
   tags: string[];
-  started_at: Timestamp;
-  completed_at?: Timestamp;
+  startedAt: Timestamp;
+  completedAt?: Timestamp;
   duration_ms?: number;
 }
 
 export interface Event {
   event_id: UUID;
-  trace_id: UUID;
+  traceId: UUID;
   event_type: string;
   level: EventLevel;
   message?: string;
@@ -289,9 +299,9 @@ export type TraceStatus = 'active' | 'completed' | 'failed' | 'cancelled' | 'exp
 export type EventLevel = 'debug' | 'info' | 'warn' | 'error' | 'critical';
 
 export interface CreateTraceRequest {
-  context_id: UUID;
+  contextId: UUID;
   execution_id?: UUID;
-  trace_type: TraceType;
+  traceType: TraceType;
   name: string;
   description?: string;
   metadata?: Record<string, any>;
@@ -299,7 +309,7 @@ export interface CreateTraceRequest {
 }
 
 export interface RecordEventRequest {
-  trace_id: UUID;
+  traceId: UUID;
   event_type: string;
   level: EventLevel;
   message?: string;
@@ -364,7 +374,7 @@ export interface RoleController {
 }
 
 export interface Role {
-  role_id: UUID;
+  roleId: UUID;
   name: string;
   description?: string;
   permissions: Permission[];
@@ -373,8 +383,8 @@ export interface Role {
   is_system_role: boolean;
   is_active: boolean;
   metadata: Record<string, any>;
-  created_at: Timestamp;
-  updated_at: Timestamp;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
 export interface Permission {
@@ -385,15 +395,15 @@ export interface Permission {
   description?: string;
   conditions?: PermissionCondition[];
   is_system_permission: boolean;
-  created_at: Timestamp;
+  createdAt: Timestamp;
 }
 
 export interface UserRole {
   assignment_id: UUID;
-  user_id: string;
-  role_id: UUID;
+  userId: string;
+  roleId: UUID;
   assigned_by: string;
-  context_id?: UUID;
+  contextId?: UUID;
   expires_at?: Date;
   is_active: boolean;
   assigned_at: Timestamp;
@@ -409,12 +419,12 @@ export interface CreateRoleRequest {
 }
 
 export interface AssignmentContext {
-  context_id?: UUID;
+  contextId?: UUID;
   expires_at?: Date;
 }
 
 export interface PermissionContext {
-  context_id?: UUID;
+  contextId?: UUID;
   resource_id?: string;
   [key: string]: any;
 }
@@ -446,7 +456,7 @@ export interface ExtensionController {
 }
 
 export interface Extension {
-  extension_id: UUID;
+  extensionId: UUID;
   name: string;
   version: string;
   description?: string;
@@ -459,12 +469,12 @@ export interface Extension {
   permissions: string[];
   metadata: ExtensionMetadata;
   installed_at: Timestamp;
-  updated_at: Timestamp;
+  updatedAt: Timestamp;
 }
 
 export interface Hook {
   hook_id: UUID;
-  extension_id: UUID;
+  extensionId: UUID;
   hook_type: string;
   handler: string;
   priority: number;
@@ -472,7 +482,7 @@ export interface Hook {
   is_active: boolean;
   execution_count: number;
   last_executed?: Timestamp;
-  created_at: Timestamp;
+  createdAt: Timestamp;
 }
 
 export type ExtensionSource = 'npm' | 'git' | 'local' | 'marketplace';
@@ -513,8 +523,8 @@ export interface ExtensionMetadata {
 
 export interface HookContext {
   execution_id: UUID;
-  context_id?: UUID;
-  user_id?: string;
+  contextId?: UUID;
+  userId?: string;
   timestamp: Timestamp;
   data?: Record<string, any>;
 }
@@ -569,31 +579,31 @@ export interface ModuleCoordinator {
 export interface WorkflowConfiguration {
   stages: WorkflowStage[];
   parallel_execution?: boolean;
-  timeout_ms?: number;
-  retry_policy?: RetryPolicy;
-  error_handling?: ErrorHandlingPolicy;
+  timeoutMs?: number;
+  retryPolicy?: RetryPolicy;
+  errorHandling?: ErrorHandlingPolicy;
 }
 
 export interface WorkflowExecutionResult {
   execution_id: UUID;
-  context_id: UUID;
+  contextId: UUID;
   status: 'completed' | 'failed' | 'cancelled';
   stages: StageExecutionResult[];
   total_duration_ms: number;
-  started_at: Timestamp;
-  completed_at?: Timestamp;
+  startedAt: Timestamp;
+  completedAt?: Timestamp;
   error?: Error;
 }
 
 export interface ExecutionContext {
   execution_id: UUID;
-  context_id: UUID;
+  contextId: UUID;
   workflow_config: WorkflowConfiguration;
   current_stage: WorkflowStage;
   stage_results: Map<WorkflowStage, any>;
   metadata: Record<string, any>;
-  started_at: Timestamp;
-  updated_at: Timestamp;
+  startedAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
 export interface StageExecutionResult {
@@ -609,7 +619,7 @@ export interface ModuleStatus {
   status: 'initialized' | 'running' | 'idle' | 'error';
   last_execution?: Timestamp;
   error_count: number;
-  performance_metrics?: PerformanceMetrics;
+  performanceMetrics?: PerformanceMetrics;
 }
 
 export interface CoordinationEvent {
@@ -622,8 +632,8 @@ export interface CoordinationEvent {
 }
 
 export interface RetryPolicy {
-  max_attempts: number;
-  delay_ms: number;
+  maxAttempts: number;
+  delayMs: number;
   backoff_multiplier?: number;
   retry_on_errors?: string[];
 }
@@ -637,9 +647,9 @@ export interface ErrorHandlingPolicy {
 
 export interface WorkflowOptions {
   parallel?: boolean;
-  timeout_ms?: number;
-  retry_policy?: Partial<RetryPolicy>;
-  error_handling?: Partial<ErrorHandlingPolicy>;
+  timeoutMs?: number;
+  retryPolicy?: Partial<RetryPolicy>;
+  errorHandling?: Partial<ErrorHandlingPolicy>;
 }
 
 export interface ValidationResult {

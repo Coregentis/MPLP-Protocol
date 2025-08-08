@@ -62,12 +62,12 @@ export type MetricType =
  * Trace创建请求
  */
 export interface CreateTraceRequest {
-  context_id: UUID;
+  contextId: UUID;
   execution_id?: UUID;
-  trace_type: TraceType;
+  traceType: TraceType;
   name: string;
   description?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   tags?: string[];
 }
 
@@ -78,7 +78,7 @@ export interface UpdateTraceRequest {
   name?: string;
   description?: string;
   status?: TraceStatus;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   tags?: string[];
 }
 
@@ -86,11 +86,11 @@ export interface UpdateTraceRequest {
  * 事件记录请求
  */
 export interface RecordEventRequest {
-  trace_id: UUID;
+  traceId: UUID;
   event_type: EventType;
   level: EventLevel;
   message?: string;
-  data?: Record<string, any>;
+  data?: Record<string, unknown>;
   timestamp?: Timestamp;
   duration_ms?: number;
 }
@@ -102,9 +102,9 @@ export interface TraceQueryParams {
   page?: number;
   limit?: number;
   search?: string;
-  trace_type?: TraceType;
+  traceType?: TraceType;
   status?: TraceStatus;
-  context_id?: UUID;
+  contextId?: UUID;
   execution_id?: UUID;
   start_date?: Timestamp;
   end_date?: Timestamp;
@@ -117,10 +117,10 @@ export interface TraceQueryParams {
  * Trace数据接口
  */
 export interface TraceData {
-  trace_id: UUID;
-  context_id: UUID;
+  traceId: UUID;
+  contextId: UUID;
   execution_id?: UUID;
-  trace_type: TraceType;
+  traceType: TraceType;
   name: string;
   description?: string;
   status: TraceStatus;
@@ -128,9 +128,9 @@ export interface TraceData {
   end_time?: Timestamp;
   duration_ms?: number;
   tags: string[];
-  metadata: Record<string, any>;
-  created_at: Timestamp;
-  updated_at: Timestamp;
+  metadata: Record<string, unknown>;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
 /**
@@ -138,15 +138,15 @@ export interface TraceData {
  */
 export interface EventData {
   event_id: UUID;
-  trace_id: UUID;
+  traceId: UUID;
   event_type: EventType;
   level: EventLevel;
   message?: string;
-  data?: Record<string, any>;
+  data?: Record<string, unknown>;
   timestamp: Timestamp;
   duration_ms?: number;
   source?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -154,14 +154,14 @@ export interface EventData {
  */
 export interface MetricData {
   metric_id: UUID;
-  trace_id: UUID;
+  traceId: UUID;
   metric_type: MetricType;
   name: string;
   value: number;
   unit: string;
   timestamp: Timestamp;
   tags?: Record<string, string>;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -175,7 +175,7 @@ export interface TraceStatistics {
   average_duration_ms: number;
   total_events: number;
   error_rate: number;
-  performance_metrics: {
+  performanceMetrics: {
     avg_cpu_usage: number;
     avg_memory_usage: number;
     avg_network_usage: number;
@@ -186,9 +186,9 @@ export interface TraceStatistics {
  * 追踪摘要数据接口
  */
 export interface TraceSummary {
-  trace_id: UUID;
+  traceId: UUID;
   name: string;
-  trace_type: TraceType;
+  traceType: TraceType;
   status: TraceStatus;
   start_time: Timestamp;
   end_time?: Timestamp;

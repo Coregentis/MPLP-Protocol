@@ -35,21 +35,31 @@ export class Collab {
   private _created_by: string;
   private _metadata?: Record<string, any>;
 
-  constructor(data: Partial<CollabEntity>) {
-    this._collaboration_id = data.collaboration_id || uuidv4();
+    /**
+   * 决策制定
+   */
+  public decisionMaking?: Record<string, unknown>;
+
+  /**
+   * 委员会配置
+   */
+  public councilConfiguration?: Record<string, unknown>;
+
+constructor(data: Partial<CollabEntity>) {
+    this._collaboration_id = data.collaborationId || uuidv4();
     this._version = data.version || '1.0.0';
     this._timestamp = data.timestamp || new Date().toISOString();
-    this._context_id = data.context_id!;
-    this._plan_id = data.plan_id!;
+    this._context_id = data.contextId!;
+    this._plan_id = data.planId!;
     this._name = data.name!;
     this._description = data.description;
     this._mode = data.mode!;
     this._participants = data.participants || [];
-    this._coordination_strategy = data.coordination_strategy!;
+    this._coordination_strategy = data.coordinationStrategy!;
     this._status = data.status || 'pending';
-    this._created_at = data.created_at || new Date().toISOString();
-    this._updated_at = data.updated_at || new Date().toISOString();
-    this._created_by = data.created_by!;
+    this._created_at = data.createdAt || new Date().toISOString();
+    this._updated_at = data.updatedAt || new Date().toISOString();
+    this._created_by = data.createdBy!;
     this._metadata = data.metadata;
 
     this.validate();
@@ -57,7 +67,7 @@ export class Collab {
 
   // ==================== Getters ====================
 
-  get collaboration_id(): string {
+  get collaborationId(): string {
     return this._collaboration_id;
   }
   get version(): string {
@@ -66,10 +76,10 @@ export class Collab {
   get timestamp(): string {
     return this._timestamp;
   }
-  get context_id(): string {
+  get contextId(): string {
     return this._context_id;
   }
-  get plan_id(): string {
+  get planId(): string {
     return this._plan_id;
   }
   get name(): string {
@@ -84,19 +94,19 @@ export class Collab {
   get participants(): CollabParticipant[] {
     return [...this._participants];
   }
-  get coordination_strategy(): CoordinationStrategy {
+  get coordinationStrategy(): CoordinationStrategy {
     return { ...this._coordination_strategy };
   }
   get status(): EntityStatus {
     return this._status;
   }
-  get created_at(): string {
+  get createdAt(): string {
     return this._created_at;
   }
-  get updated_at(): string {
+  get updatedAt(): string {
     return this._updated_at;
   }
-  get created_by(): string {
+  get createdBy(): string {
     return this._created_by;
   }
   get metadata(): Record<string, any> | undefined {
@@ -117,7 +127,7 @@ export class Collab {
     }
 
     // 验证Agent不重复
-    if (this._participants.some(p => p.agent_id === participant.agent_id)) {
+    if (this._participants.some(p => p.agentId === participant.agentId)) {
       throw new Error('Agent已经是协作参与者');
     }
 
@@ -310,20 +320,20 @@ export class Collab {
    */
   toObject(): CollabEntity {
     return {
-      collaboration_id: this._collaboration_id,
+      collaborationId: this._collaboration_id,
       version: this._version,
       timestamp: this._timestamp,
-      context_id: this._context_id,
-      plan_id: this._plan_id,
+      contextId: this._context_id,
+      planId: this._plan_id,
       name: this._name,
       description: this._description,
       mode: this._mode,
       participants: [...this._participants],
       coordination_strategy: { ...this._coordination_strategy },
       status: this._status,
-      created_at: this._created_at,
-      updated_at: this._updated_at,
-      created_by: this._created_by,
+      createdAt: this._created_at,
+      updatedAt: this._updated_at,
+      createdBy: this._created_by,
       metadata: this._metadata ? { ...this._metadata } : undefined,
     };
   }

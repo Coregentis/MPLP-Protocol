@@ -14,6 +14,8 @@ import { ContextFactory } from './domain/factories/context.factory';
 import { ContextValidationService } from './domain/services/context-validation.service';
 import { ContextRepository } from './infrastructure/repositories/context.repository';
 import { ContextManagementService } from './application/services/context-management.service';
+import { SharedStateManagementService } from './application/services/shared-state-management.service';
+import { AccessControlManagementService } from './application/services/access-control-management.service';
 import { CreateContextHandler } from './application/commands/create-context.handler';
 import { GetContextByIdHandler } from './application/queries/get-context-by-id.handler';
 import { Logger } from '../../public/utils/logger';
@@ -55,12 +57,18 @@ export async function initializeContextModule(options: ContextModuleOptions): Pr
       throw new Error('DataSource is required for ContextModule');
     }
     const contextRepository = new ContextRepository(options.dataSource);
-    
+
+    // 创建应用层服务
+    const sharedStateService = new SharedStateManagementService();
+    const accessControlService = new AccessControlManagementService();
+
     // 创建应用层组件
     const contextManagementService = new ContextManagementService(
       contextRepository,
       contextFactory,
-      validationService
+      validationService,
+      sharedStateService,
+      accessControlService
     );
     
     // 创建命令和查询处理器
@@ -70,7 +78,8 @@ export async function initializeContextModule(options: ContextModuleOptions): Pr
     // 创建API层组件
     const contextController = new ContextController(
       createContextHandler,
-      getContextByIdHandler
+      getContextByIdHandler,
+      contextManagementService
     );
     
     logger.info('Context module initialized successfully');

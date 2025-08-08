@@ -30,7 +30,7 @@ export class WorkflowTemplates {
     stages: ['context', 'plan', 'confirm', 'trace'],
     parallel_execution: false,
     timeout_ms: 300000, // 5分钟
-    retry_policy: {
+    retryPolicy: {
       max_attempts: 3,
       delay_ms: 1000,
       backoff_multiplier: 2,
@@ -51,7 +51,7 @@ export class WorkflowTemplates {
     stages: ['context', 'plan', 'trace'],
     parallel_execution: false,
     timeout_ms: 60000, // 1分钟
-    retry_policy: {
+    retryPolicy: {
       max_attempts: 2,
       delay_ms: 500,
       backoff_multiplier: 1.5,
@@ -72,7 +72,7 @@ export class WorkflowTemplates {
     stages: ['context', 'plan', 'trace'],
     parallel_execution: true,
     timeout_ms: 120000, // 2分钟
-    retry_policy: {
+    retryPolicy: {
       max_attempts: 2,
       delay_ms: 1000,
       backoff_multiplier: 2,
@@ -93,7 +93,7 @@ export class WorkflowTemplates {
     stages: ['context', 'trace'],
     parallel_execution: false,
     timeout_ms: 30000, // 30秒
-    retry_policy: {
+    retryPolicy: {
       max_attempts: 1,
       delay_ms: 0
     },
@@ -112,7 +112,7 @@ export class WorkflowTemplates {
     stages: ['context', 'plan', 'confirm'],
     parallel_execution: false,
     timeout_ms: 600000, // 10分钟
-    retry_policy: {
+    retryPolicy: {
       max_attempts: 1,
       delay_ms: 0
     },
@@ -172,20 +172,20 @@ export class WorkflowManager {
     options: {
       parallel?: boolean;
       timeout_ms?: number;
-      retry_policy?: Partial<RetryPolicy>;
+      retryPolicy?: Partial<RetryPolicy>;
       error_handling?: Partial<ErrorHandlingPolicy>;
     } = {}
   ): WorkflowConfiguration {
     return {
       stages,
       parallel_execution: options.parallel || false,
-      timeout_ms: options.timeout_ms || 300000,
-      retry_policy: {
+      timeout_ms: options.timeoutMs || 300000,
+      retryPolicy: {
         max_attempts: 3,
         delay_ms: 1000,
         backoff_multiplier: 2,
         max_delay_ms: 10000,
-        ...options.retry_policy
+        ...options.retryPolicy
       },
       error_handling: {
         continue_on_error: false,
@@ -221,16 +221,16 @@ export class WorkflowManager {
     }
 
     // 验证超时时间
-    if (config.timeout_ms && config.timeout_ms <= 0) {
+    if (config.timeoutMs && config.timeoutMs <= 0) {
       errors.push('超时时间必须大于0');
     }
 
     // 验证重试策略
-    if (config.retry_policy) {
-      if (config.retry_policy.max_attempts < 0) {
+    if (config.retryPolicy) {
+      if (config.retryPolicy.max_attempts < 0) {
         errors.push('最大重试次数不能为负数');
       }
-      if (config.retry_policy.delay_ms < 0) {
+      if (config.retryPolicy.delay_ms < 0) {
         errors.push('重试延迟不能为负数');
       }
     }
@@ -240,7 +240,7 @@ export class WorkflowManager {
       warnings.push('并行执行模式下包含确认阶段可能导致不一致的结果');
     }
 
-    if (config.timeout_ms && config.timeout_ms > 600000) {
+    if (config.timeoutMs && config.timeoutMs > 600000) {
       warnings.push('工作流超时时间超过10分钟，可能影响用户体验');
     }
 
@@ -266,26 +266,26 @@ export class WorkflowManager {
 
     // 根据负载调整超时时间
     if (context.expected_load === 'high') {
-      optimized.timeout_ms = (optimized.timeout_ms || 300000) * 1.5;
+      optimized.timeoutMs = (optimized.timeoutMs || 300000) * 1.5;
     } else if (context.expected_load === 'low') {
-      optimized.timeout_ms = (optimized.timeout_ms || 300000) * 0.7;
+      optimized.timeoutMs = (optimized.timeoutMs || 300000) * 0.7;
     }
 
     // 根据优先级调整重试策略
     if (context.priority === 'high') {
-      if (optimized.retry_policy) {
-        optimized.retry_policy.max_attempts = Math.max(optimized.retry_policy.max_attempts, 3);
-        optimized.retry_policy.delay_ms = Math.min(optimized.retry_policy.delay_ms, 500);
+      if (optimized.retryPolicy) {
+        optimized.retryPolicy.max_attempts = Math.max(optimized.retryPolicy.max_attempts, 3);
+        optimized.retryPolicy.delay_ms = Math.min(optimized.retryPolicy.delay_ms, 500);
       }
     } else if (context.priority === 'low') {
-      if (optimized.retry_policy) {
-        optimized.retry_policy.max_attempts = Math.min(optimized.retry_policy.max_attempts, 2);
+      if (optimized.retryPolicy) {
+        optimized.retryPolicy.max_attempts = Math.min(optimized.retryPolicy.max_attempts, 2);
       }
     }
 
     // 用户交互场景优化
     if (context.user_interactive) {
-      optimized.timeout_ms = Math.min(optimized.timeout_ms || 300000, 60000); // 最多1分钟
+      optimized.timeoutMs = Math.min(optimized.timeoutMs || 300000, 60000); // 最多1分钟
       if (optimized.error_handling) {
         optimized.error_handling.notification_enabled = true;
       }
@@ -351,5 +351,17 @@ export class WorkflowManager {
       bottlenecks,
       recommendations
     };
+  }
+
+  /**
+   * 停止工作流管理器
+   */
+  async stop(): Promise<void> {
+    this.logger.info('Stopping WorkflowManager...');
+
+    // 清理工作流模板
+    this.workflowTemplates.clear();
+
+    this.logger.info('WorkflowManager stopped successfully');
   }
 }

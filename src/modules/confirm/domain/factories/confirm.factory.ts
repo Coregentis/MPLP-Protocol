@@ -79,17 +79,17 @@ export class ConfirmFactory {
 
     return new Confirm(
       confirmId,
-      request.context_id,
+      request.contextId,
       this.PROTOCOL_VERSION,
-      request.confirmation_type,
+      request.confirmationType,
       'pending', // 新创建的确认默认为待处理状态
       request.priority,
       request.subject,
       request.requester,
-      request.approval_workflow,
+      request.approvalWorkflow,
       now,
       now,
-      request.plan_id,
+      request.planId,
       undefined, // 新创建时没有决策
       request.expires_at,
       request.metadata
@@ -258,7 +258,7 @@ export class ConfirmFactory {
   static validateCreateRequest(request: CreateConfirmRequest): { isValid: boolean; errors: string[] } {
     const errors: string[] = [];
 
-    if (!request.context_id) {
+    if (!request.contextId) {
       errors.push('上下文ID不能为空');
     }
 
@@ -270,7 +270,7 @@ export class ConfirmFactory {
       errors.push('请求者用户ID不能为空');
     }
 
-    if (!request.approval_workflow?.steps?.length) {
+    if (!request.approvalWorkflow?.steps?.length) {
       errors.push('审批工作流必须包含至少一个步骤');
     }
 

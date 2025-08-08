@@ -7,17 +7,16 @@
  * @created 2025-09-16
  */
 
-import { UUID, EntityStatus, ISO8601DateTime } from '../../../../public/shared/types';
+import { UUID, EntityStatus } from '../../../../public/shared/types';
 import { ContextLifecycleStage } from '../../../../public/shared/types/context-types';
+import { SharedState, Dependency, Goal, Resource } from '../value-objects/shared-state';
+import { AccessControl, Action } from '../value-objects/access-control';
 
 /**
  * Context实体类
  * 包含上下文的核心属性和领域行为
  */
 export class Context {
-  /**
-   * 创建一个新的Context实例
-   */
   constructor(
     public readonly contextId: UUID,
     public name: string,
@@ -29,7 +28,9 @@ export class Context {
     public sessionIds: UUID[] = [],
     public sharedStateIds: UUID[] = [],
     public configuration: Record<string, unknown> = {},
-    public metadata: Record<string, unknown> = {}
+    public metadata: Record<string, unknown> = {},
+    public sharedState?: SharedState,
+    public accessControl?: AccessControl
   ) {}
 
   /**
@@ -179,6 +180,104 @@ export class Context {
   }
 
   /**
+   * 更新共享状态
+   */
+  updateSharedState(sharedState: SharedState): void {
+    this.sharedState = sharedState;
+    this.updatedAt = new Date();
+  }
+
+  /**
+   * 更新访问控制
+   */
+  updateAccessControl(accessControl: AccessControl): void {
+    this.accessControl = accessControl;
+    this.updatedAt = new Date();
+  }
+
+  /**
+   * 更新名称
+   */
+  updateName(name: string): void {
+    this.name = name;
+    this.updatedAt = new Date();
+  }
+
+  /**
+   * 更新描述
+   */
+  updateDescription(description: string | null): void {
+    this.description = description;
+    this.updatedAt = new Date();
+  }
+
+  /**
+   * 获取共享状态变量
+   */
+  getSharedVariable(key: string): unknown {
+    return this.sharedState?.variables[key];
+  }
+
+  /**
+   * 设置共享状态变量
+   */
+  setSharedVariable(key: string, value: unknown): void {
+    if (!this.sharedState) {
+      this.sharedState = new SharedState({ [key]: value });
+    } else {
+      this.sharedState = this.sharedState.updateVariables({ [key]: value });
+    }
+    this.updatedAt = new Date();
+  }
+
+  /**
+   * 检查访问权限
+   */
+  hasPermission(principal: string, resource: string, action: Action): boolean {
+    if (!this.accessControl) {
+      return false;
+    }
+    return this.accessControl.hasPermission(principal, resource, action);
+  }
+
+  /**
+   * 获取所有依赖
+   */
+  getDependencies(): Dependency[] {
+    return this.sharedState?.dependencies || [];
+  }
+
+  /**
+   * 获取所有目标
+   */
+  getGoals(): Goal[] {
+    return this.sharedState?.goals || [];
+  }
+
+  /**
+   * 检查目标是否完成
+   */
+  isGoalAchieved(goalId: UUID): boolean {
+    const goal = this.sharedState?.goals.find(g => g.id === goalId);
+    return goal?.status === 'achieved';
+  }
+
+  /**
+   * 获取资源分配状态
+   */
+  getResourceAllocation(resourceKey: string): Resource | undefined {
+    return this.sharedState?.allocatedResources[resourceKey];
+  }
+
+  /**
+   * 检查资源是否可用
+   */
+  isResourceAvailable(resourceKey: string): boolean {
+    const resource = this.getResourceAllocation(resourceKey);
+    return resource?.status === 'available';
+  }
+
+  /**
    * 创建Context的深拷贝
    */
   clone(): Context {
@@ -193,7 +292,9 @@ export class Context {
       [...this.sessionIds],
       [...this.sharedStateIds],
       JSON.parse(JSON.stringify(this.configuration)),
-      JSON.parse(JSON.stringify(this.metadata))
+      JSON.parse(JSON.stringify(this.metadata)),
+      this.sharedState,
+      this.accessControl
     );
   }
-} 
+}

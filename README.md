@@ -151,6 +151,45 @@ src/modules/{module}/
 #### Core Coordination Module
 - [⚙️ Core Module](./docs/modules/core/) - Runtime orchestrator and coordinator
 
+## 🏗️ Architecture
+
+### Core Design Decisions
+
+#### **🚨 Dual Naming Convention** (Critical)
+MPLP implements a unique dual naming convention to balance technical standards and cross-language compatibility:
+
+- **Schema Layer**: `snake_case` (JSON/API standard compliance)
+- **TypeScript Layer**: `camelCase` (JavaScript ecosystem standard)
+- **Automatic Mapping**: Seamless conversion between layers
+
+**Example**:
+```json
+// Schema (snake_case)
+{
+  "context_id": "uuid",
+  "session_id": "string",
+  "created_at": "timestamp"
+}
+```
+
+```typescript
+// TypeScript (camelCase)
+interface Context {
+  contextId: string;
+  sessionId: string;
+  createdAt: Date;
+}
+```
+
+**📚 Documentation**:
+- [Dual Naming Convention Architecture](./docs/architecture/dual-naming-convention.md)
+- [Implementation Guide](./docs/architecture/dual-naming-implementation-guide.md)
+
+### Architecture Documentation
+- [📋 Architecture Overview](./docs/architecture/README.md) - Complete architecture documentation index
+- [🏗️ System Architecture](./docs/architecture/system-architecture.md) - Overall system design
+- [🎯 DDD Implementation](./docs/architecture/ddd-overview.md) - Domain-driven design details
+
 ## 🧪 Testing
 
 ```bash
@@ -164,11 +203,22 @@ npm run test:cov
 npm test -- --testPathPattern=unit
 npm test -- --testPathPattern=integration
 npm test -- --testPathPattern=e2e
+
+# Validate Schema-TypeScript mapping
+npm run validate:mapping
+
+# Check naming consistency
+npm run check:naming
 ```
 
 ## 🤝 Contributing
 
 We welcome contributions! Please see our [Contributing Guide](./docs/CONTRIBUTING.md) for details.
+
+### Important for Contributors
+- **Must Read**: [Dual Naming Convention](./docs/architecture/dual-naming-convention.md) before contributing
+- **Follow**: [Implementation Guide](./docs/architecture/dual-naming-implementation-guide.md) for code standards
+- **Use**: Validation tools to ensure consistency
 
 ## 📄 License
 

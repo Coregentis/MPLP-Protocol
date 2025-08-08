@@ -50,8 +50,8 @@ export class CollabService {
 
       // 创建协作实体
       const collab = new Collab({
-        context_id: request.context_id,
-        plan_id: request.plan_id,
+        context_id: request.contextId,
+        plan_id: request.planId,
         name: request.name,
         description: request.description,
         mode: request.mode,
@@ -60,8 +60,8 @@ export class CollabService {
           participant_id: '', // 将在实体中生成
           joined_at: '', // 将在实体中生成
         })),
-        coordination_strategy: request.coordination_strategy,
-        created_by: request.context_id, // 临时使用context_id
+        coordination_strategy: request.coordinationStrategy,
+        created_by: request.contextId, // 临时使用context_id
         metadata: request.metadata,
       });
 
@@ -70,16 +70,16 @@ export class CollabService {
 
       // 发布事件
       this.eventBus.publish('collaboration_created', {
-        collaboration_id: collab.collaboration_id,
-        context_id: collab.context_id,
-        plan_id: collab.plan_id,
+        collaboration_id: collab.collaborationId,
+        context_id: collab.contextId,
+        plan_id: collab.planId,
         name: collab.name,
         mode: collab.mode,
         participants_count: collab.participants.length,
       });
 
       this.logger.info('协作创建成功', {
-        collaboration_id: collab.collaboration_id,
+        collaboration_id: collab.collaborationId,
       });
 
       return {
@@ -142,7 +142,7 @@ export class CollabService {
       this.logger.info('更新协作', { request });
 
       const collab = await this.collabRepository.findById(
-        request.collaboration_id
+        request.collaborationId
       );
       if (!collab) {
         return {
@@ -162,8 +162,8 @@ export class CollabService {
       }
 
       // 更新协调策略
-      if (request.coordination_strategy) {
-        collab.updateCoordinationStrategy(request.coordination_strategy);
+      if (request.coordinationStrategy) {
+        collab.updateCoordinationStrategy(request.coordinationStrategy);
       }
 
       // 更新元数据
@@ -176,12 +176,12 @@ export class CollabService {
 
       // 发布事件
       this.eventBus.publish('collaboration_updated', {
-        collaboration_id: collab.collaboration_id,
+        collaboration_id: collab.collaborationId,
         updates: request,
       });
 
       this.logger.info('协作更新成功', {
-        collaboration_id: collab.collaboration_id,
+        collaboration_id: collab.collaborationId,
       });
 
       return {
@@ -240,7 +240,7 @@ export class CollabService {
       this.logger.info('添加参与者', { request });
 
       const collab = await this.collabRepository.findById(
-        request.collaboration_id
+        request.collaborationId
       );
       if (!collab) {
         return {
@@ -251,8 +251,8 @@ export class CollabService {
       }
 
       collab.addParticipant({
-        agent_id: request.agent_id,
-        role_id: request.role_id,
+        agent_id: request.agentId,
+        role_id: request.roleId,
         status: 'active',
         capabilities: request.capabilities,
         priority: request.priority,
@@ -263,14 +263,14 @@ export class CollabService {
 
       // 发布事件
       this.eventBus.publish('participant_added', {
-        collaboration_id: collab.collaboration_id,
-        agent_id: request.agent_id,
-        role_id: request.role_id,
+        collaboration_id: collab.collaborationId,
+        agent_id: request.agentId,
+        role_id: request.roleId,
       });
 
       this.logger.info('参与者添加成功', {
-        collaboration_id: collab.collaboration_id,
-        agent_id: request.agent_id,
+        collaboration_id: collab.collaborationId,
+        agent_id: request.agentId,
       });
 
       return {
@@ -299,7 +299,7 @@ export class CollabService {
       this.logger.info('移除参与者', { request });
 
       const collab = await this.collabRepository.findById(
-        request.collaboration_id
+        request.collaborationId
       );
       if (!collab) {
         return {
@@ -314,13 +314,13 @@ export class CollabService {
 
       // 发布事件
       this.eventBus.publish('participant_removed', {
-        collaboration_id: collab.collaboration_id,
+        collaboration_id: collab.collaborationId,
         participant_id: request.participant_id,
         reason: request.reason,
       });
 
       this.logger.info('参与者移除成功', {
-        collaboration_id: collab.collaboration_id,
+        collaboration_id: collab.collaborationId,
         participant_id: request.participant_id,
       });
 
@@ -348,13 +348,13 @@ export class CollabService {
       this.logger.info('执行协调操作', { request });
 
       const collab = await this.collabRepository.findById(
-        request.collaboration_id
+        request.collaborationId
       );
       if (!collab) {
         return {
           success: false,
           operation: request.operation,
-          collaboration_id: request.collaboration_id,
+          collaboration_id: request.collaborationId,
           error: '协作不存在',
           timestamp: new Date().toISOString(),
         };
@@ -382,20 +382,20 @@ export class CollabService {
 
       // 发布事件
       this.eventBus.publish('coordination_completed', {
-        collaboration_id: collab.collaboration_id,
+        collaboration_id: collab.collaborationId,
         operation: request.operation,
         initiated_by: request.initiated_by,
       });
 
       this.logger.info('协调操作执行成功', {
-        collaboration_id: collab.collaboration_id,
+        collaboration_id: collab.collaborationId,
         operation: request.operation,
       });
 
       return {
         success: true,
         operation: request.operation,
-        collaboration_id: collab.collaboration_id,
+        collaboration_id: collab.collaborationId,
         result: collab.toObject(),
         timestamp: new Date().toISOString(),
       };
@@ -405,7 +405,7 @@ export class CollabService {
       return {
         success: false,
         operation: request.operation,
-        collaboration_id: request.collaboration_id,
+        collaboration_id: request.collaborationId,
         error: errorMessage,
         timestamp: new Date().toISOString(),
       };
@@ -460,7 +460,7 @@ export class CollabService {
       this.logger.info('更新参与者状态', { request });
 
       const collab = await this.collabRepository.findById(
-        request.collaboration_id
+        request.collaborationId
       );
       if (!collab) {
         return {
@@ -478,13 +478,13 @@ export class CollabService {
 
       // 发布事件
       this.eventBus.publish('participant_status_updated', {
-        collaboration_id: request.collaboration_id,
+        collaboration_id: request.collaborationId,
         participant_id: request.participant_id,
         status: request.status,
       });
 
       this.logger.info('参与者状态更新成功', {
-        collaboration_id: request.collaboration_id,
+        collaboration_id: request.collaborationId,
         participant_id: request.participant_id,
       });
 
@@ -528,7 +528,7 @@ export class CollabService {
 
       // 发布事件
       this.eventBus.publish('collaboration_started', {
-        collaboration_id: collab.collaboration_id,
+        collaboration_id: collab.collaborationId,
       });
 
       this.logger.info('协作启动成功', { collaboration_id });
@@ -576,7 +576,7 @@ export class CollabService {
 
       // 发布事件
       this.eventBus.publish('collaboration_paused', {
-        collaboration_id: collab.collaboration_id,
+        collaboration_id: collab.collaborationId,
       });
 
       this.logger.info('协作暂停成功', { collaboration_id });
@@ -624,7 +624,7 @@ export class CollabService {
 
       // 发布事件
       this.eventBus.publish('collaboration_resumed', {
-        collaboration_id: collab.collaboration_id,
+        collaboration_id: collab.collaborationId,
       });
 
       this.logger.info('协作恢复成功', { collaboration_id });
@@ -672,7 +672,7 @@ export class CollabService {
 
       // 发布事件
       this.eventBus.publish('collaboration_completed', {
-        collaboration_id: collab.collaboration_id,
+        collaboration_id: collab.collaborationId,
       });
 
       this.logger.info('协作完成成功', { collaboration_id });
@@ -720,7 +720,7 @@ export class CollabService {
 
       // 发布事件
       this.eventBus.publish('collaboration_cancelled', {
-        collaboration_id: collab.collaboration_id,
+        collaboration_id: collab.collaborationId,
       });
 
       this.logger.info('协作取消成功', { collaboration_id });

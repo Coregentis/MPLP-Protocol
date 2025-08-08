@@ -59,12 +59,12 @@ export type DelegationStatus = 'active' | 'expired' | 'revoked' | 'pending';
  */
 export interface CreateRoleRequest {
   name: string;
-  role_type: RoleType;
+  roleType: RoleType;
   display_name?: string;
   description?: string;
   scope?: RoleScope;
   permissions?: RolePermissionData[];
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -77,7 +77,7 @@ export interface UpdateRoleRequest {
   status?: RoleStatus;
   scope?: RoleScope;
   permissions?: RolePermissionData[];
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -87,7 +87,7 @@ export interface RoleQueryParams {
   page?: number;
   limit?: number;
   search?: string;
-  role_type?: RoleType;
+  roleType?: RoleType;
   status?: RoleStatus;
   scope?: RoleScope;
   sortBy?: string;
@@ -98,9 +98,9 @@ export interface RoleQueryParams {
  * Role数据接口
  */
 export interface RoleData {
-  role_id: UUID;
+  roleId: UUID;
   name: string;
-  role_type: RoleType;
+  roleType: RoleType;
   display_name?: string;
   description?: string;
   status: RoleStatus;
@@ -109,11 +109,11 @@ export interface RoleData {
   inheritance?: RoleInheritanceData;
   delegation?: RoleDelegationData;
   attributes?: RoleAttributesData;
-  validation_rules?: ValidationRulesData;
+  validationRules?: ValidationRulesData;
   audit_settings?: AuditSettingsData;
-  created_at: Timestamp;
-  updated_at: Timestamp;
-  metadata?: Record<string, any>;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -124,10 +124,10 @@ export interface RolePermissionData {
   resource_type: ResourceType;
   resource_id?: UUID;
   actions: PermissionAction[];
-  conditions?: Record<string, any>;
+  conditions?: Record<string, unknown>;
   granted_at: Timestamp;
   expires_at?: Timestamp;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -155,7 +155,7 @@ export interface RoleDelegationData {
     start_date: Timestamp;
     end_date?: Timestamp;
     status: DelegationStatus;
-    conditions?: Record<string, any>;
+    conditions?: Record<string, unknown>;
   }[];
 }
 
@@ -163,7 +163,7 @@ export interface RoleDelegationData {
  * 角色属性数据接口
  */
 export interface RoleAttributesData {
-  attributes: Record<string, any>;
+  attributes: Record<string, unknown>;
   constraints?: {
     max_concurrent_sessions?: number;
     allowed_ip_ranges?: string[];
@@ -210,13 +210,13 @@ export interface AuditSettingsData {
  * 角色分配请求
  */
 export interface AssignRoleRequest {
-  user_id: UUID;
-  role_id: UUID;
+  userId: UUID;
+  roleId: UUID;
   assigned_by: UUID;
   start_date?: Timestamp;
   end_date?: Timestamp;
-  conditions?: Record<string, any>;
-  metadata?: Record<string, any>;
+  conditions?: Record<string, unknown>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -224,26 +224,26 @@ export interface AssignRoleRequest {
  */
 export interface RoleAssignmentData {
   assignment_id: UUID;
-  user_id: UUID;
-  role_id: UUID;
+  userId: UUID;
+  roleId: UUID;
   assigned_by: UUID;
   assigned_at: Timestamp;
   start_date?: Timestamp;
   end_date?: Timestamp;
   status: 'active' | 'inactive' | 'expired' | 'revoked';
-  conditions?: Record<string, any>;
-  metadata?: Record<string, any>;
+  conditions?: Record<string, unknown>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
  * 权限检查请求
  */
 export interface PermissionCheckRequest {
-  user_id: UUID;
+  userId: UUID;
   resource_type: ResourceType;
   resource_id?: UUID;
   action: PermissionAction;
-  context?: Record<string, any>;
+  context?: Record<string, unknown>;
 }
 
 /**
@@ -254,11 +254,11 @@ export interface PermissionCheckResult {
   reason?: string;
   applicable_roles: UUID[];
   conditions_met: boolean;
-  audit_trail?: {
+  auditTrail?: {
     check_id: UUID;
     timestamp: Timestamp;
     result: boolean;
-    details: Record<string, any>;
+    details: Record<string, unknown>;
   };
 }
 

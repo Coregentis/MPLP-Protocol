@@ -67,7 +67,7 @@ export type ConfirmDecision = 'approved' | 'rejected' | 'escalated';
 export interface ConfirmMetadata {
   source?: string;
   tags?: string[];
-  custom_fields?: Record<string, any>;
+  custom_fields?: Record<string, unknown>;
   attachments?: Array<{
     name: string;
     url: string;
@@ -219,7 +219,7 @@ export interface ApprovalStep {
    * 审批标准 - 此步骤的审批标准
    * @schema_path #/properties/approval_workflow/properties/steps/items/properties/approval_criteria
    */
-  approval_criteria?: ApprovalCriterion[];
+  approvalCriteria?: ApprovalCriterion[];
   
   /**
    * 步骤状态 - 此步骤的当前状态
@@ -975,7 +975,7 @@ export interface ConfirmProtocol {
    * @schema_path #/properties/protocol_version 
    * 当前固定值: "1.0.1"
    */
-  protocol_version: Version;
+  protocolVersion: Version;
   
   /** 
    * 协议消息时间戳 - ISO 8601格式
@@ -983,27 +983,27 @@ export interface ConfirmProtocol {
    */
   timestamp: Timestamp;
   
-  /** 
+  /**
    * 确认唯一标识符 - UUID格式
-   * @schema_path #/properties/confirm_id 
+   * @schema_path #/properties/confirm_id
    */
   confirm_id: UUID;
-  
-  /** 
+
+  /**
    * 关联的上下文ID - UUID格式
-   * @schema_path #/properties/context_id 
+   * @schema_path #/properties/context_id
    */
   context_id: UUID;
-  
-  /** 
+
+  /**
    * 关联的计划ID - UUID格式，可选
-   * @schema_path #/properties/plan_id 
+   * @schema_path #/properties/plan_id
    */
   plan_id?: UUID;
   
-  /** 
+  /**
    * 确认类型 - 表示确认流程的类型
-   * @schema_path #/properties/confirmation_type 
+   * @schema_path #/properties/confirmation_type
    */
   confirmation_type: ConfirmationType;
   
@@ -1025,9 +1025,9 @@ export interface ConfirmProtocol {
    */
   requester?: Requester;
   
-  /** 
+  /**
    * 审批工作流 - 定义确认流程的审批步骤和规则
-   * @schema_path #/properties/approval_workflow 
+   * @schema_path #/properties/approval_workflow
    */
   approval_workflow?: ApprovalWorkflow;
   
@@ -1041,19 +1041,19 @@ export interface ConfirmProtocol {
    * 风险评估 - 与确认请求相关的风险评估
    * @schema_path #/properties/risk_assessment 
    */
-  risk_assessment?: RiskAssessment;
+  riskAssessment?: RiskAssessment;
   
   /** 
    * 通知设置 - 与确认流程相关的通知配置
    * @schema_path #/properties/notification_settings 
    */
-  notification_settings?: NotificationSettings;
+  notificationSettings?: NotificationSettings;
   
   /** 
    * 审计追踪 - 确认流程的审计记录
    * @schema_path #/properties/audit_trail 
    */
-  audit_trail?: AuditTrail[];
+  auditTrail?: AuditTrail[];
 }
 
 /**
@@ -1073,19 +1073,19 @@ export interface CreateConfirmRequest {
    * 关联的上下文ID - UUID格式
    * @implementation 对应Schema: #/properties/context_id
    */
-  context_id: UUID;
+  contextId: UUID;
   
   /**
    * 关联的计划ID - UUID格式，可选
    * @implementation 对应Schema: #/properties/plan_id
    */
-  plan_id?: UUID;
+  planId?: UUID;
   
   /**
    * 确认类型 - 表示确认流程的类型
    * @implementation 对应Schema: #/properties/confirmation_type
    */
-  confirmation_type: ConfirmationType;
+  confirmationType: ConfirmationType;
   
   /**
    * 确认优先级 - 表示确认流程的优先级
@@ -1115,13 +1115,13 @@ export interface CreateConfirmRequest {
    * 风险评估 - 与确认请求相关的风险评估
    * @implementation 对应Schema: #/properties/risk_assessment
    */
-  risk_assessment?: RiskAssessment;
+  riskAssessment?: RiskAssessment;
   
   /**
    * 通知设置 - 与确认流程相关的通知配置
    * @implementation 对应Schema: #/properties/notification_settings
    */
-  notification_settings?: NotificationSettings;
+  notificationSettings?: NotificationSettings;
 }
 
 /**
@@ -1133,7 +1133,7 @@ export interface UpdateConfirmRequest {
    * 确认ID - 要更新的确认请求ID
    * @implementation 对应Schema: #/properties/confirm_id
    */
-  confirm_id: UUID;
+  confirmId: UUID;
   
   /**
    * 确认状态 - 要更新的确认状态
@@ -1157,7 +1157,7 @@ export interface UpdateConfirmRequest {
    * 通知设置 - 要更新的通知设置（部分更新）
    * @implementation 对应Schema: #/properties/notification_settings
    */
-  notification_settings?: Partial<NotificationSettings>;
+  notificationSettings?: Partial<NotificationSettings>;
 }
 
 /**
@@ -1222,7 +1222,7 @@ export interface ConfirmResponse {
      * 跟踪ID - 用于分布式追踪的ID
      * @implementation 应用层字段
      */
-    trace_id: string;
+    traceId: string;
   };
 }
 
@@ -1241,7 +1241,7 @@ export interface ConfirmFilter {
    * 上下文ID - 单个上下文过滤
    * @implementation 应用层字段
    */
-  context_id?: UUID;
+  contextId?: UUID;
 
   /**
    * 上下文ID列表 - 根据上下文过滤
@@ -1253,7 +1253,7 @@ export interface ConfirmFilter {
    * 计划ID - 单个计划过滤
    * @implementation 应用层字段
    */
-  plan_id?: UUID;
+  planId?: UUID;
 
   /**
    * 计划ID列表 - 根据计划过滤
@@ -1265,7 +1265,7 @@ export interface ConfirmFilter {
    * 确认类型 - 单个类型过滤
    * @implementation 应用层字段
    */
-  confirmation_type?: ConfirmationType;
+  confirmationType?: ConfirmationType;
 
   /**
    * 确认类型列表 - 根据类型过滤
@@ -1618,7 +1618,7 @@ export interface ConfirmOperationResult {
      * 跟踪ID - 用于分布式追踪的ID
      * @implementation 应用层字段
      */
-    trace_id: string;
+    traceId: string;
   };
 }
 
@@ -1667,19 +1667,19 @@ export interface ConfirmDetail {
    * 确认ID - 确认的唯一标识符
    * @implementation 应用层字段
    */
-  confirm_id: UUID;
+  confirmId: UUID;
   
   /**
    * 上下文ID - 关联的上下文ID
    * @implementation 应用层字段
    */
-  context_id: UUID;
+  contextId: UUID;
   
   /**
    * 确认类型 - 确认的类型
    * @implementation 应用层字段
    */
-  confirmation_type: ConfirmationType;
+  confirmationType: ConfirmationType;
   
   /**
    * 状态 - 确认的当前状态
@@ -1697,13 +1697,13 @@ export interface ConfirmDetail {
    * 创建时间 - 确认的创建时间
    * @implementation 应用层字段
    */
-  created_at: Timestamp;
+  createdAt: Timestamp;
   
   /**
    * 更新时间 - 确认的最后更新时间
    * @implementation 应用层字段
    */
-  updated_at: Timestamp;
+  updatedAt: Timestamp;
 }
 
 // ===== 错误处理类型 (应用层实现) =====

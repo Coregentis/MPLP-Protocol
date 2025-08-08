@@ -41,6 +41,11 @@ export class ContextConfiguration {
    * 创建从JSON的配置
    */
   static fromJSON(json: Record<string, unknown>): ContextConfiguration {
+    // 处理null和undefined参数
+    if (!json || typeof json !== 'object') {
+      json = {};
+    }
+
     return new ContextConfiguration(
       json.allowSharing === true,
       typeof json.maxSessions === 'number' ? json.maxSessions : 10,

@@ -14,23 +14,23 @@ export interface EventSubscriptionOptions {
 }
 
 export interface IEventBus {
-  subscribe<T = any>(eventType: string, handler: (data: T) => void | Promise<void>, options?: EventSubscriptionOptions): string;
+  subscribe<T = unknown>(eventType: string, handler: (data: T) => void | Promise<void>, options?: EventSubscriptionOptions): string;
   unsubscribe(subscriptionId: string): boolean;
-  publish<T = any>(eventType: string, data: T): number;
-  publishAsync<T = any>(eventType: string, data: T): Promise<number>;
+  publish<T = unknown>(eventType: string, data: T): number;
+  publishAsync<T = unknown>(eventType: string, data: T): Promise<number>;
   clear(): void;
 }
 
-interface Subscription {
+interface Subscription<T = unknown> {
   id: string;
   eventType: string;
-  handler: (data: any) => void | Promise<void>;
+  handler: (data: T) => void | Promise<void>;
   options: EventSubscriptionOptions;
 }
 
 interface EventHistory {
   eventType: string;
-  data: any;
+  data: unknown;
   timestamp: string;
   handlerCount: number;
 }
@@ -215,6 +215,13 @@ export class EventBus implements IEventBus {
     this.subscriptions.clear();
     this.subscriptionCounter = 0;
     this.logger.debug('Event bus cleared');
+  }
+
+  /**
+   * 移除所有监听器（兼容标准EventEmitter接口）
+   */
+  removeAllListeners(): void {
+    this.clear();
   }
 
   /**

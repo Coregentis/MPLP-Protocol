@@ -58,10 +58,10 @@ export class ContextValidationService {
    */
   validateLifecycleStage(stage: string): ValidationError | null {
     const validStages: ContextLifecycleStage[] = [
-      ContextLifecycleStage.INITIALIZATION,
-      ContextLifecycleStage.ACTIVE,
-      ContextLifecycleStage.MAINTENANCE,
-      ContextLifecycleStage.COMPLETION
+      ContextLifecycleStage.PLANNING,
+      ContextLifecycleStage.EXECUTING,
+      ContextLifecycleStage.MONITORING,
+      ContextLifecycleStage.COMPLETED
     ];
 
     if (!validStages.includes(stage as ContextLifecycleStage)) {
@@ -118,10 +118,10 @@ export class ContextValidationService {
     newStage: ContextLifecycleStage
   ): ValidationError | null {
     const stageOrder: Record<ContextLifecycleStage, number> = {
-      [ContextLifecycleStage.INITIALIZATION]: 0,
-      [ContextLifecycleStage.ACTIVE]: 1,
-      [ContextLifecycleStage.MAINTENANCE]: 2,
-      [ContextLifecycleStage.COMPLETION]: 3
+      [ContextLifecycleStage.PLANNING]: 0,
+      [ContextLifecycleStage.EXECUTING]: 1,
+      [ContextLifecycleStage.MONITORING]: 2,
+      [ContextLifecycleStage.COMPLETED]: 3
     };
     
     // 确保阶段只能向前推进，不能回退

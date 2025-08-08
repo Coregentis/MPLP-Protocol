@@ -87,7 +87,7 @@ export class RoleModuleAdapter implements ModuleInterface {
       
       this.logger.info('Lifecycle coordination completed', {
         contextId: request.contextId,
-        role_id: result.role_id
+        role_id: result.roleId
       });
 
       return result;
@@ -180,8 +180,8 @@ export class RoleModuleAdapter implements ModuleInterface {
     const createRoleRequest: CreateRoleRequest = {
       context_id: request.contextId,
       name: roleData.name,
-      role_type: roleData.role_type,
-      display_name: roleData.display_name,
+      role_type: roleData.roleType,
+      display_name: roleData.displayName,
       description: roleData.description,
       permissions: roleData.permissions
     };
@@ -430,7 +430,7 @@ export class RoleModuleAdapter implements ModuleInterface {
   }
 
   async executeBusinessCoordination(request: any): Promise<any> {
-    const result = await this.execute({ contextId: request.context_id, creation_strategy: 'dynamic', parameters: {} });
+    const result = await this.execute({ contextId: request.contextId, creation_strategy: 'dynamic', parameters: {} });
     return {
       coordination_id: request.coordination_id,
       module: 'role',

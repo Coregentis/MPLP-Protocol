@@ -114,9 +114,9 @@ export class TraceController {
   async queryTraces(req: HttpRequest): Promise<HttpResponse> {
     try {
       const filter: TraceFilter = {
-        context_id: req.query.context_id,
-        plan_id: req.query.plan_id,
-        trace_type: req.query.trace_type,
+        context_id: req.query.contextId,
+        plan_id: req.query.planId,
+        trace_type: req.query.traceType,
         severity: req.query.severity,
         event_type: req.query.event_type,
         event_category: req.query.event_category,
@@ -165,7 +165,7 @@ export class TraceController {
    */
   async getErrorTraces(req: HttpRequest): Promise<HttpResponse> {
     try {
-      const contextId = req.query.context_id;
+      const contextId = req.query.contextId;
       const limit = req.query.limit ? parseInt(req.query.limit) : undefined;
       
       const result = await this.traceManagementService.getErrorTraces(contextId, limit);
@@ -195,7 +195,7 @@ export class TraceController {
    */
   async getPerformanceTraces(req: HttpRequest): Promise<HttpResponse> {
     try {
-      const contextId = req.query.context_id;
+      const contextId = req.query.contextId;
       const limit = req.query.limit ? parseInt(req.query.limit) : undefined;
       
       const result = await this.traceManagementService.getPerformanceTraces(contextId, limit);
@@ -318,7 +318,7 @@ export class TraceController {
    */
   async analyzeTraces(req: HttpRequest): Promise<HttpResponse> {
     try {
-      const contextId = req.query.context_id;
+      const contextId = req.query.contextId;
       const result = await this.traceManagementService.analyzeTraces(contextId);
       
       if (!result.success) {
@@ -346,7 +346,7 @@ export class TraceController {
    */
   async analyzePerformance(req: HttpRequest): Promise<HttpResponse> {
     try {
-      const contextId = req.query.context_id;
+      const contextId = req.query.contextId;
       const result = await this.traceManagementService.analyzePerformance(contextId);
       
       if (!result.success) {
@@ -402,7 +402,7 @@ export class TraceController {
    */
   async getStatistics(req: HttpRequest): Promise<HttpResponse> {
     try {
-      const contextId = req.query.context_id;
+      const contextId = req.query.contextId;
       const timeRange = req.query.start && req.query.end ? {
         start: req.query.start,
         end: req.query.end
@@ -444,8 +444,8 @@ export class TraceController {
       }
 
       const filter: TraceFilter = {
-        context_id: req.query.context_id,
-        trace_type: req.query.trace_type,
+        context_id: req.query.contextId,
+        trace_type: req.query.traceType,
         severity: req.query.severity
       };
 

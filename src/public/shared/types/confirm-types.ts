@@ -59,17 +59,17 @@ export type EscalationStrategy = 'time_based' | 'role_based' | 'priority_based' 
  * Confirmation创建请求
  */
 export interface CreateConfirmationRequest {
-  context_id: UUID;
-  confirmation_type: ConfirmationType;
+  contextId: UUID;
+  confirmationType: ConfirmationType;
   title: string;
   description?: string;
   priority: ConfirmationPriority;
   required_approvers: ApproverData[];
   deadline?: Timestamp;
-  auto_approve_conditions?: Record<string, any>;
-  escalation_rules?: EscalationRuleData[];
-  notification_settings?: NotificationSettingsData;
-  metadata?: Record<string, any>;
+  auto_approve_conditions?: Record<string, unknown>;
+  escalationRules?: EscalationRuleData[];
+  notificationSettings?: NotificationSettingsData;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -81,7 +81,7 @@ export interface UpdateConfirmationRequest {
   priority?: ConfirmationPriority;
   deadline?: Timestamp;
   status?: ConfirmationStatus;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -94,7 +94,7 @@ export interface ConfirmationResponseRequest {
   comments?: string;
   conditions?: string[];
   attachments?: AttachmentData[];
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -104,10 +104,10 @@ export interface ConfirmationQueryParams {
   page?: number;
   limit?: number;
   search?: string;
-  confirmation_type?: ConfirmationType;
+  confirmationType?: ConfirmationType;
   status?: ConfirmationStatus;
   priority?: ConfirmationPriority;
-  context_id?: UUID;
+  contextId?: UUID;
   approver_id?: UUID;
   created_after?: Timestamp;
   created_before?: Timestamp;
@@ -122,23 +122,23 @@ export interface ConfirmationQueryParams {
  */
 export interface ConfirmationData {
   confirmation_id: UUID;
-  context_id: UUID;
-  confirmation_type: ConfirmationType;
+  contextId: UUID;
+  confirmationType: ConfirmationType;
   title: string;
   description?: string;
   status: ConfirmationStatus;
   priority: ConfirmationPriority;
   created_by: UUID;
-  created_at: Timestamp;
-  updated_at: Timestamp;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
   deadline?: Timestamp;
-  completed_at?: Timestamp;
+  completedAt?: Timestamp;
   required_approvers: ApproverData[];
   responses: ConfirmationResponseData[];
-  auto_approve_conditions?: Record<string, any>;
-  escalation_rules?: EscalationRuleData[];
-  notification_settings?: NotificationSettingsData;
-  metadata?: Record<string, any>;
+  auto_approve_conditions?: Record<string, unknown>;
+  escalationRules?: EscalationRuleData[];
+  notificationSettings?: NotificationSettingsData;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -153,7 +153,7 @@ export interface ApproverData {
   is_required: boolean;
   order?: number;
   delegation_allowed: boolean;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -170,7 +170,7 @@ export interface ConfirmationResponseData {
   responded_at: Timestamp;
   ip_address?: string;
   user_agent?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -184,7 +184,7 @@ export interface AttachmentData {
   url?: string;
   checksum?: string;
   uploaded_at: Timestamp;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -206,7 +206,7 @@ export interface EscalationRuleData {
     auto_approve?: boolean;
   };
   max_escalations?: number;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -221,7 +221,7 @@ export interface NotificationSettingsData {
     body_template?: string;
   };
   webhook_urls?: string[];
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -246,10 +246,10 @@ export interface ConfirmationStatistics {
 export interface ConfirmationSummary {
   confirmation_id: UUID;
   title: string;
-  confirmation_type: ConfirmationType;
+  confirmationType: ConfirmationType;
   status: ConfirmationStatus;
   priority: ConfirmationPriority;
-  created_at: Timestamp;
+  createdAt: Timestamp;
   deadline?: Timestamp;
   required_approvers_count: number;
   completed_approvers_count: number;
@@ -260,12 +260,12 @@ export interface ConfirmationSummary {
  * 确认详情数据接口
  */
 export interface ConfirmationDetails extends ConfirmationData {
-  audit_trail: {
+  auditTrail: {
     event_id: UUID;
     event_type: string;
     timestamp: Timestamp;
-    user_id?: UUID;
-    details: Record<string, any>;
+    userId?: UUID;
+    details: Record<string, unknown>;
   }[];
   related_confirmations?: UUID[];
   dependencies?: UUID[];
@@ -279,7 +279,7 @@ export interface BulkConfirmationRequest {
   approver_id: UUID;
   result: ConfirmationResult;
   comments?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**

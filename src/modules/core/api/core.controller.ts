@@ -63,7 +63,7 @@ export class CoreController {
   async executeWorkflow(request: ExecuteWorkflowRequest): Promise<OperationResult<WorkflowExecutionResult>> {
     try {
       this.logger.info('收到工作流执行请求', {
-        context_id: request.context_id,
+        context_id: request.contextId,
         workflow_config: request.workflow_config
       });
 
@@ -75,12 +75,12 @@ export class CoreController {
 
       // 2. 执行工作流
       const result = await this.coreOrchestrator.executeWorkflow(
-        request.context_id,
+        request.contextId,
         request.workflow_config
       );
 
       this.logger.info('工作流执行完成', {
-        context_id: request.context_id,
+        context_id: request.contextId,
         success: result.success,
         workflow_id: result.data?.workflow_id
       });
@@ -89,7 +89,7 @@ export class CoreController {
 
     } catch (error) {
       this.logger.error('工作流执行失败', {
-        context_id: request.context_id,
+        context_id: request.contextId,
         error: error instanceof Error ? error.message : 'Unknown error'
       });
 
@@ -321,7 +321,7 @@ export class CoreController {
    * 验证工作流执行请求
    */
   private validateExecuteWorkflowRequest(request: ExecuteWorkflowRequest): OperationResult {
-    if (!request.context_id) {
+    if (!request.contextId) {
       return {
         success: false,
         error: 'context_id is required'
@@ -354,7 +354,7 @@ export class CoreController {
         }
       }
 
-      if (request.workflow_config.timeout_ms && request.workflow_config.timeout_ms < 1000) {
+      if (request.workflow_config.timeoutMs && request.workflow_config.timeoutMs < 1000) {
         return {
           success: false,
           error: 'timeout_ms must be at least 1000ms'

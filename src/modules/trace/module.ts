@@ -29,7 +29,7 @@ export interface TraceModuleOptions {
   enableLogging?: boolean;
   enablePerformanceMonitoring?: boolean;
   enableAutoCorrelation?: boolean;
-  dataSource?: any; // 数据源配置，生产环境中应该是真实的数据库连接
+  dataSource?: unknown; // 数据源配置，生产环境中应该是真实的数据库连接
   retentionDays?: number; // 追踪数据保留天数
 }
 

@@ -341,7 +341,7 @@ export class WorkflowEventFilter {
    * 按用户ID过滤
    */
   static byUserId(userId: string) {
-    return (data: WorkflowEventData) => data.user_id === userId;
+    return (data: WorkflowEventData) => data.userId === userId;
   }
 
   /**

@@ -2,26 +2,45 @@ import { Context } from '../../src/modules/context/domain/entities/context.entit
 import { Plan } from '../../src/modules/plan/domain/entities/plan.entity';
 import { Confirm } from '../../src/modules/confirm/domain/entities/confirm.entity';
 import { Trace } from '../../src/modules/trace/domain/entities/trace.entity';
+import { TraceFactory } from '../../src/modules/trace/domain/factories/trace.factory';
+import { TraceEvent, TraceType, TraceSeverity } from '../../src/modules/trace/types';
 import { Role } from '../../src/modules/role/domain/entities/role.entity';
 import { Extension } from '../../src/modules/extension/domain/entities/extension.entity';
 import { Collab } from '../../src/modules/collab/domain/entities/collab.entity';
 import { Dialog } from '../../src/modules/dialog/domain/entities/dialog.entity';
 import { Network } from '../../src/modules/network/domain/entities/network.entity';
+import { v4 as uuidv4 } from 'uuid';
 
 describe('Trace-All Modules Integration Tests', () => {
   let trace: Trace;
 
   beforeEach(() => {
-    trace = new Trace({
-      context_id: 'trace-context-001',
-      event_type: 'system_monitoring',
-      source: 'integration_test',
+    const traceEvent: TraceEvent = {
+      name: 'system_monitoring',
+      source: {
+        component: 'integration_test',
+        module: 'trace',
+        version: '1.0.0'
+      },
       data: {
         test_session: 'all_modules_trace',
         timestamp: new Date().toISOString()
       },
       created_by: 'test-system'
-    });
+    };
+
+    const now = new Date().toISOString();
+    trace = new Trace(
+      uuidv4(),                    // trace_id
+      uuidv4(),                    // context_id
+      '1.0.0',                     // protocol_version
+      'execution',                 // trace_type
+      'info',                      // severity
+      traceEvent,                  // event
+      now,                         // timestamp
+      now,                         // created_at
+      now                          // updated_at
+    );
   });
 
   describe('Context模块事件追踪', () => {
@@ -41,21 +60,29 @@ describe('Trace-All Modules Integration Tests', () => {
       });
 
       // 追踪Context创建事件
-      const contextCreatedTrace = new Trace({
+      const contextCreatedTrace = TraceFactory.create({
         context_id: context.context_id,
-        event_type: 'context_created',
-        source: 'context_module',
-        data: {
-          context_id: context.context_id,
-          session_id: context.session_id,
-          agent_id: context.agent_id,
-          configuration: context.configuration
-        },
-        created_by: 'system'
+        trace_type: 'execution',
+        severity: 'info',
+        event: {
+          type: 'lifecycle',
+          name: 'context_created',
+          category: 'system',
+          source: {
+            component: 'context_module',
+            module: 'context'
+          },
+          data: {
+            context_id: context.context_id,
+            session_id: context.session_id,
+            agent_id: context.agent_id,
+            configuration: context.configuration
+          }
+        }
       });
 
-      expect(contextCreatedTrace.event_type).toBe('context_created');
-      expect(contextCreatedTrace.data.context_id).toBe(context.context_id);
+      expect(contextCreatedTrace.event.name).toBe('context_created');
+      expect(contextCreatedTrace.event.data.context_id).toBe(context.context_id);
 
       // 追踪Context状态变更事件
       context.start();
@@ -100,49 +127,67 @@ describe('Trace-All Modules Integration Tests', () => {
       });
 
       // 追踪Plan创建事件
-      const planCreatedTrace = new Trace({
+      const planCreatedTrace = TraceFactory.create({
         context_id: plan.context_id,
-        event_type: 'plan_created',
-        source: 'plan_module',
-        data: {
-          plan_id: plan.plan_id,
-          name: plan.name,
-          task_count: plan.tasks.length,
-          estimated_total_duration: plan.tasks.reduce((sum, task) => sum + task.estimated_duration, 0)
-        },
-        created_by: 'system'
+        plan_id: plan.plan_id,
+        trace_type: 'execution',
+        severity: 'info',
+        event: {
+          type: 'lifecycle',
+          name: 'plan_created',
+          category: 'business',
+          source: {
+            component: 'plan_module',
+            module: 'plan'
+          },
+          data: {
+            plan_id: plan.plan_id,
+            name: plan.name,
+            task_count: plan.tasks.length,
+            estimated_total_duration: plan.tasks.reduce((sum, task) => sum + task.estimated_duration, 0)
+          }
+        }
       });
 
-      expect(planCreatedTrace.event_type).toBe('plan_created');
-      expect(planCreatedTrace.data.task_count).toBe(1);
+      expect(planCreatedTrace.event.name).toBe('plan_created');
+      expect(planCreatedTrace.event.data.task_count).toBe(1);
 
       // 追踪任务状态变更事件
       plan.start();
       plan.updateTaskStatus('traced-task-001', 'in_progress');
 
-      const taskStatusTrace = new Trace({
+      const taskStatusTrace = TraceFactory.create({
         context_id: plan.context_id,
-        event_type: 'task_status_changed',
-        source: 'plan_module',
-        data: {
-          plan_id: plan.plan_id,
-          task_id: 'traced-task-001',
-          old_status: 'pending',
-          new_status: 'in_progress',
-          assigned_agents: ['agent-trace-002']
-        },
-        created_by: 'system'
+        plan_id: plan.plan_id,
+        trace_type: 'execution',
+        severity: 'info',
+        event: {
+          type: 'state_change',
+          name: 'task_status_changed',
+          category: 'business',
+          source: {
+            component: 'plan_module',
+            module: 'plan'
+          },
+          data: {
+            plan_id: plan.plan_id,
+            task_id: 'traced-task-001',
+            old_status: 'pending',
+            new_status: 'in_progress',
+            assigned_agents: ['agent-trace-002']
+          }
+        }
       });
 
-      expect(taskStatusTrace.event_type).toBe('task_status_changed');
-      expect(taskStatusTrace.data.new_status).toBe('in_progress');
+      expect(taskStatusTrace.event.name).toBe('task_status_changed');
+      expect(taskStatusTrace.event.data.new_status).toBe('in_progress');
     });
   });
 
   describe('Confirm模块事件追踪', () => {
     it('应该追踪确认流程的所有事件', () => {
       const confirm = new Confirm({
-        context_id: 'confirm-trace-context',
+        context_id: uuidv4(),
         request_type: 'plan_execution',
         title: 'Traced Confirmation',
         description: 'Confirmation for tracing',
@@ -220,6 +265,7 @@ describe('Trace-All Modules Integration Tests', () => {
   describe('Role模块事件追踪', () => {
     it('应该追踪角色和权限变更事件', () => {
       const role = new Role({
+        context_id: uuidv4(),
         name: 'Traced Admin',
         description: 'Admin role for tracing',
         permissions: ['read', 'write'],
@@ -265,6 +311,7 @@ describe('Trace-All Modules Integration Tests', () => {
   describe('Extension模块事件追踪', () => {
     it('应该追踪扩展生命周期事件', () => {
       const extension = new Extension({
+        context_id: uuidv4(),
         name: 'Traced Extension',
         version: '1.0.0',
         description: 'Extension for tracing',
@@ -312,7 +359,8 @@ describe('Trace-All Modules Integration Tests', () => {
   describe('Collab模块事件追踪', () => {
     it('应该追踪协作和决策事件', () => {
       const collab = new Collab({
-        context_id: 'collab-trace-context',
+        context_id: uuidv4(),
+        plan_id: uuidv4(),
         name: 'Traced Collaboration',
         description: 'Collaboration for tracing',
         participants: [

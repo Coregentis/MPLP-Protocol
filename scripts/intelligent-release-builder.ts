@@ -949,31 +949,15 @@ export interface ContextOperationResult extends OperationResult {
   stage?: ContextLifecycleStage;
 }
 
-// Plan相关类型
-export enum PlanStatus {
-  DRAFT = 'draft',
-  ACTIVE = 'active',
-  PAUSED = 'paused',
-  COMPLETED = 'completed',
-  FAILED = 'failed',
-  CANCELLED = 'cancelled'
-}
+// Plan相关类型 - 导入共享类型定义
+import {
+  PlanStatus,
+  TaskStatus,
+  ExecutionStrategy
+} from '../src/public/shared/types/plan-types';
 
-export enum TaskStatus {
-  PENDING = 'pending',
-  IN_PROGRESS = 'in_progress',
-  COMPLETED = 'completed',
-  FAILED = 'failed',
-  BLOCKED = 'blocked',
-  CANCELLED = 'cancelled'
-}
-
-export enum ExecutionStrategy {
-  SEQUENTIAL = 'sequential',
-  PARALLEL = 'parallel',
-  CONDITIONAL = 'conditional',
-  HYBRID = 'hybrid'
-}
+// 重新导出以保持向后兼容
+export { PlanStatus, TaskStatus, ExecutionStrategy };
 
 export enum OptimizationStrategy {
   SPEED = 'speed',

@@ -13,7 +13,7 @@ import { Logger } from '../../../utils/logger';
 export interface EventData {
   eventType: string;
   timestamp: string;
-  data: any;
+  data: unknown;
   source?: string;
 }
 
@@ -79,7 +79,7 @@ export class EventBus {
   /**
    * 发布事件
    */
-  async publish(eventType: string, data: any, source?: string): Promise<void> {
+  async publish(eventType: string, data: unknown, source?: string): Promise<void> {
     const eventData: EventData = {
       eventType,
       timestamp: new Date().toISOString(),
@@ -125,7 +125,14 @@ export class EventBus {
   clear(): void {
     this.emitter.removeAllListeners();
     this.subscribers.clear();
-    
+
     this.logger.info('事件总线已清理');
+  }
+
+  /**
+   * 移除所有监听器（兼容标准EventEmitter接口）
+   */
+  removeAllListeners(): void {
+    this.clear();
   }
 }

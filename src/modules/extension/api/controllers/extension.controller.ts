@@ -258,7 +258,7 @@ export class ExtensionController {
   async queryExtensions(req: HttpRequest): Promise<HttpResponse> {
     try {
       const filter: ExtensionFilter = {
-        context_id: req.query.context_id,
+        context_id: req.query.contextId,
         type: req.query.type,
         status: req.query.status,
         name_pattern: req.query.name_pattern,
@@ -307,7 +307,7 @@ export class ExtensionController {
    */
   async getActiveExtensions(req: HttpRequest): Promise<HttpResponse> {
     try {
-      const contextId = req.query.context_id;
+      const contextId = req.query.contextId;
       const result = await this.extensionManagementService.getActiveExtensions(contextId);
       
       if (!result.success) {
@@ -363,7 +363,7 @@ export class ExtensionController {
    */
   async getStatistics(req: HttpRequest): Promise<HttpResponse> {
     try {
-      const contextId = req.query.context_id;
+      const contextId = req.query.contextId;
       const result = await this.extensionManagementService.getStatistics(contextId);
       
       if (!result.success) {

@@ -67,8 +67,8 @@ export interface ICacheManager extends ICacheProvider {
  * 缓存提供者接口
  */
 export interface ICacheProvider {
-  get<T = any>(key: string): Promise<T | undefined>;
-  set<T = any>(key: string, value: T, ttl?: number): Promise<boolean>;
+  get<T = unknown>(key: string): Promise<T | undefined>;
+  set<T = unknown>(key: string, value: T, ttl?: number): Promise<boolean>;
   delete(key: string): Promise<boolean>;
   has(key: string): Promise<boolean>;
   clear(): Promise<boolean>;
@@ -81,11 +81,11 @@ export interface ICacheProvider {
  * 缓存策略接口
  */
 export interface ICacheStrategy {
-  shouldCache(key: string, value: any): boolean;
-  getTTL(key: string, value: any): number;
-  onHit(key: string, value: any): void;
+  shouldCache(key: string, value: unknown): boolean;
+  getTTL(key: string, value: unknown): number;
+  onHit(key: string, value: unknown): void;
   onMiss(key: string): void;
-  onSet(key: string, value: any): void;
+  onSet(key: string, value: unknown): void;
   onDelete(key: string): void;
 }
 
@@ -95,7 +95,7 @@ export interface ICacheStrategy {
 export interface ICacheSerializer {
   serialize<T>(value: T): string | Buffer;
   deserialize<T>(data: string | Buffer): T;
-  canSerialize(value: any): boolean;
+  canSerialize(value: unknown): boolean;
 }
 
 /**
@@ -139,7 +139,7 @@ export type CacheEventListener = (data: CacheEventData) => void;
  */
 export interface CacheEventData {
   key?: string;
-  value?: any;
+  value?: unknown;
   ttl?: number;
   reason?: string;
   error?: Error;
@@ -223,9 +223,9 @@ export interface ICacheMiddleware {
  */
 export interface CacheDecoratorOptions {
   ttl?: number;
-  key?: string | ((args: any[]) => string);
-  condition?: (args: any[]) => boolean;
-  unless?: (result: any) => boolean;
+  key?: string | ((args: unknown[]) => string);
+  condition?: (args: unknown[]) => boolean;
+  unless?: (result: unknown) => boolean;
   namespace?: string;
 }
 
@@ -233,9 +233,9 @@ export interface CacheDecoratorOptions {
  * 缓存工厂接口
  */
 export interface ICacheFactory {
-  createProvider(type: string, config: any): ICacheProvider;
-  createClient(provider: ICacheProvider, config: any): any;
-  createStrategy(type: string, config: any): ICacheStrategy;
+  createProvider(type: string, config: Record<string, unknown>): ICacheProvider;
+  createClient(provider: ICacheProvider, config: Record<string, unknown>): ICacheProvider;
+  createStrategy(type: string, config: Record<string, unknown>): ICacheStrategy;
   createSerializer(type: string): ICacheSerializer;
   createCompressor(type: string): ICacheCompressor;
 }
@@ -246,7 +246,7 @@ export interface ICacheFactory {
 export interface ICacheAdapter {
   name: string;
   version: string;
-  connect(config: any): Promise<void>;
+  connect(config: Record<string, unknown>): Promise<void>;
   disconnect(): Promise<void>;
   isConnected(): boolean;
   getHealth(): Promise<ICacheHealth>;
@@ -291,5 +291,5 @@ export interface ICacheBackup {
   backup(destination: string): Promise<void>;
   restore(source: string): Promise<void>;
   schedule(cron: string, destination: string): void;
-  getBackupInfo(): Promise<any>;
+  getBackupInfo(): Promise<Record<string, unknown>>;
 }

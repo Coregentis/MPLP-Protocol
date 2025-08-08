@@ -107,7 +107,7 @@ export class ConfirmValidationService {
     const errors: string[] = [];
     const warnings: string[] = [];
 
-    if (!requester.user_id || requester.user_id.trim().length === 0) {
+    if (!requester.userId || requester.userId.trim().length === 0) {
       errors.push('请求者用户ID不能为空');
     }
 

@@ -539,19 +539,14 @@ export enum PlanStatus {
   CANCELLED = 'cancelled'
 }
 
-export enum TaskStatus {
-  PENDING = 'pending',
-  IN_PROGRESS = 'in_progress',
-  COMPLETED = 'completed',
-  FAILED = 'failed',
-  CANCELLED = 'cancelled'
-}
+// 导入共享类型定义
+import {
+  TaskStatus,
+  ExecutionStrategy
+} from '../src/public/shared/types/plan-types';
 
-export enum ExecutionStrategy {
-  SEQUENTIAL = 'sequential',
-  PARALLEL = 'parallel',
-  CONDITIONAL = 'conditional'
-}
+// 重新导出以保持向后兼容
+export { TaskStatus, ExecutionStrategy };
 
 export enum OptimizationStrategy {
   SPEED = 'speed',

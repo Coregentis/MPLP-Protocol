@@ -11,7 +11,7 @@ import { performance } from 'perf_hooks';
 
 // 智能缓存管理器 - 基于业务特征的缓存策略
 export class IntelligentCacheManager {
-  private cache = new Map<string, { data: any, expiry: number, accessCount: number, lastAccess: number }>();
+  private cache = new Map<string, { data: unknown, expiry: number, accessCount: number, lastAccess: number }>();
   private maxSize: number;
   private hitCount = 0;
   private missCount = 0;
@@ -20,7 +20,7 @@ export class IntelligentCacheManager {
     this.maxSize = maxSize;
   }
 
-  async get(key: string): Promise<any> {
+  async get(key: string): Promise<unknown> {
     const item = this.cache.get(key);
     if (item && item.expiry > Date.now()) {
       item.accessCount++;
@@ -36,7 +36,7 @@ export class IntelligentCacheManager {
     return null;
   }
 
-  async set(key: string, data: any, ttl: number): Promise<void> {
+  async set(key: string, data: unknown, ttl: number): Promise<void> {
     // 如果缓存满了，使用LFU+LRU混合策略淘汰
     if (this.cache.size >= this.maxSize) {
       this.evictLeastValuable();
@@ -82,7 +82,7 @@ export class IntelligentCacheManager {
   }
 
   // 预热缓存 - 基于业务模式预加载热点数据
-  async warmup(preloadKeys: string[], dataLoader: (key: string) => Promise<any>): Promise<void> {
+  async warmup(preloadKeys: string[], dataLoader: (key: string) => Promise<unknown>): Promise<void> {
     const promises = preloadKeys.map(async (key) => {
       try {
         const data = await dataLoader(key);
@@ -122,13 +122,13 @@ interface PoolConfig {
   maxConnections: number;
   acquireTimeoutMs: number;
   idleTimeoutMs: number;
-  createConnection: () => Promise<any>;
-  validateConnection: (conn: any) => Promise<boolean>;
-  destroyConnection: (conn: any) => Promise<void>;
+  createConnection: () => Promise<unknown>;
+  validateConnection: (conn: unknown) => Promise<boolean>;
+  destroyConnection: (conn: unknown) => Promise<void>;
 }
 
 class ConnectionPool {
-  private connections: Array<{ conn: any, inUse: boolean, lastUsed: number }> = [];
+  private connections: Array<{ conn: unknown, inUse: boolean, lastUsed: number }> = [];
   private waitingQueue: Array<{ resolve: Function, reject: Function, timeout: NodeJS.Timeout }> = [];
   private config: PoolConfig;
   private cleanupInterval: NodeJS.Timeout;
@@ -159,7 +159,7 @@ class ConnectionPool {
     }
   }
 
-  async acquire(): Promise<any> {
+  async acquire(): Promise<unknown> {
     // 查找可用连接
     const availableConn = this.connections.find(c => !c.inUse);
     if (availableConn) {
@@ -209,7 +209,7 @@ class ConnectionPool {
     });
   }
 
-  async release(conn: any): Promise<void> {
+  async release(conn: unknown): Promise<void> {
     const connWrapper = this.connections.find(c => c.conn === conn);
     if (connWrapper) {
       connWrapper.inUse = false;
@@ -225,7 +225,7 @@ class ConnectionPool {
     }
   }
 
-  private async removeConnection(connWrapper: { conn: any, inUse: boolean, lastUsed: number }): Promise<void> {
+  private async removeConnection(connWrapper: { conn: unknown, inUse: boolean, lastUsed: number }): Promise<void> {
     const index = this.connections.indexOf(connWrapper);
     if (index >= 0) {
       this.connections.splice(index, 1);
@@ -349,10 +349,10 @@ export class BatchProcessor<T> {
 // 性能监控器 - 实时监控业务性能指标
 export class BusinessPerformanceMonitor extends EventEmitter {
   private metrics = new Map<string, number[]>();
-  private businessMetrics = new Map<string, any>();
+  private businessMetrics = new Map<string, unknown>();
   private alertThresholds = new Map<string, { warning: number, critical: number }>();
 
-  recordBusinessMetric(name: string, value: number, metadata?: any): void {
+  recordBusinessMetric(name: string, value: number, metadata?: unknown): void {
     const values = this.metrics.get(name) || [];
     values.push(value);
     

@@ -69,5 +69,5 @@ export interface PerformanceMetricEventData {
   value: number;
   unit: string;
   timestamp: string;
-  context?: Record<string, any>;
+  context?: Record<string, unknown>;
 }

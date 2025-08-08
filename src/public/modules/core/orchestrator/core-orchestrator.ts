@@ -235,8 +235,8 @@ export class CoreOrchestrator {
 
         // 更新缓存结果的时间戳
         const result = { ...cachedResult };
-        result.started_at = startTime;
-        result.completed_at = new Date().toISOString();
+        result.startedAt = startTime;
+        result.completedAt = new Date().toISOString();
         result.total_duration_ms = Date.now() - performanceStartTime;
 
         this.logger.info(`Workflow ${contextId} served from cache`);
@@ -249,13 +249,13 @@ export class CoreOrchestrator {
     // 创建执行上下文
     const executionContext: ExecutionContext = {
       execution_id: executionId,
-      context_id: contextId,
-      workflow_config: config,
+      contextId: contextId,
+      workflowConfig: config,
       current_stage: config.stages[0],
       stage_results: new Map(),
       metadata: {},
-      started_at: startTime,
-      updated_at: startTime
+      startedAt: startTime,
+      updatedAt: startTime
     };
 
     this.activeExecutions.set(executionId, executionContext);
@@ -282,12 +282,12 @@ export class CoreOrchestrator {
 
       const result: WorkflowExecutionResult = {
         execution_id: executionId,
-        context_id: contextId,
+        contextId: contextId,
         status: 'completed',
         stages: stageResults,
         total_duration_ms: totalDuration,
-        started_at: startTime,
-        completed_at: endTime
+        startedAt: startTime,
+        completedAt: endTime
       };
 
       // 执行后置钩子
@@ -312,12 +312,12 @@ export class CoreOrchestrator {
 
       const result: WorkflowExecutionResult = {
         execution_id: executionId,
-        context_id: contextId,
+        contextId: contextId,
         status: 'failed',
         stages: [],
         total_duration_ms: totalDuration,
-        started_at: startTime,
-        completed_at: endTime,
+        startedAt: startTime,
+        completedAt: endTime,
         error: error instanceof Error ? error : new Error(String(error))
       };
 
@@ -370,12 +370,12 @@ export class CoreOrchestrator {
 
       const workflowResult: WorkflowExecutionResult = {
         execution_id: executionId,
-        context_id: contextId,
+        contextId: contextId,
         status: isSuccess ? 'completed' : 'failed',
         stages: results,
         total_duration_ms: totalDuration,
-        started_at: new Date(startTime).toISOString(),
-        completed_at: new Date().toISOString()
+        startedAt: new Date(startTime).toISOString(),
+        completedAt: new Date().toISOString()
       };
 
       this.logger.info('Extended workflow execution completed', {
@@ -396,12 +396,12 @@ export class CoreOrchestrator {
 
       return {
         execution_id: executionId,
-        context_id: contextId,
+        contextId: contextId,
         status: 'failed',
         stages: [],
         total_duration_ms: Date.now() - startTime,
-        started_at: new Date(startTime).toISOString(),
-        completed_at: new Date().toISOString(),
+        startedAt: new Date(startTime).toISOString(),
+        completedAt: new Date().toISOString(),
         error: error instanceof Error ? error : new Error(String(error))
       };
     }
@@ -458,7 +458,7 @@ export class CoreOrchestrator {
 
           const businessRequest: BusinessCoordinationRequest = {
             coordination_id: uuidv4() as UUID,
-            context_id: contextId,
+            contextId: contextId,
             module: stage as ProtocolModule,
             coordination_type: this.mapStageToCoordinationType(stage),
             input_data: {
@@ -472,14 +472,14 @@ export class CoreOrchestrator {
                 validation_status: 'valid',
                 security_level: 'internal'
               },
-              created_at: new Date().toISOString(),
-              updated_at: new Date().toISOString()
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString()
             },
             previous_stage_results: [],
             configuration: {
               timeout_ms: 30000,
-              retry_policy: { max_attempts: 3, delay_ms: 1000 },
-              validation_rules: [],
+              retryPolicy: { max_attempts: 3, delay_ms: 1000 },
+              validationRules: [],
               output_format: `${stage}_data`
             }
           };
@@ -499,8 +499,8 @@ export class CoreOrchestrator {
         status: 'completed',
         result: coordinationResult,
         duration_ms: Date.now() - startTime,
-        started_at: new Date(startTime).toISOString(),
-        completed_at: new Date().toISOString()
+        startedAt: new Date(startTime).toISOString(),
+        completedAt: new Date().toISOString()
       };
     } catch (error) {
       return {
@@ -508,8 +508,8 @@ export class CoreOrchestrator {
         status: 'failed',
         error: error instanceof Error ? error : new Error(String(error)),
         duration_ms: Date.now() - startTime,
-        started_at: new Date(startTime).toISOString(),
-        completed_at: new Date().toISOString()
+        startedAt: new Date(startTime).toISOString(),
+        completedAt: new Date().toISOString()
       };
     }
   }
@@ -520,11 +520,11 @@ export class CoreOrchestrator {
   private async executeStagesSequentially(context: ExecutionContext): Promise<StageExecutionResult[]> {
     const results: StageExecutionResult[] = [];
     
-    for (const stage of context.workflow_config.stages) {
+    for (const stage of context.workflowConfig.stages) {
       const result = await this.executeStage(stage, context);
       results.push(result);
       
-      if (result.status === 'failed' && !context.workflow_config.error_handling?.continue_on_error) {
+      if (result.status === 'failed' && !context.workflowConfig.error_handling?.continue_on_error) {
         break;
       }
     }
@@ -536,7 +536,7 @@ export class CoreOrchestrator {
    * 并行执行阶段
    */
   private async executeStagesInParallel(context: ExecutionContext): Promise<StageExecutionResult[]> {
-    const stagePromises = context.workflow_config.stages.map(stage => 
+    const stagePromises = context.workflowConfig.stages.map(stage => 
       this.executeStage(stage, context)
     );
     
@@ -580,7 +580,7 @@ export class CoreOrchestrator {
         const businessRequest = this.createBusinessCoordinationRequest(stage, context);
         const businessResult = await this.executeWithTimeout(
           () => module.executeBusinessCoordination(businessRequest),
-          this.configuration.module_timeout_ms
+          this.configuration.moduleTimeoutMs
         );
 
         // 转换为StageExecutionResult
@@ -589,14 +589,14 @@ export class CoreOrchestrator {
           status: businessResult.status === 'completed' ? 'completed' : 'failed',
           result: businessResult.output_data,
           duration_ms: businessResult.execution_metrics.duration_ms,
-          started_at: businessResult.execution_metrics.start_time,
-          completed_at: businessResult.execution_metrics.end_time
+          startedAt: businessResult.execution_metrics.start_time,
+          completedAt: businessResult.execution_metrics.end_time
         };
       } else {
         // 技术工作流：调用原有的execute方法
         result = await this.executeWithTimeout(
           () => module.executeStage(this.createWorkflowExecutionContext(context)),
-          this.configuration.module_timeout_ms
+          this.configuration.moduleTimeoutMs
         );
       }
 
@@ -608,13 +608,13 @@ export class CoreOrchestrator {
         status: 'completed',
         result,
         duration_ms: duration,
-        started_at: startTime,
-        completed_at: endTime
+        startedAt: startTime,
+        completedAt: endTime
       };
 
       // 保存阶段结果
       context.stage_results.set(stage, result);
-      context.updated_at = endTime;
+      context.updatedAt = endTime;
 
       // 执行后置钩子
       if (this.configuration.lifecycle_hooks?.afterStage) {
@@ -642,8 +642,8 @@ export class CoreOrchestrator {
         status: 'failed',
         error: error instanceof Error ? error : new Error(String(error)),
         duration_ms: duration,
-        started_at: startTime,
-        completed_at: endTime
+        startedAt: startTime,
+        completedAt: endTime
       };
 
       // 执行错误钩子
@@ -813,8 +813,8 @@ export class CoreOrchestrator {
     const configHash = JSON.stringify({
       stages: config.stages,
       parallel_execution: config.parallel_execution,
-      timeout_ms: config.timeout_ms,
-      retry_policy: config.retry_policy
+      timeout_ms: config.timeoutMs,
+      retryPolicy: config.retryPolicy
     });
 
     return `workflow:${contextId}:${Buffer.from(configHash).toString('base64').slice(0, 16)}`;
@@ -873,7 +873,7 @@ export class CoreOrchestrator {
       // P0修复：执行决策过程
       const businessRequest: BusinessCoordinationRequest = {
         coordination_id: uuidv4() as UUID,
-        context_id: collabRequest.contextId,
+        contextId: collabRequest.contextId,
         module: 'collab',
         coordination_type: 'collaboration_coordination',
         input_data: {
@@ -887,14 +887,14 @@ export class CoreOrchestrator {
             validation_status: 'valid',
             security_level: 'internal'
           },
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
         },
         previous_stage_results: [],
         configuration: {
           timeout_ms: 30000,
-          retry_policy: { max_attempts: 3, delay_ms: 1000 },
-          validation_rules: [],
+          retryPolicy: { max_attempts: 3, delay_ms: 1000 },
+          validationRules: [],
           output_format: 'collaboration_data'
         }
       };
@@ -903,7 +903,7 @@ export class CoreOrchestrator {
       const result: DecisionResult = {
         decision_id: businessResult.output_data.payload.decision_id,
         result: businessResult.output_data.payload.result,
-        consensus_reached: businessResult.output_data.payload.consensus_reached,
+        consensus_reached: businessResult.output_data.payload.consensusReached,
         participants_votes: businessResult.output_data.payload.participants_votes,
         timestamp: businessResult.timestamp
       };
@@ -912,7 +912,7 @@ export class CoreOrchestrator {
       this.emitModuleEvent('decision_completed', 'collab', result);
 
       // 如果达成共识，发出共识事件
-      if (result.consensus_reached) {
+      if (result.consensusReached) {
         this.emitModuleEvent('consensus_reached', 'collab', result);
       }
 
@@ -947,7 +947,7 @@ export class CoreOrchestrator {
       // P0修复：执行生命周期管理
       const businessRequest: BusinessCoordinationRequest = {
         coordination_id: uuidv4() as UUID,
-        context_id: roleRequest.contextId,
+        contextId: roleRequest.contextId,
         module: 'role',
         coordination_type: 'role_coordination',
         input_data: {
@@ -961,14 +961,14 @@ export class CoreOrchestrator {
             validation_status: 'valid',
             security_level: 'internal'
           },
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
         },
         previous_stage_results: [],
         configuration: {
           timeout_ms: 30000,
-          retry_policy: { max_attempts: 3, delay_ms: 1000 },
-          validation_rules: [],
+          retryPolicy: { max_attempts: 3, delay_ms: 1000 },
+          validationRules: [],
           output_format: 'role_data'
         }
       };
@@ -978,7 +978,7 @@ export class CoreOrchestrator {
 
       // 转换回原有格式
       const result: LifecycleResult = {
-        role_id: businessResult.output_data.payload.role_id || uuidv4() as UUID,
+        roleId: businessResult.output_data.payload.roleId || uuidv4() as UUID,
         role_data: businessResult.output_data.payload.role_data || {},
         capabilities: businessResult.output_data.payload.capabilities || [],
         timestamp: businessResult.timestamp
@@ -995,7 +995,7 @@ export class CoreOrchestrator {
 
       this.logger.info('Lifecycle coordination completed', {
         contextId: roleRequest.contextId,
-        role_id: result.role_id
+        roleId: result.roleId
       });
 
       return result;
@@ -1023,7 +1023,7 @@ export class CoreOrchestrator {
 
       // 临时实现：Dialog模块尚未完全实现
       const result: DialogResult = {
-        dialog_id: uuidv4() as UUID,
+        dialogId: uuidv4() as UUID,
         turns: [],
         final_state: {
           status: 'completed',
@@ -1038,7 +1038,7 @@ export class CoreOrchestrator {
 
       this.logger.info('Dialog coordination completed', {
         contextId: dialogRequest.contextId,
-        dialog_id: result.dialog_id
+        dialogId: result.dialogId
       });
 
       return result;
@@ -1118,7 +1118,7 @@ export class CoreOrchestrator {
           content: { message: 'Knowledge persisted successfully' },
           metadata: {
             size_bytes: 1024,
-            created_at: new Date().toISOString(),
+            createdAt: new Date().toISOString(),
             last_accessed: new Date().toISOString()
           }
         },
@@ -1249,7 +1249,7 @@ export class CoreOrchestrator {
       // P0修复：调用新的业务协调方法
       const businessRequest: BusinessCoordinationRequest = {
         coordination_id: uuidv4() as UUID,
-        context_id: planRequest.contextId,
+        contextId: planRequest.contextId,
         module: 'plan',
         coordination_type: 'planning_coordination',
         input_data: {
@@ -1263,14 +1263,14 @@ export class CoreOrchestrator {
             validation_status: 'valid',
             security_level: 'internal'
           },
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
         },
         previous_stage_results: [],
         configuration: {
           timeout_ms: 30000,
-          retry_policy: { max_attempts: 3, delay_ms: 1000 },
-          validation_rules: [],
+          retryPolicy: { max_attempts: 3, delay_ms: 1000 },
+          validationRules: [],
           output_format: 'planning_data'
         }
       };
@@ -1279,7 +1279,7 @@ export class CoreOrchestrator {
 
       // 转换回原有格式
       const result: PlanningResult = {
-        plan_id: businessResult.output_data.payload.plan_id,
+        planId: businessResult.output_data.payload.planId,
         task_breakdown: businessResult.output_data.payload.task_breakdown,
         resource_allocation: businessResult.output_data.payload.resource_allocation,
         timestamp: businessResult.timestamp
@@ -1290,7 +1290,7 @@ export class CoreOrchestrator {
 
       this.logger.info('Planning coordination completed', {
         contextId: planRequest.contextId,
-        plan_id: result.plan_id
+        planId: result.planId
       });
 
       return result;
@@ -1322,7 +1322,7 @@ export class CoreOrchestrator {
       // P0修复：执行确认流程
       const businessRequest: BusinessCoordinationRequest = {
         coordination_id: uuidv4() as UUID,
-        context_id: confirmRequest.contextId,
+        contextId: confirmRequest.contextId,
         module: 'confirm',
         coordination_type: 'confirmation_coordination',
         input_data: {
@@ -1336,14 +1336,14 @@ export class CoreOrchestrator {
             validation_status: 'valid',
             security_level: 'internal'
           },
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
         },
         previous_stage_results: [],
         configuration: {
           timeout_ms: 30000,
-          retry_policy: { max_attempts: 3, delay_ms: 1000 },
-          validation_rules: [],
+          retryPolicy: { max_attempts: 3, delay_ms: 1000 },
+          validationRules: [],
           output_format: 'confirmation_data'
         }
       };
@@ -1401,7 +1401,7 @@ export class CoreOrchestrator {
       // P0修复：执行事件跟踪
       const businessRequest: BusinessCoordinationRequest = {
         coordination_id: uuidv4() as UUID,
-        context_id: traceRequest.contextId,
+        contextId: traceRequest.contextId,
         module: 'trace',
         coordination_type: 'tracing_coordination',
         input_data: {
@@ -1415,14 +1415,14 @@ export class CoreOrchestrator {
             validation_status: 'valid',
             security_level: 'internal'
           },
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
         },
         previous_stage_results: [],
         configuration: {
           timeout_ms: 30000,
-          retry_policy: { max_attempts: 3, delay_ms: 1000 },
-          validation_rules: [],
+          retryPolicy: { max_attempts: 3, delay_ms: 1000 },
+          validationRules: [],
           output_format: 'tracing_data'
         }
       };
@@ -1431,7 +1431,7 @@ export class CoreOrchestrator {
 
       // 转换回原有格式
       const result: TracingResult = {
-        trace_id: businessResult.output_data.payload.trace_id,
+        traceId: businessResult.output_data.payload.traceId,
         monitoring_session: businessResult.output_data.payload.monitoring_session,
         event_collection: businessResult.output_data.payload.event_collection,
         timestamp: businessResult.timestamp
@@ -1442,7 +1442,7 @@ export class CoreOrchestrator {
 
       this.logger.info('Tracing coordination completed', {
         contextId: traceRequest.contextId,
-        trace_id: result.trace_id
+        traceId: result.traceId
       });
 
       return result;
@@ -1460,7 +1460,7 @@ export class CoreOrchestrator {
    */
   private isBusinessWorkflow(context: ExecutionContext): boolean {
     // 检查工作流配置中是否包含业务工作流标识
-    return context.workflow_config.stages.some(stage =>
+    return context.workflowConfig.stages.some(stage =>
       ['plan', 'confirm', 'trace', 'collab', 'dialog'].includes(stage)
     );
   }
@@ -1497,18 +1497,18 @@ export class CoreOrchestrator {
 
     return {
       coordination_id: uuidv4() as UUID,
-      context_id: context.context_id,
+      contextId: context.contextId,
       module: stage as ProtocolModule,
       coordination_type: this.mapStageToCoordinationType(stage),
       input_data: inputData,
       previous_stage_results: previousResults.map(r => this.convertToBusinessData(r)),
       configuration: {
-        timeout_ms: this.configuration.module_timeout_ms,
-        retry_policy: this.configuration.default_workflow.retry_policy || {
+        timeout_ms: this.configuration.moduleTimeoutMs,
+        retryPolicy: this.configuration.default_workflow.retryPolicy || {
           max_attempts: 3,
           delay_ms: 1000
         },
-        validation_rules: [],
+        validationRules: [],
         output_format: `${stage}_data`
       }
     };
@@ -1520,11 +1520,11 @@ export class CoreOrchestrator {
   private createWorkflowExecutionContext(context: ExecutionContext): WorkflowExecutionContext {
     return {
       execution_id: context.execution_id,
-      context_id: context.context_id,
-      workflow_type: 'custom',
+      contextId: context.contextId,
+      workflowType: 'custom',
       current_stage: context.current_stage,
       stage_index: 0,
-      total_stages: context.workflow_config.stages.length,
+      total_stages: context.workflowConfig.stages.length,
       data_store: {
         global_data: {},
         stage_inputs: {},
@@ -1535,14 +1535,14 @@ export class CoreOrchestrator {
         status: 'running',
         completed_stages: [],
         failed_stages: [],
-        pending_stages: context.workflow_config.stages,
+        pending_stages: context.workflowConfig.stages,
         current_stage_status: 'in_progress',
         error_count: 0,
         retry_count: 0
       },
       metadata: context.metadata,
-      started_at: context.started_at,
-      updated_at: context.updated_at
+      startedAt: context.startedAt,
+      updatedAt: context.updatedAt
     };
   }
 
@@ -1557,7 +1557,7 @@ export class CoreOrchestrator {
       data_type: `${stage}_data` as BusinessDataType,
       data_version: '1.0.0',
       payload: {
-        context_id: context.context_id,
+        contextId: context.contextId,
         execution_id: context.execution_id,
         stage: stage,
         metadata: context.metadata
@@ -1569,8 +1569,8 @@ export class CoreOrchestrator {
         validation_status: 'valid',
         security_level: 'internal'
       },
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     };
   }
 
@@ -1589,8 +1589,8 @@ export class CoreOrchestrator {
         validation_status: 'valid',
         security_level: 'internal'
       },
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     };
   }
 

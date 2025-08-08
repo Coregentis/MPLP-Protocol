@@ -33,7 +33,7 @@ export class InMemoryWorkflowExecutionRepository implements IWorkflowExecutionRe
       
       this.logger.debug('工作流执行已保存', {
         workflow_id: execution.workflow_id,
-        status: execution.execution_status.status
+        status: execution.executionStatus.status
       });
     } catch (error) {
       this.logger.error('保存工作流执行失败', {
@@ -77,7 +77,7 @@ export class InMemoryWorkflowExecutionRepository implements IWorkflowExecutionRe
       // 按状态过滤
       if (criteria.status && criteria.status.length > 0) {
         results = results.filter(execution => 
-          criteria.status!.includes(execution.execution_status.status)
+          criteria.status!.includes(execution.executionStatus.status)
         );
       }
 
@@ -89,16 +89,16 @@ export class InMemoryWorkflowExecutionRepository implements IWorkflowExecutionRe
       }
 
       // 按用户ID过滤
-      if (criteria.user_id) {
+      if (criteria.userId) {
         results = results.filter(execution => 
-          execution.execution_context.user_id === criteria.user_id
+          execution.execution_context.userId === criteria.userId
         );
       }
 
       // 按会话ID过滤
-      if (criteria.session_id) {
+      if (criteria.sessionId) {
         results = results.filter(execution => 
-          execution.execution_context.session_id === criteria.session_id
+          execution.execution_context.sessionId === criteria.sessionId
         );
       }
 
@@ -115,7 +115,7 @@ export class InMemoryWorkflowExecutionRepository implements IWorkflowExecutionRe
       if (criteria.start_time_from) {
         const fromTime = new Date(criteria.start_time_from);
         results = results.filter(execution => {
-          const startTime = execution.execution_status.start_time;
+          const startTime = execution.executionStatus.start_time;
           return startTime && new Date(startTime) >= fromTime;
         });
       }
@@ -123,7 +123,7 @@ export class InMemoryWorkflowExecutionRepository implements IWorkflowExecutionRe
       if (criteria.start_time_to) {
         const toTime = new Date(criteria.start_time_to);
         results = results.filter(execution => {
-          const startTime = execution.execution_status.start_time;
+          const startTime = execution.executionStatus.start_time;
           return startTime && new Date(startTime) <= toTime;
         });
       }
@@ -136,20 +136,20 @@ export class InMemoryWorkflowExecutionRepository implements IWorkflowExecutionRe
 
           switch (criteria.sort_by) {
             case 'created_at':
-              aValue = a.created_at;
-              bValue = b.created_at;
+              aValue = a.createdAt;
+              bValue = b.createdAt;
               break;
             case 'updated_at':
-              aValue = a.updated_at;
-              bValue = b.updated_at;
+              aValue = a.updatedAt;
+              bValue = b.updatedAt;
               break;
             case 'start_time':
-              aValue = a.execution_status.start_time || '';
-              bValue = b.execution_status.start_time || '';
+              aValue = a.executionStatus.start_time || '';
+              bValue = b.executionStatus.start_time || '';
               break;
             default:
-              aValue = a.created_at;
-              bValue = b.created_at;
+              aValue = a.createdAt;
+              bValue = b.createdAt;
           }
 
           const comparison = aValue.localeCompare(bValue);
@@ -192,7 +192,7 @@ export class InMemoryWorkflowExecutionRepository implements IWorkflowExecutionRe
       
       this.logger.debug('工作流执行已更新', {
         workflow_id: execution.workflow_id,
-        status: execution.execution_status.status
+        status: execution.executionStatus.status
       });
     } catch (error) {
       this.logger.error('更新工作流执行失败', {
@@ -241,7 +241,7 @@ export class InMemoryWorkflowExecutionRepository implements IWorkflowExecutionRe
       const activeStatuses = [WorkflowStatus.CREATED, WorkflowStatus.IN_PROGRESS, WorkflowStatus.PAUSED];
       
       let results = Array.from(this.executions.values()).filter(execution =>
-        activeStatuses.includes(execution.execution_status.status)
+        activeStatuses.includes(execution.executionStatus.status)
       );
 
       if (orchestratorId) {
@@ -271,7 +271,7 @@ export class InMemoryWorkflowExecutionRepository implements IWorkflowExecutionRe
   async countByStatus(status: WorkflowStatus): Promise<number> {
     try {
       const count = Array.from(this.executions.values())
-        .filter(execution => execution.execution_status.status === status)
+        .filter(execution => execution.executionStatus.status === status)
         .length;
 
       this.logger.debug('工作流状态计数完成', {
@@ -295,8 +295,8 @@ export class InMemoryWorkflowExecutionRepository implements IWorkflowExecutionRe
   async findByUserId(userId: string, limit?: number): Promise<WorkflowExecution[]> {
     try {
       let results = Array.from(this.executions.values())
-        .filter(execution => execution.execution_context.user_id === userId)
-        .sort((a, b) => b.created_at.localeCompare(a.created_at)); // 按创建时间倒序
+        .filter(execution => execution.execution_context.userId === userId)
+        .sort((a, b) => b.createdAt.localeCompare(a.createdAt)); // 按创建时间倒序
 
       if (limit) {
         results = results.slice(0, limit);
@@ -324,8 +324,8 @@ export class InMemoryWorkflowExecutionRepository implements IWorkflowExecutionRe
   async findBySessionId(sessionId: UUID): Promise<WorkflowExecution[]> {
     try {
       const results = Array.from(this.executions.values())
-        .filter(execution => execution.execution_context.session_id === sessionId)
-        .sort((a, b) => b.created_at.localeCompare(a.created_at)); // 按创建时间倒序
+        .filter(execution => execution.execution_context.sessionId === sessionId)
+        .sort((a, b) => b.createdAt.localeCompare(a.createdAt)); // 按创建时间倒序
 
       this.logger.debug('会话工作流执行查询完成', {
         sessionId,
@@ -384,7 +384,7 @@ export class InMemoryWorkflowExecutionRepository implements IWorkflowExecutionRe
       let cleanedCount = 0;
 
       for (const [workflowId, execution] of executions) {
-        const createdAt = new Date(execution.created_at);
+        const createdAt = new Date(execution.createdAt);
         if (createdAt < olderThan && execution.isCompleted()) {
           this.executions.delete(workflowId);
           cleanedCount++;
@@ -421,13 +421,13 @@ export class InMemoryWorkflowExecutionRepository implements IWorkflowExecutionRe
       totalExecutions: executions.length,
       activeExecutions: executions.filter(e => 
         [WorkflowStatus.CREATED, WorkflowStatus.IN_PROGRESS, WorkflowStatus.PAUSED]
-          .includes(e.execution_status.status)
+          .includes(e.executionStatus.status)
       ).length,
       completedExecutions: executions.filter(e => 
-        e.execution_status.status === WorkflowStatus.COMPLETED
+        e.executionStatus.status === WorkflowStatus.COMPLETED
       ).length,
       failedExecutions: executions.filter(e => 
-        e.execution_status.status === WorkflowStatus.FAILED
+        e.executionStatus.status === WorkflowStatus.FAILED
       ).length
     };
   }

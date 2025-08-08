@@ -70,7 +70,7 @@ export interface CreateDialogRequest {
   // 上下文配置
   context?: DialogContext;
 
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -166,7 +166,7 @@ export interface DialogInteractionRequest {
     responseFormat?: 'text' | 'structured' | 'multimodal';
   };
 
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -432,7 +432,7 @@ export interface UpdateDialogRequest {
   description?: string;
   capabilities?: Partial<DialogCapabilities>;
   strategy?: DialogStrategy;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -514,7 +514,7 @@ export interface DialogMilestone {
  */
 export interface AnalysisResult {
   type: string;
-  result: any;
+  result: unknown;
   confidence: number;
   timestamp: string;
 }
@@ -534,11 +534,11 @@ export interface AdaptationRule {
  * 统一的对话实体定义，支持所有对话管理需求
  */
 export interface DialogEntity {
-  dialog_id: string;
+  dialogId: string;
   version: string;
   timestamp: string;
-  session_id: string;
-  context_id: string;
+  sessionId: string;
+  contextId: string;
   name: string;
   description?: string;
   participants: DialogParticipant[];
@@ -546,10 +546,10 @@ export interface DialogEntity {
   conversation_context?: ConversationContext;
   security_policy?: SecurityPolicy;
   status: DialogStatus;
-  created_at: string;
-  updated_at: string;
-  created_by: string;
-  metadata?: Record<string, any>;
+  createdAt: string;
+  updatedAt: string;
+  createdBy: string;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -558,8 +558,8 @@ export interface DialogEntity {
  */
 export interface DialogParticipant {
   participant_id: string;
-  agent_id: string;
-  role_id: string;
+  agentId: string;
+  roleId: string;
   status: ParticipantStatus;
   permissions: Permission[];
   joined_at: string;
@@ -621,8 +621,8 @@ export type MessageStatus = 'pending' | 'sent' | 'delivered' | 'read' | 'failed'
  * 创建对话请求（兼容接口）
  */
 export interface LegacyCreateDialogRequest {
-  session_id: string;
-  context_id: string;
+  sessionId: string;
+  contextId: string;
   name: string;
   description?: string;
   participants: Omit<DialogParticipant, 'participant_id' | 'joined_at'>[];
@@ -638,7 +638,7 @@ export interface LegacyCreateDialogRequest {
  */
 export interface DialogMessage {
   message_id: string;
-  dialog_id: string;
+  dialogId: string;
   sender_id: string;
   recipient_ids: string[];
   type: MessageType;
@@ -722,7 +722,7 @@ export interface DialogModuleConfig {
  * @deprecated 使用新的统一接口类型
  */
 export interface SendMessageRequest {
-  dialog_id: string;
+  dialogId: string;
   sender_id: string;
   recipient_ids: string[];
   type: MessageType;
@@ -736,11 +736,11 @@ export interface SendMessageRequest {
  * @deprecated 使用新的统一接口类型
  */
 export interface DialogQueryParams {
-  session_id?: string;
-  context_id?: string;
+  sessionId?: string;
+  contextId?: string;
   status?: DialogStatus;
   participant_id?: string;
-  created_by?: string;
+  createdBy?: string;
   limit?: number;
   offset?: number;
   sort_by?: 'created_at' | 'updated_at' | 'name';
@@ -752,7 +752,7 @@ export interface DialogQueryParams {
  * @deprecated 使用新的统一接口类型
  */
 export interface MessageQueryParams {
-  dialog_id: string;
+  dialogId: string;
   sender_id?: string;
   recipient_id?: string;
   type?: MessageType;
@@ -768,9 +768,9 @@ export interface MessageQueryParams {
  * @deprecated 使用新的统一接口类型
  */
 export interface AddParticipantRequest {
-  dialog_id: string;
-  agent_id: string;
-  role_id: string;
+  dialogId: string;
+  agentId: string;
+  roleId: string;
   permissions: Permission[];
 }
 
@@ -779,7 +779,7 @@ export interface AddParticipantRequest {
  * @deprecated 使用新的统一接口类型
  */
 export interface RemoveParticipantRequest {
-  dialog_id: string;
+  dialogId: string;
   participant_id: string;
   reason?: string;
 }
@@ -789,7 +789,7 @@ export interface RemoveParticipantRequest {
  * @deprecated 使用新的统一接口类型
  */
 export interface UpdateParticipantRequest {
-  dialog_id: string;
+  dialogId: string;
   participant_id: string;
   permissions?: Permission[];
   status?: ParticipantStatus;

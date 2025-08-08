@@ -20,9 +20,38 @@ export type Timestamp = string;
 export type PlanStatus = 'draft' | 'active' | 'approved' | 'paused' | 'completed' | 'failed' | 'cancelled' | 'archived';
 
 /**
+ * 计划状态常量对象 - 提供类似enum的使用方式
+ */
+export const PlanStatus = {
+  DRAFT: 'draft' as const,
+  ACTIVE: 'active' as const,
+  APPROVED: 'approved' as const,
+  PAUSED: 'paused' as const,
+  COMPLETED: 'completed' as const,
+  FAILED: 'failed' as const,
+  CANCELLED: 'cancelled' as const,
+  ARCHIVED: 'archived' as const
+} as const;
+
+/**
  * 任务状态枚举
  */
 export type TaskStatus = 'pending' | 'in_progress' | 'completed' | 'blocked' | 'cancelled' | 'failed' | 'skipped' | 'ready' | 'pending_intervention';
+
+/**
+ * 任务状态常量对象 - 提供类似enum的使用方式
+ */
+export const TaskStatus = {
+  PENDING: 'pending' as const,
+  IN_PROGRESS: 'in_progress' as const,
+  COMPLETED: 'completed' as const,
+  BLOCKED: 'blocked' as const,
+  CANCELLED: 'cancelled' as const,
+  FAILED: 'failed' as const,
+  SKIPPED: 'skipped' as const,
+  READY: 'ready' as const,
+  PENDING_INTERVENTION: 'pending_intervention' as const
+} as const;
 
 /**
  * 执行策略枚举
@@ -30,9 +59,30 @@ export type TaskStatus = 'pending' | 'in_progress' | 'completed' | 'blocked' | '
 export type ExecutionStrategy = 'sequential' | 'parallel' | 'hybrid' | 'conditional';
 
 /**
+ * 执行策略常量对象 - 提供类似enum的使用方式
+ */
+export const ExecutionStrategy = {
+  SEQUENTIAL: 'sequential' as const,
+  PARALLEL: 'parallel' as const,
+  HYBRID: 'hybrid' as const,
+  CONDITIONAL: 'conditional' as const
+} as const;
+
+/**
  * 优先级枚举
  */
 export type Priority = 'critical' | 'high' | 'medium' | 'low' | 'normal';
+
+/**
+ * 优先级常量对象 - 提供类似enum的使用方式
+ */
+export const Priority = {
+  CRITICAL: 'critical' as const,
+  HIGH: 'high' as const,
+  MEDIUM: 'medium' as const,
+  LOW: 'low' as const,
+  NORMAL: 'normal' as const
+} as const;
 
 /**
  * 任务优先级枚举
@@ -107,7 +157,7 @@ export interface TaskEffort {
  * 任务分配者接口
  */
 export interface TaskAssignee {
-  user_id: UUID;
+  userId: UUID;
   name: string;
   role?: string;
   email?: string;
@@ -140,17 +190,17 @@ export interface AcceptanceCriterion {
  * Plan创建请求
  */
 export interface CreatePlanRequest {
-  context_id: UUID;
+  contextId: UUID;
   name: string;
   description?: string;
   goals?: string[];
   priority?: Priority;
   execution_strategy?: ExecutionStrategy;
-  estimated_duration?: {
+  estimatedDuration?: {
     value: number;
     unit: DurationUnit;
   };
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -163,11 +213,11 @@ export interface UpdatePlanRequest {
   goals?: string[];
   priority?: Priority;
   execution_strategy?: ExecutionStrategy;
-  estimated_duration?: {
+  estimatedDuration?: {
     value: number;
     unit: DurationUnit;
   };
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -179,7 +229,7 @@ export interface PlanQueryParams {
   search?: string;
   status?: PlanStatus;
   priority?: Priority;
-  context_id?: UUID;
+  contextId?: UUID;
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
 }
@@ -188,8 +238,8 @@ export interface PlanQueryParams {
  * Plan数据接口
  */
 export interface PlanData {
-  plan_id: UUID;
-  context_id: UUID;
+  planId: UUID;
+  contextId: UUID;
   name: string;
   description?: string;
   status: PlanStatus;
@@ -197,41 +247,41 @@ export interface PlanData {
   goals: string[];
   priority: Priority;
   execution_strategy: ExecutionStrategy;
-  estimated_duration?: {
+  estimatedDuration?: {
     value: number;
     unit: DurationUnit;
   };
-  created_at: Timestamp;
-  updated_at: Timestamp;
-  metadata?: Record<string, any>;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+  metadata?: Record<string, unknown>;
 }
 
 /**
  * 任务数据接口
  */
 export interface TaskData {
-  task_id: UUID;
-  plan_id: UUID;
+  taskId: UUID;
+  planId: UUID;
   name: string;
   description?: string;
   type: TaskType;
   status: TaskStatus;
   priority: TaskPriority;
-  assigned_to?: string;
-  estimated_duration?: {
+  assignedTo?: string;
+  estimatedDuration?: {
     value: number;
     unit: DurationUnit;
   };
-  actual_duration?: {
+  actualDuration?: {
     value: number;
     unit: DurationUnit;
   };
   start_date?: Timestamp;
   end_date?: Timestamp;
   dependencies?: UUID[];
-  metadata?: Record<string, any>;
-  created_at: Timestamp;
-  updated_at: Timestamp;
+  metadata?: Record<string, unknown>;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
 /**
@@ -240,14 +290,14 @@ export interface TaskData {
 export interface PlanDependencyData {
   dependency_id: UUID;
   source_task_id: UUID;
-  target_task_id: UUID;
+  target_taskId: UUID;
   type: DependencyType;
   criticality: DependencyCriticality;
   lag_time?: {
     value: number;
     unit: DurationUnit;
   };
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -255,14 +305,14 @@ export interface PlanDependencyData {
  */
 export interface MilestoneData {
   milestone_id: UUID;
-  plan_id: UUID;
+  planId: UUID;
   name: string;
   description?: string;
   target_date: Timestamp;
   actual_date?: Timestamp;
   status: MilestoneStatus;
   criteria: string[];
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -270,7 +320,7 @@ export interface MilestoneData {
  */
 export interface RiskAssessmentData {
   risk_id: UUID;
-  plan_id: UUID;
+  planId: UUID;
   name: string;
   description: string;
   category: RiskCategory;
@@ -281,6 +331,6 @@ export interface RiskAssessmentData {
   mitigation_strategy?: string;
   contingency_plan?: string;
   identified_at: Timestamp;
-  updated_at: Timestamp;
-  metadata?: Record<string, any>;
+  updatedAt: Timestamp;
+  metadata?: Record<string, unknown>;
 }

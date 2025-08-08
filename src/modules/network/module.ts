@@ -6,7 +6,7 @@
  * @description 网络模块配置，定义模块的依赖注入和初始化
  */
 
-import express from 'express';
+import * as express from 'express';
 import { NetworkService } from './application/services/network.service';
 import {
   MemoryNetworkRepository,
@@ -33,7 +33,7 @@ export class NetworkModule {
   private routingRepository!: RoutingRepository;
   private networkService!: NetworkService;
   private networkController!: NetworkController;
-  private router!: any;
+  private router!: unknown;
 
   constructor(private config: NetworkModuleConfig, private eventBus: EventBus) {
     this.initializeModule();
@@ -71,7 +71,7 @@ export class NetworkModule {
    * 初始化路由
    */
   private initializeRoutes(): void {
-    this.router = (express as any).Router();
+    this.router = (express as unknown).Router();
 
     // 网络CRUD路由
     this.router.post(
@@ -117,7 +117,7 @@ export class NetworkModule {
   /**
    * 获取模块路由
    */
-  getRouter(): any {
+  getRouter(): unknown {
     return this.router;
   }
 
@@ -176,7 +176,7 @@ export class NetworkModule {
    */
   async healthCheck(): Promise<{
     status: 'healthy' | 'unhealthy';
-    details: any;
+    details: unknown;
   }> {
     try {
       // 检查仓储连接
@@ -214,7 +214,7 @@ export class NetworkModule {
    */
   private async checkRepositoryHealth(): Promise<{
     healthy: boolean;
-    details: any;
+    details: unknown;
   }> {
     try {
       // 对于内存仓储，检查是否可以正常访问
@@ -241,7 +241,7 @@ export class NetworkModule {
    */
   private async checkServiceHealth(): Promise<{
     healthy: boolean;
-    details: any;
+    details: unknown;
   }> {
     try {
       // 检查服务是否正常初始化
@@ -272,15 +272,15 @@ export class NetworkModule {
     try {
       // 清理资源
       if (this.networkRepository instanceof MemoryNetworkRepository) {
-        await (this.networkRepository as any).clear?.();
+        await (this.networkRepository as unknown).clear?.();
       }
       if (
         this.nodeDiscoveryRepository instanceof MemoryNodeDiscoveryRepository
       ) {
-        await (this.nodeDiscoveryRepository as any).clear?.();
+        await (this.nodeDiscoveryRepository as unknown).clear?.();
       }
       if (this.routingRepository instanceof MemoryRoutingRepository) {
-        await (this.routingRepository as any).clear?.();
+        await (this.routingRepository as unknown).clear?.();
       }
 
       this.logger.info('网络模块关闭完成');

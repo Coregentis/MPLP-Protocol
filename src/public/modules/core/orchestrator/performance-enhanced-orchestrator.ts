@@ -32,7 +32,7 @@ export class PerformanceEnhancedOrchestrator {
   
   // 性能优化组件
   private readonly cache: IntelligentCacheManager;
-  private readonly batchProcessor: BatchProcessor<any>;
+  private readonly batchProcessor: BatchProcessor<unknown>;
   private readonly performanceMonitor: BusinessPerformanceMonitor;
   
   // 性能统计
@@ -59,7 +59,7 @@ export class PerformanceEnhancedOrchestrator {
     // 设置批处理器
     this.batchProcessor.registerProcessor(
       'performance_metrics',
-      async (metrics: any[]) => {
+      async (metrics: unknown[]) => {
         // 批量处理性能指标
         for (const metric of metrics) {
           this.performanceMonitor.recordBusinessMetric(metric.name, metric.value, metric.metadata);
@@ -111,8 +111,8 @@ export class PerformanceEnhancedOrchestrator {
         
         // 更新缓存结果的时间戳
         const result = { ...cachedResult };
-        result.started_at = new Date().toISOString();
-        result.completed_at = new Date().toISOString();
+        result.startedAt = new Date().toISOString();
+        result.completedAt = new Date().toISOString();
         result.total_duration_ms = Date.now() - startTime;
         
         this.logger.info(`Workflow ${contextId} served from cache (${result.total_duration_ms}ms)`);
@@ -191,14 +191,14 @@ export class PerformanceEnhancedOrchestrator {
   /**
    * 添加事件监听器 - 委托给核心调度器
    */
-  addEventListener(listener: (event: any) => void): void {
+  addEventListener(listener: (event: unknown) => void): void {
     this.coreOrchestrator.addEventListener(listener);
   }
 
   /**
    * 移除事件监听器 - 委托给核心调度器
    */
-  removeEventListener(listener: (event: any) => void): void {
+  removeEventListener(listener: (event: unknown) => void): void {
     this.coreOrchestrator.removeEventListener(listener);
   }
 
@@ -213,7 +213,7 @@ export class PerformanceEnhancedOrchestrator {
   /**
    * 检查缓存结果是否有效
    */
-  private isCacheResultValid(cachedResult: any): boolean {
+  private isCacheResultValid(cachedResult: unknown): boolean {
     return cachedResult && 
            cachedResult.status === 'completed' && 
            cachedResult.stages && 

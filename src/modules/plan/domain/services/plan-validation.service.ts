@@ -9,8 +9,7 @@
  */
 
 import { Plan } from '../entities/plan.entity';
-import { PlanTask } from '../value-objects/plan-task.value-object';
-import { PlanDependency } from '../value-objects/plan-dependency.value-object';
+import { PlanTask, PlanDependency, PlanStatus } from '../../types';
 import { UUID } from '../../../../public/shared/types/plan-types';
 
 /**
@@ -32,13 +31,19 @@ export class PlanValidationService {
    */
   validatePlan(plan: Plan): ValidationResult {
     const errors: string[] = [];
-    
+
+    // 防护null/undefined
+    if (!plan) {
+      errors.push('Plan is required');
+      return { valid: false, errors };
+    }
+
     // 验证基本信息
     if (!plan.name || plan.name.trim().length === 0) {
       errors.push('Plan name is required');
     }
-    
-    if (!plan.context_id) {
+
+    if (!plan.contextId) {
       errors.push('Context ID is required');
     }
     
@@ -63,24 +68,41 @@ export class PlanValidationService {
    */
   validateTasks(tasks: PlanTask[]): string[] {
     const errors: string[] = [];
+
+    // 防护null/undefined
+    if (!tasks) {
+      errors.push('Tasks list is required');
+      return errors;
+    }
+
+    if (!Array.isArray(tasks)) {
+      errors.push('Tasks must be an array');
+      return errors;
+    }
+
     const taskIds = new Set<UUID>();
-    
+
     // 检查任务ID唯一性
     tasks.forEach(task => {
-      if (taskIds.has(task.task_id)) {
-        errors.push(`Duplicate task ID: ${task.task_id}`);
+      if (taskIds.has(task.taskId)) {
+        errors.push(`Duplicate task ID: ${task.taskId}`);
       } else {
-        taskIds.add(task.task_id);
+        taskIds.add(task.taskId);
       }
       
       // 检查任务名称
       if (!task.name || task.name.trim().length === 0) {
-        errors.push(`Task ${task.task_id} has no name`);
+        errors.push(`Task ${task.taskId} has no name`);
       }
       
       // 检查父任务引用
-      if (task.parent_task_id && !taskIds.has(task.parent_task_id)) {
-        errors.push(`Task ${task.task_id} references non-existent parent task ${task.parent_task_id}`);
+      // Note: PlanTask in types.ts doesn't have parent_task_id, using dependencies instead
+      if (task.dependencies && task.dependencies.length > 0) {
+        task.dependencies.forEach(depId => {
+          if (!taskIds.has(depId)) {
+            errors.push(`Task ${task.taskId} references non-existent dependency task ${depId}`);
+          }
+        });
       }
     });
     
@@ -95,34 +117,51 @@ export class PlanValidationService {
    */
   validateDependencies(tasks: PlanTask[], dependencies: PlanDependency[]): string[] {
     const errors: string[] = [];
+
+    // 防护null/undefined
+    if (!tasks) {
+      errors.push('Tasks list is required for dependency validation');
+      return errors;
+    }
+
+    if (!dependencies) {
+      // 空依赖列表是有效的
+      return errors;
+    }
+
+    if (!Array.isArray(dependencies)) {
+      errors.push('Dependencies must be an array');
+      return errors;
+    }
+
     const taskIds = new Set<UUID>();
     const dependencyIds = new Set<UUID>();
-    
+
     // 收集所有任务ID
-    tasks.forEach(task => taskIds.add(task.task_id));
-    
+    tasks.forEach(task => taskIds.add(task.taskId));
+
     // 检查依赖关系
     dependencies.forEach(dependency => {
       // 检查依赖ID唯一性
-      if (dependencyIds.has(dependency.id)) {
-        errors.push(`Duplicate dependency ID: ${dependency.id}`);
+      if (dependencyIds.has(dependency.dependencyId)) {
+        errors.push(`Duplicate dependency ID: ${dependency.dependencyId}`);
       } else {
-        dependencyIds.add(dependency.id);
+        dependencyIds.add(dependency.dependencyId);
       }
-      
+
       // 检查源任务是否存在
-      if (!taskIds.has(dependency.source_task_id)) {
-        errors.push(`Dependency ${dependency.id} references non-existent source task ${dependency.source_task_id}`);
+      if (!taskIds.has(dependency.sourceTaskId)) {
+        errors.push(`Dependency ${dependency.dependencyId} references non-existent source task ${dependency.sourceTaskId}`);
       }
-      
+
       // 检查目标任务是否存在
-      if (!taskIds.has(dependency.target_task_id)) {
-        errors.push(`Dependency ${dependency.id} references non-existent target task ${dependency.target_task_id}`);
+      if (!taskIds.has(dependency.targetTaskId)) {
+        errors.push(`Dependency ${dependency.dependencyId} references non-existent target task ${dependency.targetTaskId}`);
       }
-      
+
       // 检查自引用
-      if (dependency.source_task_id === dependency.target_task_id) {
-        errors.push(`Self-dependency detected: ${dependency.id} (${dependency.source_task_id})`);
+      if (dependency.sourceTaskId === dependency.targetTaskId) {
+        errors.push(`Self-dependency detected: ${dependency.dependencyId} (${dependency.sourceTaskId})`);
       }
     });
     
@@ -147,12 +186,30 @@ export class PlanValidationService {
     
     // 初始化图
     tasks.forEach(task => {
-      graph[task.task_id] = [];
+      graph[task.taskId] = [];
     });
     
     // 添加依赖边
     dependencies.forEach(dep => {
-      graph[dep.source_task_id].push(dep.target_task_id);
+      // 检查源任务是否存在
+      if (!graph[dep.sourceTaskId]) {
+        errors.push(`Dependency references non-existent source task: ${dep.sourceTaskId}`);
+        return;
+      }
+
+      // 检查目标任务是否存在
+      if (!graph[dep.targetTaskId]) {
+        errors.push(`Dependency references non-existent target task: ${dep.targetTaskId}`);
+        return;
+      }
+
+      // 检查自引用
+      if (dep.sourceTaskId === dep.targetTaskId) {
+        errors.push(`Self-dependency detected for task: ${dep.sourceTaskId}`);
+        return;
+      }
+
+      graph[dep.sourceTaskId].push(dep.targetTaskId);
     });
     
     // 检查循环
@@ -190,8 +247,8 @@ export class PlanValidationService {
     
     // 检查每个节点
     for (const task of tasks) {
-      if (!visited.has(task.task_id)) {
-        dfs(task.task_id);
+      if (!visited.has(task.taskId)) {
+        dfs(task.taskId);
       }
     }
     
@@ -207,7 +264,7 @@ export class PlanValidationService {
     const errors: string[] = [];
     
     // 检查状态
-    if (plan.status !== 'active' && plan.status !== 'approved') {
+    if (plan.status !== PlanStatus.ACTIVE && plan.status !== PlanStatus.DRAFT) {
       errors.push(`Plan status must be 'active' or 'approved', current status: ${plan.status}`);
     }
     

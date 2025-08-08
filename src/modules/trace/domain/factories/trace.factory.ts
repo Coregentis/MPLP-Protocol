@@ -55,17 +55,17 @@ export class TraceFactory {
 
     return new Trace(
       traceId,
-      request.context_id,
+      request.contextId,
       this.PROTOCOL_VERSION,
-      request.trace_type,
+      request.traceType,
       request.severity,
       request.event,
       timestamp,
       now,
       now,
-      request.plan_id,
-      request.performance_metrics,
-      request.error_information,
+      request.planId,
+      request.performanceMetrics,
+      request.errorInformation,
       request.correlations || [],
       request.metadata
     );
@@ -324,7 +324,7 @@ export class TraceFactory {
   static validateCreateRequest(request: CreateTraceRequest): { isValid: boolean; errors: string[] } {
     const errors: string[] = [];
 
-    if (!request.context_id) {
+    if (!request.contextId) {
       errors.push('上下文ID不能为空');
     }
 
@@ -336,7 +336,7 @@ export class TraceFactory {
       errors.push('事件源组件不能为空');
     }
 
-    if (request.trace_type === 'error' && !request.error_information) {
+    if (request.traceType === 'error' && !request.errorInformation) {
       errors.push('错误类型的追踪必须包含错误信息');
     }
 

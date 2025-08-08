@@ -128,7 +128,7 @@ describe('PlanManagementService', () => {
       expect(result.data).toEqual(mockPlan);
       expect(mockValidationService.validatePlanName).toHaveBeenCalledWith(createParams.name);
       expect(mockFactoryService.createPlan).toHaveBeenCalledWith(expect.objectContaining({
-        context_id: createParams.context_id,
+        contextId: createParams.context_id,
         name: createParams.name,
         description: createParams.description
       }));

@@ -12,22 +12,22 @@
  * 网络实体
  */
 export interface NetworkEntity {
-  network_id: string;
+  networkId: string;
   version: string;
   timestamp: string;
-  context_id: string;
+  contextId: string;
   name: string;
   description?: string;
   topology: NetworkTopology;
   nodes: NetworkNode[];
   edges?: NetworkEdge[];
-  discovery_mechanism: DiscoveryMechanism;
-  routing_strategy: RoutingStrategy;
+  discoveryMechanism: DiscoveryMechanism;
+  routingStrategy: RoutingStrategy;
   status: NetworkStatus;
-  created_at: string;
-  updated_at: string;
-  created_by: string;
-  metadata?: Record<string, any>;
+  createdAt: string;
+  updatedAt: string;
+  createdBy: string;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -35,12 +35,12 @@ export interface NetworkEntity {
  */
 export interface NetworkNode {
   node_id: string;
-  agent_id: string;
-  node_type: NodeType;
+  agentId: string;
+  nodeType: NodeType;
   status: NodeStatus;
   capabilities: NodeCapability[];
   address?: NodeAddress;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -54,7 +54,7 @@ export interface NetworkEdge {
   direction: EdgeDirection;
   status: EdgeStatus;
   weight?: number;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -217,38 +217,38 @@ export type LoadBalancingMethod =
  * 创建网络请求
  */
 export interface CreateNetworkRequest {
-  context_id: string;
+  contextId: string;
   name: string;
   description?: string;
   topology: NetworkTopology;
   nodes: Omit<NetworkNode, 'node_id'>[];
-  discovery_mechanism: DiscoveryMechanism;
-  routing_strategy: RoutingStrategy;
-  metadata?: Record<string, any>;
+  discoveryMechanism: DiscoveryMechanism;
+  routingStrategy: RoutingStrategy;
+  metadata?: Record<string, unknown>;
 }
 
 /**
  * 更新网络请求
  */
 export interface UpdateNetworkRequest {
-  network_id: string;
+  networkId: string;
   name?: string;
   description?: string;
   status?: NetworkStatus; // 修复：添加缺失的status字段
   topology?: NetworkTopology;
-  discovery_mechanism?: Partial<DiscoveryMechanism>;
-  routing_strategy?: Partial<RoutingStrategy>;
-  metadata?: Record<string, any>;
+  discoveryMechanism?: Partial<DiscoveryMechanism>;
+  routingStrategy?: Partial<RoutingStrategy>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
  * 网络查询参数
  */
 export interface NetworkQueryParams {
-  context_id?: string;
+  contextId?: string;
   status?: NetworkStatus;
   topology?: NetworkTopology;
-  created_by?: string;
+  createdBy?: string;
   limit?: number;
   offset?: number;
   sort_by?: 'created_at' | 'updated_at' | 'name';
@@ -259,8 +259,8 @@ export interface NetworkQueryParams {
  * 节点发现请求
  */
 export interface NodeDiscoveryRequest {
-  network_id?: string;
-  node_type?: NodeType;
+  networkId?: string;
+  nodeType?: NodeType;
   capabilities?: NodeCapability[];
   region?: string;
   timeout?: number;
@@ -270,19 +270,19 @@ export interface NodeDiscoveryRequest {
  * 节点注册请求
  */
 export interface NodeRegistrationRequest {
-  network_id: string;
-  agent_id: string;
-  node_type: NodeType;
+  networkId: string;
+  agentId: string;
+  nodeType: NodeType;
   capabilities: NodeCapability[];
   address?: NodeAddress;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
  * 路由请求
  */
 export interface RoutingRequest {
-  network_id: string;
+  networkId: string;
   source_node_id: string;
   target_node_id: string;
   message_type?: string;
@@ -362,19 +362,19 @@ export interface RoutingResponse {
  * 添加节点请求
  */
 export interface AddNodeRequest {
-  network_id: string;
-  agent_id: string;
-  node_type: NodeType;
+  networkId: string;
+  agentId: string;
+  nodeType: NodeType;
   capabilities: NodeCapability[];
   address?: NodeAddress;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
  * 移除节点请求
  */
 export interface RemoveNodeRequest {
-  network_id: string;
+  networkId: string;
   node_id: string;
   reason?: string;
 }
@@ -383,13 +383,13 @@ export interface RemoveNodeRequest {
  * 更新节点请求
  */
 export interface UpdateNodeRequest {
-  network_id: string;
+  networkId: string;
   node_id: string;
-  node_type?: NodeType;
+  nodeType?: NodeType;
   capabilities?: NodeCapability[];
   address?: NodeAddress;
   status?: NodeStatus;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 // ==================== 事件类型 ====================
@@ -399,9 +399,9 @@ export interface UpdateNodeRequest {
  */
 export interface NetworkEvent {
   event_id: string;
-  network_id: string;
+  networkId: string;
   event_type: NetworkEventType;
-  data: any;
+  data: unknown;
   timestamp: string;
   source: string;
 }
@@ -443,7 +443,7 @@ export interface NetworkModuleConfig {
  * 网络性能指标
  */
 export interface NetworkPerformanceMetrics {
-  network_id: string;
+  networkId: string;
   node_count: number;
   edge_count: number;
   average_latency: number;

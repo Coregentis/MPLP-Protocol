@@ -1,10 +1,8 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://mplp.dev/schemas/v1.0/mplp-core.json",
   "title": "MPLP Core Protocol v1.0",
   "description": "Core协议Schema - MPLP协议簇的统一协调和工作流管理",
-  "version": "1.0.0",
-  "lastUpdated": "2025-08-04",
   "type": "object",
   "$defs": {
     "uuid": {
@@ -24,22 +22,49 @@
     },
     "priority": {
       "type": "string",
-      "enum": ["critical", "high", "medium", "low"],
+      "enum": [
+        "critical",
+        "high",
+        "medium",
+        "low"
+      ],
       "description": "优先级枚举"
     },
     "workflow_stage": {
       "type": "string",
-      "enum": ["context", "plan", "confirm", "trace", "role", "extension", "collab", "dialog", "network"],
+      "enum": [
+        "context",
+        "plan",
+        "confirm",
+        "trace",
+        "role",
+        "extension",
+        "collab",
+        "dialog",
+        "network"
+      ],
       "description": "工作流阶段，对应MPLP的9个协议模块"
     },
     "workflow_status": {
       "type": "string",
-      "enum": ["created", "in_progress", "completed", "failed", "cancelled", "paused"],
+      "enum": [
+        "created",
+        "in_progress",
+        "completed",
+        "failed",
+        "cancelled",
+        "paused"
+      ],
       "description": "工作流执行状态"
     },
     "execution_mode": {
       "type": "string",
-      "enum": ["sequential", "parallel", "conditional", "hybrid"],
+      "enum": [
+        "sequential",
+        "parallel",
+        "conditional",
+        "hybrid"
+      ],
       "description": "工作流执行模式"
     }
   },
@@ -118,17 +143,24 @@
             },
             "backoff_factor": {
               "type": "number",
-              "minimum": 1.0,
-              "maximum": 5.0,
+              "minimum": 1,
+              "maximum": 5,
               "description": "退避因子"
             }
           },
-          "required": ["max_attempts", "delay_ms"],
+          "required": [
+            "max_attempts",
+            "delay_ms"
+          ],
           "additionalProperties": false,
           "description": "重试策略配置"
         }
       },
-      "required": ["name", "stages", "execution_mode"],
+      "required": [
+        "name",
+        "stages",
+        "execution_mode"
+      ],
       "additionalProperties": false
     },
     "execution_context": {
@@ -191,7 +223,13 @@
             "properties": {
               "status": {
                 "type": "string",
-                "enum": ["pending", "running", "completed", "failed", "skipped"]
+                "enum": [
+                  "pending",
+                  "running",
+                  "completed",
+                  "failed",
+                  "skipped"
+                ]
               },
               "start_time": {
                 "$ref": "#/$defs/timestamp"
@@ -222,7 +260,9 @@
                 }
               }
             },
-            "required": ["status"]
+            "required": [
+              "status"
+            ]
           }
         },
         "start_time": {
@@ -244,7 +284,9 @@
           "description": "重试次数"
         }
       },
-      "required": ["status"],
+      "required": [
+        "status"
+      ],
       "additionalProperties": false
     },
     "module_coordination": {
@@ -286,10 +328,15 @@
                     "maximum": 10000
                   }
                 },
-                "required": ["max_attempts", "delay_ms"]
+                "required": [
+                  "max_attempts",
+                  "delay_ms"
+                ]
               }
             },
-            "required": ["adapter_type"],
+            "required": [
+              "adapter_type"
+            ],
             "additionalProperties": false
           }
         },
@@ -317,7 +364,11 @@
                     "description": "数据转换规则"
                   }
                 },
-                "required": ["source_stage", "source_field", "target_field"]
+                "required": [
+                  "source_stage",
+                  "source_field",
+                  "target_field"
+                ]
               }
             },
             "output_mappings": {
@@ -340,7 +391,11 @@
                     "description": "数据转换规则"
                   }
                 },
-                "required": ["target_stage", "source_field", "target_field"]
+                "required": [
+                  "target_stage",
+                  "source_field",
+                  "target_field"
+                ]
               }
             }
           },
@@ -385,7 +440,10 @@
                 "additionalProperties": true
               }
             },
-            "required": ["event_type", "handler"],
+            "required": [
+              "event_type",
+              "handler"
+            ],
             "additionalProperties": false
           },
           "description": "事件监听器配置"
@@ -412,7 +470,10 @@
                     "description": "目标处理器"
                   }
                 },
-                "required": ["condition", "handler"]
+                "required": [
+                  "condition",
+                  "handler"
+                ]
               }
             }
           },

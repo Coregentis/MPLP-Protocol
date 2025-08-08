@@ -43,21 +43,21 @@ export class Network {
   private _metadata?: Record<string, any>;
 
   constructor(data: Partial<NetworkEntity>) {
-    this._network_id = data.network_id || uuidv4();
+    this._network_id = data.networkId || uuidv4();
     this._version = data.version || '1.0.0';
     this._timestamp = data.timestamp || new Date().toISOString();
-    this._context_id = data.context_id!;
+    this._context_id = data.contextId!;
     this._name = data.name!;
     this._description = data.description;
     this._topology = data.topology!;
     this._nodes = data.nodes || [];
     this._edges = data.edges;
-    this._discovery_mechanism = data.discovery_mechanism!;
-    this._routing_strategy = data.routing_strategy!;
+    this._discovery_mechanism = data.discoveryMechanism!;
+    this._routing_strategy = data.routingStrategy!;
     this._status = data.status || 'pending';
-    this._created_at = data.created_at || new Date().toISOString();
-    this._updated_at = data.updated_at || new Date().toISOString();
-    this._created_by = data.created_by!;
+    this._created_at = data.createdAt || new Date().toISOString();
+    this._updated_at = data.updatedAt || new Date().toISOString();
+    this._created_by = data.createdBy!;
     this._metadata = data.metadata;
 
     this.validate();
@@ -65,7 +65,7 @@ export class Network {
 
   // ==================== Getters ====================
 
-  get network_id(): string {
+  get networkId(): string {
     return this._network_id;
   }
   get version(): string {
@@ -74,7 +74,7 @@ export class Network {
   get timestamp(): string {
     return this._timestamp;
   }
-  get context_id(): string {
+  get contextId(): string {
     return this._context_id;
   }
   get name(): string {
@@ -92,22 +92,22 @@ export class Network {
   get edges(): NetworkEdge[] | undefined {
     return this._edges ? [...this._edges] : undefined;
   }
-  get discovery_mechanism(): DiscoveryMechanism {
+  get discoveryMechanism(): DiscoveryMechanism {
     return { ...this._discovery_mechanism };
   }
-  get routing_strategy(): RoutingStrategy {
+  get routingStrategy(): RoutingStrategy {
     return { ...this._routing_strategy };
   }
   get status(): NetworkStatus {
     return this._status;
   }
-  get created_at(): string {
+  get createdAt(): string {
     return this._created_at;
   }
-  get updated_at(): string {
+  get updatedAt(): string {
     return this._updated_at;
   }
-  get created_by(): string {
+  get createdBy(): string {
     return this._created_by;
   }
   get metadata(): Record<string, any> | undefined {
@@ -126,7 +126,7 @@ export class Network {
     }
 
     // 验证Agent不重复
-    if (this._nodes.some(n => n.agent_id === node.agent_id)) {
+    if (this._nodes.some(n => n.agentId === node.agentId)) {
       throw new Error('Agent已经是网络节点');
     }
 
@@ -314,7 +314,7 @@ export class Network {
    * 根据Agent ID查找节点
    */
   findNodeByAgentId(agent_id: string): NetworkNode | undefined {
-    return this._nodes.find(n => n.agent_id === agent_id);
+    return this._nodes.find(n => n.agentId === agent_id);
   }
 
   /**
@@ -536,10 +536,10 @@ export class Network {
    */
   toObject(): NetworkEntity {
     return {
-      network_id: this._network_id,
+      networkId: this._network_id,
       version: this._version,
       timestamp: this._timestamp,
-      context_id: this._context_id,
+      contextId: this._context_id,
       name: this._name,
       description: this._description,
       topology: this._topology,
@@ -548,9 +548,9 @@ export class Network {
       discovery_mechanism: { ...this._discovery_mechanism },
       routing_strategy: { ...this._routing_strategy },
       status: this._status,
-      created_at: this._created_at,
-      updated_at: this._updated_at,
-      created_by: this._created_by,
+      createdAt: this._created_at,
+      updatedAt: this._updated_at,
+      createdBy: this._created_by,
       metadata: this._metadata ? { ...this._metadata } : undefined,
     };
   }

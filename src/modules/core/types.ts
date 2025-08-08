@@ -76,9 +76,9 @@ export enum StageStatus {
  * 重试策略接口
  */
 export interface RetryPolicy {
-  max_attempts: number;
-  delay_ms: number;
-  backoff_factor?: number;
+  maxAttempts: number;
+  delayMs: number;
+  backoffFactor?: number;
 }
 
 // ===== 工作流配置 =====
@@ -91,7 +91,7 @@ export interface WorkflowConfig {
   description?: string;
   stages: WorkflowStage[];
   execution_mode: ExecutionMode;
-  timeout_ms?: number;
+  timeoutMs?: number;
   max_concurrent_executions?: number;
   retry_policy?: RetryPolicy;
 }
@@ -102,12 +102,12 @@ export interface WorkflowConfig {
  * 执行上下文接口
  */
 export interface ExecutionContext {
-  user_id?: string;
-  session_id?: UUID;
+  userId?: string;
+  sessionId?: UUID;
   request_id?: UUID;
   priority?: Priority;
-  metadata?: Record<string, any>;
-  variables?: Record<string, any>;
+  metadata?: Record<string, unknown>;
+  variables?: Record<string, unknown>;
 }
 
 // ===== 阶段执行结果 =====
@@ -118,7 +118,7 @@ export interface ExecutionContext {
 export interface ErrorInfo {
   code: string;
   message: string;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
 }
 
 /**
@@ -129,7 +129,7 @@ export interface StageResult {
   start_time?: Timestamp;
   end_time?: Timestamp;
   duration_ms?: number;
-  result?: Record<string, any>;
+  result?: Record<string, unknown>;
   error?: ErrorInfo;
 }
 
@@ -146,7 +146,7 @@ export interface ExecutionStatus {
   start_time?: Timestamp;
   end_time?: Timestamp;
   duration_ms?: number;
-  retry_count?: number;
+  retryCount?: number;
 }
 
 // ===== 模块协调 =====
@@ -156,8 +156,8 @@ export interface ExecutionStatus {
  */
 export interface ModuleAdapterConfig {
   adapter_type: string;
-  config?: Record<string, any>;
-  timeout_ms?: number;
+  config?: Record<string, unknown>;
+  timeoutMs?: number;
   retry_policy?: RetryPolicy;
 }
 
@@ -212,7 +212,7 @@ export enum EventType {
 export interface EventListenerConfig {
   event_type: EventType;
   handler: string;
-  config?: Record<string, any>;
+  config?: Record<string, unknown>;
 }
 
 /**
@@ -245,13 +245,13 @@ export interface EventHandling {
  * Core协议接口
  */
 export interface CoreProtocol {
-  protocol_version: string;
+  protocolVersion: string;
   timestamp: Timestamp;
-  workflow_id: UUID;
-  orchestrator_id: UUID;
+  workflowId: UUID;
+  orchestratorId: UUID;
   workflow_config: WorkflowConfig;
   execution_context: ExecutionContext;
-  execution_status: ExecutionStatus;
+  executionStatus: ExecutionStatus;
   module_coordination?: ModuleCoordination;
   event_handling?: EventHandling;
 }
@@ -261,11 +261,11 @@ export interface CoreProtocol {
 /**
  * 操作结果接口
  */
-export interface OperationResult<T = any> {
+export interface OperationResult<T = unknown> {
   success: boolean;
   data?: T;
   error?: string;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
 }
 
 // ===== 工作流执行结果 =====
@@ -274,7 +274,7 @@ export interface OperationResult<T = any> {
  * 工作流执行结果接口
  */
 export interface WorkflowExecutionResult {
-  workflow_id: UUID;
+  workflowId: UUID;
   status: WorkflowStatus;
   start_time: Timestamp;
   end_time?: Timestamp;
@@ -291,7 +291,7 @@ export interface WorkflowExecutionResult {
  * 模块适配器接口
  */
 export interface IModuleAdapter {
-  execute(input: Record<string, any>): Promise<OperationResult>;
+  execute(input: Record<string, unknown>): Promise<OperationResult>;
   getStatus(): Promise<StageStatus>;
   healthCheck(): Promise<boolean>;
   getMetadata(): ModuleMetadata;
@@ -337,8 +337,8 @@ export interface ICoreOrchestrator {
   registerModuleAdapter(stage: WorkflowStage, adapter: IModuleAdapter): Promise<void>;
   
   // 事件处理
-  addEventListener(eventType: EventType, handler: (event: any) => void): void;
-  removeEventListener(eventType: EventType, handler: (event: any) => void): void;
+  addEventListener(eventType: EventType, handler: (event: unknown) => void): void;
+  removeEventListener(eventType: EventType, handler: (event: unknown) => void): void;
   
   // 控制操作
   pauseWorkflow(workflowId: string): Promise<OperationResult<boolean>>;

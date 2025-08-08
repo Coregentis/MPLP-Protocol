@@ -24,29 +24,29 @@ export type { UUID, Timestamp, Version };
  */
 export interface RoleProtocol {
   // Schema必需字段
-  protocol_version: Version;    // 协议版本
+  protocolVersion: Version;    // 协议版本
   timestamp: Timestamp;         // 消息时间戳
-  role_id: UUID;                // 角色唯一标识符
-  context_id: UUID;             // 关联的上下文ID
+  roleId: UUID;                // 角色唯一标识符
+  contextId: UUID;             // 关联的上下文ID
   name: string;                 // 角色名称
-  role_type: RoleType;          // 角色类型
+  roleType: RoleType;          // 角色类型
   status: RoleStatus;           // 角色状态
   permissions: Permission[];    // 权限列表
   
   // Schema可选字段
-  display_name?: string;        // 角色显示名称
+  displayName?: string;        // 角色显示名称
   description?: string;         // 角色描述
   scope?: RoleScope;            // 角色适用范围
   inheritance?: RoleInheritance; // 角色继承
   delegation?: RoleDelegation;  // 角色委托
   attributes?: RoleAttributes;  // 角色属性
-  validation_rules?: ValidationRules; // 验证规则
-  audit_settings?: AuditSettings; // 审计设置
+  validationRules?: ValidationRules; // 验证规则
+  auditSettings?: AuditSettings; // 审计设置
 
   // Agent管理相关字段 (Schema新增)
   agents?: Agent[];             // 管理的Agent列表
-  agent_management?: AgentManagement; // Agent管理配置
-  team_configuration?: TeamConfiguration; // 团队配置
+  agentManagement?: AgentManagement; // Agent管理配置
+  teamConfiguration?: TeamConfiguration; // 团队配置
 }
 
 // ===== 基础枚举类型 (Schema定义) =====
@@ -180,13 +180,13 @@ export interface RoleScope {
  */
 export interface RoleInheritance {
   parent_roles?: Array<{           // 父角色
-    role_id: UUID;                 // 角色ID
+    roleId: UUID;                 // 角色ID
     inheritance_type: InheritanceType; // 继承类型
     excluded_permissions?: UUID[]; // 排除的权限
     conditions?: Record<string, unknown>; // 条件
   }>;
   child_roles?: Array<{            // 子角色
-    role_id: UUID;                 // 角色ID
+    roleId: UUID;                 // 角色ID
     delegation_level: number;      // 委托级别
     can_further_delegate: boolean; // 是否可以进一步委托
   }>;
@@ -297,7 +297,7 @@ export interface AuditSettings {
  * 所有协议消息的基础
  */
 export interface BaseProtocol {
-  protocol_version: Version;
+  protocolVersion: Version;
   timestamp: Timestamp;
 }
 
@@ -306,17 +306,17 @@ export interface BaseProtocol {
  * @implementation 应用层接口，基于Schema定义
  */
 export interface CreateRoleRequest {
-  context_id: UUID;
+  contextId: UUID;
   name: string;
-  display_name?: string;
+  displayName?: string;
   description?: string;
-  role_type: RoleType;
+  roleType: RoleType;
   scope?: RoleScope;
   permissions: Permission[];
   inheritance?: RoleInheritance;
   attributes?: RoleAttributes;
-  validation_rules?: ValidationRules;
-  audit_settings?: AuditSettings;
+  validationRules?: ValidationRules;
+  auditSettings?: AuditSettings;
 }
 
 /**
@@ -324,16 +324,16 @@ export interface CreateRoleRequest {
  * @implementation 应用层接口，基于Schema定义
  */
 export interface UpdateRoleRequest {
-  role_id: UUID;
-  display_name?: string;
+  roleId: UUID;
+  displayName?: string;
   description?: string;
   status?: RoleStatus;
   scope?: RoleScope;
   permissions?: Permission[];
   inheritance?: RoleInheritance;
   attributes?: RoleAttributes;
-  validation_rules?: ValidationRules;
-  audit_settings?: AuditSettings;
+  validationRules?: ValidationRules;
+  auditSettings?: AuditSettings;
 }
 
 /**
@@ -341,7 +341,7 @@ export interface UpdateRoleRequest {
  * @implementation 应用层接口，基于Schema定义
  */
 export interface RoleFilter {
-  context_id?: UUID;
+  contextId?: UUID;
   role_types?: RoleType[];
   status?: RoleStatus[];
   name_pattern?: string;
@@ -361,9 +361,9 @@ export interface RoleFilter {
  */
 export interface UserRoleAssignment {
   assignment_id: UUID;
-  user_id: string;
-  role_id: UUID;
-  context_id?: UUID;
+  userId: string;
+  roleId: UUID;
+  contextId?: UUID;
   assigned_by: string;
   assigned_at: Timestamp;
   expires_at?: Timestamp;
@@ -376,7 +376,7 @@ export interface UserRoleAssignment {
  * @implementation 应用层接口，基于Schema定义
  */
 export interface PermissionCheckRequest {
-  user_id: string;
+  userId: string;
   resource_type: ResourceType;
   resource_id: string;
   action: PermissionAction;
@@ -395,7 +395,7 @@ export interface PermissionCheckResult {
   conditions_met?: boolean;
   check_time_ms?: number;
   cache_hit?: boolean;
-  role_id?: string;
+  roleId?: string;
   error?: string;
   execution_time_ms?: number;
 }
@@ -405,7 +405,7 @@ export interface PermissionCheckResult {
  * @implementation 应用层接口，基于Schema定义
  */
 export interface BatchPermissionCheckRequest {
-  user_id: string;
+  userId: string;
   checks: Array<{
     resource_type: ResourceType;
     resource_id: string;
@@ -466,8 +466,8 @@ export interface ValidationError {
 export interface RoleEvent {
   event_id: UUID;
   event_type: RoleEventType;
-  role_id: UUID;
-  context_id: UUID;
+  roleId: UUID;
+  contextId: UUID;
   actor_id: string;
   timestamp: Timestamp;
   details: Record<string, unknown>;
@@ -495,7 +495,7 @@ export type RoleEventType =
  * @implementation 应用层接口，基于Schema定义
  */
 export interface RolePerformanceMetrics {
-  role_id?: string;
+  roleId?: string;
   period?: {
     start_time: string;
     end_time: string;
@@ -552,7 +552,7 @@ export interface RolePerformanceMetrics {
  * @implementation 应用层接口，基于Schema定义
  */
 export interface UserSessionStats {
-  user_id: string;
+  userId: string;
   active_roles: number;
   permission_checks: number;
   last_activity: Timestamp;
@@ -638,17 +638,17 @@ export interface RetryPolicy {
  * Agent定义 (Schema定义)
  */
 export interface Agent {
-  agent_id: UUID;
+  agentId: UUID;
   name: string;
   type: AgentType;
   domain: string;
   status: AgentStatus;
   capabilities: AgentCapabilities;
   configuration?: AgentConfiguration;
-  performance_metrics?: PerformanceMetrics;
-  created_at: Timestamp;
-  updated_at?: Timestamp;
-  created_by: string;
+  performanceMetrics?: PerformanceMetrics;
+  createdAt: Timestamp;
+  updatedAt?: Timestamp;
+  createdBy: string;
 }
 
 /**
@@ -687,7 +687,7 @@ export interface AgentCapabilities {
 export interface AgentConfiguration {
   basic: {
     max_concurrent_tasks: number;
-    timeout_ms: number;
+    timeoutMs: number;
     retry_policy?: RetryPolicy;
     priority_level?: Priority;
   };
@@ -747,7 +747,7 @@ export interface AgentManagement {
 export interface TeamConfiguration {
   max_team_size?: number;
   collaboration_rules?: CollaborationRule[];
-  decision_mechanism?: DecisionMechanism;
+  decisionMechanism?: DecisionMechanism;
 }
 
 /**
@@ -765,5 +765,5 @@ export interface CollaborationRule {
 export interface DecisionMechanism {
   type: 'consensus' | 'majority' | 'weighted' | 'authority';
   threshold?: number;
-  timeout_ms?: number;
+  timeoutMs?: number;
 }

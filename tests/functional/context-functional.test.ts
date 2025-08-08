@@ -12,6 +12,8 @@ import { Context } from '../../src/modules/context/domain/entities/context.entit
 import { ContextFactory } from '../../src/modules/context/domain/factories/context.factory';
 import { ContextValidationService } from '../../src/modules/context/domain/services/context-validation.service';
 import { ContextManagementService } from '../../src/modules/context/application/services/context-management.service';
+import { SharedStateManagementService } from '../../src/modules/context/application/services/shared-state-management.service';
+import { AccessControlManagementService } from '../../src/modules/context/application/services/access-control-management.service';
 import { EntityStatus } from '../../src/public/shared/types';
 import { ContextLifecycleStage } from '../../src/public/shared/types/context-types';
 import {
@@ -852,9 +854,12 @@ describe('Context模块功能场景测试', () => {
         };
 
         const contextService = new ContextManagementService(
-          {} as any, // mockRepository
+          {} as any,
+          // mockRepository
           contextFactory,
-          validationService
+          validationService,
+          {} as any, // mockSharedStateService
+          {} as any  // mockAccessControlService
         );
 
         const result = await contextService.createContext(createRequest);
@@ -922,9 +927,12 @@ describe('Context模块功能场景测试', () => {
         };
 
         const contextService = new ContextManagementService(
-          {} as any, // mockRepository
+          {} as any,
+          // mockRepository
           contextFactory,
-          validationService
+          validationService,
+          {} as any, // mockSharedStateService
+          {} as any  // mockAccessControlService
         );
 
         const result = await contextService.createContext(createRequest);
@@ -972,10 +980,12 @@ describe('Context模块功能场景测试', () => {
         };
 
         const contextService = new ContextManagementService(
-          {} as any, // mockRepository
+          {} as any,
+          // mockRepository
           contextFactory,
           validationService,
-
+          {} as any, // mockSharedStateService
+          {} as any  // mockAccessControlService
         );
 
         const result = await contextService.createContext(createRequest);
@@ -1002,9 +1012,12 @@ describe('Context模块功能场景测试', () => {
         };
 
         const contextService = new ContextManagementService(
-          {} as any, // mockRepository
+          {} as any,
+          // mockRepository
           contextFactory,
-          validationService
+          validationService,
+          {} as any, // mockSharedStateService
+          {} as any  // mockAccessControlService
         );
 
         const result = await contextService.syncContext(syncRequest);
@@ -1033,9 +1046,12 @@ describe('Context模块功能场景测试', () => {
         };
 
         const contextService = new ContextManagementService(
-          {} as any, // mockRepository
+          {} as any,
+          // mockRepository
           contextFactory,
-          validationService
+          validationService,
+          {} as any, // mockSharedStateService
+          {} as any  // mockAccessControlService
         );
 
         const result = await contextService.operateContext(operationRequest);
@@ -1067,9 +1083,12 @@ describe('Context模块功能场景测试', () => {
         };
 
         const contextService = new ContextManagementService(
-          {} as any, // mockRepository
+          {} as any,
+          // mockRepository
           contextFactory,
-          validationService
+          validationService,
+          {} as any, // mockSharedStateService
+          {} as any  // mockAccessControlService
         );
 
         const result = await contextService.operateContext(operationRequest);
@@ -1092,9 +1111,12 @@ describe('Context模块功能场景测试', () => {
         };
 
         const contextService = new ContextManagementService(
-          {} as any, // mockRepository
+          {} as any,
+          // mockRepository
           contextFactory,
-          validationService
+          validationService,
+          {} as any, // mockSharedStateService
+          {} as any  // mockAccessControlService
         );
 
         // 模拟存在的上下文
@@ -1141,10 +1163,12 @@ describe('Context模块功能场景测试', () => {
         };
 
         const contextService = new ContextManagementService(
-          {} as any, // mockRepository
+          {} as any,
+          // mockRepository
           contextFactory,
           validationService,
-
+          {} as any, // mockSharedStateService
+          {} as any  // mockAccessControlService
         );
 
         const result = await contextService.updateContext(updateRequest);
@@ -1171,10 +1195,12 @@ describe('Context模块功能场景测试', () => {
         };
 
         const contextService = new ContextManagementService(
-          {} as any, // mockRepository
+          {} as any,
+          // mockRepository
           contextFactory,
           validationService,
-          {} as any  // mockLogger
+          {} as any, // mockSharedStateService
+          {} as any  // mockAccessControlService
         );
 
         const result = await contextService.analyzeContext(analysisRequest);
@@ -1208,10 +1234,12 @@ describe('Context模块功能场景测试', () => {
         };
 
         const contextService = new ContextManagementService(
-          {} as any, // mockRepository
+          {} as any,
+          // mockRepository
           contextFactory,
           validationService,
-          {} as any  // mockLogger
+          {} as any, // mockSharedStateService
+          {} as any  // mockAccessControlService
         );
 
         const result = await contextService.analyzeContext(analysisRequest);
@@ -1245,10 +1273,12 @@ describe('Context模块功能场景测试', () => {
         };
 
         const contextService = new ContextManagementService(
-          {} as any, // mockRepository
+          {} as any,
+          // mockRepository
           contextFactory,
           validationService,
-          {} as any  // mockLogger
+          {} as any, // mockSharedStateService
+          {} as any  // mockAccessControlService
         );
 
         // 模拟查询结果
@@ -1274,10 +1304,12 @@ describe('Context模块功能场景测试', () => {
         const contextId = uuidv4();
 
         const contextService = new ContextManagementService(
-          {} as any, // mockRepository
+          {} as any,
+          // mockRepository
           contextFactory,
           validationService,
-          {} as any  // mockLogger
+          {} as any, // mockSharedStateService
+          {} as any  // mockAccessControlService
         );
 
         // 模拟删除成功
@@ -1373,10 +1405,12 @@ describe('Context模块功能场景测试', () => {
         };
 
         const contextService = new ContextManagementService(
-          {} as any, // mockRepository
+          {} as any,
+          // mockRepository
           contextFactory,
           validationService,
-          {} as any  // mockLogger
+          {} as any, // mockSharedStateService
+          {} as any  // mockAccessControlService
         );
 
         const result = await contextService.createContext(ddscContextRequest);

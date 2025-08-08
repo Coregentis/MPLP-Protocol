@@ -148,7 +148,7 @@ export class ConfirmModuleAdapter implements ModuleInterface {
     }
 
     // 验证超时设置
-    if (request.parameters.timeout_ms && request.parameters.timeout_ms <= 0) {
+    if (request.parameters.timeoutMs && request.parameters.timeoutMs <= 0) {
       throw new Error('Timeout must be positive');
     }
 
@@ -166,8 +166,8 @@ export class ConfirmModuleAdapter implements ModuleInterface {
     }
 
     // 验证审批工作流
-    if (request.approval_workflow) {
-      const { required_approvers, approval_threshold } = request.approval_workflow;
+    if (request.approvalWorkflow) {
+      const { required_approvers, approval_threshold } = request.approvalWorkflow;
       
       if (!Array.isArray(required_approvers) || required_approvers.length === 0) {
         throw new Error('Required approvers must be a non-empty array');
@@ -242,7 +242,7 @@ export class ConfirmModuleAdapter implements ModuleInterface {
       },
       approval_workflow: {
         workflow_type: request.confirmation_strategy === 'multi_stage' ? 'sequential' :
-                      request.approval_workflow?.parallel_approval ? 'parallel' : 'single_approver',
+                      request.approvalWorkflow?.parallel_approval ? 'parallel' : 'single_approver',
         steps: this.generateApprovalSteps(request),
         escalation_rules: request.parameters.escalation_policy ? [{
           trigger: 'timeout',
@@ -257,8 +257,8 @@ export class ConfirmModuleAdapter implements ModuleInterface {
           conditions: ['system_request']
         } : undefined
       },
-      expires_at: request.parameters.timeout_ms ? 
-        new Date(Date.now() + request.parameters.timeout_ms).toISOString() : undefined,
+      expires_at: request.parameters.timeoutMs ? 
+        new Date(Date.now() + request.parameters.timeoutMs).toISOString() : undefined,
       metadata: {
         source: 'core-orchestrator',
         tags: [request.confirmation_strategy, 'coordination'],
@@ -283,7 +283,7 @@ export class ConfirmModuleAdapter implements ModuleInterface {
     comments?: string;
   }>> {
     const responses: Record<string, any> = {};
-    const approvers = request.approval_workflow?.required_approvers || ['system'];
+    const approvers = request.approvalWorkflow?.required_approvers || ['system'];
 
     // 根据策略执行不同的审批流程
     switch (request.confirmation_strategy) {
@@ -343,7 +343,7 @@ export class ConfirmModuleAdapter implements ModuleInterface {
     const responses = Object.values(approverResponses);
     const approvals = responses.filter(r => r.decision === 'approve').length;
     const rejections = responses.filter(r => r.decision === 'reject').length;
-    const threshold = request.approval_workflow?.approval_threshold || 1;
+    const threshold = request.approvalWorkflow?.approval_threshold || 1;
 
     // 如果有拒绝且不是自动策略，则拒绝
     if (rejections > 0 && request.confirmation_strategy !== 'automatic') {
@@ -403,7 +403,7 @@ export class ConfirmModuleAdapter implements ModuleInterface {
    * 确定优先级
    */
   private determinePriority(request: ConfirmationCoordinationRequest): Priority {
-    const timeout = request.parameters.timeout_ms;
+    const timeout = request.parameters.timeoutMs;
     
     if (timeout && timeout < 300000) { // < 5 minutes
       return 'critical';
@@ -439,7 +439,7 @@ export class ConfirmModuleAdapter implements ModuleInterface {
    * 生成审批步骤
    */
   private generateApprovalSteps(request: ConfirmationCoordinationRequest): any[] {
-    const approvers = request.approval_workflow?.required_approvers || ['system'];
+    const approvers = request.approvalWorkflow?.required_approvers || ['system'];
     const steps = [];
 
     if (request.confirmation_strategy === 'multi_stage') {
@@ -462,9 +462,9 @@ export class ConfirmModuleAdapter implements ModuleInterface {
         step_name: 'Single Stage Approval',
         step_type: 'approval',
         required_approvers: approvers,
-        approval_threshold: request.approval_workflow?.approval_threshold || 1,
-        parallel_execution: request.approval_workflow?.parallel_approval || false,
-        timeout_duration: request.parameters.timeout_ms || 3600000
+        approval_threshold: request.approvalWorkflow?.approval_threshold || 1,
+        parallel_execution: request.approvalWorkflow?.parallel_approval || false,
+        timeout_duration: request.parameters.timeoutMs || 3600000
       });
     }
 
@@ -478,13 +478,13 @@ export class ConfirmModuleAdapter implements ModuleInterface {
     // 简化实现：直接调用executeBusinessCoordination
     const businessRequest = {
       coordination_id: 'stage-' + Date.now(),
-      context_id: context.context_id,
+      context_id: context.contextId,
       module: 'confirm',
       coordination_type: 'confirmation_coordination',
       input_data: {
         data_type: 'confirmation_data',
         data_version: '1.0.0',
-        payload: { context_id: context.context_id },
+        payload: { context_id: context.contextId },
         metadata: {
           source_module: 'confirm',
           target_modules: ['confirm'],
@@ -524,12 +524,12 @@ export class ConfirmModuleAdapter implements ModuleInterface {
     try {
       // 转换为原有的确认请求格式
       const confirmRequest = {
-        contextId: request.context_id,
+        contextId: request.contextId,
         confirmation_strategy: request.input_data.payload.confirmation_strategy || 'manual',
         parameters: {
           approval_type: request.input_data.payload.approval_type || 'manual',
           approvers: request.input_data.payload.approvers || ['default-approver'],
-          approval_criteria: request.input_data.payload.approval_criteria || {},
+          approval_criteria: request.input_data.payload.approvalCriteria || {},
           timeout_ms: 30000
         }
       };
@@ -614,7 +614,7 @@ export class ConfirmModuleAdapter implements ModuleInterface {
     this.logger.error('Handling Confirm module error', {
       errorId: error.error_id,
       errorType: error.error_type,
-      contextId: context.context_id
+      contextId: context.contextId
     });
 
     return {

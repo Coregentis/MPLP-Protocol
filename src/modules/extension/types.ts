@@ -24,23 +24,23 @@ export type { UUID, Timestamp, Version, Priority };
  */
 export interface ExtensionProtocol {
   // Schema必需字段
-  protocol_version: Version;           // 协议版本
+  protocolVersion: Version;           // 协议版本
   timestamp: Timestamp;                // 消息时间戳
-  extension_id: UUID;                  // 扩展唯一标识符
-  context_id: UUID;                    // 关联的上下文ID
+  extensionId: UUID;                  // 扩展唯一标识符
+  contextId: UUID;                    // 关联的上下文ID
   name: string;                        // 扩展名称
   version: Version;                    // 扩展版本号
   type: ExtensionType;                 // 扩展类型
   status: ExtensionStatus;             // 扩展状态
   
   // Schema可选字段
-  display_name?: string;               // 扩展显示名称
+  displayName?: string;               // 扩展显示名称
   description?: string;                // 扩展详细描述
   compatibility?: ExtensionCompatibility; // 兼容性信息
   configuration?: ExtensionConfiguration; // 配置信息
-  extension_points?: ExtensionPoint[]; // 扩展点定义
-  api_extensions?: ApiExtension[];     // API扩展定义
-  event_subscriptions?: EventSubscription[]; // 事件订阅
+  extensionPoints?: ExtensionPoint[]; // 扩展点定义
+  apiExtensions?: ApiExtension[];     // API扩展定义
+  eventSubscriptions?: EventSubscription[]; // 事件订阅
   lifecycle?: ExtensionLifecycle;      // 生命周期信息
   security?: ExtensionSecurity;        // 安全设置
   metadata?: ExtensionMetadata;        // 元数据
@@ -94,7 +94,7 @@ export type ModuleName = 'context' | 'plan' | 'confirm' | 'trace' | 'role' | 'ex
  * @schema extension-protocol.json#/properties/compatibility/properties/dependencies/items
  */
 export interface ExtensionDependency {
-  extension_id: UUID;                  // 依赖扩展ID
+  extensionId: UUID;                  // 依赖扩展ID
   name: string;                        // 依赖扩展名称
   version_range: string;               // 版本范围
   optional?: boolean;                  // 是否可选
@@ -105,7 +105,7 @@ export interface ExtensionDependency {
  * @schema extension-protocol.json#/properties/compatibility/properties/conflicts/items
  */
 export interface ExtensionConflict {
-  extension_id: UUID;                  // 冲突扩展ID
+  extensionId: UUID;                  // 冲突扩展ID
   name: string;                        // 冲突扩展名称
   reason: string;                      // 冲突原因
 }
@@ -120,7 +120,7 @@ export interface ExtensionConfiguration {
   schema: Record<string, unknown>;     // 配置参数的JSON Schema定义
   current_config: Record<string, unknown>; // 当前配置值
   default_config?: Record<string, unknown>; // 默认配置值
-  validation_rules?: ValidationRule[]; // 验证规则
+  validationRules?: ValidationRule[]; // 验证规则
 }
 
 /**
@@ -176,7 +176,7 @@ export type TargetModule = 'context' | 'plan' | 'confirm' | 'trace' | 'role' | '
 export interface ExtensionHandler {
   function_name: string;               // 函数名称
   parameters?: Record<string, unknown>; // 参数
-  timeout_ms?: number;                 // 超时时间(毫秒)
+  timeoutMs?: number;                 // 超时时间(毫秒)
   retry_policy?: RetryPolicy;          // 重试策略
 }
 
@@ -281,7 +281,7 @@ export interface ExtensionLifecycle {
   activation_count: number;            // 激活次数
   error_count: number;                 // 错误次数
   last_error?: ExtensionError;         // 最后错误
-  performance_metrics?: ExtensionPerformanceMetrics; // 性能指标
+  performanceMetrics?: ExtensionPerformanceMetrics; // 性能指标
   health_check?: ExtensionHealthCheck; // 健康检查
 }
 
@@ -314,7 +314,7 @@ export interface ExtensionPerformanceMetrics {
 export interface ExtensionHealthCheck {
   endpoint?: string;                   // 健康检查端点
   interval_seconds?: number;           // 检查间隔(秒)
-  timeout_ms?: number;                 // 超时时间(毫秒)
+  timeoutMs?: number;                 // 超时时间(毫秒)
   failure_threshold?: number;          // 失败阈值
 }
 
@@ -408,7 +408,7 @@ export interface ExtensionScreenshot {
  * @note 此接口为API实现类型，非Schema直接定义
  */
 export interface InstallExtensionRequest {
-  context_id: UUID;
+  contextId: UUID;
   name: string;
   source: string;
   version?: Version;
@@ -423,14 +423,14 @@ export interface InstallExtensionRequest {
  * @note 此接口为API实现类型，非Schema直接定义
  */
 export interface UpdateExtensionRequest {
-  extension_id: UUID;
-  display_name?: string;
+  extensionId: UUID;
+  displayName?: string;
   description?: string;
   status?: ExtensionStatus;
   configuration?: Partial<ExtensionConfiguration>;
-  extension_points?: ExtensionPoint[];
-  api_extensions?: ApiExtension[];
-  event_subscriptions?: EventSubscription[];
+  extensionPoints?: ExtensionPoint[];
+  apiExtensions?: ApiExtension[];
+  eventSubscriptions?: EventSubscription[];
   security?: Partial<ExtensionSecurity>;
   metadata?: Partial<ExtensionMetadata>;
 }
@@ -440,7 +440,7 @@ export interface UpdateExtensionRequest {
  * @note 此接口为API实现类型，非Schema直接定义
  */
 export interface UpdateConfigurationRequest {
-  extension_id: UUID;
+  extensionId: UUID;
   configuration: Record<string, unknown>;
   validate_only?: boolean;
 }
@@ -450,7 +450,7 @@ export interface UpdateConfigurationRequest {
  * @note 此接口为API实现类型，非Schema直接定义
  */
 export interface ExtensionActivationRequest {
-  extension_id: UUID;
+  extensionId: UUID;
   activate: boolean;
   force?: boolean;
 }
@@ -478,11 +478,11 @@ export interface ExtensionSearchCriteria {
  */
 export interface ExtensionInstallResult {
   success: boolean;
-  extension_id?: UUID;
+  extensionId?: UUID;
   message: string;
   warnings?: string[];
   conflicts?: Array<{
-    extension_id: UUID;
+    extensionId: UUID;
     name: string;
     reason: string;
   }>;
@@ -508,7 +508,7 @@ export interface ExtensionStatistics {
  */
 export interface ExtensionEvent {
   event_type: string;
-  extension_id: UUID;
+  extensionId: UUID;
   timestamp: Timestamp;
   data: Record<string, unknown>;
 }
@@ -519,15 +519,15 @@ export interface ExtensionEvent {
  */
 export interface ExtensionExecutionContext {
   execution_id: UUID;
-  extension_id: UUID;
+  extensionId: UUID;
   point_id?: UUID;
-  context_id: UUID;
+  contextId: UUID;
   start_time: Timestamp;
-  timeout_ms: number;
+  timeoutMs: number;
   parameters: Record<string, unknown>;
-  user_id?: string;
-  session_id?: string;
-  trace_id?: string;
+  userId?: string;
+  sessionId?: string;
+  traceId?: string;
 }
 
 /**
@@ -536,7 +536,7 @@ export interface ExtensionExecutionContext {
  */
 export interface ExtensionExecutionResult {
   execution_id: UUID;
-  extension_id: UUID;
+  extensionId: UUID;
   success: boolean;
   result?: unknown;
   error?: {
@@ -585,7 +585,7 @@ export type ExtensionLifecycleEvent = 'installing' | 'installed' | 'starting' | 
 export interface LifecycleHandler {
   event: ExtensionLifecycleEvent;
   handler_function: string;
-  timeout_ms?: number;
+  timeoutMs?: number;
   required?: boolean;
 }
 
@@ -749,7 +749,7 @@ export type SecurityPolicy = Partial<ExtensionSecurity>;
  */
 export type PerformanceMonitor = {
   enabled: boolean;
-  metrics: any[];
-  thresholds: any[];
-  alerting?: any;
+  metrics: unknown[];
+  thresholds: unknown[];
+  alerting?: unknown;
 }; 

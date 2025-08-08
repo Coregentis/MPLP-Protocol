@@ -30,7 +30,7 @@ import { ConfirmController } from './api/controllers/confirm.controller';
 export interface ConfirmModuleOptions {
   enableLogging?: boolean;
   enablePerformanceMonitoring?: boolean;
-  dataSource?: any; // 数据源配置，生产环境中应该是真实的数据库连接
+  dataSource?: unknown; // 数据源配置，生产环境中应该是真实的数据库连接
 }
 
 /**
@@ -45,6 +45,7 @@ export interface ConfirmModuleExports {
  * 初始化Confirm模块
  */
 export async function initializeConfirmModule(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   options: ConfirmModuleOptions = {}
 ): Promise<ConfirmModuleExports> {
   const logger = new Logger('ConfirmModule');

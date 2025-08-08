@@ -86,7 +86,7 @@ export class CollabModuleAdapter implements ModuleInterface {
       this.logger.info('Decision coordination completed', {
         contextId: request.contextId,
         decision_id: result.decision_id,
-        consensus_reached: result.consensus_reached
+        consensus_reached: result.consensusReached
       });
 
       return result;
@@ -196,7 +196,7 @@ export class CollabModuleAdapter implements ModuleInterface {
           anonymity: false,
           transparency: true,
           revision_allowed: false,
-          time_limit_ms: request.parameters.timeout_ms || 30000
+          time_limit_ms: request.parameters.timeoutMs || 30000
         }
       }
     };
@@ -211,7 +211,7 @@ export class CollabModuleAdapter implements ModuleInterface {
 
     // 启动协作决策过程
     const coordinationRequest: CoordinationRequest = {
-      collaboration_id: collaboration.collaboration_id,
+      collaboration_id: collaboration.collaborationId,
       operation: 'initiate',
       parameters: {
         decision_strategy: request.strategy,
@@ -342,7 +342,7 @@ export class CollabModuleAdapter implements ModuleInterface {
   }
 
   async executeBusinessCoordination(request: any): Promise<any> {
-    const result = await this.execute({ contextId: request.context_id, strategy: 'consensus', participants: ['agent1', 'agent2'], parameters: {} });
+    const result = await this.execute({ contextId: request.contextId, strategy: 'consensus', participants: ['agent1', 'agent2'], parameters: {} });
     return {
       coordination_id: request.coordination_id,
       module: 'collab',

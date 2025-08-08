@@ -177,9 +177,9 @@ export class ConfirmController {
   async queryConfirms(req: HttpRequest): Promise<HttpResponse> {
     try {
       const filter: ConfirmFilter = {
-        context_id: req.query.context_id,
-        plan_id: req.query.plan_id,
-        confirmation_type: req.query.confirmation_type,
+        context_id: req.query.contextId,
+        plan_id: req.query.planId,
+        confirmation_type: req.query.confirmationType,
         status: req.query.status,
         priority: req.query.priority,
         requester_user_id: req.query.requester_user_id,
@@ -226,7 +226,7 @@ export class ConfirmController {
    */
   async getPendingConfirms(req: HttpRequest): Promise<HttpResponse> {
     try {
-      const userId = req.query.user_id || req.user?.id;
+      const userId = req.query.userId || req.user?.id;
       const result = await this.confirmManagementService.getPendingConfirms(userId);
       
       if (!result.success) {
@@ -254,7 +254,7 @@ export class ConfirmController {
    */
   async getConfirmStatistics(req: HttpRequest): Promise<HttpResponse> {
     try {
-      const contextId = req.query.context_id;
+      const contextId = req.query.contextId;
       const result = await this.confirmManagementService.getConfirmStatistics(contextId);
       
       if (!result.success) {

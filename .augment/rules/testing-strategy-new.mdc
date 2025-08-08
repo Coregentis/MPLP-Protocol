@@ -1,0 +1,200 @@
+---
+type: "always_apply"
+description: "Testing strategy for MPLP v1.0"
+---
+
+# Testing Strategy Rules - MPLP Proven Methodology
+
+## 🏗️ **MPLP v1.0 Testing Context**
+
+**CRITICAL**: MPLP v1.0 has **301 functional scenario tests + 66 core tests with 89.2% coverage** across 10 complete modules. All testing must maintain this production-grade quality standard.
+
+**PROVEN METHODOLOGY**: This testing strategy has been successfully validated through complete testing of all 10 MPLP modules, discovering and fixing 12 critical source code issues.
+
+## 🎯 **Core Testing Principles**
+
+### **Testing's Fundamental Purpose**
+```markdown
+RULE: Testing's fundamental purpose is to discover and fix source code problems
+
+Core Values:
+1. Discover source code issues - not bypass problems
+2. Based on actual implementation - not fictional interfaces
+3. Validate from user perspective - not technical-oriented
+4. Fix source code - not modify test expectations
+5. Ensure system stability - not local optimization
+
+When tests reveal source code errors, immediately fix the source code
+implementation, not bypass the problem. Tests should simulate production
+environment and pass by fixing source code - this is testing's true value.
+```
+
+### **MPLP Testing Baseline**
+```markdown
+RULE: Maintain MPLP production-grade testing standards
+- Maintain >89.2% test coverage
+- Ensure all 367 tests continue passing (301 functional + 66 core)
+- New features must include corresponding tests
+- Tests must be based on actual Schema and implementation
+- Functional scenario coverage must be >90%
+```
+
+## 📋 **4-Layer Testing Architecture**
+
+### **Layer 1: Functional Scenario Tests (Core Layer)**
+```markdown
+RULE: User scenario-based functional testing
+- Target: 90%+ functional scenario coverage
+- Method: Design tests from user roles and use cases
+- Files: tests/functional/[module]-functional.test.ts
+- Focus: Discover source code functional gaps and business logic errors
+
+Functional Scenario Types:
+□ Basic functional scenarios (most common user needs)
+□ Advanced functional scenarios (professional user needs)
+□ Exception handling scenarios (system robustness)
+□ Boundary condition scenarios (extreme cases)
+□ Integration scenarios (inter-module collaboration)
+□ Performance scenarios (production environment needs)
+```
+
+### **Layer 2: Cross-Module Functional Tests (Core Layer)**
+```markdown
+RULE: Real user scenario-based cross-module integration testing
+- Target: 90%+ cross-module functional scenario coverage
+- Method: Validate complete data flow between modules
+- Files: tests/cross-module/[workflow]-cross.test.ts
+- Focus: Discover cross-module integration and data consistency issues
+
+Cross-Module Testing Methodology:
+□ Design tests based on real user roles and scenarios
+□ Use actual service layer APIs, avoid fictional interfaces
+□ Dynamic Mock strategy ensures cross-module data consistency
+□ Validate complete data flow and business logic
+□ Discover and fix source code issues rather than bypass
+```
+
+### **Layer 3: Unit Tests**
+```markdown
+RULE: Complete unit test coverage
+- Target: 90%+ code coverage
+- Method: Test individual components and functions
+- Focus: Verify implementation details and boundary conditions
+```
+
+### **Layer 4: Integration Tests**
+```markdown
+RULE: Real inter-module collaboration testing
+- Target: Verify inter-module collaboration
+- Method: Test real module interactions
+- Focus: Verify complete business processes
+```
+
+### **Layer 5: End-to-End Tests**
+```markdown
+RULE: Complete user scenario testing
+- Target: Verify complete business processes
+- Method: Test real user scenarios
+- Focus: Verify overall system stability
+```
+
+## 🔧 **Chain-Based Source Code Repair Methodology**
+
+### **Step 1: Problem Impact Analysis**
+```markdown
+RULE: After discovering problems, immediately analyze impact scope
+
+Impact Analysis Checklist:
+□ Direct impact: Which modules are directly affected?
+□ Indirect impact: Which modules might be indirectly affected?
+□ Systemic issues: Are there similar problem patterns?
+□ Type definition impact: Do type definitions need updates?
+□ API interface impact: Do interface definitions need updates?
+□ Test impact: Which tests need corresponding adjustments?
+```
+
+### **Step 2: Systematic Repair**
+```markdown
+RULE: Fix source code problems, not bypass problems
+
+Repair Principles:
+□ Fix root causes, not symptoms
+□ Maintain backward compatibility
+□ Ensure type safety
+□ Follow existing architecture patterns
+□ Add necessary validation logic
+□ Improve error handling mechanisms
+```
+
+### **Step 3: Chain Validation**
+```markdown
+RULE: After repair, must perform complete chain validation
+
+Validation Steps:
+1. TypeScript compilation validation - ensure zero compilation errors
+2. Unit test validation - ensure existing functionality unaffected
+3. Functional scenario test validation - ensure repair effectiveness
+4. Integration test validation - ensure inter-module collaboration normal
+5. End-to-end test validation - ensure overall system stability
+```
+
+## 🧪 **Testing Implementation Standards**
+
+### Functional Scenario Testing Standards
+```typescript
+// ✅ Correct functional scenario test example
+describe('Dialog Module Functional Scenarios - Based on Real User Needs', () => {
+  describe('1. Dialog Creation Scenario - Dialog Administrator Daily Use', () => {
+    it('should allow administrator to create a basic text dialog', async () => {
+      // User scenario: Dialog administrator creates team discussion dialog
+      const createRequest: CreateDialogRequest = {
+        session_id: sessionId,
+        context_id: contextId,
+        name: 'Team Project Discussion',
+        description: 'Team discussion dialog about new project',
+        // ... complete data based on actual needs
+      };
+
+      const result = await dialogService.createDialog(createRequest);
+
+      expect(result.success).toBe(true);
+      expect(result.data?.name).toBe('Team Project Discussion');
+      expect(result.data?.participants).toHaveLength(2);
+    });
+  });
+});
+```
+
+## 🚫 **Testing Anti-Patterns**
+
+### Prohibited Testing Practices
+```markdown
+❌ Absolutely Prohibited:
+- Modifying test expectations to fit wrong implementations
+- Skipping failed test cases
+- Using excessive mocks that make tests meaningless
+- Testing implementation details instead of behavior
+- Writing unstable tests (flaky tests)
+- Dependencies between tests
+- Hard-coded test data causing maintenance difficulties
+- Lowering test standards to improve pass rates
+- Ignoring source code problems, only focusing on test passing
+```
+
+### Correct Test Repair Methods
+```markdown
+✅ When tests fail:
+1. Analyze failure cause - is it code problem or test problem
+2. If code problem - fix source code
+3. If test problem - fix test logic
+4. Ensure repair makes tests stable and reliable
+5. Verify repair doesn't introduce new problems
+6. Execute complete chain validation
+7. Record problems and solutions
+```
+
+---
+
+**Testing Commitment**: These testing strategies are based on successful MPLP project practices, ensuring enterprise-grade quality assurance capabilities supporting reliable software delivery.
+
+**Validation Status**: ✅ Successfully validated in 9 protocol modules, 654 test cases all passed, 12 source code issues fixed

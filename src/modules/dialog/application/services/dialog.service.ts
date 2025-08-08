@@ -51,8 +51,8 @@ function getErrorMessage(error: unknown): string {
  */
 function convertDialogToResponse(dialog: Dialog): any {
   return {
-    dialog_id: dialog.dialog_id, // 使用旧版字段名保持兼容性
-    dialogId: dialog.dialog_id,   // 同时提供新版字段名
+    dialog_id: dialog.dialogId, // 使用旧版字段名保持兼容性
+    dialogId: dialog.dialogId,   // 同时提供新版字段名
     name: dialog.name,
     description: dialog.description, // 添加描述字段
     status: dialog.status,
@@ -64,17 +64,17 @@ function convertDialogToResponse(dialog: Dialog): any {
       },
     },
     participants: dialog.participants.map(p => ({
-      agent_id: p.agent_id,
-      role_id: p.role_id,
+      agent_id: p.agentId,
+      role_id: p.roleId,
       status: p.status,
       permissions: p.permissions, // 保留权限信息
       participant_id: p.participant_id,
       joined_at: p.joined_at
     })),
-    createdAt: dialog.created_at,
-    updatedAt: dialog.updated_at,
-    created_at: dialog.created_at, // 向后兼容
-    updated_at: dialog.updated_at, // 向后兼容
+    createdAt: dialog.createdAt,
+    updatedAt: dialog.updatedAt,
+    created_at: dialog.createdAt, // 向后兼容
+    updated_at: dialog.updatedAt, // 向后兼容
   };
 }
 
@@ -166,24 +166,24 @@ export class DialogService implements DialogProtocol {
 
         // 发布事件
         this.eventBus.publish('dialog_created', {
-          dialog_id: dialog.dialog_id,
+          dialog_id: dialog.dialogId,
           name: dialog.name,
           participants_count: dialog.participants.length,
           capabilities: request.capabilities,
         });
 
-        this.logger.info('对话创建成功 (统一接口)', { dialogId: dialog.dialog_id });
+        this.logger.info('对话创建成功 (统一接口)', { dialogId: dialog.dialogId });
 
         return {
           success: true,
           data: {
-            dialogId: dialog.dialog_id,
+            dialogId: dialog.dialogId,
             name: dialog.name,
             status: dialog.status,
             capabilities: request.capabilities,
             participants: request.participants,
-            createdAt: dialog.created_at,
-            updatedAt: dialog.updated_at,
+            createdAt: dialog.createdAt,
+            updatedAt: dialog.updatedAt,
           },
         };
       } else {
@@ -306,7 +306,7 @@ export class DialogService implements DialogProtocol {
       }
 
       const data: any = {
-        dialogId: dialog.dialog_id,
+        dialogId: dialog.dialogId,
         status: dialog.status,
         progress: {
           currentRound: 1,
@@ -412,12 +412,12 @@ export class DialogService implements DialogProtocol {
         success: true,
         data: {
           dialogs: result.dialogs.map((dialog: Dialog) => ({
-            dialogId: dialog.dialog_id,
+            dialogId: dialog.dialogId,
             name: dialog.name,
             status: dialog.status,
             participantCount: dialog.participants.length,
-            createdAt: dialog.created_at,
-            lastActivity: dialog.updated_at,
+            createdAt: dialog.createdAt,
+            lastActivity: dialog.updatedAt,
           })),
           total: result.total,
           hasMore: (filter.offset || 0) + (filter.limit || 10) < result.total,
@@ -442,8 +442,8 @@ export class DialogService implements DialogProtocol {
 
       // 创建对话实体
       const dialog = new Dialog({
-        session_id: request.session_id,
-        context_id: request.context_id,
+        session_id: request.sessionId,
+        context_id: request.contextId,
         name: request.name,
         description: request.description,
         participants: request.participants.map((p: any) => ({
@@ -454,7 +454,7 @@ export class DialogService implements DialogProtocol {
         message_format: request.message_format,
         conversation_context: request.conversation_context,
         security_policy: request.security_policy,
-        created_by: request.context_id,
+        created_by: request.contextId,
         metadata: request.metadata,
       });
 
@@ -462,14 +462,14 @@ export class DialogService implements DialogProtocol {
 
       // 发布事件
       this.eventBus.publish('dialog_created', {
-        dialog_id: dialog.dialog_id,
-        session_id: dialog.session_id,
-        context_id: dialog.context_id,
+        dialog_id: dialog.dialogId,
+        session_id: dialog.sessionId,
+        context_id: dialog.contextId,
         name: dialog.name,
         participants_count: dialog.participants.length,
       });
 
-      this.logger.info('对话创建成功 (旧版兼容)', { dialog_id: dialog.dialog_id });
+      this.logger.info('对话创建成功 (旧版兼容)', { dialog_id: dialog.dialogId });
 
       return {
         success: true,
@@ -522,7 +522,7 @@ export class DialogService implements DialogProtocol {
       this.logger.info('更新对话', { request });
 
       // 支持新旧接口格式
-      const dialogId = request.dialogId || request.dialog_id;
+      const dialogId = request.dialogId || request.dialogId;
       const dialog = await this.dialogRepository.findById(dialogId);
       if (!dialog) {
         return {
@@ -563,11 +563,11 @@ export class DialogService implements DialogProtocol {
 
       // 发布事件
       this.eventBus.publish('dialog_updated', {
-        dialog_id: dialog.dialog_id,
+        dialog_id: dialog.dialogId,
         updates: request,
       });
 
-      this.logger.info('对话更新成功', { dialog_id: dialog.dialog_id });
+      this.logger.info('对话更新成功', { dialog_id: dialog.dialogId });
 
       return {
         success: true,
@@ -593,7 +593,7 @@ export class DialogService implements DialogProtocol {
       this.logger.info('发送消息', { request });
 
       // 验证对话存在
-      const dialog = await this.dialogRepository.findById(request.dialog_id);
+      const dialog = await this.dialogRepository.findById(request.dialogId);
       if (!dialog) {
         return {
           success: false,
@@ -623,7 +623,7 @@ export class DialogService implements DialogProtocol {
       // 创建消息
       const message: DialogMessage = {
         message_id: uuidv4(),
-        dialog_id: request.dialog_id,
+        dialog_id: request.dialogId,
         sender_id: request.sender_id,
         recipient_ids: request.recipient_ids,
         type: request.type,
@@ -641,7 +641,7 @@ export class DialogService implements DialogProtocol {
       // 发布事件
       this.eventBus.publish('message_sent', {
         message_id: message.message_id,
-        dialog_id: message.dialog_id,
+        dialog_id: message.dialogId,
         sender_id: message.sender_id,
         recipient_ids: message.recipient_ids,
         type: message.type,
@@ -706,7 +706,7 @@ export class DialogService implements DialogProtocol {
     try {
       this.logger.info('添加参与者', { request });
 
-      const dialog = await this.dialogRepository.findById(request.dialog_id);
+      const dialog = await this.dialogRepository.findById(request.dialogId);
       if (!dialog) {
         return {
           success: false,
@@ -715,8 +715,8 @@ export class DialogService implements DialogProtocol {
       }
 
       dialog.addParticipant({
-        agent_id: request.agent_id,
-        role_id: request.role_id,
+        agent_id: request.agentId,
+        role_id: request.roleId,
         status: 'active',
         permissions: request.permissions,
       });
@@ -725,14 +725,14 @@ export class DialogService implements DialogProtocol {
 
       // 发布事件
       this.eventBus.publish('participant_added', {
-        dialog_id: dialog.dialog_id,
-        agent_id: request.agent_id,
-        role_id: request.role_id,
+        dialog_id: dialog.dialogId,
+        agent_id: request.agentId,
+        role_id: request.roleId,
       });
 
       this.logger.info('参与者添加成功', {
-        dialog_id: dialog.dialog_id,
-        agent_id: request.agent_id,
+        dialog_id: dialog.dialogId,
+        agent_id: request.agentId,
       });
 
       return {
@@ -760,7 +760,7 @@ export class DialogService implements DialogProtocol {
     try {
       this.logger.info('移除参与者', { request });
 
-      const dialog = await this.dialogRepository.findById(request.dialog_id);
+      const dialog = await this.dialogRepository.findById(request.dialogId);
       if (!dialog) {
         return {
           success: false,
@@ -773,13 +773,13 @@ export class DialogService implements DialogProtocol {
 
       // 发布事件
       this.eventBus.publish('participant_removed', {
-        dialog_id: dialog.dialog_id,
+        dialog_id: dialog.dialogId,
         participant_id: request.participant_id,
         reason: request.reason,
       });
 
       this.logger.info('参与者移除成功', {
-        dialog_id: dialog.dialog_id,
+        dialog_id: dialog.dialogId,
         participant_id: request.participant_id,
       });
 
@@ -812,13 +812,13 @@ export class DialogService implements DialogProtocol {
         success: true,
         data: {
           dialogs: result.dialogs.map((dialog: Dialog) => ({
-            dialog_id: dialog.dialog_id,
+            dialog_id: dialog.dialogId,
             name: dialog.name,
             status: dialog.status,
             participants: dialog.participants,
             message_format: { type: 'text' as any, encoding: 'utf-8' as any },
-            created_at: dialog.created_at,
-            updated_at: dialog.updated_at,
+            created_at: dialog.createdAt,
+            updated_at: dialog.updatedAt,
             created_by: 'system',
             version: '1.0.0',
             timestamp: new Date().toISOString(),

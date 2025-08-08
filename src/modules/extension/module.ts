@@ -25,7 +25,7 @@ export interface ExtensionModuleOptions {
   enableLogging?: boolean;
   enableDependencyValidation?: boolean;
   enableAutoActivation?: boolean;
-  dataSource?: any; // 数据源配置，生产环境中应该是真实的数据库连接
+  dataSource?: unknown; // 数据源配置，生产环境中应该是真实的数据库连接
 }
 
 /**

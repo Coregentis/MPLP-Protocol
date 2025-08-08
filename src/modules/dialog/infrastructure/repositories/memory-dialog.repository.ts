@@ -30,8 +30,8 @@ export class MemoryDialogRepository implements DialogRepository {
    * 保存对话
    */
   async save(dialog: Dialog): Promise<void> {
-    this.logger.debug('保存对话', { dialog_id: dialog.dialog_id });
-    this.dialogs.set(dialog.dialog_id, dialog);
+    this.logger.debug('保存对话', { dialog_id: dialog.dialogId });
+    this.dialogs.set(dialog.dialogId, dialog);
   }
 
   /**
@@ -48,7 +48,7 @@ export class MemoryDialogRepository implements DialogRepository {
   async findBySessionId(session_id: string): Promise<Dialog[]> {
     this.logger.debug('根据会话ID查找对话列表', { session_id });
     return Array.from(this.dialogs.values()).filter(
-      dialog => dialog.session_id === session_id
+      dialog => dialog.sessionId === session_id
     );
   }
 
@@ -58,7 +58,7 @@ export class MemoryDialogRepository implements DialogRepository {
   async findByContextId(context_id: string): Promise<Dialog[]> {
     this.logger.debug('根据上下文ID查找对话列表', { context_id });
     return Array.from(this.dialogs.values()).filter(
-      dialog => dialog.context_id === context_id
+      dialog => dialog.contextId === context_id
     );
   }
 
@@ -70,7 +70,7 @@ export class MemoryDialogRepository implements DialogRepository {
     return Array.from(this.dialogs.values()).filter(dialog =>
       dialog.participants.some(
         p =>
-          p.participant_id === participant_id || p.agent_id === participant_id
+          p.participant_id === participant_id || p.agentId === participant_id
       )
     );
   }
@@ -81,7 +81,7 @@ export class MemoryDialogRepository implements DialogRepository {
   async findByCreatedBy(created_by: string): Promise<Dialog[]> {
     this.logger.debug('根据创建者查找对话列表', { created_by });
     return Array.from(this.dialogs.values()).filter(
-      dialog => dialog.created_by === created_by
+      dialog => dialog.createdBy === created_by
     );
   }
 
@@ -97,11 +97,11 @@ export class MemoryDialogRepository implements DialogRepository {
     let dialogs = Array.from(this.dialogs.values());
 
     // 应用过滤条件
-    if (params.session_id) {
-      dialogs = dialogs.filter(d => d.session_id === params.session_id);
+    if (params.sessionId) {
+      dialogs = dialogs.filter(d => d.sessionId === params.sessionId);
     }
-    if (params.context_id) {
-      dialogs = dialogs.filter(d => d.context_id === params.context_id);
+    if (params.contextId) {
+      dialogs = dialogs.filter(d => d.contextId === params.contextId);
     }
     if (params.status) {
       dialogs = dialogs.filter(d => d.status === params.status);
@@ -111,12 +111,12 @@ export class MemoryDialogRepository implements DialogRepository {
         d.participants.some(
           p =>
             p.participant_id === params.participant_id ||
-            p.agent_id === params.participant_id
+            p.agentId === params.participant_id
         )
       );
     }
-    if (params.created_by) {
-      dialogs = dialogs.filter(d => d.created_by === params.created_by);
+    if (params.createdBy) {
+      dialogs = dialogs.filter(d => d.createdBy === params.createdBy);
     }
 
     const total = dialogs.length;
@@ -130,20 +130,20 @@ export class MemoryDialogRepository implements DialogRepository {
 
       switch (sortBy) {
         case 'created_at':
-          aValue = new Date(a.created_at).getTime();
-          bValue = new Date(b.created_at).getTime();
+          aValue = new Date(a.createdAt).getTime();
+          bValue = new Date(b.createdAt).getTime();
           break;
         case 'updated_at':
-          aValue = new Date(a.updated_at).getTime();
-          bValue = new Date(b.updated_at).getTime();
+          aValue = new Date(a.updatedAt).getTime();
+          bValue = new Date(b.updatedAt).getTime();
           break;
         case 'name':
           aValue = a.name.toLowerCase();
           bValue = b.name.toLowerCase();
           break;
         default:
-          aValue = a.created_at;
-          bValue = b.created_at;
+          aValue = a.createdAt;
+          bValue = b.createdAt;
       }
 
       if (sortOrder === 'asc') {
@@ -315,7 +315,7 @@ export class MemoryMessageRepository implements MessageRepository {
   async findMessagesByDialogId(dialog_id: string): Promise<DialogMessage[]> {
     this.logger.debug('根据对话ID查找消息列表', { dialog_id });
     return Array.from(this.messages.values()).filter(
-      message => message.dialog_id === dialog_id
+      message => message.dialogId === dialog_id
     );
   }
 
@@ -329,7 +329,7 @@ export class MemoryMessageRepository implements MessageRepository {
     this.logger.debug('根据查询参数查找消息列表', { params });
 
     let messages = Array.from(this.messages.values()).filter(
-      message => message.dialog_id === params.dialog_id
+      message => message.dialogId === params.dialogId
     );
 
     // 应用过滤条件
@@ -387,7 +387,7 @@ export class MemoryMessageRepository implements MessageRepository {
   async deleteMessagesByDialogId(dialog_id: string): Promise<void> {
     this.logger.debug('批量删除对话的所有消息', { dialog_id });
     const messagesToDelete = Array.from(this.messages.entries())
-      .filter(([_, message]) => message.dialog_id === dialog_id)
+      .filter(([_, message]) => message.dialogId === dialog_id)
       .map(([id, _]) => id);
 
     messagesToDelete.forEach(id => this.messages.delete(id));
@@ -448,7 +448,7 @@ export class MemoryMessageRepository implements MessageRepository {
 
     return Array.from(this.messages.values()).filter(
       message => {
-        if (message.dialog_id !== dialog_id ||
+        if (message.dialogId !== dialog_id ||
             !message.recipient_ids.includes(participant_id) ||
             message.status === 'read') {
           return false;

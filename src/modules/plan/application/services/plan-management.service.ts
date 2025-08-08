@@ -12,7 +12,9 @@ import { Plan } from '../../domain/entities/plan.entity';
 import { IPlanRepository, PlanFilter } from '../../domain/repositories/plan-repository.interface';
 import { PlanValidationService, ValidationResult } from '../../domain/services/plan-validation.service';
 import { PlanFactoryService } from '../../domain/services/plan-factory.service';
-import { UUID, PlanStatus } from '../../../../public/shared/types/plan-types';
+import { UUID } from '../../../../public/shared/types';
+import { Priority, PlanStatus, PlanTask, PlanDependency, ExecutionStrategy } from '../../types';
+import { PlanConfiguration } from '../../domain/value-objects/plan-configuration.value-object';
 
 /**
  * 操作结果接口
@@ -40,17 +42,20 @@ export class PlanManagementService {
    * @returns 操作结果
    */
   async createPlan(params: {
-    plan_id?: UUID;
-    context_id: UUID;
+    planId?: UUID;
+    contextId?: UUID;
+    context_id?: UUID;  // 兼容snake_case
     name: string;
     description: string;
     goals?: string[];
-    tasks?: any[];
-    dependencies?: any[];
-    execution_strategy?: string;
-    priority?: string;
-    estimated_duration?: { value: number; unit: string };
-    configuration?: any;
+    tasks?: PlanTask[];
+    dependencies?: PlanDependency[];
+    executionStrategy?: ExecutionStrategy;
+    execution_strategy?: ExecutionStrategy;  // 兼容snake_case
+    priority?: Priority;
+    estimatedDuration?: { value: number; unit: string };
+    estimated_duration?: { value: number; unit: string };  // 兼容snake_case
+    configuration?: PlanConfiguration;
     metadata?: Record<string, unknown>;
   }): Promise<OperationResult<Plan>> {
     try {
@@ -64,20 +69,44 @@ export class PlanManagementService {
         };
       }
       
-      // 创建计划实体
-      const plan = this.planFactoryService.createPlan({
-        plan_id: params.plan_id,
-        context_id: params.context_id,
+      // 标准化参数，支持snake_case到camelCase转换
+      const normalizedParams = {
+        planId: params.planId,
+        contextId: params.contextId || params.context_id,
         name: params.name,
         description: params.description,
         goals: params.goals,
         tasks: params.tasks,
         dependencies: params.dependencies,
-        execution_strategy: params.execution_strategy as any,
-        priority: params.priority as any,
-        estimated_duration: params.estimated_duration,
+        executionStrategy: params.executionStrategy || params.execution_strategy,
+        priority: params.priority,
+        estimatedDuration: params.estimatedDuration || params.estimated_duration,
         configuration: params.configuration,
         metadata: params.metadata
+      };
+
+      // 验证必需字段
+      if (!normalizedParams.contextId) {
+        return {
+          success: false,
+          error: 'Context ID is required'
+        };
+      }
+
+      // 创建计划实体
+      const plan = this.planFactoryService.createPlan({
+        planId: normalizedParams.planId,
+        contextId: normalizedParams.contextId,
+        name: normalizedParams.name,
+        description: normalizedParams.description,
+        goals: normalizedParams.goals,
+        tasks: normalizedParams.tasks,
+        dependencies: normalizedParams.dependencies,
+        executionStrategy: normalizedParams.executionStrategy,
+        priority: normalizedParams.priority,
+        estimatedDuration: normalizedParams.estimatedDuration,
+        configuration: normalizedParams.configuration,
+        metadata: normalizedParams.metadata
       });
       
       // 验证计划
@@ -91,12 +120,12 @@ export class PlanManagementService {
       }
       
       // 检查计划ID是否已存在
-      if (params.plan_id) {
-        const exists = await this.planRepository.exists(params.plan_id);
+      if (params.planId) {
+        const exists = await this.planRepository.exists(params.planId);
         if (exists) {
           return {
             success: false,
-            error: `Plan with ID ${params.plan_id} already exists`
+            error: `Plan with ID ${params.planId} already exists`
           };
         }
       }
@@ -108,10 +137,11 @@ export class PlanManagementService {
         success: true,
         data: savedPlan
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       return {
         success: false,
-        error: `Failed to create plan: ${error.message}`
+        error: `Failed to create plan: ${errorMessage}`
       };
     }
   }
@@ -136,10 +166,11 @@ export class PlanManagementService {
         success: true,
         data: plan
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       return {
         success: false,
-        error: `Failed to get plan: ${error.message}`
+        error: `Failed to get plan: ${errorMessage}`
       };
     }
   }
@@ -178,7 +209,7 @@ export class PlanManagementService {
       const updatedPlan = new Plan({
         ...existingPlan.toObject(),
         ...updates,
-        updated_at: new Date().toISOString()
+        updatedAt: new Date().toISOString()
       });
       
       // 验证更新后的计划
@@ -198,14 +229,15 @@ export class PlanManagementService {
         success: true,
         data: savedPlan
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       return {
         success: false,
-        error: `Failed to update plan: ${error.message}`
+        error: `Failed to update plan: ${errorMessage}`
       };
     }
   }
-  
+
   /**
    * 删除计划
    * @param planId 计划ID
@@ -215,25 +247,26 @@ export class PlanManagementService {
     try {
       // 检查计划是否存在
       const exists = await this.planRepository.exists(planId);
-      
+
       if (!exists) {
         return {
           success: false,
           error: `Plan with ID ${planId} not found`
         };
       }
-      
+
       // 删除计划
       const result = await this.planRepository.delete(planId);
-      
+
       return {
         success: result,
         data: result
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       return {
         success: false,
-        error: `Failed to delete plan: ${error.message}`
+        error: `Failed to delete plan: ${errorMessage}`
       };
     }
   }
@@ -273,10 +306,11 @@ export class PlanManagementService {
         success: true,
         data: savedPlan
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       return {
         success: false,
-        error: `Failed to update plan status: ${error.message}`
+        error: `Failed to update plan status: ${errorMessage}`
       };
     }
   }
@@ -294,14 +328,15 @@ export class PlanManagementService {
         success: true,
         data: plans
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       return {
         success: false,
-        error: `Failed to find plans: ${error.message}`
+        error: `Failed to find plans: ${errorMessage}`
       };
     }
   }
-  
+
   /**
    * 统计计划数量
    * @param filter 过滤条件
@@ -310,15 +345,16 @@ export class PlanManagementService {
   async countPlans(filter?: PlanFilter): Promise<OperationResult<number>> {
     try {
       const count = await this.planRepository.count(filter);
-      
+
       return {
         success: true,
         data: count
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       return {
         success: false,
-        error: `Failed to count plans: ${error.message}`
+        error: `Failed to count plans: ${errorMessage}`
       };
     }
   }
@@ -332,27 +368,100 @@ export class PlanManagementService {
     try {
       // 获取现有计划
       const existingPlan = await this.planRepository.findById(planId);
-      
+
       if (!existingPlan) {
         return {
           success: false,
           error: `Plan with ID ${planId} not found`
         };
       }
-      
+
       // 验证计划是否可执行
       const validation = this.planValidationService.validatePlanExecutability(existingPlan);
-      
+
       return {
         success: validation.valid,
         data: validation,
         validationErrors: validation.errors
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       return {
         success: false,
-        error: `Failed to check plan executability: ${error.message}`
+        error: `Failed to check plan executability: ${errorMessage}`
       };
     }
   }
-} 
+
+  /**
+   * 通过ID获取计划（带选项）
+   * @param planId 计划ID
+   * @param _options 查询选项（暂未使用）
+   * @returns 操作结果
+   */
+  async getPlanById(planId: UUID): Promise<OperationResult<Plan | null>> {
+    try {
+      const plan = await this.planRepository.findById(planId);
+      return {
+        success: true,
+        data: plan
+      };
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      return {
+        success: false,
+        error: `Failed to get plan by ID: ${errorMessage}`
+      };
+    }
+  }
+
+  /**
+   * 获取计划列表
+   * @param query 查询参数
+   * @returns 操作结果
+   */
+  async getPlans(query: {
+    contextId?: UUID;
+    status?: string;
+    priority?: string;
+    page?: number;
+    limit?: number;
+    search?: string;
+    sortBy?: string;
+    sortOrder?: 'asc' | 'desc';
+  }): Promise<OperationResult<{
+    plans: Plan[];
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  }>> {
+    try {
+      // 获取计划列表（模拟分页）
+      const allPlans = await this.planRepository.findByContextId(query.contextId || '');
+      const total = allPlans.length;
+      const page = query.page || 1;
+      const limit = query.limit || 10;
+      const totalPages = Math.ceil(total / limit);
+      const startIndex = (page - 1) * limit;
+      const plans = allPlans.slice(startIndex, startIndex + limit);
+
+      return {
+        success: true,
+        data: {
+          plans,
+          total,
+          page,
+          limit,
+          totalPages
+        }
+      };
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      return {
+        success: false,
+        error: `Failed to get plans: ${errorMessage}`
+      };
+    }
+  }
+}

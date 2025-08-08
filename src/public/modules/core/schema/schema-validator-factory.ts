@@ -21,7 +21,7 @@ export interface SchemaValidatorConfig {
 export interface ValidationResult {
   valid: boolean;
   errors?: string[];
-  data?: any;
+  data?: unknown;
 }
 
 /**
@@ -90,7 +90,7 @@ export class SchemaValidatorFactory {
   /**
    * 验证数据
    */
-  validate(validatorName: string, schema: any, data: any): ValidationResult {
+  validate(validatorName: string, schema: unknown, data: unknown): ValidationResult {
     const validator = this.getValidator(validatorName);
     
     if (!validator) {

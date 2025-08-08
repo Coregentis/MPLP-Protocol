@@ -8,41 +8,33 @@
  * @compliance 100% Schema合规性 - 完全匹配plan-protocol.json
  */
 
-import { UUID, DependencyType, DependencyCriticality, Duration } from '../../../../public/shared/types/plan-types';
+import { UUID } from '../../../../public/shared/types';
+import { PlanDependency, DependencyType } from '../../types';
 
-/**
- * 计划依赖值对象
- */
-export interface PlanDependency {
-  id: UUID;
-  source_task_id: UUID;
-  target_task_id: UUID;
-  dependency_type: DependencyType;
-  lag?: Duration;
-  criticality: DependencyCriticality;
-  condition?: string;
-}
+// 重新导出PlanDependency类型，确保类型一致性
+export { PlanDependency } from '../../types';
 
 /**
  * 创建PlanDependency值对象
+ * 使用types.ts中统一的PlanDependency接口
  */
 export function createPlanDependency(params: {
-  id: UUID;
-  source_task_id: UUID;
-  target_task_id: UUID;
-  dependency_type?: DependencyType;
-  lag?: Duration;
-  criticality?: DependencyCriticality;
+  dependencyId: UUID;
+  sourceTaskId: UUID;
+  targetTaskId: UUID;
+  type: DependencyType;
+  lagTimeMs?: number;
   condition?: string;
+  metadata?: Record<string, unknown>;
 }): PlanDependency {
   return {
-    id: params.id,
-    source_task_id: params.source_task_id,
-    target_task_id: params.target_task_id,
-    dependency_type: params.dependency_type || 'finish_to_start',
-    lag: params.lag,
-    criticality: params.criticality || 'important',
-    condition: params.condition
+    dependencyId: params.dependencyId,
+    sourceTaskId: params.sourceTaskId,
+    targetTaskId: params.targetTaskId,
+    type: params.type,
+    lagTimeMs: params.lagTimeMs,
+    condition: params.condition,
+    metadata: params.metadata
   };
 }
 
@@ -52,7 +44,8 @@ export function createPlanDependency(params: {
  * @returns 是否是关键依赖
  */
 export function isCriticalDependency(dependency: PlanDependency): boolean {
-  return dependency.criticality === 'critical';
+  // 基于依赖类型判断关键性
+  return dependency.type === DependencyType.FINISH_TO_START;
 }
 
 /**
@@ -61,7 +54,8 @@ export function isCriticalDependency(dependency: PlanDependency): boolean {
  * @returns 是否是可选依赖
  */
 export function isOptionalDependency(dependency: PlanDependency): boolean {
-  return dependency.criticality === 'optional';
+  // 基于条件判断是否可选
+  return !!dependency.condition;
 }
 
 /**
@@ -79,7 +73,7 @@ export function hasCondition(dependency: PlanDependency): boolean {
  * @returns 是否有滞后时间
  */
 export function hasLag(dependency: PlanDependency): boolean {
-  return !!dependency.lag;
+  return !!dependency.lagTimeMs && dependency.lagTimeMs > 0;
 }
 
 /**
@@ -94,8 +88,8 @@ export function hasDependency(
   sourceTaskId: UUID,
   targetTaskId: UUID
 ): boolean {
-  return dependencies.some(dep => 
-    dep.source_task_id === sourceTaskId && dep.target_task_id === targetTaskId
+  return dependencies.some(dep =>
+    dep.sourceTaskId === sourceTaskId && dep.targetTaskId === targetTaskId
   );
 }
 
@@ -107,8 +101,8 @@ export function hasDependency(
  */
 export function getDependencyTaskIds(dependencies: PlanDependency[], taskId: UUID): UUID[] {
   return dependencies
-    .filter(dep => dep.target_task_id === taskId)
-    .map(dep => dep.source_task_id);
+    .filter(dep => dep.targetTaskId === taskId)
+    .map(dep => dep.sourceTaskId);
 }
 
 /**
@@ -119,6 +113,6 @@ export function getDependencyTaskIds(dependencies: PlanDependency[], taskId: UUI
  */
 export function getDependentTaskIds(dependencies: PlanDependency[], taskId: UUID): UUID[] {
   return dependencies
-    .filter(dep => dep.source_task_id === taskId)
-    .map(dep => dep.target_task_id);
+    .filter(dep => dep.sourceTaskId === taskId)
+    .map(dep => dep.targetTaskId);
 } 

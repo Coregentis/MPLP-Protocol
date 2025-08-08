@@ -312,7 +312,7 @@ export class CoreOrchestratorService implements ICoreOrchestrator {
    */
   private prepareStageInput(execution: WorkflowExecution, stage: WorkflowStage): Record<string, any> {
     const context = execution.execution_context;
-    const stageResults = execution.execution_status.stage_results || {};
+    const stageResults = execution.executionStatus.stage_results || {};
 
     // 基础输入
     const input: Record<string, any> = {
@@ -325,17 +325,17 @@ export class CoreOrchestratorService implements ICoreOrchestrator {
     // 根据阶段类型添加特定输入
     switch (stage) {
       case WorkflowStage.CONTEXT:
-        input.session_id = context.session_id;
+        input.sessionId = context.sessionId;
         break;
       case WorkflowStage.PLAN:
-        input.context_id = context.session_id;
+        input.contextId = context.sessionId;
         input.context_result = stageResults[WorkflowStage.CONTEXT]?.result;
         break;
       case WorkflowStage.CONFIRM:
-        input.plan_id = stageResults[WorkflowStage.PLAN]?.result?.plan_id;
+        input.planId = stageResults[WorkflowStage.PLAN]?.result?.plan_id;
         break;
       case WorkflowStage.TRACE:
-        input.confirm_id = stageResults[WorkflowStage.CONFIRM]?.result?.confirm_id;
+        input.confirmId = stageResults[WorkflowStage.CONFIRM]?.result?.confirm_id;
         break;
     }
 
@@ -346,7 +346,7 @@ export class CoreOrchestratorService implements ICoreOrchestrator {
    * 构建执行结果
    */
   private buildExecutionResult(execution: WorkflowExecution): WorkflowExecutionResult {
-    const status = execution.execution_status;
+    const status = execution.executionStatus;
     
     return {
       workflow_id: execution.workflow_id,
@@ -382,7 +382,7 @@ export class CoreOrchestratorService implements ICoreOrchestrator {
 
       return {
         success: true,
-        data: execution.execution_status
+        data: execution.executionStatus
       };
     } catch (error) {
       return {

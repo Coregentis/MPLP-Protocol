@@ -52,11 +52,11 @@ export class NetworkController {
 
       // 验证请求数据
       if (
-        !request.context_id ||
+        !request.contextId ||
         !request.name ||
         !request.topology ||
-        !request.discovery_mechanism ||
-        !request.routing_strategy
+        !request.discoveryMechanism ||
+        !request.routingStrategy
       ) {
         res.status(400).json({
           success: false,
@@ -170,10 +170,10 @@ export class NetworkController {
   async queryNetworks(req: Request, res: Response): Promise<void> {
     try {
       const params: NetworkQueryParams = {
-        context_id: req.query.context_id as string,
+        context_id: req.query.contextId as string,
         status: req.query.status as any,
         topology: req.query.topology as any,
-        created_by: req.query.created_by as string,
+        created_by: req.query.createdBy as string,
         limit: req.query.limit
           ? parseInt(req.query.limit as string)
           : undefined,
@@ -270,7 +270,7 @@ export class NetworkController {
       };
 
       // 验证必需参数
-      if (!request.agent_id || !request.node_type || !request.capabilities) {
+      if (!request.agentId || !request.node_type || !request.capabilities) {
         res.status(400).json({
           success: false,
           error: '缺少必需参数: agent_id, node_type, capabilities',

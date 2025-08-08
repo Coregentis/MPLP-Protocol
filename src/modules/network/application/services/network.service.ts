@@ -67,7 +67,7 @@ export class NetworkService {
 
       // 创建网络实体
       const network = new Network({
-        context_id: request.context_id,
+        context_id: request.contextId,
         name: request.name,
         description: request.description,
         topology: request.topology,
@@ -75,9 +75,9 @@ export class NetworkService {
           ...n,
           node_id: uuidv4(),
         })),
-        discovery_mechanism: request.discovery_mechanism,
-        routing_strategy: request.routing_strategy,
-        created_by: request.context_id, // 临时使用context_id
+        discovery_mechanism: request.discoveryMechanism,
+        routing_strategy: request.routingStrategy,
+        created_by: request.contextId, // 临时使用context_id
         metadata: request.metadata,
       });
 
@@ -87,21 +87,21 @@ export class NetworkService {
       // 注册所有节点
       for (const node of network.nodes) {
         await this.nodeDiscoveryRepository.registerNode(
-          network.network_id,
+          network.networkId,
           node
         );
       }
 
       // 发布事件
       this.eventBus.publish('network_created', {
-        network_id: network.network_id,
-        context_id: network.context_id,
+        network_id: network.networkId,
+        context_id: network.contextId,
         name: network.name,
         topology: network.topology,
         nodes_count: network.nodes.length,
       });
 
-      this.logger.info('网络创建成功', { network_id: network.network_id });
+      this.logger.info('网络创建成功', { network_id: network.networkId });
 
       return {
         success: true,
@@ -161,7 +161,7 @@ export class NetworkService {
     try {
       this.logger.info('更新网络', { request });
 
-      const network = await this.networkRepository.findById(request.network_id);
+      const network = await this.networkRepository.findById(request.networkId);
       if (!network) {
         return {
           success: false,
@@ -184,13 +184,13 @@ export class NetworkService {
       }
 
       // 更新发现机制
-      if (request.discovery_mechanism) {
-        network.updateDiscoveryMechanism(request.discovery_mechanism);
+      if (request.discoveryMechanism) {
+        network.updateDiscoveryMechanism(request.discoveryMechanism);
       }
 
       // 更新路由策略
-      if (request.routing_strategy) {
-        network.updateRoutingStrategy(request.routing_strategy);
+      if (request.routingStrategy) {
+        network.updateRoutingStrategy(request.routingStrategy);
       }
 
       // 更新元数据
@@ -208,11 +208,11 @@ export class NetworkService {
 
       // 发布事件
       this.eventBus.publish('network_updated', {
-        network_id: network.network_id,
+        network_id: network.networkId,
         updates: request,
       });
 
-      this.logger.info('网络更新成功', { network_id: network.network_id });
+      this.logger.info('网络更新成功', { network_id: network.networkId });
 
       return {
         success: true,
@@ -275,13 +275,13 @@ export class NetworkService {
 
       // 发布事件
       this.eventBus.publish('nodes_discovered', {
-        network_id: request.network_id,
+        network_id: request.networkId,
         node_count: nodes.length,
         filters: request,
       });
 
       this.logger.info('节点发现成功', {
-        network_id: request.network_id,
+        network_id: request.networkId,
         node_count: nodes.length,
       });
 
@@ -310,7 +310,7 @@ export class NetworkService {
     try {
       this.logger.info('注册节点', { request });
 
-      const network = await this.networkRepository.findById(request.network_id);
+      const network = await this.networkRepository.findById(request.networkId);
       if (!network) {
         return {
           success: false,
@@ -321,7 +321,7 @@ export class NetworkService {
 
       const node: NetworkNode = {
         node_id: uuidv4(),
-        agent_id: request.agent_id,
+        agent_id: request.agentId,
         node_type: request.node_type,
         status: 'online',
         capabilities: request.capabilities,
@@ -331,18 +331,18 @@ export class NetworkService {
 
       network.addNode(node);
       await this.networkRepository.save(network);
-      await this.nodeDiscoveryRepository.registerNode(request.network_id, node);
+      await this.nodeDiscoveryRepository.registerNode(request.networkId, node);
 
       // 发布事件
       this.eventBus.publish('node_registered', {
-        network_id: request.network_id,
+        network_id: request.networkId,
         node_id: node.node_id,
-        agent_id: request.agent_id,
+        agent_id: request.agentId,
         node_type: request.node_type,
       });
 
       this.logger.info('节点注册成功', {
-        network_id: request.network_id,
+        network_id: request.networkId,
         node_id: node.node_id,
       });
 
@@ -388,7 +388,7 @@ export class NetworkService {
 
       // 发布事件
       this.eventBus.publish('route_calculated', {
-        network_id: request.network_id,
+        network_id: request.networkId,
         source_node_id: request.source_node_id,
         target_node_id: request.target_node_id,
         path_length: result.path.length,
@@ -396,7 +396,7 @@ export class NetworkService {
       });
 
       this.logger.info('路由计算成功', {
-        network_id: request.network_id,
+        network_id: request.networkId,
         path_length: result.path.length,
       });
 

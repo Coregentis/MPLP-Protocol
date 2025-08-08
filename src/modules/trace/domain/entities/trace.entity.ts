@@ -37,55 +37,70 @@ export class Trace {
   private _created_at: Timestamp;
   private _updated_at: Timestamp;
 
-  constructor(
-    trace_id: UUID,
-    context_id: UUID,
-    protocol_version: string,
-    trace_type: TraceType,
+    /**
+   * 任务ID
+   */
+  public taskId?: string;
+
+  /**
+   * 上下文快照
+   */
+  public contextSnapshot?: Record<string, unknown>;
+
+  /**
+   * 决策日志
+   */
+  public decisionLog?: unknown[];
+
+constructor(
+    traceId: UUID,
+    contextId: UUID,
+    protocolVersion: string,
+    traceType: TraceType,
     severity: TraceSeverity,
     event: TraceEvent,
     timestamp: Timestamp,
-    created_at: Timestamp,
-    updated_at: Timestamp,
-    plan_id?: UUID,
-    performance_metrics?: PerformanceMetrics,
-    error_information?: ErrorInformation,
+    createdAt: Timestamp,
+    updatedAt: Timestamp,
+    planId?: UUID,
+    performanceMetrics?: PerformanceMetrics,
+    errorInformation?: ErrorInformation,
     correlations: Correlation[] = [],
     metadata?: TraceMetadata
   ) {
-    this._trace_id = trace_id;
-    this._context_id = context_id;
-    this._plan_id = plan_id;
-    this._protocol_version = protocol_version;
-    this._trace_type = trace_type;
+    this._trace_id = traceId;
+    this._context_id = contextId;
+    this._plan_id = planId;
+    this._protocol_version = protocolVersion;
+    this._trace_type = traceType;
     this._severity = severity;
     this._event = event;
     this._timestamp = timestamp;
-    this._performance_metrics = performance_metrics;
-    this._error_information = error_information;
+    this._performance_metrics = performanceMetrics;
+    this._error_information = errorInformation;
     this._correlations = correlations;
     this._metadata = metadata;
-    this._created_at = created_at;
-    this._updated_at = updated_at;
+    this._created_at = createdAt;
+    this._updated_at = updatedAt;
 
     this.validateInvariants();
   }
 
   // Getters
-  get trace_id(): UUID { return this._trace_id; }
-  get context_id(): UUID { return this._context_id; }
-  get plan_id(): UUID | undefined { return this._plan_id; }
-  get protocol_version(): string { return this._protocol_version; }
-  get trace_type(): TraceType { return this._trace_type; }
+  get traceId(): UUID { return this._trace_id; }
+  get contextId(): UUID { return this._context_id; }
+  get planId(): UUID | undefined { return this._plan_id; }
+  get protocolVersion(): string { return this._protocol_version; }
+  get traceType(): TraceType { return this._trace_type; }
   get severity(): TraceSeverity { return this._severity; }
   get event(): TraceEvent { return this._event; }
   get timestamp(): Timestamp { return this._timestamp; }
-  get performance_metrics(): PerformanceMetrics | undefined { return this._performance_metrics; }
-  get error_information(): ErrorInformation | undefined { return this._error_information; }
+  get performanceMetrics(): PerformanceMetrics | undefined { return this._performance_metrics; }
+  get errorInformation(): ErrorInformation | undefined { return this._error_information; }
   get correlations(): Correlation[] { return [...this._correlations]; }
   get metadata(): TraceMetadata | undefined { return this._metadata; }
-  get created_at(): Timestamp { return this._created_at; }
-  get updated_at(): Timestamp { return this._updated_at; }
+  get createdAt(): Timestamp { return this._created_at; }
+  get updatedAt(): Timestamp { return this._updated_at; }
 
   /**
    * 添加关联
@@ -189,20 +204,20 @@ export class Trace {
    */
   toProtocol(): any {
     return {
-      trace_id: this._trace_id,
-      context_id: this._context_id,
-      plan_id: this._plan_id,
-      protocol_version: this._protocol_version,
-      trace_type: this._trace_type,
+      traceId: this._trace_id,
+      contextId: this._context_id,
+      planId: this._plan_id,
+      protocolVersion: this._protocol_version,
+      traceType: this._trace_type,
       severity: this._severity,
       event: this._event,
       timestamp: this._timestamp,
-      performance_metrics: this._performance_metrics,
-      error_information: this._error_information,
+      performanceMetrics: this._performance_metrics,
+      errorInformation: this._error_information,
       correlations: this._correlations,
       metadata: this._metadata,
-      created_at: this._created_at,
-      updated_at: this._updated_at
+      createdAt: this._created_at,
+      updatedAt: this._updated_at
     };
   }
 
@@ -211,18 +226,18 @@ export class Trace {
    */
   static fromProtocol(protocol: any): Trace {
     return new Trace(
-      protocol.trace_id,
-      protocol.context_id,
-      protocol.protocol_version,
-      protocol.trace_type,
+      protocol.traceId,
+      protocol.contextId,
+      protocol.protocolVersion,
+      protocol.traceType,
       protocol.severity,
       protocol.event,
       protocol.timestamp,
-      protocol.created_at,
-      protocol.updated_at,
-      protocol.plan_id,
-      protocol.performance_metrics,
-      protocol.error_information,
+      protocol.createdAt,
+      protocol.updatedAt,
+      protocol.planId,
+      protocol.performanceMetrics,
+      protocol.errorInformation,
       protocol.correlations || [],
       protocol.metadata
     );

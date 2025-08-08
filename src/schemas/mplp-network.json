@@ -1,10 +1,8 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://mplp.dev/schemas/v1.0/mplp-network.json",
   "title": "MPLP Network Protocol v1.0",
   "description": "Network模块协议Schema - Agent网络拓扑和连接管理",
-  "version": "1.0.0",
-  "lastUpdated": "2025-08-04",
   "type": "object",
   "$defs": {
     "uuid": {
@@ -65,7 +63,15 @@
     },
     "topology": {
       "type": "string",
-      "enum": ["star", "mesh", "tree", "ring", "bus", "hybrid", "hierarchical"],
+      "enum": [
+        "star",
+        "mesh",
+        "tree",
+        "ring",
+        "bus",
+        "hybrid",
+        "hierarchical"
+      ],
       "description": "网络拓扑类型"
     },
     "nodes": {
@@ -136,11 +142,22 @@
               },
               "protocol": {
                 "type": "string",
-                "enum": ["http", "https", "ws", "wss", "tcp", "udp"],
+                "enum": [
+                  "http",
+                  "https",
+                  "ws",
+                  "wss",
+                  "tcp",
+                  "udp"
+                ],
                 "description": "通信协议"
               }
             },
-            "required": ["host", "port", "protocol"],
+            "required": [
+              "host",
+              "port",
+              "protocol"
+            ],
             "additionalProperties": false,
             "description": "节点地址信息"
           },
@@ -150,7 +167,12 @@
             "description": "节点元数据"
           }
         },
-        "required": ["node_id", "agent_id", "node_type", "status"],
+        "required": [
+          "node_id",
+          "agent_id",
+          "node_type",
+          "status"
+        ],
         "additionalProperties": false
       },
       "minItems": 1,
@@ -176,12 +198,20 @@
           },
           "edge_type": {
             "type": "string",
-            "enum": ["data", "control", "monitoring", "backup"],
+            "enum": [
+              "data",
+              "control",
+              "monitoring",
+              "backup"
+            ],
             "description": "连接类型"
           },
           "direction": {
             "type": "string",
-            "enum": ["unidirectional", "bidirectional"],
+            "enum": [
+              "unidirectional",
+              "bidirectional"
+            ],
             "description": "连接方向"
           },
           "status": {
@@ -251,7 +281,9 @@
           "description": "注册中心配置"
         }
       },
-      "required": ["type"],
+      "required": [
+        "type"
+      ],
       "additionalProperties": false,
       "description": "节点发现机制"
     },
@@ -286,7 +318,9 @@
           "description": "负载均衡配置"
         }
       },
-      "required": ["algorithm"],
+      "required": [
+        "algorithm"
+      ],
       "additionalProperties": false,
       "description": "路由策略"
     },

@@ -67,7 +67,7 @@ export class DialogModuleAdapter implements ModuleInterface {
 
     try {
       this.logger.info('Executing Dialog stage', {
-        contextId: context.context_id,
+        contextId: context.contextId,
         stage: context.current_stage
       });
 
@@ -87,7 +87,7 @@ export class DialogModuleAdapter implements ModuleInterface {
 
       this.moduleStatus.status = 'idle';
       this.logger.info('Dialog stage executed successfully', {
-        contextId: context.context_id,
+        contextId: context.contextId,
         duration: result.duration_ms
       });
 
@@ -97,7 +97,7 @@ export class DialogModuleAdapter implements ModuleInterface {
       this.moduleStatus.error_count++;
       const errorMessage = error instanceof Error ? error.message : String(error);
       this.logger.error('Dialog stage execution failed', {
-        contextId: context.context_id,
+        contextId: context.contextId,
         error: errorMessage
       });
 
@@ -293,7 +293,7 @@ export class DialogModuleAdapter implements ModuleInterface {
     try {
       this.logger.error('Handling Dialog module error', {
         error: error.error_message,
-        context: context.context_id
+        context: context.contextId
       });
 
       // 根据错误类型决定处理策略
@@ -327,7 +327,7 @@ export class DialogModuleAdapter implements ModuleInterface {
    */
   private async processDialogStage(context: WorkflowExecutionContext): Promise<Record<string, unknown>> {
     // 输入验证
-    if (!context.context_id) {
+    if (!context.contextId) {
       throw new Error('Invalid context: missing context_id');
     }
 
@@ -352,7 +352,7 @@ export class DialogModuleAdapter implements ModuleInterface {
     const inputData = request.input_data;
 
     return {
-      contextId: request.context_id,
+      contextId: request.contextId,
       turn_strategy: 'adaptive',
       parameters: {
         min_turns: 1,

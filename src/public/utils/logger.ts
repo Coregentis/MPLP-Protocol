@@ -42,7 +42,7 @@ export interface LoggerOptions {
   /**
    * 自定义格式化函数
    */
-  formatter?: (level: LogLevel, message: string, namespace: string, timestamp: string, data?: any) => string;
+  formatter?: (level: LogLevel, message: string, namespace: string, timestamp: string, data?: unknown) => string;
 }
 
 /**
@@ -72,7 +72,7 @@ export interface LogEntry {
   /**
    * 附加数据
    */
-  data?: any;
+  data?: unknown;
   
   /**
    * 调用栈
@@ -90,7 +90,7 @@ export class Logger {
   private level: LogLevel;
   private includeTimestamp: boolean;
   private includeStack: boolean;
-  private formatter?: (level: LogLevel, message: string, namespace: string, timestamp: string, data?: any) => string;
+  private formatter?: (level: LogLevel, message: string, namespace: string, timestamp: string, data?: unknown) => string;
 
   /**
    * 构造函数
@@ -112,7 +112,7 @@ export class Logger {
    * @param message 日志消息
    * @param data 附加数据
    */
-  public debug(message: string, data?: any): void {
+  public debug(message: string, data?: unknown): void {
     this.log(LogLevel.DEBUG, message, data);
   }
 
@@ -122,7 +122,7 @@ export class Logger {
    * @param message 日志消息
    * @param data 附加数据
    */
-  public info(message: string, data?: any): void {
+  public info(message: string, data?: unknown): void {
     this.log(LogLevel.INFO, message, data);
   }
 
@@ -132,7 +132,7 @@ export class Logger {
    * @param message 日志消息
    * @param data 附加数据
    */
-  public warn(message: string, data?: any): void {
+  public warn(message: string, data?: unknown): void {
     this.log(LogLevel.WARN, message, data);
   }
 
@@ -142,7 +142,7 @@ export class Logger {
    * @param message 日志消息
    * @param data 附加数据
    */
-  public error(message: string, data?: any): void {
+  public error(message: string, data?: unknown): void {
     this.log(LogLevel.ERROR, message, data);
   }
 
@@ -186,7 +186,7 @@ export class Logger {
    * @param message 日志消息
    * @param data 附加数据
    */
-  private log(level: LogLevel, message: string, data?: any): void {
+  private log(level: LogLevel, message: string, data?: unknown): void {
     // 检查日志级别
     if (!this.shouldLog(level)) {
       return;
@@ -200,7 +200,7 @@ export class Logger {
       stack = stackTrace ? stackTrace.split('\n').slice(2).join('\n') : undefined;
     }
     
-    const logEntry: LogEntry = {
+    const _logEntry: LogEntry = {
       level,
       message,
       namespace: this.namespace,

@@ -32,7 +32,7 @@ export interface WorkflowConfiguration {
   stages: WorkflowStage[];
   parallel_execution?: boolean;
   timeout_ms?: number;
-  retry_policy?: RetryPolicy;
+  retryPolicy?: RetryPolicy;
   error_handling?: ErrorHandlingPolicy;
 }
 
@@ -60,13 +60,13 @@ export interface ErrorHandlingPolicy {
  */
 export interface ExecutionContext {
   execution_id: UUID;
-  context_id: UUID;
-  workflow_config: WorkflowConfiguration;
+  contextId: UUID;
+  workflowConfig: WorkflowConfiguration;
   current_stage: WorkflowStage;
-  stage_results: Map<WorkflowStage, any>;
-  metadata: Record<string, any>;
-  started_at: Timestamp;
-  updated_at: Timestamp;
+  stage_results: Map<WorkflowStage, unknown>;
+  metadata: Record<string, unknown>;
+  startedAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
 /**
@@ -74,16 +74,16 @@ export interface ExecutionContext {
  */
 export interface WorkflowExecutionContext {
   execution_id: UUID;
-  context_id: UUID;
-  workflow_type: BusinessWorkflowType;
+  contextId: UUID;
+  workflowType: BusinessWorkflowType;
   current_stage: WorkflowStage;
   stage_index: number;
   total_stages: number;
   data_store: BusinessDataStore;
   execution_state: WorkflowExecutionState;
-  metadata: Record<string, any>;
-  started_at: Timestamp;
-  updated_at: Timestamp;
+  metadata: Record<string, unknown>;
+  startedAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
 /**
@@ -92,11 +92,11 @@ export interface WorkflowExecutionContext {
 export interface StageExecutionResult {
   stage: WorkflowStage;
   status: ExecutionStatus;
-  result?: any;
+  result?: unknown;
   error?: Error;
   duration_ms: number;
-  started_at: Timestamp;
-  completed_at?: Timestamp;
+  startedAt: Timestamp;
+  completedAt?: Timestamp;
 }
 
 /**
@@ -104,12 +104,12 @@ export interface StageExecutionResult {
  */
 export interface WorkflowExecutionResult {
   execution_id: UUID;
-  context_id: UUID;
+  contextId: UUID;
   status: ExecutionStatus;
   stages: StageExecutionResult[];
   total_duration_ms: number;
-  started_at: Timestamp;
-  completed_at?: Timestamp;
+  startedAt: Timestamp;
+  completedAt?: Timestamp;
   error?: Error;
 }
 
@@ -131,7 +131,7 @@ export interface ModuleInterface {
   getStatus(): ModuleStatus;
 
   // 新增：数据验证和错误处理
-  validateInput(input: any): Promise<ValidationResult>;
+  validateInput(input: unknown): Promise<ValidationResult>;
   handleError(error: BusinessError, context: BusinessContext): Promise<ErrorHandlingResult>;
 }
 
@@ -143,7 +143,7 @@ export interface ModuleStatus {
   status: 'initialized' | 'running' | 'idle' | 'error';
   last_execution?: Timestamp;
   error_count: number;
-  performance_metrics?: PerformanceMetrics;
+  performanceMetrics?: PerformanceMetrics;
 }
 
 /**
@@ -181,7 +181,7 @@ export interface CoordinationEvent {
   event_type: CoordinationEventType;
   execution_id: UUID;
   stage?: WorkflowStage;
-  data?: any;
+  data?: unknown;
   timestamp: Timestamp;
 }
 
@@ -201,8 +201,8 @@ export interface LifecycleHooks {
  */
 export interface OrchestratorConfiguration {
   default_workflow: WorkflowConfiguration;
-  module_timeout_ms: number;
-  max_concurrent_executions: number;
+  moduleTimeoutMs: number;
+  maxConcurrentExecutions: number;
   enable_performance_monitoring: boolean;
   enable_event_logging: boolean;
   lifecycle_hooks?: LifecycleHooks;
@@ -230,9 +230,9 @@ export interface DecisionCoordinationRequest {
  */
 export interface DecisionResult {
   decision_id: UUID;
-  result: any;
+  result: unknown;
   consensus_reached: boolean;
-  participants_votes: Record<string, any>;
+  participants_votes: Record<string, unknown>;
   timestamp: Timestamp;
 }
 
@@ -245,7 +245,7 @@ export interface LifecycleCoordinationRequest {
   parameters: {
     creation_rules?: string[];
     template_source?: string;
-    generation_criteria?: any;
+    generation_criteria?: unknown;
   };
   capability_management?: {
     skills: string[];
@@ -258,8 +258,8 @@ export interface LifecycleCoordinationRequest {
  * 生命周期结果
  */
 export interface LifecycleResult {
-  role_id: UUID;
-  role_data: any;
+  roleId: UUID;
+  role_data: unknown;
   capabilities: string[];
   timestamp: Timestamp;
 }
@@ -273,7 +273,7 @@ export interface DialogCoordinationRequest {
   parameters: {
     min_turns?: number;
     max_turns?: number;
-    exit_criteria?: any;
+    exit_criteria?: unknown;
   };
   state_management?: {
     persistence: boolean;
@@ -307,7 +307,7 @@ export interface DialogFinalState {
  * 对话结果
  */
 export interface DialogResult {
-  dialog_id: UUID;
+  dialogId: UUID;
   turns: DialogTurn[];
   final_state: DialogFinalState;
   timestamp: Timestamp;
@@ -388,7 +388,7 @@ export interface KnowledgeCoordinationRequest {
   parameters: {
     storage_backend?: string;
     retention_policy?: KnowledgeRetentionPolicy;
-    access_control?: KnowledgeAccessControl;
+    accessControl?: KnowledgeAccessControl;
   };
   sharing?: {
     cross_session: boolean;
@@ -405,7 +405,7 @@ export interface KnowledgePersistedData {
   content: Record<string, unknown>;
   metadata: {
     size_bytes: number;
-    created_at: Timestamp;
+    createdAt: Timestamp;
     last_accessed: Timestamp;
   };
 }
@@ -433,7 +433,7 @@ export interface PlanningCoordinationRequest {
       time_limit?: number;
       resource_limit?: number;
     };
-    [key: string]: any;
+    [key: string]: unknown;
   };
   task_management?: {
     auto_decomposition: boolean;
@@ -446,10 +446,11 @@ export interface PlanningCoordinationRequest {
  * 规划结果
  */
 export interface PlanningResult {
-  plan_id: UUID;
+  planId: UUID;
+  plan_id?: UUID;  // 兼容snake_case
   task_breakdown: {
     tasks: Array<{
-      task_id: UUID;
+      taskId: UUID;
       name: string;
       dependencies: UUID[];
       priority: number;
@@ -457,7 +458,7 @@ export interface PlanningResult {
     }>;
     execution_order: UUID[];
   };
-  resource_allocation: Record<string, any>;
+  resource_allocation: Record<string, unknown>;
   timestamp: Timestamp;
 }
 
@@ -474,9 +475,9 @@ export interface ConfirmationCoordinationRequest {
       levels: string[];
       timeout_per_level: number;
     };
-    [key: string]: any;
+    [key: string]: unknown;
   };
-  approval_workflow?: {
+  approvalWorkflow?: {
     required_approvers: string[];
     approval_threshold: number;
     parallel_approval: boolean;
@@ -508,7 +509,7 @@ export interface TracingCoordinationRequest {
     sampling_rate?: number;
     retention_period?: number;
     event_filters?: string[];
-    [key: string]: any;
+    [key: string]: unknown;
   };
   monitoring_config?: {
     metrics_collection: boolean;
@@ -521,9 +522,9 @@ export interface TracingCoordinationRequest {
  * 跟踪结果
  */
 export interface TracingResult {
-  trace_id: UUID;
+  traceId: UUID;
   monitoring_session: {
-    session_id: UUID;
+    sessionId: UUID;
     start_time: Timestamp;
     active_traces: number;
   };
@@ -539,7 +540,7 @@ export interface TracingResult {
  */
 export interface ExtendedWorkflowConfig {
   stages?: WorkflowStage[];
-  execution_mode?: 'sequential' | 'parallel' | 'conditional' | 'hybrid';
+  executionMode?: 'sequential' | 'parallel' | 'conditional' | 'hybrid';
   timeout_ms?: number;
 
   // 各模块的特定配置
@@ -559,7 +560,7 @@ export interface ExtendedWorkflowConfig {
     parameters?: {
       creation_rules?: string[];
       template_source?: string;
-      generation_criteria?: any;
+      generation_criteria?: unknown;
     };
     capability_management?: {
       skills?: string[];
@@ -573,7 +574,7 @@ export interface ExtendedWorkflowConfig {
     parameters?: {
       min_turns?: number;
       max_turns?: number;
-      exit_criteria?: any;
+      exit_criteria?: unknown;
     };
     state_management?: {
       persistence?: boolean;
@@ -585,10 +586,10 @@ export interface ExtendedWorkflowConfig {
   extensionConfig?: {
     categories?: ('methodology' | 'algorithm' | 'workflow' | 'analysis')[];
     lifecycle?: {
-      registration?: any;
-      activation?: any;
-      execution?: any;
-      deactivation?: any;
+      registration?: unknown;
+      activation?: unknown;
+      execution?: unknown;
+      deactivation?: unknown;
     };
     integration_points?: ('pre_execution' | 'post_execution' | 'error_handling' | 'monitoring')[];
   };
@@ -597,8 +598,8 @@ export interface ExtendedWorkflowConfig {
     strategy?: 'memory' | 'file' | 'database' | 'distributed';
     parameters?: {
       storage_backend?: string;
-      retention_policy?: any;
-      access_control?: any;
+      retention_policy?: unknown;
+      accessControl?: unknown;
     };
     sharing?: {
       cross_session?: boolean;
@@ -627,7 +628,7 @@ export interface BusinessDataStore {
   global_data: Record<string, BusinessData>;
   stage_inputs: Record<string, BusinessData>;
   stage_outputs: Record<string, BusinessData>;
-  intermediate_results: Record<string, any>;
+  intermediate_results: Record<string, unknown>;
 }
 
 /**
@@ -660,7 +661,7 @@ export type BusinessWorkflowStatus =
  */
 export interface BusinessCoordinationRequest {
   coordination_id: UUID;
-  context_id: UUID;
+  contextId: UUID;
   module: ProtocolModule;
   coordination_type: BusinessCoordinationType;
   input_data: BusinessData;
@@ -713,10 +714,10 @@ export type BusinessCoordinationStatus =
 export interface BusinessData {
   data_type: BusinessDataType;
   data_version: string;
-  payload: Record<string, any>;
+  payload: Record<string, unknown>;
   metadata: BusinessDataMetadata;
-  created_at: Timestamp;
-  updated_at: Timestamp;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
 /**
@@ -754,7 +755,7 @@ export interface BusinessError {
   error_message: string;
   source_module: ProtocolModule;
   stage_id?: string;
-  context_data: Record<string, any>;
+  context_data: Record<string, unknown>;
   recovery_suggestions: RecoverySuggestion[];
   timestamp: Timestamp;
 }
@@ -778,14 +779,14 @@ export interface RecoverySuggestion {
   suggestion_type: 'retry' | 'skip' | 'rollback' | 'manual_intervention' | 'alternative_path';
   description: string;
   automated: boolean;
-  parameters?: Record<string, any>;
+  parameters?: Record<string, unknown>;
 }
 
 /**
  * 业务上下文
  */
 export interface BusinessContext {
-  context_id: UUID;
+  contextId: UUID;
   workflow_execution_id?: UUID;
   stage_id?: string;
   user_context?: UserContext;
@@ -796,7 +797,7 @@ export interface BusinessContext {
  * 用户上下文
  */
 export interface UserContext {
-  user_id: string;
+  userId: string;
   roles: string[];
   permissions: string[];
 }
@@ -863,7 +864,7 @@ export interface ExecutionMetrics {
  */
 export interface ModuleCoordinationConfiguration {
   timeout_ms: number;
-  retry_policy: RetryPolicy;
-  validation_rules: string[];
+  retryPolicy: RetryPolicy;
+  validationRules: string[];
   output_format: string;
 }

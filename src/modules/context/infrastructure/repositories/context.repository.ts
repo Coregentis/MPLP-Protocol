@@ -116,31 +116,31 @@ export class ContextRepository implements IContextRepository {
       }
       
       if (filter.lifecycleStage) {
-        queryBuilder.andWhere('context.lifecycle_stage = :lifecycleStage', { 
+        queryBuilder.andWhere('context.lifecycleStage = :lifecycleStage', { 
           lifecycleStage: filter.lifecycleStage 
         });
       }
       
       if (filter.createdAfter) {
-        queryBuilder.andWhere('context.created_at >= :createdAfter', { 
+        queryBuilder.andWhere('context.createdAt >= :createdAfter', { 
           createdAfter: filter.createdAfter 
         });
       }
       
       if (filter.createdBefore) {
-        queryBuilder.andWhere('context.created_at <= :createdBefore', { 
+        queryBuilder.andWhere('context.createdAt <= :createdBefore', { 
           createdBefore: filter.createdBefore 
         });
       }
       
       if (filter.updatedAfter) {
-        queryBuilder.andWhere('context.updated_at >= :updatedAfter', { 
+        queryBuilder.andWhere('context.updatedAt >= :updatedAfter', { 
           updatedAfter: filter.updatedAfter 
         });
       }
       
       if (filter.updatedBefore) {
-        queryBuilder.andWhere('context.updated_at <= :updatedBefore', { 
+        queryBuilder.andWhere('context.updatedAt <= :updatedBefore', { 
           updatedBefore: filter.updatedBefore 
         });
       }
@@ -307,7 +307,7 @@ export class ContextRepository implements IContextRepository {
       }
       
       if (filter.lifecycleStage) {
-        queryBuilder.andWhere('context.lifecycle_stage = :lifecycleStage', { 
+        queryBuilder.andWhere('context.lifecycleStage = :lifecycleStage', { 
           lifecycleStage: filter.lifecycleStage 
         });
       }
@@ -362,16 +362,17 @@ export class ContextRepository implements IContextRepository {
   
   /**
    * 将持久化实体映射到领域对象
+   * Infrastructure层(snake_case) → Domain层(camelCase)
    */
   private mapToDomain(entity: ContextEntity): Context {
     return new Context(
-      entity.context_id,
+      entity.context_id,        // snake_case → camelCase映射
       entity.name,
       entity.description,
-      entity.lifecycle_stage,
+      entity.lifecycle_stage,   // snake_case → camelCase映射
       entity.status,
-      entity.created_at,
-      entity.updated_at,
+      entity.created_at,        // snake_case → camelCase映射
+      entity.updated_at,        // snake_case → camelCase映射
       entity.session_ids || [],
       entity.shared_state_ids || [],
       entity.configuration || {},

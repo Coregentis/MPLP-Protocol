@@ -15,6 +15,11 @@ export * from './api/controllers/context.controller';
 
 // 应用层
 export * from './application/services/context-management.service';
+export * from './application/services/shared-state-management.service';
+export * from './application/services/access-control-management.service';
+export * from './application/services/context-performance-monitor.service';
+export * from './application/services/dependency-resolution.service';
+export * from './application/services/context-synchronization.service';
 export * from './application/commands/create-context.command';
 export * from './application/queries/get-context-by-id.query';
 

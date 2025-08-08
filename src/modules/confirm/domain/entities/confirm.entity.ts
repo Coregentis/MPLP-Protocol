@@ -39,36 +39,51 @@ export class Confirm {
   private _expires_at?: Timestamp;
   private _metadata?: ConfirmMetadata;
 
-  constructor(
-    confirm_id: UUID,
-    context_id: UUID,
-    protocol_version: string,
-    confirmation_type: ConfirmationType,
+    /**
+   * 风险评估
+   */
+  public riskAssessment?: Record<string, unknown>;
+
+  /**
+   * 通知设置
+   */
+  public notificationSettings?: Record<string, unknown>;
+
+  /**
+   * 审计跟踪
+   */
+  public auditTrail?: unknown[];
+
+constructor(
+    confirmId: UUID,
+    contextId: UUID,
+    protocolVersion: string,
+    confirmationType: ConfirmationType,
     status: ConfirmStatus,
     priority: Priority,
     subject: ConfirmSubject,
     requester: Requester,
-    approval_workflow: ApprovalWorkflow,
-    created_at: Timestamp,
-    updated_at: Timestamp,
-    plan_id?: UUID,
+    approvalWorkflow: ApprovalWorkflow,
+    createdAt: Timestamp,
+    updatedAt: Timestamp,
+    planId?: UUID,
     decision?: ConfirmDecision,
     expires_at?: Timestamp,
     metadata?: ConfirmMetadata
   ) {
-    this._confirm_id = confirm_id;
-    this._context_id = context_id;
-    this._plan_id = plan_id;
-    this._protocol_version = protocol_version;
-    this._confirmation_type = confirmation_type;
+    this._confirm_id = confirmId;
+    this._context_id = contextId;
+    this._plan_id = planId;
+    this._protocol_version = protocolVersion;
+    this._confirmation_type = confirmationType;
     this._status = status;
     this._priority = priority;
     this._subject = subject;
     this._requester = requester;
-    this._approval_workflow = approval_workflow;
+    this._approval_workflow = approvalWorkflow;
     this._decision = decision;
-    this._created_at = created_at;
-    this._updated_at = updated_at;
+    this._created_at = createdAt;
+    this._updated_at = updatedAt;
     this._expires_at = expires_at;
     this._metadata = metadata;
 
@@ -76,19 +91,19 @@ export class Confirm {
   }
 
   // Getters
-  get confirm_id(): UUID { return this._confirm_id; }
-  get context_id(): UUID { return this._context_id; }
-  get plan_id(): UUID | undefined { return this._plan_id; }
-  get protocol_version(): string { return this._protocol_version; }
-  get confirmation_type(): ConfirmationType { return this._confirmation_type; }
+  get confirmId(): UUID { return this._confirm_id; }
+  get contextId(): UUID { return this._context_id; }
+  get planId(): UUID | undefined { return this._plan_id; }
+  get protocolVersion(): string { return this._protocol_version; }
+  get confirmationType(): ConfirmationType { return this._confirmation_type; }
   get status(): ConfirmStatus { return this._status; }
   get priority(): Priority { return this._priority; }
   get subject(): ConfirmSubject { return this._subject; }
   get requester(): Requester { return this._requester; }
-  get approval_workflow(): ApprovalWorkflow { return this._approval_workflow; }
+  get approvalWorkflow(): ApprovalWorkflow { return this._approval_workflow; }
   get decision(): ConfirmDecision | undefined { return this._decision; }
-  get created_at(): Timestamp { return this._created_at; }
-  get updated_at(): Timestamp { return this._updated_at; }
+  get createdAt(): Timestamp { return this._created_at; }
+  get updatedAt(): Timestamp { return this._updated_at; }
   get expires_at(): Timestamp | undefined { return this._expires_at; }
   get metadata(): ConfirmMetadata | undefined { return this._metadata; }
 
@@ -151,7 +166,7 @@ export class Confirm {
     if (!this._subject.title || this._subject.title.trim().length === 0) {
       throw new Error('确认主题标题不能为空');
     }
-    if (!this._requester.user_id) {
+    if (!this._requester.userId) {
       throw new Error('请求者用户ID不能为空');
     }
   }
@@ -180,19 +195,19 @@ export class Confirm {
    */
   toProtocol(): any {
     return {
-      confirm_id: this._confirm_id,
-      context_id: this._context_id,
-      plan_id: this._plan_id,
-      protocol_version: this._protocol_version,
-      confirmation_type: this._confirmation_type,
+      confirmId: this._confirm_id,
+      contextId: this._context_id,
+      planId: this._plan_id,
+      protocolVersion: this._protocol_version,
+      confirmationType: this._confirmation_type,
       status: this._status,
       priority: this._priority,
       subject: this._subject,
       requester: this._requester,
-      approval_workflow: this._approval_workflow,
+      approvalWorkflow: this._approval_workflow,
       decision: this._decision,
-      created_at: this._created_at,
-      updated_at: this._updated_at,
+      createdAt: this._created_at,
+      updatedAt: this._updated_at,
       expires_at: this._expires_at,
       metadata: this._metadata
     };
@@ -203,18 +218,18 @@ export class Confirm {
    */
   static fromProtocol(protocol: any): Confirm {
     return new Confirm(
-      protocol.confirm_id,
-      protocol.context_id,
-      protocol.protocol_version,
-      protocol.confirmation_type,
+      protocol.confirmId,
+      protocol.contextId,
+      protocol.protocolVersion,
+      protocol.confirmationType,
       protocol.status,
       protocol.priority,
       protocol.subject,
       protocol.requester,
-      protocol.approval_workflow,
-      protocol.created_at,
-      protocol.updated_at,
-      protocol.plan_id,
+      protocol.approvalWorkflow,
+      protocol.createdAt,
+      protocol.updatedAt,
+      protocol.planId,
       protocol.decision,
       protocol.expires_at,
       protocol.metadata

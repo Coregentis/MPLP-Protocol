@@ -95,7 +95,7 @@ export class TraceModuleAdapter implements ModuleInterface {
       
       this.logger.info('Tracing coordination completed', {
         contextId: request.contextId,
-        trace_id: result.trace_id
+        trace_id: result.traceId
       });
 
       return result;
@@ -263,7 +263,7 @@ export class TraceModuleAdapter implements ModuleInterface {
 
     // 记录监控会话开始事件
     await this.traceManagementService.recordEvent({
-      trace_id: trace.trace_id,
+      trace_id: trace.traceId,
       event_type: 'monitoring_session_started',
       level: 'info',
       timestamp: new Date(),
@@ -295,7 +295,7 @@ export class TraceModuleAdapter implements ModuleInterface {
 
     // 记录事件收集配置事件
     await this.traceManagementService.recordEvent({
-      trace_id: trace.trace_id,
+      trace_id: trace.traceId,
       event_type: 'event_collection_configured',
       level: 'info',
       timestamp: new Date(),
@@ -358,13 +358,13 @@ export class TraceModuleAdapter implements ModuleInterface {
   async executeStage(context: any): Promise<any> {
     const businessRequest = {
       coordination_id: 'stage-' + Date.now(),
-      context_id: context.context_id,
+      context_id: context.contextId,
       module: 'trace',
       coordination_type: 'tracing_coordination',
       input_data: {
         data_type: 'tracing_data',
         data_version: '1.0.0',
-        payload: { context_id: context.context_id },
+        payload: { context_id: context.contextId },
         metadata: {
           source_module: 'trace',
           target_modules: ['trace'],
@@ -403,7 +403,7 @@ export class TraceModuleAdapter implements ModuleInterface {
 
     try {
       const traceRequest = {
-        contextId: request.context_id,
+        contextId: request.contextId,
         tracing_strategy: request.input_data.payload.tracing_strategy || 'real_time',
         parameters: request.input_data.payload.parameters || {
           sampling_rate: 1.0,
@@ -494,7 +494,7 @@ export class TraceModuleAdapter implements ModuleInterface {
     this.logger.error('Handling Trace module error', {
       errorId: error.error_id,
       errorType: error.error_type,
-      contextId: context.context_id
+      contextId: context.contextId
     });
 
     return {

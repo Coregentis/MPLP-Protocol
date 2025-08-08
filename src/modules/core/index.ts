@@ -111,12 +111,12 @@ export const DEFAULT_CORE_CONFIG: CoreOrchestratorConfig = {
     name: 'Default MPLP Workflow',
     stages: [WorkflowStage.CONTEXT, WorkflowStage.PLAN, WorkflowStage.CONFIRM, WorkflowStage.TRACE],
     execution_mode: ExecutionMode.SEQUENTIAL,
-    timeout_ms: 300000,
+    timeoutMs: 300000,
     max_concurrent_executions: 10,
     retry_policy: {
-      max_attempts: 3,
-      delay_ms: 1000,
-      backoff_factor: 2.0
+      maxAttempts: 3,
+      delayMs: 1000,
+      backoffFactor: 2.0
     }
   }
 };

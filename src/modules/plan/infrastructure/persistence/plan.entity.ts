@@ -49,10 +49,10 @@ export class PlanEntity {
   goals!: string[];
 
   @Column('simple-json')
-  tasks!: any[];
+  tasks!: Record<string, unknown>[];
 
   @Column('simple-json')
-  dependencies!: any[];
+  dependencies!: Record<string, unknown>[];
 
   @Column('varchar', { length: 50 })
   execution_strategy!: ExecutionStrategy;
@@ -74,12 +74,12 @@ export class PlanEntity {
   timeline?: {
     start_date: string;
     end_date: string;
-    milestones: any[];
+    milestones: Record<string, unknown>[];
     critical_path: string[];
   };
   
   @Column('simple-json')
-  configuration: any;
+  configuration!: Record<string, unknown>;
   
   @Column('simple-json', { nullable: true })
   metadata?: Record<string, unknown>;
@@ -87,7 +87,7 @@ export class PlanEntity {
   @Column('simple-json', { nullable: true })
   risk_assessment?: {
     overall_risk_level: string;
-    risks: any[];
+    risks: Record<string, unknown>[];
     last_assessed: string;
   };
 } 

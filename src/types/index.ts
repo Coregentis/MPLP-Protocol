@@ -65,7 +65,7 @@ export interface BaseProtocol {
   /**
    * 协议版本
    */
-  protocol_version: Version;
+  protocolVersion: Version;
   
   /**
    * 消息时间戳
@@ -166,12 +166,12 @@ export interface Metadata {
   /**
    * 创建时间
    */
-  created_at: Timestamp;
+  createdAt: Timestamp;
   
   /**
    * 更新时间
    */
-  updated_at: Timestamp;
+  updatedAt: Timestamp;
   
   /**
    * 创建者

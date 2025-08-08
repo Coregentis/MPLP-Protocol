@@ -8,8 +8,6 @@
  * @description 定义Trace模块的所有类型，严格匹配Schema
  */
 
-import { UUID, Timestamp } from '../../types';
-
 /**
  * 追踪类型 - 严格匹配Schema定义
  * @schema trace-protocol.json#/properties/trace_type
@@ -313,7 +311,7 @@ export interface DecisionLog {
 export interface Correlation {
   correlation_id: string;                        // 关联ID (必需)
   type: CorrelationType;                         // 关联类型 (必需)
-  related_trace_id: string;                      // 关联的追踪ID (必需)
+  related_traceId: string;                      // 关联的追踪ID (必需)
   strength?: number;                             // 关联强度
   description?: string;                          // 描述
 }
@@ -324,28 +322,28 @@ export interface Correlation {
  */
 export interface MPLPTraceData {
   // 基础信息 - 必需字段
-  protocol_version: string;                      // 协议版本 (必需)
+  protocolVersion: string;                      // 协议版本 (必需)
   timestamp: string;                             // ISO 8601时间戳 (必需)
-  trace_id: string;                              // 追踪唯一标识符 (必需)
-  context_id: string;                            // 上下文ID (必需)
-  trace_type: TraceType;                         // 追踪类型 (必需)
+  traceId: string;                              // 追踪唯一标识符 (必需)
+  contextId: string;                            // 上下文ID (必需)
+  traceType: TraceType;                         // 追踪类型 (必需)
   severity: TraceSeverity;                       // 严重程度 (必需)
   event: TraceEvent;                             // 事件信息 (必需)
   
   // 可选字段
-  plan_id?: string;                              // 计划ID
-  task_id?: string;                              // 任务ID
-  performance_metrics?: PerformanceMetrics;      // 性能指标
-  context_snapshot?: ContextSnapshot;            // 上下文快照
-  error_information?: ErrorInformation;          // 错误信息
-  decision_log?: DecisionLog;                    // 决策日志
+  planId?: string;                              // 计划ID
+  taskId?: string;                              // 任务ID
+  performanceMetrics?: PerformanceMetrics;      // 性能指标
+  contextSnapshot?: ContextSnapshot;            // 上下文快照
+  errorInformation?: ErrorInformation;          // 错误信息
+  decisionLog?: DecisionLog;                    // 决策日志
   correlations?: Correlation[];                  // 关联
   
   // 运行时扩展字段 (非Schema定义)
   /**
    * @note 以下字段为运行时扩展，非Schema原始定义，用于增强功能
    */
-  user_id?: string;                              // 用户ID
+  userId?: string;                              // 用户ID
   source?: string;                               // 追踪来源
   status?: TraceStatus;                          // 追踪状态
   operation?: {                                  // 操作信息

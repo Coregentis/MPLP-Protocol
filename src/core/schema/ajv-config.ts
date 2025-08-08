@@ -5,7 +5,7 @@
  * @version 1.0.1
  */
 
-import Ajv, { JSONSchemaType, ValidateFunction, ErrorObject } from 'ajv';
+import Ajv, { JSONSchemaType } from 'ajv';
 import addFormats from 'ajv-formats';
 import { Logger } from '../../public/utils/logger';
 
@@ -206,7 +206,7 @@ function addCustomKeywords(ajv: Ajv): void {
     keyword: 'mplpVersion',
     type: 'string',
     schemaType: 'string',
-    compile: (_schemaVal: string) => {
+    compile: () => {
       return function validate(data: string) {
         const supportedVersions = ['1.0.0', '1.0.1'];
         const isValid = supportedVersions.includes(data);
@@ -231,7 +231,7 @@ function addCustomKeywords(ajv: Ajv): void {
     keyword: 'moduleDependency',
     type: 'array',
     schemaType: 'object',
-    compile: (_schemaVal: any) => {
+    compile: () => {
       return function validate(data: string[]) {
         const validModules = ['context', 'plan', 'confirm', 'trace', 'role', 'extension'];
         

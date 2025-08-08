@@ -7,11 +7,11 @@
  * @created 2025-07-28
  */
 
-import { 
-  ModuleIntegrationManager, 
+import {
+  ModuleIntegrationManager,
   ModuleDependencyValidator,
   MODULE_REGISTRY,
-  MODULE_INITIALIZATION_ORDER,
+  // MODULE_INITIALIZATION_ORDER, // 暂时未使用
   ModuleIntegrationConfig
 } from '../../config/module-integration';
 
@@ -32,7 +32,7 @@ export interface ModuleLoadOptions {
  */
 export interface ModuleLoadResult {
   success: boolean;
-  module?: any;
+  module?: unknown;
   error?: string;
   warnings?: string[];
   loadTime?: number;
@@ -43,7 +43,7 @@ export interface ModuleLoadResult {
  */
 export interface BatchLoadResult {
   success: boolean;
-  loadedModules: Record<string, any>;
+  loadedModules: Record<string, unknown>;
   failedModules: Record<string, string>;
   warnings: string[];
   totalLoadTime: number;
@@ -54,7 +54,7 @@ export interface BatchLoadResult {
  */
 export class ModuleLoader {
   private integrationManager: ModuleIntegrationManager;
-  private loadedModules = new Map<string, any>();
+  private loadedModules = new Map<string, unknown>();
   private loadingPromises = new Map<string, Promise<ModuleLoadResult>>();
 
   constructor(config?: Partial<ModuleIntegrationConfig>) {
@@ -157,7 +157,7 @@ export class ModuleLoader {
     }
 
     // 动态导入模块
-    let moduleClass: any;
+    let moduleClass: unknown;
     try {
       const moduleImport = await this._importModule(moduleName);
       moduleClass = moduleImport.default || moduleImport[this._getModuleClassName(moduleName)];
@@ -218,7 +218,7 @@ export class ModuleLoader {
     options: ModuleLoadOptions = {}
   ): Promise<BatchLoadResult> {
     const startTime = Date.now();
-    const loadedModules: Record<string, any> = {};
+    const loadedModules: Record<string, unknown> = {};
     const failedModules: Record<string, string> = {};
     const allWarnings: string[] = [];
 
@@ -259,14 +259,14 @@ export class ModuleLoader {
   /**
    * 获取已加载的模块
    */
-  getLoadedModule(moduleName: string): any | undefined {
+  getLoadedModule(moduleName: string): unknown | undefined {
     return this.loadedModules.get(moduleName);
   }
 
   /**
    * 获取所有已加载的模块
    */
-  getAllLoadedModules(): Record<string, any> {
+  getAllLoadedModules(): Record<string, unknown> {
     return Object.fromEntries(this.loadedModules);
   }
 
@@ -325,7 +325,7 @@ export class ModuleLoader {
   /**
    * 动态导入模块
    */
-  private async _importModule(moduleName: string): Promise<any> {
+  private async _importModule(moduleName: string): Promise<unknown> {
     const modulePath = `../../../modules/${moduleName}/module`;
     return await import(modulePath);
   }
@@ -361,8 +361,8 @@ export class ModuleLoader {
    * 执行健康检查
    */
   private async _performHealthCheck(
-    moduleInstance: any,
-    moduleName: string
+    moduleInstance: unknown,
+    _moduleName: string
   ): Promise<{ healthy: boolean; message?: string }> {
     try {
       // 如果模块有healthCheck方法，调用它

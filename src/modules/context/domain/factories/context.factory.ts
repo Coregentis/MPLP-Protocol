@@ -9,9 +9,9 @@
 
 import { v4 as uuidv4 } from 'uuid';
 import { Context } from '../entities/context.entity';
-import { ContextConfiguration } from '../value-objects/context-configuration';
 import { ContextLifecycleStage } from '../../../../public/shared/types/context-types';
 import { EntityStatus, UUID } from '../../../../public/shared/types';
+import { ContextValidationService } from '../services/context-validation.service';
 
 /**
  * Context创建参数
@@ -29,17 +29,34 @@ export interface CreateContextParams {
  * Context工厂
  */
 export class ContextFactory {
+  private validationService: ContextValidationService;
+
+  constructor() {
+    this.validationService = new ContextValidationService();
+  }
+
   /**
    * 创建新的Context
    */
   createContext(params: CreateContextParams): Context {
+    // 验证输入参数
+    const nameError = this.validationService.validateName(params.name);
+    if (nameError) {
+      throw new Error(`Invalid context name: ${nameError.message}`);
+    }
+
+    const descriptionError = this.validationService.validateDescription(params.description ?? null);
+    if (descriptionError) {
+      throw new Error(`Invalid context description: ${descriptionError.message}`);
+    }
+
     const contextId = uuidv4();
     const now = new Date();
-    
+
     // 使用默认值或提供的参数
     const name = params.name;
     const description = params.description ?? null;
-    const lifecycleStage = params.lifecycleStage ?? ContextLifecycleStage.INITIALIZATION;
+    const lifecycleStage = params.lifecycleStage ?? ContextLifecycleStage.PLANNING;
     const status = params.status ?? EntityStatus.ACTIVE;
     
     // 创建配置对象

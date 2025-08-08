@@ -29,7 +29,7 @@ export class RoleRepository implements IRoleRepository {
    * 保存角色
    */
   async save(role: Role): Promise<void> {
-    this.roles.set(role.role_id, role);
+    this.roles.set(role.roleId, role);
   }
 
   /**
@@ -44,7 +44,7 @@ export class RoleRepository implements IRoleRepository {
    */
   async findByName(name: string, contextId?: UUID): Promise<Role | null> {
     for (const role of this.roles.values()) {
-      if (role.name === name && (!contextId || role.context_id === contextId)) {
+      if (role.name === name && (!contextId || role.contextId === contextId)) {
         return role;
       }
     }
@@ -56,7 +56,7 @@ export class RoleRepository implements IRoleRepository {
    */
   async findByContextId(contextId: UUID): Promise<Role[]> {
     return Array.from(this.roles.values())
-      .filter(role => role.context_id === contextId);
+      .filter(role => role.contextId === contextId);
   }
 
   /**
@@ -69,12 +69,12 @@ export class RoleRepository implements IRoleRepository {
     let results = Array.from(this.roles.values());
 
     // 应用过滤器
-    if (filter.context_id) {
-      results = results.filter(role => role.context_id === filter.context_id);
+    if (filter.contextId) {
+      results = results.filter(role => role.contextId === filter.contextId);
     }
 
-    if (filter.role_type) {
-      results = results.filter(role => role.role_type === filter.role_type);
+    if (filter.roleType) {
+      results = results.filter(role => role.roleType === filter.roleType);
     }
 
     if (filter.status) {
@@ -85,7 +85,7 @@ export class RoleRepository implements IRoleRepository {
       const pattern = new RegExp(filter.name_pattern, 'i');
       results = results.filter(role => 
         pattern.test(role.name) || 
-        (role.display_name && pattern.test(role.display_name))
+        (role.displayName && pattern.test(role.displayName))
       );
     }
 
@@ -97,11 +97,11 @@ export class RoleRepository implements IRoleRepository {
     }
 
     if (filter.created_after) {
-      results = results.filter(role => role.created_at >= filter.created_after!);
+      results = results.filter(role => role.createdAt >= filter.created_after!);
     }
 
     if (filter.created_before) {
-      results = results.filter(role => role.created_at <= filter.created_before!);
+      results = results.filter(role => role.createdAt <= filter.created_before!);
     }
 
     // 排序
@@ -154,7 +154,7 @@ export class RoleRepository implements IRoleRepository {
       .filter(role => role.isActive());
 
     if (contextId) {
-      results = results.filter(role => role.context_id === contextId);
+      results = results.filter(role => role.contextId === contextId);
     }
 
     return results;
@@ -164,7 +164,7 @@ export class RoleRepository implements IRoleRepository {
    * 更新角色
    */
   async update(role: Role): Promise<void> {
-    this.roles.set(role.role_id, role);
+    this.roles.set(role.roleId, role);
   }
 
   /**
@@ -187,8 +187,8 @@ export class RoleRepository implements IRoleRepository {
   async isNameUnique(name: string, contextId: UUID, excludeRoleId?: UUID): Promise<boolean> {
     for (const role of this.roles.values()) {
       if (role.name === name && 
-          role.context_id === contextId && 
-          role.role_id !== excludeRoleId) {
+          role.contextId === contextId && 
+          role.roleId !== excludeRoleId) {
         return false;
       }
     }
@@ -207,14 +207,14 @@ export class RoleRepository implements IRoleRepository {
     let roles = Array.from(this.roles.values());
     
     if (contextId) {
-      roles = roles.filter(role => role.context_id === contextId);
+      roles = roles.filter(role => role.contextId === contextId);
     }
 
     const total = roles.length;
     const active_count = roles.filter(role => role.isActive()).length;
     
     const by_type = roles.reduce((acc, role) => {
-      acc[role.role_type] = (acc[role.role_type] || 0) + 1;
+      acc[role.roleType] = (acc[role.roleType] || 0) + 1;
       return acc;
     }, {} as Record<RoleType, number>);
 
@@ -239,15 +239,15 @@ export class RoleRepository implements IRoleRepository {
       case 'name':
         return role.name;
       case 'created_at':
-        return role.created_at;
+        return role.createdAt;
       case 'updated_at':
-        return role.updated_at;
+        return role.updatedAt;
       case 'role_type':
-        return role.role_type;
+        return role.roleType;
       case 'status':
         return role.status;
       default:
-        return role.created_at;
+        return role.createdAt;
     }
   }
 }

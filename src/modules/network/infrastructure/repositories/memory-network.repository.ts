@@ -33,8 +33,8 @@ export class MemoryNetworkRepository implements NetworkRepository {
    * 保存网络
    */
   async save(network: Network): Promise<void> {
-    this.logger.debug('保存网络', { network_id: network.network_id });
-    this.networks.set(network.network_id, network);
+    this.logger.debug('保存网络', { network_id: network.networkId });
+    this.networks.set(network.networkId, network);
   }
 
   /**
@@ -51,7 +51,7 @@ export class MemoryNetworkRepository implements NetworkRepository {
   async findByContextId(context_id: string): Promise<Network[]> {
     this.logger.debug('根据上下文ID查找网络列表', { context_id });
     return Array.from(this.networks.values()).filter(
-      network => network.context_id === context_id
+      network => network.contextId === context_id
     );
   }
 
@@ -61,7 +61,7 @@ export class MemoryNetworkRepository implements NetworkRepository {
   async findByCreatedBy(created_by: string): Promise<Network[]> {
     this.logger.debug('根据创建者查找网络列表', { created_by });
     return Array.from(this.networks.values()).filter(
-      network => network.created_by === created_by
+      network => network.createdBy === created_by
     );
   }
 
@@ -77,8 +77,8 @@ export class MemoryNetworkRepository implements NetworkRepository {
     let networks = Array.from(this.networks.values());
 
     // 应用过滤条件
-    if (params.context_id) {
-      networks = networks.filter(n => n.context_id === params.context_id);
+    if (params.contextId) {
+      networks = networks.filter(n => n.contextId === params.contextId);
     }
     if (params.status) {
       networks = networks.filter(n => n.status === params.status);
@@ -86,8 +86,8 @@ export class MemoryNetworkRepository implements NetworkRepository {
     if (params.topology) {
       networks = networks.filter(n => n.topology === params.topology);
     }
-    if (params.created_by) {
-      networks = networks.filter(n => n.created_by === params.created_by);
+    if (params.createdBy) {
+      networks = networks.filter(n => n.createdBy === params.createdBy);
     }
 
     const total = networks.length;
@@ -101,20 +101,20 @@ export class MemoryNetworkRepository implements NetworkRepository {
 
       switch (sortBy) {
         case 'created_at':
-          aValue = new Date(a.created_at).getTime();
-          bValue = new Date(b.created_at).getTime();
+          aValue = new Date(a.createdAt).getTime();
+          bValue = new Date(b.createdAt).getTime();
           break;
         case 'updated_at':
-          aValue = new Date(a.updated_at).getTime();
-          bValue = new Date(b.updated_at).getTime();
+          aValue = new Date(a.updatedAt).getTime();
+          bValue = new Date(b.updatedAt).getTime();
           break;
         case 'name':
           aValue = a.name.toLowerCase();
           bValue = b.name.toLowerCase();
           break;
         default:
-          aValue = a.created_at;
-          bValue = b.created_at;
+          aValue = a.createdAt;
+          bValue = b.createdAt;
       }
 
       if (sortOrder === 'asc') {
@@ -240,8 +240,8 @@ export class MemoryNetworkRepository implements NetworkRepository {
     // 统计最常用的发现类型
     const discoveryCount = new Map<string, number>();
     networks.forEach(n => {
-      const count = discoveryCount.get(n.discovery_mechanism.type) || 0;
-      discoveryCount.set(n.discovery_mechanism.type, count + 1);
+      const count = discoveryCount.get(n.discoveryMechanism.type) || 0;
+      discoveryCount.set(n.discoveryMechanism.type, count + 1);
     });
     const mostUsedDiscoveryType =
       Array.from(discoveryCount.entries()).sort(
@@ -291,8 +291,8 @@ export class MemoryNodeDiscoveryRepository implements NodeDiscoveryRepository {
 
     let nodes: NetworkNode[] = [];
 
-    if (request.network_id) {
-      const networkNodes = this.nodeRegistry.get(request.network_id);
+    if (request.networkId) {
+      const networkNodes = this.nodeRegistry.get(request.networkId);
       if (networkNodes) {
         nodes = Array.from(networkNodes.values());
       }
@@ -553,7 +553,7 @@ export class MemoryRoutingRepository implements RoutingRepository {
    * 生成缓存键
    */
   private generateCacheKey(request: RoutingRequest): string {
-    return `${request.network_id}:${request.source_node_id}:${request.target_node_id}`;
+    return `${request.networkId}:${request.source_node_id}:${request.target_node_id}`;
   }
 
   /**

@@ -438,7 +438,7 @@ export class DialogController {
       };
 
       // 验证必需参数
-      if (!request.agent_id || !request.role_id || !request.permissions) {
+      if (!request.agentId || !request.roleId || !request.permissions) {
         res.status(400).json({
           success: false,
           error: '缺少必需参数: agent_id, role_id, permissions',

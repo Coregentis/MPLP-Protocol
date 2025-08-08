@@ -60,7 +60,7 @@ export type CompatibilityLevel = 'full' | 'partial' | 'limited' | 'incompatible'
  */
 export interface CreateExtensionRequest {
   name: string;
-  extension_type: ExtensionType;
+  extensionType: ExtensionType;
   version: string;
   description?: string;
   author?: string;
@@ -71,7 +71,7 @@ export interface CreateExtensionRequest {
   dependencies?: DependencyData[];
   configuration?: ExtensionConfigurationData;
   permissions?: PermissionData[];
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -84,7 +84,7 @@ export interface UpdateExtensionRequest {
   status?: ExtensionStatus;
   configuration?: ExtensionConfigurationData;
   permissions?: PermissionData[];
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -94,7 +94,7 @@ export interface ExtensionQueryParams {
   page?: number;
   limit?: number;
   search?: string;
-  extension_type?: ExtensionType;
+  extensionType?: ExtensionType;
   status?: ExtensionStatus;
   priority?: ExtensionPriority;
   author?: string;
@@ -107,9 +107,9 @@ export interface ExtensionQueryParams {
  * Extension数据接口
  */
 export interface ExtensionData {
-  extension_id: UUID;
+  extensionId: UUID;
   name: string;
-  extension_type: ExtensionType;
+  extensionType: ExtensionType;
   version: string;
   description?: string;
   status: ExtensionStatus;
@@ -126,9 +126,9 @@ export interface ExtensionData {
   compatibility: CompatibilityData;
   installation_info: InstallationInfoData;
   runtime_info?: RuntimeInfoData;
-  created_at: Timestamp;
-  updated_at: Timestamp;
-  metadata?: Record<string, any>;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -139,17 +139,17 @@ export interface DependencyData {
   version_range: string;
   type: 'required' | 'optional' | 'development';
   source?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
  * 扩展配置数据接口
  */
 export interface ExtensionConfigurationData {
-  schema?: Record<string, any>;
-  default_values?: Record<string, any>;
-  current_values?: Record<string, any>;
-  validation_rules?: {
+  schema?: Record<string, unknown>;
+  default_values?: Record<string, unknown>;
+  current_values?: Record<string, unknown>;
+  validationRules?: {
     rule_name: string;
     rule_expression: string;
     error_message: string;
@@ -183,10 +183,10 @@ export interface LifecycleHookData {
   hook_type: HookType;
   handler_function: string;
   priority: number;
-  timeout_ms?: number;
-  retry_count?: number;
-  conditions?: Record<string, any>;
-  metadata?: Record<string, any>;
+  timeoutMs?: number;
+  retryCount?: number;
+  conditions?: Record<string, unknown>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -243,12 +243,12 @@ export interface RuntimeInfoData {
  * 扩展执行请求
  */
 export interface ExtensionExecutionRequest {
-  extension_id: UUID;
+  extensionId: UUID;
   method: string;
-  parameters?: Record<string, any>;
-  context?: Record<string, any>;
-  timeout_ms?: number;
-  metadata?: Record<string, any>;
+  parameters?: Record<string, unknown>;
+  context?: Record<string, unknown>;
+  timeoutMs?: number;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -256,18 +256,18 @@ export interface ExtensionExecutionRequest {
  */
 export interface ExtensionExecutionResult {
   execution_id: UUID;
-  extension_id: UUID;
+  extensionId: UUID;
   method: string;
   success: boolean;
-  result?: any;
+  result?: unknown;
   error?: {
     code: string;
     message: string;
-    details?: Record<string, any>;
+    details?: Record<string, unknown>;
   };
   execution_time_ms: number;
   timestamp: Timestamp;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -299,7 +299,7 @@ export interface ExtensionMarketplaceData {
     billing_period?: 'monthly' | 'yearly' | 'one_time';
   };
   published_at: Timestamp;
-  updated_at: Timestamp;
+  updatedAt: Timestamp;
 }
 
 /**
@@ -316,7 +316,7 @@ export interface ExtensionStatistics {
   average_execution_time_ms: number;
   error_rate: number;
   most_used_extensions: {
-    extension_id: UUID;
+    extensionId: UUID;
     name: string;
     execution_count: number;
   }[];

@@ -30,6 +30,6 @@ export class GetConfirmByIdHandler {
    * 处理查询
    */
   async handle(query: GetConfirmByIdQuery): Promise<OperationResult<Confirm>> {
-    return await this.confirmManagementService.getConfirmById(query.confirm_id);
+    return await this.confirmManagementService.getConfirmById(query.confirmId);
   }
 }

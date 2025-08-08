@@ -8,71 +8,46 @@
  * @compliance 100% Schema合规性 - 完全匹配plan-protocol.json
  */
 
-import { 
-  UUID, 
-  Timestamp, 
-  TaskStatus, 
-  TaskPriority, 
-  TaskType, 
-  TaskEffort, 
-  TaskAssignee, 
-  ResourceRequirement, 
-  AcceptanceCriterion 
-} from '../../../../public/shared/types/plan-types';
+import { UUID } from '../../../../public/shared/types';
+import { PlanTask, TaskStatus, Priority, ResourceRequirement, FailureResolver, Duration } from '../../types';
 
-/**
- * 计划任务值对象
- */
-export interface PlanTask {
-  task_id: UUID;
-  name: string;
-  description: string;
-  status: TaskStatus;
-  priority: TaskPriority;
-  type: TaskType;
-  parent_task_id?: UUID;
-  estimated_effort?: TaskEffort;
-  assignee?: TaskAssignee;
-  resource_requirements?: ResourceRequirement[];
-  acceptance_criteria?: AcceptanceCriterion[];
-  start_time?: Timestamp;
-  end_time?: Timestamp;
-  metadata?: Record<string, unknown>;
-}
+// 重新导出PlanTask类型，确保类型一致性
+export { PlanTask } from '../../types';
 
 /**
  * 创建PlanTask值对象
+ * 使用types.ts中统一的PlanTask接口
  */
 export function createPlanTask(params: {
-  task_id: UUID;
+  taskId: UUID;
   name: string;
   description: string;
   status?: TaskStatus;
-  priority?: TaskPriority;
-  type?: TaskType;
-  parent_task_id?: UUID;
-  estimated_effort?: TaskEffort;
-  assignee?: TaskAssignee;
-  resource_requirements?: ResourceRequirement[];
-  acceptance_criteria?: AcceptanceCriterion[];
-  start_time?: Timestamp;
-  end_time?: Timestamp;
+  priority?: Priority;
+  type?: string;
+  dependencies?: UUID[];
+  estimatedDuration?: Duration;
+  actualDuration?: Duration;
+  progress?: number;
+  resourceRequirements?: ResourceRequirement[];
+  failureResolver?: FailureResolver;
+  parameters?: Record<string, unknown>;
   metadata?: Record<string, unknown>;
 }): PlanTask {
   return {
-    task_id: params.task_id,
+    taskId: params.taskId,
     name: params.name,
     description: params.description,
-    status: params.status || 'pending',
-    priority: params.priority || 'medium',
-    type: params.type || 'atomic',
-    parent_task_id: params.parent_task_id,
-    estimated_effort: params.estimated_effort,
-    assignee: params.assignee,
-    resource_requirements: params.resource_requirements,
-    acceptance_criteria: params.acceptance_criteria,
-    start_time: params.start_time,
-    end_time: params.end_time,
+    status: params.status,
+    priority: params.priority,
+    type: params.type,
+    dependencies: params.dependencies,
+    estimatedDuration: params.estimatedDuration,
+    actualDuration: params.actualDuration,
+    progress: params.progress,
+    resourceRequirements: params.resourceRequirements,
+    failureResolver: params.failureResolver,
+    parameters: params.parameters,
     metadata: params.metadata
   };
 }
@@ -87,8 +62,11 @@ export function updateTaskStatus(task: PlanTask, newStatus: TaskStatus): PlanTas
   return {
     ...task,
     status: newStatus,
-    ...(newStatus === 'in_progress' && !task.start_time ? { start_time: new Date().toISOString() } : {}),
-    ...((['completed', 'failed', 'cancelled', 'skipped'].includes(newStatus) && !task.end_time) ? 
+    // Note: PlanTask in types.ts doesn't have start_time/end_time, using metadata instead
+    ...(newStatus === TaskStatus.IN_PROGRESS && !task.metadata?.start_time ? {
+      metadata: { ...task.metadata, start_time: new Date().toISOString() }
+    } : {}),
+    ...((newStatus === TaskStatus.COMPLETED || newStatus === TaskStatus.FAILED || newStatus === TaskStatus.CANCELLED) && !task.metadata?.end_time ?
       { end_time: new Date().toISOString() } : {})
   };
 }
@@ -153,7 +131,8 @@ export function isTaskInProgress(task: PlanTask): boolean {
  * @returns 是否已阻塞
  */
 export function isTaskBlocked(task: PlanTask): boolean {
-  return task.status === 'blocked';
+  // Note: TaskStatus doesn't have 'blocked', using metadata to check
+  return task.metadata?.blocked === true;
 }
 
 /**
@@ -162,5 +141,6 @@ export function isTaskBlocked(task: PlanTask): boolean {
  * @returns 是否需要人工干预
  */
 export function isTaskPendingIntervention(task: PlanTask): boolean {
-  return task.status === 'pending_intervention';
-} 
+  // Note: TaskStatus doesn't have 'pending_intervention', using metadata to check
+  return task.metadata?.pending_intervention === true;
+}

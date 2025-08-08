@@ -10,36 +10,36 @@
 export interface SchemaDefinition {
   $schema: string;
   type: string;
-  properties?: Record<string, any>;
+  properties?: Record<string, unknown>;
   required?: string[];
   additionalProperties?: boolean;
-  definitions?: Record<string, any>;
+  definitions?: Record<string, unknown>;
 }
 
 export interface SchemaValidationError {
   path: string;
   message: string;
-  value?: any;
-  schema?: any;
+  value?: unknown;
+  schema?: unknown;
 }
 
 export interface SchemaValidationResult {
   valid: boolean;
   errors: SchemaValidationError[];
   warnings?: string[];
-  data?: any;
+  data?: unknown;
 }
 
 export interface ISchemaValidator {
   /**
    * 验证数据是否符合Schema
    */
-  validate(schema: SchemaDefinition, data: any): SchemaValidationResult;
+  validate(schema: SchemaDefinition, data: unknown): SchemaValidationResult;
   
   /**
    * 编译Schema
    */
-  compile(schema: SchemaDefinition): (data: any) => boolean;
+  compile(schema: SchemaDefinition): (data: unknown) => boolean;
   
   /**
    * 添加Schema定义
@@ -89,8 +89,8 @@ export interface SchemaMetadata {
   version: string;
   description?: string;
   author?: string;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
   tags?: string[];
 }
 

@@ -26,9 +26,9 @@ export class MemoryCollabRepository implements CollabRepository {
    */
   async save(collab: Collab): Promise<void> {
     this.logger.debug('保存协作', {
-      collaboration_id: collab.collaboration_id,
+      collaboration_id: collab.collaborationId,
     });
-    this.collabs.set(collab.collaboration_id, collab);
+    this.collabs.set(collab.collaborationId, collab);
   }
 
   /**
@@ -45,7 +45,7 @@ export class MemoryCollabRepository implements CollabRepository {
   async findByContextId(context_id: string): Promise<Collab[]> {
     this.logger.debug('根据上下文ID查找协作列表', { context_id });
     return Array.from(this.collabs.values()).filter(
-      collab => collab.context_id === context_id
+      collab => collab.contextId === context_id
     );
   }
 
@@ -55,7 +55,7 @@ export class MemoryCollabRepository implements CollabRepository {
   async findByPlanId(plan_id: string): Promise<Collab[]> {
     this.logger.debug('根据计划ID查找协作列表', { plan_id });
     return Array.from(this.collabs.values()).filter(
-      collab => collab.plan_id === plan_id
+      collab => collab.planId === plan_id
     );
   }
 
@@ -65,7 +65,7 @@ export class MemoryCollabRepository implements CollabRepository {
   async findByCreatedBy(created_by: string): Promise<Collab[]> {
     this.logger.debug('根据创建者查找协作列表', { created_by });
     return Array.from(this.collabs.values()).filter(
-      collab => collab.created_by === created_by
+      collab => collab.createdBy === created_by
     );
   }
 
@@ -81,13 +81,13 @@ export class MemoryCollabRepository implements CollabRepository {
     let collaborations = Array.from(this.collabs.values());
 
     // 应用过滤条件
-    if (params.context_id) {
+    if (params.contextId) {
       collaborations = collaborations.filter(
-        c => c.context_id === params.context_id
+        c => c.contextId === params.contextId
       );
     }
-    if (params.plan_id) {
-      collaborations = collaborations.filter(c => c.plan_id === params.plan_id);
+    if (params.planId) {
+      collaborations = collaborations.filter(c => c.planId === params.planId);
     }
     if (params.status) {
       collaborations = collaborations.filter(c => c.status === params.status);
@@ -95,9 +95,9 @@ export class MemoryCollabRepository implements CollabRepository {
     if (params.mode) {
       collaborations = collaborations.filter(c => c.mode === params.mode);
     }
-    if (params.created_by) {
+    if (params.createdBy) {
       collaborations = collaborations.filter(
-        c => c.created_by === params.created_by
+        c => c.createdBy === params.createdBy
       );
     }
 
@@ -112,20 +112,20 @@ export class MemoryCollabRepository implements CollabRepository {
 
       switch (sortBy) {
         case 'created_at':
-          aValue = new Date(a.created_at).getTime();
-          bValue = new Date(b.created_at).getTime();
+          aValue = new Date(a.createdAt).getTime();
+          bValue = new Date(b.createdAt).getTime();
           break;
         case 'updated_at':
-          aValue = new Date(a.updated_at).getTime();
-          bValue = new Date(b.updated_at).getTime();
+          aValue = new Date(a.updatedAt).getTime();
+          bValue = new Date(b.updatedAt).getTime();
           break;
         case 'name':
           aValue = a.name.toLowerCase();
           bValue = b.name.toLowerCase();
           break;
         default:
-          aValue = a.created_at;
-          bValue = b.created_at;
+          aValue = a.createdAt;
+          bValue = b.createdAt;
       }
 
       if (sortOrder === 'asc') {
@@ -260,7 +260,7 @@ export class MemoryCollabRepository implements CollabRepository {
     // 统计最常用的协调类型
     const coordinationTypeCount = new Map<string, number>();
     collaborations.forEach(c => {
-      const type = c.coordination_strategy.type;
+      const type = c.coordinationStrategy.type;
       coordinationTypeCount.set(
         type,
         (coordinationTypeCount.get(type) || 0) + 1

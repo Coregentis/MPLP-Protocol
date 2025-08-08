@@ -676,7 +676,7 @@ export function isTraceData(obj: unknown): obj is TraceData {
   
   const data = obj as Partial<TraceData>;
   return (
-    typeof data.trace_id === 'string' &&
+    typeof data.traceId === 'string' &&
     typeof data.operation_name === 'string' &&
     typeof data.start_time === 'string' &&
     typeof data.end_time === 'string' &&

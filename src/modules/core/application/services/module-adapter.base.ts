@@ -160,7 +160,7 @@ export abstract class ModuleAdapterBase implements IModuleAdapter {
   protected async executeWithTimeout<T>(
     operation: () => Promise<T>
   ): Promise<T> {
-    const timeout = this.config.timeout_ms || 30000;
+    const timeout = this.config.timeoutMs || 30000;
     
     return new Promise<T>((resolve, reject) => {
       const timer = setTimeout(() => {

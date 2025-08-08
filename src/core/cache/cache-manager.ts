@@ -27,7 +27,7 @@ export interface CacheManagerConfig {
   enableStats?: boolean;
 }
 
-export interface CacheEntry<T = any> {
+export interface CacheEntry<T = unknown> {
   key: string;
   value: T;
   ttl: number;
@@ -51,11 +51,11 @@ export interface CacheMetrics {
  */
 export class CacheManager {
   private cache = new Map<string, CacheEntry>();
-  private timers = new Map<string, NodeJS.Timeout>();
+  private timers = new Map<string, ReturnType<typeof setTimeout>>();
   private metrics: CacheMetrics;
   private logger: Logger;
   private eventBus?: EventBus;
-  private cleanupTimer?: NodeJS.Timeout;
+  private cleanupTimer?: ReturnType<typeof setTimeout>;
   private config: CacheManagerConfig & {
     defaultTTL: number;
     maxSize: number;
@@ -102,7 +102,7 @@ export class CacheManager {
   /**
    * 获取缓存值
    */
-  async get<T = any>(key: string): Promise<T | undefined> {
+  async get<T = unknown>(key: string): Promise<T | undefined> {
     const entry = this.cache.get(key);
     
     if (!entry) {
@@ -135,7 +135,7 @@ export class CacheManager {
   /**
    * 设置缓存值
    */
-  async set<T = any>(key: string, value: T, ttl?: number): Promise<boolean> {
+  async set<T = unknown>(key: string, value: T, ttl?: number): Promise<boolean> {
     try {
       const effectiveTTL = ttl || this.config.defaultTTL;
       const now = Date.now();
@@ -337,9 +337,9 @@ export class CacheManager {
   /**
    * 发送事件
    */
-  private emitEvent(operation: string, data: any): void {
+  private emitEvent(operation: string, data: Record<string, unknown>): void {
     if (!this.config.enableEvents || !this.eventBus) return;
-    
+
     this.eventBus.publish(EventType.CACHE_HIT, {
       timestamp: new Date().toISOString(),
       source: 'CacheManager',
@@ -385,7 +385,7 @@ export class CacheManager {
   /**
    * 注册缓存提供者（用于测试）
    */
-  registerProvider(provider: any, isPrimary: boolean = false): void {
+  registerProvider(provider: { getName?(): string }, isPrimary: boolean = false): void {
     // 这是一个测试用的方法，实际实现可以根据需要扩展
     this.logger.debug('Cache provider registered', { provider: provider.getName?.(), isPrimary });
   }

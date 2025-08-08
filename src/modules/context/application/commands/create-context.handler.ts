@@ -7,7 +7,6 @@
  * @created 2025-09-16
  */
 
-import { UUID } from '../../../../public/shared/types';
 import { ContextManagementService, ContextOperationResult } from '../../application/services/context-management.service';
 import { CreateContextCommand } from './create-context.command';
 import { Logger } from '../../../../public/utils/logger';

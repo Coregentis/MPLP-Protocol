@@ -20,18 +20,26 @@ export interface AdapterConfig {
   name: string;
   version: string;
   enabled?: boolean;
-  options?: Record<string, any>;
+  options?: Record<string, unknown>;
 }
 
 export interface AdapterHealth {
   status: 'healthy' | 'degraded' | 'unhealthy';
   message?: string;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
   last_check: string;
 }
 
+export interface AdapterInfo {
+  name: string;
+  version: string;
+  type: string;
+  capabilities: string[];
+  status: 'active' | 'inactive' | 'error';
+}
+
 export interface IAdapter {
-  getAdapterInfo(): any;
+  getAdapterInfo(): AdapterInfo;
   initialize(config: AdapterConfig): Promise<void>;
   checkHealth(): Promise<AdapterHealth>;
   close(): Promise<void>;

@@ -46,45 +46,50 @@ export class Extension {
   private _created_at: Timestamp;
   private _updated_at: Timestamp;
 
-  constructor(
-    extension_id: UUID,
-    context_id: UUID,
-    protocol_version: Version,
+    /**
+   * 扩展类型
+   */
+  public extensionType: string;
+
+constructor(
+    extensionId: UUID,
+    contextId: UUID,
+    protocolVersion: Version,
     name: string,
     version: Version,
     type: ExtensionType,
     status: ExtensionStatus,
     timestamp: Timestamp,
-    created_at: Timestamp,
-    updated_at: Timestamp,
-    display_name?: string,
+    createdAt: Timestamp,
+    updatedAt: Timestamp,
+    displayName?: string,
     description?: string,
     compatibility?: ExtensionCompatibility,
     configuration?: ExtensionConfiguration,
-    extension_points: ExtensionPoint[] = [],
-    api_extensions: ApiExtension[] = [],
-    event_subscriptions: EventSubscription[] = [],
+    extensionPoints: ExtensionPoint[] = [],
+    apiExtensions: ApiExtension[] = [],
+    eventSubscriptions: EventSubscription[] = [],
     lifecycle?: ExtensionLifecycle,
     security?: ExtensionSecurity,
     metadata?: ExtensionMetadata
   ) {
-    this._extension_id = extension_id;
-    this._context_id = context_id;
-    this._protocol_version = protocol_version;
+    this._extension_id = extensionId;
+    this._context_id = contextId;
+    this._protocol_version = protocolVersion;
     this._name = name;
     this._version = version;
     this._type = type;
     this._status = status;
     this._timestamp = timestamp;
-    this._created_at = created_at;
-    this._updated_at = updated_at;
-    this._display_name = display_name;
+    this._created_at = createdAt;
+    this._updated_at = updatedAt;
+    this._display_name = displayName;
     this._description = description;
     this._compatibility = compatibility;
     this._configuration = configuration;
-    this._extension_points = extension_points;
-    this._api_extensions = api_extensions;
-    this._event_subscriptions = event_subscriptions;
+    this._extension_points = extensionPoints;
+    this._api_extensions = apiExtensions;
+    this._event_subscriptions = eventSubscriptions;
     this._lifecycle = lifecycle;
     this._security = security;
     this._metadata = metadata;
@@ -93,26 +98,26 @@ export class Extension {
   }
 
   // Getters
-  get extension_id(): UUID { return this._extension_id; }
-  get context_id(): UUID { return this._context_id; }
-  get protocol_version(): Version { return this._protocol_version; }
+  get extensionId(): UUID { return this._extension_id; }
+  get contextId(): UUID { return this._context_id; }
+  get protocolVersion(): Version { return this._protocol_version; }
   get name(): string { return this._name; }
   get version(): Version { return this._version; }
   get type(): ExtensionType { return this._type; }
   get status(): ExtensionStatus { return this._status; }
-  get display_name(): string | undefined { return this._display_name; }
+  get displayName(): string | undefined { return this._display_name; }
   get description(): string | undefined { return this._description; }
   get compatibility(): ExtensionCompatibility | undefined { return this._compatibility; }
   get configuration(): ExtensionConfiguration | undefined { return this._configuration; }
-  get extension_points(): ExtensionPoint[] { return [...this._extension_points]; }
-  get api_extensions(): ApiExtension[] { return [...this._api_extensions]; }
-  get event_subscriptions(): EventSubscription[] { return [...this._event_subscriptions]; }
+  get extensionPoints(): ExtensionPoint[] { return [...this._extension_points]; }
+  get apiExtensions(): ApiExtension[] { return [...this._api_extensions]; }
+  get eventSubscriptions(): EventSubscription[] { return [...this._event_subscriptions]; }
   get lifecycle(): ExtensionLifecycle | undefined { return this._lifecycle; }
   get security(): ExtensionSecurity | undefined { return this._security; }
   get metadata(): ExtensionMetadata | undefined { return this._metadata; }
   get timestamp(): Timestamp { return this._timestamp; }
-  get created_at(): Timestamp { return this._created_at; }
-  get updated_at(): Timestamp { return this._updated_at; }
+  get createdAt(): Timestamp { return this._created_at; }
+  get updatedAt(): Timestamp { return this._updated_at; }
 
   /**
    * 更新扩展状态
@@ -270,26 +275,26 @@ export class Extension {
    */
   toProtocol(): any {
     return {
-      protocol_version: this._protocol_version,
+      protocolVersion: this._protocol_version,
       timestamp: this._timestamp,
-      extension_id: this._extension_id,
-      context_id: this._context_id,
+      extensionId: this._extension_id,
+      contextId: this._context_id,
       name: this._name,
       version: this._version,
       type: this._type,
       status: this._status,
-      display_name: this._display_name,
+      displayName: this._display_name,
       description: this._description,
       compatibility: this._compatibility,
       configuration: this._configuration,
-      extension_points: this._extension_points,
-      api_extensions: this._api_extensions,
-      event_subscriptions: this._event_subscriptions,
+      extensionPoints: this._extension_points,
+      apiExtensions: this._api_extensions,
+      eventSubscriptions: this._event_subscriptions,
       lifecycle: this._lifecycle,
       security: this._security,
       metadata: this._metadata,
-      created_at: this._created_at,
-      updated_at: this._updated_at
+      createdAt: this._created_at,
+      updatedAt: this._updated_at
     };
   }
 
@@ -298,23 +303,23 @@ export class Extension {
    */
   static fromProtocol(protocol: any): Extension {
     return new Extension(
-      protocol.extension_id,
-      protocol.context_id,
-      protocol.protocol_version,
+      protocol.extensionId,
+      protocol.contextId,
+      protocol.protocolVersion,
       protocol.name,
       protocol.version,
       protocol.type,
       protocol.status,
       protocol.timestamp,
-      protocol.created_at,
-      protocol.updated_at,
-      protocol.display_name,
+      protocol.createdAt,
+      protocol.updatedAt,
+      protocol.displayName,
       protocol.description,
       protocol.compatibility,
       protocol.configuration,
-      protocol.extension_points || [],
-      protocol.api_extensions || [],
-      protocol.event_subscriptions || [],
+      protocol.extensionPoints || [],
+      protocol.apiExtensions || [],
+      protocol.eventSubscriptions || [],
       protocol.lifecycle,
       protocol.security,
       protocol.metadata

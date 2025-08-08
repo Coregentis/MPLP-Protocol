@@ -30,7 +30,7 @@ export class TraceRepository implements ITraceRepository {
    * 保存追踪
    */
   async save(trace: Trace): Promise<void> {
-    this.traces.set(trace.trace_id, trace);
+    this.traces.set(trace.traceId, trace);
   }
 
   /**
@@ -45,7 +45,7 @@ export class TraceRepository implements ITraceRepository {
    */
   async findByContextId(contextId: UUID): Promise<Trace[]> {
     return Array.from(this.traces.values())
-      .filter(trace => trace.context_id === contextId)
+      .filter(trace => trace.contextId === contextId)
       .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
   }
 
@@ -54,7 +54,7 @@ export class TraceRepository implements ITraceRepository {
    */
   async findByPlanId(planId: UUID): Promise<Trace[]> {
     return Array.from(this.traces.values())
-      .filter(trace => trace.plan_id === planId)
+      .filter(trace => trace.planId === planId)
       .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
   }
 
@@ -68,16 +68,16 @@ export class TraceRepository implements ITraceRepository {
     let results = Array.from(this.traces.values());
 
     // 应用过滤器
-    if (filter.context_id) {
-      results = results.filter(trace => trace.context_id === filter.context_id);
+    if (filter.contextId) {
+      results = results.filter(trace => trace.contextId === filter.contextId);
     }
 
-    if (filter.plan_id) {
-      results = results.filter(trace => trace.plan_id === filter.plan_id);
+    if (filter.planId) {
+      results = results.filter(trace => trace.planId === filter.planId);
     }
 
-    if (filter.trace_type) {
-      results = results.filter(trace => trace.trace_type === filter.trace_type);
+    if (filter.traceType) {
+      results = results.filter(trace => trace.traceType === filter.traceType);
     }
 
     if (filter.severity) {
@@ -159,7 +159,7 @@ export class TraceRepository implements ITraceRepository {
       .filter(trace => trace.isError());
 
     if (contextId) {
-      results = results.filter(trace => trace.context_id === contextId);
+      results = results.filter(trace => trace.contextId === contextId);
     }
 
     // 按时间戳倒序排序
@@ -180,7 +180,7 @@ export class TraceRepository implements ITraceRepository {
       .filter(trace => trace.isPerformanceTrace());
 
     if (contextId) {
-      results = results.filter(trace => trace.context_id === contextId);
+      results = results.filter(trace => trace.contextId === contextId);
     }
 
     // 按时间戳倒序排序
@@ -236,7 +236,7 @@ export class TraceRepository implements ITraceRepository {
       });
 
     if (contextId) {
-      results = results.filter(trace => trace.context_id === contextId);
+      results = results.filter(trace => trace.contextId === contextId);
     }
 
     return results.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
@@ -246,7 +246,7 @@ export class TraceRepository implements ITraceRepository {
    * 更新追踪
    */
   async update(trace: Trace): Promise<void> {
-    this.traces.set(trace.trace_id, trace);
+    this.traces.set(trace.traceId, trace);
   }
 
   /**
@@ -280,7 +280,7 @@ export class TraceRepository implements ITraceRepository {
     let traces = Array.from(this.traces.values());
     
     if (contextId) {
-      traces = traces.filter(trace => trace.context_id === contextId);
+      traces = traces.filter(trace => trace.contextId === contextId);
     }
 
     if (timeRange) {
@@ -297,7 +297,7 @@ export class TraceRepository implements ITraceRepository {
     const performanceTracesCount = traces.filter(t => t.isPerformanceTrace()).length;
     
     const by_type = traces.reduce((acc, trace) => {
-      acc[trace.trace_type] = (acc[trace.trace_type] || 0) + 1;
+      acc[trace.traceType] = (acc[trace.traceType] || 0) + 1;
       return acc;
     }, {} as Record<TraceType, number>);
 
@@ -333,9 +333,9 @@ export class TraceRepository implements ITraceRepository {
     cutoffDate.setDate(cutoffDate.getDate() - olderThanDays);
     
     const expiredTraces = Array.from(this.traces.values())
-      .filter(trace => new Date(trace.created_at) < cutoffDate);
+      .filter(trace => new Date(trace.createdAt) < cutoffDate);
     
-    expiredTraces.forEach(trace => this.traces.delete(trace.trace_id));
+    expiredTraces.forEach(trace => this.traces.delete(trace.traceId));
     
     return expiredTraces.length;
   }
@@ -366,7 +366,7 @@ export class TraceRepository implements ITraceRepository {
         trace.event.name.toLowerCase().includes(searchText) ||
         trace.event.description?.toLowerCase().includes(searchText) ||
         trace.event.source.component.toLowerCase().includes(searchText) ||
-        trace.trace_type.toLowerCase().includes(searchText) ||
+        trace.traceType.toLowerCase().includes(searchText) ||
         trace.severity.toLowerCase().includes(searchText)
       );
     });
@@ -382,11 +382,11 @@ export class TraceRepository implements ITraceRepository {
       case 'timestamp':
         return trace.timestamp;
       case 'created_at':
-        return trace.created_at;
+        return trace.createdAt;
       case 'severity':
         return trace.severity;
       case 'trace_type':
-        return trace.trace_type;
+        return trace.traceType;
       case 'event_name':
         return trace.event.name;
       default:

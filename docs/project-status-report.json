@@ -1,0 +1,341 @@
+{
+  "timestamp": "2025-08-07T05:57:34.070Z",
+  "typescript": {
+    "errors": 0,
+    "files": 0
+  },
+  "eslint": {
+    "errors": 328,
+    "warnings": 661,
+    "files": 0
+  },
+  "tests": {
+    "total": 0,
+    "passed": 0,
+    "failed": 0,
+    "coverage": 0
+  },
+  "anyTypes": {
+    "count": 294,
+    "files": [
+      {
+        "file": "src\\core\\error\\base-error.ts",
+        "count": 4
+      },
+      {
+        "file": "src\\core\\error.ts",
+        "count": 17
+      },
+      {
+        "file": "src\\core\\event-bus.ts",
+        "count": 6
+      },
+      {
+        "file": "src\\core\\event-types.ts",
+        "count": 4
+      },
+      {
+        "file": "src\\core\\infrastructure\\infrastructure-manager.ts",
+        "count": 5
+      },
+      {
+        "file": "src\\core\\managers\\base-manager.ts",
+        "count": 6
+      },
+      {
+        "file": "src\\core\\protocol-engine.ts",
+        "count": 3
+      },
+      {
+        "file": "src\\core\\protocol-types.ts",
+        "count": 10
+      },
+      {
+        "file": "src\\core\\schema\\ajv-config.ts",
+        "count": 4
+      },
+      {
+        "file": "src\\core\\schema\\schema-validator.ts",
+        "count": 1
+      },
+      {
+        "file": "src\\core\\workflow\\interfaces\\workflow-context.interface.ts",
+        "count": 1
+      },
+      {
+        "file": "src\\core\\workflow\\workflow-events.ts",
+        "count": 4
+      },
+      {
+        "file": "src\\core\\workflow\\workflow-types.ts",
+        "count": 4
+      },
+      {
+        "file": "src\\database\\data-source.ts",
+        "count": 3
+      },
+      {
+        "file": "src\\interfaces\\error-handling.interface.ts",
+        "count": 2
+      },
+      {
+        "file": "src\\modules\\collab\\api\\controllers\\collab.controller.ts",
+        "count": 1
+      },
+      {
+        "file": "src\\modules\\collab\\infrastructure\\adapters\\collab-module.adapter.ts",
+        "count": 5
+      },
+      {
+        "file": "src\\modules\\collab\\infrastructure\\repositories\\memory-collab.repository.ts",
+        "count": 2
+      },
+      {
+        "file": "src\\modules\\confirm\\api\\controllers\\confirm.controller.ts",
+        "count": 2
+      },
+      {
+        "file": "src\\modules\\confirm\\api\\dto\\confirm.dto.ts",
+        "count": 1
+      },
+      {
+        "file": "src\\modules\\confirm\\domain\\entities\\confirm.entity.ts",
+        "count": 2
+      },
+      {
+        "file": "src\\modules\\confirm\\domain\\factories\\confirm.factory.ts",
+        "count": 2
+      },
+      {
+        "file": "src\\modules\\confirm\\infrastructure\\adapters\\confirm-module.adapter.ts",
+        "count": 7
+      },
+      {
+        "file": "src\\modules\\context\\api\\controllers\\context.controller.ts",
+        "count": 1
+      },
+      {
+        "file": "src\\modules\\core\\application\\services\\core-orchestrator.service.ts",
+        "count": 4
+      },
+      {
+        "file": "src\\modules\\core\\application\\services\\module-adapter.base.ts",
+        "count": 3
+      },
+      {
+        "file": "src\\modules\\core\\domain\\entities\\workflow-execution.entity.ts",
+        "count": 1
+      },
+      {
+        "file": "src\\modules\\dialog\\api\\controllers\\dialog.controller.ts",
+        "count": 1
+      },
+      {
+        "file": "src\\modules\\dialog\\application\\services\\dialog.service.ts",
+        "count": 6
+      },
+      {
+        "file": "src\\modules\\dialog\\infrastructure\\repositories\\memory-dialog.repository.ts",
+        "count": 2
+      },
+      {
+        "file": "src\\modules\\extension\\api\\controllers\\extension.controller.ts",
+        "count": 2
+      },
+      {
+        "file": "src\\modules\\extension\\domain\\entities\\extension.entity.ts",
+        "count": 2
+      },
+      {
+        "file": "src\\modules\\index.ts",
+        "count": 9
+      },
+      {
+        "file": "src\\modules\\network\\api\\controllers\\network.controller.ts",
+        "count": 1
+      },
+      {
+        "file": "src\\modules\\network\\infrastructure\\repositories\\memory-network.repository.ts",
+        "count": 2
+      },
+      {
+        "file": "src\\modules\\role\\api\\controllers\\role.controller.ts",
+        "count": 2
+      },
+      {
+        "file": "src\\modules\\role\\domain\\entities\\role.entity.ts",
+        "count": 3
+      },
+      {
+        "file": "src\\modules\\role\\infrastructure\\adapters\\role-module.adapter.ts",
+        "count": 6
+      },
+      {
+        "file": "src\\modules\\trace\\api\\controllers\\trace.controller.ts",
+        "count": 2
+      },
+      {
+        "file": "src\\modules\\trace\\domain\\entities\\trace.entity.ts",
+        "count": 2
+      },
+      {
+        "file": "src\\modules\\trace\\domain\\factories\\trace.factory.ts",
+        "count": 3
+      },
+      {
+        "file": "src\\modules\\trace\\infrastructure\\adapters\\trace-module.adapter.ts",
+        "count": 7
+      },
+      {
+        "file": "src\\routes\\health.ts",
+        "count": 8
+      },
+      {
+        "file": "src\\routes\\metrics.ts",
+        "count": 8
+      },
+      {
+        "file": "src\\scripts\\generate-dependency-graph.ts",
+        "count": 3
+      },
+      {
+        "file": "src\\scripts\\integration-test.ts",
+        "count": 2
+      },
+      {
+        "file": "src\\scripts\\schema-validator-cli.ts",
+        "count": 1
+      },
+      {
+        "file": "src\\scripts\\validate-schema.ts",
+        "count": 4
+      },
+      {
+        "file": "src\\server.ts",
+        "count": 17
+      },
+      {
+        "file": "src\\test-utils\\common-fixes.ts",
+        "count": 4
+      },
+      {
+        "file": "src\\test-utils\\core-test-utils.ts",
+        "count": 10
+      },
+      {
+        "file": "src\\test-utils\\jest-mock-utils.ts",
+        "count": 20
+      },
+      {
+        "file": "src\\tests\\unit\\protocol-engine.test.ts",
+        "count": 3
+      },
+      {
+        "file": "src\\types\\express-extensions.d.ts",
+        "count": 5
+      },
+      {
+        "file": "src\\types\\express-fix.d.ts",
+        "count": 1
+      },
+      {
+        "file": "src\\types\\glob-fix.d.ts",
+        "count": 1
+      },
+      {
+        "file": "src\\types\\glob.d.ts",
+        "count": 1
+      },
+      {
+        "file": "src\\types\\jest-extensions.d.ts",
+        "count": 22
+      },
+      {
+        "file": "src\\types\\module-exports.ts",
+        "count": 29
+      }
+    ]
+  },
+  "modules": {
+    "collab": {
+      "exists": true,
+      "hasApi": true,
+      "hasApplication": true,
+      "hasDomain": true,
+      "hasInfrastructure": true,
+      "hasTests": false
+    },
+    "confirm": {
+      "exists": true,
+      "hasApi": true,
+      "hasApplication": true,
+      "hasDomain": true,
+      "hasInfrastructure": true,
+      "hasTests": false
+    },
+    "context": {
+      "exists": true,
+      "hasApi": true,
+      "hasApplication": true,
+      "hasDomain": true,
+      "hasInfrastructure": true,
+      "hasTests": false
+    },
+    "core": {
+      "exists": true,
+      "hasApi": true,
+      "hasApplication": true,
+      "hasDomain": true,
+      "hasInfrastructure": true,
+      "hasTests": false
+    },
+    "dialog": {
+      "exists": true,
+      "hasApi": true,
+      "hasApplication": true,
+      "hasDomain": true,
+      "hasInfrastructure": true,
+      "hasTests": true
+    },
+    "extension": {
+      "exists": true,
+      "hasApi": true,
+      "hasApplication": true,
+      "hasDomain": true,
+      "hasInfrastructure": true,
+      "hasTests": false
+    },
+    "network": {
+      "exists": true,
+      "hasApi": true,
+      "hasApplication": true,
+      "hasDomain": true,
+      "hasInfrastructure": true,
+      "hasTests": false
+    },
+    "plan": {
+      "exists": true,
+      "hasApi": true,
+      "hasApplication": true,
+      "hasDomain": true,
+      "hasInfrastructure": true,
+      "hasTests": false
+    },
+    "role": {
+      "exists": true,
+      "hasApi": true,
+      "hasApplication": true,
+      "hasDomain": true,
+      "hasInfrastructure": true,
+      "hasTests": false
+    },
+    "trace": {
+      "exists": true,
+      "hasApi": true,
+      "hasApplication": true,
+      "hasDomain": true,
+      "hasInfrastructure": true,
+      "hasTests": false
+    }
+  }
+}

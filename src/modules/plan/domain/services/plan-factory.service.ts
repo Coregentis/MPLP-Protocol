@@ -10,27 +10,21 @@
 
 import { v4 as uuidv4 } from 'uuid';
 import { Plan } from '../entities/plan.entity';
-import { PlanTask } from '../value-objects/plan-task.value-object';
-import { PlanDependency } from '../value-objects/plan-dependency.value-object';
+import { PlanTask, PlanDependency } from '../../types';
 import { PlanConfiguration, createDefaultPlanConfiguration } from '../value-objects/plan-configuration.value-object';
 import { Timeline, createTimeline } from '../value-objects/timeline.value-object';
-import { PlanMilestone, createPlanMilestone } from '../value-objects/plan-milestone.value-object';
-import { RiskAssessment, Risk, createRiskAssessment, createRisk } from '../value-objects/risk-assessment.value-object';
-import { 
-  UUID, 
-  Timestamp, 
-  PlanStatus, 
-  ExecutionStrategy, 
-  Priority, 
-  TaskStatus, 
-  TaskPriority, 
-  TaskType, 
-  DependencyType, 
-  DependencyCriticality, 
-  MilestoneStatus,
-  RiskCategory,
-  RiskStatus
-} from '../../../../public/shared/types/plan-types';
+import { createPlanMilestone } from '../value-objects/plan-milestone.value-object';
+import { RiskAssessment, createRiskAssessment, createRisk } from '../value-objects/risk-assessment.value-object';
+import { UUID, Timestamp } from '../../../../public/shared/types';
+import {
+  PlanStatus,
+  ExecutionStrategy,
+  Priority,
+  TaskStatus,
+  DependencyType,
+  RiskLevel
+} from '../../types';
+import { MilestoneStatus, RiskCategory, RiskStatus } from '../../../../public/shared/types/plan-types';
 
 /**
  * Plan工厂服务
@@ -40,53 +34,59 @@ export class PlanFactoryService {
    * 创建Plan实体
    */
   createPlan(params: {
-    plan_id?: UUID;
-    context_id: UUID;
+    planId?: UUID;
+    contextId: UUID;
     name: string;
     description: string;
     status?: PlanStatus;
     version?: string;
-    created_at?: Timestamp;
-    updated_at?: Timestamp;
+    createdAt?: Timestamp;
+    updatedAt?: Timestamp;
     goals?: string[];
     tasks?: PlanTask[];
     dependencies?: PlanDependency[];
-    execution_strategy?: ExecutionStrategy;
+    executionStrategy?: ExecutionStrategy;
     priority?: Priority;
-    estimated_duration?: { value: number; unit: string };
+    estimatedDuration?: { value: number; unit: string };
     timeline?: Timeline;
     configuration?: PlanConfiguration;
     metadata?: Record<string, unknown>;
-    risk_assessment?: RiskAssessment;
+    riskAssessment?: RiskAssessment;
   }): Plan {
     const now = new Date().toISOString();
     
     return new Plan({
-      plan_id: params.plan_id || uuidv4(),
-      context_id: params.context_id,
+      planId: params.planId || uuidv4(),
+      contextId: params.contextId,
       name: params.name,
       description: params.description,
-      status: params.status || 'draft',
+      status: params.status || PlanStatus.DRAFT,
       version: params.version || '1.0.0',
-      created_at: params.created_at || now,
-      updated_at: params.updated_at || now,
+      createdAt: params.createdAt || now,
+      updatedAt: params.updatedAt || now,
       goals: params.goals || [],
       tasks: params.tasks || [],
       dependencies: params.dependencies || [],
-      execution_strategy: params.execution_strategy || 'sequential',
-      priority: params.priority || 'normal',
-      estimated_duration: params.estimated_duration,
+      executionStrategy: params.executionStrategy || ExecutionStrategy.SEQUENTIAL,
+      priority: params.priority || Priority.MEDIUM,
+      estimatedDuration: params.estimatedDuration ? {
+        value: params.estimatedDuration.value,
+        unit: params.estimatedDuration.unit as 'minutes' | 'hours' | 'days' | 'weeks'
+      } : undefined,
       progress: {
-        completed_tasks: params.tasks ? params.tasks.filter(t => t.status === 'completed').length : 0,
-        total_tasks: params.tasks ? params.tasks.length : 0,
-        percentage: params.tasks && params.tasks.length > 0 
-          ? Math.round((params.tasks.filter(t => t.status === 'completed').length / params.tasks.length) * 100) 
+        completedTasks: params.tasks ? params.tasks.filter(t => t.status === TaskStatus.COMPLETED).length : 0,
+        totalTasks: params.tasks ? params.tasks.length : 0,
+        percentage: params.tasks && params.tasks.length > 0
+          ? Math.round((params.tasks.filter(t => t.status === TaskStatus.COMPLETED).length / params.tasks.length) * 100)
           : 0
       },
       timeline: params.timeline,
       configuration: params.configuration || createDefaultPlanConfiguration(),
       metadata: params.metadata,
-      risk_assessment: params.risk_assessment
+      riskAssessment: params.riskAssessment ? {
+        overallRiskLevel: RiskLevel.LOW,
+        risks: []
+      } : undefined
     });
   }
   
@@ -94,12 +94,12 @@ export class PlanFactoryService {
    * 创建PlanTask值对象
    */
   createTask(params: {
-    task_id?: UUID;
+    taskId?: UUID;
     name: string;
     description: string;
     status?: TaskStatus;
-    priority?: TaskPriority;
-    type?: TaskType;
+    priority?: Priority;
+    type?: string;
     parent_task_id?: UUID;
     estimated_effort?: { value: number; unit: string; confidence?: number };
     assignee?: { id: UUID; name: string; role?: string; assignment_time?: Timestamp };
@@ -110,38 +110,28 @@ export class PlanFactoryService {
     metadata?: Record<string, unknown>;
   }): PlanTask {
     return {
-      task_id: params.task_id || uuidv4(),
+      taskId: params.taskId || uuidv4(),
       name: params.name,
       description: params.description,
-      status: params.status || 'pending',
-      priority: params.priority || 'medium',
-      type: params.type || 'atomic',
-      parent_task_id: params.parent_task_id,
-      estimated_effort: params.estimated_effort ? {
-        estimated_hours: params.estimated_effort.value,
-        complexity: (params.estimated_effort.confidence && params.estimated_effort.confidence > 0.8) ? 'low' :
-                   (params.estimated_effort.confidence && params.estimated_effort.confidence > 0.5) ? 'medium' : 'high'
+      status: params.status,
+      priority: params.priority,
+      type: params.type,
+      dependencies: [],
+      estimatedDuration: params.estimated_effort ? {
+        value: params.estimated_effort.value,
+        unit: (params.estimated_effort.unit as 'minutes' | 'hours' | 'days' | 'weeks') || 'hours'
       } : undefined,
-      assignee: params.assignee ? {
-        user_id: params.assignee.id,
-        name: params.assignee.name,
-        role: params.assignee.role
-      } : undefined,
-      resource_requirements: params.resource_requirements?.map(req => ({
-        resource_type: req.resource_type,
+      actualDuration: undefined,
+      progress: 0,
+      resourceRequirements: params.resource_requirements?.map(req => ({
+        resourceId: `resource-${Date.now()}-${Math.random()}`,
+        type: req.resource_type,
         quantity: req.amount,
         unit: req.unit || 'units',
         mandatory: req.mandatory
       })),
-      acceptance_criteria: params.acceptance_criteria?.map(criteria => ({
-        criterion_id: criteria.id || uuidv4(),
-        description: criteria.description,
-        is_met: criteria.verified || false,
-        verified_at: criteria.verified_at,
-        verified_by: criteria.verified_by
-      })),
-      start_time: params.start_time,
-      end_time: params.end_time,
+      failureResolver: undefined,
+      parameters: {},
       metadata: params.metadata
     };
   }
@@ -150,25 +140,22 @@ export class PlanFactoryService {
    * 创建PlanDependency值对象
    */
   createDependency(params: {
-    id?: UUID;
-    source_task_id: UUID;
-    target_task_id: UUID;
-    dependency_type?: DependencyType;
-    lag?: { value: number; unit: string };
-    criticality?: DependencyCriticality;
+    dependencyId?: UUID;
+    sourceTaskId: UUID;
+    targetTaskId: UUID;
+    type?: DependencyType;
+    lagTimeMs?: number;
     condition?: string;
+    metadata?: Record<string, unknown>;
   }): PlanDependency {
     return {
-      id: params.id || uuidv4(),
-      source_task_id: params.source_task_id,
-      target_task_id: params.target_task_id,
-      dependency_type: params.dependency_type || 'finish_to_start',
-      lag: params.lag ? {
-        value: params.lag.value,
-        unit: (params.lag.unit as any) || 'hours'
-      } : undefined,
-      criticality: params.criticality || 'important',
-      condition: params.condition
+      dependencyId: params.dependencyId || uuidv4(),
+      sourceTaskId: params.sourceTaskId,
+      targetTaskId: params.targetTaskId,
+      type: params.type || DependencyType.FINISH_TO_START,
+      lagTimeMs: params.lagTimeMs,
+      condition: params.condition,
+      metadata: params.metadata
     };
   }
   
@@ -176,30 +163,30 @@ export class PlanFactoryService {
    * 创建Timeline值对象
    */
   createTimeline(params: {
-    start_date: Timestamp;
-    end_date: Timestamp;
+    startDate: Timestamp;
+    endDate: Timestamp;
     milestones?: {
-      milestone_id?: UUID;
+      milestoneId?: UUID;
       name: string;
       description?: string;
-      due_date: Timestamp;
-      status?: MilestoneStatus;
-      related_tasks?: UUID[];
+      dueDate: Timestamp;
+      status?: string;
+      relatedTasks?: UUID[];
     }[];
-    critical_path?: UUID[];
+    criticalPath?: UUID[];
   }): Timeline {
     return createTimeline({
-      start_date: params.start_date,
-      end_date: params.end_date,
+      start_date: params.startDate,
+      end_date: params.endDate,
       milestones: params.milestones?.map(m => createPlanMilestone({
-        milestone_id: m.milestone_id || uuidv4(),
+        milestone_id: m.milestoneId || uuidv4(),
         name: m.name,
         description: m.description,
-        due_date: m.due_date,
-        status: m.status,
-        related_tasks: m.related_tasks
+        due_date: m.dueDate,
+        status: m.status as MilestoneStatus,
+        related_tasks: m.relatedTasks
       })),
-      critical_path: params.critical_path
+      critical_path: params.criticalPath
     });
   }
   
@@ -211,10 +198,10 @@ export class PlanFactoryService {
       risk_id?: UUID;
       name: string;
       description: string;
-      category: RiskCategory;
+      category: string;
       likelihood: number;
       impact: number;
-      status?: RiskStatus;
+      status?: string;
       mitigation_strategy?: string;
       related_tasks?: UUID[];
     }[];
@@ -225,10 +212,10 @@ export class PlanFactoryService {
         risk_id: r.risk_id || uuidv4(),
         name: r.name,
         description: r.description,
-        category: r.category,
+        category: r.category as RiskCategory,
         likelihood: r.likelihood,
         impact: r.impact,
-        status: r.status,
+        status: r.status as RiskStatus,
         mitigation_strategy: r.mitigation_strategy,
         related_tasks: r.related_tasks
       })),

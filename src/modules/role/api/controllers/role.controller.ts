@@ -235,8 +235,8 @@ export class RoleController {
   async queryRoles(req: HttpRequest): Promise<HttpResponse> {
     try {
       const filter: RoleFilter = {
-        context_id: req.query.context_id,
-        role_type: req.query.role_type,
+        context_id: req.query.contextId,
+        role_type: req.query.roleType,
         status: req.query.status,
         name_pattern: req.query.name_pattern,
         created_after: req.query.created_after,
@@ -280,7 +280,7 @@ export class RoleController {
    */
   async getActiveRoles(req: HttpRequest): Promise<HttpResponse> {
     try {
-      const contextId = req.query.context_id;
+      const contextId = req.query.contextId;
       const result = await this.roleManagementService.getActiveRoles(contextId);
       
       if (!result.success) {
@@ -336,7 +336,7 @@ export class RoleController {
    */
   async getStatistics(req: HttpRequest): Promise<HttpResponse> {
     try {
-      const contextId = req.query.context_id;
+      const contextId = req.query.contextId;
       const result = await this.roleManagementService.getStatistics(contextId);
       
       if (!result.success) {

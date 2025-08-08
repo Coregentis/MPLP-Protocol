@@ -1,10 +1,8 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://mplp.dev/schemas/v1.0/mplp-collab.json",
   "title": "MPLP Collab Protocol v1.0",
   "description": "Collab模块协议Schema - 多Agent协作调度和协调",
-  "version": "1.0.0",
-  "lastUpdated": "2025-08-04",
   "type": "object",
   "$defs": {
     "uuid": {
@@ -36,19 +34,42 @@
     },
     "decision_algorithm": {
       "type": "string",
-      "enum": ["majority_vote", "consensus", "weighted_vote", "pbft", "custom"],
+      "enum": [
+        "majority_vote",
+        "consensus",
+        "weighted_vote",
+        "pbft",
+        "custom"
+      ],
       "description": "决策算法类型"
     },
     "voting_mechanism": {
       "type": "object",
       "description": "投票机制配置",
       "properties": {
-        "anonymity": { "type": "boolean", "description": "是否匿名投票" },
-        "transparency": { "type": "boolean", "description": "是否透明投票" },
-        "revision_allowed": { "type": "boolean", "description": "是否允许修改投票" },
-        "time_limit_ms": { "type": "integer", "minimum": 1000, "description": "投票时间限制(毫秒)" }
+        "anonymity": {
+          "type": "boolean",
+          "description": "是否匿名投票"
+        },
+        "transparency": {
+          "type": "boolean",
+          "description": "是否透明投票"
+        },
+        "revision_allowed": {
+          "type": "boolean",
+          "description": "是否允许修改投票"
+        },
+        "time_limit_ms": {
+          "type": "integer",
+          "minimum": 1000,
+          "description": "投票时间限制(毫秒)"
+        }
       },
-      "required": ["anonymity", "transparency", "revision_allowed"],
+      "required": [
+        "anonymity",
+        "transparency",
+        "revision_allowed"
+      ],
       "additionalProperties": false
     },
     "weighting_strategy": {
@@ -57,27 +78,53 @@
       "properties": {
         "strategy": {
           "type": "string",
-          "enum": ["equal", "expertise_based", "role_based", "performance_based"],
+          "enum": [
+            "equal",
+            "expertise_based",
+            "role_based",
+            "performance_based"
+          ],
           "description": "权重策略类型"
         },
         "weights": {
           "type": "object",
-          "additionalProperties": { "type": "number", "minimum": 0, "maximum": 1 },
+          "additionalProperties": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
           "description": "参与者权重映射"
         }
       },
-      "required": ["strategy"],
+      "required": [
+        "strategy"
+      ],
       "additionalProperties": false
     },
     "consensus_requirements": {
       "type": "object",
       "description": "共识要求配置",
       "properties": {
-        "threshold": { "type": "number", "minimum": 0, "maximum": 1, "description": "共识阈值(0-1)" },
-        "quorum": { "type": "integer", "minimum": 1, "description": "最小参与者数量" },
-        "unanimity_required": { "type": "boolean", "description": "是否需要一致同意" }
+        "threshold": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "共识阈值(0-1)"
+        },
+        "quorum": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "最小参与者数量"
+        },
+        "unanimity_required": {
+          "type": "boolean",
+          "description": "是否需要一致同意"
+        }
       },
-      "required": ["threshold", "quorum"],
+      "required": [
+        "threshold",
+        "quorum"
+      ],
       "additionalProperties": false
     }
   },
@@ -115,7 +162,13 @@
     },
     "mode": {
       "type": "string",
-      "enum": ["sequential", "parallel", "hybrid", "pipeline", "mesh"],
+      "enum": [
+        "sequential",
+        "parallel",
+        "hybrid",
+        "pipeline",
+        "mesh"
+      ],
       "description": "协作执行模式"
     },
     "participants": {
@@ -141,7 +194,9 @@
           },
           "capabilities": {
             "type": "array",
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "maxItems": 20,
             "description": "参与者能力列表"
           },
@@ -162,7 +217,12 @@
             "description": "参与者加入时间"
           }
         },
-        "required": ["participant_id", "agent_id", "role_id", "status"],
+        "required": [
+          "participant_id",
+          "agent_id",
+          "role_id",
+          "status"
+        ],
         "additionalProperties": false
       },
       "minItems": 2,
@@ -188,11 +248,19 @@
         },
         "decision_making": {
           "type": "string",
-          "enum": ["consensus", "majority", "weighted", "coordinator"],
+          "enum": [
+            "consensus",
+            "majority",
+            "weighted",
+            "coordinator"
+          ],
           "description": "决策机制"
         }
       },
-      "required": ["type", "decision_making"],
+      "required": [
+        "type",
+        "decision_making"
+      ],
       "additionalProperties": false,
       "description": "协调策略配置"
     },
@@ -216,13 +284,26 @@
       "type": "object",
       "description": "决策制定配置",
       "properties": {
-        "enabled": { "type": "boolean", "description": "是否启用决策功能" },
-        "algorithm": { "$ref": "#/$defs/decision_algorithm" },
-        "voting": { "$ref": "#/$defs/voting_mechanism" },
-        "weighting": { "$ref": "#/$defs/weighting_strategy" },
-        "consensus": { "$ref": "#/$defs/consensus_requirements" }
+        "enabled": {
+          "type": "boolean",
+          "description": "是否启用决策功能"
+        },
+        "algorithm": {
+          "$ref": "#/$defs/decision_algorithm"
+        },
+        "voting": {
+          "$ref": "#/$defs/voting_mechanism"
+        },
+        "weighting": {
+          "$ref": "#/$defs/weighting_strategy"
+        },
+        "consensus": {
+          "$ref": "#/$defs/consensus_requirements"
+        }
       },
-      "required": ["enabled"],
+      "required": [
+        "enabled"
+      ],
       "additionalProperties": false
     },
     "council_configuration": {
@@ -231,26 +312,50 @@
       "properties": {
         "council_type": {
           "type": "string",
-          "enum": ["advisory", "executive", "judicial", "mixed"],
+          "enum": [
+            "advisory",
+            "executive",
+            "judicial",
+            "mixed"
+          ],
           "description": "议会类型"
         },
         "session_management": {
           "type": "object",
           "properties": {
-            "max_session_duration_ms": { "type": "integer", "minimum": 60000 },
-            "quorum_enforcement": { "type": "boolean" },
-            "automatic_adjournment": { "type": "boolean" }
+            "max_session_duration_ms": {
+              "type": "integer",
+              "minimum": 60000
+            },
+            "quorum_enforcement": {
+              "type": "boolean"
+            },
+            "automatic_adjournment": {
+              "type": "boolean"
+            }
           },
-          "required": ["max_session_duration_ms", "quorum_enforcement"]
+          "required": [
+            "max_session_duration_ms",
+            "quorum_enforcement"
+          ]
         },
         "voting_rules": {
           "type": "object",
           "properties": {
-            "multiple_rounds_allowed": { "type": "boolean" },
-            "abstention_allowed": { "type": "boolean" },
-            "delegation_allowed": { "type": "boolean" }
+            "multiple_rounds_allowed": {
+              "type": "boolean"
+            },
+            "abstention_allowed": {
+              "type": "boolean"
+            },
+            "delegation_allowed": {
+              "type": "boolean"
+            }
           },
-          "required": ["multiple_rounds_allowed", "abstention_allowed"]
+          "required": [
+            "multiple_rounds_allowed",
+            "abstention_allowed"
+          ]
         }
       },
       "additionalProperties": false

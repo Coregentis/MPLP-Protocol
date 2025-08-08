@@ -17,7 +17,8 @@ export function createMockTraceAdapter(): IAdapter {
       type: 'trace',
       version: '1.0.0',
       name: 'mock-trace-adapter',
-      status: 'active'
+      status: 'active',
+      capabilities: ['trace', 'monitor', 'log']
     }),
     
     initialize: async (config: AdapterConfig) => {
@@ -45,7 +46,8 @@ export function createMockPlanAdapter(): IAdapter {
       type: 'plan',
       version: '1.0.0',
       name: 'mock-plan-adapter',
-      status: 'active'
+      status: 'active',
+      capabilities: ['plan', 'schedule', 'optimize']
     }),
     
     initialize: async (config: AdapterConfig) => {
@@ -73,7 +75,8 @@ export function createMockConfirmAdapter(): IAdapter {
       type: 'confirm',
       version: '1.0.0',
       name: 'mock-confirm-adapter',
-      status: 'active'
+      status: 'active',
+      capabilities: ['confirm', 'approve', 'validate']
     }),
     
     initialize: async (config: AdapterConfig) => {
@@ -101,7 +104,8 @@ export function createMockExtensionAdapter(): IAdapter {
       type: 'extension',
       version: '1.0.0',
       name: 'mock-extension-adapter',
-      status: 'active'
+      status: 'active',
+      capabilities: ['extend', 'plugin', 'integrate']
     }),
     
     initialize: async (config: AdapterConfig) => {

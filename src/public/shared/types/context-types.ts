@@ -14,12 +14,13 @@ import { UUID, Timestamp } from './index';
 
 /**
  * Context生命周期阶段枚举
+ * 必须与mplp-context.json Schema保持一致
  */
 export enum ContextLifecycleStage {
-  INITIALIZATION = 'initialization',
-  ACTIVE = 'active',
-  MAINTENANCE = 'maintenance',
-  COMPLETION = 'completion'
+  PLANNING = 'planning',
+  EXECUTING = 'executing',
+  MONITORING = 'monitoring',
+  COMPLETED = 'completed'
 }
 
 // Context基础类型
@@ -27,7 +28,7 @@ export interface ContextData {
   id: string;
   name: string;
   description?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   createdAt: string;
   updatedAt: string;
 }
@@ -36,14 +37,14 @@ export interface ContextData {
 export interface CreateContextRequest {
   name: string;
   description?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 // Context更新请求
 export interface UpdateContextRequest {
   name?: string;
   description?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 // Context查询参数

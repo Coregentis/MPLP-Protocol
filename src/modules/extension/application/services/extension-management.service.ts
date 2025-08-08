@@ -65,7 +65,7 @@ export class ExtensionManagementService {
       }
 
       // 验证扩展名称唯一性
-      const isUnique = await this.extensionRepository.isNameUnique(request.name, request.context_id);
+      const isUnique = await this.extensionRepository.isNameUnique(request.name, request.contextId);
       if (!isUnique) {
         return {
           success: false,
@@ -77,7 +77,7 @@ export class ExtensionManagementService {
       const now = new Date().toISOString();
       const extension = new Extension(
         this.generateUUID(),
-        request.context_id,
+        request.contextId,
         '1.0.0',
         request.name,
         request.version,
@@ -86,7 +86,7 @@ export class ExtensionManagementService {
         now,
         now,
         now,
-        request.display_name,
+        request.displayName,
         request.description,
         undefined,
         request.configuration
@@ -488,7 +488,7 @@ export class ExtensionManagementService {
     }
 
     // 检查上下文ID
-    if (!request.context_id || request.context_id.trim() === '') {
+    if (!request.contextId || request.contextId.trim() === '') {
       return '上下文ID不能为空';
     }
 

@@ -377,7 +377,7 @@ export class TraceManagementService {
     data?: Record<string, any>;
   }): Promise<OperationResult<any>> {
     try {
-      const trace = await this.traceRepository.findById(request.trace_id);
+      const trace = await this.traceRepository.findById(request.traceId);
 
       if (!trace) {
         return {
@@ -408,7 +408,7 @@ export class TraceManagementService {
       return {
         success: true,
         data: {
-          event_id: `${request.trace_id}_${Date.now()}`,
+          event_id: `${request.traceId}_${Date.now()}`,
           recorded_at: request.timestamp.toISOString()
         }
       };
@@ -489,7 +489,7 @@ export class TraceManagementService {
       }
 
       // 获取相关的追踪记录
-      const relatedTraces = await this.traceRepository.findByContextId(trace.context_id);
+      const relatedTraces = await this.traceRepository.findByContextId(trace.contextId);
 
       // 检测关联
       const correlations = this.analysisService.detectCorrelations(trace, relatedTraces);

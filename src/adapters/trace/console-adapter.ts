@@ -43,8 +43,8 @@ export class ConsoleTraceAdapter extends BaseTraceAdapter {
     
     if (result.success && result.data) {
       console.log('🔍 TRACE:', {
-        id: result.data.trace_id,
-        type: result.data.trace_type,
+        id: result.data.traceId,
+        type: result.data.traceType,
         severity: result.data.severity,
         event: result.data.event.name,
         timestamp: result.data.timestamp

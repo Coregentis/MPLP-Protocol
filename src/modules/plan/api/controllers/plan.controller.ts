@@ -9,13 +9,27 @@
  */
 
 import { Request, Response, NextFunction } from 'express';
-const express = require('express');
-const { body, param, query, validationResult } = require('express-validator');
+import express = require('express');
+const { body, param, validationResult } = require('express-validator');
 import { APIResponse, AuthenticatedRequest } from '../../../../types/express-extensions';
+
+// Express Router接口定义
+interface ExpressRouter {
+  post(path: string, ...handlers: (Function | Function[])[]): void;
+  get(path: string, ...handlers: (Function | Function[])[]): void;
+  put(path: string, ...handlers: (Function | Function[])[]): void;
+  delete(path: string, ...handlers: (Function | Function[])[]): void;
+}
 import { CreatePlanCommandHandler } from '../../application/commands/create-plan.command';
+import { UpdatePlanCommandHandler } from '../../application/commands/update-plan.command';
+import { DeletePlanCommandHandler } from '../../application/commands/delete-plan.command';
 import { GetPlanQueryHandler } from '../../application/queries/get-plan.query';
+import { GetPlanByIdQueryHandler } from '../../application/queries/get-plan-by-id.query';
+import { GetPlansQueryHandler } from '../../application/queries/get-plans.query';
 import { PlanManagementService } from '../../application/services/plan-management.service';
 import { PlanExecutionService, PlanExecutionRequest } from '../../application/services/plan-execution.service';
+import { PlanModuleAdapter } from '../../infrastructure/adapters/plan-module.adapter';
+import { PlanStatus, Priority } from '../../types';
 import { Logger } from '../../../../public/utils/logger';
 
 
@@ -26,34 +40,49 @@ import { Logger } from '../../../../public/utils/logger';
  * Plan控制器
  */
 export class PlanController {
-  private router: any;
+  private router: ExpressRouter;
   private readonly logger: Logger;
   private readonly createPlanCommandHandler: CreatePlanCommandHandler;
+  private readonly updatePlanCommandHandler: UpdatePlanCommandHandler;
+  private readonly deletePlanCommandHandler: DeletePlanCommandHandler;
   private readonly getPlanQueryHandler: GetPlanQueryHandler;
+  private readonly getPlanByIdQueryHandler: GetPlanByIdQueryHandler;
+  private readonly getPlansQueryHandler: GetPlansQueryHandler;
   private readonly planManagementService: PlanManagementService;
   private readonly planExecutionService: PlanExecutionService;
-  
+  private readonly planModuleAdapter: PlanModuleAdapter;
+
   constructor(
     createPlanCommandHandler: CreatePlanCommandHandler,
-    getPlanQueryHandler: GetPlanQueryHandler,
+    updatePlanCommandHandler: UpdatePlanCommandHandler,
+    deletePlanCommandHandler: DeletePlanCommandHandler,
+    getPlanByIdQueryHandler: GetPlanByIdQueryHandler,
+    getPlansQueryHandler: GetPlansQueryHandler,
     planManagementService: PlanManagementService,
-    planExecutionService: PlanExecutionService,
+    planModuleAdapter: PlanModuleAdapter,
+    getPlanQueryHandler?: GetPlanQueryHandler,
+    planExecutionService?: PlanExecutionService,
     logger: Logger = new Logger('PlanController')
   ) {
-    this.router = express();
+    this.router = (express as { Router: () => ExpressRouter }).Router();
     this.logger = logger;
     this.createPlanCommandHandler = createPlanCommandHandler;
-    this.getPlanQueryHandler = getPlanQueryHandler;
+    this.updatePlanCommandHandler = updatePlanCommandHandler;
+    this.deletePlanCommandHandler = deletePlanCommandHandler;
+    this.getPlanQueryHandler = getPlanQueryHandler || new GetPlanQueryHandler(planManagementService);
+    this.getPlanByIdQueryHandler = getPlanByIdQueryHandler;
+    this.getPlansQueryHandler = getPlansQueryHandler;
     this.planManagementService = planManagementService;
-    this.planExecutionService = planExecutionService;
-    
+    this.planExecutionService = planExecutionService || {} as PlanExecutionService;
+    this.planModuleAdapter = planModuleAdapter;
+
     this.setupRoutes();
   }
   
   /**
    * 获取路由器实例
    */
-  public getRouter(): any {
+  public getRouter(): ExpressRouter {
     return this.router;
   }
   
@@ -115,37 +144,59 @@ export class PlanController {
   /**
    * 创建计划
    */
-  private async createPlan(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+  private async createPlan(req: AuthenticatedRequest, res: Response): Promise<void> {
     const requestId = this.generateRequestId();
     
     try {
       this.logger.debug('Creating plan', { requestId });
-      
+
+      // 验证请求体
+      if (!req.body) {
+        res.status(400).json({
+          success: false,
+          error: 'Request body is required'
+        });
+        return;
+      }
+
       const result = await this.createPlanCommandHandler.execute({
-        context_id: req.body.context_id,
+        contextId: req.body.context_id || req.body.contextId,
         name: req.body.name,
         description: req.body.description,
         goals: req.body.goals,
         tasks: req.body.tasks,
         dependencies: req.body.dependencies,
-        execution_strategy: req.body.execution_strategy,
+        executionStrategy: req.body.execution_strategy || req.body.executionStrategy,
         priority: req.body.priority,
-        estimated_duration: req.body.estimated_duration,
+        estimatedDuration: req.body.estimated_duration || req.body.estimatedDuration,
         configuration: req.body.configuration,
         metadata: req.body.metadata
       });
       
       if (result.success) {
-        res.status(201).json(this.buildAPIResponse(result.data, requestId));
+        res.status(201).json({
+          success: true,
+          data: result.data
+        });
       } else {
-        res.status(400).json(this.buildErrorResponse({
-          code: 'VALIDATION_ERROR',
-          message: result.error || 'Failed to create plan',
-          details: result.validationErrors
-        }, requestId));
+        // 检查是否是请求过大的错误
+        if (result.error && result.error.includes('Request payload too large')) {
+          res.status(413).json({
+            success: false,
+            error: result.error
+          });
+        } else {
+          res.status(400).json({
+            success: false,
+            error: result.error || 'Failed to create plan'
+          });
+        }
       }
     } catch (error: unknown) {
-      next(error);
+      res.status(500).json({
+        success: false,
+        error: 'Internal server error'
+      });
     }
   }
   
@@ -159,7 +210,7 @@ export class PlanController {
       const planId = req.params.planId;
       this.logger.debug('Getting plan', { planId, requestId });
 
-      const result = await this.getPlanQueryHandler.execute({ plan_id: planId });
+      const result = await this.getPlanQueryHandler.execute({ planId: planId });
 
       if (result.success && result.data) {
         res.status(200).json(this.buildAPIResponse(result.data, requestId));
@@ -177,99 +228,95 @@ export class PlanController {
   /**
    * 更新计划
    */
-  private async updatePlan(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
-    const requestId = this.generateRequestId();
-    
+  async updatePlan(req: AuthenticatedRequest, res: Response, next?: NextFunction): Promise<void> {
     try {
-      const planId = req.params.planId;
-      this.logger.debug('Updating plan', { planId, requestId });
-      
-      const result = await this.planManagementService.updatePlan(planId, req.body);
-      
-      if (result.success && result.data) {
-        res.status(200).json(this.buildAPIResponse(result.data, requestId));
-      } else if (result.error?.includes('not found')) {
-        res.status(404).json(this.buildErrorResponse({
-          code: 'NOT_FOUND',
-          message: `Plan with ID ${planId} not found`
-        }, requestId));
+      const planId = req.params.id || req.params.planId;
+      const updateData = req.body;
+      this.logger.debug('Updating plan', { planId, updateData });
+
+      // 执行更新计划命令
+      const command = {
+        planId,
+        ...updateData
+      };
+
+      const result = await this.updatePlanCommandHandler.execute(command);
+
+      if (result.success) {
+        res.status(200).json({
+          success: true,
+          data: result.data
+        });
       } else {
-        res.status(400).json(this.buildErrorResponse({
-          code: 'VALIDATION_ERROR',
-          message: result.error || 'Failed to update plan',
-          details: result.validationErrors
-        }, requestId));
+        res.status(400).json({
+          success: false,
+          error: result.error || 'Failed to update plan'
+        });
       }
     } catch (error: unknown) {
-      next(error);
+      if (next) next(error);
     }
   }
   
   /**
    * 删除计划
    */
-  private async deletePlan(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
-    const requestId = this.generateRequestId();
-
+  async deletePlan(req: AuthenticatedRequest, res: Response, next?: NextFunction): Promise<void> {
     try {
-      const planId = req.params.planId;
-      this.logger.debug('Deleting plan', { planId, requestId });
+      const planId = req.params.id || req.params.planId;
+      this.logger.debug('Deleting plan', { planId });
 
-      const result = await this.planManagementService.deletePlan(planId);
+      // 执行删除计划命令
+      const command = { planId };
+      const result = await this.deletePlanCommandHandler.execute(command);
 
       if (result.success) {
-        res.status(204).end();
-      } else if (result.error?.includes('not found')) {
-        res.status(404).json(this.buildErrorResponse({
-          code: 'NOT_FOUND',
-          message: `Plan with ID ${planId} not found`
-        }, requestId));
+        res.status(200).json({
+          success: true,
+          message: 'Plan deleted successfully'
+        });
       } else {
-        res.status(400).json(this.buildErrorResponse({
-          code: 'DELETE_ERROR',
-          message: result.error || 'Failed to delete plan'
-        }, requestId));
+        res.status(404).json({
+          success: false,
+          error: 'Plan not found'
+        });
       }
     } catch (error: unknown) {
-      next(error);
+      if (next) next(error);
     }
   }
   
   /**
    * 执行计划
    */
-  private async executePlan(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
-    const requestId = this.generateRequestId();
-    
+  async executePlan(req: AuthenticatedRequest, res: Response, next?: NextFunction): Promise<void> {
     try {
-      const planId = req.params.planId;
-      this.logger.debug('Executing plan', { planId, requestId });
-      
+      const planId = req.params.id || req.params.planId;
+      this.logger.debug('Executing plan', { planId });
+
       const executionRequest: PlanExecutionRequest = {
-        plan_id: planId,
-        execution_context: req.body.execution_context,
-        execution_options: req.body.execution_options,
-        execution_variables: req.body.execution_variables,
+        planId: planId,
+        executionContext: req.body.execution_context,
+        executionOptions: req.body.execution_options,
+        executionVariables: req.body.execution_variables,
         conditions: req.body.conditions
       };
-      
+
       const result = await this.planExecutionService.executePlan(executionRequest);
-      
+
       if (result.success) {
-        res.status(200).json(this.buildAPIResponse(result, requestId));
-      } else if (result.error?.includes('not found')) {
-        res.status(404).json(this.buildErrorResponse({
-          code: 'NOT_FOUND',
-          message: `Plan with ID ${planId} not found`
-        }, requestId));
+        res.status(200).json({
+          success: true,
+          data: result
+        });
       } else {
-        res.status(400).json(this.buildErrorResponse({
-          code: 'EXECUTION_ERROR',
-          message: result.error || 'Failed to execute plan'
-        }, requestId));
+        res.status(400).json({
+          success: false,
+          error: result.error || 'Failed to execute plan'
+        });
       }
     } catch (error: unknown) {
-      next(error);
+      if (next) next(error);
     }
   }
   
@@ -284,15 +331,15 @@ export class PlanController {
       this.logger.debug('Getting plan status', { planId, requestId });
       
       // 获取计划
-      const result = await this.getPlanQueryHandler.execute({ plan_id: planId });
+      const result = await this.getPlanQueryHandler.execute({ planId: planId });
       
       if (result.success && result.data) {
         // 只返回状态相关信息
         const statusInfo = {
-          plan_id: result.data.plan_id,
+          plan_id: result.data.planId,
           status: result.data.status,
           progress: result.data.progress,
-          updated_at: result.data.updated_at
+          updated_at: result.data.updatedAt
         };
         
         res.status(200).json(this.buildAPIResponse(statusInfo, requestId));
@@ -434,4 +481,125 @@ export class PlanController {
       }
     };
   }
-} 
+
+  /**
+   * 通过ID获取计划
+   */
+  async getPlanById(req: AuthenticatedRequest, res: Response, next?: NextFunction): Promise<void> {
+    const requestId = this.generateRequestId();
+
+    try {
+      const planId = req.params.id || req.params.planId;
+      this.logger.debug('Getting plan by ID', { planId, requestId });
+
+      const result = await this.getPlanByIdQueryHandler.execute({ planId });
+
+      if (result.success && result.data) {
+        res.status(200).json({
+          success: true,
+          data: result.data
+        });
+      } else {
+        res.status(404).json({
+          success: false,
+          error: 'Plan not found'
+        });
+      }
+    } catch (error: unknown) {
+      if (next) next(error);
+    }
+  }
+
+  /**
+   * 获取计划列表
+   */
+  async getPlans(req: AuthenticatedRequest, res: Response, next?: NextFunction): Promise<void> {
+    const requestId = this.generateRequestId();
+
+    try {
+      this.logger.debug('Getting plans list', { requestId });
+
+      // 构建查询参数
+      const query: Record<string, unknown> = {};
+
+      if (req.query.contextId) query.contextId = req.query.contextId as string;
+      if (req.query.status) query.status = req.query.status as PlanStatus;
+      if (req.query.priority) query.priority = req.query.priority as Priority;
+      if (req.query.page) query.page = parseInt(req.query.page as string);
+      if (req.query.limit) query.limit = parseInt(req.query.limit as string);
+      if (req.query.search) query.search = req.query.search as string;
+      if (req.query.sortBy) query.sortBy = req.query.sortBy as string;
+      if (req.query.sortOrder) query.sortOrder = req.query.sortOrder as 'asc' | 'desc';
+
+      // 验证查询参数
+      if (query.page && typeof query.page === 'number' && query.page < 1) {
+        res.status(400).json({
+          success: false,
+          error: 'Page must be greater than 0'
+        });
+        return;
+      }
+
+      if (query.limit && typeof query.limit === 'number' && (query.limit < 1 || query.limit > 100)) {
+        res.status(400).json({
+          success: false,
+          error: 'Limit must be between 1 and 100'
+        });
+        return;
+      }
+
+      const result = await this.getPlansQueryHandler.execute(query);
+
+      if (result.success) {
+        res.status(200).json({
+          success: true,
+          data: result.data
+        });
+      } else {
+        res.status(400).json({
+          success: false,
+          error: (typeof result.error === 'string' ? result.error : 'Failed to get plans')
+        });
+      }
+    } catch (error: unknown) {
+      if (next) next(error);
+    }
+  }
+
+  /**
+   * 规划协调功能
+   */
+  async coordinatePlanning(req: AuthenticatedRequest, res: Response, next?: NextFunction): Promise<void> {
+    const requestId = this.generateRequestId();
+
+    try {
+      const coordinationRequest = req.body;
+      this.logger.debug('Coordinating planning', { coordinationRequest, requestId });
+
+      if (!coordinationRequest) {
+        res.status(400).json({
+          success: false,
+          error: 'Coordination request is required'
+        });
+        return;
+      }
+
+      // 执行规划协调
+      const result = await this.planModuleAdapter.coordinatePlanning(coordinationRequest);
+
+      if (result.success) {
+        res.status(200).json({
+          success: true,
+          data: result.data
+        });
+      } else {
+        res.status(400).json({
+          success: false,
+          error: (typeof result.error === 'string' ? result.error : 'Planning coordination failed')
+        });
+      }
+    } catch (error: unknown) {
+      if (next) next(error);
+    }
+  }
+}

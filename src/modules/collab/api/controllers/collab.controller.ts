@@ -166,11 +166,11 @@ export class CollabController {
   async queryCollabs(req: Request, res: Response): Promise<void> {
     try {
       const params: CollabQueryParams = {
-        context_id: req.query.context_id as string,
-        plan_id: req.query.plan_id as string,
+        context_id: req.query.contextId as string,
+        plan_id: req.query.planId as string,
         status: req.query.status as any,
         mode: req.query.mode as any,
-        created_by: req.query.created_by as string,
+        created_by: req.query.createdBy as string,
         limit: req.query.limit
           ? parseInt(req.query.limit as string)
           : undefined,
@@ -243,7 +243,7 @@ export class CollabController {
       };
 
       // 验证必需参数
-      if (!request.agent_id || !request.role_id) {
+      if (!request.agentId || !request.roleId) {
         res.status(400).json({
           success: false,
           error: '缺少必需参数: agent_id, role_id',

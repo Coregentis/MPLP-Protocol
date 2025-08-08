@@ -1,10 +1,8 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://mplp.dev/schemas/v1.0/mplp-role.json",
   "title": "MPLP Role Protocol v1.0",
   "description": "Role模块协议Schema - 角色定义和权限管理",
-  "version": "1.0.0",
-  "lastUpdated": "2025-08-04",
   "type": "object",
   "$defs": {
     "uuid": {
@@ -24,51 +22,120 @@
     },
     "priority": {
       "type": "string",
-      "enum": ["critical", "high", "medium", "low"],
+      "enum": [
+        "critical",
+        "high",
+        "medium",
+        "low"
+      ],
       "description": "优先级枚举"
     },
     "agent_type": {
       "type": "string",
-      "enum": ["core", "specialist", "stakeholder", "coordinator", "custom"],
+      "enum": [
+        "core",
+        "specialist",
+        "stakeholder",
+        "coordinator",
+        "custom"
+      ],
       "description": "Agent类型枚举"
     },
     "agent_status": {
       "type": "string",
-      "enum": ["active", "inactive", "busy", "error", "maintenance", "retired"],
+      "enum": [
+        "active",
+        "inactive",
+        "busy",
+        "error",
+        "maintenance",
+        "retired"
+      ],
       "description": "Agent状态枚举"
     },
     "expertise_level": {
       "type": "string",
-      "enum": ["beginner", "intermediate", "advanced", "expert", "master"],
+      "enum": [
+        "beginner",
+        "intermediate",
+        "advanced",
+        "expert",
+        "master"
+      ],
       "description": "专业技能水平"
     },
     "communication_style": {
       "type": "string",
-      "enum": ["formal", "casual", "technical", "collaborative", "directive"],
+      "enum": [
+        "formal",
+        "casual",
+        "technical",
+        "collaborative",
+        "directive"
+      ],
       "description": "沟通风格"
     },
     "conflict_resolution_strategy": {
       "type": "string",
-      "enum": ["consensus", "majority", "authority", "compromise", "avoidance"],
+      "enum": [
+        "consensus",
+        "majority",
+        "authority",
+        "compromise",
+        "avoidance"
+      ],
       "description": "冲突解决策略"
     },
     "agent": {
       "type": "object",
       "description": "Agent定义",
       "properties": {
-        "agent_id": { "$ref": "#/$defs/uuid" },
-        "name": { "type": "string", "minLength": 1 },
-        "type": { "$ref": "#/$defs/agent_type" },
-        "domain": { "type": "string", "minLength": 1 },
-        "status": { "$ref": "#/$defs/agent_status" },
-        "capabilities": { "$ref": "#/$defs/agent_capabilities" },
-        "configuration": { "$ref": "#/$defs/agent_configuration" },
-        "performance_metrics": { "$ref": "#/$defs/performance_metrics" },
-        "created_at": { "$ref": "#/$defs/timestamp" },
-        "updated_at": { "$ref": "#/$defs/timestamp" },
-        "created_by": { "type": "string" }
+        "agent_id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "$ref": "#/$defs/agent_type"
+        },
+        "domain": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "$ref": "#/$defs/agent_status"
+        },
+        "capabilities": {
+          "$ref": "#/$defs/agent_capabilities"
+        },
+        "configuration": {
+          "$ref": "#/$defs/agent_configuration"
+        },
+        "performance_metrics": {
+          "$ref": "#/$defs/performance_metrics"
+        },
+        "created_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "created_by": {
+          "type": "string"
+        }
       },
-      "required": ["agent_id", "name", "type", "domain", "status", "capabilities", "created_at", "created_by"],
+      "required": [
+        "agent_id",
+        "name",
+        "type",
+        "domain",
+        "status",
+        "capabilities",
+        "created_at",
+        "created_by"
+      ],
       "additionalProperties": false
     },
     "agent_capabilities": {
@@ -78,45 +145,114 @@
         "core": {
           "type": "object",
           "properties": {
-            "critical_thinking": { "type": "boolean" },
-            "scenario_validation": { "type": "boolean" },
-            "ddsc_dialog": { "type": "boolean" },
-            "mplp_protocols": { "type": "array", "items": { "type": "string" } }
+            "critical_thinking": {
+              "type": "boolean"
+            },
+            "scenario_validation": {
+              "type": "boolean"
+            },
+            "ddsc_dialog": {
+              "type": "boolean"
+            },
+            "mplp_protocols": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           },
-          "required": ["critical_thinking", "scenario_validation", "ddsc_dialog", "mplp_protocols"]
+          "required": [
+            "critical_thinking",
+            "scenario_validation",
+            "ddsc_dialog",
+            "mplp_protocols"
+          ]
         },
         "specialist": {
           "type": "object",
           "properties": {
-            "domain": { "type": "string" },
-            "expertise_level": { "$ref": "#/$defs/expertise_level" },
-            "knowledge_areas": { "type": "array", "items": { "type": "string" } },
-            "tools": { "type": "array", "items": { "type": "string" } }
+            "domain": {
+              "type": "string"
+            },
+            "expertise_level": {
+              "$ref": "#/$defs/expertise_level"
+            },
+            "knowledge_areas": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "tools": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           },
-          "required": ["domain", "expertise_level", "knowledge_areas"]
+          "required": [
+            "domain",
+            "expertise_level",
+            "knowledge_areas"
+          ]
         },
         "collaboration": {
           "type": "object",
           "properties": {
-            "communication_style": { "$ref": "#/$defs/communication_style" },
-            "conflict_resolution": { "$ref": "#/$defs/conflict_resolution_strategy" },
-            "decision_weight": { "type": "number", "minimum": 0, "maximum": 1 },
-            "trust_level": { "type": "number", "minimum": 0, "maximum": 1 }
+            "communication_style": {
+              "$ref": "#/$defs/communication_style"
+            },
+            "conflict_resolution": {
+              "$ref": "#/$defs/conflict_resolution_strategy"
+            },
+            "decision_weight": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "trust_level": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
           },
-          "required": ["communication_style", "conflict_resolution", "decision_weight", "trust_level"]
+          "required": [
+            "communication_style",
+            "conflict_resolution",
+            "decision_weight",
+            "trust_level"
+          ]
         },
         "learning": {
           "type": "object",
           "properties": {
-            "experience_accumulation": { "type": "boolean" },
-            "pattern_recognition": { "type": "boolean" },
-            "adaptation_mechanism": { "type": "boolean" },
-            "performance_optimization": { "type": "boolean" }
+            "experience_accumulation": {
+              "type": "boolean"
+            },
+            "pattern_recognition": {
+              "type": "boolean"
+            },
+            "adaptation_mechanism": {
+              "type": "boolean"
+            },
+            "performance_optimization": {
+              "type": "boolean"
+            }
           },
-          "required": ["experience_accumulation", "pattern_recognition", "adaptation_mechanism", "performance_optimization"]
+          "required": [
+            "experience_accumulation",
+            "pattern_recognition",
+            "adaptation_mechanism",
+            "performance_optimization"
+          ]
         }
       },
-      "required": ["core", "specialist", "collaboration", "learning"],
+      "required": [
+        "core",
+        "specialist",
+        "collaboration",
+        "learning"
+      ],
       "additionalProperties": false
     },
     "agent_configuration": {
@@ -126,46 +262,104 @@
         "basic": {
           "type": "object",
           "properties": {
-            "max_concurrent_tasks": { "type": "integer", "minimum": 1 },
-            "timeout_ms": { "type": "integer", "minimum": 1000 },
-            "retry_policy": { "$ref": "#/$defs/retry_policy" },
-            "priority_level": { "$ref": "#/$defs/priority" }
+            "max_concurrent_tasks": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "timeout_ms": {
+              "type": "integer",
+              "minimum": 1000
+            },
+            "retry_policy": {
+              "$ref": "#/$defs/retry_policy"
+            },
+            "priority_level": {
+              "$ref": "#/$defs/priority"
+            }
           },
-          "required": ["max_concurrent_tasks", "timeout_ms"]
+          "required": [
+            "max_concurrent_tasks",
+            "timeout_ms"
+          ]
         },
         "communication": {
           "type": "object",
           "properties": {
-            "protocols": { "type": "array", "items": { "type": "string" } },
-            "message_format": { "type": "string" },
-            "encryption_enabled": { "type": "boolean" },
-            "compression_enabled": { "type": "boolean" }
+            "protocols": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "message_format": {
+              "type": "string"
+            },
+            "encryption_enabled": {
+              "type": "boolean"
+            },
+            "compression_enabled": {
+              "type": "boolean"
+            }
           },
-          "required": ["protocols", "message_format"]
+          "required": [
+            "protocols",
+            "message_format"
+          ]
         },
         "security": {
           "type": "object",
           "properties": {
-            "authentication_required": { "type": "boolean" },
-            "authorization_level": { "type": "string" },
-            "audit_logging": { "type": "boolean" },
-            "data_encryption": { "type": "boolean" }
+            "authentication_required": {
+              "type": "boolean"
+            },
+            "authorization_level": {
+              "type": "string"
+            },
+            "audit_logging": {
+              "type": "boolean"
+            },
+            "data_encryption": {
+              "type": "boolean"
+            }
           },
-          "required": ["authentication_required", "audit_logging"]
+          "required": [
+            "authentication_required",
+            "audit_logging"
+          ]
         }
       },
-      "required": ["basic", "communication", "security"],
+      "required": [
+        "basic",
+        "communication",
+        "security"
+      ],
       "additionalProperties": false
     },
     "performance_metrics": {
       "type": "object",
       "description": "性能指标",
       "properties": {
-        "response_time_ms": { "type": "number", "minimum": 0 },
-        "throughput_ops_per_sec": { "type": "number", "minimum": 0 },
-        "success_rate": { "type": "number", "minimum": 0, "maximum": 1 },
-        "error_rate": { "type": "number", "minimum": 0, "maximum": 1 },
-        "last_updated": { "$ref": "#/$defs/timestamp" }
+        "response_time_ms": {
+          "type": "number",
+          "minimum": 0
+        },
+        "throughput_ops_per_sec": {
+          "type": "number",
+          "minimum": 0
+        },
+        "success_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "error_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "last_updated": {
+          "$ref": "#/$defs/timestamp"
+        }
       },
       "additionalProperties": false
     },
@@ -173,12 +367,27 @@
       "type": "object",
       "description": "重试策略",
       "properties": {
-        "max_retries": { "type": "integer", "minimum": 0 },
-        "backoff_ms": { "type": "integer", "minimum": 100 },
-        "backoff_multiplier": { "type": "number", "minimum": 1 },
-        "max_backoff_ms": { "type": "integer", "minimum": 1000 }
+        "max_retries": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "backoff_ms": {
+          "type": "integer",
+          "minimum": 100
+        },
+        "backoff_multiplier": {
+          "type": "number",
+          "minimum": 1
+        },
+        "max_backoff_ms": {
+          "type": "integer",
+          "minimum": 1000
+        }
       },
-      "required": ["max_retries", "backoff_ms"],
+      "required": [
+        "max_retries",
+        "backoff_ms"
+      ],
       "additionalProperties": false
     }
   },
@@ -231,7 +440,12 @@
     },
     "status": {
       "type": "string",
-      "enum": ["active", "inactive", "deprecated", "suspended"],
+      "enum": [
+        "active",
+        "inactive",
+        "deprecated",
+        "suspended"
+      ],
       "description": "角色状态"
     },
     "scope": {
@@ -239,32 +453,52 @@
       "properties": {
         "level": {
           "type": "string",
-          "enum": ["global", "organization", "project", "team", "individual"],
+          "enum": [
+            "global",
+            "organization",
+            "project",
+            "team",
+            "individual"
+          ],
           "description": "范围级别"
         },
         "context_ids": {
           "type": "array",
-          "items": { "$ref": "#/$defs/uuid" },
+          "items": {
+            "$ref": "#/$defs/uuid"
+          },
           "description": "适用的上下文ID列表"
         },
         "plan_ids": {
           "type": "array",
-          "items": { "$ref": "#/$defs/uuid" },
+          "items": {
+            "$ref": "#/$defs/uuid"
+          },
           "description": "适用的计划ID列表"
         },
         "resource_constraints": {
           "type": "object",
           "properties": {
-            "max_contexts": { "type": "integer", "minimum": 0 },
-            "max_plans": { "type": "integer", "minimum": 0 },
+            "max_contexts": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "max_plans": {
+              "type": "integer",
+              "minimum": 0
+            },
             "allowed_resource_types": {
               "type": "array",
-              "items": { "type": "string" }
+              "items": {
+                "type": "string"
+              }
             }
           }
         }
       },
-      "required": ["level"],
+      "required": [
+        "level"
+      ],
       "description": "角色适用范围"
     },
     "permissions": {
@@ -272,7 +506,9 @@
       "items": {
         "type": "object",
         "properties": {
-          "permission_id": { "$ref": "#/$defs/uuid" },
+          "permission_id": {
+            "$ref": "#/$defs/uuid"
+          },
           "resource_type": {
             "type": "string",
             "enum": [
@@ -288,8 +524,13 @@
           },
           "resource_id": {
             "oneOf": [
-              { "$ref": "#/$defs/uuid" },
-              { "type": "string", "const": "*" }
+              {
+                "$ref": "#/$defs/uuid"
+              },
+              {
+                "type": "string",
+                "const": "*"
+              }
             ],
             "description": "资源ID或通配符 *"
           },
@@ -316,12 +557,24 @@
               "time_based": {
                 "type": "object",
                 "properties": {
-                  "start_time": { "type": "string", "format": "date-time" },
-                  "end_time": { "type": "string", "format": "date-time" },
-                  "timezone": { "type": "string" },
+                  "start_time": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "end_time": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "timezone": {
+                    "type": "string"
+                  },
                   "days_of_week": {
                     "type": "array",
-                    "items": { "type": "integer", "minimum": 0, "maximum": 6 }
+                    "items": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 6
+                    }
                   }
                 }
               },
@@ -330,19 +583,27 @@
                 "properties": {
                   "allowed_ip_ranges": {
                     "type": "array",
-                    "items": { "type": "string" }
+                    "items": {
+                      "type": "string"
+                    }
                   },
                   "geo_restrictions": {
                     "type": "array",
-                    "items": { "type": "string" }
+                    "items": {
+                      "type": "string"
+                    }
                   }
                 }
               },
               "context_based": {
                 "type": "object",
                 "properties": {
-                  "required_attributes": { "type": "object" },
-                  "forbidden_attributes": { "type": "object" }
+                  "required_attributes": {
+                    "type": "object"
+                  },
+                  "forbidden_attributes": {
+                    "type": "object"
+                  }
                 }
               },
               "approval_required": {
@@ -350,12 +611,19 @@
                 "properties": {
                   "for_actions": {
                     "type": "array",
-                    "items": { "type": "string" }
+                    "items": {
+                      "type": "string"
+                    }
                   },
-                  "approval_threshold": { "type": "integer", "minimum": 1 },
+                  "approval_threshold": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
                   "approver_roles": {
                     "type": "array",
-                    "items": { "type": "string" }
+                    "items": {
+                      "type": "string"
+                    }
                   }
                 }
               }
@@ -363,7 +631,12 @@
           },
           "grant_type": {
             "type": "string",
-            "enum": ["direct", "inherited", "delegated", "temporary"],
+            "enum": [
+              "direct",
+              "inherited",
+              "delegated",
+              "temporary"
+            ],
             "description": "权限授予类型"
           },
           "expiry": {
@@ -388,18 +661,32 @@
           "items": {
             "type": "object",
             "properties": {
-              "role_id": { "$ref": "#/$defs/uuid" },
+              "role_id": {
+                "$ref": "#/$defs/uuid"
+              },
               "inheritance_type": {
                 "type": "string",
-                "enum": ["full", "partial", "conditional"]
+                "enum": [
+                  "full",
+                  "partial",
+                  "conditional"
+                ]
               },
               "excluded_permissions": {
                 "type": "array",
-                "items": { "$ref": "#/$defs/uuid" }
+                "items": {
+                  "$ref": "#/$defs/uuid"
+                }
               },
-              "conditions": { "type": "object", "additionalProperties": true }
+              "conditions": {
+                "type": "object",
+                "additionalProperties": true
+              }
             },
-            "required": ["role_id", "inheritance_type"]
+            "required": [
+              "role_id",
+              "inheritance_type"
+            ]
           }
         },
         "child_roles": {
@@ -407,15 +694,22 @@
           "items": {
             "type": "object",
             "properties": {
-              "role_id": { "$ref": "#/$defs/uuid" },
+              "role_id": {
+                "$ref": "#/$defs/uuid"
+              },
               "delegation_level": {
                 "type": "integer",
                 "minimum": 1,
                 "maximum": 5
               },
-              "can_further_delegate": { "type": "boolean" }
+              "can_further_delegate": {
+                "type": "boolean"
+              }
             },
-            "required": ["role_id", "delegation_level"]
+            "required": [
+              "role_id",
+              "delegation_level"
+            ]
           }
         },
         "inheritance_rules": {
@@ -423,7 +717,12 @@
           "properties": {
             "merge_strategy": {
               "type": "string",
-              "enum": ["union", "intersection", "priority", "custom"]
+              "enum": [
+                "union",
+                "intersection",
+                "priority",
+                "custom"
+              ]
             },
             "conflict_resolution": {
               "type": "string",
@@ -441,25 +740,42 @@
               "maximum": 10
             }
           },
-          "required": ["merge_strategy", "conflict_resolution"]
+          "required": [
+            "merge_strategy",
+            "conflict_resolution"
+          ]
         }
       }
     },
     "delegation": {
       "type": "object",
       "properties": {
-        "can_delegate": { "type": "boolean" },
+        "can_delegate": {
+          "type": "boolean"
+        },
         "delegatable_permissions": {
           "type": "array",
-          "items": { "$ref": "#/$defs/uuid" }
+          "items": {
+            "$ref": "#/$defs/uuid"
+          }
         },
         "delegation_constraints": {
           "type": "object",
           "properties": {
-            "max_delegation_depth": { "type": "integer", "minimum": 1 },
-            "time_limit": { "type": "integer", "minimum": 1 },
-            "require_approval": { "type": "boolean" },
-            "revocable": { "type": "boolean" }
+            "max_delegation_depth": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "time_limit": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "require_approval": {
+              "type": "boolean"
+            },
+            "revocable": {
+              "type": "boolean"
+            }
           }
         },
         "active_delegations": {
@@ -467,17 +783,32 @@
           "items": {
             "type": "object",
             "properties": {
-              "delegation_id": { "$ref": "#/$defs/uuid" },
-              "delegated_to": { "type": "string" },
+              "delegation_id": {
+                "$ref": "#/$defs/uuid"
+              },
+              "delegated_to": {
+                "type": "string"
+              },
               "permissions": {
                 "type": "array",
-                "items": { "$ref": "#/$defs/uuid" }
+                "items": {
+                  "$ref": "#/$defs/uuid"
+                }
               },
-              "start_time": { "$ref": "#/$defs/timestamp" },
-              "end_time": { "$ref": "#/$defs/timestamp" },
+              "start_time": {
+                "$ref": "#/$defs/timestamp"
+              },
+              "end_time": {
+                "$ref": "#/$defs/timestamp"
+              },
               "status": {
                 "type": "string",
-                "enum": ["active", "suspended", "revoked", "expired"]
+                "enum": [
+                  "active",
+                  "suspended",
+                  "revoked",
+                  "expired"
+                ]
               }
             },
             "required": [
@@ -490,40 +821,73 @@
           }
         }
       },
-      "required": ["can_delegate"]
+      "required": [
+        "can_delegate"
+      ]
     },
     "attributes": {
       "type": "object",
       "properties": {
         "security_clearance": {
           "type": "string",
-          "enum": ["public", "internal", "confidential", "secret", "top_secret"]
+          "enum": [
+            "public",
+            "internal",
+            "confidential",
+            "secret",
+            "top_secret"
+          ]
         },
-        "department": { "type": "string" },
+        "department": {
+          "type": "string"
+        },
         "seniority_level": {
           "type": "string",
-          "enum": ["junior", "mid", "senior", "lead", "executive"]
+          "enum": [
+            "junior",
+            "mid",
+            "senior",
+            "lead",
+            "executive"
+          ]
         },
         "certification_requirements": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-              "certification": { "type": "string" },
-              "level": { "type": "string" },
-              "expiry": { "$ref": "#/$defs/timestamp" },
-              "issuer": { "type": "string" }
+              "certification": {
+                "type": "string"
+              },
+              "level": {
+                "type": "string"
+              },
+              "expiry": {
+                "$ref": "#/$defs/timestamp"
+              },
+              "issuer": {
+                "type": "string"
+              }
             },
-            "required": ["certification", "level"]
+            "required": [
+              "certification",
+              "level"
+            ]
           }
         },
         "custom_attributes": {
           "type": "object",
           "additionalProperties": {
             "oneOf": [
-              { "type": "string" },
-              { "type": "number" },
-              { "type": "boolean" }
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              }
             ]
           }
         }
@@ -537,15 +901,29 @@
           "items": {
             "type": "object",
             "properties": {
-              "rule_id": { "$ref": "#/$defs/uuid" },
-              "condition": { "type": "string" },
+              "rule_id": {
+                "$ref": "#/$defs/uuid"
+              },
+              "condition": {
+                "type": "string"
+              },
               "action": {
                 "type": "string",
-                "enum": ["allow", "deny", "require_approval"]
+                "enum": [
+                  "allow",
+                  "deny",
+                  "require_approval"
+                ]
               },
-              "message": { "type": "string" }
+              "message": {
+                "type": "string"
+              }
             },
-            "required": ["rule_id", "condition", "action"]
+            "required": [
+              "rule_id",
+              "condition",
+              "action"
+            ]
           }
         },
         "separation_of_duties": {
@@ -555,15 +933,26 @@
             "properties": {
               "conflicting_roles": {
                 "type": "array",
-                "items": { "$ref": "#/$defs/uuid" }
+                "items": {
+                  "$ref": "#/$defs/uuid"
+                }
               },
               "severity": {
                 "type": "string",
-                "enum": ["warning", "error", "critical"]
+                "enum": [
+                  "warning",
+                  "error",
+                  "critical"
+                ]
               },
-              "exception_approval_required": { "type": "boolean" }
+              "exception_approval_required": {
+                "type": "boolean"
+              }
             },
-            "required": ["conflicting_roles", "severity"]
+            "required": [
+              "conflicting_roles",
+              "severity"
+            ]
           }
         }
       }
@@ -571,7 +960,9 @@
     "audit_settings": {
       "type": "object",
       "properties": {
-        "audit_enabled": { "type": "boolean" },
+        "audit_enabled": {
+          "type": "boolean"
+        },
         "audit_events": {
           "type": "array",
           "items": {
@@ -586,55 +977,110 @@
             ]
           }
         },
-        "retention_period": { "type": "string" },
+        "retention_period": {
+          "type": "string"
+        },
         "compliance_frameworks": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         }
       },
-      "required": ["audit_enabled"]
+      "required": [
+        "audit_enabled"
+      ]
     },
     "agents": {
       "type": "array",
       "description": "管理的Agent列表",
-      "items": { "$ref": "#/$defs/agent" }
+      "items": {
+        "$ref": "#/$defs/agent"
+      }
     },
     "agent_management": {
       "type": "object",
       "description": "Agent管理配置",
       "properties": {
-        "max_agents": { "type": "integer", "minimum": 1 },
-        "auto_scaling": { "type": "boolean" },
-        "load_balancing": { "type": "boolean" },
-        "health_check_interval_ms": { "type": "integer", "minimum": 1000 },
-        "default_agent_config": { "$ref": "#/$defs/agent_configuration" }
+        "max_agents": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "auto_scaling": {
+          "type": "boolean"
+        },
+        "load_balancing": {
+          "type": "boolean"
+        },
+        "health_check_interval_ms": {
+          "type": "integer",
+          "minimum": 1000
+        },
+        "default_agent_config": {
+          "$ref": "#/$defs/agent_configuration"
+        }
       }
     },
     "team_configuration": {
       "type": "object",
       "description": "团队配置",
       "properties": {
-        "max_team_size": { "type": "integer", "minimum": 1 },
+        "max_team_size": {
+          "type": "integer",
+          "minimum": 1
+        },
         "collaboration_rules": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-              "rule_name": { "type": "string" },
-              "rule_type": { "type": "string", "enum": ["communication", "decision", "conflict_resolution", "resource_sharing"] },
-              "rule_config": { "type": "object" }
+              "rule_name": {
+                "type": "string"
+              },
+              "rule_type": {
+                "type": "string",
+                "enum": [
+                  "communication",
+                  "decision",
+                  "conflict_resolution",
+                  "resource_sharing"
+                ]
+              },
+              "rule_config": {
+                "type": "object"
+              }
             },
-            "required": ["rule_name", "rule_type"]
+            "required": [
+              "rule_name",
+              "rule_type"
+            ]
           }
         },
         "decision_mechanism": {
           "type": "object",
           "properties": {
-            "type": { "type": "string", "enum": ["consensus", "majority", "weighted", "authority"] },
-            "threshold": { "type": "number", "minimum": 0, "maximum": 1 },
-            "timeout_ms": { "type": "integer", "minimum": 1000 }
+            "type": {
+              "type": "string",
+              "enum": [
+                "consensus",
+                "majority",
+                "weighted",
+                "authority"
+              ]
+            },
+            "threshold": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "timeout_ms": {
+              "type": "integer",
+              "minimum": 1000
+            }
           },
-          "required": ["type"]
+          "required": [
+            "type"
+          ]
         }
       }
     }

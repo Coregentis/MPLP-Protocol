@@ -311,7 +311,7 @@ export class TypeSchemaValidator {
       let totalMismatches = 0;
       let validModules = 0;
       
-      for (const [module, result] of Object.entries(results)) {
+      for (const [_module, result] of Object.entries(results)) {
         if (result.mismatches) {
           totalMismatches += result.mismatches.length;
         }
@@ -379,7 +379,7 @@ export class TypeSchemaValidator {
    */
   private validateInterface(
     interfaceDecl: ts.InterfaceDeclaration,
-    schemaProps: any,
+    schemaProps: unknown,
     mismatches: TypeSchemaMismatch[],
     stats: TypeValidationStats
   ): void {
@@ -466,7 +466,7 @@ export class TypeSchemaValidator {
    */
   private validateEnums(
     sourceFile: ts.SourceFile,
-    schema: any,
+    schema: unknown,
     mismatches: TypeSchemaMismatch[],
     stats: TypeValidationStats
   ): void {
@@ -497,7 +497,7 @@ export class TypeSchemaValidator {
     // 查找Schema中的所有枚举定义
     const schemaEnums = new Map<string, { path: string; values: string[] }>();
     
-    const findSchemaEnums = (obj: any, path: string) => {
+    const findSchemaEnums = (obj: unknown, path: string) => {
       if (!obj || typeof obj !== 'object') return;
       
       if (obj.enum && Array.isArray(obj.enum)) {
