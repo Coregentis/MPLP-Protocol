@@ -1,19 +1,41 @@
 /**
  * Confirm模块适配器
- * 
+ *
  * 实现Core模块的ModuleInterface接口，提供确认和审批流程功能
- * 
+ *
  * @version 2.0.0
  * @created 2025-08-04
  * @updated 2025-08-04 23:32
  */
 
+/**
+ * 业务数据载荷接口
+ */
+interface BusinessPayload {
+  confirmation_strategy?: 'manual' | 'automatic' | 'conditional' | 'multi_stage';
+  approval_type?: string;
+  approvers?: string[];
+  approvalCriteria?: Record<string, unknown>;
+  contextId?: UUID;
+  [key: string]: unknown;
+}
+
+
+
 import { v4 as uuidv4 } from 'uuid';
-import { 
-  ModuleInterface, 
-  ModuleStatus, 
+import {
+  ModuleInterface,
+  ModuleStatus,
   ConfirmationCoordinationRequest,
-  ConfirmationResult
+  ConfirmationResult,
+  ValidationResult,
+  WorkflowExecutionContext,
+  StageExecutionResult,
+  BusinessCoordinationRequest,
+  BusinessCoordinationResult,
+  BusinessError,
+  BusinessContext,
+  ErrorHandlingResult
 } from '../../../../public/modules/core/types/core.types';
 import { ConfirmManagementService } from '../../application/services/confirm-management.service';
 import { ConfirmFactory, CreateConfirmRequest } from '../../domain/factories/confirm.factory';
@@ -21,16 +43,13 @@ import { ConfirmValidationService } from '../../domain/services/confirm-validati
 import { Logger } from '../../../../public/utils/logger';
 import {
   ConfirmationType,
-  ConfirmStatus,
   Priority,
-  ConfirmDecision,
-  ConfirmSubject,
-  Requester,
-  ApprovalWorkflow,
-  ConfirmMetadata,
   UUID,
-  Timestamp
-} from '../../../confirm/types';
+  Timestamp,
+  RiskLevel,
+  ApprovalStep,
+  StepStatus
+} from '../../types';
 
 /**
  * Confirm模块适配器类
@@ -148,7 +167,7 @@ export class ConfirmModuleAdapter implements ModuleInterface {
     }
 
     // 验证超时设置
-    if (request.parameters.timeoutMs && request.parameters.timeoutMs <= 0) {
+    if (request.parameters.timeoutMs && (request.parameters.timeoutMs as number) <= 0) {
       throw new Error('Timeout must be positive');
     }
 
@@ -187,7 +206,7 @@ export class ConfirmModuleAdapter implements ModuleInterface {
     const timestamp = new Date().toISOString();
 
     // 根据策略生成确认数据
-    const confirmData = await this.generateConfirmData(request, confirmation_id);
+    const confirmData = await this.generateConfirmData(request);
 
     // 创建确认
     const createResult = await this.confirmManagementService.createConfirm(confirmData);
@@ -195,10 +214,8 @@ export class ConfirmModuleAdapter implements ModuleInterface {
       throw new Error(`Failed to create confirmation: ${createResult.error}`);
     }
 
-    const confirm = createResult.data;
-
     // 执行确认流程
-    const approverResponses = await this.executeApprovalWorkflow(request, confirm);
+    const approverResponses = await this.executeApprovalWorkflow(request);
 
     // 确定最终决策
     const finalDecision = this.determineFinalDecision(request, approverResponses);
@@ -215,54 +232,47 @@ export class ConfirmModuleAdapter implements ModuleInterface {
   /**
    * 生成确认数据
    */
-  private async generateConfirmData(request: ConfirmationCoordinationRequest, confirmation_id: string): Promise<CreateConfirmRequest> {
+  private async generateConfirmData(request: ConfirmationCoordinationRequest): Promise<CreateConfirmRequest> {
     const confirmationType = this.mapStrategyToConfirmationType(request.confirmation_strategy);
     const priority = this.determinePriority(request);
 
     return {
-      context_id: request.contextId,
-      confirmation_type: confirmationType,
+      contextId: request.contextId,
+      confirmationType: confirmationType,
       priority: priority,
       subject: {
         title: `Confirmation for ${request.confirmation_strategy} strategy`,
         description: `Confirmation request created using ${request.confirmation_strategy} strategy`,
-        impact_assessment: {
-          scope: 'project',
-          business_impact: 'medium',
-          technical_impact: 'low',
-          affected_systems: ['core-orchestrator'],
-          affected_users: ['system']
+        impactAssessment: {
+          businessImpact: 'medium',
+          technicalImpact: 'low',
+          riskLevel: RiskLevel.MEDIUM,
+          impactScope: ['core-orchestrator', 'system']
         }
       },
       requester: {
-        user_id: 'core-orchestrator',
+        userId: 'core-orchestrator',
+        name: 'Core Orchestrator',
         role: 'system',
+        email: 'core@system.com',
         department: 'core',
-        request_reason: `Coordination request using ${request.confirmation_strategy} strategy`
+        requestReason: `Coordination request using ${request.confirmation_strategy} strategy`
       },
-      approval_workflow: {
-        workflow_type: request.confirmation_strategy === 'multi_stage' ? 'sequential' :
-                      request.approvalWorkflow?.parallel_approval ? 'parallel' : 'single_approver',
+      approvalWorkflow: {
+        workflowType: request.confirmation_strategy === 'multi_stage' ? 'sequential' :
+                      request.approvalWorkflow?.parallel_approval ? 'parallel' : 'consensus',
         steps: this.generateApprovalSteps(request),
-        escalation_rules: request.parameters.escalation_policy ? [{
-          trigger: 'timeout',
-          escalate_to: {
-            user_id: request.parameters.escalation_policy.levels[0] || 'admin',
-            role: 'administrator'
-          },
-          notification_delay: Math.floor((request.parameters.escalation_policy.timeout_per_level || 3600000) / 60000) // 转换为分钟
-        }] : undefined,
-        auto_approval_rules: request.confirmation_strategy === 'automatic' ? {
+        autoApprovalRules: request.confirmation_strategy === 'automatic' ? {
           enabled: true,
           conditions: ['system_request']
         } : undefined
       },
-      expires_at: request.parameters.timeoutMs ? 
-        new Date(Date.now() + request.parameters.timeoutMs).toISOString() : undefined,
+      expiresAt: request.parameters.timeoutMs ?
+        new Date(Date.now() + (request.parameters.timeoutMs as number)).toISOString() : undefined,
       metadata: {
         source: 'core-orchestrator',
         tags: [request.confirmation_strategy, 'coordination'],
-        custom_fields: {
+        customFields: {
           strategy: request.confirmation_strategy,
           auto_approval: request.confirmation_strategy === 'automatic',
           conditional_rules: request.parameters.approval_rules || []
@@ -275,14 +285,17 @@ export class ConfirmModuleAdapter implements ModuleInterface {
    * 执行审批工作流
    */
   private async executeApprovalWorkflow(
-    request: ConfirmationCoordinationRequest, 
-    confirm: any
+    request: ConfirmationCoordinationRequest
   ): Promise<Record<string, {
     decision: 'approve' | 'reject' | 'abstain';
     timestamp: Timestamp;
     comments?: string;
   }>> {
-    const responses: Record<string, any> = {};
+    const responses: Record<string, {
+      decision: 'approve' | 'reject' | 'abstain';
+      timestamp: Timestamp;
+      comments?: string;
+    }> = {};
     const approvers = request.approvalWorkflow?.required_approvers || ['system'];
 
     // 根据策略执行不同的审批流程
@@ -307,7 +320,7 @@ export class ConfirmModuleAdapter implements ModuleInterface {
         }
         break;
 
-      case 'conditional':
+      case 'conditional': {
         // 条件审批
         const shouldApprove = this.evaluateApprovalConditions(request);
         responses['system'] = {
@@ -316,6 +329,7 @@ export class ConfirmModuleAdapter implements ModuleInterface {
           comments: `Conditional approval: ${shouldApprove ? 'conditions met' : 'conditions not met'}`
         };
         break;
+      }
 
       case 'multi_stage':
         // 多阶段审批
@@ -338,7 +352,11 @@ export class ConfirmModuleAdapter implements ModuleInterface {
    */
   private determineFinalDecision(
     request: ConfirmationCoordinationRequest,
-    approverResponses: Record<string, any>
+    approverResponses: Record<string, {
+      decision: 'approve' | 'reject' | 'abstain';
+      timestamp: Timestamp;
+      comments?: string;
+    }>
   ): boolean {
     const responses = Object.values(approverResponses);
     const approvals = responses.filter(r => r.decision === 'approve').length;
@@ -359,7 +377,11 @@ export class ConfirmModuleAdapter implements ModuleInterface {
    */
   private mapDecisionToStatus(
     finalDecision: boolean,
-    approverResponses: Record<string, any>
+    approverResponses: Record<string, {
+      decision: 'approve' | 'reject' | 'abstain';
+      timestamp: Timestamp;
+      comments?: string;
+    }>
   ): 'approved' | 'rejected' | 'pending' | 'escalated' {
     if (finalDecision) {
       return 'approved';
@@ -387,15 +409,15 @@ export class ConfirmModuleAdapter implements ModuleInterface {
   private mapStrategyToConfirmationType(strategy: string): ConfirmationType {
     switch (strategy) {
       case 'manual':
-        return 'task_approval';
+        return ConfirmationType.TASK_APPROVAL;
       case 'automatic':
-        return 'resource_allocation';
+        return ConfirmationType.RESOURCE_ALLOCATION;
       case 'conditional':
-        return 'risk_acceptance';
+        return ConfirmationType.RISK_ACCEPTANCE;
       case 'multi_stage':
-        return 'plan_approval';
+        return ConfirmationType.PLAN_APPROVAL;
       default:
-        return 'task_approval';
+        return ConfirmationType.TASK_APPROVAL;
     }
   }
 
@@ -405,12 +427,12 @@ export class ConfirmModuleAdapter implements ModuleInterface {
   private determinePriority(request: ConfirmationCoordinationRequest): Priority {
     const timeout = request.parameters.timeoutMs;
     
-    if (timeout && timeout < 300000) { // < 5 minutes
-      return 'critical';
-    } else if (timeout && timeout < 3600000) { // < 1 hour
-      return 'high';
+    if (timeout && (timeout as number) < 300000) { // < 5 minutes
+      return Priority.URGENT;
+    } else if (timeout && (timeout as number) < 3600000) { // < 1 hour
+      return Priority.HIGH;
     } else {
-      return 'medium';
+      return Priority.MEDIUM;
     }
   }
 
@@ -438,33 +460,31 @@ export class ConfirmModuleAdapter implements ModuleInterface {
   /**
    * 生成审批步骤
    */
-  private generateApprovalSteps(request: ConfirmationCoordinationRequest): any[] {
+  private generateApprovalSteps(request: ConfirmationCoordinationRequest): ApprovalStep[] {
     const approvers = request.approvalWorkflow?.required_approvers || ['system'];
-    const steps = [];
+    const steps: ApprovalStep[] = [];
 
     if (request.confirmation_strategy === 'multi_stage') {
       // 多阶段：每个审批者一个步骤
       approvers.forEach((approver, index) => {
         steps.push({
-          step_id: `step_${index + 1}`,
-          step_name: `Stage ${index + 1} Approval`,
-          step_type: 'approval',
-          required_approvers: [approver],
-          approval_threshold: 1,
-          parallel_execution: false,
-          timeout_duration: 3600000 // 1 hour
+          stepId: `step_${index + 1}`,
+          name: `Stage ${index + 1} Approval`,
+          stepOrder: index + 1,
+          approverRole: approver,
+          timeoutHours: 1,
+          status: StepStatus.PENDING
         });
       });
     } else {
       // 单阶段：所有审批者在一个步骤中
       steps.push({
-        step_id: 'step_1',
-        step_name: 'Single Stage Approval',
-        step_type: 'approval',
-        required_approvers: approvers,
-        approval_threshold: request.approvalWorkflow?.approval_threshold || 1,
-        parallel_execution: request.approvalWorkflow?.parallel_approval || false,
-        timeout_duration: request.parameters.timeoutMs || 3600000
+        stepId: 'step_1',
+        name: 'Single Stage Approval',
+        stepOrder: 1,
+        approverRole: approvers[0] || 'system',
+        timeoutHours: Math.ceil((typeof request.parameters.timeoutMs === 'number' ? request.parameters.timeoutMs : 3600000) / (1000 * 60 * 60)),
+        status: StepStatus.PENDING
       });
     }
 
@@ -474,17 +494,17 @@ export class ConfirmModuleAdapter implements ModuleInterface {
   /**
    * P0修复：执行工作流阶段
    */
-  async executeStage(context: any): Promise<any> {
+  async executeStage(context: WorkflowExecutionContext): Promise<StageExecutionResult> {
     // 简化实现：直接调用executeBusinessCoordination
-    const businessRequest = {
-      coordination_id: 'stage-' + Date.now(),
-      context_id: context.contextId,
+    const businessRequest: BusinessCoordinationRequest = {
+      coordination_id: ('stage-' + Date.now()) as UUID,
+      contextId: context.contextId,
       module: 'confirm',
       coordination_type: 'confirmation_coordination',
       input_data: {
         data_type: 'confirmation_data',
         data_version: '1.0.0',
-        payload: { context_id: context.contextId },
+        payload: { contextId: context.contextId },
         metadata: {
           source_module: 'confirm',
           target_modules: ['confirm'],
@@ -492,14 +512,14 @@ export class ConfirmModuleAdapter implements ModuleInterface {
           validation_status: 'valid',
           security_level: 'internal'
         },
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
       },
       previous_stage_results: [],
       configuration: {
         timeout_ms: 30000,
-        retry_policy: { max_attempts: 3, delay_ms: 1000 },
-        validation_rules: [],
+        retryPolicy: { max_attempts: 3, delay_ms: 1000 },
+        validationRules: [],
         output_format: 'confirmation_data'
       }
     };
@@ -510,26 +530,27 @@ export class ConfirmModuleAdapter implements ModuleInterface {
       status: 'completed',
       result: result.output_data,
       duration_ms: 100,
-      started_at: new Date().toISOString(),
-      completed_at: new Date().toISOString()
+      startedAt: new Date().toISOString(),
+      completedAt: new Date().toISOString()
     };
   }
 
   /**
    * P0修复：执行业务协调
    */
-  async executeBusinessCoordination(request: any): Promise<any> {
+  async executeBusinessCoordination(request: BusinessCoordinationRequest): Promise<BusinessCoordinationResult> {
     const startTime = Date.now();
 
     try {
       // 转换为原有的确认请求格式
-      const confirmRequest = {
+      const payload = request.input_data.payload as BusinessPayload;
+      const confirmRequest: ConfirmationCoordinationRequest = {
         contextId: request.contextId,
-        confirmation_strategy: request.input_data.payload.confirmation_strategy || 'manual',
+        confirmation_strategy: payload?.confirmation_strategy || 'manual',
         parameters: {
-          approval_type: request.input_data.payload.approval_type || 'manual',
-          approvers: request.input_data.payload.approvers || ['default-approver'],
-          approval_criteria: request.input_data.payload.approvalCriteria || {},
+          approval_type: payload?.approval_type || 'manual',
+          approvers: payload?.approvers || ['default-approver'],
+          approval_criteria: payload?.approvalCriteria || {},
           timeout_ms: 30000
         }
       };
@@ -545,7 +566,7 @@ export class ConfirmModuleAdapter implements ModuleInterface {
         output_data: {
           data_type: 'confirmation_data',
           data_version: '1.0.0',
-          payload: result,
+          payload: result as unknown as Record<string, unknown>,
           metadata: {
             source_module: 'confirm',
             target_modules: ['trace'],
@@ -553,8 +574,8 @@ export class ConfirmModuleAdapter implements ModuleInterface {
             validation_status: 'valid',
             security_level: 'internal'
           },
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
         },
         execution_metrics: {
           start_time: new Date(startTime).toISOString(),
@@ -599,27 +620,71 @@ export class ConfirmModuleAdapter implements ModuleInterface {
   /**
    * P0修复：验证输入数据
    */
-  async validateInput(input: any): Promise<any> {
-    return {
-      is_valid: true,
-      errors: [],
-      warnings: []
-    };
+  async validateInput(input: unknown): Promise<ValidationResult> {
+    try {
+      // 基本验证：检查输入是否为对象
+      if (!input || typeof input !== 'object') {
+        return {
+          is_valid: false,
+          errors: [{
+            field_path: 'input',
+            error_code: 'INVALID_TYPE',
+            error_message: 'Input must be a valid object'
+          }],
+          warnings: []
+        };
+      }
+
+      // 验证通过
+      return {
+        is_valid: true,
+        errors: [],
+        warnings: []
+      };
+    } catch (error) {
+      return {
+        is_valid: false,
+        errors: [{
+          field_path: 'input',
+          error_code: 'VALIDATION_ERROR',
+          error_message: error instanceof Error ? error.message : 'Unknown validation error'
+        }],
+        warnings: []
+      };
+    }
   }
 
   /**
    * P0修复：处理错误
    */
-  async handleError(error: any, context: any): Promise<any> {
+  async handleError(error: BusinessError, context: BusinessContext): Promise<ErrorHandlingResult> {
     this.logger.error('Handling Confirm module error', {
       errorId: error.error_id,
       errorType: error.error_type,
       contextId: context.contextId
     });
 
+    // 根据错误类型决定恢复策略
+    let recoveryAction: 'retry' | 'skip' | 'rollback' | 'escalate' = 'escalate';
+
+    switch (error.error_type) {
+      case 'validation_error':
+        recoveryAction = 'retry';
+        break;
+      case 'timeout_error':
+        recoveryAction = 'retry';
+        break;
+      case 'dependency_error':
+        recoveryAction = 'retry';
+        break;
+      default:
+        recoveryAction = 'escalate';
+        break;
+    }
+
     return {
       handled: true,
-      recovery_action: 'retry'
+      recovery_action: recoveryAction
     };
   }
 }

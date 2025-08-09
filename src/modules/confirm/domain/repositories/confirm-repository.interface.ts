@@ -13,18 +13,19 @@ import { ConfirmStatus, ConfirmationType, Priority } from '../../types';
 
 /**
  * 确认查询过滤器
+ * Application层使用camelCase
  */
 export interface ConfirmFilter {
-  context_id?: UUID;
-  plan_id?: UUID;
-  confirmation_type?: ConfirmationType;
+  contextId?: UUID;
+  planId?: UUID;
+  confirmationType?: ConfirmationType;
   status?: ConfirmStatus;
   priority?: Priority;
-  requester_user_id?: string;
-  created_after?: string;
-  created_before?: string;
-  expires_after?: string;
-  expires_before?: string;
+  requesterId?: string;
+  createdAfter?: string;
+  createdBefore?: string;
+  expiresAfter?: string;
+  expiresBefore?: string;
 }
 
 /**

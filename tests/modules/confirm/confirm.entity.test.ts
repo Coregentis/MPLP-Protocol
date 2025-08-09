@@ -13,10 +13,12 @@ import {
   ConfirmationType,
   ConfirmStatus,
   Priority,
+  DecisionType,
   ConfirmDecision,
   ConfirmSubject,
   Requester,
   ApprovalWorkflow,
+  StepStatus,
   ConfirmMetadata,
   ImpactAssessment
 } from '../../../src/modules/confirm/types';
@@ -31,32 +33,46 @@ describe('Confirm Entity', () => {
   const createValidSubject = (title: string = 'Test Confirmation', description: string = 'Test'): ConfirmSubject => ({
     title,
     description,
-    impact_assessment: {
+    impactAssessment: {
       scope: 'project',
-      business_impact: 'medium',
-      technical_impact: 'low'
+      businessImpact: 'medium',
+      technicalImpact: 'low',
+      riskLevel: 'low',
+      impactScope: ['system1'],
+      estimatedCost: 1000
     } as ImpactAssessment
   });
 
   // 辅助函数：创建有效的Requester
   const createValidRequester = (userId: string = 'user-123'): Requester => ({
-    user_id: userId,
+    userId: userId,
+    name: '测试用户',
     role: 'manager',
-    request_reason: 'Testing purposes'
+    email: 'test@example.com',
+    requestReason: 'Testing purposes',
+    department: 'engineering'
   });
 
   // 辅助函数：创建有效的ApprovalWorkflow
   const createValidWorkflow = (): ApprovalWorkflow => ({
-    workflow_type: 'sequential',
+    workflowId: TestDataFactory.Base.generateUUID(),
+    name: 'Test Workflow',
     steps: [
       {
-        step_id: TestDataFactory.Base.generateUUID(),
-        step_name: 'Initial Review',
-        step_order: 1,
-        approver: { user_id: 'approver-1', role: 'supervisor', is_required: true },
-        status: 'pending'
+        stepId: TestDataFactory.Base.generateUUID(),
+        name: 'Initial Review',
+        stepOrder: 1,
+        approverRole: 'supervisor',
+        isRequired: true,
+        timeoutHours: 24,
+        status: StepStatus.PENDING
       }
-    ]
+    ],
+    parallelExecution: false,
+    autoApprovalRules: [{
+      enabled: false,
+      conditions: []
+    }]
   });
 
   afterEach(async () => {
@@ -66,66 +82,63 @@ describe('Confirm Entity', () => {
   describe('构造函数', () => {
     it('应该正确创建Confirm实例', async () => {
       // 基于实际Schema创建测试数据
-      const confirmParams = {
-        confirm_id: TestDataFactory.Base.generateUUID(),
-        context_id: TestDataFactory.Base.generateUUID(),
-        plan_id: TestDataFactory.Base.generateUUID(),
-        protocol_version: '1.0.0',
-        confirmation_type: 'plan_approval' as ConfirmationType,
-        status: 'pending' as ConfirmStatus,
-        priority: 'medium' as Priority,
-        subject: createValidSubject('Test Confirmation', 'Test confirmation description'),
-        requester: createValidRequester('user-123'),
-        approval_workflow: createValidWorkflow(),
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        decision: undefined,
-        expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-        metadata: {
-          source: 'test',
-          tags: ['test', 'unit'],
-          custom_fields: { test: true }
-        } as ConfirmMetadata
-      };
+      const confirmId = TestDataFactory.Base.generateUUID();
+      const contextId = TestDataFactory.Base.generateUUID();
+      const planId = TestDataFactory.Base.generateUUID();
+      const protocolVersion = '1.0.0';
+      const confirmationType = ConfirmationType.PLAN_APPROVAL;
+      const status = ConfirmStatus.PENDING;
+      const priority = Priority.MEDIUM;
+      const subject = createValidSubject('Test Confirmation', 'Test confirmation description');
+      const requester = createValidRequester('user-123');
+      const approvalWorkflow = createValidWorkflow();
+      const createdAt = new Date().toISOString();
+      const updatedAt = new Date().toISOString();
+      const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+      const metadata = {
+        source: 'test',
+        tags: ['test', 'unit'],
+        customFields: { test: true }
+      } as ConfirmMetadata;
 
       // 执行测试
       const confirm = await TestHelpers.Performance.expectExecutionTime(
         () => new Confirm(
-          confirmParams.confirm_id,
-          confirmParams.context_id,
-          confirmParams.protocol_version,
-          confirmParams.confirmation_type,
-          confirmParams.status,
-          confirmParams.priority,
-          confirmParams.subject,
-          confirmParams.requester,
-          confirmParams.approval_workflow,
-          confirmParams.created_at,
-          confirmParams.updated_at,
-          confirmParams.plan_id,
-          confirmParams.decision,
-          confirmParams.expires_at,
-          confirmParams.metadata
+          confirmId,
+          contextId,
+          protocolVersion,
+          confirmationType,
+          status,
+          priority,
+          subject,
+          requester,
+          approvalWorkflow,
+          createdAt,
+          updatedAt,
+          planId,
+          undefined, // decision
+          expiresAt,
+          metadata
         ),
         PERFORMANCE_THRESHOLDS.UNIT_TEST.ENTITY_VALIDATION
       );
 
       // 验证结果 - 基于实际getter方法
-      expect(confirm.confirm_id).toBe(confirmParams.confirm_id);
-      expect(confirm.context_id).toBe(confirmParams.context_id);
-      expect(confirm.plan_id).toBe(confirmParams.plan_id);
-      expect(confirm.protocol_version).toBe(confirmParams.protocol_version);
-      expect(confirm.confirmation_type).toBe(confirmParams.confirmation_type);
-      expect(confirm.status).toBe(confirmParams.status);
-      expect(confirm.priority).toBe(confirmParams.priority);
-      expect(confirm.subject).toEqual(confirmParams.subject);
-      expect(confirm.requester).toEqual(confirmParams.requester);
-      expect(confirm.approval_workflow).toEqual(confirmParams.approval_workflow);
-      expect(confirm.decision).toBe(confirmParams.decision);
-      expect(confirm.created_at).toBe(confirmParams.created_at);
-      expect(confirm.updated_at).toBe(confirmParams.updated_at);
-      expect(confirm.expires_at).toBe(confirmParams.expires_at);
-      expect(confirm.metadata).toEqual(confirmParams.metadata);
+      expect(confirm.confirmId).toBe(confirmId);
+      expect(confirm.contextId).toBe(contextId);
+      expect(confirm.planId).toBe(planId);
+      expect(confirm.protocolVersion).toBe(protocolVersion);
+      expect(confirm.confirmationType).toBe(confirmationType);
+      expect(confirm.status).toBe(status);
+      expect(confirm.priority).toBe(priority);
+      expect(confirm.subject).toEqual(subject);
+      expect(confirm.requester).toEqual(requester);
+      expect(confirm.approvalWorkflow).toEqual(approvalWorkflow);
+      expect(confirm.decision).toBe(undefined);
+      expect(confirm.createdAt).toBe(createdAt);
+      expect(confirm.updatedAt).toBe(updatedAt);
+      expect(confirm.expiresAt).toBe(expiresAt);
+      expect(confirm.metadata).toEqual(metadata);
     });
 
     it('应该测试边界条件', async () => {
@@ -168,9 +181,9 @@ describe('Confirm Entity', () => {
               TestDataFactory.Base.generateUUID(),
               TestDataFactory.Base.generateUUID(),
               '1.0.0',
-              'plan_approval',
-              'pending',
-              'medium',
+              ConfirmationType.PLAN_APPROVAL,
+              ConfirmStatus.PENDING,
+              Priority.MEDIUM,
               subject as any,
               requester as any,
               createValidWorkflow(),
@@ -187,9 +200,9 @@ describe('Confirm Entity', () => {
             TestDataFactory.Base.generateUUID(),
             TestDataFactory.Base.generateUUID(),
             '1.0.0',
-            'plan_approval',
-            'pending',
-            'medium',
+            ConfirmationType.PLAN_APPROVAL,
+            ConfirmStatus.PENDING,
+            Priority.MEDIUM,
             subject,
             requester,
             createValidWorkflow(),
@@ -227,11 +240,11 @@ describe('Confirm Entity', () => {
       await TestHelpers.Async.wait(1);
 
       // 执行测试
-      confirm.updateStatus('in_review');
+      confirm.updateStatus(ConfirmStatus.IN_REVIEW);
 
       // 验证结果
-      expect(confirm.status).toBe('in_review');
-      expect(confirm.updated_at).not.toBe(originalUpdatedAt);
+      expect(confirm.status).toBe(ConfirmStatus.IN_REVIEW);
+      expect(confirm.updatedAt).not.toBe(originalUpdatedAt);
     });
 
     it('应该测试所有有效状态转换', () => {
@@ -270,9 +283,9 @@ describe('Confirm Entity', () => {
         TestDataFactory.Base.generateUUID(),
         TestDataFactory.Base.generateUUID(),
         '1.0.0',
-        'plan_approval',
-        'in_review',
-        'medium',
+        ConfirmationType.PLAN_APPROVAL,
+        ConfirmStatus.IN_REVIEW, // 直接创建为审核中状态
+        Priority.MEDIUM,
         createValidSubject('Test Confirmation', 'Test'),
         createValidRequester('user-123'),
         createValidWorkflow(),
@@ -280,17 +293,24 @@ describe('Confirm Entity', () => {
         new Date().toISOString()
       );
 
-      const originalUpdatedAt = confirm.updated_at;
-      
+      const originalUpdatedAt = confirm.updatedAt;
+
       // 等待足够时间确保时间差异
       await TestHelpers.Async.wait(10);
 
       // 执行测试
-      confirm.setDecision('approved');
+      const decision: ConfirmDecision = {
+        decisionId: TestDataFactory.Base.generateUUID(),
+        type: DecisionType.APPROVE,
+        deciderId: 'approver-123',
+        reason: '测试决策',
+        timestamp: new Date().toISOString()
+      };
+      confirm.setDecision(decision);
 
       // 验证结果
-      expect(confirm.decision).toBe('approved');
-      expect(confirm.updated_at).not.toBe(originalUpdatedAt);
+      expect(confirm.decision).toEqual(decision);
+      expect(confirm.updatedAt).not.toBe(originalUpdatedAt);
     });
 
     it('应该测试所有决策类型', () => {
@@ -369,9 +389,9 @@ describe('Confirm Entity', () => {
         TestDataFactory.Base.generateUUID(),
         TestDataFactory.Base.generateUUID(),
         '1.0.0',
-        'plan_approval',
-        'pending',
-        'medium',
+        ConfirmationType.PLAN_APPROVAL,
+        ConfirmStatus.PENDING,
+        Priority.MEDIUM,
         createValidSubject('Test Confirmation', 'Test'),
         createValidRequester('user-123'),
         createValidWorkflow(),
@@ -379,7 +399,7 @@ describe('Confirm Entity', () => {
         new Date().toISOString()
       );
 
-      const originalUpdatedAt = confirm.updated_at;
+      const originalUpdatedAt = confirm.updatedAt;
 
       // 等待一毫秒确保时间差异
       await TestHelpers.Async.wait(1);
@@ -388,19 +408,19 @@ describe('Confirm Entity', () => {
       confirm.cancel();
 
       // 验证结果
-      expect(confirm.status).toBe('cancelled');
-      expect(new Date(confirm.updated_at).getTime()).toBeGreaterThan(new Date(originalUpdatedAt).getTime());
+      expect(confirm.status).toBe(ConfirmStatus.CANCELLED);
+      expect(new Date(confirm.updatedAt).getTime()).toBeGreaterThan(new Date(originalUpdatedAt).getTime());
     });
 
-    it('应该拒绝取消不可取消的确认', () => {
+    it('应该拒绝取消不可取消的确认', async () => {
       // 准备测试数据
       const confirm = new Confirm(
         TestDataFactory.Base.generateUUID(),
         TestDataFactory.Base.generateUUID(),
         '1.0.0',
-        'plan_approval',
-        'approved',
-        'medium',
+        ConfirmationType.PLAN_APPROVAL,
+        ConfirmStatus.APPROVED,
+        Priority.MEDIUM,
         createValidSubject('Test Confirmation', 'Test'),
         createValidRequester('user-123'),
         createValidWorkflow(),
@@ -409,9 +429,9 @@ describe('Confirm Entity', () => {
       );
 
       // 执行测试并验证异常
-      expect(() => {
-        confirm.cancel();
-      }).toThrow('无法取消状态为 approved 的确认');
+      await expect(async () => {
+        await confirm.cancel();
+      }).rejects.toThrow(`无法取消状态为 ${ConfirmStatus.APPROVED} 的确认`);
     });
   });
 });

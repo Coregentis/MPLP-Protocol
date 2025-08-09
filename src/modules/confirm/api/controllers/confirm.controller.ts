@@ -7,23 +7,25 @@
  * @created 2025-09-16
  */
 
-import { UUID } from '../../../../public/shared/types';
-import { CreateConfirmHandler } from '../../application/commands/create-confirm.command';
+// UUID 类型已在其他地方定义
+import { CreateConfirmHandler, CreateConfirmCommand } from '../../application/commands/create-confirm.command';
 import { GetConfirmByIdHandler } from '../../application/queries/get-confirm-by-id.query';
 import { ConfirmManagementService } from '../../application/services/confirm-management.service';
-import { 
-  ConfirmStatus, 
-  ConfirmDecision,
-  ConfirmFilter 
+import {
+  ConfirmFilter,
+  ConfirmStatus,
+  ConfirmationType,
+  Priority,
+  ConfirmDecision
 } from '../../types';
 
 /**
  * HTTP请求接口
  */
 export interface HttpRequest {
-  params: Record<string, any>;
-  body: any;
-  query: Record<string, any>;
+  params: Record<string, string>;
+  body: unknown;
+  query: Record<string, string | string[] | undefined>;
   user?: {
     id: string;
     role: string;
@@ -35,9 +37,30 @@ export interface HttpRequest {
  */
 export interface HttpResponse {
   status: number;
-  data?: any;
+  data?: unknown;
   error?: string;
   message?: string;
+}
+
+/**
+ * 安全地获取查询参数的字符串值
+ */
+function getQueryString(value: string | string[] | undefined): string | undefined {
+  if (Array.isArray(value)) {
+    return value[0];
+  }
+  return value;
+}
+
+/**
+ * 安全地获取查询参数的枚举值
+ */
+function getQueryEnum<T>(value: string | string[] | undefined, validValues: readonly string[]): T | undefined {
+  const stringValue = getQueryString(value);
+  if (stringValue && validValues.includes(stringValue)) {
+    return stringValue as T;
+  }
+  return undefined;
 }
 
 /**
@@ -56,7 +79,7 @@ export class ConfirmController {
    */
   async createConfirm(req: HttpRequest): Promise<HttpResponse> {
     try {
-      const result = await this.createConfirmHandler.handle(req.body);
+      const result = await this.createConfirmHandler.handle(req.body as CreateConfirmCommand);
       
       if (!result.success) {
         return {
@@ -85,7 +108,7 @@ export class ConfirmController {
   async getConfirmById(req: HttpRequest): Promise<HttpResponse> {
     try {
       const confirmId = req.params.id;
-      const result = await this.getConfirmByIdHandler.handle({ confirm_id: confirmId });
+      const result = await this.getConfirmByIdHandler.handle({ confirmId: confirmId });
       
       if (!result.success) {
         return {
@@ -113,12 +136,13 @@ export class ConfirmController {
   async updateConfirmStatus(req: HttpRequest): Promise<HttpResponse> {
     try {
       const confirmId = req.params.id;
-      const { status, decision } = req.body;
+      const body = req.body as { status: string; decision?: unknown };
+      const { status, decision } = body;
 
       const result = await this.confirmManagementService.updateConfirmStatus(
         confirmId,
-        status,
-        decision
+        status as ConfirmStatus,
+        decision as ConfirmDecision | undefined
       );
       
       if (!result.success) {
@@ -177,23 +201,23 @@ export class ConfirmController {
   async queryConfirms(req: HttpRequest): Promise<HttpResponse> {
     try {
       const filter: ConfirmFilter = {
-        context_id: req.query.contextId,
-        plan_id: req.query.planId,
-        confirmation_type: req.query.confirmationType,
-        status: req.query.status,
-        priority: req.query.priority,
-        requester_user_id: req.query.requester_user_id,
-        created_after: req.query.created_after,
-        created_before: req.query.created_before,
-        expires_after: req.query.expires_after,
-        expires_before: req.query.expires_before
+        contextId: getQueryString(req.query.contextId),
+        planId: getQueryString(req.query.planId),
+        confirmationType: getQueryEnum<ConfirmationType>(req.query.confirmationType, Object.values(ConfirmationType)),
+        status: getQueryEnum<ConfirmStatus>(req.query.status, Object.values(ConfirmStatus)),
+        priority: getQueryEnum<Priority>(req.query.priority, Object.values(Priority)),
+        requesterId: getQueryString(req.query.requester_user_id),
+        createdAfter: getQueryString(req.query.created_after),
+        createdBefore: getQueryString(req.query.created_before),
+        expiresAfter: getQueryString(req.query.expires_after),
+        expiresBefore: getQueryString(req.query.expires_before)
       };
 
       const pagination = {
-        page: parseInt(req.query.page) || 1,
-        limit: parseInt(req.query.limit) || 10,
-        sort_by: req.query.sort_by,
-        sort_order: req.query.sort_order as 'asc' | 'desc'
+        page: parseInt(getQueryString(req.query.page) || '1') || 1,
+        limit: parseInt(getQueryString(req.query.limit) || '10') || 10,
+        sort_by: getQueryString(req.query.sort_by),
+        sort_order: getQueryString(req.query.sort_order) as 'asc' | 'desc' | undefined
       };
 
       const result = await this.confirmManagementService.queryConfirms(filter, pagination);
@@ -226,7 +250,7 @@ export class ConfirmController {
    */
   async getPendingConfirms(req: HttpRequest): Promise<HttpResponse> {
     try {
-      const userId = req.query.userId || req.user?.id;
+      const userId = getQueryString(req.query.userId) || req.user?.id;
       const result = await this.confirmManagementService.getPendingConfirms(userId);
       
       if (!result.success) {
@@ -254,7 +278,7 @@ export class ConfirmController {
    */
   async getConfirmStatistics(req: HttpRequest): Promise<HttpResponse> {
     try {
-      const contextId = req.query.contextId;
+      const contextId = getQueryString(req.query.contextId);
       const result = await this.confirmManagementService.getConfirmStatistics(contextId);
       
       if (!result.success) {
@@ -282,7 +306,8 @@ export class ConfirmController {
    */
   async batchUpdateStatus(req: HttpRequest): Promise<HttpResponse> {
     try {
-      const { confirm_ids, status } = req.body;
+      const body = req.body as { confirm_ids: string[]; status: ConfirmStatus };
+      const { confirm_ids, status } = body;
       const result = await this.confirmManagementService.batchUpdateStatus(confirm_ids, status);
       
       if (!result.success) {

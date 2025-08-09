@@ -12,16 +12,30 @@ import { Confirm } from '../../domain/entities/confirm.entity';
 import { IConfirmRepository, ConfirmFilter, PaginationOptions, PaginatedResult } from '../../domain/repositories/confirm-repository.interface';
 import { ConfirmFactory, CreateConfirmRequest } from '../../domain/factories/confirm.factory';
 import { ConfirmValidationService } from '../../domain/services/confirm-validation.service';
-import { 
-  ConfirmStatus, 
+import { ConfirmEventManager, ConfirmEventType } from '../../domain/services/confirm-event-manager.service';
+import { NotificationService, NotificationConfig, NotificationChannel } from '../../domain/services/notification.service';
+import { EventPushService } from '../../domain/services/event-push.service';
+import {
+  ConfirmStatus,
   ConfirmDecision,
-  ConfirmProtocol 
+  ConfirmationType,
+  Priority
 } from '../../types';
+
+/**
+ * 确认统计信息接口
+ */
+export interface ConfirmStatistics {
+  total: number;
+  by_status: Record<ConfirmStatus, number>;
+  by_type: Record<ConfirmationType, number>;
+  by_priority: Record<Priority, number>;
+}
 
 /**
  * 操作结果
  */
-export interface OperationResult<T = any> {
+export interface OperationResult<T = unknown> {
   success: boolean;
   data?: T;
   error?: string;
@@ -32,11 +46,85 @@ export interface OperationResult<T = any> {
  * Confirm管理服务
  */
 export class ConfirmManagementService {
+  private eventManager?: ConfirmEventManager;
+
   constructor(
     private readonly confirmRepository: IConfirmRepository,
-    private readonly confirmFactory: ConfirmFactory,
     private readonly validationService: ConfirmValidationService
   ) {}
+
+  /**
+   * 设置事件管理器
+   */
+  setEventManager(eventManager: ConfirmEventManager): void {
+    this.eventManager = eventManager;
+  }
+
+  /**
+   * 初始化通知和事件系统
+   */
+  initializeEventSystem(): ConfirmEventManager {
+    // 创建默认通知配置
+    const notificationConfig: NotificationConfig = {
+      enableRealtime: true,
+      enableEmail: true,
+      enableSMS: false,
+      enablePush: true,
+      enableWebhook: false,
+      defaultChannels: [NotificationChannel.WEBSOCKET, NotificationChannel.EMAIL],
+      retryPolicy: {
+        maxRetries: 3,
+        retryDelay: 1000,
+        backoffMultiplier: 2
+      },
+      templates: {
+        confirmation_created: {
+          subject: '新的确认请求已创建',
+          content: '您有一个新的确认请求需要处理'
+        },
+        approval_request: {
+          subject: '需要您的审批',
+          content: '请查看并处理审批请求'
+        },
+        approval_submitted: {
+          subject: '审批已提交',
+          content: '您的审批已成功提交'
+        },
+        confirmation_approved: {
+          subject: '确认已批准',
+          content: '确认请求已获得批准'
+        },
+        confirmation_rejected: {
+          subject: '确认已拒绝',
+          content: '确认请求已被拒绝'
+        },
+        confirmation_cancelled: {
+          subject: '确认已取消',
+          content: '确认请求已被取消'
+        },
+        confirmation_expired: {
+          subject: '确认已过期',
+          content: '确认请求已过期'
+        },
+        escalation_triggered: {
+          subject: '确认已升级',
+          content: '确认请求已升级处理'
+        },
+        reminder_sent: {
+          subject: '提醒通知',
+          content: '这是一个提醒通知'
+        }
+      }
+    };
+
+    // 创建服务实例
+    const notificationService = new NotificationService(notificationConfig);
+    const eventPushService = new EventPushService();
+    const eventManager = new ConfirmEventManager(notificationService, eventPushService);
+
+    this.eventManager = eventManager;
+    return eventManager;
+  }
 
   /**
    * 创建确认
@@ -63,8 +151,26 @@ export class ConfirmManagementService {
       // 创建确认实体
       const confirm = ConfirmFactory.create(request);
 
+      // 设置事件管理器
+      if (this.eventManager) {
+        confirm.setEventManager(this.eventManager);
+      }
+
       // 保存到仓库
       await this.confirmRepository.save(confirm);
+
+      // 触发确认创建事件
+      if (this.eventManager) {
+        await this.eventManager.emitEvent(ConfirmEventType.CONFIRMATION_CREATED, {
+          eventType: ConfirmEventType.CONFIRMATION_CREATED,
+          confirmId: confirm.confirmId,
+          contextId: confirm.contextId,
+          planId: confirm.planId,
+          userId: confirm.requester.userId,
+          status: confirm.status,
+          metadata: confirm.metadata as Record<string, unknown> | undefined
+        });
+      }
 
       return {
         success: true,
@@ -242,8 +348,8 @@ export class ConfirmManagementService {
       let processedCount = 0;
 
       for (const confirm of expiredConfirms) {
-        if (confirm.status === 'pending' || confirm.status === 'in_review') {
-          confirm.updateStatus('expired');
+        if (confirm.status === ConfirmStatus.PENDING || confirm.status === ConfirmStatus.IN_REVIEW) {
+          confirm.updateStatus(ConfirmStatus.EXPIRED);
           await this.confirmRepository.update(confirm);
           processedCount++;
         }
@@ -264,7 +370,7 @@ export class ConfirmManagementService {
   /**
    * 获取确认统计信息
    */
-  async getConfirmStatistics(contextId?: UUID): Promise<OperationResult<any>> {
+  async getConfirmStatistics(contextId?: UUID): Promise<OperationResult<ConfirmStatistics>> {
     try {
       const statistics = await this.confirmRepository.getStatistics(contextId);
       

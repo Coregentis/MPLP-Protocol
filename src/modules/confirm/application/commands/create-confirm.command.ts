@@ -21,16 +21,17 @@ import { Confirm } from '../../domain/entities/confirm.entity';
 
 /**
  * 创建确认命令
+ * Application层使用camelCase
  */
 export interface CreateConfirmCommand {
-  context_id: UUID;
-  plan_id?: UUID;
-  confirmation_type: ConfirmationType;
+  contextId: UUID;
+  planId?: UUID;
+  confirmationType: ConfirmationType;
   priority: Priority;
   subject: ConfirmSubject;
   requester: Requester;
-  approval_workflow: ApprovalWorkflow;
-  expires_at?: string;
+  approvalWorkflow: ApprovalWorkflow;
+  expiresAt?: string;
   metadata?: ConfirmMetadata;
 }
 

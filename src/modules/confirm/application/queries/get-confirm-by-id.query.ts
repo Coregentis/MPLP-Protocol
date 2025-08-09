@@ -13,9 +13,10 @@ import { Confirm } from '../../domain/entities/confirm.entity';
 
 /**
  * 根据ID获取确认查询
+ * Application层使用camelCase
  */
 export interface GetConfirmByIdQuery {
-  confirm_id: UUID;
+  confirmId: UUID;
 }
 
 /**

@@ -83,6 +83,12 @@ export class ConfirmValidationService {
     const errors: string[] = [];
     const warnings: string[] = [];
 
+    // 添加null/undefined防护
+    if (!subject) {
+      errors.push('确认主题不能为空');
+      return { isValid: false, errors, warnings };
+    }
+
     if (!subject.title || subject.title.trim().length === 0) {
       errors.push('确认主题标题不能为空');
     } else if (subject.title.length > 200) {
@@ -115,9 +121,9 @@ export class ConfirmValidationService {
       errors.push('请求者角色不能为空');
     }
 
-    if (!requester.request_reason || requester.request_reason.trim().length === 0) {
+    if (!requester.requestReason || requester.requestReason.trim().length === 0) {
       errors.push('请求原因不能为空');
-    } else if (requester.request_reason.length > 1000) {
+    } else if (requester.requestReason.length > 1000) {
       errors.push('请求原因不能超过1000个字符');
     }
 
@@ -135,30 +141,28 @@ export class ConfirmValidationService {
     const errors: string[] = [];
     const warnings: string[] = [];
 
-    if (!workflow.workflow_type) {
-      errors.push('审批工作流类型不能为空');
-    }
+    // workflowType是可选字段，不需要验证为必需
 
     if (!workflow.steps || workflow.steps.length === 0) {
       errors.push('审批工作流必须包含至少一个步骤');
     } else {
       // 验证每个步骤
       workflow.steps.forEach((step, index) => {
-        if (!step.step_name || step.step_name.trim().length === 0) {
+        if (!step.name || step.name.trim().length === 0) {
           errors.push(`第${index + 1}个审批步骤名称不能为空`);
         }
 
-        if (!step.approver_role || step.approver_role.trim().length === 0) {
+        if (!step.approverRole || step.approverRole.trim().length === 0) {
           errors.push(`第${index + 1}个审批步骤的审批者角色不能为空`);
         }
 
-        if (step.timeout_hours && (step.timeout_hours <= 0 || step.timeout_hours > 720)) {
+        if (step.timeoutHours && (step.timeoutHours <= 0 || step.timeoutHours > 720)) {
           errors.push(`第${index + 1}个审批步骤的超时时间必须在1-720小时之间`);
         }
       });
 
       // 检查步骤顺序
-      const stepOrders = workflow.steps.map(step => step.step_order);
+      const stepOrders = workflow.steps.map(step => step.stepOrder);
       const uniqueOrders = new Set(stepOrders);
       if (uniqueOrders.size !== stepOrders.length) {
         errors.push('审批步骤顺序不能重复');
@@ -196,13 +200,12 @@ export class ConfirmValidationService {
     const warnings: string[] = [];
 
     const validTransitions: Record<ConfirmStatus, ConfirmStatus[]> = {
-      'pending': ['in_review', 'cancelled', 'expired'],
-      'in_review': ['approved', 'rejected', 'escalated', 'cancelled'],
-      'approved': [],
-      'rejected': [],
-      'cancelled': [],
-      'expired': [],
-      'escalated': ['in_review', 'approved', 'rejected']
+      [ConfirmStatus.PENDING]: [ConfirmStatus.IN_REVIEW, ConfirmStatus.CANCELLED, ConfirmStatus.EXPIRED],
+      [ConfirmStatus.IN_REVIEW]: [ConfirmStatus.APPROVED, ConfirmStatus.REJECTED, ConfirmStatus.CANCELLED],
+      [ConfirmStatus.APPROVED]: [],
+      [ConfirmStatus.REJECTED]: [],
+      [ConfirmStatus.CANCELLED]: [],
+      [ConfirmStatus.EXPIRED]: []
     };
 
     if (!validTransitions[from].includes(to)) {
@@ -219,7 +222,7 @@ export class ConfirmValidationService {
     const errors: string[] = [];
     const warnings: string[] = [];
 
-    const modifiableStatuses: ConfirmStatus[] = ['pending', 'in_review'];
+    const modifiableStatuses: ConfirmStatus[] = [ConfirmStatus.PENDING, ConfirmStatus.IN_REVIEW];
     
     if (!modifiableStatuses.includes(status)) {
       errors.push(`状态为 ${status} 的确认不能修改`);

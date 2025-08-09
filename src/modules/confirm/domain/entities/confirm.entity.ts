@@ -8,16 +8,19 @@
  */
 
 import { UUID, Timestamp } from '../../../../public/shared/types';
-import { 
-  ConfirmationType, 
-  ConfirmStatus, 
-  Priority, 
-  Requester, 
+import { Logger } from '../../../../public/utils/logger';
+import {
+  ConfirmationType,
+  ConfirmStatus,
+  Priority,
+  Requester,
   ApprovalWorkflow,
   ConfirmSubject,
   ConfirmDecision,
-  ConfirmMetadata
+  ConfirmMetadata,
+  ConfirmProtocol
 } from '../../types';
+import { ConfirmEventManager, ConfirmEventType, ConfirmEventData } from '../services/confirm-event-manager.service';
 
 /**
  * Confirm领域实体
@@ -38,6 +41,10 @@ export class Confirm {
   private _updated_at: Timestamp;
   private _expires_at?: Timestamp;
   private _metadata?: ConfirmMetadata;
+
+  // 事件管理器（可选注入）
+  private _eventManager?: ConfirmEventManager;
+  private _logger: Logger;
 
     /**
    * 风险评估
@@ -69,7 +76,8 @@ constructor(
     planId?: UUID,
     decision?: ConfirmDecision,
     expires_at?: Timestamp,
-    metadata?: ConfirmMetadata
+    metadata?: ConfirmMetadata,
+    eventManager?: ConfirmEventManager
   ) {
     this._confirm_id = confirmId;
     this._context_id = contextId;
@@ -86,6 +94,8 @@ constructor(
     this._updated_at = updatedAt;
     this._expires_at = expires_at;
     this._metadata = metadata;
+    this._eventManager = eventManager;
+    this._logger = new Logger('Confirm');
 
     this.validateInvariants();
   }
@@ -105,16 +115,10 @@ constructor(
   get createdAt(): Timestamp { return this._created_at; }
   get updatedAt(): Timestamp { return this._updated_at; }
   get expires_at(): Timestamp | undefined { return this._expires_at; }
+  get expiresAt(): Timestamp | undefined { return this._expires_at; }
   get metadata(): ConfirmMetadata | undefined { return this._metadata; }
 
-  /**
-   * 更新确认状态
-   */
-  updateStatus(newStatus: ConfirmStatus): void {
-    this.validateStatusTransition(this._status, newStatus);
-    this._status = newStatus;
-    this._updated_at = new Date().toISOString();
-  }
+
 
   /**
    * 设置决策结果
@@ -139,18 +143,96 @@ constructor(
    * 检查是否可以取消
    */
   canCancel(): boolean {
-    return ['pending', 'in_review'].includes(this._status);
+    return [ConfirmStatus.PENDING, ConfirmStatus.IN_REVIEW].includes(this._status);
   }
 
   /**
    * 取消确认
    */
-  cancel(): void {
+  async cancel(): Promise<void> {
     if (!this.canCancel()) {
       throw new Error(`无法取消状态为 ${this._status} 的确认`);
     }
-    this._status = 'cancelled';
+
+    const previousStatus = this._status;
+    this._status = ConfirmStatus.CANCELLED;
     this._updated_at = new Date().toISOString();
+
+    // 触发事件
+    await this.emitEvent(ConfirmEventType.CONFIRMATION_CANCELLED, {
+      previousStatus,
+      newStatus: this._status
+    });
+  }
+
+  /**
+   * 更新状态并触发事件
+   */
+  async updateStatus(newStatus: ConfirmStatus, decision?: ConfirmDecision): Promise<void> {
+    this.validateStatusTransition(this._status, newStatus);
+
+    const previousStatus = this._status;
+    this._status = newStatus;
+    this._updated_at = new Date().toISOString();
+
+    if (decision) {
+      this._decision = decision;
+    }
+
+    // 触发状态变更事件
+    await this.emitEvent(ConfirmEventType.STATUS_CHANGED, {
+      previousStatus,
+      newStatus,
+      decision: decision ? String(decision) : undefined
+    });
+
+    // 根据新状态触发特定事件
+    switch (newStatus) {
+      case ConfirmStatus.APPROVED:
+        await this.emitEvent(ConfirmEventType.CONFIRMATION_APPROVED, { decision: decision ? String(decision) : undefined });
+        break;
+      case ConfirmStatus.REJECTED:
+        await this.emitEvent(ConfirmEventType.CONFIRMATION_REJECTED, { decision: decision ? String(decision) : undefined });
+        break;
+      case ConfirmStatus.EXPIRED:
+        await this.emitEvent(ConfirmEventType.CONFIRMATION_EXPIRED);
+        break;
+    }
+  }
+
+  /**
+   * 设置事件管理器
+   */
+  setEventManager(eventManager: ConfirmEventManager): void {
+    this._eventManager = eventManager;
+  }
+
+  /**
+   * 触发事件
+   */
+  private async emitEvent(eventType: ConfirmEventType, additionalData?: Partial<ConfirmEventData>): Promise<void> {
+    if (!this._eventManager) {
+      return; // 如果没有事件管理器，静默忽略
+    }
+
+    const eventData: ConfirmEventData = {
+      eventType,
+      confirmId: this._confirm_id,
+      contextId: this._context_id,
+      planId: this._plan_id,
+      userId: this._requester.userId,
+      status: this._status,
+      decision: this._decision ? String(this._decision) : undefined,
+      metadata: this._metadata as Record<string, unknown> | undefined,
+      ...additionalData
+    };
+
+    try {
+      await this._eventManager.emitEvent(eventType, eventData);
+    } catch (error) {
+      // 事件发送失败不应该影响业务逻辑
+      this._logger.error('Failed to emit event:', error);
+    }
   }
 
   /**
@@ -176,13 +258,12 @@ constructor(
    */
   private validateStatusTransition(from: ConfirmStatus, to: ConfirmStatus): void {
     const validTransitions: Record<ConfirmStatus, ConfirmStatus[]> = {
-      'pending': ['in_review', 'cancelled', 'expired'],
-      'in_review': ['approved', 'rejected', 'escalated', 'cancelled'],
-      'approved': [],
-      'rejected': [],
-      'cancelled': [],
-      'expired': [],
-      'escalated': ['in_review', 'approved', 'rejected']
+      [ConfirmStatus.PENDING]: [ConfirmStatus.IN_REVIEW, ConfirmStatus.CANCELLED, ConfirmStatus.EXPIRED],
+      [ConfirmStatus.IN_REVIEW]: [ConfirmStatus.APPROVED, ConfirmStatus.REJECTED, ConfirmStatus.CANCELLED],
+      [ConfirmStatus.APPROVED]: [],
+      [ConfirmStatus.REJECTED]: [],
+      [ConfirmStatus.CANCELLED]: [],
+      [ConfirmStatus.EXPIRED]: []
     };
 
     if (!validTransitions[from].includes(to)) {
@@ -193,12 +274,13 @@ constructor(
   /**
    * 转换为协议格式
    */
-  toProtocol(): any {
+  toProtocol(): ConfirmProtocol {
     return {
       confirmId: this._confirm_id,
       contextId: this._context_id,
       planId: this._plan_id,
       protocolVersion: this._protocol_version,
+      timestamp: this._created_at, // 使用创建时间作为协议时间戳
       confirmationType: this._confirmation_type,
       status: this._status,
       priority: this._priority,
@@ -208,7 +290,7 @@ constructor(
       decision: this._decision,
       createdAt: this._created_at,
       updatedAt: this._updated_at,
-      expires_at: this._expires_at,
+      expiresAt: this._expires_at,
       metadata: this._metadata
     };
   }
@@ -216,7 +298,7 @@ constructor(
   /**
    * 从协议格式创建实体
    */
-  static fromProtocol(protocol: any): Confirm {
+  static fromProtocol(protocol: ConfirmProtocol): Confirm {
     return new Confirm(
       protocol.confirmId,
       protocol.contextId,
@@ -231,7 +313,7 @@ constructor(
       protocol.updatedAt,
       protocol.planId,
       protocol.decision,
-      protocol.expires_at,
+      protocol.expiresAt,
       protocol.metadata
     );
   }

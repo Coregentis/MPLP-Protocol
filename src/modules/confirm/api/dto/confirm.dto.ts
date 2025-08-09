@@ -115,7 +115,7 @@ export interface ConfirmStatisticsResponseDto {
 /**
  * API响应包装器
  */
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean;
   data?: T;
   error?: string;
@@ -129,7 +129,7 @@ export interface ApiResponse<T = any> {
 export interface ErrorResponseDto {
   error: string;
   code?: string;
-  details?: any;
+  details?: Record<string, unknown>;
   timestamp: string;
   path: string;
 }

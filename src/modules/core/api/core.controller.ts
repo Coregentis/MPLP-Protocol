@@ -63,7 +63,7 @@ export class CoreController {
   async executeWorkflow(request: ExecuteWorkflowRequest): Promise<OperationResult<WorkflowExecutionResult>> {
     try {
       this.logger.info('收到工作流执行请求', {
-        context_id: request.contextId,
+        context_id: request.context_id,
         workflow_config: request.workflow_config
       });
 
@@ -75,21 +75,21 @@ export class CoreController {
 
       // 2. 执行工作流
       const result = await this.coreOrchestrator.executeWorkflow(
-        request.contextId,
+        request.context_id,
         request.workflow_config
       );
 
       this.logger.info('工作流执行完成', {
-        context_id: request.contextId,
+        context_id: request.context_id,
         success: result.success,
-        workflow_id: result.data?.workflow_id
+        workflow_id: result.data?.workflowId
       });
 
       return result;
 
     } catch (error) {
       this.logger.error('工作流执行失败', {
-        context_id: request.contextId,
+        context_id: request.context_id,
         error: error instanceof Error ? error.message : 'Unknown error'
       });
 
@@ -320,8 +320,8 @@ export class CoreController {
   /**
    * 验证工作流执行请求
    */
-  private validateExecuteWorkflowRequest(request: ExecuteWorkflowRequest): OperationResult {
-    if (!request.contextId) {
+  private validateExecuteWorkflowRequest(request: ExecuteWorkflowRequest): OperationResult<WorkflowExecutionResult> {
+    if (!request.context_id) {
       return {
         success: false,
         error: 'context_id is required'
@@ -380,7 +380,7 @@ export class CoreController {
   /**
    * 验证工作流控制请求
    */
-  private validateWorkflowControlRequest(request: WorkflowControlRequest): OperationResult {
+  private validateWorkflowControlRequest(request: WorkflowControlRequest): OperationResult<boolean> {
     if (!request.workflow_id) {
       return {
         success: false,

@@ -85,27 +85,27 @@ export class ConfirmRepository implements IConfirmRepository {
       results = results.filter(confirm => confirm.priority === filter.priority);
     }
 
-    if (filter.requester_user_id) {
-      results = results.filter(confirm => confirm.requester.userId === filter.requester_user_id);
+    if (filter.requesterId) {
+      results = results.filter(confirm => confirm.requester.userId === filter.requesterId);
     }
 
-    if (filter.created_after) {
-      results = results.filter(confirm => confirm.createdAt >= filter.created_after!);
+    if (filter.createdAfter) {
+      results = results.filter(confirm => confirm.createdAt >= filter.createdAfter!);
     }
 
-    if (filter.created_before) {
-      results = results.filter(confirm => confirm.createdAt <= filter.created_before!);
+    if (filter.createdBefore) {
+      results = results.filter(confirm => confirm.createdAt <= filter.createdBefore!);
     }
 
-    if (filter.expires_after) {
-      results = results.filter(confirm => 
-        confirm.expires_at && confirm.expires_at >= filter.expires_after!
+    if (filter.expiresAfter) {
+      results = results.filter(confirm =>
+        confirm.expires_at && confirm.expires_at >= filter.expiresAfter!
       );
     }
 
-    if (filter.expires_before) {
-      results = results.filter(confirm => 
-        confirm.expires_at && confirm.expires_at <= filter.expires_before!
+    if (filter.expiresBefore) {
+      results = results.filter(confirm =>
+        confirm.expires_at && confirm.expires_at <= filter.expiresBefore!
       );
     }
 

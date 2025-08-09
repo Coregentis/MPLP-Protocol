@@ -98,7 +98,7 @@ export class CoreOrchestratorService implements ICoreOrchestrator {
         name: `Workflow-${workflowId}`,
         stages: [WorkflowStage.CONTEXT, WorkflowStage.PLAN, WorkflowStage.CONFIRM, WorkflowStage.TRACE],
         execution_mode: ExecutionMode.SEQUENTIAL,
-        timeout_ms: this.config.module_timeout_ms,
+        timeoutMs: this.config.module_timeout_ms,
         max_concurrent_executions: this.config.max_concurrent_executions,
         ...this.config.default_workflow,
         ...config
@@ -106,7 +106,7 @@ export class CoreOrchestratorService implements ICoreOrchestrator {
 
       // 3. 创建执行上下文
       const executionContext: ExecutionContext = {
-        session_id: contextId,
+        sessionId: contextId,
         request_id: workflowId,
         priority: Priority.MEDIUM,
         metadata: {
@@ -280,7 +280,7 @@ export class CoreOrchestratorService implements ICoreOrchestrator {
       }
 
       // 完成阶段
-      execution.completeStage(stage, result.data);
+      execution.completeStage(stage, result.data as Record<string, unknown>);
       await this.repository.update(execution);
 
       this.emitEvent(EventType.STAGE_COMPLETED, {
@@ -312,7 +312,7 @@ export class CoreOrchestratorService implements ICoreOrchestrator {
    */
   private prepareStageInput(execution: WorkflowExecution, stage: WorkflowStage): Record<string, any> {
     const context = execution.execution_context;
-    const stageResults = execution.executionStatus.stage_results || {};
+    const stageResults = execution.execution_status.stage_results || {};
 
     // 基础输入
     const input: Record<string, any> = {
@@ -346,10 +346,10 @@ export class CoreOrchestratorService implements ICoreOrchestrator {
    * 构建执行结果
    */
   private buildExecutionResult(execution: WorkflowExecution): WorkflowExecutionResult {
-    const status = execution.executionStatus;
+    const status = execution.execution_status;
     
     return {
-      workflow_id: execution.workflow_id,
+      workflowId: execution.workflow_id,
       status: status.status,
       start_time: status.start_time!,
       end_time: status.end_time,

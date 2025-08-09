@@ -10,7 +10,6 @@
 import { Logger } from '../../public/utils/logger';
 
 // Domain层
-import { ConfirmFactory } from './domain/factories/confirm.factory';
 import { ConfirmValidationService } from './domain/services/confirm-validation.service';
 
 // Infrastructure层
@@ -52,7 +51,6 @@ export async function initializeConfirmModule(
   
   try {
     // 创建领域层组件
-    const confirmFactory = new ConfirmFactory();
     const validationService = new ConfirmValidationService();
     
     // 创建基础设施层组件
@@ -61,9 +59,11 @@ export async function initializeConfirmModule(
     // 创建应用层组件
     const confirmManagementService = new ConfirmManagementService(
       confirmRepository,
-      confirmFactory,
       validationService
     );
+
+    // 初始化事件系统
+    confirmManagementService.initializeEventSystem();
     
     // 创建命令和查询处理器
     const createConfirmHandler = new CreateConfirmHandler(confirmManagementService);

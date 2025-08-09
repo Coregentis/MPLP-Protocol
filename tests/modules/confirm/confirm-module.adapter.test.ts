@@ -19,7 +19,7 @@ import { ConfirmFactory, CreateConfirmRequest } from '../../../src/modules/confi
 import { ConfirmValidationService, ValidationResult } from '../../../src/modules/confirm/domain/services/confirm-validation.service';
 import { Confirm } from '../../../src/modules/confirm/domain/entities/confirm.entity';
 import { ConfirmationCoordinationRequest, ConfirmationResult, ModuleStatus } from '../../../src/public/modules/core/types/core.types';
-import { 
+import {
   ConfirmationType,
   ConfirmStatus,
   Priority,
@@ -27,6 +27,7 @@ import {
   ConfirmSubject,
   Requester,
   ApprovalWorkflow,
+  StepStatus,
   ConfirmMetadata,
   UUID,
   Timestamp
@@ -44,7 +45,7 @@ describe('ConfirmModuleAdapter单元测试', () => {
   // 辅助函数：创建正确的Mock Confirm实体
   const createMockConfirm = (
     contextId: string,
-    confirmationType: ConfirmationType = 'task_approval',
+    confirmationType: ConfirmationType = ConfirmationType.TASK_APPROVAL,
     title: string = 'Test Confirmation'
   ): Confirm => {
     return new Confirm(
@@ -52,35 +53,44 @@ describe('ConfirmModuleAdapter单元测试', () => {
       contextId as UUID,
       '1.0.0',
       confirmationType,
-      'pending' as ConfirmStatus,
-      'medium' as Priority,
+      ConfirmStatus.PENDING,
+      Priority.MEDIUM,
       {
         title: title,
         description: 'Test Description',
-        impact_assessment: {
+        impactAssessment: {
           scope: 'project',
-          business_impact: 'medium',
-          technical_impact: 'low',
-          affected_systems: ['core-orchestrator'],
-          affected_users: ['system']
+          businessImpact: 'medium',
+          technicalImpact: 'low',
+          riskLevel: 'low',
+          impactScope: ['core-orchestrator'],
+          estimatedCost: 1000
         }
       } as ConfirmSubject,
       {
-        user_id: 'core-orchestrator',
+        userId: 'core-orchestrator',
+        name: 'System User',
         role: 'system',
+        email: 'system@example.com',
         department: 'core',
-        request_reason: 'Test request reason'
+        requestReason: 'Test request reason'
       } as Requester,
       {
-        workflow_type: 'single_approver',
+        workflowId: TestDataFactory.Base.generateUUID(),
+        name: 'Test Workflow',
         steps: [{
-          step_id: 'step_1',
-          step_name: 'Test Approval',
-          step_type: 'approval',
-          required_approvers: ['system'],
-          approval_threshold: 1,
-          parallel_execution: false,
-          timeout_duration: 3600000
+          stepId: 'step_1',
+          name: 'Test Approval',
+          stepOrder: 1,
+          approverRole: 'system',
+          isRequired: true,
+          timeoutHours: 24,
+          status: StepStatus.PENDING
+        }],
+        parallelExecution: false,
+        autoApprovalRules: [{
+          enabled: false,
+          conditions: []
         }]
       } as ApprovalWorkflow,
       new Date().toISOString() as Timestamp,
@@ -170,7 +180,7 @@ describe('ConfirmModuleAdapter单元测试', () => {
         parameters: {
           approval_rules: ['manual_review_required']
         },
-        approval_workflow: {
+        approvalWorkflow: {
           required_approvers: ['user1', 'user2'],
           approval_threshold: 2,
           parallel_approval: true
@@ -275,7 +285,7 @@ describe('ConfirmModuleAdapter单元测试', () => {
         contextId: contextId,
         confirmation_strategy: 'multi_stage',
         parameters: {},
-        approval_workflow: {
+        approvalWorkflow: {
           required_approvers: ['stage1_approver', 'stage2_approver', 'stage3_approver'],
           approval_threshold: 3,
           parallel_approval: false
@@ -342,7 +352,7 @@ describe('ConfirmModuleAdapter单元测试', () => {
         contextId: TestDataFactory.Base.generateUUID(),
         confirmation_strategy: 'manual',
         parameters: {
-          timeout_ms: -1000 // 负数超时
+          timeoutMs: -1000 // 负数超时
         }
       };
 
@@ -371,7 +381,7 @@ describe('ConfirmModuleAdapter单元测试', () => {
         contextId: TestDataFactory.Base.generateUUID(),
         confirmation_strategy: 'manual',
         parameters: {},
-        approval_workflow: {
+        approvalWorkflow: {
           required_approvers: ['user1', 'user2'],
           approval_threshold: 5, // 阈值超过审批者数量
           parallel_approval: true
@@ -397,7 +407,7 @@ describe('ConfirmModuleAdapter单元测试', () => {
         contextId: contextId,
         confirmation_strategy: 'automatic',
         parameters: {
-          timeout_ms: 240000 // 4 minutes - 应该是critical
+          timeoutMs: 240000 // 4 minutes - 应该是urgent
         }
       };
 
@@ -418,7 +428,7 @@ describe('ConfirmModuleAdapter单元测试', () => {
       // 验证createConfirm被调用时使用了正确的优先级
       expect(mockConfirmManagementService.createConfirm).toHaveBeenCalledWith(
         expect.objectContaining({
-          priority: 'critical'
+          priority: Priority.URGENT
         })
       );
     });
