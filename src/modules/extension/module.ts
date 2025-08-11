@@ -1,8 +1,8 @@
 /**
  * Extension模块集成
- * 
+ *
  * DDD架构的模块集成和依赖注入配置
- * 
+ *
  * @version 1.0.0
  * @created 2025-09-16
  */
@@ -43,17 +43,21 @@ export async function initializeExtensionModule(
   options: ExtensionModuleOptions = {}
 ): Promise<ExtensionModuleExports> {
   const logger = new Logger('ExtensionModule');
-  
+
   try {
     // 创建基础设施层组件
     const extensionRepository = new ExtensionRepository();
-    
+
     // 创建应用层组件
-    const extensionManagementService = new ExtensionManagementService(extensionRepository);
-    
+    const extensionManagementService = new ExtensionManagementService(
+      extensionRepository
+    );
+
     // 创建API层组件
-    const extensionController = new ExtensionController(extensionManagementService);
-    
+    const extensionController = new ExtensionController(
+      extensionManagementService
+    );
+
     // 配置选项
     if (options.enableDependencyValidation) {
       logger.info('Dependency validation enabled for extension module');
@@ -62,12 +66,12 @@ export async function initializeExtensionModule(
     if (options.enableAutoActivation) {
       logger.info('Auto-activation enabled for extension module');
     }
-    
+
     logger.info('Extension module initialized successfully');
-    
+
     return {
       extensionController,
-      extensionManagementService
+      extensionManagementService,
     };
   } catch (error) {
     logger.error('Failed to initialize Extension module', error);

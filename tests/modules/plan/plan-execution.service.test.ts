@@ -340,7 +340,7 @@ describe('PlanExecutionService', () => {
       const mockPlan = createMockPlan({
         planId,
         status: PlanStatus.DRAFT,
-        executionStrategy: ExecutionStrategy.ADAPTIVE
+        executionStrategy: ExecutionStrategy.HYBRID
       });
 
       mockRepository.findById.mockResolvedValue(mockPlan);
@@ -353,7 +353,7 @@ describe('PlanExecutionService', () => {
       const result = await executionService.executePlan(executionRequest);
 
       expect(result.success).toBe(true);
-      expect(result.execution_mode).toBe(ExecutionStrategy.ADAPTIVE);
+      expect(result.execution_mode).toBe(ExecutionStrategy.HYBRID);
     });
 
     it('应该正确处理分层执行策略', async () => {
@@ -361,7 +361,7 @@ describe('PlanExecutionService', () => {
       const mockPlan = createMockPlan({
         planId,
         status: PlanStatus.DRAFT,
-        executionStrategy: ExecutionStrategy.HIERARCHICAL
+        executionStrategy: ExecutionStrategy.CONDITIONAL
       });
 
       mockRepository.findById.mockResolvedValue(mockPlan);
@@ -374,7 +374,7 @@ describe('PlanExecutionService', () => {
       const result = await executionService.executePlan(executionRequest);
 
       expect(result.success).toBe(true);
-      expect(result.execution_mode).toBe(ExecutionStrategy.HIERARCHICAL);
+      expect(result.execution_mode).toBe(ExecutionStrategy.CONDITIONAL);
     });
   });
 

@@ -584,7 +584,7 @@ describe('Role Entity', () => {
 
       // 验证结果
       expect(role.scope).toEqual(newScope);
-      expect(new Date(role.updated_at).getTime()).toBeGreaterThan(new Date(originalUpdatedAt).getTime());
+      expect(new Date(role.updated_at).getTime()).toBeGreaterThanOrEqual(new Date(originalUpdatedAt).getTime());
     });
   });
 

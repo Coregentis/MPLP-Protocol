@@ -1,8 +1,8 @@
 /**
  * Extension仓库接口
- * 
+ *
  * 定义扩展数据访问的领域接口
- * 
+ *
  * @version 1.0.0
  * @created 2025-09-16
  */
@@ -53,6 +53,11 @@ export interface PaginatedResult<T> {
  */
 export interface IExtensionRepository {
   /**
+   * 创建新扩展
+   */
+  create(extension: Extension): Promise<Extension>;
+
+  /**
    * 保存扩展
    */
   save(extension: Extension): Promise<void>;
@@ -75,7 +80,10 @@ export interface IExtensionRepository {
   /**
    * 根据过滤器查找扩展列表
    */
-  findByFilter(filter: ExtensionFilter, pagination?: PaginationOptions): Promise<PaginatedResult<Extension>>;
+  findByFilter(
+    filter: ExtensionFilter,
+    pagination?: PaginationOptions
+  ): Promise<PaginatedResult<Extension>>;
 
   /**
    * 查找活跃扩展
@@ -110,7 +118,10 @@ export interface IExtensionRepository {
   /**
    * 批量更新状态
    */
-  batchUpdateStatus(extensionIds: UUID[], status: ExtensionStatus): Promise<void>;
+  batchUpdateStatus(
+    extensionIds: UUID[],
+    status: ExtensionStatus
+  ): Promise<void>;
 
   /**
    * 检查扩展是否存在
@@ -120,7 +131,11 @@ export interface IExtensionRepository {
   /**
    * 检查扩展名称是否唯一
    */
-  isNameUnique(name: string, contextId: UUID, excludeExtensionId?: UUID): Promise<boolean>;
+  isNameUnique(
+    name: string,
+    contextId: UUID,
+    excludeExtensionId?: UUID
+  ): Promise<boolean>;
 
   /**
    * 获取扩展统计信息

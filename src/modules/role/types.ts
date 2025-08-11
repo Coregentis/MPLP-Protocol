@@ -158,6 +158,8 @@ export interface Permission {
       approval_threshold?: number;  // 审批阈值
       approver_roles?: string[];    // 审批角色
     };
+    custom_conditions?: Record<string, unknown>; // 自定义条件
+    resource_state?: Record<string, unknown>;   // 资源状态条件
   };
   grant_type: GrantType;            // 授予类型
   expiry?: Timestamp;               // 过期时间
@@ -766,4 +768,235 @@ export interface DecisionMechanism {
   type: 'consensus' | 'majority' | 'weighted' | 'authority';
   threshold?: number;
   timeoutMs?: number;
+}
+
+// ===== Domain Services 类型定义 =====
+
+/**
+ * 验证结果接口
+ */
+export interface ValidationResult {
+  is_valid: boolean;
+  errors: ValidationError[];
+  warnings?: ValidationWarning[];
+  metadata?: Record<string, unknown>;
+}
+
+/**
+ * 验证警告接口
+ */
+export interface ValidationWarning {
+  field: string;
+  message: string;
+  code: string;
+  severity: 'low' | 'medium' | 'high';
+}
+
+/**
+ * 冲突结果接口
+ */
+export interface ConflictResult {
+  conflict_id: UUID;
+  conflict_type: 'permission_overlap' | 'role_inheritance' | 'separation_of_duties' | 'resource_access';
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  description: string;
+  affected_permissions: UUID[];
+  affected_roles: UUID[];
+  resolution_suggestions: string[];
+  metadata?: Record<string, unknown>;
+}
+
+/**
+ * 解析后的角色接口
+ */
+export interface ResolvedRole {
+  roleId: UUID;
+  name: string;
+  effective_permissions: Permission[];
+  inherited_from: UUID[];
+  delegation_chain: UUID[];
+  computed_at: Timestamp;
+  metadata?: Record<string, unknown>;
+}
+
+/**
+ * Agent性能指标接口 (Domain Services专用)
+ */
+export interface AgentPerformanceMetrics {
+  agent_id: UUID;
+  measurement_period: {
+    start_time: Timestamp;
+    end_time: Timestamp;
+    duration_ms: number;
+  };
+  performance_data: {
+    response_time_avg_ms: number;
+    response_time_max_ms: number;
+    success_rate: number;
+    error_rate: number;
+    throughput_ops_per_second: number;
+    resource_utilization: {
+      cpu_usage_percent: number;
+      memory_usage_mb: number;
+      network_io_bytes: number;
+    };
+  };
+  quality_metrics: {
+    accuracy_score: number;
+    completeness_score: number;
+    consistency_score: number;
+  };
+  metadata?: Record<string, unknown>;
+}
+
+/**
+ * 团队结果接口
+ */
+export interface TeamResult {
+  team_id: UUID;
+  configuration_applied: boolean;
+  team_members: {
+    agent_id: UUID;
+    role_id: UUID;
+    status: AgentStatus;
+    assigned_at: Timestamp;
+  }[];
+  performance_baseline: AgentPerformanceMetrics[];
+  collaboration_rules: CollaborationRule[];
+  decision_mechanism: DecisionMechanism;
+  metadata?: Record<string, unknown>;
+}
+
+/**
+ * 决策请求接口
+ */
+export interface DecisionRequest {
+  decision_id: UUID;
+  context_id: UUID;
+  decision_type: 'role_assignment' | 'permission_grant' | 'conflict_resolution' | 'resource_allocation';
+  participants: UUID[];
+  options: {
+    option_id: UUID;
+    description: string;
+    impact_assessment: Record<string, unknown>;
+    supporters: UUID[];
+  }[];
+  deadline?: Timestamp;
+  metadata?: Record<string, unknown>;
+}
+
+/**
+ * 决策结果接口
+ */
+export interface DecisionResult {
+  decision_id: UUID;
+  selected_option: UUID;
+  decision_method: 'consensus' | 'majority' | 'weighted' | 'authority';
+  voting_results: {
+    participant_id: UUID;
+    vote: UUID;
+    weight?: number;
+    timestamp: Timestamp;
+  }[];
+  execution_plan: {
+    step_id: UUID;
+    description: string;
+    responsible_agent: UUID;
+    deadline: Timestamp;
+    dependencies: UUID[];
+  }[];
+  decided_at: Timestamp;
+  metadata?: Record<string, unknown>;
+}
+
+/**
+ * 审计事件接口
+ */
+export interface AuditEvent {
+  event_id: UUID;
+  event_type: 'role_created' | 'role_updated' | 'role_deleted' | 'permission_granted' | 'permission_revoked' | 'role_assigned' | 'role_unassigned';
+  actor_id: UUID;
+  target_id: UUID;
+  resource_type: ResourceType;
+  timestamp: Timestamp;
+  details: Record<string, unknown>;
+  severity: 'info' | 'warning' | 'error' | 'critical';
+  context_id?: UUID;
+  session_id?: UUID;
+  metadata?: Record<string, unknown>;
+}
+
+/**
+ * 审计过滤器接口
+ */
+export interface AuditFilter {
+  start_time?: Timestamp;
+  end_time?: Timestamp;
+  event_types?: string[];
+  actor_ids?: UUID[];
+  target_ids?: UUID[];
+  resource_types?: ResourceType[];
+  severity_levels?: string[];
+  context_ids?: UUID[];
+  limit?: number;
+  offset?: number;
+}
+
+/**
+ * 审计日志接口
+ */
+export interface AuditLog {
+  log_id: UUID;
+  events: AuditEvent[];
+  total_count: number;
+  filtered_count: number;
+  query_metadata: {
+    filter_applied: AuditFilter;
+    execution_time_ms: number;
+    generated_at: Timestamp;
+  };
+  metadata?: Record<string, unknown>;
+}
+
+/**
+ * 合规报告接口
+ */
+export interface ComplianceReport {
+  report_id: UUID;
+  framework: string;
+  report_period: {
+    start_time: Timestamp;
+    end_time: Timestamp;
+  };
+  compliance_status: 'compliant' | 'non_compliant' | 'partially_compliant';
+  findings: {
+    finding_id: UUID;
+    category: string;
+    severity: 'low' | 'medium' | 'high' | 'critical';
+    description: string;
+    evidence: AuditEvent[];
+    recommendations: string[];
+  }[];
+  overall_score: number;
+  generated_at: Timestamp;
+  metadata?: Record<string, unknown>;
+}
+
+/**
+ * 异常结果接口
+ */
+export interface AnomalyResult {
+  anomaly_id: UUID;
+  anomaly_type: 'unusual_access_pattern' | 'privilege_escalation' | 'suspicious_timing' | 'resource_abuse';
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  description: string;
+  affected_user: UUID;
+  detection_time: Timestamp;
+  evidence: {
+    event_ids: UUID[];
+    pattern_description: string;
+    confidence_score: number;
+  };
+  recommended_actions: string[];
+  metadata?: Record<string, unknown>;
 }

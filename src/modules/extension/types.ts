@@ -1,6 +1,6 @@
 /**
  * MPLP Extension模块类型定义
- * 
+ *
  * @version v1.1.0
  * @created 2025-07-10T14:30:00+08:00
  * @updated 2025-08-13T07:00:00+08:00
@@ -24,26 +24,26 @@ export type { UUID, Timestamp, Version, Priority };
  */
 export interface ExtensionProtocol {
   // Schema必需字段
-  protocolVersion: Version;           // 协议版本
-  timestamp: Timestamp;                // 消息时间戳
-  extensionId: UUID;                  // 扩展唯一标识符
-  contextId: UUID;                    // 关联的上下文ID
-  name: string;                        // 扩展名称
-  version: Version;                    // 扩展版本号
-  type: ExtensionType;                 // 扩展类型
-  status: ExtensionStatus;             // 扩展状态
-  
+  protocolVersion: Version; // 协议版本
+  timestamp: Timestamp; // 消息时间戳
+  extensionId: UUID; // 扩展唯一标识符
+  contextId: UUID; // 关联的上下文ID
+  name: string; // 扩展名称
+  version: Version; // 扩展版本号
+  type: ExtensionType; // 扩展类型
+  status: ExtensionStatus; // 扩展状态
+
   // Schema可选字段
-  displayName?: string;               // 扩展显示名称
-  description?: string;                // 扩展详细描述
+  displayName?: string; // 扩展显示名称
+  description?: string; // 扩展详细描述
   compatibility?: ExtensionCompatibility; // 兼容性信息
   configuration?: ExtensionConfiguration; // 配置信息
   extensionPoints?: ExtensionPoint[]; // 扩展点定义
-  apiExtensions?: ApiExtension[];     // API扩展定义
+  apiExtensions?: ApiExtension[]; // API扩展定义
   eventSubscriptions?: EventSubscription[]; // 事件订阅
-  lifecycle?: ExtensionLifecycle;      // 生命周期信息
-  security?: ExtensionSecurity;        // 安全设置
-  metadata?: ExtensionMetadata;        // 元数据
+  lifecycle?: ExtensionLifecycle; // 生命周期信息
+  security?: ExtensionSecurity; // 安全设置
+  metadata?: ExtensionMetadata; // 元数据
 }
 
 // ===== 基础枚举类型 (Schema定义) =====
@@ -52,13 +52,26 @@ export interface ExtensionProtocol {
  * 扩展类型 (Schema定义)
  * @schema extension-protocol.json#/properties/extension_type
  */
-export type ExtensionType = 'plugin' | 'adapter' | 'connector' | 'middleware' | 'hook' | 'transformer';
+export type ExtensionType =
+  | 'plugin'
+  | 'adapter'
+  | 'connector'
+  | 'middleware'
+  | 'hook'
+  | 'transformer';
 
 /**
  * 扩展状态 (Schema定义)
  * @schema extension-protocol.json#/properties/status
  */
-export type ExtensionStatus = 'installed' | 'active' | 'inactive' | 'disabled' | 'error' | 'updating' | 'uninstalling';
+export type ExtensionStatus =
+  | 'installed'
+  | 'active'
+  | 'inactive'
+  | 'disabled'
+  | 'error'
+  | 'updating'
+  | 'uninstalling';
 
 // ===== 兼容性管理 (Schema定义) =====
 
@@ -67,10 +80,10 @@ export type ExtensionStatus = 'installed' | 'active' | 'inactive' | 'disabled' |
  * @schema extension-protocol.json#/properties/compatibility
  */
 export interface ExtensionCompatibility {
-  mplp_version: string;                // 兼容的MPLP版本范围
+  mplp_version: string; // 兼容的MPLP版本范围
   required_modules?: RequiredModule[]; // 必需的模块
   dependencies?: ExtensionDependency[]; // 扩展依赖
-  conflicts?: ExtensionConflict[];     // 扩展冲突
+  conflicts?: ExtensionConflict[]; // 扩展冲突
 }
 
 /**
@@ -78,26 +91,32 @@ export interface ExtensionCompatibility {
  * @schema extension-protocol.json#/properties/compatibility/properties/required_modules/items
  */
 export interface RequiredModule {
-  module: ModuleName;                  // 模块名称
-  min_version?: Version;               // 最低版本
-  max_version?: Version;               // 最高版本
+  module: ModuleName; // 模块名称
+  min_version?: Version; // 最低版本
+  max_version?: Version; // 最高版本
 }
 
 /**
  * 模块名称 (Schema定义)
  * @schema extension-protocol.json#/properties/compatibility/properties/required_modules/items/properties/module
  */
-export type ModuleName = 'context' | 'plan' | 'confirm' | 'trace' | 'role' | 'extension';
+export type ModuleName =
+  | 'context'
+  | 'plan'
+  | 'confirm'
+  | 'trace'
+  | 'role'
+  | 'extension';
 
 /**
  * 扩展依赖 (Schema定义)
  * @schema extension-protocol.json#/properties/compatibility/properties/dependencies/items
  */
 export interface ExtensionDependency {
-  extensionId: UUID;                  // 依赖扩展ID
-  name: string;                        // 依赖扩展名称
-  version_range: string;               // 版本范围
-  optional?: boolean;                  // 是否可选
+  extensionId: UUID; // 依赖扩展ID
+  name: string; // 依赖扩展名称
+  version_range: string; // 版本范围
+  optional?: boolean; // 是否可选
 }
 
 /**
@@ -105,9 +124,9 @@ export interface ExtensionDependency {
  * @schema extension-protocol.json#/properties/compatibility/properties/conflicts/items
  */
 export interface ExtensionConflict {
-  extensionId: UUID;                  // 冲突扩展ID
-  name: string;                        // 冲突扩展名称
-  reason: string;                      // 冲突原因
+  extensionId: UUID; // 冲突扩展ID
+  name: string; // 冲突扩展名称
+  reason: string; // 冲突原因
 }
 
 // ===== 配置管理 (Schema定义) =====
@@ -117,7 +136,7 @@ export interface ExtensionConflict {
  * @schema extension-protocol.json#/properties/configuration
  */
 export interface ExtensionConfiguration {
-  schema: Record<string, unknown>;     // 配置参数的JSON Schema定义
+  schema: Record<string, unknown>; // 配置参数的JSON Schema定义
   current_config: Record<string, unknown>; // 当前配置值
   default_config?: Record<string, unknown>; // 默认配置值
   validationRules?: ValidationRule[]; // 验证规则
@@ -128,9 +147,9 @@ export interface ExtensionConfiguration {
  * @schema extension-protocol.json#/properties/configuration/properties/validation_rules/items
  */
 export interface ValidationRule {
-  rule: string;                        // 规则表达式
-  message: string;                     // 错误消息
-  severity: ValidationSeverity;        // 严重程度
+  rule: string; // 规则表达式
+  message: string; // 错误消息
+  severity: ValidationSeverity; // 严重程度
 }
 
 /**
@@ -146,38 +165,50 @@ export type ValidationSeverity = 'error' | 'warning' | 'info';
  * @schema extension-protocol.json#/properties/extension_points/items
  */
 export interface ExtensionPoint {
-  point_id: UUID;                      // 扩展点ID
-  name: string;                        // 扩展点名称
-  type: ExtensionPointType;            // 扩展点类型
-  target_module: TargetModule;         // 目标模块
-  event_name?: string;                 // 事件名称
-  execution_order: number;             // 执行顺序
-  enabled: boolean;                    // 是否启用
-  handler: ExtensionHandler;           // 处理器
-  conditions?: ExtensionConditions;    // 条件
+  point_id: UUID; // 扩展点ID
+  name: string; // 扩展点名称
+  type: ExtensionPointType; // 扩展点类型
+  target_module: TargetModule; // 目标模块
+  event_name?: string; // 事件名称
+  execution_order: number; // 执行顺序
+  enabled: boolean; // 是否启用
+  handler: ExtensionHandler; // 处理器
+  conditions?: ExtensionConditions; // 条件
 }
 
 /**
  * 扩展点类型 (Schema定义)
  * @schema extension-protocol.json#/properties/extension_points/items/properties/type
  */
-export type ExtensionPointType = 'hook' | 'filter' | 'action' | 'api_endpoint' | 'event_listener';
+export type ExtensionPointType =
+  | 'hook'
+  | 'filter'
+  | 'action'
+  | 'api_endpoint'
+  | 'event_listener';
 
 /**
  * 目标模块 (Schema定义)
  * @schema extension-protocol.json#/properties/extension_points/items/properties/target_module
  */
-export type TargetModule = 'context' | 'plan' | 'confirm' | 'trace' | 'role' | 'extension' | 'system';
+export type TargetModule =
+  | 'context'
+  | 'plan'
+  | 'confirm'
+  | 'trace'
+  | 'role'
+  | 'extension'
+  | 'system';
 
 /**
  * 扩展处理器 (Schema定义)
  * @schema extension-protocol.json#/properties/extension_points/items/properties/handler
  */
 export interface ExtensionHandler {
-  function_name: string;               // 函数名称
+  function_name: string; // 函数名称
   parameters?: Record<string, unknown>; // 参数
-  timeoutMs?: number;                 // 超时时间(毫秒)
-  retry_policy?: RetryPolicy;          // 重试策略
+  timeoutMs?: number; // 超时时间(毫秒)
+  retry_policy?: RetryPolicy; // 重试策略
 }
 
 /**
@@ -185,9 +216,9 @@ export interface ExtensionHandler {
  * @schema extension-protocol.json#/properties/extension_points/items/properties/handler/properties/retry_policy
  */
 export interface RetryPolicy {
-  max_retries?: number;                // 最大重试次数
-  retry_delay_ms?: number;             // 重试延迟(毫秒)
-  backoff_strategy?: BackoffStrategy;  // 退避策略
+  max_retries?: number; // 最大重试次数
+  retry_delay_ms?: number; // 重试延迟(毫秒)
+  backoff_strategy?: BackoffStrategy; // 退避策略
 }
 
 /**
@@ -201,8 +232,8 @@ export type BackoffStrategy = 'fixed' | 'exponential' | 'linear';
  * @schema extension-protocol.json#/properties/extension_points/items/properties/conditions
  */
 export interface ExtensionConditions {
-  when?: string;                       // 条件表达式
-  required_permissions?: string[];     // 所需权限
+  when?: string; // 条件表达式
+  required_permissions?: string[]; // 所需权限
   context_filters?: Record<string, unknown>; // 上下文过滤器
 }
 
@@ -213,15 +244,15 @@ export interface ExtensionConditions {
  * @schema extension-protocol.json#/properties/api_extensions/items
  */
 export interface ApiExtension {
-  endpoint_id: UUID;                   // 端点ID
-  path: string;                        // 路径
-  method: HttpMethod;                  // HTTP方法
-  description?: string;                // 描述
-  handler: string;                     // 处理器
-  middleware?: string[];               // 中间件
-  authentication_required: boolean;    // 是否需要认证
-  required_permissions?: string[];     // 所需权限
-  rate_limit?: RateLimit;              // 速率限制
+  endpoint_id: UUID; // 端点ID
+  path: string; // 路径
+  method: HttpMethod; // HTTP方法
+  description?: string; // 描述
+  handler: string; // 处理器
+  middleware?: string[]; // 中间件
+  authentication_required: boolean; // 是否需要认证
+  required_permissions?: string[]; // 所需权限
+  rate_limit?: RateLimit; // 速率限制
   request_schema?: Record<string, unknown>; // 请求Schema
   response_schema?: Record<string, unknown>; // 响应Schema
 }
@@ -230,15 +261,22 @@ export interface ApiExtension {
  * HTTP方法 (Schema定义)
  * @schema extension-protocol.json#/properties/api_extensions/items/properties/method
  */
-export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS' | 'HEAD';
+export type HttpMethod =
+  | 'GET'
+  | 'POST'
+  | 'PUT'
+  | 'PATCH'
+  | 'DELETE'
+  | 'OPTIONS'
+  | 'HEAD';
 
 /**
  * 速率限制 (Schema定义)
  * @schema extension-protocol.json#/properties/api_extensions/items/properties/rate_limit
  */
 export interface RateLimit {
-  requests_per_minute: number;         // 每分钟请求数
-  burst_size?: number;                 // 突发大小
+  requests_per_minute: number; // 每分钟请求数
+  burst_size?: number; // 突发大小
 }
 
 // ===== 事件订阅 (Schema定义) =====
@@ -248,26 +286,37 @@ export interface RateLimit {
  * @schema extension-protocol.json#/properties/event_subscriptions/items
  */
 export interface EventSubscription {
-  subscription_id: UUID;               // 订阅ID
-  event_pattern: string;               // 事件模式
-  source_module: EventSource;          // 源模块
-  handler: string;                     // 处理器
+  subscription_id: UUID; // 订阅ID
+  event_pattern: string; // 事件模式
+  source_module: EventSource; // 源模块
+  handler: string; // 处理器
   filter_conditions?: Record<string, unknown>; // 过滤条件
   delivery_guarantees: DeliveryGuarantee; // 传递保证
-  dead_letter_queue?: boolean;         // 死信队列
+  dead_letter_queue?: boolean; // 死信队列
 }
 
 /**
  * 事件源 (Schema定义)
  * @schema extension-protocol.json#/properties/event_subscriptions/items/properties/source_module
  */
-export type EventSource = 'context' | 'plan' | 'confirm' | 'trace' | 'role' | 'extension' | 'system' | '*';
+export type EventSource =
+  | 'context'
+  | 'plan'
+  | 'confirm'
+  | 'trace'
+  | 'role'
+  | 'extension'
+  | 'system'
+  | '*';
 
 /**
  * 传递保证 (Schema定义)
  * @schema extension-protocol.json#/properties/event_subscriptions/items/properties/delivery_guarantees
  */
-export type DeliveryGuarantee = 'at_least_once' | 'at_most_once' | 'exactly_once';
+export type DeliveryGuarantee =
+  | 'at_least_once'
+  | 'at_most_once'
+  | 'exactly_once';
 
 // ===== 生命周期 (Schema定义) =====
 
@@ -276,11 +325,11 @@ export type DeliveryGuarantee = 'at_least_once' | 'at_most_once' | 'exactly_once
  * @schema extension-protocol.json#/properties/lifecycle
  */
 export interface ExtensionLifecycle {
-  install_date: Timestamp;             // 安装日期
-  last_update?: Timestamp;             // 最后更新时间
-  activation_count: number;            // 激活次数
-  error_count: number;                 // 错误次数
-  last_error?: ExtensionError;         // 最后错误
+  install_date: Timestamp; // 安装日期
+  last_update?: Timestamp; // 最后更新时间
+  activation_count: number; // 激活次数
+  error_count: number; // 错误次数
+  last_error?: ExtensionError; // 最后错误
   performanceMetrics?: ExtensionPerformanceMetrics; // 性能指标
   health_check?: ExtensionHealthCheck; // 健康检查
 }
@@ -290,10 +339,10 @@ export interface ExtensionLifecycle {
  * @schema extension-protocol.json#/properties/lifecycle/properties/last_error
  */
 export interface ExtensionError {
-  timestamp: Timestamp;                // 错误时间
-  error_type: string;                  // 错误类型
-  message: string;                     // 错误消息
-  stack_trace?: string;                // 堆栈跟踪
+  timestamp: Timestamp; // 错误时间
+  error_type: string; // 错误类型
+  message: string; // 错误消息
+  stack_trace?: string; // 堆栈跟踪
 }
 
 /**
@@ -301,10 +350,10 @@ export interface ExtensionError {
  * @schema extension-protocol.json#/properties/lifecycle/properties/performance_metrics
  */
 export interface ExtensionPerformanceMetrics {
-  average_execution_time_ms: number;   // 平均执行时间(毫秒)
-  total_executions: number;            // 总执行次数
-  success_rate: number;                // 成功率
-  memory_usage_mb: number;             // 内存使用(MB)
+  average_execution_time_ms: number; // 平均执行时间(毫秒)
+  total_executions: number; // 总执行次数
+  success_rate: number; // 成功率
+  memory_usage_mb: number; // 内存使用(MB)
 }
 
 /**
@@ -312,10 +361,10 @@ export interface ExtensionPerformanceMetrics {
  * @schema extension-protocol.json#/properties/lifecycle/properties/health_check
  */
 export interface ExtensionHealthCheck {
-  endpoint?: string;                   // 健康检查端点
-  interval_seconds?: number;           // 检查间隔(秒)
-  timeoutMs?: number;                 // 超时时间(毫秒)
-  failure_threshold?: number;          // 失败阈值
+  endpoint?: string; // 健康检查端点
+  interval_seconds?: number; // 检查间隔(秒)
+  timeoutMs?: number; // 超时时间(毫秒)
+  failure_threshold?: number; // 失败阈值
 }
 
 // ===== 安全设置 (Schema定义) =====
@@ -325,9 +374,9 @@ export interface ExtensionHealthCheck {
  * @schema extension-protocol.json#/properties/security
  */
 export interface ExtensionSecurity {
-  sandbox_enabled: boolean;            // 是否启用沙箱
+  sandbox_enabled: boolean; // 是否启用沙箱
   resource_limits: ExtensionResourceLimits; // 资源限制
-  code_signing?: CodeSigning;          // 代码签名
+  code_signing?: CodeSigning; // 代码签名
   permissions?: ExtensionPermission[]; // 权限
 }
 
@@ -336,10 +385,10 @@ export interface ExtensionSecurity {
  * @schema extension-protocol.json#/properties/security/properties/resource_limits
  */
 export interface ExtensionResourceLimits {
-  max_memory_mb?: number;              // 最大内存(MB)
-  max_cpu_percent?: number;            // 最大CPU使用率(%)
-  max_file_size_mb?: number;           // 最大文件大小(MB)
-  network_access?: boolean;            // 网络访问
+  max_memory_mb?: number; // 最大内存(MB)
+  max_cpu_percent?: number; // 最大CPU使用率(%)
+  max_file_size_mb?: number; // 最大文件大小(MB)
+  network_access?: boolean; // 网络访问
   file_system_access?: FileSystemAccess; // 文件系统访问
 }
 
@@ -354,10 +403,10 @@ export type FileSystemAccess = 'none' | 'read_only' | 'sandbox' | 'full';
  * @schema extension-protocol.json#/properties/security/properties/code_signing
  */
 export interface CodeSigning {
-  required?: boolean;                  // 是否必需
-  signature?: string;                  // 签名
-  certificate?: string;                // 证书
-  timestamp?: Timestamp;               // 时间戳
+  required?: boolean; // 是否必需
+  signature?: string; // 签名
+  certificate?: string; // 证书
+  timestamp?: Timestamp; // 时间戳
 }
 
 /**
@@ -365,11 +414,11 @@ export interface CodeSigning {
  * @schema extension-protocol.json#/properties/security/properties/permissions/items
  */
 export interface ExtensionPermission {
-  permission: string;                  // 权限名称
-  justification: string;               // 权限理由
-  approved: boolean;                   // 是否已批准
-  approved_by?: string;                // 批准人
-  approval_date?: Timestamp;           // 批准日期
+  permission: string; // 权限名称
+  justification: string; // 权限理由
+  approved: boolean; // 是否已批准
+  approved_by?: string; // 批准人
+  approval_date?: Timestamp; // 批准日期
 }
 
 // ===== 元数据 (Schema定义) =====
@@ -379,15 +428,15 @@ export interface ExtensionPermission {
  * @schema extension-protocol.json#/properties/metadata
  */
 export interface ExtensionMetadata {
-  author?: string;                     // 作者
-  organization?: string;               // 组织
-  license?: string;                    // 许可证
-  homepage?: string;                   // 主页
-  repository?: string;                 // 代码仓库
-  documentation?: string;              // 文档
-  support_contact?: string;            // 支持联系方式
-  keywords?: string[];                 // 关键词
-  categories?: string[];               // 分类
+  author?: string; // 作者
+  organization?: string; // 组织
+  license?: string; // 许可证
+  homepage?: string; // 主页
+  repository?: string; // 代码仓库
+  documentation?: string; // 文档
+  support_contact?: string; // 支持联系方式
+  keywords?: string[]; // 关键词
+  categories?: string[]; // 分类
   screenshots?: ExtensionScreenshot[]; // 截图
 }
 
@@ -396,8 +445,8 @@ export interface ExtensionMetadata {
  * @schema extension-protocol.json#/properties/metadata/properties/screenshots/items
  */
 export interface ExtensionScreenshot {
-  url: string;                         // URL
-  caption?: string;                    // 标题
+  url: string; // URL
+  caption?: string; // 标题
 }
 
 // ===== 请求和响应类型 =====
@@ -576,7 +625,18 @@ export interface ExtensionHealthStatus {
  * 扩展生命周期事件
  * @note 此类型为API实现类型，非Schema直接定义
  */
-export type ExtensionLifecycleEvent = 'installing' | 'installed' | 'starting' | 'started' | 'stopping' | 'stopped' | 'updating' | 'updated' | 'uninstalling' | 'uninstalled' | 'error';
+export type ExtensionLifecycleEvent =
+  | 'installing'
+  | 'installed'
+  | 'starting'
+  | 'started'
+  | 'stopping'
+  | 'stopped'
+  | 'updating'
+  | 'updated'
+  | 'uninstalling'
+  | 'uninstalled'
+  | 'error';
 
 /**
  * 生命周期处理器
@@ -593,14 +653,14 @@ export interface LifecycleHandler {
  * 扩展操作
  * @note 此类型为API实现类型，非Schema直接定义
  */
-export type ExtensionOperation = 
-  | 'install' 
-  | 'uninstall' 
-  | 'activate' 
-  | 'deactivate' 
-  | 'update' 
-  | 'configure' 
-  | 'execute' 
+export type ExtensionOperation =
+  | 'install'
+  | 'uninstall'
+  | 'activate'
+  | 'deactivate'
+  | 'update'
+  | 'configure'
+  | 'execute'
   | 'health_check'
   | 'register_extension_point'
   | 'unregister_extension_point'
@@ -610,7 +670,12 @@ export type ExtensionOperation =
  * 安装来源
  * @note 此类型为API实现类型，非Schema直接定义
  */
-export type InstallationSource = 'registry' | 'local_file' | 'git_repository' | 'url' | 'marketplace';
+export type InstallationSource =
+  | 'registry'
+  | 'local_file'
+  | 'git_repository'
+  | 'url'
+  | 'marketplace';
 
 /**
  * 扩展管理器配置
@@ -701,12 +766,12 @@ export interface ExtensionUpdateResult {
    * 操作是否成功
    */
   success: boolean;
-  
+
   /**
    * 更新后的扩展数据（成功时）
    */
   data?: ExtensionProtocol;
-  
+
   /**
    * 错误信息（失败时）
    */
@@ -715,7 +780,7 @@ export interface ExtensionUpdateResult {
      * 错误代码
      */
     code: string;
-    
+
     /**
      * 错误消息
      */
@@ -752,4 +817,4 @@ export type PerformanceMonitor = {
   metrics: unknown[];
   thresholds: unknown[];
   alerting?: unknown;
-}; 
+};

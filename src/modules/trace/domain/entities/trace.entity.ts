@@ -8,14 +8,16 @@
  */
 
 import { UUID, Timestamp } from '../../../../public/shared/types';
-import { 
-  TraceType, 
-  TraceSeverity, 
+import {
+  TraceType,
+  TraceSeverity,
   TraceEvent,
   PerformanceMetrics,
   ErrorInformation,
   Correlation,
-  TraceMetadata
+  TraceMetadata,
+  ContextSnapshot,
+  DecisionLog
 } from '../../types';
 
 /**
@@ -45,12 +47,12 @@ export class Trace {
   /**
    * 上下文快照
    */
-  public contextSnapshot?: Record<string, unknown>;
+  private _context_snapshot?: ContextSnapshot;
 
   /**
    * 决策日志
    */
-  public decisionLog?: unknown[];
+  private _decision_log?: DecisionLog;
 
 constructor(
     traceId: UUID,
@@ -66,7 +68,9 @@ constructor(
     performanceMetrics?: PerformanceMetrics,
     errorInformation?: ErrorInformation,
     correlations: Correlation[] = [],
-    metadata?: TraceMetadata
+    metadata?: TraceMetadata,
+    contextSnapshot?: ContextSnapshot,
+    decisionLog?: DecisionLog
   ) {
     this._trace_id = traceId;
     this._context_id = contextId;
@@ -82,6 +86,8 @@ constructor(
     this._metadata = metadata;
     this._created_at = createdAt;
     this._updated_at = updatedAt;
+    this._context_snapshot = contextSnapshot;
+    this._decision_log = decisionLog;
 
     this.validateInvariants();
   }
@@ -101,6 +107,8 @@ constructor(
   get metadata(): TraceMetadata | undefined { return this._metadata; }
   get createdAt(): Timestamp { return this._created_at; }
   get updatedAt(): Timestamp { return this._updated_at; }
+  get contextSnapshot(): ContextSnapshot | undefined { return this._context_snapshot; }
+  get decisionLog(): DecisionLog | undefined { return this._decision_log; }
 
   /**
    * 添加关联
@@ -150,6 +158,45 @@ constructor(
   }
 
   /**
+   * 设置上下文快照
+   */
+  setContextSnapshot(snapshot: ContextSnapshot): void {
+    this._context_snapshot = snapshot;
+    this._updated_at = new Date().toISOString();
+  }
+
+  /**
+   * 设置决策日志
+   */
+  setDecisionLog(decisionLog: DecisionLog): void {
+    this._decision_log = decisionLog;
+    this._updated_at = new Date().toISOString();
+  }
+
+  /**
+   * 捕获当前上下文快照
+   */
+  captureContextSnapshot(variables?: Record<string, unknown>, callStack?: string[]): void {
+    const snapshot: ContextSnapshot = {
+      variables: variables || {},
+      environment: {
+        os: process.platform,
+        platform: process.arch,
+        runtime_version: process.version,
+        environment_variables: Object.fromEntries(
+          Object.entries(process.env).filter(([, value]) => value !== undefined)
+        ) as Record<string, string>
+      },
+      call_stack: callStack?.map((func, index) => ({
+        function: func,
+        file: 'unknown',
+        line: index + 1
+      }))
+    };
+    this.setContextSnapshot(snapshot);
+  }
+
+  /**
    * 更新元数据
    */
   updateMetadata(metadata: TraceMetadata): void {
@@ -194,15 +241,17 @@ constructor(
     if (!this._event.source.component) {
       throw new Error('事件源组件不能为空');
     }
-    if (this._trace_type === 'error' && !this._error_information) {
-      throw new Error('错误类型的追踪必须包含错误信息');
-    }
+    // 错误类型的追踪可以没有详细错误信息，允许简单错误追踪
+    // if (this._trace_type === 'error' && !this._error_information) {
+    //   throw new Error('错误类型的追踪必须包含错误信息');
+    // }
   }
 
   /**
-   * 转换为协议格式
+   * 转换为内部协议格式（camelCase）
+   * @deprecated 使用 TraceMapper.toSchema() 进行对外Schema输出
    */
-  toProtocol(): any {
+  toProtocol(): Record<string, unknown> {
     return {
       traceId: this._trace_id,
       contextId: this._context_id,
@@ -216,30 +265,36 @@ constructor(
       errorInformation: this._error_information,
       correlations: this._correlations,
       metadata: this._metadata,
+      contextSnapshot: this._context_snapshot,
+      decisionLog: this._decision_log,
       createdAt: this._created_at,
       updatedAt: this._updated_at
     };
   }
 
+
+
   /**
    * 从协议格式创建实体
    */
-  static fromProtocol(protocol: any): Trace {
+  static fromProtocol(protocol: Record<string, unknown>): Trace {
     return new Trace(
-      protocol.traceId,
-      protocol.contextId,
-      protocol.protocolVersion,
-      protocol.traceType,
-      protocol.severity,
-      protocol.event,
-      protocol.timestamp,
-      protocol.createdAt,
-      protocol.updatedAt,
-      protocol.planId,
-      protocol.performanceMetrics,
-      protocol.errorInformation,
-      protocol.correlations || [],
-      protocol.metadata
+      protocol.traceId as string,
+      protocol.contextId as string,
+      protocol.protocolVersion as string,
+      protocol.traceType as TraceType,
+      protocol.severity as TraceSeverity,
+      protocol.event as TraceEvent,
+      protocol.timestamp as string,
+      protocol.createdAt as string,
+      protocol.updatedAt as string,
+      protocol.planId as string | undefined,
+      protocol.performanceMetrics as PerformanceMetrics | undefined,
+      protocol.errorInformation as ErrorInformation | undefined,
+      (protocol.correlations as Correlation[]) || [],
+      protocol.metadata as TraceMetadata | undefined,
+      protocol.contextSnapshot as ContextSnapshot | undefined,
+      protocol.decisionLog as DecisionLog | undefined
     );
   }
 }

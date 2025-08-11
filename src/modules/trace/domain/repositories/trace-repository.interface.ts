@@ -17,6 +17,7 @@ import { TraceType, TraceSeverity, EventType } from '../../types';
 export interface TraceFilter {
   context_id?: UUID;
   plan_id?: UUID;
+  task_id?: UUID;
   trace_type?: TraceType;
   severity?: TraceSeverity;
   event_type?: EventType;

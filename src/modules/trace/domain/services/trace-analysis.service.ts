@@ -158,6 +158,16 @@ export class TraceAnalysisService {
    * 生成摘要
    */
   private generateSummary(traces: Trace[]) {
+    // null/undefined防护
+    if (!traces || !Array.isArray(traces)) {
+      return {
+        total_traces: 0,
+        error_count: 0,
+        warning_count: 0,
+        performance_issues: 0
+      };
+    }
+
     return {
       total_traces: traces.length,
       error_count: traces.filter(t => t.isError()).length,
@@ -170,6 +180,11 @@ export class TraceAnalysisService {
    * 检测模式
    */
   private detectPatterns(traces: Trace[]): TracePattern[] {
+    // null/undefined防护
+    if (!traces || !Array.isArray(traces)) {
+      return [];
+    }
+
     const patterns: TracePattern[] = [];
 
     // 检测错误聚集
@@ -348,6 +363,11 @@ export class TraceAnalysisService {
   private generateRecommendations(traces: Trace[], patterns: TracePattern[]): string[] {
     const recommendations: string[] = [];
 
+    // null/undefined防护
+    if (!traces || !Array.isArray(traces)) {
+      return recommendations;
+    }
+
     const errorCount = traces.filter(t => t.isError()).length;
     if (errorCount > traces.length * 0.1) {
       recommendations.push('错误率较高，建议检查系统稳定性');
@@ -358,16 +378,18 @@ export class TraceAnalysisService {
       recommendations.push('发现性能问题，建议优化慢操作');
     }
 
-    patterns.forEach(pattern => {
-      switch (pattern.pattern_type) {
-        case 'error_cluster':
-          recommendations.push(`建议重点关注 ${pattern.description} 中的组件`);
-          break;
-        case 'performance_degradation':
-          recommendations.push('建议分析性能退化原因并进行优化');
-          break;
-      }
-    });
+    if (patterns && Array.isArray(patterns)) {
+      patterns.forEach(pattern => {
+        switch (pattern.pattern_type) {
+          case 'error_cluster':
+            recommendations.push(`建议重点关注 ${pattern.description} 中的组件`);
+            break;
+          case 'performance_degradation':
+            recommendations.push('建议分析性能退化原因并进行优化');
+            break;
+        }
+      });
+    }
 
     return recommendations;
   }

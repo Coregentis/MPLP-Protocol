@@ -23,14 +23,14 @@ import {
  * 创建确认请求DTO
  */
 export interface CreateConfirmRequestDto {
-  context_id: UUID;
-  plan_id?: UUID;
-  confirmation_type: ConfirmationType;
+  contextId: UUID;
+  planId?: UUID;
+  confirmationType: ConfirmationType;
   priority: Priority;
   subject: ConfirmSubject;
   requester: Requester;
-  approval_workflow: ApprovalWorkflow;
-  expires_at?: string;
+  approvalWorkflow: ApprovalWorkflow;
+  expiresAt?: string;
   metadata?: ConfirmMetadata;
 }
 
@@ -46,7 +46,7 @@ export interface UpdateConfirmStatusRequestDto {
  * 批量更新状态请求DTO
  */
 export interface BatchUpdateStatusRequestDto {
-  confirm_ids: UUID[];
+  confirmIds: UUID[];
   status: ConfirmStatus;
 }
 
@@ -54,40 +54,40 @@ export interface BatchUpdateStatusRequestDto {
  * 确认查询请求DTO
  */
 export interface ConfirmQueryRequestDto {
-  context_id?: UUID;
-  plan_id?: UUID;
-  confirmation_type?: ConfirmationType;
+  contextId?: UUID;
+  planId?: UUID;
+  confirmationType?: ConfirmationType;
   status?: ConfirmStatus;
   priority?: Priority;
-  requester_user_id?: string;
-  created_after?: string;
-  created_before?: string;
-  expires_after?: string;
-  expires_before?: string;
+  requesterUserId?: string;
+  createdAfter?: string;
+  createdBefore?: string;
+  expiresAfter?: string;
+  expiresBefore?: string;
   page?: number;
   limit?: number;
-  sort_by?: string;
-  sort_order?: 'asc' | 'desc';
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
 }
 
 /**
  * 确认响应DTO
  */
 export interface ConfirmResponseDto {
-  confirm_id: UUID;
-  context_id: UUID;
-  plan_id?: UUID;
-  protocol_version: string;
-  confirmation_type: ConfirmationType;
+  confirmId: UUID;
+  contextId: UUID;
+  planId?: UUID;
+  protocolVersion: string;
+  confirmationType: ConfirmationType;
   status: ConfirmStatus;
   priority: Priority;
   subject: ConfirmSubject;
   requester: Requester;
-  approval_workflow: ApprovalWorkflow;
+  approvalWorkflow: ApprovalWorkflow;
   decision?: ConfirmDecision;
-  created_at: string;
-  updated_at: string;
-  expires_at?: string;
+  createdAt: string;
+  updatedAt: string;
+  expiresAt?: string;
   metadata?: ConfirmMetadata;
 }
 
@@ -99,7 +99,7 @@ export interface PaginatedConfirmResponseDto {
   total: number;
   page: number;
   limit: number;
-  total_pages: number;
+  totalPages: number;
 }
 
 /**
@@ -107,9 +107,9 @@ export interface PaginatedConfirmResponseDto {
  */
 export interface ConfirmStatisticsResponseDto {
   total: number;
-  by_status: Record<ConfirmStatus, number>;
-  by_type: Record<ConfirmationType, number>;
-  by_priority: Record<Priority, number>;
+  byStatus: Record<ConfirmStatus, number>;
+  byType: Record<ConfirmationType, number>;
+  byPriority: Record<Priority, number>;
 }
 
 /**

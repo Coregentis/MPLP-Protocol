@@ -15,23 +15,81 @@ import { AccessControl, Action } from '../value-objects/access-control';
 /**
  * Context实体类
  * 包含上下文的核心属性和领域行为
+ * 遵循MPLP双重命名约定：实体层使用snake_case
  */
 export class Context {
+  // 私有字段使用snake_case命名约定
+  private readonly _context_id: UUID;
+  private _name: string;
+  private _description: string | null;
+  private _lifecycle_stage: ContextLifecycleStage;
+  private _status: EntityStatus;
+  private readonly _created_at: Date;
+  private _updated_at: Date;
+  private _session_ids: UUID[];
+  private _shared_state_ids: UUID[];
+  private _configuration: Record<string, unknown>;
+  private _metadata: Record<string, unknown>;
+  private _shared_state?: SharedState;
+  private _access_control?: AccessControl;
+
   constructor(
-    public readonly contextId: UUID,
-    public name: string,
-    public description: string | null,
-    public lifecycleStage: ContextLifecycleStage,
-    public status: EntityStatus,
-    public readonly createdAt: Date,
-    public updatedAt: Date,
-    public sessionIds: UUID[] = [],
-    public sharedStateIds: UUID[] = [],
-    public configuration: Record<string, unknown> = {},
-    public metadata: Record<string, unknown> = {},
-    public sharedState?: SharedState,
-    public accessControl?: AccessControl
-  ) {}
+    contextId: UUID,
+    name: string,
+    description: string | null,
+    lifecycleStage: ContextLifecycleStage,
+    status: EntityStatus,
+    createdAt: Date,
+    updatedAt: Date,
+    sessionIds: UUID[] = [],
+    sharedStateIds: UUID[] = [],
+    configuration: Record<string, unknown> = {},
+    metadata: Record<string, unknown> = {},
+    sharedState?: SharedState,
+    accessControl?: AccessControl
+  ) {
+    this._context_id = contextId;
+    this._name = name;
+    this._description = description;
+    this._lifecycle_stage = lifecycleStage;
+    this._status = status;
+    this._created_at = createdAt;
+    this._updated_at = updatedAt;
+    this._session_ids = sessionIds;
+    this._shared_state_ids = sharedStateIds;
+    this._configuration = configuration;
+    this._metadata = metadata;
+    this._shared_state = sharedState;
+    this._access_control = accessControl;
+  }
+
+  // Getter方法 - 提供对私有字段的访问
+  get contextId(): UUID { return this._context_id; }
+  get name(): string { return this._name; }
+  get description(): string | null { return this._description; }
+  get lifecycleStage(): ContextLifecycleStage { return this._lifecycle_stage; }
+  get status(): EntityStatus { return this._status; }
+  get createdAt(): Date { return this._created_at; }
+  get updatedAt(): Date { return this._updated_at; }
+  get sessionIds(): UUID[] { return [...this._session_ids]; }
+  get sharedStateIds(): UUID[] { return [...this._shared_state_ids]; }
+  get configuration(): Record<string, unknown> { return { ...this._configuration }; }
+  get metadata(): Record<string, unknown> { return { ...this._metadata }; }
+  get sharedState(): SharedState | undefined { return this._shared_state; }
+  get accessControl(): AccessControl | undefined { return this._access_control; }
+
+  // Setter方法 - 提供对可变字段的修改
+  set name(value: string) { this._name = value; }
+  set description(value: string | null) { this._description = value; }
+  set lifecycleStage(value: ContextLifecycleStage) { this._lifecycle_stage = value; }
+  set status(value: EntityStatus) { this._status = value; }
+  set updatedAt(value: Date) { this._updated_at = value; }
+  set sessionIds(value: UUID[]) { this._session_ids = [...value]; }
+  set sharedStateIds(value: UUID[]) { this._shared_state_ids = [...value]; }
+  set configuration(value: Record<string, unknown>) { this._configuration = { ...value }; }
+  set metadata(value: Record<string, unknown>) { this._metadata = { ...value }; }
+  set sharedState(value: SharedState | undefined) { this._shared_state = value; }
+  set accessControl(value: AccessControl | undefined) { this._access_control = value; }
 
   /**
    * 激活上下文
@@ -109,8 +167,8 @@ export class Context {
    * 添加会话ID
    */
   addSessionId(sessionId: UUID): boolean {
-    if (!this.sessionIds.includes(sessionId)) {
-      this.sessionIds.push(sessionId);
+    if (!this._session_ids.includes(sessionId)) {
+      this._session_ids.push(sessionId);
       this.updatedAt = new Date();
       return true;
     }
@@ -121,10 +179,10 @@ export class Context {
    * 移除会话ID
    */
   removeSessionId(sessionId: UUID): boolean {
-    const initialLength = this.sessionIds.length;
-    this.sessionIds = this.sessionIds.filter(id => id !== sessionId);
-    
-    if (this.sessionIds.length !== initialLength) {
+    const initialLength = this._session_ids.length;
+    this._session_ids = this._session_ids.filter(id => id !== sessionId);
+
+    if (this._session_ids.length !== initialLength) {
       this.updatedAt = new Date();
       return true;
     }

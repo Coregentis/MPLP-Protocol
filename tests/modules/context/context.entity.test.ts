@@ -188,8 +188,8 @@ describe('Context Entity', () => {
 
       const originalUpdatedAt = context.updatedAt.getTime();
 
-      // 等待一毫秒确保时间差异
-      await TestHelpers.Async.wait(1);
+      // 等待足够时间确保时间差异
+      await TestHelpers.Async.wait(10);
 
       // 执行测试
       const result = context.suspend();

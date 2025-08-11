@@ -467,7 +467,7 @@ export class PlanModuleAdapter implements ModuleInterface {
         input_data: context.data_store.global_data.input || {
           data_type: 'planning_data',
           data_version: '1.0.0',
-          payload: { context_id: context.contextId },
+          payload: { contextId: context.contextId },
           metadata: {
             source_module: 'plan',
             target_modules: ['plan'],
@@ -475,8 +475,8 @@ export class PlanModuleAdapter implements ModuleInterface {
             validation_status: 'valid',
             security_level: 'internal'
           },
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
         },
         previous_stage_results: [],
         configuration: {

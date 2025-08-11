@@ -80,7 +80,7 @@ describe('Plan Entity', () => {
         {
           name: '空字符串名称',
           input: { name: '', description: planData.description },
-          expectedError: undefined
+          expectedError: 'Plan name is required'
         },
         {
           name: '超长名称',
@@ -95,28 +95,54 @@ describe('Plan Entity', () => {
       ];
 
       for (const test of boundaryTests) {
-        const plan = new Plan({
-          plan_id: planData.plan_id,
-          context_id: planData.context_id,
-          name: test.input.name,
-          description: test.input.description,
-          status: 'active' as PlanStatus,
-          version: '1.0.0',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          goals: planData.goals,
-          tasks: planData.tasks,
-          dependencies: planData.dependencies,
-          execution_strategy: planData.execution_strategy,
-          priority: planData.priority,
-          estimated_duration: planData.estimated_duration,
-          progress: { completed_tasks: 0, total_tasks: 0, percentage: 0 },
-          configuration: planData.configuration,
-          metadata: planData.metadata
-        });
+        if (test.expectedError) {
+          // 测试应该抛出错误的情况
+          expect(() => {
+            new Plan({
+              plan_id: planData.plan_id,
+              context_id: planData.context_id,
+              name: test.input.name,
+              description: test.input.description,
+              status: 'active' as PlanStatus,
+              version: '1.0.0',
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+              goals: planData.goals,
+              tasks: planData.tasks,
+              dependencies: planData.dependencies,
+              execution_strategy: planData.execution_strategy,
+              priority: planData.priority,
+              estimated_duration: planData.estimated_duration,
+              progress: { completed_tasks: 0, total_tasks: 0, percentage: 0 },
+              configuration: planData.configuration,
+              metadata: planData.metadata
+            });
+          }).toThrow(test.expectedError);
+        } else {
+          // 测试应该成功的情况
+          const plan = new Plan({
+            plan_id: planData.plan_id,
+            context_id: planData.context_id,
+            name: test.input.name,
+            description: test.input.description,
+            status: 'active' as PlanStatus,
+            version: '1.0.0',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+            goals: planData.goals,
+            tasks: planData.tasks,
+            dependencies: planData.dependencies,
+            execution_strategy: planData.execution_strategy,
+            priority: planData.priority,
+            estimated_duration: planData.estimated_duration,
+            progress: { completed_tasks: 0, total_tasks: 0, percentage: 0 },
+            configuration: planData.configuration,
+            metadata: planData.metadata
+          });
 
-        expect(plan.name).toBe(test.input.name);
-        expect(plan.description).toBe(test.input.description);
+          expect(plan.name).toBe(test.input.name);
+          expect(plan.description).toBe(test.input.description);
+        }
       }
     });
   });

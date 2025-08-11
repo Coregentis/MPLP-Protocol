@@ -255,10 +255,10 @@ export interface LifecycleCoordinationRequest {
 }
 
 /**
- * 生命周期结果
+ * 生命周期结果 (Schema定义 - snake_case)
  */
 export interface LifecycleResult {
-  roleId: UUID;
+  role_id: UUID;
   role_data: unknown;
   capabilities: string[];
   timestamp: Timestamp;

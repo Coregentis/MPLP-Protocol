@@ -8,7 +8,33 @@
  * @created 2025-01-28T20:00:00+08:00
  */
 
+// Mock express-validator completely
+jest.mock('express-validator', () => {
+  const mockChain = {
+    isUUID: jest.fn().mockReturnThis(),
+    isString: jest.fn().mockReturnThis(),
+    notEmpty: jest.fn().mockReturnThis(),
+    isLength: jest.fn().mockReturnThis(),
+    isArray: jest.fn().mockReturnThis(),
+    optional: jest.fn().mockReturnThis(),
+    isIn: jest.fn().mockReturnThis(),
+    isObject: jest.fn().mockReturnThis(),
+    isNumeric: jest.fn().mockReturnThis(),
+    withMessage: jest.fn().mockReturnThis()
+  };
+
+  return {
+    body: jest.fn(() => mockChain),
+    param: jest.fn(() => mockChain),
+    validationResult: jest.fn(() => ({
+      isEmpty: jest.fn(() => true),
+      array: jest.fn(() => [])
+    }))
+  };
+});
+
 import { Request, Response, NextFunction } from 'express';
+import { validationResult } from 'express-validator';
 import { PlanController } from '../../../src/modules/plan/api/controllers/plan.controller';
 import { CreatePlanCommandHandler } from '../../../src/modules/plan/application/commands/create-plan.command';
 import { GetPlanQueryHandler } from '../../../src/modules/plan/application/queries/get-plan.query';
@@ -17,17 +43,6 @@ import { PlanExecutionService } from '../../../src/modules/plan/application/serv
 import { Logger } from '../../../src/public/utils/logger';
 import { TestDataFactory } from '../../public/test-utils/test-data-factory';
 import { TestHelpers } from '../../public/test-utils/test-helpers';
-
-// Mock express-validator
-const mockValidationResult = jest.fn();
-const mockBody = jest.fn();
-const mockParam = jest.fn();
-
-jest.mock('express-validator', () => ({
-  body: mockBody,
-  param: mockParam,
-  validationResult: mockValidationResult
-}));
 
 // Mock express
 const mockRouter = {
@@ -42,22 +57,50 @@ jest.mock('express', () => ({
 }));
 
 describe('PlanController', () => {
-  let planController: PlanController;
+  let controller: PlanController;
   let mockCreatePlanCommandHandler: jest.Mocked<CreatePlanCommandHandler>;
+  let mockUpdatePlanCommandHandler: any;
+  let mockDeletePlanCommandHandler: any;
+  let mockGetPlanByIdQueryHandler: any;
+  let mockGetPlansQueryHandler: any;
   let mockGetPlanQueryHandler: jest.Mocked<GetPlanQueryHandler>;
   let mockPlanManagementService: jest.Mocked<PlanManagementService>;
+  let mockPlanModuleAdapter: any;
   let mockPlanExecutionService: jest.Mocked<PlanExecutionService>;
   let mockLogger: jest.Mocked<Logger>;
   let mockRequest: Partial<Request>;
   let mockResponse: Partial<Response>;
   let mockNext: jest.MockedFunction<NextFunction>;
+  let mockValidationResult: jest.MockedFunction<typeof validationResult>;
 
   beforeEach(() => {
     // 重置所有mock
     jest.clearAllMocks();
 
+    // 重置router mock
+    mockRouter.post.mockClear();
+    mockRouter.get.mockClear();
+    mockRouter.put.mockClear();
+    mockRouter.delete.mockClear();
+
     // 创建mock服务
     mockCreatePlanCommandHandler = {
+      execute: jest.fn()
+    } as any;
+
+    mockUpdatePlanCommandHandler = {
+      execute: jest.fn()
+    } as any;
+
+    mockDeletePlanCommandHandler = {
+      execute: jest.fn()
+    } as any;
+
+    mockGetPlanByIdQueryHandler = {
+      execute: jest.fn()
+    } as any;
+
+    mockGetPlansQueryHandler = {
       execute: jest.fn()
     } as any;
 
@@ -72,6 +115,11 @@ describe('PlanController', () => {
       deletePlan: jest.fn()
     } as any;
 
+    mockPlanModuleAdapter = {
+      processRequest: jest.fn(),
+      processResponse: jest.fn()
+    } as any;
+
     mockPlanExecutionService = {
       executePlan: jest.fn()
     } as any;
@@ -84,10 +132,15 @@ describe('PlanController', () => {
     } as any;
 
     // 创建controller实例
-    planController = new PlanController(
+    controller = new PlanController(
       mockCreatePlanCommandHandler,
-      mockGetPlanQueryHandler,
+      mockUpdatePlanCommandHandler,
+      mockDeletePlanCommandHandler,
+      mockGetPlanByIdQueryHandler,
+      mockGetPlansQueryHandler,
       mockPlanManagementService,
+      mockPlanModuleAdapter,
+      mockGetPlanQueryHandler,
       mockPlanExecutionService,
       mockLogger
     );
@@ -108,24 +161,13 @@ describe('PlanController', () => {
 
     mockNext = jest.fn();
 
-    // 设置express-validator mocks
-    mockBody.mockReturnValue({
-      isUUID: () => ({ withMessage: () => mockBody }),
-      isString: () => ({ notEmpty: () => ({ withMessage: () => ({ isLength: () => ({ withMessage: () => mockBody }) }) }) }),
-      optional: () => ({ isArray: () => ({ withMessage: () => mockBody }) }),
-      isIn: () => ({ withMessage: () => mockBody }),
-      withMessage: () => mockBody
-    });
-
-    mockParam.mockReturnValue({
-      isUUID: () => ({ withMessage: () => mockParam }),
-      withMessage: () => mockParam
-    });
+    // Get the mocked validationResult
+    mockValidationResult = validationResult as jest.MockedFunction<typeof validationResult>;
   });
 
   describe('构造函数和初始化', () => {
     it('应该正确初始化Controller', () => {
-      expect(planController).toBeInstanceOf(PlanController);
+      expect(controller).toBeInstanceOf(PlanController);
       expect(mockRouter.post).toHaveBeenCalledTimes(2); // '/' 和 '/:planId/execute'
       expect(mockRouter.get).toHaveBeenCalledTimes(2); // '/:planId' 和 '/:planId/status'
       expect(mockRouter.put).toHaveBeenCalledTimes(1); // '/:planId'
@@ -133,7 +175,7 @@ describe('PlanController', () => {
     });
 
     it('应该返回router实例', () => {
-      const router = planController.getRouter();
+      const router = controller.getRouter();
       expect(router).toBe(mockRouter);
     });
   });
@@ -158,7 +200,7 @@ describe('PlanController', () => {
 
     it('应该成功创建计划', async () => {
       const planId = TestDataFactory.Base.generateUUID();
-      const mockPlan = TestDataFactory.Plan.createValidPlan({
+      const mockPlan = TestDataFactory.Plan.createValidPlanRequest({
         planId,
         contextId: mockRequest.body.context_id,
         name: mockRequest.body.name
@@ -300,7 +342,7 @@ describe('PlanController', () => {
     });
 
     it('应该成功获取计划', async () => {
-      const mockPlan = TestDataFactory.Plan.createValidPlan({
+      const mockPlan = TestDataFactory.Plan.createValidPlanRequest({
         planId: mockRequest.params.planId
       });
 
@@ -382,7 +424,7 @@ describe('PlanController', () => {
     });
 
     it('应该成功更新计划', async () => {
-      const mockUpdatedPlan = TestDataFactory.Plan.createValidPlan({
+      const mockUpdatedPlan = TestDataFactory.Plan.createValidPlanRequest({
         planId: mockRequest.params.planId,
         name: mockRequest.body.name,
         description: mockRequest.body.description
@@ -654,7 +696,7 @@ describe('PlanController', () => {
     });
 
     it('应该成功获取计划状态', async () => {
-      const mockPlan = TestDataFactory.Plan.createValidPlan({
+      const mockPlan = TestDataFactory.Plan.createValidPlanRequest({
         planId: mockRequest.params.planId,
         status: 'active'
       });
@@ -720,7 +762,7 @@ describe('PlanController', () => {
 
       mockCreatePlanCommandHandler.execute.mockResolvedValue({
         success: true,
-        data: TestDataFactory.Plan.createValidPlan()
+        data: TestDataFactory.Plan.createValidPlanRequest()
       });
 
       mockRequest.body = {
@@ -737,7 +779,7 @@ describe('PlanController', () => {
     });
 
     it('应该构建正确的API响应格式', async () => {
-      const mockPlan = TestDataFactory.Plan.createValidPlan();
+      const mockPlan = TestDataFactory.Plan.createValidPlanRequest();
 
       mockCreatePlanCommandHandler.execute.mockResolvedValue({
         success: true,

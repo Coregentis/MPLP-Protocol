@@ -69,12 +69,12 @@ export class RoleRepository implements IRoleRepository {
     let results = Array.from(this.roles.values());
 
     // 应用过滤器
-    if (filter.contextId) {
-      results = results.filter(role => role.contextId === filter.contextId);
+    if (filter.context_id) {
+      results = results.filter(role => role.contextId === filter.context_id);
     }
 
-    if (filter.roleType) {
-      results = results.filter(role => role.roleType === filter.roleType);
+    if (filter.role_type) {
+      results = results.filter(role => role.roleType === filter.role_type);
     }
 
     if (filter.status) {

@@ -170,10 +170,10 @@ export class NetworkController {
   async queryNetworks(req: Request, res: Response): Promise<void> {
     try {
       const params: NetworkQueryParams = {
-        context_id: req.query.contextId as string,
+        contextId: req.query.contextId as string,
         status: req.query.status as any,
         topology: req.query.topology as any,
-        created_by: req.query.createdBy as string,
+        createdBy: req.query.createdBy as string,
         limit: req.query.limit
           ? parseInt(req.query.limit as string)
           : undefined,
@@ -270,10 +270,10 @@ export class NetworkController {
       };
 
       // 验证必需参数
-      if (!request.agentId || !request.node_type || !request.capabilities) {
+      if (!request.agentId || !request.nodeType || !request.capabilities) {
         res.status(400).json({
           success: false,
-          error: '缺少必需参数: agent_id, node_type, capabilities',
+          error: '缺少必需参数: agentId, nodeType, capabilities',
           timestamp: new Date().toISOString(),
         });
         return;

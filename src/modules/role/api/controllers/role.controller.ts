@@ -7,18 +7,27 @@
  * @created 2025-09-16
  */
 
-import { UUID } from '../../../../public/shared/types';
-import { RoleManagementService, CreateRoleRequest } from '../../application/services/role-management.service';
+// UUID import removed - not used in this file
+import { RoleManagementService, CreateRoleRequest, RoleStatistics } from '../../application/services/role-management.service';
 import { RoleFilter } from '../../domain/repositories/role-repository.interface';
-import { RoleStatus, Permission, ResourceType, PermissionAction } from '../../types';
+import { RoleStatus, RoleType, Permission, ResourceType, PermissionAction } from '../../types';
+import { RoleMapper } from '../mappers/role.mapper';
+import {
+  CreateRoleDto,
+  UpdateRoleDto,
+  QueryRolesDto,
+  RoleResponseDto,
+  RoleListResponseDto,
+  OperationResultDto,
+  PermissionCheckResultDto
+} from '../dto/role.dto';
 
 /**
- * HTTP请求接口
+ * HTTP请求接口基类
  */
-export interface HttpRequest {
-  params: Record<string, any>;
-  body: any;
-  query: Record<string, any>;
+export interface BaseHttpRequest {
+  params: Record<string, string>;
+  query: Record<string, string>;
   user?: {
     id: string;
     role: string;
@@ -26,11 +35,46 @@ export interface HttpRequest {
 }
 
 /**
+ * 创建角色请求接口
+ */
+export interface CreateRoleHttpRequest extends BaseHttpRequest {
+  body: CreateRoleDto;
+}
+
+/**
+ * 更新角色请求接口
+ */
+export interface UpdateRoleHttpRequest extends BaseHttpRequest {
+  body: UpdateRoleDto;
+}
+
+/**
+ * 查询角色请求接口
+ */
+export interface QueryRolesHttpRequest extends BaseHttpRequest {
+  body?: QueryRolesDto;
+}
+
+/**
+ * 权限操作请求接口
+ */
+export interface PermissionHttpRequest extends BaseHttpRequest {
+  body: Permission;
+}
+
+/**
+ * 通用HTTP请求接口
+ */
+export interface HttpRequest extends BaseHttpRequest {
+  body: Record<string, string | number | boolean>;
+}
+
+/**
  * HTTP响应接口
  */
 export interface HttpResponse {
   status: number;
-  data?: any;
+  data?: RoleResponseDto | RoleListResponseDto | OperationResultDto | PermissionCheckResultDto | RoleStatistics;
   error?: string;
   message?: string;
 }
@@ -47,11 +91,23 @@ export class RoleController {
    * 创建角色
    * POST /api/v1/roles
    */
-  async createRole(req: HttpRequest): Promise<HttpResponse> {
+  async createRole(req: CreateRoleHttpRequest): Promise<HttpResponse> {
     try {
-      const createRequest: CreateRoleRequest = req.body;
+      // 使用DTO接收Schema格式的请求
+      const createDto: CreateRoleDto = req.body;
+
+      // 转换为应用层请求格式 - 直接使用DTO字段
+      const createRequest: CreateRoleRequest = {
+        context_id: createDto.context_id,
+        name: createDto.name,
+        role_type: createDto.role_type,
+        display_name: createDto.display_name,
+        description: createDto.description,
+        permissions: createDto.permissions
+      };
+
       const result = await this.roleManagementService.createRole(createRequest);
-      
+
       if (!result.success) {
         return {
           status: 400,
@@ -59,9 +115,16 @@ export class RoleController {
         };
       }
 
+      // 使用Mapper转换响应为Schema格式
+      const responseData: RoleResponseDto = {
+        ...RoleMapper.toSchema(result.data!),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+
       return {
         status: 201,
-        data: result.data?.toProtocol(),
+        data: responseData,
         message: '角色创建成功'
       };
     } catch (error) {
@@ -80,7 +143,7 @@ export class RoleController {
     try {
       const roleId = req.params.id;
       const result = await this.roleManagementService.getRoleById(roleId);
-      
+
       if (!result.success) {
         return {
           status: 404,
@@ -88,9 +151,16 @@ export class RoleController {
         };
       }
 
+      // 使用Mapper转换响应为Schema格式
+      const responseData: RoleResponseDto = {
+        ...RoleMapper.toSchema(result.data!),
+        created_at: result.data!.createdAt,
+        updated_at: result.data!.updatedAt
+      };
+
       return {
         status: 200,
-        data: result.data?.toProtocol()
+        data: responseData
       };
     } catch (error) {
       return {
@@ -104,10 +174,10 @@ export class RoleController {
    * 更新角色状态
    * PUT /api/v1/roles/:id/status
    */
-  async updateRoleStatus(req: HttpRequest): Promise<HttpResponse> {
+  async updateRoleStatus(req: UpdateRoleHttpRequest): Promise<HttpResponse> {
     try {
       const roleId = req.params.id;
-      const { status } = req.body;
+      const status = req.body.status as RoleStatus;
 
       const result = await this.roleManagementService.updateRoleStatus(roleId, status);
       
@@ -118,9 +188,16 @@ export class RoleController {
         };
       }
 
+      // 使用Mapper转换响应为Schema格式
+      const responseData: RoleResponseDto = {
+        ...RoleMapper.toSchema(result.data!),
+        created_at: result.data!.createdAt,
+        updated_at: result.data!.updatedAt
+      };
+
       return {
         status: 200,
-        data: result.data?.toProtocol(),
+        data: responseData,
         message: '角色状态更新成功'
       };
     } catch (error) {
@@ -135,7 +212,7 @@ export class RoleController {
    * 添加权限
    * POST /api/v1/roles/:id/permissions
    */
-  async addPermission(req: HttpRequest): Promise<HttpResponse> {
+  async addPermission(req: PermissionHttpRequest): Promise<HttpResponse> {
     try {
       const roleId = req.params.id;
       const permission: Permission = req.body;
@@ -149,9 +226,16 @@ export class RoleController {
         };
       }
 
+      // 使用Mapper转换响应为Schema格式
+      const responseData: RoleResponseDto = {
+        ...RoleMapper.toSchema(result.data!),
+        created_at: result.data!.createdAt,
+        updated_at: result.data!.updatedAt
+      };
+
       return {
         status: 200,
-        data: result.data?.toProtocol(),
+        data: responseData,
         message: '权限添加成功'
       };
     } catch (error) {
@@ -180,9 +264,16 @@ export class RoleController {
         };
       }
 
+      // 使用Mapper转换响应为Schema格式
+      const responseData: RoleResponseDto = {
+        ...RoleMapper.toSchema(result.data!),
+        created_at: result.data!.createdAt,
+        updated_at: result.data!.updatedAt
+      };
+
       return {
         status: 200,
-        data: result.data?.toProtocol(),
+        data: responseData,
         message: '权限移除成功'
       };
     } catch (error) {
@@ -216,9 +307,14 @@ export class RoleController {
         };
       }
 
+      const permissionResult: PermissionCheckResultDto = {
+        has_permission: result.data || false,
+        checked_at: new Date().toISOString()
+      };
+
       return {
         status: 200,
-        data: { has_permission: result.data }
+        data: permissionResult
       };
     } catch (error) {
       return {
@@ -236,8 +332,8 @@ export class RoleController {
     try {
       const filter: RoleFilter = {
         context_id: req.query.contextId,
-        role_type: req.query.roleType,
-        status: req.query.status,
+        role_type: req.query.roleType as RoleType,
+        status: req.query.status as RoleStatus,
         name_pattern: req.query.name_pattern,
         created_after: req.query.created_after,
         created_before: req.query.created_before
@@ -259,12 +355,22 @@ export class RoleController {
         };
       }
 
+      // 转换为RoleListResponseDto格式
+      const roleListResponse: RoleListResponseDto = {
+        roles: result.data?.items?.map(role => ({
+          ...RoleMapper.toSchema(role),
+          created_at: role.createdAt,
+          updated_at: role.updatedAt
+        })) || [],
+        total: result.data?.total || 0,
+        page: result.data?.page || 1,
+        limit: result.data?.limit || 10,
+        total_pages: result.data?.total_pages || 1
+      };
+
       return {
         status: 200,
-        data: {
-          ...result.data,
-          items: result.data?.items.map(role => role.toProtocol())
-        }
+        data: roleListResponse
       };
     } catch (error) {
       return {
@@ -290,9 +396,16 @@ export class RoleController {
         };
       }
 
+      // 转换为RoleResponseDto数组
+      const rolesResponse: RoleResponseDto[] = result.data?.map(role => ({
+        ...RoleMapper.toSchema(role),
+        created_at: role.createdAt,
+        updated_at: role.updatedAt
+      })) || [];
+
       return {
         status: 200,
-        data: result.data?.map(role => role.toProtocol())
+        data: { roles: rolesResponse, total: rolesResponse.length, page: 1, limit: rolesResponse.length, total_pages: 1 } as RoleListResponseDto
       };
     } catch (error) {
       return {

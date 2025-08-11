@@ -26,30 +26,30 @@ import { Timeline } from '../value-objects/timeline.value-object';
  * Plan领域实体
  */
 export class Plan {
-  // Domain层使用camelCase命名约定 (DDD架构标准)
-  private _planId: UUID;                    // 对应Schema: plan_id
-  private _contextId: UUID;                 // 对应Schema: context_id
+  // Domain层使用snake_case命名约定 (MPLP双重命名约定)
+  private _plan_id: UUID;                    // 对应Schema: plan_id
+  private _context_id: UUID;                 // 对应Schema: context_id
   private _name: string;                    // 对应Schema: name
   private _description: string;             // 对应Schema: description
   private _status: PlanStatus;              // 对应Schema: status
   private _version: string;                 // 对应Schema: version
-  private _createdAt: Timestamp;            // 对应Schema: created_at
-  private _updatedAt: Timestamp;            // 对应Schema: updated_at
+  private _created_at: Timestamp;            // 对应Schema: created_at
+  private _updated_at: Timestamp;            // 对应Schema: updated_at
   private _goals: string[];                 // 对应Schema: goals
   private _tasks: PlanTask[];               // 对应Schema: tasks
   private _dependencies: PlanDependency[];  // 对应Schema: dependencies
-  private _executionStrategy: ExecutionStrategy; // 对应Schema: execution_strategy
+  private _execution_strategy: ExecutionStrategy; // 对应Schema: execution_strategy
   private _priority: Priority;              // 对应Schema: priority
-  private _estimatedDuration?: Duration;    // 对应Schema: estimated_duration
+  private _estimated_duration?: Duration;    // 对应Schema: estimated_duration
   private _progress: {                      // 对应Schema: progress
-    completedTasks: number;                 // camelCase for Domain layer
-    totalTasks: number;
+    completed_tasks: number;                 // snake_case for Domain layer
+    total_tasks: number;
     percentage: number;
   };
   private _timeline?: Timeline;             // 对应Schema: timeline
   private _configuration: PlanConfiguration; // 对应Schema: configuration
   private _metadata?: Record<string, unknown>; // 对应Schema: metadata
-  private _riskAssessment?: RiskAssessment; // 对应Schema: risk_assessment
+  private _risk_assessment?: RiskAssessment; // 对应Schema: risk_assessment
 
     /**
    * 里程碑列表
@@ -83,26 +83,26 @@ constructor(params: Record<string, unknown>) {
     // 转换snake_case到camelCase参数
     const normalizedParams = this.normalizeParams(params);
 
-    // Domain层属性赋值，使用camelCase
-    this._planId = normalizedParams.planId;
-    this._contextId = normalizedParams.contextId;
+    // Domain层属性赋值，使用snake_case
+    this._plan_id = normalizedParams.planId;
+    this._context_id = normalizedParams.contextId;
     this._name = normalizedParams.name;
     this._description = normalizedParams.description;
     this._status = normalizedParams.status;
     this._version = normalizedParams.version;
-    this._createdAt = normalizedParams.createdAt;
-    this._updatedAt = normalizedParams.updatedAt;
+    this._created_at = normalizedParams.createdAt;
+    this._updated_at = normalizedParams.updatedAt;
     this._goals = normalizedParams.goals;
     this._tasks = normalizedParams.tasks;
     this._dependencies = normalizedParams.dependencies;
-    this._executionStrategy = normalizedParams.executionStrategy;
+    this._execution_strategy = normalizedParams.executionStrategy;
     this._priority = normalizedParams.priority;
-    this._estimatedDuration = normalizedParams.estimatedDuration;
-    this._progress = normalizedParams.progress;
+    this._estimated_duration = normalizedParams.estimatedDuration;
+    this._progress = this.normalizeProgress(normalizedParams.progress);
     this._timeline = normalizedParams.timeline;
     this._configuration = normalizedParams.configuration;
     this._metadata = normalizedParams.metadata;
-    this._riskAssessment = normalizedParams.riskAssessment;
+    this._risk_assessment = normalizedParams.riskAssessment;
     this.createdBy = normalizedParams.createdBy || 'system';
     this.updatedBy = normalizedParams.updatedBy;
   }
@@ -152,8 +152,8 @@ constructor(params: Record<string, unknown>) {
     priority: Priority;
     estimatedDuration?: Duration;
     progress: {
-      completedTasks: number;
-      totalTasks: number;
+      completed_tasks: number;
+      total_tasks: number;
       percentage: number;
     };
     timeline?: Timeline;
@@ -194,21 +194,21 @@ constructor(params: Record<string, unknown>) {
    * 标准化progress对象
    */
   private normalizeProgress(progress: Record<string, unknown> | undefined): {
-    completedTasks: number;
-    totalTasks: number;
+    completed_tasks: number;
+    total_tasks: number;
     percentage: number;
   } {
     if (!progress) {
       return {
-        completedTasks: 0,
-        totalTasks: 0,
+        completed_tasks: 0,
+        total_tasks: 0,
         percentage: 0
       };
     }
 
     return {
-      completedTasks: (progress.completedTasks || progress.completed_tasks || 0) as number,
-      totalTasks: (progress.totalTasks || progress.total_tasks || 0) as number,
+      completed_tasks: (progress.completedTasks || progress.completed_tasks || 0) as number,
+      total_tasks: (progress.totalTasks || progress.total_tasks || 0) as number,
       percentage: (progress.percentage || 0) as number
     };
   }
@@ -216,11 +216,11 @@ constructor(params: Record<string, unknown>) {
   // ===== 获取器 =====
 
   get planId(): UUID {
-    return this._planId;
+    return this._plan_id;
   }
 
   get contextId(): UUID {
-    return this._contextId;
+    return this._context_id;
   }
 
   get name(): string {
@@ -240,11 +240,11 @@ constructor(params: Record<string, unknown>) {
   }
 
   get createdAt(): Timestamp {
-    return this._createdAt;
+    return this._created_at;
   }
 
   get updatedAt(): Timestamp {
-    return this._updatedAt;
+    return this._updated_at;
   }
 
   get goals(): string[] {
@@ -264,7 +264,7 @@ constructor(params: Record<string, unknown>) {
   }
 
   get executionStrategy(): ExecutionStrategy {
-    return this._executionStrategy;
+    return this._execution_strategy;
   }
 
   get priority(): Priority {
@@ -272,7 +272,7 @@ constructor(params: Record<string, unknown>) {
   }
 
   get estimatedDuration(): Duration | undefined {
-    return this._estimatedDuration ? { ...this._estimatedDuration } : undefined;
+    return this._estimated_duration ? { ...this._estimated_duration } : undefined;
   }
 
   get progress(): {
@@ -284,9 +284,11 @@ constructor(params: Record<string, unknown>) {
     total_tasks: number;
   } {
     return {
-      ...this._progress,
-      completed_tasks: this._progress.completedTasks,
-      total_tasks: this._progress.totalTasks
+      completedTasks: this._progress.completed_tasks,
+      totalTasks: this._progress.total_tasks,
+      percentage: this._progress.percentage,
+      completed_tasks: this._progress.completed_tasks,
+      total_tasks: this._progress.total_tasks
     };
   }
 
@@ -303,37 +305,37 @@ constructor(params: Record<string, unknown>) {
   }
 
   get riskAssessment(): RiskAssessment | undefined {
-    return this._riskAssessment ? { ...this._riskAssessment } : undefined;
+    return this._risk_assessment ? { ...this._risk_assessment } : undefined;
   }
 
   // ===== Snake_case 兼容性获取器 (用于测试) =====
 
   get plan_id(): UUID {
-    return this._planId;
+    return this._plan_id;
   }
 
   get context_id(): UUID {
-    return this._contextId;
+    return this._context_id;
   }
 
   get execution_strategy(): ExecutionStrategy {
-    return this._executionStrategy;
+    return this._execution_strategy;
   }
 
   get estimated_duration(): { value: number; unit: string } | undefined {
-    return this._estimatedDuration;
+    return this._estimated_duration;
   }
 
   get created_at(): Timestamp {
-    return this._createdAt;
+    return this._created_at;
   }
 
   get updated_at(): Timestamp {
-    return this._updatedAt;
+    return this._updated_at;
   }
 
   get risk_assessment(): RiskAssessment | undefined {
-    return this._riskAssessment ? { ...this._riskAssessment } : undefined;
+    return this._risk_assessment ? { ...this._risk_assessment } : undefined;
   }
 
 
@@ -355,7 +357,7 @@ constructor(params: Record<string, unknown>) {
     }
 
     this._status = newStatus;
-    this._updatedAt = new Date().toISOString();
+    this._updated_at = new Date().toISOString();
     return { success: true };
   }
 
@@ -396,7 +398,7 @@ constructor(params: Record<string, unknown>) {
     }
 
     this._tasks.push(normalizedTask);
-    this._updatedAt = new Date().toISOString();
+    this._updated_at = new Date().toISOString();
     this.recalculateProgress();
 
     return { success: true };
@@ -439,7 +441,7 @@ constructor(params: Record<string, unknown>) {
       taskId: currentTask.taskId
     };
 
-    this._updatedAt = new Date().toISOString();
+    this._updated_at = new Date().toISOString();
     this.recalculateProgress();
     return { success: true };
   }
@@ -468,7 +470,7 @@ constructor(params: Record<string, unknown>) {
       dep.sourceTaskId !== taskId && dep.targetTaskId !== taskId
     );
 
-    this._updatedAt = new Date().toISOString();
+    this._updated_at = new Date().toISOString();
     this.recalculateProgress();
     return { success: true };
   }
@@ -520,7 +522,7 @@ constructor(params: Record<string, unknown>) {
     }
 
     this._dependencies.push(normalizedDependency);
-    this._updatedAt = new Date().toISOString();
+    this._updated_at = new Date().toISOString();
     return true;
   }
 
@@ -533,7 +535,7 @@ constructor(params: Record<string, unknown>) {
       ...this._configuration,
       ...updates
     };
-    this._updatedAt = new Date().toISOString();
+    this._updated_at = new Date().toISOString();
   }
 
   /**
@@ -545,7 +547,7 @@ constructor(params: Record<string, unknown>) {
       ...this._metadata || {},
       ...updates
     };
-    this._updatedAt = new Date().toISOString();
+    this._updated_at = new Date().toISOString();
   }
 
   /**
@@ -553,8 +555,8 @@ constructor(params: Record<string, unknown>) {
    * @param assessment 风险评估
    */
   updateRiskAssessment(assessment: RiskAssessment): void {
-    this._riskAssessment = assessment;
-    this._updatedAt = new Date().toISOString();
+    this._risk_assessment = assessment;
+    this._updated_at = new Date().toISOString();
   }
 
   /**
@@ -566,8 +568,8 @@ constructor(params: Record<string, unknown>) {
     const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
 
     this._progress = {
-      completedTasks: completed,
-      totalTasks: total,
+      completed_tasks: completed,
+      total_tasks: total,
       percentage
     };
   }
@@ -1002,25 +1004,25 @@ constructor(params: Record<string, unknown>) {
    */
   toObject() {
     return {
-      planId: this._planId,
-      contextId: this._contextId,
+      planId: this._plan_id,
+      contextId: this._context_id,
       name: this._name,
       description: this._description,
       status: this._status,
       version: this._version,
-      createdAt: this._createdAt,
-      updatedAt: this._updatedAt,
+      createdAt: this._created_at,
+      updatedAt: this._updated_at,
       goals: [...this._goals],
       tasks: this._tasks.map(task => ({ ...task })),
       dependencies: this._dependencies.map(dep => ({ ...dep })),
-      executionStrategy: this._executionStrategy,
+      executionStrategy: this._execution_strategy,
       priority: this._priority,
-      estimatedDuration: this._estimatedDuration ? { ...this._estimatedDuration } : undefined,
+      estimatedDuration: this._estimated_duration ? { ...this._estimated_duration } : undefined,
       progress: { ...this._progress },
       timeline: this._timeline ? { ...this._timeline } : undefined,
       configuration: { ...this._configuration },
       metadata: this._metadata ? { ...this._metadata } : undefined,
-      riskAssessment: this._riskAssessment ? { ...this._riskAssessment } : undefined
+      riskAssessment: this._risk_assessment ? { ...this._risk_assessment } : undefined
     };
   }
 } 

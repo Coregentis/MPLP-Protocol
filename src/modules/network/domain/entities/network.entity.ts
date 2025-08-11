@@ -321,7 +321,7 @@ export class Network {
    * 根据类型查找节点
    */
   findNodesByType(node_type: NodeType): NetworkNode[] {
-    return this._nodes.filter(n => n.node_type === node_type);
+    return this._nodes.filter(n => n.nodeType === node_type);
   }
 
   /**
@@ -545,8 +545,8 @@ export class Network {
       topology: this._topology,
       nodes: [...this._nodes],
       edges: this._edges ? [...this._edges] : undefined,
-      discovery_mechanism: { ...this._discovery_mechanism },
-      routing_strategy: { ...this._routing_strategy },
+      discoveryMechanism: { ...this._discovery_mechanism },
+      routingStrategy: { ...this._routing_strategy },
       status: this._status,
       createdAt: this._created_at,
       updatedAt: this._updated_at,

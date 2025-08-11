@@ -311,7 +311,7 @@ export interface DecisionLog {
 export interface Correlation {
   correlation_id: string;                        // 关联ID (必需)
   type: CorrelationType;                         // 关联类型 (必需)
-  related_traceId: string;                      // 关联的追踪ID (必需)
+  related_trace_id: string;                      // 关联的追踪ID (必需)
   strength?: number;                             // 关联强度
   description?: string;                          // 描述
 }
@@ -470,4 +470,22 @@ export interface TraceConfig {
     warning_ms: number;                        // 警告阈值(毫秒)
     critical_ms: number;                       // 严重阈值(毫秒)
   };
+}
+
+/**
+ * 创建追踪请求（内部camelCase版本）
+ * @note 用于TraceMapper.fromSchema的返回类型，遵循TypeScript层camelCase约定
+ */
+export interface CreateTraceRequestInternal {
+  traceId?: string;                            // 追踪ID（可选，通常由工厂生成）
+  contextId: string;                           // 上下文ID
+  planId?: string;                             // 计划ID（可选）
+  traceType: TraceType;                        // 追踪类型
+  severity: TraceSeverity;                     // 严重程度
+  event: TraceEvent;                           // 事件信息
+  timestamp?: string;                          // 时间戳（可选）
+  performanceMetrics?: PerformanceMetrics;     // 性能指标（可选）
+  errorInformation?: ErrorInformation;         // 错误信息（可选）
+  correlations?: Correlation[];                // 关联关系（可选）
+  metadata?: Record<string, unknown>;          // 元数据（可选）
 }

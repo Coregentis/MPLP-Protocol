@@ -26,7 +26,10 @@ export * from './infrastructure/repositories/extension.repository';
 export * from './module';
 
 // ===== 特定导出 (避免冲突) =====
-export { IExtensionRepository, ExtensionFilter } from './domain/repositories/extension-repository.interface';
+export {
+  IExtensionRepository,
+  ExtensionFilter,
+} from './domain/repositories/extension-repository.interface';
 
 // ===== 类型定义导出 =====
 export * from './types';

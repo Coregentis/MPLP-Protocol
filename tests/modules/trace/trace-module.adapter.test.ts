@@ -214,9 +214,9 @@ describe('TraceModuleAdapter单元测试', () => {
       const result: TracingResult = await traceAdapter.execute(request);
 
       // 验证结果结构
-      expect(result.trace_id).toBeDefined();
+      expect(result.traceId).toBeDefined();
       expect(result.monitoring_session).toBeDefined();
-      expect(result.monitoring_session.session_id).toBeDefined();
+      expect(result.monitoring_session.sessionId).toBeDefined();
       expect(result.monitoring_session.start_time).toBeDefined();
       expect(result.monitoring_session.active_traces).toBe(1);
       expect(result.event_collection).toBeDefined();
@@ -256,7 +256,7 @@ describe('TraceModuleAdapter单元测试', () => {
 
       const result: TracingResult = await traceAdapter.execute(request);
 
-      expect(result.trace_id).toBeDefined();
+      expect(result.traceId).toBeDefined();
       expect(result.event_collection.storage_location).toContain('batch');
       expect(result.monitoring_session.active_traces).toBe(1);
     });
@@ -282,7 +282,7 @@ describe('TraceModuleAdapter单元测试', () => {
 
       const result: TracingResult = await traceAdapter.execute(request);
 
-      expect(result.trace_id).toBeDefined();
+      expect(result.traceId).toBeDefined();
       expect(result.event_collection.storage_location).toContain('sampling');
       
       // 验证采样率被正确传递
@@ -324,9 +324,9 @@ describe('TraceModuleAdapter单元测试', () => {
 
       const result: TracingResult = await traceAdapter.execute(request);
 
-      expect(result.trace_id).toBeDefined();
+      expect(result.traceId).toBeDefined();
       expect(result.event_collection.storage_location).toContain('adaptive');
-      expect(result.monitoring_session.session_id).toBeDefined();
+      expect(result.monitoring_session.sessionId).toBeDefined();
     });
   });
 

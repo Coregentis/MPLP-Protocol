@@ -9,25 +9,30 @@
  */
 
 import { v4 as uuidv4 } from 'uuid';
-import { 
-  ModuleInterface, 
-  ModuleStatus, 
+import {
+  ModuleInterface,
+  ModuleStatus,
   TracingCoordinationRequest,
-  TracingResult
+  TracingResult,
+  ValidationResult,
+  WorkflowExecutionContext,
+  StageExecutionResult,
+  BusinessCoordinationRequest,
+  BusinessCoordinationResult,
+  BusinessError,
+  BusinessContext,
+  ErrorHandlingResult,
+  ProtocolModule,
+  BusinessCoordinationType,
+  BusinessDataType
 } from '../../../../public/modules/core/types/core.types';
 import { TraceManagementService } from '../../application/services/trace-management.service';
 import { TraceFactory, CreateTraceRequest } from '../../domain/factories/trace.factory';
+import { Trace } from '../../domain/entities/trace.entity';
 import { TraceAnalysisService } from '../../domain/services/trace-analysis.service';
 import { Logger } from '../../../../public/utils/logger';
 import {
-  TraceType,
-  TraceStatus,
-  TraceSeverity,
-  EventType,
-  EventCategory,
-  EventSource,
-  TraceEvent,
-  TraceMetadata
+  TraceType
 } from '../../types';
 import { UUID, Timestamp } from '../../../../public/shared/types';
 
@@ -95,7 +100,7 @@ export class TraceModuleAdapter implements ModuleInterface {
       
       this.logger.info('Tracing coordination completed', {
         contextId: request.contextId,
-        trace_id: result.traceId
+        traceId: result.traceId
       });
 
       return result;
@@ -204,7 +209,7 @@ export class TraceModuleAdapter implements ModuleInterface {
     const eventCollection = await this.configureEventCollection(request, trace);
 
     return {
-      trace_id: trace_id as UUID,
+      traceId: trace_id as UUID,
       monitoring_session: monitoringSession,
       event_collection: eventCollection,
       timestamp: timestamp as Timestamp
@@ -214,7 +219,7 @@ export class TraceModuleAdapter implements ModuleInterface {
   /**
    * 生成跟踪数据
    */
-  private async generateTraceData(request: TracingCoordinationRequest, trace_id: string): Promise<CreateTraceRequest> {
+  private async generateTraceData(request: TracingCoordinationRequest, _trace_id: string): Promise<CreateTraceRequest> {
     const traceType = this.mapStrategyToTraceType(request.tracing_strategy);
 
     return {
@@ -251,10 +256,10 @@ export class TraceModuleAdapter implements ModuleInterface {
    * 启动监控会话
    */
   private async startMonitoringSession(
-    request: TracingCoordinationRequest, 
-    trace: any
+    request: TracingCoordinationRequest,
+    trace: Trace
   ): Promise<{
-    session_id: UUID;
+    sessionId: UUID;
     start_time: Timestamp;
     active_traces: number;
   }> {
@@ -275,7 +280,7 @@ export class TraceModuleAdapter implements ModuleInterface {
     });
 
     return {
-      session_id: session_id as UUID,
+      sessionId: session_id as UUID,
       start_time: start_time as Timestamp,
       active_traces: 1 // 简化实现，实际应该查询活跃跟踪数量
     };
@@ -286,7 +291,7 @@ export class TraceModuleAdapter implements ModuleInterface {
    */
   private async configureEventCollection(
     request: TracingCoordinationRequest,
-    trace: any
+    trace: Trace
   ): Promise<{
     events_captured: number;
     storage_location: string;
@@ -355,31 +360,36 @@ export class TraceModuleAdapter implements ModuleInterface {
   /**
    * P0修复：执行工作流阶段
    */
-  async executeStage(context: any): Promise<any> {
+  async executeStage(context: WorkflowExecutionContext): Promise<StageExecutionResult> {
     const businessRequest = {
+      contextId: context.contextId,
       coordination_id: 'stage-' + Date.now(),
       context_id: context.contextId,
-      module: 'trace',
-      coordination_type: 'tracing_coordination',
+      module: 'trace' as ProtocolModule,
+      coordination_type: 'tracing_coordination' as BusinessCoordinationType,
       input_data: {
-        data_type: 'tracing_data',
+        data_type: 'tracing_data' as BusinessDataType,
         data_version: '1.0.0',
         payload: { context_id: context.contextId },
         metadata: {
-          source_module: 'trace',
-          target_modules: ['trace'],
+          source_module: 'trace' as ProtocolModule,
+          target_modules: ['trace' as ProtocolModule],
           data_schema_version: '1.0.0',
-          validation_status: 'valid',
-          security_level: 'internal'
+          validation_status: 'valid' as 'valid' | 'pending' | 'invalid',
+          security_level: 'internal' as 'internal' | 'public' | 'confidential' | 'restricted'
         },
         created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
       },
       previous_stage_results: [],
       configuration: {
         timeout_ms: 30000,
         retry_policy: { max_attempts: 3, delay_ms: 1000 },
+        retryPolicy: { max_attempts: 3, delay_ms: 1000 },
         validation_rules: [],
+        validationRules: [],
         output_format: 'tracing_data'
       }
     };
@@ -390,28 +400,29 @@ export class TraceModuleAdapter implements ModuleInterface {
       status: 'completed',
       result: result.output_data,
       duration_ms: 100,
-      started_at: new Date().toISOString(),
-      completed_at: new Date().toISOString()
+      startedAt: new Date().toISOString(),
+      completedAt: new Date().toISOString()
     };
   }
 
   /**
    * P0修复：执行业务协调
    */
-  async executeBusinessCoordination(request: any): Promise<any> {
+  async executeBusinessCoordination(request: BusinessCoordinationRequest): Promise<BusinessCoordinationResult> {
     const startTime = Date.now();
 
     try {
       const traceRequest = {
         contextId: request.contextId,
-        tracing_strategy: request.input_data.payload.tracing_strategy || 'real_time',
-        parameters: request.input_data.payload.parameters || {
+        tracing_strategy: (request.input_data.payload.tracing_strategy as 'real_time' | 'batch' | 'sampling' | 'adaptive') || 'real_time',
+        parameters: (request.input_data.payload.parameters as { [key: string]: unknown; sampling_rate?: number; retention_period?: number; event_filters?: string[]; }) || {
           sampling_rate: 1.0,
           retention_period: 86400000,
           event_filters: []
         },
-        monitoring_config: request.input_data.payload.monitoring_config || {
+        monitoring_config: (request.input_data.payload.monitoring_config as { metrics_collection: boolean; alert_thresholds: Record<string, number>; dashboard_enabled: boolean; }) || {
           metrics_collection: true,
+          alert_thresholds: {},
           dashboard_enabled: false
         }
       };
@@ -425,7 +436,7 @@ export class TraceModuleAdapter implements ModuleInterface {
         output_data: {
           data_type: 'tracing_data',
           data_version: '1.0.0',
-          payload: result,
+          payload: result as unknown as Record<string, unknown>,
           metadata: {
             source_module: 'trace',
             target_modules: ['core'],
@@ -433,8 +444,8 @@ export class TraceModuleAdapter implements ModuleInterface {
             validation_status: 'valid',
             security_level: 'internal'
           },
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
         },
         execution_metrics: {
           start_time: new Date(startTime).toISOString(),
@@ -479,7 +490,7 @@ export class TraceModuleAdapter implements ModuleInterface {
   /**
    * P0修复：验证输入数据
    */
-  async validateInput(input: any): Promise<any> {
+  async validateInput(_input: unknown): Promise<ValidationResult> {
     return {
       is_valid: true,
       errors: [],
@@ -490,7 +501,7 @@ export class TraceModuleAdapter implements ModuleInterface {
   /**
    * P0修复：处理错误
    */
-  async handleError(error: any, context: any): Promise<any> {
+  async handleError(error: BusinessError, context: BusinessContext): Promise<ErrorHandlingResult> {
     this.logger.error('Handling Trace module error', {
       errorId: error.error_id,
       errorType: error.error_type,

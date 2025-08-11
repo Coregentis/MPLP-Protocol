@@ -563,7 +563,7 @@ export class DecisionTreeService implements IDecisionTreeService {
       successfulExecutions: Math.floor(tree.totalExecutions * tree.successRate),
       failedExecutions: tree.totalExecutions - Math.floor(tree.totalExecutions * tree.successRate),
       averageExecutionTime: tree.averageExecutionTime,
-      averageConfidence: this.calculateAverageConfidence(tree),
+      averageConfidence: this.calculateConfidence([], tree),
       mostUsedPath,
       leastUsedNodes,
       optimizationSuggestions,

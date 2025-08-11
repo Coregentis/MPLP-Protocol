@@ -4,7 +4,7 @@
  * @version v1.0.0
  * @created 2025-08-05T17:30:00+08:00
  * @description Extension模块适配器，实现ModuleInterface接口，支持Core模块协调
- * 
+ *
  * 遵循规则：
  * - 零技术债务：严禁使用any类型
  * - 生产级代码质量：完整的错误处理和类型安全
@@ -26,7 +26,7 @@ import {
   BusinessContext,
   ErrorHandlingResult,
   ModuleStatus,
-  StageExecutionResult
+  StageExecutionResult,
 } from '../../../../public/modules/core/types/core.types';
 
 /**
@@ -39,9 +39,7 @@ export class ExtensionModuleAdapter implements ModuleInterface {
   private errorCount = 0;
   private readonly logger: Logger;
 
-  constructor(
-    private readonly extensionService: ExtensionManagementService
-  ) {
+  constructor(private readonly extensionService: ExtensionManagementService) {
     this.logger = new Logger('ExtensionModuleAdapter');
   }
 
@@ -51,7 +49,7 @@ export class ExtensionModuleAdapter implements ModuleInterface {
   async initialize(): Promise<void> {
     try {
       this.logger.info('Initializing Extension module adapter');
-      
+
       // 验证服务可用性
       if (!this.extensionService) {
         throw new Error('ExtensionManagementService is required');
@@ -62,7 +60,9 @@ export class ExtensionModuleAdapter implements ModuleInterface {
     } catch (error) {
       this.status = 'error';
       this.errorCount++;
-      this.logger.error('Failed to initialize Extension module adapter', { error });
+      this.logger.error('Failed to initialize Extension module adapter', {
+        error,
+      });
       throw error;
     }
   }
@@ -70,12 +70,16 @@ export class ExtensionModuleAdapter implements ModuleInterface {
   /**
    * 执行工作流阶段
    */
-  async executeStage(context: WorkflowExecutionContext): Promise<StageExecutionResult> {
+  async executeStage(
+    context: WorkflowExecutionContext
+  ): Promise<StageExecutionResult> {
     const startTime = Date.now();
     const startedAt = new Date().toISOString();
 
     try {
-      this.logger.info('Executing extension stage', { context_id: context.contextId });
+      this.logger.info('Executing extension stage', {
+        context_id: context.contextId,
+      });
 
       // 处理扩展阶段
       const result = await this.processExtensionStage(context);
@@ -88,17 +92,17 @@ export class ExtensionModuleAdapter implements ModuleInterface {
         status: 'completed',
         result,
         duration_ms: duration,
-        started_at: startedAt,
-        completed_at: completedAt
+        startedAt: startedAt,
+        completedAt: completedAt,
       };
     } catch (error) {
       this.errorCount++;
       const completedAt = new Date().toISOString();
       const duration = Date.now() - startTime;
 
-      this.logger.error('Extension stage execution failed', { 
-        context_id: context.contextId, 
-        error: error instanceof Error ? error.message : 'Unknown error' 
+      this.logger.error('Extension stage execution failed', {
+        context_id: context.contextId,
+        error: error instanceof Error ? error.message : 'Unknown error',
       });
 
       return {
@@ -107,11 +111,11 @@ export class ExtensionModuleAdapter implements ModuleInterface {
         result: {
           error: error instanceof Error ? error.message : 'Unknown error',
           context_id: context.contextId,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         },
         duration_ms: duration,
-        started_at: startedAt,
-        completed_at: completedAt
+        startedAt: startedAt,
+        completedAt: completedAt,
       };
     }
   }
@@ -119,12 +123,14 @@ export class ExtensionModuleAdapter implements ModuleInterface {
   /**
    * 执行业务协调
    */
-  async executeBusinessCoordination(request: BusinessCoordinationRequest): Promise<BusinessCoordinationResult> {
+  async executeBusinessCoordination(
+    request: BusinessCoordinationRequest
+  ): Promise<BusinessCoordinationResult> {
     const startTime = Date.now();
 
     try {
-      this.logger.info('Executing extension business coordination', { 
-        coordination_id: request.coordination_id 
+      this.logger.info('Executing extension business coordination', {
+        coordination_id: request.coordination_id,
       });
 
       // 处理业务协调请求
@@ -145,27 +151,27 @@ export class ExtensionModuleAdapter implements ModuleInterface {
             target_modules: ['core'],
             data_schema_version: '1.0.0',
             validation_status: 'valid',
-            security_level: 'internal'
+            security_level: 'internal',
           },
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
         },
         execution_metrics: {
           start_time: new Date(startTime).toISOString(),
           end_time: new Date().toISOString(),
           duration_ms: executionTime,
           memory_usage: process.memoryUsage().heapUsed / 1024 / 1024,
-          cpu_usage: 0 // 简化实现
+          cpu_usage: 0, // 简化实现
         },
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
     } catch (error) {
       this.errorCount++;
       const executionTime = Date.now() - startTime;
 
-      this.logger.error('Extension business coordination failed', { 
-        coordination_id: request.coordination_id, 
-        error: error instanceof Error ? error.message : 'Unknown error' 
+      this.logger.error('Extension business coordination failed', {
+        coordination_id: request.coordination_id,
+        error: error instanceof Error ? error.message : 'Unknown error',
       });
 
       return {
@@ -178,26 +184,26 @@ export class ExtensionModuleAdapter implements ModuleInterface {
           payload: {
             error: error instanceof Error ? error.message : 'Unknown error',
             coordination_id: request.coordination_id,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
           },
           metadata: {
             source_module: 'extension',
             target_modules: ['core'],
             data_schema_version: '1.0.0',
             validation_status: 'invalid',
-            security_level: 'internal'
+            security_level: 'internal',
           },
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
         },
         execution_metrics: {
           start_time: new Date(startTime).toISOString(),
           end_time: new Date().toISOString(),
           duration_ms: executionTime,
           memory_usage: process.memoryUsage().heapUsed / 1024 / 1024,
-          cpu_usage: 0
+          cpu_usage: 0,
         },
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
     }
   }
@@ -215,13 +221,13 @@ export class ExtensionModuleAdapter implements ModuleInterface {
         errors.push({
           error_code: 'INVALID_TYPE',
           error_message: 'Input cannot be null or undefined',
-          field_path: 'input'
+          field_path: 'input',
         });
       } else if (typeof input !== 'object') {
         errors.push({
           error_code: 'INVALID_TYPE',
           error_message: 'Input must be an object',
-          field_path: 'input'
+          field_path: 'input',
         });
       } else {
         const inputObj = input as Record<string, unknown>;
@@ -231,7 +237,7 @@ export class ExtensionModuleAdapter implements ModuleInterface {
           errors.push({
             error_code: 'MISSING_FIELDS',
             error_message: 'plugins field is required and must be an array',
-            field_path: 'plugins'
+            field_path: 'plugins',
           });
         }
 
@@ -239,7 +245,7 @@ export class ExtensionModuleAdapter implements ModuleInterface {
           errors.push({
             error_code: 'MISSING_FIELDS',
             error_message: 'context field is required',
-            field_path: 'context'
+            field_path: 'context',
           });
         }
 
@@ -248,7 +254,7 @@ export class ExtensionModuleAdapter implements ModuleInterface {
           warnings.push({
             warning_code: 'EMPTY_PLUGINS',
             warning_message: 'No plugins specified for extension processing',
-            field_path: 'plugins'
+            field_path: 'plugins',
           });
         }
       }
@@ -256,17 +262,20 @@ export class ExtensionModuleAdapter implements ModuleInterface {
       return {
         is_valid: errors.length === 0,
         errors,
-        warnings
+        warnings,
       };
     } catch (error) {
       return {
         is_valid: false,
-        errors: [{
-          error_code: 'VALIDATION_EXCEPTION',
-          error_message: error instanceof Error ? error.message : 'Validation failed',
-          field_path: 'input'
-        }],
-        warnings: []
+        errors: [
+          {
+            error_code: 'VALIDATION_EXCEPTION',
+            error_message:
+              error instanceof Error ? error.message : 'Validation failed',
+            field_path: 'input',
+          },
+        ],
+        warnings: [],
       };
     }
   }
@@ -274,11 +283,14 @@ export class ExtensionModuleAdapter implements ModuleInterface {
   /**
    * 处理错误
    */
-  async handleError(error: BusinessError, context: BusinessContext): Promise<ErrorHandlingResult> {
+  async handleError(
+    error: BusinessError,
+    context: BusinessContext
+  ): Promise<ErrorHandlingResult> {
     try {
-      this.logger.warn('Handling extension error', { 
-        error_id: error.error_id, 
-        error_type: error.error_type 
+      this.logger.warn('Handling extension error', {
+        error_id: error.error_id,
+        error_type: error.error_type,
       });
 
       let recoveryAction: 'retry' | 'skip' | 'escalate' = 'escalate';
@@ -306,28 +318,31 @@ export class ExtensionModuleAdapter implements ModuleInterface {
           payload: {
             error_id: error.error_id,
             recovery_strategy: recoveryAction,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
           },
           metadata: {
             source_module: 'extension',
             target_modules: ['core'],
             data_schema_version: '1.0.0',
             validation_status: 'valid',
-            security_level: 'internal'
+            security_level: 'internal',
           },
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        }
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        },
       };
     } catch (recoveryError) {
-      this.logger.error('Error recovery failed', { 
-        original_error: error.error_id, 
-        recovery_error: recoveryError instanceof Error ? recoveryError.message : 'Unknown error' 
+      this.logger.error('Error recovery failed', {
+        original_error: error.error_id,
+        recovery_error:
+          recoveryError instanceof Error
+            ? recoveryError.message
+            : 'Unknown error',
       });
 
       return {
         handled: false,
-        recovery_action: 'escalate'
+        recovery_action: 'escalate',
       };
     }
   }
@@ -354,14 +369,16 @@ export class ExtensionModuleAdapter implements ModuleInterface {
       module_name: 'extension',
       status: this.status,
       error_count: this.errorCount,
-      last_execution: new Date().toISOString()
+      last_execution: new Date().toISOString(),
     };
   }
 
   /**
    * 处理扩展阶段
    */
-  private async processExtensionStage(context: WorkflowExecutionContext): Promise<Record<string, unknown>> {
+  private async processExtensionStage(
+    context: WorkflowExecutionContext
+  ): Promise<Record<string, unknown>> {
     // 输入验证
     if (!context.contextId) {
       throw new Error('Invalid context: missing context_id');
@@ -377,14 +394,16 @@ export class ExtensionModuleAdapter implements ModuleInterface {
       plugins_loaded: ['strategy-plugin-1', 'analysis-plugin-2'],
       extensions_count: 2,
       status: 'completed',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
   }
 
   /**
    * 处理业务协调
    */
-  private async processBusinessCoordination(request: BusinessCoordinationRequest): Promise<Record<string, unknown>> {
+  private async processBusinessCoordination(
+    request: BusinessCoordinationRequest
+  ): Promise<Record<string, unknown>> {
     // 输入验证
     if (!request.coordination_id) {
       throw new Error('Invalid request: missing coordination_id');
@@ -396,7 +415,7 @@ export class ExtensionModuleAdapter implements ModuleInterface {
       coordination_type: request.coordination_type,
       plugins_executed: ['plugin-1', 'plugin-2'],
       execution_result: 'success',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
   }
 }

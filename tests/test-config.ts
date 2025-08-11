@@ -33,6 +33,9 @@ export const PERFORMANCE_THRESHOLDS = {
     CACHE_OPERATION: 50
   },
 
+  // Repository性能阈值 (毫秒)
+  REPOSITORY_BATCH_SAVE_MS: 1000,
+
   // 端到端测试性能阈值 (毫秒)
   E2E_TEST: {
     COMPLETE_WORKFLOW: 2000,

@@ -10,9 +10,9 @@
 import { v4 as uuidv4 } from 'uuid';
 import { UUID } from '../../../../public/shared/types';
 import { Trace } from '../entities/trace.entity';
-import { 
-  TraceType, 
-  TraceSeverity, 
+import {
+  TraceType,
+  TraceSeverity,
   TraceEvent,
   EventType,
   EventCategory,
@@ -20,7 +20,10 @@ import {
   PerformanceMetrics,
   ErrorInformation,
   Correlation,
-  TraceMetadata 
+  TraceMetadata,
+  StackTraceItem,
+  DecisionLog,
+  ContextSnapshot
 } from '../../types';
 
 /**
@@ -55,17 +58,17 @@ export class TraceFactory {
 
     return new Trace(
       traceId,
-      request.contextId,
+      request.context_id,
       this.PROTOCOL_VERSION,
-      request.traceType,
+      request.trace_type,
       request.severity,
       request.event,
       timestamp,
       now,
       now,
-      request.planId,
-      request.performanceMetrics,
-      request.errorInformation,
+      request.plan_id,
+      request.performance_metrics,
+      request.error_information,
       request.correlations || [],
       request.metadata
     );
@@ -111,7 +114,7 @@ export class TraceFactory {
     component: string,
     errorType: string = 'system',
     plan_id?: UUID,
-    errorDetails?: any
+    errorDetails?: Record<string, unknown>
   ): Trace {
     const event: TraceEvent = {
       type: 'failure',
@@ -129,7 +132,7 @@ export class TraceFactory {
       error_type: errorType as any,
       error_message: errorMessage,
       error_code: 'SYSTEM_ERROR',
-      stack_trace: errorDetails?.stack,
+      stack_trace: (errorDetails?.stack as StackTraceItem[]) || [],
       recovery_actions: []
     };
 
@@ -263,7 +266,7 @@ export class TraceFactory {
     context_id: UUID,
     decisionName: string,
     component: string,
-    decision: any,
+    decision: Record<string, unknown>,
     plan_id?: UUID,
     reasoning?: string
   ): Trace {
@@ -295,9 +298,54 @@ export class TraceFactory {
   }
 
   /**
+   * 创建带有完整决策日志的追踪
+   */
+  static createDecisionTraceWithLog(
+    context_id: UUID,
+    decisionLog: DecisionLog,
+    plan_id?: UUID,
+    contextSnapshot?: ContextSnapshot
+  ): Trace {
+    const event: TraceEvent = {
+      type: 'checkpoint',
+      name: `Decision: ${decisionLog.decision_point}`,
+      category: 'system',
+      source: {
+        component: 'decision_engine',
+        module: 'trace_factory'
+      },
+      data: {
+        decision_point: decisionLog.decision_point,
+        selected_option: decisionLog.selected_option,
+        confidence_level: decisionLog.confidence_level
+      }
+    };
+
+    const trace = this.create({
+      context_id,
+      plan_id,
+      trace_type: 'decision',
+      severity: 'info',
+      event,
+      metadata: {
+        decision_type: 'structured',
+        options_count: decisionLog.options_considered.length
+      }
+    });
+
+    // 设置决策日志和上下文快照
+    trace.setDecisionLog(decisionLog);
+    if (contextSnapshot) {
+      trace.setContextSnapshot(contextSnapshot);
+    }
+
+    return trace;
+  }
+
+  /**
    * 从协议数据重建追踪实体
    */
-  static fromProtocol(protocol: any): Trace {
+  static fromProtocol(protocol: Record<string, unknown>): Trace {
     return Trace.fromProtocol(protocol);
   }
 
@@ -324,7 +372,7 @@ export class TraceFactory {
   static validateCreateRequest(request: CreateTraceRequest): { isValid: boolean; errors: string[] } {
     const errors: string[] = [];
 
-    if (!request.contextId) {
+    if (!request.context_id) {
       errors.push('上下文ID不能为空');
     }
 
@@ -336,7 +384,19 @@ export class TraceFactory {
       errors.push('事件源组件不能为空');
     }
 
-    if (request.traceType === 'error' && !request.errorInformation) {
+    // 验证追踪类型
+    const validTraceTypes = ['execution', 'error', 'performance', 'audit', 'security'];
+    if (!validTraceTypes.includes(request.trace_type)) {
+      errors.push('追踪类型无效');
+    }
+
+    // 验证严重程度
+    const validSeverities = ['debug', 'info', 'warn', 'error', 'critical'];
+    if (!validSeverities.includes(request.severity)) {
+      errors.push('严重程度无效');
+    }
+
+    if (request.trace_type === 'error' && !request.error_information) {
       errors.push('错误类型的追踪必须包含错误信息');
     }
 

@@ -16,7 +16,7 @@ import {
   PaginatedResult,
   TraceStatistics 
 } from '../../domain/repositories/trace-repository.interface';
-import { TraceType, TraceSeverity, EventType } from '../../types';
+import { TraceType, TraceSeverity } from '../../types';
 
 /**
  * Trace仓库实现
@@ -68,16 +68,20 @@ export class TraceRepository implements ITraceRepository {
     let results = Array.from(this.traces.values());
 
     // 应用过滤器
-    if (filter.contextId) {
-      results = results.filter(trace => trace.contextId === filter.contextId);
+    if (filter.context_id) {
+      results = results.filter(trace => trace.contextId === filter.context_id);
     }
 
-    if (filter.planId) {
-      results = results.filter(trace => trace.planId === filter.planId);
+    if (filter.plan_id) {
+      results = results.filter(trace => trace.planId === filter.plan_id);
     }
 
-    if (filter.traceType) {
-      results = results.filter(trace => trace.traceType === filter.traceType);
+    if (filter.task_id) {
+      results = results.filter(trace => trace.metadata?.task_id === filter.task_id);
+    }
+
+    if (filter.trace_type) {
+      results = results.filter(trace => trace.traceType === filter.trace_type);
     }
 
     if (filter.severity) {

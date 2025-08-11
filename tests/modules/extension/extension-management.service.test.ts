@@ -9,23 +9,17 @@
  */
 
 import { jest } from '@jest/globals';
-import { ExtensionManagementService, OperationResult, CreateExtensionRequest } from '../../../src/modules/extension/application/services/extension-management.service';
+import { ExtensionManagementService, CreateExtensionRequest } from '../../../src/modules/extension/application/services/extension-management.service';
 import { Extension } from '../../../src/modules/extension/domain/entities/extension.entity';
 import { IExtensionRepository, ExtensionFilter, PaginationOptions, PaginatedResult } from '../../../src/modules/extension/domain/repositories/extension-repository.interface';
 import { 
   ExtensionType, 
-  ExtensionStatus, 
   ExtensionConfiguration,
   ExtensionPoint,
-  ApiExtension,
-  EventSubscription,
   ExtensionPointType,
-  TargetModule,
-  HttpMethod,
-  EventSource,
-  DeliveryGuarantee
+  TargetModule
 } from '../../../src/modules/extension/types';
-import { UUID, Version } from '../../../src/public/shared/types';
+import { Version } from '../../../src/public/shared/types';
 import { TestDataFactory } from '../../public/test-utils/test-data-factory';
 import { TestHelpers } from '../../public/test-utils/test-helpers';
 import { PERFORMANCE_THRESHOLDS } from '../../test-config';
@@ -56,6 +50,47 @@ describe('ExtensionManagementService', () => {
     }
   });
 
+  // 辅助函数：创建标准的Extension Schema数据
+  const createExtensionSchemaData = (overrides: Partial<Record<string, unknown>> = {}): Record<string, unknown> => {
+    const now = new Date().toISOString();
+    return {
+      protocol_version: '1.0.1',
+      timestamp: now,
+      extension_id: TestDataFactory.Base.generateUUID(),
+      context_id: TestDataFactory.Base.generateUUID(),
+      name: 'test-extension',
+      display_name: 'Test Extension',
+      description: 'Test extension description',
+      version: '1.0.0',
+      extension_type: 'plugin',
+      status: 'installed',
+      compatibility: {
+        mplp_version: '1.0.0',
+        required_modules: [],
+        dependencies: [],
+        conflicts: []
+      },
+      configuration: createValidConfiguration(),
+      extension_points: [],
+      api_extensions: [],
+      event_subscriptions: [],
+      lifecycle: {
+        install_date: now,
+        activation_count: 0,
+        error_count: 0
+      },
+      security: {
+        sandbox_enabled: true,
+        resource_limits: {}
+      },
+      metadata: {
+        author: 'Test Author',
+        license: 'MIT'
+      },
+      ...overrides
+    };
+  };
+
   // 辅助函数：创建有效的ExtensionPoint
   const createValidExtensionPoint = (): ExtensionPoint => ({
     point_id: TestDataFactory.Base.generateUUID(),
@@ -67,7 +102,7 @@ describe('ExtensionManagementService', () => {
     enabled: true,
     handler: {
       function_name: 'handleBeforeContextCreate',
-      timeout_ms: 5000
+      timeoutMs: 5000
     },
     conditions: {
       when: 'context.type === "project"',
@@ -133,7 +168,7 @@ describe('ExtensionManagementService', () => {
       expect(result.data?.name).toBe(createRequest.name);
       expect(result.data?.version).toBe(createRequest.version);
       expect(result.data?.type).toBe(createRequest.type);
-      expect(result.data?.display_name).toBe(createRequest.display_name);
+      expect(result.data?.displayName).toBe(createRequest.display_name);
       expect(result.data?.description).toBe(createRequest.description);
       expect(result.data?.configuration).toEqual(createRequest.configuration);
       expect(mockRepository.isNameUnique).toHaveBeenCalledWith(createRequest.name, createRequest.context_id);
@@ -243,18 +278,11 @@ describe('ExtensionManagementService', () => {
     it('应该成功获取Extension', async () => {
       // 准备测试数据
       const extensionId = TestDataFactory.Base.generateUUID();
-      const mockExtension = new Extension(
-        extensionId,
-        TestDataFactory.Base.generateUUID(),
-        '1.0.0',
-        'test-extension',
-        '1.0.0',
-        'plugin',
-        'installed',
-        new Date().toISOString(),
-        new Date().toISOString(),
-        new Date().toISOString()
-      );
+      const mockExtensionSchemaData = createExtensionSchemaData({
+        extension_id: extensionId,
+        status: 'installed'
+      });
+      const mockExtension = Extension.fromSchema(mockExtensionSchemaData);
 
       // 设置Mock返回值
       mockRepository.findById.mockResolvedValue(mockExtension);
@@ -307,18 +335,11 @@ describe('ExtensionManagementService', () => {
     it('应该成功激活Extension', async () => {
       // 准备测试数据
       const extensionId = TestDataFactory.Base.generateUUID();
-      const existingExtension = new Extension(
-        extensionId,
-        TestDataFactory.Base.generateUUID(),
-        '1.0.0',
-        'test-extension',
-        '1.0.0',
-        'plugin',
-        'installed',
-        new Date().toISOString(),
-        new Date().toISOString(),
-        new Date().toISOString()
-      );
+      const existingExtensionSchemaData = createExtensionSchemaData({
+        extension_id: extensionId,
+        status: 'installed'
+      });
+      const existingExtension = Extension.fromSchema(existingExtensionSchemaData);
 
       // 设置Mock返回值
       mockRepository.findById.mockResolvedValue(existingExtension);
@@ -359,18 +380,11 @@ describe('ExtensionManagementService', () => {
     it('应该处理依赖不满足的情况', async () => {
       // 准备测试数据
       const extensionId = TestDataFactory.Base.generateUUID();
-      const existingExtension = new Extension(
-        extensionId,
-        TestDataFactory.Base.generateUUID(),
-        '1.0.0',
-        'test-extension',
-        '1.0.0',
-        'plugin',
-        'installed',
-        new Date().toISOString(),
-        new Date().toISOString(),
-        new Date().toISOString()
-      );
+      const existingExtensionSchemaData = createExtensionSchemaData({
+        extension_id: extensionId,
+        status: 'installed'
+      });
+      const existingExtension = Extension.fromSchema(existingExtensionSchemaData);
 
       // 设置Mock返回值
       mockRepository.findById.mockResolvedValue(existingExtension);
@@ -394,18 +408,11 @@ describe('ExtensionManagementService', () => {
     it('应该成功停用Extension', async () => {
       // 准备测试数据
       const extensionId = TestDataFactory.Base.generateUUID();
-      const existingExtension = new Extension(
-        extensionId,
-        TestDataFactory.Base.generateUUID(),
-        '1.0.0',
-        'test-extension',
-        '1.0.0',
-        'plugin',
-        'active',
-        new Date().toISOString(),
-        new Date().toISOString(),
-        new Date().toISOString()
-      );
+      const existingExtensionSchemaData = createExtensionSchemaData({
+        extension_id: extensionId,
+        status: 'active'
+      });
+      const existingExtension = Extension.fromSchema(existingExtensionSchemaData);
 
       // 设置Mock返回值
       mockRepository.findById.mockResolvedValue(existingExtension);
@@ -555,18 +562,11 @@ describe('ExtensionManagementService', () => {
     it('应该成功为扩展添加扩展点', async () => {
       // 准备测试数据
       const extensionId = TestDataFactory.Base.generateUUID();
-      const existingExtension = new Extension(
-        extensionId,
-        TestDataFactory.Base.generateUUID(),
-        '1.0.0',
-        'test-extension',
-        '1.0.0',
-        'plugin',
-        'installed',
-        new Date().toISOString(),
-        new Date().toISOString(),
-        new Date().toISOString()
-      );
+      const existingExtensionSchemaData = createExtensionSchemaData({
+        extension_id: extensionId,
+        status: 'installed'
+      });
+      const existingExtension = Extension.fromSchema(existingExtensionSchemaData);
 
       const newExtensionPoint = createValidExtensionPoint();
 

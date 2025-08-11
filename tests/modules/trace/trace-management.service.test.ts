@@ -255,7 +255,7 @@ describe('TraceManagementService', () => {
 
       // 验证结果
       expect(result.success).toBe(false);
-      expect(result.error).toBe('Database connection failed');
+      expect(result.error).toBe('创建追踪失败: Database connection failed');
     });
 
     it('应该测试边界条件', async () => {
@@ -402,7 +402,7 @@ describe('TraceManagementService', () => {
 
       // 验证结果
       expect(result.success).toBe(false);
-      expect(result.error).toBe('Database connection failed');
+      expect(result.error).toBe('获取追踪失败: Database connection failed');
     });
   });
 

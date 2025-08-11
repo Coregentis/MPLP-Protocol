@@ -67,7 +67,7 @@ export class NetworkService {
 
       // 创建网络实体
       const network = new Network({
-        context_id: request.contextId,
+        contextId: request.contextId,
         name: request.name,
         description: request.description,
         topology: request.topology,
@@ -75,9 +75,9 @@ export class NetworkService {
           ...n,
           node_id: uuidv4(),
         })),
-        discovery_mechanism: request.discoveryMechanism,
-        routing_strategy: request.routingStrategy,
-        created_by: request.contextId, // 临时使用context_id
+        discoveryMechanism: request.discoveryMechanism,
+        routingStrategy: request.routingStrategy,
+        createdBy: request.contextId, // 临时使用context_id
         metadata: request.metadata,
       });
 
@@ -321,8 +321,8 @@ export class NetworkService {
 
       const node: NetworkNode = {
         node_id: uuidv4(),
-        agent_id: request.agentId,
-        node_type: request.node_type,
+        agentId: request.agentId,
+        nodeType: request.nodeType,
         status: 'online',
         capabilities: request.capabilities,
         address: request.address,
@@ -338,7 +338,7 @@ export class NetworkService {
         network_id: request.networkId,
         node_id: node.node_id,
         agent_id: request.agentId,
-        node_type: request.node_type,
+        node_type: request.nodeType,
       });
 
       this.logger.info('节点注册成功', {

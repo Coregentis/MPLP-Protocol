@@ -10,12 +10,13 @@
 import { UUID } from '../../../../public/shared/types';
 import { Role } from '../../domain/entities/role.entity';
 import { IRoleRepository, RoleFilter, PaginationOptions, PaginatedResult } from '../../domain/repositories/role-repository.interface';
-import { 
-  RoleType, 
-  RoleStatus, 
+import { RoleCacheService } from '../../infrastructure/cache/role-cache.service';
+import {
+  RoleType,
+  RoleStatus,
   Permission,
   ResourceType,
-  PermissionAction 
+  PermissionAction
 } from '../../types';
 
 /**
@@ -31,9 +32,21 @@ export interface CreateRoleRequest {
 }
 
 /**
+ * 角色统计信息接口
+ */
+export interface RoleStatistics {
+  total_roles: number;
+  active_roles: number;
+  inactive_roles: number;
+  roles_by_type: Record<string, number>;
+  permissions_count: number;
+  last_updated: string;
+}
+
+/**
  * 操作结果
  */
-export interface OperationResult<T = any> {
+export interface OperationResult<T = Role> {
   success: boolean;
   data?: T;
   error?: string;
@@ -44,9 +57,14 @@ export interface OperationResult<T = any> {
  * Role管理服务
  */
 export class RoleManagementService {
+  private readonly cacheService: RoleCacheService;
+
   constructor(
-    private readonly roleRepository: IRoleRepository
-  ) {}
+    private readonly roleRepository: IRoleRepository,
+    cacheService?: RoleCacheService
+  ) {
+    this.cacheService = cacheService || new RoleCacheService();
+  }
 
   /**
    * 创建角色
@@ -54,7 +72,7 @@ export class RoleManagementService {
   async createRole(request: CreateRoleRequest): Promise<OperationResult<Role>> {
     try {
       // 验证角色名称唯一性
-      const isUnique = await this.roleRepository.isNameUnique(request.name, request.contextId);
+      const isUnique = await this.roleRepository.isNameUnique(request.name, request.context_id);
       if (!isUnique) {
         return {
           success: false,
@@ -66,21 +84,24 @@ export class RoleManagementService {
       const now = new Date().toISOString();
       const role = new Role(
         this.generateUUID(),
-        request.contextId,
+        request.context_id,
         '1.0.0',
         request.name,
-        request.roleType,
+        request.role_type,
         'active',
         request.permissions || [],
         now,
         now,
         now,
-        request.displayName,
+        request.display_name,
         request.description
       );
 
       // 保存到仓库
       await this.roleRepository.save(role);
+
+      // 缓存新创建的角色
+      this.cacheService.setRole(role.roleId, role);
 
       return {
         success: true,
@@ -95,18 +116,31 @@ export class RoleManagementService {
   }
 
   /**
-   * 获取角色详情
+   * 获取角色详情（带缓存优化）
    */
   async getRoleById(roleId: UUID): Promise<OperationResult<Role>> {
     try {
+      // 首先尝试从缓存获取
+      const cachedRole = this.cacheService.getRole(roleId);
+      if (cachedRole) {
+        return {
+          success: true,
+          data: cachedRole
+        };
+      }
+
+      // 缓存未命中，从Repository获取
       const role = await this.roleRepository.findById(roleId);
-      
+
       if (!role) {
         return {
           success: false,
           error: '角色不存在'
         };
       }
+
+      // 缓存角色数据
+      this.cacheService.setRole(roleId, role);
 
       return {
         success: true,
@@ -319,10 +353,20 @@ export class RoleManagementService {
   /**
    * 获取统计信息
    */
-  async getStatistics(contextId?: UUID): Promise<OperationResult<any>> {
+  async getStatistics(contextId?: UUID): Promise<OperationResult<RoleStatistics>> {
     try {
-      const statistics = await this.roleRepository.getStatistics(contextId);
-      
+      const rawStats = await this.roleRepository.getStatistics(contextId);
+
+      // 转换为标准化的统计信息格式
+      const statistics: RoleStatistics = {
+        total_roles: rawStats.total,
+        active_roles: rawStats.active_count,
+        inactive_roles: rawStats.total - rawStats.active_count,
+        roles_by_type: rawStats.by_type as Record<string, number>,
+        permissions_count: 0, // 需要从repository获取
+        last_updated: new Date().toISOString()
+      };
+
       return {
         success: true,
         data: statistics

@@ -171,17 +171,17 @@ describe('Extension模块功能场景测试', () => {
       it('应该成功激活已安装的扩展', async () => {
         // 准备测试数据 - 用户想要激活一个已安装的扩展
         const extensionId = 'ext-001';
-        const mockExtension = new Extension(
-          extensionId,
-          'context-001',
-          '1.0.0',
-          'test-extension',
-          '1.0.0',
-          'plugin',
-          'installed',
-          new Date().toISOString(),
-          new Date().toISOString(),
-          new Date().toISOString()
+        const mockExtensionSchema: ExtensionProtocolSchema = {
+          extension_id: extensionId,
+          context_id: 'context-001',
+          protocol_version: '1.0.0',
+          name: 'test-extension',
+          version: '1.0.0',
+          extension_type: 'plugin' as ExtensionType,
+          status: 'installed' as ExtensionStatus,
+          timestamp: new Date().toISOString()
+        };
+        const mockExtension = new Extension(mockExtensionSchema
         );
 
         // Mock仓库行为
@@ -241,17 +241,17 @@ describe('Extension模块功能场景测试', () => {
       it('应该处理依赖不满足的情况', async () => {
         // 准备测试数据 - 扩展有未满足的依赖
         const extensionId = 'ext-with-deps';
-        const mockExtension = new Extension(
-          extensionId,
-          'context-001',
-          '1.0.0',
-          'dependent-extension',
-          '1.0.0',
-          'plugin',
-          'installed',
-          new Date().toISOString(),
-          new Date().toISOString(),
-          new Date().toISOString()
+        const mockExtensionSchema: ExtensionProtocolSchema = {
+          extension_id: extensionId,
+          context_id: 'context-001',
+          protocol_version: '1.0.0',
+          name: 'dependent-extension',
+          version: '1.0.0',
+          extension_type: 'plugin' as ExtensionType,
+          status: 'installed' as ExtensionStatus,
+          timestamp: new Date().toISOString()
+        };
+        const mockExtension = new Extension(mockExtensionSchema
         );
 
         // Mock仓库行为 - 依赖检查失败
@@ -276,20 +276,19 @@ describe('Extension模块功能场景测试', () => {
     it('应该允许用户查看扩展详情', async () => {
       // 准备测试数据 - 用户想要查看扩展的详细信息
       const extensionId = 'ext-001';
-      const mockExtension = new Extension(
-        extensionId,
-        'context-001',
-        '1.0.0',
-        'sample-extension',
-        '2.1.0',
-        'middleware',
-        'active',
-        new Date().toISOString(),
-        new Date().toISOString(),
-        new Date().toISOString(),
-        '示例扩展',
-        '这是一个示例扩展，用于演示功能'
-      );
+      const mockExtensionSchema: ExtensionProtocolSchema = {
+        extension_id: extensionId,
+        context_id: 'context-001',
+        protocol_version: '1.0.0',
+        name: 'sample-extension',
+        version: '2.1.0',
+        extension_type: 'middleware' as ExtensionType,
+        status: 'active' as ExtensionStatus,
+        timestamp: new Date().toISOString(),
+        display_name: '示例扩展',
+        description: '这是一个示例扩展，用于演示功能'
+      };
+      const mockExtension = new Extension(mockExtensionSchema);
 
       // Mock仓库行为
       mockRepository.findById.mockResolvedValue(mockExtension);
@@ -300,12 +299,12 @@ describe('Extension模块功能场景测试', () => {
       // 验证结果 - 用户应该能看到完整的扩展信息
       expect(result.success).toBe(true);
       expect(result.data).toBeDefined();
-      expect(result.data!.extension_id).toBe(extensionId);
+      expect(result.data!.extensionId).toBe(extensionId);
       expect(result.data!.name).toBe('sample-extension');
       expect(result.data!.version).toBe('2.1.0');
       expect(result.data!.type).toBe('middleware');
       expect(result.data!.status).toBe('active');
-      expect(result.data!.display_name).toBe('示例扩展');
+      expect(result.data!.displayName).toBe('示例扩展');
       expect(result.data!.description).toBe('这是一个示例扩展，用于演示功能');
     });
   });
@@ -314,18 +313,17 @@ describe('Extension模块功能场景测试', () => {
     it('应该成功停用活跃的扩展', async () => {
       // 准备测试数据 - 用户想要停用一个活跃的扩展
       const extensionId = 'ext-001';
-      const mockExtension = new Extension(
-        extensionId,
-        'context-001',
-        '1.0.0',
-        'active-extension',
-        '1.0.0',
-        'plugin',
-        'active',
-        new Date().toISOString(),
-        new Date().toISOString(),
-        new Date().toISOString()
-      );
+      const mockExtensionSchema: ExtensionProtocolSchema = {
+        extension_id: extensionId,
+        context_id: 'context-001',
+        protocol_version: '1.0.0',
+        name: 'active-extension',
+        version: '1.0.0',
+        extension_type: 'plugin' as ExtensionType,
+        status: 'active' as ExtensionStatus,
+        timestamp: new Date().toISOString()
+      };
+      const mockExtension = new Extension(mockExtensionSchema);
 
       // Mock仓库行为
       mockRepository.findById.mockResolvedValue(mockExtension);

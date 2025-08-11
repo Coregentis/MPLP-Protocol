@@ -122,6 +122,17 @@ constructor(
   get createdAt(): Timestamp { return this._created_at; }
   get updatedAt(): Timestamp { return this._updated_at; }
 
+  // Schema-compatible getters (snake_case) for testing and serialization
+  get role_id(): UUID { return this._role_id; }
+  get context_id(): UUID { return this._context_id; }
+  get protocol_version(): string { return this._protocol_version; }
+  get role_type(): RoleType { return this._role_type; }
+  get display_name(): string | undefined { return this._display_name; }
+  get validation_rules(): ValidationRules | undefined { return this._validation_rules; }
+  get audit_settings(): AuditSettings | undefined { return this._audit_settings; }
+  get created_at(): Timestamp { return this._created_at; }
+  get updated_at(): Timestamp { return this._updated_at; }
+
   /**
    * 更新角色状态
    */
@@ -181,7 +192,7 @@ constructor(
       // 检查条件限制（简化实现）
       if (permission.conditions) {
         // 这里可以添加更复杂的条件检查逻辑
-        return this.checkPermissionConditions(permission.conditions);
+        return this.checkPermissionConditions(permission.conditions as Parameters<typeof this.checkPermissionConditions>[0]);
       }
       
       return true;
@@ -199,7 +210,7 @@ constructor(
       
       // 检查条件限制
       if (permission.conditions) {
-        return this.checkPermissionConditions(permission.conditions);
+        return this.checkPermissionConditions(permission.conditions as Parameters<typeof this.checkPermissionConditions>[0]);
       }
       
       return true;
@@ -282,7 +293,27 @@ constructor(
   /**
    * 检查权限条件
    */
-  private checkPermissionConditions(conditions: any): boolean {
+  private checkPermissionConditions(conditions: {
+    time_based?: {
+      start_time?: string;
+      end_time?: string;
+      timezone?: string;
+      days_of_week?: number[];
+    };
+    location_based?: {
+      allowed_ip_ranges?: string[];
+      geo_restrictions?: string[];
+    };
+    context_based?: {
+      required_attributes?: Record<string, string | number | boolean>;
+      forbidden_attributes?: Record<string, string | number | boolean>;
+    };
+    approval_required?: {
+      for_actions?: string[];
+      approval_threshold?: number;
+      approver_roles?: string[];
+    };
+  }): boolean {
     // 简化的条件检查实现
     // 在实际应用中，这里应该包含更复杂的条件验证逻辑
     
@@ -302,7 +333,29 @@ constructor(
   /**
    * 转换为协议格式
    */
-  toProtocol(): any {
+  toProtocol(): {
+    protocolVersion: string;
+    timestamp: string;
+    roleId: string;
+    contextId: string;
+    name: string;
+    roleType: RoleType;
+    status: RoleStatus;
+    permissions: Permission[];
+    displayName?: string;
+    description?: string;
+    scope?: RoleScope;
+    inheritance?: RoleInheritance;
+    delegation?: RoleDelegation;
+    attributes?: RoleAttributes;
+    validationRules?: ValidationRules;
+    auditSettings?: AuditSettings;
+    agents?: string[];
+    agentManagement?: Record<string, string | number | boolean>;
+    teamConfiguration?: Record<string, string | number | boolean>;
+    createdAt: string;
+    updatedAt: string;
+  } {
     return {
       protocolVersion: this._protocol_version,
       timestamp: this._timestamp,
@@ -328,7 +381,29 @@ constructor(
   /**
    * 从协议格式创建实体
    */
-  static fromProtocol(protocol: any): Role {
+  static fromProtocol(protocol: {
+    roleId: string;
+    contextId: string;
+    protocolVersion: string;
+    timestamp: string;
+    name: string;
+    roleType: RoleType;
+    status: RoleStatus;
+    permissions: Permission[];
+    displayName?: string;
+    description?: string;
+    scope?: RoleScope;
+    inheritance?: RoleInheritance;
+    delegation?: RoleDelegation;
+    attributes?: RoleAttributes;
+    validationRules?: ValidationRules;
+    auditSettings?: AuditSettings;
+    agents?: string[];
+    agentManagement?: Record<string, string | number | boolean>;
+    teamConfiguration?: Record<string, string | number | boolean>;
+    createdAt: string;
+    updatedAt: string;
+  }): Role {
     return new Role(
       protocol.roleId,
       protocol.contextId,
