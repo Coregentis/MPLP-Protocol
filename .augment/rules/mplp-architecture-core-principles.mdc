@@ -1,13 +1,71 @@
+---
+type: "always_apply"
+---
+
 # MPLP架构核心原则
 
 ## 🏗️ **MPLP v1.0 架构基本事实**
 
-**CRITICAL**: MPLP v1.0是一个**生产级L4智能Agent操作系统**，拥有**10个完整模块**，当前**50%完成**（5/10模块），不是理论框架。
+**CRITICAL**: MPLP v1.0是一个**Multi-Agent Protocol Lifecycle Platform**，实现**L1-L3分层协议栈**，拥有**10个完整模块**，当前**60%完成**（6/10模块）。
 
-**当前状态**: 5个模块已完成（Plan, Context, Confirm, Trace, Role），5个模块待完成（Extension, Collab, Dialog, Network, Core）
-**质量成就**: Role模块达到企业级标准（75.31%覆盖率，333个测试），Trace模块达到100%测试通过率（107/107测试）
+**项目名称**: MPLP - Multi-Agent Protocol Lifecycle Platform
+**实现范围**: L1-L3分层架构 (协议层、协调层、执行层)
+**当前状态**: 6个模块已完成（Plan, Context, Confirm, Trace, Role, Extension），4个模块待完成（Collab, Dialog, Network, Core）
+**质量成就**:
+- Role模块达到企业级标准（75.31%覆盖率，333个测试）
+- Trace模块达到100%测试通过率（107/107测试）
+- **Extension模块达到多智能体协议平台标准**（54个功能测试100%通过，8个MPLP模块预留接口，10种CoreOrchestrator协调场景）
 
 ## 🎯 **核心架构原则**
+
+### **0. AI功能架构边界原则（最高优先级）**
+
+```markdown
+RULE: AI决策和学习系统的正确架构定位
+
+✅ L1-L3协议层职责：
+- 提供AI系统集成的标准化接口
+- 定义AI服务的请求/响应格式
+- 支持多种AI提供商的插件化集成
+- 保持厂商中立性和通用性
+
+❌ L1-L3协议层严格禁止：
+- 实现具体的AI决策算法
+- 包含机器学习模型和训练逻辑
+- 绑定特定的AI技术栈
+- 实现行业特定的智能化功能
+
+✅ L4 Agent层职责：
+- 实现具体的AI决策和学习逻辑
+- 选择最适合的AI技术栈
+- 实现领域特定的智能化功能
+- 提供个性化的AI能力
+
+ENFORCEMENT: 违反此原则的代码将被拒绝
+```
+
+### **0.1. 协议模块与Agent关系澄清**
+
+```markdown
+RULE: 协议是"积木"，Agent是"建筑"
+
+✅ 正确理解：
+- 协议模块是可组合的标准化组件
+- 一个Agent可以使用多个协议模块
+- 医疗诊断Agent = Context + Plan + Confirm + Trace协议
+- 电商推荐Agent = Context + Plan + Extension协议
+- L4主Agent根据需求智能生成Agent组合
+
+❌ 错误理解：
+- 1个协议模块 = 1个Agent
+- 协议模块直接对应单一Agent
+- 固化的一对一映射关系
+
+MPLP v1.0定位：
+- MPLP v1.0是"智能体构建框架协议"
+- 不是"智能体本身"
+- 为L4智能体层提供基础设施
+```
 
 ### **1. CoreOrchestrator中心化协调原则**
 
@@ -32,17 +90,23 @@ PROHIBITED:
 ```typescript
 RULE: 模块采用"接口先行，实现后置"的设计模式
 
-// ✅ 正确的预留接口模式
-export class RoleValidationService {
+// ✅ 正确的预留接口模式 - Extension模块成功案例
+export class ExtensionManagementService {
   // 预留接口：参数用下划线标记，等待CoreOrchestrator激活
-  private async checkUserHasRole(_userId: UUID, _roleId: UUID): Promise<boolean> {
+  private async checkExtensionPermission(_userId: UUID, _extensionId: UUID): Promise<boolean> {
     // TODO: 等待CoreOrchestrator注入实现
-    return false; // 临时实现
+    return true; // 临时实现
   }
-  
-  private async getRoleStatus(_roleId: UUID): Promise<string> {
+
+  private async getContextualExtensionRecommendations(_contextId: UUID): Promise<ExtensionRecommendation[]> {
     // TODO: 等待CoreOrchestrator提供数据源
-    return 'active'; // 临时实现
+    return []; // 临时实现
+  }
+
+  // Extension模块实现了8个MPLP模块的预留接口
+  private async recordExtensionActivity(_extensionId: UUID, _activity: ExtensionActivity): Promise<void> {
+    // TODO: 等待CoreOrchestrator激活
+    // 临时实现
   }
 }
 
@@ -158,6 +222,13 @@ FOCUS: 完善模块内部功能和接口定义
 - 编写模块内部测试
 - 优化性能和代码质量
 - 准备CoreOrchestrator集成接口
+
+EXTENSION模块成功经验:
+✅ 8个MPLP模块预留接口100%实现
+✅ 10种CoreOrchestrator协调场景完整支持
+✅ 54个功能测试100%通过（35基础+19MPLP集成）
+✅ 智能协作、企业级功能、分布式支持完整实现
+✅ L4智能Agent操作系统标准达成
 ```
 
 ### **2. 未来集成阶段**
@@ -202,9 +273,94 @@ private async checkUserRole(userId: UUID): Promise<boolean> {
 }
 ```
 
+## 🧠 **L4主Agent元认知能力定义**
+
+### **L4主Agent的核心特征**
+
+```typescript
+// L4主Agent：具有元认知的智能决策者
+class L4MasterAgent {
+  // 元认知能力 - 思考如何思考
+  private metaCognition: MetaCognitionEngine;
+
+  // 自主学习 - 学习如何学习
+  private selfLearning: SelfLearningEngine;
+
+  // Agent管理能力
+  private agentManager: AgentManager;
+
+  // 协议组合优化
+  private protocolOptimizer: ProtocolOptimizer;
+
+  // 项目需求分析
+  async analyzeProjectRequirements(requirements: ProjectRequirements): Promise<AgentArchitecture> {
+    // 分析项目需求，设计最优Agent架构
+  }
+
+  // 智能生成多个专业Agent
+  async generateAgents(architecture: AgentArchitecture): Promise<Agent[]> {
+    // 根据需求智能生成专业化Agent组合
+    // 例如：医疗诊断Agent = Context + Plan + Confirm + Trace协议
+  }
+
+  // 自主学习和进化能力
+  async evolveSystemArchitecture(): Promise<void> {
+    // 学习最优的Agent组合方式
+    // 优化协议使用策略
+    // 适应新的项目需求
+    // 自主改进系统性能
+  }
+}
+```
+
+### **L4主Agent的学习层次**
+
+```markdown
+🧠 主Agent的多层次学习能力：
+
+1. 协议组合学习：学习最优的协议组合方式
+2. Agent架构学习：学习最佳的Agent架构设计
+3. 性能优化学习：学习如何提升整体系统性能
+4. 需求理解学习：学习如何更好地理解项目需求
+5. 元学习能力：学习如何学习（learning to learn）
+
+注意：这些学习能力属于L4层，不在当前MPLP v1.0范围内
+```
+
+### **智能Agent生成示例**
+
+```markdown
+实际应用场景：智能医疗系统开发
+
+L4主Agent分析需求 → 智能生成：
+
+1. 诊断Agent
+   - 使用：Context + Plan + Confirm + Trace协议
+   - 职责：患者诊断和治疗规划
+
+2. 监控Agent
+   - 使用：Trace + Network协议
+   - 职责：患者状态监控
+
+3. 协调Agent
+   - 使用：Core + Orchestration协议
+   - 职责：系统协调和资源管理
+
+4. 学习Agent
+   - 使用：Extension + Context协议
+   - 职责：知识更新和模型优化
+
+L4框架约束：
+- 约束每个Agent的行为边界
+- 管理Agent间的协作关系
+- 提供统一的学习和进化机制
+- 优化整体系统性能
+```
+
 ---
 
 **ENFORCEMENT**: 这些架构原则是**强制性的**，违反将导致架构不一致。
 
-**VERSION**: 1.0.0  
-**EFFECTIVE**: August 9, 2025
+**VERSION**: 2.0.0
+**EFFECTIVE**: August 13, 2025
+**UPDATED**: 添加AI功能架构边界原则、协议模块与Agent关系澄清、L4主Agent元认知能力定义

@@ -1,0 +1,760 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://mplp.dev/schemas/v1.0/mplp-security.json",
+  "title": "MPLP Security Protocol v1.0",
+  "description": "多智能体协议生命周期平台统一安全和权限协议Schema",
+  "version": "1.0.0",
+  "type": "object",
+  "$defs": {
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "description": "UUID v4 format"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp"
+    },
+    "module_type": {
+      "type": "string",
+      "enum": ["core", "context", "plan", "confirm", "trace", "role", "extension", "collab", "dialog", "network", "coordination", "orchestration", "transaction", "event_bus", "state_sync"],
+      "description": "MPLP模块类型"
+    },
+    "security_level": {
+      "type": "string",
+      "enum": ["public", "internal", "confidential", "restricted", "top_secret"],
+      "description": "安全级别"
+    },
+    "authentication_method": {
+      "type": "string",
+      "enum": ["none", "basic", "bearer_token", "oauth2", "saml", "certificate", "multi_factor"],
+      "description": "认证方法"
+    },
+    "encryption_algorithm": {
+      "type": "string",
+      "enum": ["none", "aes_256_gcm", "chacha20_poly1305", "rsa_2048", "rsa_4096", "ecdsa_p256", "ecdsa_p384"],
+      "description": "加密算法"
+    },
+    "user_identity": {
+      "type": "object",
+      "properties": {
+        "user_id": {"type": "string"},
+        "username": {"type": "string"},
+        "email": {"type": "string", "format": "email"},
+        "display_name": {"type": "string"},
+        "user_type": {
+          "type": "string",
+          "enum": ["human", "service", "system", "agent"]
+        },
+        "organization": {"type": "string"},
+        "department": {"type": "string"},
+        "roles": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "groups": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "attributes": {
+          "type": "object",
+          "description": "用户自定义属性"
+        }
+      },
+      "required": ["user_id", "user_type"]
+    },
+    "permission": {
+      "type": "object",
+      "properties": {
+        "permission_id": {"$ref": "#/$defs/uuid"},
+        "resource_type": {
+          "type": "string",
+          "enum": ["module", "api", "data", "function", "workflow", "configuration"]
+        },
+        "resource_identifier": {"type": "string"},
+        "actions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["read", "write", "execute", "delete", "admin", "audit"]
+          },
+          "minItems": 1
+        },
+        "conditions": {
+          "type": "object",
+          "properties": {
+            "time_restrictions": {
+              "type": "object",
+              "properties": {
+                "start_time": {"$ref": "#/$defs/timestamp"},
+                "end_time": {"$ref": "#/$defs/timestamp"},
+                "allowed_hours": {
+                  "type": "array",
+                  "items": {"type": "integer", "minimum": 0, "maximum": 23}
+                },
+                "allowed_days": {
+                  "type": "array",
+                  "items": {"type": "integer", "minimum": 1, "maximum": 7}
+                }
+              }
+            },
+            "ip_restrictions": {
+              "type": "array",
+              "items": {"type": "string"}
+            },
+            "context_requirements": {
+              "type": "object",
+              "description": "上下文相关的权限条件"
+            }
+          }
+        },
+        "granted_at": {"$ref": "#/$defs/timestamp"},
+        "expires_at": {"$ref": "#/$defs/timestamp"},
+        "granted_by": {"type": "string"}
+      },
+      "required": ["permission_id", "resource_type", "resource_identifier", "actions"]
+    },
+    "encryption_info": {
+      "type": "object",
+      "properties": {
+        "algorithm": {"$ref": "#/$defs/encryption_algorithm"},
+        "key_id": {"type": "string"},
+        "key_version": {"type": "string"},
+        "initialization_vector": {"type": "string"},
+        "key_derivation": {
+          "type": "object",
+          "properties": {
+            "method": {
+              "type": "string",
+              "enum": ["pbkdf2", "scrypt", "argon2"]
+            },
+            "iterations": {"type": "integer", "minimum": 1000},
+            "salt": {"type": "string"}
+          }
+        },
+        "signature": {"type": "string"},
+        "certificate_chain": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      },
+      "required": ["algorithm"]
+    },
+    "audit_entry": {
+      "type": "object",
+      "properties": {
+        "audit_id": {"$ref": "#/$defs/uuid"},
+        "event_type": {
+          "type": "string",
+          "enum": ["authentication", "authorization", "access", "modification", "deletion", "configuration_change", "security_violation"]
+        },
+        "user_identity": {"$ref": "#/$defs/user_identity"},
+        "resource_accessed": {"type": "string"},
+        "action_performed": {"type": "string"},
+        "result": {
+          "type": "string",
+          "enum": ["success", "failure", "partial", "denied"]
+        },
+        "source_ip": {"type": "string"},
+        "user_agent": {"type": "string"},
+        "session_id": {"$ref": "#/$defs/uuid"},
+        "request_id": {"$ref": "#/$defs/uuid"},
+        "additional_data": {"type": "object"},
+        "risk_score": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 10.0
+        },
+        "timestamp": {"$ref": "#/$defs/timestamp"}
+      },
+      "required": ["audit_id", "event_type", "user_identity", "result", "timestamp"]
+    },
+    "security_context": {
+      "type": "object",
+      "properties": {
+        "context_id": {"$ref": "#/$defs/uuid"},
+        "session_id": {"$ref": "#/$defs/uuid"},
+        "user_identity": {"$ref": "#/$defs/user_identity"},
+        "authentication_token": {
+          "type": "object",
+          "properties": {
+            "token_type": {
+              "type": "string",
+              "enum": ["bearer", "jwt", "saml", "certificate"]
+            },
+            "token_value": {"type": "string"},
+            "issued_at": {"$ref": "#/$defs/timestamp"},
+            "expires_at": {"$ref": "#/$defs/timestamp"},
+            "issuer": {"type": "string"},
+            "audience": {"type": "string"},
+            "scopes": {
+              "type": "array",
+              "items": {"type": "string"}
+            }
+          },
+          "required": ["token_type", "token_value", "issued_at", "expires_at"]
+        },
+        "permissions": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/permission"}
+        },
+        "security_level": {"$ref": "#/$defs/security_level"},
+        "encryption_info": {"$ref": "#/$defs/encryption_info"},
+        "audit_trail": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/audit_entry"}
+        },
+        "security_policies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "policy_id": {"type": "string"},
+              "policy_name": {"type": "string"},
+              "policy_version": {"type": "string"},
+              "enforcement_level": {
+                "type": "string",
+                "enum": ["advisory", "warning", "enforcing", "blocking"]
+              }
+            },
+            "required": ["policy_id", "policy_name", "enforcement_level"]
+          }
+        },
+        "threat_indicators": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "indicator_type": {
+                "type": "string",
+                "enum": ["suspicious_ip", "unusual_access_pattern", "privilege_escalation", "data_exfiltration", "brute_force"]
+              },
+              "severity": {
+                "type": "string",
+                "enum": ["low", "medium", "high", "critical"]
+              },
+              "description": {"type": "string"},
+              "detected_at": {"$ref": "#/$defs/timestamp"}
+            },
+            "required": ["indicator_type", "severity", "detected_at"]
+          }
+        },
+        "created_at": {"$ref": "#/$defs/timestamp"},
+        "updated_at": {"$ref": "#/$defs/timestamp"}
+      },
+      "required": ["context_id", "session_id", "user_identity", "security_level", "created_at"]
+    },
+    "security_event": {
+      "type": "object",
+      "properties": {
+        "event_id": {"$ref": "#/$defs/uuid"},
+        "event_type": {
+          "type": "string",
+          "enum": ["authentication_success", "authentication_failure", "authorization_denied", "suspicious_activity", "security_violation", "policy_violation", "data_breach", "system_compromise"]
+        },
+        "severity": {
+          "type": "string",
+          "enum": ["info", "warning", "error", "critical", "emergency"]
+        },
+        "source_module": {"$ref": "#/$defs/module_type"},
+        "affected_resources": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "security_context": {"$ref": "#/$defs/security_context"},
+        "event_details": {
+          "type": "object",
+          "description": "事件详细信息"
+        },
+        "mitigation_actions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "action_type": {
+                "type": "string",
+                "enum": ["block_user", "revoke_token", "quarantine_resource", "alert_admin", "log_incident"]
+              },
+              "action_description": {"type": "string"},
+              "automated": {"type": "boolean"},
+              "executed_at": {"$ref": "#/$defs/timestamp"}
+            },
+            "required": ["action_type", "action_description", "automated"]
+          }
+        },
+        "investigation_status": {
+          "type": "string",
+          "enum": ["new", "investigating", "resolved", "false_positive", "escalated"]
+        },
+        "occurred_at": {"$ref": "#/$defs/timestamp"},
+        "resolved_at": {"$ref": "#/$defs/timestamp"}
+      },
+      "required": ["event_id", "event_type", "severity", "source_module", "security_context", "occurred_at"]
+    },
+    "security_policy": {
+      "type": "object",
+      "properties": {
+        "policy_id": {"$ref": "#/$defs/uuid"},
+        "policy_name": {"type": "string"},
+        "policy_version": {"type": "string"},
+        "policy_type": {
+          "type": "string",
+          "enum": ["authentication", "authorization", "encryption", "audit", "compliance", "incident_response"]
+        },
+        "target_modules": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/module_type"}
+        },
+        "policy_rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "rule_id": {"type": "string"},
+              "rule_name": {"type": "string"},
+              "condition": {"type": "string"},
+              "action": {
+                "type": "string",
+                "enum": ["allow", "deny", "require_approval", "log_only", "alert"]
+              },
+              "parameters": {"type": "object"}
+            },
+            "required": ["rule_id", "rule_name", "condition", "action"]
+          }
+        },
+        "enforcement_level": {
+          "type": "string",
+          "enum": ["advisory", "warning", "enforcing", "blocking"]
+        },
+        "compliance_frameworks": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["gdpr", "hipaa", "sox", "pci_dss", "iso_27001", "nist", "cis"]
+          }
+        },
+        "effective_date": {"$ref": "#/$defs/timestamp"},
+        "expiration_date": {"$ref": "#/$defs/timestamp"},
+        "created_by": {"type": "string"},
+        "approved_by": {"type": "string"},
+        "created_at": {"$ref": "#/$defs/timestamp"},
+        "updated_at": {"$ref": "#/$defs/timestamp"}
+      },
+      "required": ["policy_id", "policy_name", "policy_version", "policy_type", "target_modules", "policy_rules", "enforcement_level", "created_at"]
+    }
+  },
+  "properties": {
+    "protocol_version": {
+      "type": "string",
+      "const": "1.0.0",
+      "description": "MPLP协议版本"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601格式时间戳"
+    },
+    "security_context": {"$ref": "#/$defs/security_context"},
+    "security_event": {"$ref": "#/$defs/security_event"},
+    "security_policy": {"$ref": "#/$defs/security_policy"},
+    "audit_trail": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "retention_days": { "type": "integer", "minimum": 1, "maximum": 2555 },
+        "audit_events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "event_id": { "$ref": "#/$defs/uuid" },
+              "event_type": {
+                "type": "string",
+                "enum": ["authentication_attempted", "authentication_succeeded", "authentication_failed", "authorization_granted", "authorization_denied", "security_policy_applied", "security_violation_detected", "encryption_applied", "decryption_performed"]
+              },
+              "timestamp": { "$ref": "#/$defs/timestamp" },
+              "user_id": { "type": "string" },
+              "user_role": { "type": "string" },
+              "action": { "type": "string" },
+              "resource": { "type": "string" },
+              "security_operation": { "type": "string" },
+              "security_level": { "$ref": "#/$defs/security_level" },
+              "authentication_method": { "$ref": "#/$defs/authentication_method" },
+              "encryption_algorithm": { "$ref": "#/$defs/encryption_algorithm" },
+              "source_module": { "$ref": "#/$defs/module_type" },
+              "target_resource": { "type": "string" },
+              "security_details": { "type": "object" },
+              "ip_address": { "type": "string" },
+              "user_agent": { "type": "string" },
+              "session_id": { "type": "string" },
+              "correlation_id": { "$ref": "#/$defs/uuid" }
+            },
+            "required": ["event_id", "event_type", "timestamp", "user_id", "action", "resource"]
+          }
+        },
+        "compliance_settings": {
+          "type": "object",
+          "properties": {
+            "gdpr_enabled": { "type": "boolean" },
+            "hipaa_enabled": { "type": "boolean" },
+            "sox_enabled": { "type": "boolean" },
+            "security_audit_level": {
+              "type": "string",
+              "enum": ["basic", "detailed", "comprehensive"]
+            },
+            "security_data_logging": { "type": "boolean" },
+            "custom_compliance": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      },
+      "required": ["enabled", "retention_days"]
+    },
+    "monitoring_integration": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "supported_providers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["prometheus", "grafana", "datadog", "new_relic", "elastic_apm", "custom"]
+          }
+        },
+        "integration_endpoints": {
+          "type": "object",
+          "properties": {
+            "metrics_api": { "type": "string", "format": "uri" },
+            "security_monitoring_api": { "type": "string", "format": "uri" },
+            "threat_analysis_api": { "type": "string", "format": "uri" },
+            "compliance_monitoring_api": { "type": "string", "format": "uri" }
+          }
+        },
+        "security_metrics": {
+          "type": "object",
+          "properties": {
+            "track_security_monitoring": { "type": "boolean" },
+            "track_threat_analysis": { "type": "boolean" },
+            "track_compliance_monitoring": { "type": "boolean" },
+            "track_access_control": { "type": "boolean" }
+          }
+        },
+        "export_formats": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["prometheus", "opentelemetry", "custom"]
+          }
+        }
+      },
+      "required": ["enabled", "supported_providers"]
+    },
+    "performance_metrics": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "collection_interval_seconds": { "type": "integer", "minimum": 10, "maximum": 3600 },
+        "metrics": {
+          "type": "object",
+          "properties": {
+            "security_check_latency_ms": { "type": "number", "minimum": 0 },
+            "authentication_success_rate_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+            "authorization_success_rate_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+            "threat_detection_accuracy_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+            "compliance_score": { "type": "number", "minimum": 0, "maximum": 10 },
+            "active_sessions_count": { "type": "integer", "minimum": 0 },
+            "security_violations_count": { "type": "integer", "minimum": 0 },
+            "failed_authentications_count": { "type": "integer", "minimum": 0 },
+            "average_encryption_time_ms": { "type": "number", "minimum": 0 }
+          }
+        },
+        "health_status": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": ["healthy", "degraded", "unhealthy", "compromised"]
+            },
+            "last_check": { "$ref": "#/$defs/timestamp" },
+            "checks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "check_name": { "type": "string" },
+                  "status": {
+                    "type": "string",
+                    "enum": ["pass", "fail", "warn"]
+                  },
+                  "message": { "type": "string" },
+                  "duration_ms": { "type": "number", "minimum": 0 }
+                },
+                "required": ["check_name", "status"]
+              }
+            }
+          }
+        },
+        "alerting": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "thresholds": {
+              "type": "object",
+              "properties": {
+                "max_security_check_latency_ms": { "type": "number", "minimum": 0 },
+                "min_authentication_success_rate_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+                "min_authorization_success_rate_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+                "min_threat_detection_accuracy_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+                "max_security_violations_count": { "type": "integer", "minimum": 0 }
+              }
+            },
+            "notification_channels": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["email", "slack", "webhook", "sms", "pagerduty"]
+              }
+            }
+          }
+        }
+      },
+      "required": ["enabled", "collection_interval_seconds"]
+    },
+    "version_history": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "max_versions": { "type": "integer", "minimum": 1, "maximum": 100, "default": 50 },
+        "versions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "version_id": { "$ref": "#/$defs/uuid" },
+              "version_number": { "type": "integer", "minimum": 1 },
+              "created_at": { "$ref": "#/$defs/timestamp" },
+              "created_by": { "type": "string" },
+              "change_summary": { "type": "string" },
+              "security_snapshot": { "type": "object" },
+              "change_type": {
+                "type": "string",
+                "enum": ["security_policy_created", "configuration_updated", "permissions_modified", "encryption_changed", "authentication_updated"]
+              }
+            },
+            "required": ["version_id", "version_number", "created_at", "created_by", "change_type"]
+          }
+        },
+        "auto_versioning": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "version_on_config_change": { "type": "boolean" },
+            "version_on_policy_change": { "type": "boolean" },
+            "version_on_permission_change": { "type": "boolean" }
+          }
+        }
+      },
+      "required": ["enabled", "max_versions"]
+    },
+    "search_metadata": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "indexing_strategy": {
+          "type": "string",
+          "enum": ["full_text", "keyword", "semantic", "hybrid"]
+        },
+        "searchable_fields": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["user_id", "security_level", "authentication_method", "encryption_algorithm", "security_event", "performance_metrics", "metadata", "audit_logs"]
+          }
+        },
+        "search_indexes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "index_id": { "type": "string" },
+              "index_name": { "type": "string" },
+              "fields": { "type": "array", "items": { "type": "string" } },
+              "index_type": {
+                "type": "string",
+                "enum": ["btree", "hash", "gin", "gist", "full_text"]
+              },
+              "created_at": { "$ref": "#/$defs/timestamp" },
+              "last_updated": { "$ref": "#/$defs/timestamp" }
+            },
+            "required": ["index_id", "index_name", "fields", "index_type"]
+          }
+        },
+        "security_indexing": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "index_security_data": { "type": "boolean" },
+            "index_performance_metrics": { "type": "boolean" },
+            "index_audit_logs": { "type": "boolean" }
+          }
+        },
+        "auto_indexing": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "index_new_security_events": { "type": "boolean" },
+            "reindex_interval_hours": { "type": "integer", "minimum": 1 }
+          }
+        }
+      },
+      "required": ["enabled", "indexing_strategy"]
+    },
+
+    "security_operation": {
+
+      "type": "string",
+
+      "enum": [
+
+        "authenticate",
+
+        "authorize",
+
+        "audit",
+
+        "encrypt",
+
+        "decrypt"
+
+      ],
+
+      "description": "安全操作类型"
+
+    },
+
+    "security_details": {
+
+      "type": "object",
+
+      "properties": {
+
+        "security_level": {
+
+          "type": "string",
+
+          "enum": [
+
+            "basic",
+
+            "standard",
+
+            "high",
+
+            "critical"
+
+          ]
+
+        },
+
+        "encryption_algorithm": {
+
+          "type": "string",
+
+          "enum": [
+
+            "aes256",
+
+            "rsa2048",
+
+            "ecc",
+
+            "custom"
+
+          ]
+
+        },
+
+        "authentication_method": {
+
+          "type": "string",
+
+          "enum": [
+
+            "password",
+
+            "token",
+
+            "certificate",
+
+            "biometric"
+
+          ]
+
+        }
+
+      },
+
+      "description": "安全详细配置"
+
+    },
+    "event_integration": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "event_bus_connection": {
+          "type": "object",
+          "properties": {
+            "bus_type": {
+              "type": "string",
+              "enum": ["kafka", "rabbitmq", "redis", "nats", "custom"]
+            },
+            "connection_string": { "type": "string" },
+            "topic_prefix": { "type": "string" },
+            "consumer_group": { "type": "string" }
+          }
+        },
+        "published_events": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["security_authentication_attempted", "security_authentication_succeeded", "security_authentication_failed", "security_authorization_granted", "security_authorization_denied", "security_policy_applied", "security_violation_detected", "security_encryption_applied"]
+          }
+        },
+        "subscribed_events": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["context_updated", "plan_executed", "confirm_approved", "trace_completed", "role_assigned", "extension_activated", "dialog_started", "network_connected", "collab_coordinated", "orchestration_executed", "coordination_synchronized", "event_bus_message_published", "state_sync_sync_completed", "transaction_committed", "protocol_version_version_checked", "error_handling_error_occurred"]
+          }
+        },
+        "event_routing": {
+          "type": "object",
+          "properties": {
+            "routing_rules": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "rule_id": { "type": "string" },
+                  "condition": { "type": "string" },
+                  "target_topic": { "type": "string" },
+                  "enabled": { "type": "boolean" }
+                },
+                "required": ["rule_id", "condition", "target_topic"]
+              }
+            }
+          }
+        }
+      },
+      "required": ["enabled"]
+    }
+  },
+  "oneOf": [
+    {"required": ["protocol_version", "timestamp", "security_context", "audit_trail", "monitoring_integration", "performance_metrics", "version_history", "search_metadata", "security_operation", "event_integration"]},
+    {"required": ["protocol_version", "timestamp", "security_event", "audit_trail", "monitoring_integration", "performance_metrics", "version_history", "search_metadata", "security_operation", "event_integration"]},
+    {"required": ["protocol_version", "timestamp", "security_policy", "audit_trail", "monitoring_integration", "performance_metrics", "version_history", "search_metadata", "security_operation", "event_integration"]}
+  ]
+}

@@ -157,41 +157,37 @@
             }
           }
         },
-        "intelligent_diagnostics": {
+        "diagnostic_integration": {
           "type": "object",
-          "description": "智能诊断配置",
+          "description": "诊断系统集成接口",
           "properties": {
             "enabled": {
               "type": "boolean",
-              "description": "是否启用智能诊断"
+              "description": "是否启用外部诊断系统集成"
             },
-            "min_confidence_score": {
-              "type": "number",
-              "minimum": 0,
-              "maximum": 1,
-              "description": "最小置信度分数"
+            "supported_diagnostic_providers": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["internal", "external_ai", "rule_based", "expert_system", "custom"]
+              },
+              "description": "支持的诊断提供商"
             },
-            "analysis_depth": {
-              "type": "string",
-              "enum": [
-                "basic",
-                "detailed",
-                "comprehensive"
-              ],
-              "description": "分析深度"
+            "diagnostic_endpoints": {
+              "type": "object",
+              "properties": {
+                "failure_analysis_api": { "type": "string", "format": "uri" },
+                "pattern_detection_api": { "type": "string", "format": "uri" },
+                "recommendation_api": { "type": "string", "format": "uri" }
+              }
             },
-            "pattern_recognition": {
-              "type": "boolean",
-              "description": "是否启用模式识别"
-            },
-            "historical_analysis": {
-              "type": "boolean",
-              "description": "是否分析历史故障数据"
-            },
-            "max_related_failures": {
-              "type": "integer",
-              "minimum": 0,
-              "description": "最大关联故障数量"
+            "request_format": {
+              "type": "object",
+              "properties": {
+                "input_schema": { "type": "string" },
+                "output_schema": { "type": "string" },
+                "timeout_ms": { "type": "integer", "minimum": 1000 }
+              }
             }
           },
           "required": [
@@ -272,73 +268,73 @@
             "enabled"
           ]
         },
-        "self_learning": {
+        "learning_integration": {
           "type": "object",
-          "description": "自学习恢复配置",
+          "description": "学习系统集成接口",
           "properties": {
             "enabled": {
               "type": "boolean",
-              "description": "是否启用自学习恢复"
+              "description": "是否启用外部学习系统集成"
             },
-            "learning_mode": {
-              "type": "string",
-              "enum": [
-                "passive",
-                "active",
-                "hybrid"
-              ],
-              "description": "学习模式"
-            },
-            "min_samples_required": {
-              "type": "integer",
-              "minimum": 1,
-              "description": "最小样本数量要求"
-            },
-            "adaptation_rate": {
-              "type": "number",
-              "minimum": 0,
-              "maximum": 1,
-              "description": "适应率（0-1）"
-            },
-            "strategy_effectiveness_metrics": {
+            "supported_learning_providers": {
               "type": "array",
               "items": {
-                "type": "string"
+                "type": "string",
+                "enum": ["ml_platform", "analytics_engine", "feedback_system", "custom"]
               },
-              "description": "策略有效性指标列表"
+              "description": "支持的学习系统提供商"
+            },
+            "learning_endpoints": {
+              "type": "object",
+              "properties": {
+                "feedback_collection_api": { "type": "string", "format": "uri" },
+                "pattern_learning_api": { "type": "string", "format": "uri" },
+                "strategy_optimization_api": { "type": "string", "format": "uri" }
+              }
+            },
+            "data_sharing": {
+              "type": "object",
+              "properties": {
+                "anonymization_enabled": { "type": "boolean" },
+                "data_retention_days": { "type": "integer", "minimum": 1 },
+                "sharing_scope": {
+                  "type": "string",
+                  "enum": ["internal", "organization", "community", "none"]
+                }
+              }
             }
           },
           "required": [
             "enabled"
           ]
         },
-        "enhanced_features": {
+        "external_integrations": {
           "type": "object",
-          "description": "增强型故障解决器功能",
+          "description": "外部系统集成配置",
           "properties": {
-            "ai_diagnostics": {
+            "diagnostic_systems": {
               "type": "boolean",
-              "description": "是否启用AI诊断"
+              "description": "是否集成外部诊断系统"
             },
-            "failure_prediction": {
+            "prediction_services": {
               "type": "boolean",
-              "description": "是否启用故障预测"
+              "description": "是否集成预测服务"
             },
-            "auto_recovery": {
+            "recovery_automation": {
               "type": "boolean",
-              "description": "是否启用自动恢复"
+              "description": "是否集成自动恢复系统"
             },
-            "performance_optimization": {
+            "optimization_engines": {
               "type": "boolean",
-              "description": "是否启用性能优化"
+              "description": "是否集成性能优化引擎"
             },
-            "development_issues_detection": {
+            "monitoring_platforms": {
               "type": "boolean",
-              "description": "是否启用开发问题检测"
+              "description": "是否集成监控平台"
             },
-            "recovery_suggestions": {
+            "recommendation_services": {
               "type": "boolean",
-              "description": "是否启用恢复建议"
+              "description": "是否集成建议服务"
             }
           }
         }
@@ -460,7 +456,7 @@
     "protocol_version": {
       "$ref": "#/$defs/version",
       "description": "MPLP协议版本",
-      "const": "1.0.2"
+      "const": "1.0.0"
     },
     "timestamp": {
       "$ref": "#/$defs/timestamp",
@@ -1252,6 +1248,538 @@
     "updated_by": {
       "type": "string",
       "description": "最后更新者ID"
+    },
+    "audit_trail": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "retention_days": { "type": "integer", "minimum": 1, "maximum": 2555 },
+        "audit_events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "event_id": { "$ref": "#/$defs/uuid" },
+              "event_type": {
+                "type": "string",
+                "enum": ["plan_created", "plan_updated", "plan_deleted", "plan_executed", "plan_paused", "plan_resumed", "plan_completed", "plan_failed", "task_added", "task_removed", "dependency_changed"]
+              },
+              "timestamp": { "$ref": "#/$defs/timestamp" },
+              "user_id": { "type": "string" },
+              "user_role": { "type": "string" },
+              "action": { "type": "string" },
+              "resource": { "type": "string" },
+              "plan_operation": { "type": "string" },
+              "plan_id": { "$ref": "#/$defs/uuid" },
+              "plan_name": { "type": "string" },
+              "plan_status": { "type": "string" },
+              "task_ids": {
+                "type": "array",
+                "items": { "$ref": "#/$defs/uuid" }
+              },
+              "execution_stage": { "type": "string" },
+              "plan_details": { "type": "object" },
+              "old_value": { "type": "object" },
+              "new_value": { "type": "object" },
+              "ip_address": { "type": "string" },
+              "user_agent": { "type": "string" },
+              "session_id": { "type": "string" },
+              "correlation_id": { "$ref": "#/$defs/uuid" }
+            },
+            "required": ["event_id", "event_type", "timestamp", "user_id", "action", "resource"]
+          }
+        },
+        "compliance_settings": {
+          "type": "object",
+          "properties": {
+            "gdpr_enabled": { "type": "boolean" },
+            "hipaa_enabled": { "type": "boolean" },
+            "sox_enabled": { "type": "boolean" },
+            "plan_audit_level": {
+              "type": "string",
+              "enum": ["basic", "detailed", "comprehensive"]
+            },
+            "plan_data_logging": { "type": "boolean" },
+            "custom_compliance": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      },
+      "required": ["enabled", "retention_days"]
+    },
+    "monitoring_integration": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "supported_providers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["prometheus", "grafana", "datadog", "new_relic", "elastic_apm", "custom"]
+          }
+        },
+        "integration_endpoints": {
+          "type": "object",
+          "properties": {
+            "metrics_api": { "type": "string", "format": "uri" },
+            "plan_execution_api": { "type": "string", "format": "uri" },
+            "task_metrics_api": { "type": "string", "format": "uri" },
+            "resource_metrics_api": { "type": "string", "format": "uri" }
+          }
+        },
+        "plan_metrics": {
+          "type": "object",
+          "properties": {
+            "track_execution_progress": { "type": "boolean" },
+            "track_task_performance": { "type": "boolean" },
+            "track_resource_usage": { "type": "boolean" },
+            "track_failure_recovery": { "type": "boolean" }
+          }
+        },
+        "export_formats": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["prometheus", "opentelemetry", "custom"]
+          }
+        }
+      },
+      "required": ["enabled", "supported_providers"]
+    },
+    "performance_metrics": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "collection_interval_seconds": { "type": "integer", "minimum": 10, "maximum": 3600 },
+        "metrics": {
+          "type": "object",
+          "properties": {
+            "plan_execution_latency_ms": { "type": "number", "minimum": 0 },
+            "task_completion_rate_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+            "plan_optimization_score": { "type": "number", "minimum": 0, "maximum": 10 },
+            "dependency_resolution_accuracy_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+            "plan_execution_efficiency_score": { "type": "number", "minimum": 0, "maximum": 10 },
+            "active_plans_count": { "type": "integer", "minimum": 0 },
+            "plan_operations_per_second": { "type": "number", "minimum": 0 },
+            "plan_memory_usage_mb": { "type": "number", "minimum": 0 },
+            "average_plan_complexity_score": { "type": "number", "minimum": 0, "maximum": 10 }
+          }
+        },
+        "health_status": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": ["healthy", "degraded", "unhealthy", "blocked"]
+            },
+            "last_check": { "$ref": "#/$defs/timestamp" },
+            "checks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "check_name": { "type": "string" },
+                  "status": {
+                    "type": "string",
+                    "enum": ["pass", "fail", "warn"]
+                  },
+                  "message": { "type": "string" },
+                  "duration_ms": { "type": "number", "minimum": 0 }
+                },
+                "required": ["check_name", "status"]
+              }
+            }
+          },
+          "required": ["status", "last_check"]
+        },
+        "alerting": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "thresholds": {
+              "type": "object",
+              "properties": {
+                "max_plan_execution_latency_ms": { "type": "number", "minimum": 0 },
+                "min_task_completion_rate_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+                "min_plan_optimization_score": { "type": "number", "minimum": 0, "maximum": 10 },
+                "min_dependency_resolution_accuracy_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+                "min_plan_execution_efficiency_score": { "type": "number", "minimum": 0, "maximum": 10 }
+              }
+            },
+            "notification_channels": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["email", "slack", "webhook", "sms", "pagerduty"]
+              }
+            }
+          }
+        }
+      },
+      "required": ["enabled", "collection_interval_seconds"]
+    },
+    "version_history": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "max_versions": { "type": "integer", "minimum": 1, "maximum": 100, "default": 50 },
+        "versions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "version_id": { "$ref": "#/$defs/uuid" },
+              "version_number": { "type": "integer", "minimum": 1 },
+              "created_at": { "$ref": "#/$defs/timestamp" },
+              "created_by": { "type": "string" },
+              "change_summary": { "type": "string" },
+              "plan_snapshot": { "type": "object" },
+              "change_type": {
+                "type": "string",
+                "enum": ["plan_created", "configuration_updated", "tasks_modified", "dependencies_changed", "execution_optimized"]
+              }
+            },
+            "required": ["version_id", "version_number", "created_at", "created_by", "change_type"]
+          }
+        },
+        "auto_versioning": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "version_on_config_change": { "type": "boolean" },
+            "version_on_task_change": { "type": "boolean" },
+            "version_on_dependency_change": { "type": "boolean" }
+          }
+        }
+      },
+      "required": ["enabled", "max_versions"]
+    },
+    "search_metadata": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "indexing_strategy": {
+          "type": "string",
+          "enum": ["full_text", "keyword", "semantic", "hybrid"]
+        },
+        "searchable_fields": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["plan_id", "plan_name", "plan_status", "task_ids", "execution_stage", "plan_data", "performance_metrics", "metadata", "audit_logs"]
+          }
+        },
+        "search_indexes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "index_id": { "type": "string" },
+              "index_name": { "type": "string" },
+              "fields": { "type": "array", "items": { "type": "string" } },
+              "index_type": {
+                "type": "string",
+                "enum": ["btree", "hash", "gin", "gist", "full_text"]
+              },
+              "created_at": { "$ref": "#/$defs/timestamp" },
+              "last_updated": { "$ref": "#/$defs/timestamp" }
+            },
+            "required": ["index_id", "index_name", "fields", "index_type"]
+          }
+        },
+        "plan_indexing": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "index_plan_data": { "type": "boolean" },
+            "index_performance_metrics": { "type": "boolean" },
+            "index_audit_logs": { "type": "boolean" }
+          }
+        },
+        "auto_indexing": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "index_new_plans": { "type": "boolean" },
+            "reindex_interval_hours": { "type": "integer", "minimum": 1 }
+          }
+        }
+      },
+      "required": ["enabled", "indexing_strategy"]
+    },
+    "caching_policy": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "cache_strategy": {
+          "type": "string",
+          "enum": ["lru", "lfu", "ttl", "adaptive"]
+        },
+        "cache_levels": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "level": { "type": "string" },
+              "backend": {
+                "type": "string",
+                "enum": ["memory", "redis", "memcached", "database"]
+              },
+              "ttl_seconds": { "type": "integer", "minimum": 1 },
+              "max_size_mb": { "type": "number", "minimum": 1 },
+              "eviction_policy": {
+                "type": "string",
+                "enum": ["lru", "lfu", "random", "ttl"]
+              }
+            },
+            "required": ["level", "backend", "ttl_seconds"]
+          }
+        },
+        "cache_warming": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "strategies": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      },
+      "required": ["enabled", "cache_strategy"]
+    },
+
+    "plan_operation": {
+
+      "type": "string",
+
+      "enum": [
+
+        "create",
+
+        "update",
+
+        "execute",
+
+        "pause",
+
+        "cancel"
+
+      ],
+
+      "description": "计划操作类型"
+
+    },
+
+    "plan_details": {
+
+      "type": "object",
+
+      "properties": {
+
+        "planning_strategy": {
+
+          "type": "string",
+
+          "enum": [
+
+            "sequential",
+
+            "parallel",
+
+            "adaptive"
+
+          ]
+
+        },
+
+        "execution_mode": {
+
+          "type": "string",
+
+          "enum": [
+
+            "immediate",
+
+            "scheduled",
+
+            "conditional"
+
+          ]
+
+        },
+
+        "rollback_support": {
+
+          "type": "boolean"
+
+        }
+
+      },
+
+      "description": "计划详细配置"
+
+    },
+
+
+    "plan_operation": {
+
+
+      "type": "string",
+
+
+      "enum": [
+
+
+        "create",
+
+
+        "update",
+
+
+        "execute",
+
+
+        "pause",
+
+
+        "cancel"
+
+
+      ],
+
+
+      "description": "计划操作类型"
+
+
+    },
+
+
+    "plan_details": {
+
+
+      "type": "object",
+
+
+      "properties": {
+
+
+        "planning_strategy": {
+
+
+          "type": "string",
+
+
+          "enum": [
+
+
+            "sequential",
+
+
+            "parallel",
+
+
+            "adaptive"
+
+
+          ]
+
+
+        },
+
+
+        "execution_mode": {
+
+
+          "type": "string",
+
+
+          "enum": [
+
+
+            "immediate",
+
+
+            "scheduled",
+
+
+            "conditional"
+
+
+          ]
+
+
+        },
+
+
+        "rollback_support": {
+
+
+          "type": "boolean"
+
+
+        }
+
+
+      },
+
+
+      "description": "计划详细配置"
+
+
+    },
+    "event_integration": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "event_bus_connection": {
+          "type": "object",
+          "properties": {
+            "bus_type": {
+              "type": "string",
+              "enum": ["kafka", "rabbitmq", "redis", "nats", "custom"]
+            },
+            "connection_string": { "type": "string" },
+            "topic_prefix": { "type": "string" },
+            "consumer_group": { "type": "string" }
+          }
+        },
+        "published_events": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["plan_created", "plan_updated", "plan_deleted", "plan_executed", "plan_paused", "plan_resumed", "plan_completed", "plan_failed", "plan_task_added", "plan_task_removed", "plan_dependency_changed"]
+          }
+        },
+        "subscribed_events": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["context_updated", "confirm_approved", "trace_completed", "role_assigned", "extension_activated", "dialog_started", "network_connected", "collab_coordinated", "orchestration_executed", "coordination_synchronized", "eventbus_message_published", "statesync_sync_completed", "transaction_committed", "protocolversion_version_checked", "errorhandling_error_occurred", "security_authentication_attempted", "performance_metric_collected"]
+          }
+        },
+        "event_routing": {
+          "type": "object",
+          "properties": {
+            "routing_rules": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "rule_id": { "type": "string" },
+                  "condition": { "type": "string" },
+                  "target_topic": { "type": "string" },
+                  "enabled": { "type": "boolean" }
+                },
+                "required": ["rule_id", "condition", "target_topic"]
+              }
+            }
+          }
+        }
+      },
+      "required": ["enabled"]
     }
   },
   "required": [
@@ -1261,7 +1789,14 @@
     "context_id",
     "name",
     "status",
-    "tasks"
+    "tasks",
+    "audit_trail",
+    "monitoring_integration",
+    "performance_metrics",
+    "version_history",
+    "search_metadata",
+    "caching_policy",
+    "event_integration"
   ],
   "additionalProperties": false
 }

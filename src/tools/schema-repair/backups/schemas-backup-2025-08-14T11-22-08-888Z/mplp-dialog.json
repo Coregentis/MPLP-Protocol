@@ -1,0 +1,848 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://mplp.dev/schemas/v1.0/mplp-dialog.json",
+  "title": "MPLP Dialog Protocol v1.0 - Unified Interface",
+  "description": "Dialog协议统一标准接口Schema - 支持从简单对话到智能分析的所有对话需求",
+  "type": "object",
+  "$defs": {
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "description": "UUID v4格式的唯一标识符"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601格式的时间戳"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+      "description": "语义化版本号 (SemVer)"
+    },
+    "dialog_capabilities": {
+      "type": "object",
+      "description": "对话能力配置 - 核心参数化设计",
+      "properties": {
+        "basic": {
+          "type": "object",
+          "description": "基础对话能力（默认启用）",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "const": true
+            },
+            "message_history": {
+              "type": "boolean"
+            },
+            "participant_management": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "enabled",
+            "message_history",
+            "participant_management"
+          ],
+          "additionalProperties": false
+        },
+        "intelligent_control": {
+          "type": "object",
+          "description": "智能对话控制（可选）",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "adaptive_rounds": {
+              "type": "boolean"
+            },
+            "dynamic_strategy": {
+              "type": "boolean"
+            },
+            "completeness_evaluation": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "enabled"
+          ],
+          "additionalProperties": false
+        },
+        "critical_thinking": {
+          "type": "object",
+          "description": "批判性思维分析（可选）",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "analysis_depth": {
+              "type": "string",
+              "enum": [
+                "surface",
+                "moderate",
+                "deep"
+              ]
+            },
+            "question_generation": {
+              "type": "boolean"
+            },
+            "logic_validation": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "enabled"
+          ],
+          "additionalProperties": false
+        },
+        "knowledge_search": {
+          "type": "object",
+          "description": "知识搜索集成（可选）",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "real_time_search": {
+              "type": "boolean"
+            },
+            "knowledge_validation": {
+              "type": "boolean"
+            },
+            "source_verification": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "enabled"
+          ],
+          "additionalProperties": false
+        },
+        "multimodal": {
+          "type": "object",
+          "description": "多模态交互（可选）",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "supported_modalities": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "text",
+                  "audio",
+                  "image",
+                  "video",
+                  "file"
+                ]
+              }
+            },
+            "cross_modal_translation": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "enabled"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "basic"
+      ],
+      "additionalProperties": false
+    },
+    "dialog_strategy": {
+      "type": "object",
+      "description": "对话策略配置",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "fixed",
+            "adaptive",
+            "goal_driven",
+            "exploratory"
+          ]
+        },
+        "rounds": {
+          "type": "object",
+          "properties": {
+            "min": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "max": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "target": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "exit_criteria": {
+          "type": "object",
+          "properties": {
+            "completeness_threshold": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "user_satisfaction_threshold": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "time_limit": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "dialog_content": {
+      "type": "object",
+      "description": "对话内容定义",
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "multimodal": {
+          "type": "object",
+          "properties": {
+            "audio": {
+              "type": "object"
+            },
+            "image": {
+              "type": "object"
+            },
+            "video": {
+              "type": "object"
+            },
+            "file": {
+              "type": "object"
+            }
+          },
+          "additionalProperties": false
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "message",
+            "question",
+            "command",
+            "feedback"
+          ]
+        },
+        "priority": {
+          "type": "string",
+          "enum": [
+            "low",
+            "normal",
+            "high",
+            "urgent"
+          ]
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "protocol_version": {
+      "type": "string",
+      "const": "1.0.0",
+      "description": "MPLP协议版本"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601格式时间戳"
+    },
+    "dialog_id": {
+      "$ref": "#/$defs/uuid",
+      "description": "对话唯一标识符"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255,
+      "description": "对话名称"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1024,
+      "description": "对话描述"
+    },
+    "participants": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "maxItems": 100,
+      "description": "对话参与者ID列表"
+    },
+    "capabilities": {
+      "$ref": "#/$defs/dialog_capabilities",
+      "description": "对话能力配置"
+    },
+    "strategy": {
+      "$ref": "#/$defs/dialog_strategy",
+      "description": "对话策略配置"
+    },
+    "context": {
+      "type": "object",
+      "description": "对话上下文配置",
+      "properties": {
+        "session_id": {
+          "type": "string"
+        },
+        "context_id": {
+          "type": "string"
+        },
+        "knowledge_base": {
+          "type": "string"
+        },
+        "previous_dialogs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "configuration": {
+      "type": "object",
+      "description": "对话配置",
+      "properties": {
+        "timeout": {
+          "type": "integer",
+          "minimum": 1000
+        },
+        "max_participants": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "retry_policy": {
+          "type": "object",
+          "properties": {
+            "max_retries": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "backoff_ms": {
+              "type": "integer",
+              "minimum": 100
+            }
+          },
+          "additionalProperties": false
+        },
+        "security": {
+          "type": "object",
+          "properties": {
+            "encryption": {
+              "type": "boolean"
+            },
+            "authentication": {
+              "type": "boolean"
+            },
+            "audit_logging": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "对话元数据"
+    },
+    "audit_trail": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "retention_days": { "type": "integer", "minimum": 1, "maximum": 2555 },
+        "audit_events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "event_id": { "$ref": "#/$defs/uuid" },
+              "event_type": {
+                "type": "string",
+                "enum": ["dialog_started", "dialog_ended", "message_sent", "message_received", "participant_joined", "participant_left", "content_moderated", "privacy_violation", "dialog_updated"]
+              },
+              "timestamp": { "type": "string", "format": "date-time" },
+              "user_id": { "type": "string" },
+              "user_role": { "type": "string" },
+              "action": { "type": "string" },
+              "resource": { "type": "string" },
+              "dialog_operation": { "type": "string" },
+              "dialog_id": { "$ref": "#/$defs/uuid" },
+              "dialog_name": { "type": "string" },
+              "dialog_type": { "type": "string" },
+              "participant_ids": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "dialog_status": { "type": "string" },
+              "content_hash": { "type": "string" },
+              "dialog_details": { "type": "object" },
+              "ip_address": { "type": "string" },
+              "user_agent": { "type": "string" },
+              "session_id": { "type": "string" },
+              "correlation_id": { "$ref": "#/$defs/uuid" }
+            },
+            "required": ["event_id", "event_type", "timestamp", "user_id", "action", "resource"]
+          }
+        },
+        "compliance_settings": {
+          "type": "object",
+          "properties": {
+            "gdpr_enabled": { "type": "boolean" },
+            "hipaa_enabled": { "type": "boolean" },
+            "sox_enabled": { "type": "boolean" },
+            "dialog_audit_level": {
+              "type": "string",
+              "enum": ["basic", "detailed", "comprehensive"]
+            },
+            "dialog_data_logging": { "type": "boolean" },
+            "content_retention_policy": { "type": "string" },
+            "privacy_protection": { "type": "boolean" },
+            "custom_compliance": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      },
+      "required": ["enabled", "retention_days"]
+    },
+    "monitoring_integration": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "supported_providers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["prometheus", "grafana", "datadog", "new_relic", "elastic_apm", "custom"]
+          }
+        },
+        "integration_endpoints": {
+          "type": "object",
+          "properties": {
+            "metrics_api": { "type": "string", "format": "uri" },
+            "dialog_quality_api": { "type": "string", "format": "uri" },
+            "response_time_api": { "type": "string", "format": "uri" },
+            "satisfaction_api": { "type": "string", "format": "uri" }
+          }
+        },
+        "dialog_metrics": {
+          "type": "object",
+          "properties": {
+            "track_response_times": { "type": "boolean" },
+            "track_dialog_quality": { "type": "boolean" },
+            "track_user_satisfaction": { "type": "boolean" },
+            "track_content_moderation": { "type": "boolean" }
+          }
+        },
+        "export_formats": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["prometheus", "opentelemetry", "custom"]
+          }
+        }
+      },
+      "required": ["enabled", "supported_providers"]
+    },
+    "performance_metrics": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "collection_interval_seconds": { "type": "integer", "minimum": 10, "maximum": 3600 },
+        "metrics": {
+          "type": "object",
+          "properties": {
+            "dialog_response_latency_ms": { "type": "number", "minimum": 0 },
+            "dialog_completion_rate_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+            "dialog_quality_score": { "type": "number", "minimum": 0, "maximum": 10 },
+            "user_experience_satisfaction_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+            "dialog_interaction_efficiency_score": { "type": "number", "minimum": 0, "maximum": 10 },
+            "active_dialogs_count": { "type": "integer", "minimum": 0 },
+            "dialog_operations_per_second": { "type": "number", "minimum": 0 },
+            "dialog_memory_usage_mb": { "type": "number", "minimum": 0 },
+            "average_dialog_complexity_score": { "type": "number", "minimum": 0, "maximum": 10 }
+          }
+        },
+        "health_status": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": ["healthy", "degraded", "unhealthy", "interrupted"]
+            },
+            "last_check": { "type": "string", "format": "date-time" },
+            "checks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "check_name": { "type": "string" },
+                  "status": {
+                    "type": "string",
+                    "enum": ["pass", "fail", "warn"]
+                  },
+                  "message": { "type": "string" },
+                  "duration_ms": { "type": "number", "minimum": 0 }
+                },
+                "required": ["check_name", "status"]
+              }
+            }
+          }
+        },
+        "alerting": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "thresholds": {
+              "type": "object",
+              "properties": {
+                "max_dialog_response_latency_ms": { "type": "number", "minimum": 0 },
+                "min_dialog_completion_rate_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+                "min_dialog_quality_score": { "type": "number", "minimum": 0, "maximum": 10 },
+                "min_user_experience_satisfaction_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+                "min_dialog_interaction_efficiency_score": { "type": "number", "minimum": 0, "maximum": 10 }
+              }
+            },
+            "notification_channels": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["email", "slack", "webhook", "sms", "pagerduty"]
+              }
+            }
+          }
+        }
+      },
+      "required": ["enabled", "collection_interval_seconds"]
+    },
+    "version_history": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "max_versions": { "type": "integer", "minimum": 1, "maximum": 100, "default": 50 },
+        "versions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "version_id": { "$ref": "#/$defs/uuid" },
+              "version_number": { "type": "integer", "minimum": 1 },
+              "created_at": { "type": "string", "format": "date-time" },
+              "created_by": { "type": "string" },
+              "change_summary": { "type": "string" },
+              "dialog_snapshot": { "type": "object" },
+              "change_type": {
+                "type": "string",
+                "enum": ["created", "updated", "configured", "participants_changed", "capabilities_updated"]
+              }
+            },
+            "required": ["version_id", "version_number", "created_at", "created_by", "change_type"]
+          }
+        },
+        "auto_versioning": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "version_on_config_change": { "type": "boolean" },
+            "version_on_participant_change": { "type": "boolean" }
+          }
+        }
+      },
+      "required": ["enabled", "max_versions"]
+    },
+    "search_metadata": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "indexing_strategy": {
+          "type": "string",
+          "enum": ["full_text", "keyword", "semantic", "hybrid"]
+        },
+        "searchable_fields": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["dialog_id", "name", "participants", "messages", "capabilities", "metadata", "tags"]
+          }
+        },
+        "search_indexes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "index_id": { "type": "string" },
+              "index_name": { "type": "string" },
+              "fields": { "type": "array", "items": { "type": "string" } },
+              "index_type": {
+                "type": "string",
+                "enum": ["btree", "hash", "gin", "gist", "full_text"]
+              },
+              "created_at": { "type": "string", "format": "date-time" },
+              "last_updated": { "type": "string", "format": "date-time" }
+            },
+            "required": ["index_id", "index_name", "fields", "index_type"]
+          }
+        },
+        "content_indexing": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "index_message_content": { "type": "boolean" },
+            "privacy_filtering": { "type": "boolean" },
+            "sensitive_data_masking": { "type": "boolean" }
+          }
+        },
+        "auto_indexing": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "index_new_dialogs": { "type": "boolean" },
+            "reindex_interval_hours": { "type": "integer", "minimum": 1 }
+          }
+        }
+      },
+      "required": ["enabled", "indexing_strategy"]
+    },
+
+    "dialog_operation": {
+
+      "type": "string",
+
+      "enum": [
+
+        "start",
+
+        "continue",
+
+        "pause",
+
+        "resume",
+
+        "end"
+
+      ],
+
+      "description": "对话操作类型"
+
+    },
+
+    "dialog_details": {
+
+      "type": "object",
+
+      "properties": {
+
+        "dialog_type": {
+
+          "type": "string",
+
+          "enum": [
+
+            "interactive",
+
+            "batch",
+
+            "streaming"
+
+          ]
+
+        },
+
+        "turn_management": {
+
+          "type": "string",
+
+          "enum": [
+
+            "strict",
+
+            "flexible",
+
+            "free_form"
+
+          ]
+
+        },
+
+        "context_retention": {
+
+          "type": "string",
+
+          "enum": [
+
+            "none",
+
+            "session",
+
+            "persistent"
+
+          ]
+
+        }
+
+      },
+
+      "description": "对话详细配置"
+
+    },
+    "event_integration": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "event_bus_connection": {
+          "type": "object",
+          "properties": {
+            "bus_type": {
+              "type": "string",
+              "enum": ["kafka", "rabbitmq", "redis", "nats", "custom"]
+            },
+            "connection_string": { "type": "string" },
+            "topic_prefix": { "type": "string" },
+            "consumer_group": { "type": "string" }
+          }
+        },
+        "published_events": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["dialog_started", "dialog_ended", "message_sent", "message_received", "participant_joined", "participant_left", "quality_degraded", "satisfaction_low"]
+          }
+        },
+        "subscribed_events": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["context_updated", "plan_executed", "confirm_approved", "user_authenticated", "system_maintenance"]
+          }
+        },
+        "event_routing": {
+          "type": "object",
+          "properties": {
+            "routing_rules": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "rule_id": { "type": "string" },
+                  "condition": { "type": "string" },
+                  "target_topic": { "type": "string" },
+                  "enabled": { "type": "boolean" }
+                },
+                "required": ["rule_id", "condition", "target_topic"]
+              }
+            }
+          }
+        }
+      },
+      "required": ["enabled"]
+    }
+  },
+  "required": [
+    "protocol_version",
+    "timestamp",
+    "dialog_id",
+    "name",
+    "participants",
+    "capabilities",
+    "audit_trail",
+    "monitoring_integration",
+    "performance_metrics",
+    "version_history",
+    "search_metadata", "dialog_operation",
+    "event_integration"
+  ],
+  "additionalProperties": false,
+  "examples": [
+    {
+      "dialog_id": "550e8400-e29b-41d4-a716-446655440000",
+      "name": "简单客服对话",
+      "participants": [
+        "user-001",
+        "support-agent-001"
+      ],
+      "capabilities": {
+        "basic": {
+          "enabled": true,
+          "message_history": true,
+          "participant_management": true
+        }
+      }
+    },
+    {
+      "dialog_id": "550e8400-e29b-41d4-a716-446655440001",
+      "name": "TracePilot智能需求分析对话",
+      "participants": [
+        "user-001",
+        "product-owner-agent",
+        "architect-agent"
+      ],
+      "capabilities": {
+        "basic": {
+          "enabled": true,
+          "message_history": true,
+          "participant_management": true
+        },
+        "intelligent_control": {
+          "enabled": true,
+          "adaptive_rounds": true,
+          "dynamic_strategy": true,
+          "completeness_evaluation": true
+        },
+        "critical_thinking": {
+          "enabled": true,
+          "analysis_depth": "deep",
+          "question_generation": true,
+          "logic_validation": true
+        },
+        "knowledge_search": {
+          "enabled": true,
+          "real_time_search": true,
+          "knowledge_validation": true,
+          "source_verification": true
+        }
+      },
+      "strategy": {
+        "type": "adaptive",
+        "rounds": {
+          "min": 3,
+          "max": 7,
+          "target": 5
+        },
+        "exit_criteria": {
+          "completeness_threshold": 0.85,
+          "user_satisfaction_threshold": 0.8
+        }
+      }
+    }
+  ]
+}

@@ -35,7 +35,7 @@
     "protocol_version": {
       "$ref": "#/$defs/version",
       "description": "MPLP协议版本",
-      "const": "1.0.1"
+      "const": "1.0.0"
     },
     "timestamp": {
       "$ref": "#/$defs/timestamp",
@@ -363,13 +363,13 @@
           "method": {
             "type": "string",
             "enum": [
-              "GET",
-              "POST",
-              "PUT",
-              "PATCH",
-              "DELETE",
-              "OPTIONS",
-              "HEAD"
+              "get",
+              "post",
+              "put",
+              "patch",
+              "delete",
+              "options",
+              "head"
             ]
           },
           "description": {
@@ -447,7 +447,7 @@
               "role",
               "extension",
               "system",
-              "*"
+              "all"
             ]
           },
           "handler": {
@@ -706,6 +706,513 @@
           }
         }
       }
+    },
+    "audit_trail": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "retention_days": { "type": "integer", "minimum": 1, "maximum": 2555 },
+        "audit_events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "event_id": { "$ref": "#/$defs/uuid" },
+              "event_type": {
+                "type": "string",
+                "enum": ["extension_installed", "extension_activated", "extension_deactivated", "extension_updated", "extension_uninstalled", "permission_granted", "permission_revoked", "security_violation", "lifecycle_changed"]
+              },
+              "timestamp": { "$ref": "#/$defs/timestamp" },
+              "user_id": { "type": "string" },
+              "user_role": { "type": "string" },
+              "action": { "type": "string" },
+              "resource": { "type": "string" },
+              "extension_operation": { "type": "string" },
+              "extension_id": { "$ref": "#/$defs/uuid" },
+              "extension_name": { "type": "string" },
+              "extension_type": { "type": "string" },
+              "extension_version": { "type": "string" },
+              "lifecycle_stage": { "type": "string" },
+              "extension_status": { "type": "string" },
+              "extension_details": { "type": "object" },
+              "ip_address": { "type": "string" },
+              "user_agent": { "type": "string" },
+              "session_id": { "type": "string" },
+              "correlation_id": { "$ref": "#/$defs/uuid" }
+            },
+            "required": ["event_id", "event_type", "timestamp", "user_id", "action", "resource"]
+          }
+        },
+        "compliance_settings": {
+          "type": "object",
+          "properties": {
+            "gdpr_enabled": { "type": "boolean" },
+            "hipaa_enabled": { "type": "boolean" },
+            "sox_enabled": { "type": "boolean" },
+            "extension_audit_level": {
+              "type": "string",
+              "enum": ["basic", "detailed", "comprehensive"]
+            },
+            "extension_data_logging": { "type": "boolean" },
+            "custom_compliance": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      },
+      "required": ["enabled", "retention_days"]
+    },
+    "performance_metrics": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "collection_interval_seconds": { "type": "integer", "minimum": 10, "maximum": 3600 },
+        "metrics": {
+          "type": "object",
+          "properties": {
+            "extension_activation_latency_ms": { "type": "number", "minimum": 0 },
+            "extension_lifecycle_efficiency_score": { "type": "number", "minimum": 0, "maximum": 10 },
+            "extension_ecosystem_health_score": { "type": "number", "minimum": 0, "maximum": 10 },
+            "extension_compatibility_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+            "extension_management_efficiency_score": { "type": "number", "minimum": 0, "maximum": 10 },
+            "active_extensions_count": { "type": "integer", "minimum": 0 },
+            "extension_operations_per_second": { "type": "number", "minimum": 0 },
+            "extension_memory_usage_mb": { "type": "number", "minimum": 0 },
+            "average_extension_complexity_score": { "type": "number", "minimum": 0, "maximum": 10 }
+          }
+        },
+        "health_status": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": ["healthy", "degraded", "unhealthy", "incompatible"]
+            },
+            "last_check": { "$ref": "#/$defs/timestamp" },
+            "checks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "check_name": { "type": "string" },
+                  "status": {
+                    "type": "string",
+                    "enum": ["pass", "fail", "warn"]
+                  },
+                  "message": { "type": "string" },
+                  "duration_ms": { "type": "number", "minimum": 0 }
+                },
+                "required": ["check_name", "status"]
+              }
+            }
+          }
+        },
+        "alerting": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "thresholds": {
+              "type": "object",
+              "properties": {
+                "max_extension_activation_latency_ms": { "type": "number", "minimum": 0 },
+                "min_extension_lifecycle_efficiency_score": { "type": "number", "minimum": 0, "maximum": 10 },
+                "min_extension_ecosystem_health_score": { "type": "number", "minimum": 0, "maximum": 10 },
+                "min_extension_compatibility_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+                "min_extension_management_efficiency_score": { "type": "number", "minimum": 0, "maximum": 10 }
+              }
+            },
+            "notification_channels": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["email", "slack", "webhook", "sms", "pagerduty"]
+              }
+            }
+          }
+        }
+      },
+      "required": ["enabled", "collection_interval_seconds"]
+    },
+    "monitoring_integration": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "supported_providers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["prometheus", "grafana", "datadog", "new_relic", "elastic_apm", "custom"]
+          }
+        },
+        "integration_endpoints": {
+          "type": "object",
+          "properties": {
+            "metrics_api": { "type": "string", "format": "uri" },
+            "extension_lifecycle_api": { "type": "string", "format": "uri" },
+            "performance_metrics_api": { "type": "string", "format": "uri" },
+            "security_events_api": { "type": "string", "format": "uri" }
+          }
+        },
+        "extension_metrics": {
+          "type": "object",
+          "properties": {
+            "track_lifecycle_events": { "type": "boolean" },
+            "track_performance_impact": { "type": "boolean" },
+            "track_usage_statistics": { "type": "boolean" },
+            "track_security_events": { "type": "boolean" }
+          }
+        },
+        "export_formats": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["prometheus", "opentelemetry", "custom"]
+          }
+        }
+      },
+      "required": ["enabled", "supported_providers"]
+    },
+    "version_history": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "max_versions": { "type": "integer", "minimum": 1, "maximum": 100, "default": 50 },
+        "versions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "version_id": { "$ref": "#/$defs/uuid" },
+              "version_number": { "type": "integer", "minimum": 1 },
+              "created_at": { "$ref": "#/$defs/timestamp" },
+              "created_by": { "type": "string" },
+              "change_summary": { "type": "string" },
+              "extension_snapshot": { "type": "object" },
+              "change_type": {
+                "type": "string",
+                "enum": ["installed", "updated", "configured", "activated", "deactivated", "uninstalled"]
+              }
+            },
+            "required": ["version_id", "version_number", "created_at", "created_by", "change_type"]
+          }
+        },
+        "auto_versioning": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "version_on_install": { "type": "boolean" },
+            "version_on_update": { "type": "boolean" },
+            "version_on_config_change": { "type": "boolean" }
+          }
+        }
+      },
+      "required": ["enabled", "max_versions"]
+    },
+    "search_metadata": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "indexing_strategy": {
+          "type": "string",
+          "enum": ["full_text", "keyword", "semantic", "hybrid"]
+        },
+        "searchable_fields": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["extension_id", "name", "type", "description", "tags", "capabilities", "dependencies", "metadata"]
+          }
+        },
+        "search_indexes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "index_id": { "type": "string" },
+              "index_name": { "type": "string" },
+              "fields": { "type": "array", "items": { "type": "string" } },
+              "index_type": {
+                "type": "string",
+                "enum": ["btree", "hash", "gin", "gist", "full_text"]
+              },
+              "created_at": { "$ref": "#/$defs/timestamp" },
+              "last_updated": { "$ref": "#/$defs/timestamp" }
+            },
+            "required": ["index_id", "index_name", "fields", "index_type"]
+          }
+        },
+        "auto_indexing": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "index_new_extensions": { "type": "boolean" },
+            "reindex_interval_hours": { "type": "integer", "minimum": 1 }
+          }
+        }
+      },
+      "required": ["enabled", "indexing_strategy"]
+    },
+
+    "extension_operation": {
+
+      "type": "string",
+
+      "enum": [
+
+        "install",
+
+        "activate",
+
+        "deactivate",
+
+        "update",
+
+        "uninstall"
+
+      ],
+
+      "description": "扩展操作类型"
+
+    },
+
+    "extension_details": {
+
+      "type": "object",
+
+      "properties": {
+
+        "extension_type": {
+
+          "type": "string",
+
+          "enum": [
+
+            "plugin",
+
+            "middleware",
+
+            "service",
+
+            "widget"
+
+          ]
+
+        },
+
+        "compatibility_mode": {
+
+          "type": "string",
+
+          "enum": [
+
+            "strict",
+
+            "compatible",
+
+            "legacy"
+
+          ]
+
+        },
+
+        "security_level": {
+
+          "type": "string",
+
+          "enum": [
+
+            "sandbox",
+
+            "restricted",
+
+            "trusted"
+
+          ]
+
+        }
+
+      },
+
+      "description": "扩展详细配置"
+
+    },
+
+
+    "extension_operation": {
+
+
+      "type": "string",
+
+
+      "enum": [
+
+
+        "install",
+
+
+        "activate",
+
+
+        "deactivate",
+
+
+        "update",
+
+
+        "uninstall"
+
+
+      ],
+
+
+      "description": "扩展操作类型"
+
+
+    },
+
+
+    "extension_details": {
+
+
+      "type": "object",
+
+
+      "properties": {
+
+
+        "extension_type": {
+
+
+          "type": "string",
+
+
+          "enum": [
+
+
+            "plugin",
+
+
+            "middleware",
+
+
+            "service",
+
+
+            "widget"
+
+
+          ]
+
+
+        },
+
+
+        "compatibility_mode": {
+
+
+          "type": "string",
+
+
+          "enum": [
+
+
+            "strict",
+
+
+            "compatible",
+
+
+            "legacy"
+
+
+          ]
+
+
+        },
+
+
+        "security_level": {
+
+
+          "type": "string",
+
+
+          "enum": [
+
+
+            "sandbox",
+
+
+            "restricted",
+
+
+            "trusted"
+
+
+          ]
+
+
+        }
+
+
+      },
+
+
+      "description": "扩展详细配置"
+
+
+    },
+    "event_integration": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "event_bus_connection": {
+          "type": "object",
+          "properties": {
+            "bus_type": {
+              "type": "string",
+              "enum": ["kafka", "rabbitmq", "redis", "nats", "custom"]
+            },
+            "connection_string": { "type": "string" },
+            "topic_prefix": { "type": "string" },
+            "consumer_group": { "type": "string" }
+          }
+        },
+        "published_events": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["extension_installed", "extension_activated", "extension_deactivated", "extension_updated", "extension_uninstalled", "extension_error", "extension_performance_alert"]
+          }
+        },
+        "subscribed_events": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["context_updated", "plan_executed", "confirm_approved", "system_shutdown", "security_alert"]
+          }
+        },
+        "event_routing": {
+          "type": "object",
+          "properties": {
+            "routing_rules": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "rule_id": { "type": "string" },
+                  "condition": { "type": "string" },
+                  "target_topic": { "type": "string" },
+                  "enabled": { "type": "boolean" }
+                },
+                "required": ["rule_id", "condition", "target_topic"]
+              }
+            }
+          }
+        }
+      },
+      "required": ["enabled"]
     }
   },
   "required": [
@@ -716,7 +1223,13 @@
     "name",
     "type",
     "status",
-    "version"
+    "version",
+    "audit_trail",
+    "performance_metrics",
+    "monitoring_integration",
+    "version_history",
+    "search_metadata", "extension_operation",
+    "event_integration"
   ],
   "additionalProperties": false
 }

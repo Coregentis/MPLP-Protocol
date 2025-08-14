@@ -35,7 +35,7 @@
     "protocol_version": {
       "$ref": "#/$defs/version",
       "description": "MPLP协议版本",
-      "const": "1.0.1"
+      "const": "1.0.0"
     },
     "timestamp": {
       "$ref": "#/$defs/timestamp",
@@ -553,84 +553,607 @@
       ]
     },
     "audit_trail": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "event_id": {
-            "$ref": "#/$defs/uuid"
-          },
-          "timestamp": {
-            "$ref": "#/$defs/timestamp"
-          },
-          "event_type": {
-            "type": "string",
-            "enum": [
-              "created",
-              "updated",
-              "approved",
-              "rejected",
-              "escalated",
-              "cancelled",
-              "timeout"
-            ]
-          },
-          "actor": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "retention_days": { "type": "integer", "minimum": 1, "maximum": 2555 },
+        "audit_events": {
+          "type": "array",
+          "items": {
             "type": "object",
             "properties": {
-              "user_id": {
-                "type": "string"
+              "event_id": { "$ref": "#/$defs/uuid" },
+              "event_type": {
+                "type": "string",
+                "enum": ["confirm_created", "confirm_updated", "confirm_approved", "confirm_rejected", "confirm_cancelled", "confirm_escalated", "confirm_delegated", "confirm_reviewed", "confirm_expired"]
               },
-              "role": {
-                "type": "string"
+              "timestamp": { "$ref": "#/$defs/timestamp" },
+              "user_id": { "type": "string" },
+              "user_role": { "type": "string" },
+              "action": { "type": "string" },
+              "resource": { "type": "string" },
+              "confirm_operation": { "type": "string" },
+              "confirm_id": { "$ref": "#/$defs/uuid" },
+              "confirmation_type": { "type": "string" },
+              "confirm_status": { "type": "string" },
+              "approval_step": { "type": "string" },
+              "decision_reason": { "type": "string" },
+              "approver_ids": {
+                "type": "array",
+                "items": { "type": "string" }
               },
-              "ip_address": {
-                "type": "string"
-              },
-              "user_agent": {
-                "type": "string"
-              }
+              "confirm_details": { "type": "object" },
+              "old_value": { "type": "object" },
+              "new_value": { "type": "object" },
+              "ip_address": { "type": "string" },
+              "user_agent": { "type": "string" },
+              "session_id": { "type": "string" },
+              "correlation_id": { "$ref": "#/$defs/uuid" }
             },
-            "required": [
-              "user_id",
-              "role"
-            ]
-          },
-          "changes": {
-            "type": "object",
-            "properties": {
-              "field": {
-                "type": "string"
-              },
-              "old_value": {
-                "type": [
-                  "string",
-                  "number",
-                  "boolean",
-                  "null"
-                ]
-              },
-              "new_value": {
-                "type": [
-                  "string",
-                  "number",
-                  "boolean",
-                  "null"
-                ]
-              }
-            }
-          },
-          "description": {
-            "type": "string"
+            "required": ["event_id", "event_type", "timestamp", "user_id", "action", "resource"]
           }
         },
-        "required": [
-          "event_id",
-          "timestamp",
-          "event_type",
-          "actor"
-        ]
-      }
+        "compliance_settings": {
+          "type": "object",
+          "properties": {
+            "gdpr_enabled": { "type": "boolean" },
+            "hipaa_enabled": { "type": "boolean" },
+            "sox_enabled": { "type": "boolean" },
+            "confirm_audit_level": {
+              "type": "string",
+              "enum": ["basic", "detailed", "comprehensive"]
+            },
+            "confirm_data_logging": { "type": "boolean" },
+            "custom_compliance": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      },
+      "required": ["enabled", "retention_days"]
+    },
+    "monitoring_integration": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "supported_providers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["prometheus", "grafana", "datadog", "new_relic", "elastic_apm", "custom"]
+          }
+        },
+        "integration_endpoints": {
+          "type": "object",
+          "properties": {
+            "metrics_api": { "type": "string", "format": "uri" },
+            "approval_metrics_api": { "type": "string", "format": "uri" },
+            "workflow_metrics_api": { "type": "string", "format": "uri" },
+            "compliance_metrics_api": { "type": "string", "format": "uri" }
+          }
+        },
+        "approval_metrics": {
+          "type": "object",
+          "properties": {
+            "track_approval_times": { "type": "boolean" },
+            "track_workflow_performance": { "type": "boolean" },
+            "track_decision_patterns": { "type": "boolean" },
+            "track_compliance_metrics": { "type": "boolean" }
+          }
+        },
+        "export_formats": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["prometheus", "opentelemetry", "custom"]
+          }
+        }
+      },
+      "required": ["enabled", "supported_providers"]
+    },
+    "performance_metrics": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "collection_interval_seconds": { "type": "integer", "minimum": 10, "maximum": 3600 },
+        "metrics": {
+          "type": "object",
+          "properties": {
+            "confirm_processing_latency_ms": { "type": "number", "minimum": 0 },
+            "approval_rate_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+            "confirm_workflow_efficiency_score": { "type": "number", "minimum": 0, "maximum": 10 },
+            "decision_accuracy_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+            "confirm_compliance_score": { "type": "number", "minimum": 0, "maximum": 10 },
+            "active_confirmations_count": { "type": "integer", "minimum": 0 },
+            "confirm_operations_per_second": { "type": "number", "minimum": 0 },
+            "confirm_memory_usage_mb": { "type": "number", "minimum": 0 },
+            "average_approval_complexity_score": { "type": "number", "minimum": 0, "maximum": 10 }
+          }
+        },
+        "health_status": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": ["healthy", "degraded", "unhealthy", "pending"]
+            },
+            "last_check": { "$ref": "#/$defs/timestamp" },
+            "checks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "check_name": { "type": "string" },
+                  "status": {
+                    "type": "string",
+                    "enum": ["pass", "fail", "warn"]
+                  },
+                  "message": { "type": "string" },
+                  "duration_ms": { "type": "number", "minimum": 0 }
+                },
+                "required": ["check_name", "status"]
+              }
+            }
+          }
+        },
+        "alerting": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "thresholds": {
+              "type": "object",
+              "properties": {
+                "max_confirm_processing_latency_ms": { "type": "number", "minimum": 0 },
+                "min_approval_rate_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+                "min_confirm_workflow_efficiency_score": { "type": "number", "minimum": 0, "maximum": 10 },
+                "min_decision_accuracy_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+                "min_confirm_compliance_score": { "type": "number", "minimum": 0, "maximum": 10 }
+              }
+            },
+            "notification_channels": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["email", "slack", "webhook", "sms", "pagerduty"]
+              }
+            }
+          }
+        }
+      },
+      "required": ["enabled", "collection_interval_seconds"]
+    },
+    "version_history": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "max_versions": { "type": "integer", "minimum": 1, "maximum": 100, "default": 50 },
+        "versions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "version_id": { "$ref": "#/$defs/uuid" },
+              "version_number": { "type": "integer", "minimum": 1 },
+              "created_at": { "$ref": "#/$defs/timestamp" },
+              "created_by": { "type": "string" },
+              "change_summary": { "type": "string" },
+              "confirm_snapshot": { "type": "object" },
+              "change_type": {
+                "type": "string",
+                "enum": ["confirm_created", "configuration_updated", "workflow_modified", "approver_changed", "status_updated"]
+              }
+            },
+            "required": ["version_id", "version_number", "created_at", "created_by", "change_type"]
+          }
+        },
+        "auto_versioning": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "version_on_config_change": { "type": "boolean" },
+            "version_on_workflow_change": { "type": "boolean" },
+            "version_on_status_change": { "type": "boolean" }
+          }
+        }
+      },
+      "required": ["enabled", "max_versions"]
+    },
+    "search_metadata": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "indexing_strategy": {
+          "type": "string",
+          "enum": ["full_text", "keyword", "semantic", "hybrid"]
+        },
+        "searchable_fields": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["confirm_id", "confirmation_type", "confirm_status", "approver_ids", "decision_reason", "confirm_data", "performance_metrics", "metadata", "audit_logs"]
+          }
+        },
+        "search_indexes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "index_id": { "type": "string" },
+              "index_name": { "type": "string" },
+              "fields": { "type": "array", "items": { "type": "string" } },
+              "index_type": {
+                "type": "string",
+                "enum": ["btree", "hash", "gin", "gist", "full_text"]
+              },
+              "created_at": { "$ref": "#/$defs/timestamp" },
+              "last_updated": { "$ref": "#/$defs/timestamp" }
+            },
+            "required": ["index_id", "index_name", "fields", "index_type"]
+          }
+        },
+        "confirm_indexing": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "index_confirm_data": { "type": "boolean" },
+            "index_performance_metrics": { "type": "boolean" },
+            "index_audit_logs": { "type": "boolean" }
+          }
+        },
+        "auto_indexing": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "index_new_confirmations": { "type": "boolean" },
+            "reindex_interval_hours": { "type": "integer", "minimum": 1 }
+          }
+        }
+      },
+      "required": ["enabled", "indexing_strategy"]
+    },
+    "ai_integration_interface": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "supported_providers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["openai", "anthropic", "azure_ai", "google_ai", "custom", "none"]
+          }
+        },
+        "integration_endpoints": {
+          "type": "object",
+          "properties": {
+            "decision_support_api": { "type": "string", "format": "uri" },
+            "recommendation_api": { "type": "string", "format": "uri" },
+            "risk_assessment_api": { "type": "string", "format": "uri" }
+          }
+        },
+        "request_format": {
+          "type": "object",
+          "properties": {
+            "input_schema": { "type": "string" },
+            "output_schema": { "type": "string" },
+            "authentication": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["api_key", "oauth", "jwt", "none"]
+                },
+                "config": { "type": "object" }
+              }
+            }
+          }
+        },
+        "response_handling": {
+          "type": "object",
+          "properties": {
+            "timeout_ms": { "type": "integer", "minimum": 1000 },
+            "retry_policy": {
+              "type": "object",
+              "properties": {
+                "max_attempts": { "type": "integer", "minimum": 1 },
+                "backoff_strategy": {
+                  "type": "string",
+                  "enum": ["linear", "exponential", "fixed"]
+                }
+              }
+            },
+            "fallback_behavior": {
+              "type": "string",
+              "enum": ["manual_review", "default_approval", "default_rejection"]
+            }
+          }
+        }
+      },
+      "required": ["enabled", "supported_providers"]
+    },
+    "decision_support_interface": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "external_decision_engines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "engine_id": { "type": "string" },
+              "engine_name": { "type": "string" },
+              "engine_type": {
+                "type": "string",
+                "enum": ["rule_engine", "ml_model", "expert_system", "hybrid"]
+              },
+              "endpoint": { "type": "string", "format": "uri" },
+              "priority": { "type": "integer", "minimum": 1 },
+              "enabled": { "type": "boolean" }
+            },
+            "required": ["engine_id", "engine_name", "engine_type", "endpoint", "priority", "enabled"]
+          }
+        },
+        "decision_criteria": {
+          "type": "object",
+          "properties": {
+            "supported_criteria": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["budget_threshold", "risk_level", "compliance_requirement", "resource_availability", "timeline_constraint"]
+              }
+            },
+            "criteria_weights": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            }
+          }
+        },
+        "fallback_strategy": {
+          "type": "object",
+          "properties": {
+            "when_engines_unavailable": {
+              "type": "string",
+              "enum": ["manual_review", "default_workflow", "escalate"]
+            },
+            "when_engines_disagree": {
+              "type": "string",
+              "enum": ["manual_review", "highest_priority_engine", "consensus_required"]
+            }
+          }
+        }
+      },
+      "required": ["enabled", "fallback_strategy"]
+    },
+
+    "confirm_operation": {
+
+      "type": "string",
+
+      "enum": [
+
+        "create",
+
+        "approve",
+
+        "reject",
+
+        "delegate",
+
+        "escalate"
+
+      ],
+
+      "description": "确认操作类型"
+
+    },
+
+    "confirm_details": {
+
+      "type": "object",
+
+      "properties": {
+
+        "approval_level": {
+
+          "type": "integer",
+
+          "minimum": 1,
+
+          "maximum": 5
+
+        },
+
+        "timeout_seconds": {
+
+          "type": "integer",
+
+          "minimum": 30,
+
+          "maximum": 86400
+
+        },
+
+        "escalation_policy": {
+
+          "type": "string",
+
+          "enum": [
+
+            "auto",
+
+            "manual",
+
+            "none"
+
+          ]
+
+        }
+
+      },
+
+      "description": "确认详细信息"
+
+    },
+
+
+    "confirm_operation": {
+
+
+      "type": "string",
+
+
+      "enum": [
+
+
+        "create",
+
+
+        "approve",
+
+
+        "reject",
+
+
+        "delegate",
+
+
+        "escalate"
+
+
+      ],
+
+
+      "description": "确认操作类型"
+
+
+    },
+
+
+    "confirm_details": {
+
+
+      "type": "object",
+
+
+      "properties": {
+
+
+        "approval_level": {
+
+
+          "type": "integer",
+
+
+          "minimum": 1,
+
+
+          "maximum": 5
+
+
+        },
+
+
+        "timeout_seconds": {
+
+
+          "type": "integer",
+
+
+          "minimum": 30,
+
+
+          "maximum": 86400
+
+
+        },
+
+
+        "escalation_policy": {
+
+
+          "type": "string",
+
+
+          "enum": [
+
+
+            "auto",
+
+
+            "manual",
+
+
+            "none"
+
+
+          ]
+
+
+        }
+
+
+      },
+
+
+      "description": "确认详细信息"
+
+
+    },
+    "event_integration": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "event_bus_connection": {
+          "type": "object",
+          "properties": {
+            "bus_type": {
+              "type": "string",
+              "enum": ["kafka", "rabbitmq", "redis", "nats", "custom"]
+            },
+            "connection_string": { "type": "string" },
+            "topic_prefix": { "type": "string" },
+            "consumer_group": { "type": "string" }
+          }
+        },
+        "published_events": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["confirm_created", "confirm_updated", "confirm_approved", "confirm_rejected", "confirm_cancelled", "confirm_escalated", "confirm_delegated", "confirm_reviewed", "confirm_expired"]
+          }
+        },
+        "subscribed_events": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["context_updated", "plan_executed", "trace_completed", "role_assigned", "extension_activated", "dialog_started", "network_connected", "collab_coordinated", "orchestration_executed", "coordination_synchronized", "eventbus_message_published", "statesync_sync_completed", "transaction_committed", "protocolversion_version_checked", "errorhandling_error_occurred", "security_authentication_attempted", "performance_metric_collected"]
+          }
+        },
+        "event_routing": {
+          "type": "object",
+          "properties": {
+            "routing_rules": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "rule_id": { "type": "string" },
+                  "condition": { "type": "string" },
+                  "target_topic": { "type": "string" },
+                  "enabled": { "type": "boolean" }
+                },
+                "required": ["rule_id", "condition", "target_topic"]
+              }
+            }
+          }
+        }
+      },
+      "required": ["enabled"]
     }
   },
   "required": [
@@ -640,7 +1163,15 @@
     "context_id",
     "confirmation_type",
     "status",
-    "priority"
+    "priority",
+    "audit_trail",
+    "monitoring_integration",
+    "performance_metrics",
+    "version_history",
+    "search_metadata",
+    "ai_integration_interface",
+    "decision_support_interface",
+    "event_integration"
   ],
   "additionalProperties": false
 }

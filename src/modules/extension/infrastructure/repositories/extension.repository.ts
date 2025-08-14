@@ -112,7 +112,7 @@ export class ExtensionRepository implements IExtensionRepository {
     const extensionIds = this.contextIndex.get(contextId) || new Set();
     const extensions: Extension[] = [];
 
-    for (const id of extensionIds) {
+    for (const id of Array.from(extensionIds)) {
       const extension = this.extensions.get(id);
       if (extension) {
         extensions.push(extension);
@@ -167,7 +167,7 @@ export class ExtensionRepository implements IExtensionRepository {
 
     // 获取候选扩展
     let candidateExtensions: Extension[] = [];
-    for (const id of candidateIds) {
+    for (const id of Array.from(candidateIds)) {
       const extension = this.extensions.get(id);
       if (extension) {
         candidateExtensions.push(extension);
@@ -301,7 +301,7 @@ export class ExtensionRepository implements IExtensionRepository {
   async findByExtensionPoint(pointName: string): Promise<Extension[]> {
     const extensions: Extension[] = [];
 
-    for (const extension of this.extensions.values()) {
+    for (const extension of Array.from(this.extensions.values())) {
       if (extension.extensionPoints) {
         const hasPoint = extension.extensionPoints.some(
           point =>
@@ -411,7 +411,7 @@ export class ExtensionRepository implements IExtensionRepository {
     contextId: UUID,
     excludeExtensionId?: UUID
   ): Promise<boolean> {
-    for (const extension of this.extensions.values()) {
+    for (const extension of Array.from(this.extensions.values())) {
       if (
         extension.name === name &&
         extension.contextId === contextId &&
@@ -504,7 +504,7 @@ export class ExtensionRepository implements IExtensionRepository {
   async findDependents(extensionId: UUID): Promise<Extension[]> {
     const dependents: Extension[] = [];
 
-    for (const extension of this.extensions.values()) {
+    for (const extension of Array.from(this.extensions.values())) {
       if (
         extension.compatibility?.dependencies &&
         extension.compatibility.dependencies.some(dep => dep.extensionId === extensionId)
@@ -622,7 +622,7 @@ export class ExtensionRepository implements IExtensionRepository {
     }
 
     const intersection = new Set<UUID>();
-    for (const item of setA) {
+    for (const item of Array.from(setA)) {
       if (setB.has(item)) {
         intersection.add(item);
       }

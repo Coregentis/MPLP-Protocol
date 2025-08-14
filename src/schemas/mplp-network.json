@@ -38,9 +38,10 @@
       "$ref": "#/$defs/uuid",
       "description": "网络唯一标识符"
     },
-    "version": {
-      "$ref": "#/$defs/version",
-      "description": "协议版本号"
+    "protocol_version": {
+      "type": "string",
+      "const": "1.0.0",
+      "description": "MPLP协议版本"
     },
     "timestamp": {
       "$ref": "#/$defs/timestamp",
@@ -344,11 +345,542 @@
       "type": "object",
       "additionalProperties": true,
       "description": "网络元数据"
+    },
+    "audit_trail": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "retention_days": { "type": "integer", "minimum": 1, "maximum": 2555 },
+        "audit_events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "event_id": { "$ref": "#/$defs/uuid" },
+              "event_type": {
+                "type": "string",
+                "enum": ["network_created", "network_updated", "node_joined", "node_left", "connection_established", "connection_lost", "routing_changed", "security_violation", "topology_updated"]
+              },
+              "timestamp": { "$ref": "#/$defs/timestamp" },
+              "user_id": { "type": "string" },
+              "user_role": { "type": "string" },
+              "action": { "type": "string" },
+              "resource": { "type": "string" },
+              "network_operation": { "type": "string" },
+              "network_id": { "$ref": "#/$defs/uuid" },
+              "network_name": { "type": "string" },
+              "network_type": { "type": "string" },
+              "node_ids": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "network_status": { "type": "string" },
+              "node_id": { "$ref": "#/$defs/uuid" },
+              "connection_details": { "type": "object" },
+              "network_details": { "type": "object" },
+              "ip_address": { "type": "string" },
+              "user_agent": { "type": "string" },
+              "session_id": { "type": "string" },
+              "correlation_id": { "$ref": "#/$defs/uuid" }
+            },
+            "required": ["event_id", "event_type", "timestamp", "user_id", "action", "resource"]
+          }
+        },
+        "compliance_settings": {
+          "type": "object",
+          "properties": {
+            "gdpr_enabled": { "type": "boolean" },
+            "hipaa_enabled": { "type": "boolean" },
+            "sox_enabled": { "type": "boolean" },
+            "network_audit_level": {
+              "type": "string",
+              "enum": ["basic", "detailed", "comprehensive"]
+            },
+            "network_data_logging": { "type": "boolean" },
+            "traffic_logging": { "type": "boolean" },
+            "custom_compliance": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      },
+      "required": ["enabled", "retention_days"]
+    },
+    "monitoring_integration": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "supported_providers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["prometheus", "grafana", "datadog", "new_relic", "elastic_apm", "custom"]
+          }
+        },
+        "integration_endpoints": {
+          "type": "object",
+          "properties": {
+            "metrics_api": { "type": "string", "format": "uri" },
+            "network_performance_api": { "type": "string", "format": "uri" },
+            "traffic_analysis_api": { "type": "string", "format": "uri" },
+            "connection_status_api": { "type": "string", "format": "uri" }
+          }
+        },
+        "network_metrics": {
+          "type": "object",
+          "properties": {
+            "track_network_performance": { "type": "boolean" },
+            "track_traffic_flow": { "type": "boolean" },
+            "track_connection_status": { "type": "boolean" },
+            "track_security_events": { "type": "boolean" }
+          }
+        },
+        "export_formats": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["prometheus", "opentelemetry", "custom"]
+          }
+        }
+      },
+      "required": ["enabled", "supported_providers"]
+    },
+    "performance_metrics": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "collection_interval_seconds": { "type": "integer", "minimum": 10, "maximum": 3600 },
+        "metrics": {
+          "type": "object",
+          "properties": {
+            "network_communication_latency_ms": { "type": "number", "minimum": 0 },
+            "network_topology_efficiency_score": { "type": "number", "minimum": 0, "maximum": 10 },
+            "network_reliability_score": { "type": "number", "minimum": 0, "maximum": 10 },
+            "connection_success_rate_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+            "network_management_efficiency_score": { "type": "number", "minimum": 0, "maximum": 10 },
+            "active_connections_count": { "type": "integer", "minimum": 0 },
+            "network_operations_per_second": { "type": "number", "minimum": 0 },
+            "network_memory_usage_mb": { "type": "number", "minimum": 0 },
+            "average_network_complexity_score": { "type": "number", "minimum": 0, "maximum": 10 }
+          }
+        },
+        "health_status": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": ["healthy", "degraded", "unhealthy", "partitioned"]
+            },
+            "last_check": { "$ref": "#/$defs/timestamp" },
+            "checks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "check_name": { "type": "string" },
+                  "status": {
+                    "type": "string",
+                    "enum": ["pass", "fail", "warn"]
+                  },
+                  "message": { "type": "string" },
+                  "duration_ms": { "type": "number", "minimum": 0 }
+                },
+                "required": ["check_name", "status"]
+              }
+            }
+          }
+        },
+        "alerting": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "thresholds": {
+              "type": "object",
+              "properties": {
+                "max_network_communication_latency_ms": { "type": "number", "minimum": 0 },
+                "min_network_topology_efficiency_score": { "type": "number", "minimum": 0, "maximum": 10 },
+                "min_network_reliability_score": { "type": "number", "minimum": 0, "maximum": 10 },
+                "min_connection_success_rate_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+                "min_network_management_efficiency_score": { "type": "number", "minimum": 0, "maximum": 10 }
+              }
+            },
+            "notification_channels": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["email", "slack", "webhook", "sms", "pagerduty"]
+              }
+            }
+          }
+        }
+      },
+      "required": ["enabled", "collection_interval_seconds"]
+    },
+    "version_history": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "max_versions": { "type": "integer", "minimum": 1, "maximum": 100, "default": 50 },
+        "versions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "version_id": { "$ref": "#/$defs/uuid" },
+              "version_number": { "type": "integer", "minimum": 1 },
+              "created_at": { "$ref": "#/$defs/timestamp" },
+              "created_by": { "type": "string" },
+              "change_summary": { "type": "string" },
+              "network_snapshot": { "type": "object" },
+              "change_type": {
+                "type": "string",
+                "enum": ["network_created", "topology_updated", "nodes_added", "nodes_removed", "routing_changed", "configuration_updated"]
+              }
+            },
+            "required": ["version_id", "version_number", "created_at", "created_by", "change_type"]
+          }
+        },
+        "auto_versioning": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "version_on_topology_change": { "type": "boolean" },
+            "version_on_node_change": { "type": "boolean" },
+            "version_on_routing_change": { "type": "boolean" }
+          }
+        }
+      },
+      "required": ["enabled", "max_versions"]
+    },
+    "search_metadata": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "indexing_strategy": {
+          "type": "string",
+          "enum": ["full_text", "keyword", "semantic", "hybrid"]
+        },
+        "searchable_fields": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["network_id", "name", "topology", "nodes", "routing_strategy", "performance_metrics", "metadata", "audit_logs"]
+          }
+        },
+        "search_indexes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "index_id": { "type": "string" },
+              "index_name": { "type": "string" },
+              "fields": { "type": "array", "items": { "type": "string" } },
+              "index_type": {
+                "type": "string",
+                "enum": ["btree", "hash", "gin", "gist", "full_text"]
+              },
+              "created_at": { "$ref": "#/$defs/timestamp" },
+              "last_updated": { "$ref": "#/$defs/timestamp" }
+            },
+            "required": ["index_id", "index_name", "fields", "index_type"]
+          }
+        },
+        "network_indexing": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "index_topology_data": { "type": "boolean" },
+            "index_performance_metrics": { "type": "boolean" },
+            "index_audit_logs": { "type": "boolean" }
+          }
+        },
+        "auto_indexing": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "index_new_networks": { "type": "boolean" },
+            "reindex_interval_hours": { "type": "integer", "minimum": 1 }
+          }
+        }
+      },
+      "required": ["enabled", "indexing_strategy"]
+    },
+
+    "network_operation": {
+
+      "type": "string",
+
+      "enum": [
+
+        "connect",
+
+        "disconnect",
+
+        "route",
+
+        "broadcast",
+
+        "discover"
+
+      ],
+
+      "description": "网络操作类型"
+
+    },
+
+    "network_details": {
+
+      "type": "object",
+
+      "properties": {
+
+        "network_topology": {
+
+          "type": "string",
+
+          "enum": [
+
+            "star",
+
+            "mesh",
+
+            "ring",
+
+            "tree"
+
+          ]
+
+        },
+
+        "protocol_type": {
+
+          "type": "string",
+
+          "enum": [
+
+            "tcp",
+
+            "udp",
+
+            "websocket",
+
+            "http"
+
+          ]
+
+        },
+
+        "security_mode": {
+
+          "type": "string",
+
+          "enum": [
+
+            "none",
+
+            "tls",
+
+            "mtls",
+
+            "custom"
+
+          ]
+
+        }
+
+      },
+
+      "description": "网络详细配置"
+
+    },
+
+
+    "network_operation": {
+
+
+      "type": "string",
+
+
+      "enum": [
+
+
+        "connect",
+
+
+        "disconnect",
+
+
+        "route",
+
+
+        "broadcast",
+
+
+        "discover"
+
+
+      ],
+
+
+      "description": "网络操作类型"
+
+
+    },
+
+
+    "network_details": {
+
+
+      "type": "object",
+
+
+      "properties": {
+
+
+        "network_topology": {
+
+
+          "type": "string",
+
+
+          "enum": [
+
+
+            "star",
+
+
+            "mesh",
+
+
+            "ring",
+
+
+            "tree"
+
+
+          ]
+
+
+        },
+
+
+        "protocol_type": {
+
+
+          "type": "string",
+
+
+          "enum": [
+
+
+            "tcp",
+
+
+            "udp",
+
+
+            "websocket",
+
+
+            "http"
+
+
+          ]
+
+
+        },
+
+
+        "security_mode": {
+
+
+          "type": "string",
+
+
+          "enum": [
+
+
+            "none",
+
+
+            "tls",
+
+
+            "mtls",
+
+
+            "custom"
+
+
+          ]
+
+
+        }
+
+
+      },
+
+
+      "description": "网络详细配置"
+
+
+    },
+    "event_integration": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "event_bus_connection": {
+          "type": "object",
+          "properties": {
+            "bus_type": {
+              "type": "string",
+              "enum": ["kafka", "rabbitmq", "redis", "nats", "custom"]
+            },
+            "connection_string": { "type": "string" },
+            "topic_prefix": { "type": "string" },
+            "consumer_group": { "type": "string" }
+          }
+        },
+        "published_events": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["network_created", "network_updated", "node_joined", "node_left", "connection_established", "connection_lost", "routing_changed", "performance_degraded"]
+          }
+        },
+        "subscribed_events": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["context_updated", "plan_executed", "confirm_approved", "trace_completed", "role_assigned", "extension_activated", "dialog_started", "core_coordinated"]
+          }
+        },
+        "event_routing": {
+          "type": "object",
+          "properties": {
+            "routing_rules": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "rule_id": { "type": "string" },
+                  "condition": { "type": "string" },
+                  "target_topic": { "type": "string" },
+                  "enabled": { "type": "boolean" }
+                },
+                "required": ["rule_id", "condition", "target_topic"]
+              }
+            }
+          }
+        }
+      },
+      "required": ["enabled"]
     }
   },
   "required": [
     "network_id",
-    "version",
+    "protocol_version",
     "timestamp",
     "context_id",
     "name",
@@ -358,7 +890,13 @@
     "routing_strategy",
     "status",
     "created_at",
-    "created_by"
+    "created_by",
+    "audit_trail",
+    "monitoring_integration",
+    "performance_metrics",
+    "version_history",
+    "search_metadata", "network_operation",
+    "event_integration"
   ],
   "additionalProperties": false
 }

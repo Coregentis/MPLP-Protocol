@@ -1,0 +1,788 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://mplp.dev/schemas/v1.0/mplp-performance.json",
+  "title": "MPLP Performance Protocol v1.0",
+  "description": "多智能体协议生命周期平台统一性能监控和指标协议Schema",
+  "version": "1.0.0",
+  "type": "object",
+  "$defs": {
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "description": "UUID v4 format"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp"
+    },
+    "module_type": {
+      "type": "string",
+      "enum": ["core", "context", "plan", "confirm", "trace", "role", "extension", "collab", "dialog", "network", "coordination", "orchestration", "transaction", "event_bus", "state_sync"],
+      "description": "MPLP模块类型"
+    },
+    "metric_type": {
+      "type": "string",
+      "enum": ["counter", "gauge", "histogram", "summary", "timer"],
+      "description": "指标类型"
+    },
+    "alert_level": {
+      "type": "string",
+      "enum": ["info", "warning", "error", "critical", "emergency"],
+      "description": "告警级别"
+    },
+    "sla_status": {
+      "type": "string",
+      "enum": ["met", "at_risk", "violated", "unknown"],
+      "description": "SLA状态"
+    },
+
+    "performance_baseline": {
+      "type": "object",
+      "properties": {
+        "baseline_id": {"$ref": "#/$defs/uuid"},
+        "baseline_name": {"type": "string"},
+        "module_name": {"$ref": "#/$defs/module_type"},
+        "baseline_period": {
+          "type": "object",
+          "properties": {
+            "start_time": {"$ref": "#/$defs/timestamp"},
+            "end_time": {"$ref": "#/$defs/timestamp"},
+            "duration_hours": {"type": "integer", "minimum": 1}
+          },
+          "required": ["start_time", "end_time", "duration_hours"]
+        },
+        "baseline_metrics": {
+          "type": "object",
+          "properties": {
+            "response_time_p50": {"type": "number"},
+            "response_time_p95": {"type": "number"},
+            "response_time_p99": {"type": "number"},
+            "throughput_avg": {"type": "number"},
+            "throughput_peak": {"type": "number"},
+            "error_rate": {"type": "number"},
+            "cpu_usage_avg": {"type": "number"},
+            "memory_usage_avg": {"type": "number"},
+            "disk_io_avg": {"type": "number"},
+            "network_io_avg": {"type": "number"}
+          }
+        },
+        "confidence_level": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "default": 0.95
+        },
+        "sample_size": {"type": "integer", "minimum": 1},
+        "created_at": {"$ref": "#/$defs/timestamp"},
+        "created_by": {"type": "string"}
+      },
+      "required": ["baseline_id", "baseline_name", "module_name", "baseline_period", "baseline_metrics", "created_at"]
+    },
+    "sla_definition": {
+      "type": "object",
+      "properties": {
+        "sla_id": {"$ref": "#/$defs/uuid"},
+        "sla_name": {"type": "string"},
+        "module_name": {"$ref": "#/$defs/module_type"},
+        "sla_type": {
+          "type": "string",
+          "enum": ["availability", "response_time", "throughput", "error_rate", "recovery_time"]
+        },
+        "target_value": {"type": "number"},
+        "target_unit": {"type": "string"},
+        "measurement_period": {
+          "type": "string",
+          "enum": ["minute", "hour", "day", "week", "month", "quarter", "year"]
+        },
+        "calculation_method": {
+          "type": "string",
+          "enum": ["average", "median", "p95", "p99", "max", "min", "sum", "count"]
+        },
+        "violation_threshold": {
+          "type": "object",
+          "properties": {
+            "warning_percentage": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 100.0
+            },
+            "critical_percentage": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 100.0
+            },
+            "consecutive_violations": {"type": "integer", "minimum": 1}
+          }
+        },
+        "business_impact": {
+          "type": "string",
+          "enum": ["low", "medium", "high", "critical"]
+        },
+        "penalty_clauses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "violation_level": {"type": "string"},
+              "penalty_type": {
+                "type": "string",
+                "enum": ["financial", "service_credit", "escalation", "termination"]
+              },
+              "penalty_amount": {"type": "number"},
+              "penalty_description": {"type": "string"}
+            },
+            "required": ["violation_level", "penalty_type"]
+          }
+        },
+        "effective_date": {"$ref": "#/$defs/timestamp"},
+        "expiration_date": {"$ref": "#/$defs/timestamp"},
+        "created_at": {"$ref": "#/$defs/timestamp"}
+      },
+      "required": ["sla_id", "sla_name", "module_name", "sla_type", "target_value", "target_unit", "measurement_period", "created_at"]
+    },
+    "performance_alert": {
+      "type": "object",
+      "properties": {
+        "alert_id": {"$ref": "#/$defs/uuid"},
+        "alert_name": {"type": "string"},
+        "alert_type": {
+          "type": "string",
+          "enum": ["threshold_exceeded", "anomaly_detected", "sla_violation", "baseline_deviation", "trend_alert"]
+        },
+        "alert_level": {"$ref": "#/$defs/alert_level"},
+        "module_name": {"$ref": "#/$defs/module_type"},
+        "metric_name": {"type": "string"},
+        "current_value": {"type": "number"},
+        "threshold_value": {"type": "number"},
+        "deviation_percentage": {"type": "number"},
+        "alert_condition": {"type": "string"},
+        "alert_description": {"type": "string"},
+        "affected_operations": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "impact_assessment": {
+          "type": "object",
+          "properties": {
+            "user_impact": {
+              "type": "string",
+              "enum": ["none", "minimal", "moderate", "significant", "severe"]
+            },
+            "business_impact": {
+              "type": "string",
+              "enum": ["none", "low", "medium", "high", "critical"]
+            },
+            "estimated_affected_users": {"type": "integer"},
+            "estimated_revenue_impact": {"type": "number"}
+          }
+        },
+        "recommended_actions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "action_type": {
+                "type": "string",
+                "enum": ["investigate", "scale_up", "scale_down", "restart", "failover", "notify_team"]
+              },
+              "action_description": {"type": "string"},
+              "priority": {"type": "integer", "minimum": 1, "maximum": 5},
+              "estimated_time_minutes": {"type": "integer"}
+            },
+            "required": ["action_type", "action_description", "priority"]
+          }
+        },
+        "alert_status": {
+          "type": "string",
+          "enum": ["active", "acknowledged", "resolved", "suppressed", "escalated"]
+        },
+        "triggered_at": {"$ref": "#/$defs/timestamp"},
+        "acknowledged_at": {"$ref": "#/$defs/timestamp"},
+        "resolved_at": {"$ref": "#/$defs/timestamp"},
+        "acknowledged_by": {"type": "string"},
+        "resolved_by": {"type": "string"}
+      },
+      "required": ["alert_id", "alert_name", "alert_type", "alert_level", "module_name", "metric_name", "current_value", "alert_description", "triggered_at"]
+    },
+    "performance_report": {
+      "type": "object",
+      "properties": {
+        "report_id": {"$ref": "#/$defs/uuid"},
+        "report_name": {"type": "string"},
+        "report_type": {
+          "type": "string",
+          "enum": ["daily", "weekly", "monthly", "quarterly", "annual", "custom"]
+        },
+        "report_period": {
+          "type": "object",
+          "properties": {
+            "start_time": {"$ref": "#/$defs/timestamp"},
+            "end_time": {"$ref": "#/$defs/timestamp"}
+          },
+          "required": ["start_time", "end_time"]
+        },
+        "modules_covered": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/module_type"}
+        },
+        "performance_summary": {
+          "type": "object",
+          "properties": {
+            "overall_availability": {"type": "number"},
+            "average_response_time": {"type": "number"},
+            "peak_throughput": {"type": "number"},
+            "total_requests": {"type": "integer"},
+            "total_errors": {"type": "integer"},
+            "error_rate": {"type": "number"},
+            "sla_compliance_rate": {"type": "number"}
+          }
+        },
+        "module_performance": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "module_name": {"$ref": "#/$defs/module_type"},
+              "availability": {"type": "number"},
+              "response_time_p95": {"type": "number"},
+              "throughput_avg": {"type": "number"},
+              "error_rate": {"type": "number"},
+              "sla_status": {"$ref": "#/$defs/sla_status"},
+              "key_incidents": {
+                "type": "array",
+                "items": {"type": "string"}
+              }
+            },
+            "required": ["module_name", "availability", "response_time_p95", "throughput_avg", "error_rate", "sla_status"]
+          }
+        },
+        "sla_compliance": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "sla_name": {"type": "string"},
+              "target_value": {"type": "number"},
+              "actual_value": {"type": "number"},
+              "compliance_percentage": {"type": "number"},
+              "status": {"$ref": "#/$defs/sla_status"},
+              "violations_count": {"type": "integer"}
+            },
+            "required": ["sla_name", "target_value", "actual_value", "compliance_percentage", "status"]
+          }
+        },
+        "trends_analysis": {
+          "type": "object",
+          "properties": {
+            "performance_trend": {
+              "type": "string",
+              "enum": ["improving", "stable", "degrading", "volatile"]
+            },
+            "trend_confidence": {"type": "number"},
+            "key_observations": {
+              "type": "array",
+              "items": {"type": "string"}
+            },
+            "recommendations": {
+              "type": "array",
+              "items": {"type": "string"}
+            }
+          }
+        },
+        "generated_at": {"$ref": "#/$defs/timestamp"},
+        "generated_by": {"type": "string"},
+        "report_format": {
+          "type": "string",
+          "enum": ["json", "pdf", "html", "csv", "excel"]
+        }
+      },
+      "required": ["report_id", "report_name", "report_type", "report_period", "modules_covered", "performance_summary", "generated_at"]
+    },
+    "capacity_planning": {
+      "type": "object",
+      "properties": {
+        "planning_id": {"$ref": "#/$defs/uuid"},
+        "planning_name": {"type": "string"},
+        "module_name": {"$ref": "#/$defs/module_type"},
+        "current_capacity": {
+          "type": "object",
+          "properties": {
+            "max_throughput": {"type": "number"},
+            "max_concurrent_users": {"type": "integer"},
+            "cpu_cores": {"type": "integer"},
+            "memory_gb": {"type": "number"},
+            "storage_gb": {"type": "number"},
+            "network_bandwidth_mbps": {"type": "number"}
+          }
+        },
+        "usage_patterns": {
+          "type": "object",
+          "properties": {
+            "peak_usage_times": {
+              "type": "array",
+              "items": {"type": "string"}
+            },
+            "seasonal_variations": {"type": "object"},
+            "growth_rate_monthly": {"type": "number"},
+            "usage_distribution": {"type": "object"}
+          }
+        },
+        "capacity_projections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "projection_period": {"type": "string"},
+              "projected_load": {"type": "number"},
+              "required_capacity": {"type": "object"},
+              "capacity_gap": {"type": "object"},
+              "scaling_recommendations": {
+                "type": "array",
+                "items": {"type": "string"}
+              }
+            },
+            "required": ["projection_period", "projected_load"]
+          }
+        },
+        "scaling_strategies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "strategy_name": {"type": "string"},
+              "strategy_type": {
+                "type": "string",
+                "enum": ["horizontal", "vertical", "hybrid", "cloud_burst"]
+              },
+              "trigger_conditions": {"type": "object"},
+              "scaling_actions": {
+                "type": "array",
+                "items": {"type": "string"}
+              },
+              "estimated_cost": {"type": "number"},
+              "implementation_time": {"type": "string"}
+            },
+            "required": ["strategy_name", "strategy_type", "trigger_conditions"]
+          }
+        },
+        "created_at": {"$ref": "#/$defs/timestamp"},
+        "updated_at": {"$ref": "#/$defs/timestamp"}
+      },
+      "required": ["planning_id", "planning_name", "module_name", "current_capacity", "capacity_projections", "created_at"]
+    }
+  },
+  "properties": {
+    "protocol_version": {
+      "type": "string",
+      "const": "1.0.0",
+      "description": "MPLP协议版本"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601格式时间戳"
+    },
+    "performance_metrics": {"$ref": "#/$defs/performance_metrics"},
+    "performance_baseline": {"$ref": "#/$defs/performance_baseline"},
+    "sla_definition": {"$ref": "#/$defs/sla_definition"},
+    "performance_alert": {"$ref": "#/$defs/performance_alert"},
+    "performance_report": {"$ref": "#/$defs/performance_report"},
+    "capacity_planning": {"$ref": "#/$defs/capacity_planning"},
+    "audit_trail": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "retention_days": { "type": "integer", "minimum": 1, "maximum": 2555 },
+        "audit_events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "event_id": { "$ref": "#/$defs/uuid" },
+              "event_type": {
+                "type": "string",
+                "enum": ["metric_collected", "baseline_established", "sla_defined", "alert_triggered", "report_generated", "capacity_planned", "performance_optimized", "threshold_breached"]
+              },
+              "timestamp": { "$ref": "#/$defs/timestamp" },
+              "user_id": { "type": "string" },
+              "user_role": { "type": "string" },
+              "action": { "type": "string" },
+              "resource": { "type": "string" },
+              "performance_operation": { "type": "string" },
+              "metric_name": { "type": "string" },
+              "metric_value": { "type": "number" },
+              "alert_level": { "$ref": "#/$defs/alert_level" },
+              "sla_status": { "$ref": "#/$defs/sla_status" },
+              "source_module": { "$ref": "#/$defs/module_type" },
+              "performance_details": { "type": "object" },
+              "ip_address": { "type": "string" },
+              "user_agent": { "type": "string" },
+              "session_id": { "type": "string" },
+              "correlation_id": { "$ref": "#/$defs/uuid" }
+            },
+            "required": ["event_id", "event_type", "timestamp", "user_id", "action", "resource"]
+          }
+        },
+        "compliance_settings": {
+          "type": "object",
+          "properties": {
+            "gdpr_enabled": { "type": "boolean" },
+            "hipaa_enabled": { "type": "boolean" },
+            "sox_enabled": { "type": "boolean" },
+            "performance_audit_level": {
+              "type": "string",
+              "enum": ["basic", "detailed", "comprehensive"]
+            },
+            "performance_data_logging": { "type": "boolean" },
+            "custom_compliance": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      },
+      "required": ["enabled", "retention_days"]
+    },
+    "monitoring_integration": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "supported_providers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["prometheus", "grafana", "datadog", "new_relic", "elastic_apm", "custom"]
+          }
+        },
+        "integration_endpoints": {
+          "type": "object",
+          "properties": {
+            "metrics_api": { "type": "string", "format": "uri" },
+            "performance_monitoring_api": { "type": "string", "format": "uri" },
+            "performance_analysis_api": { "type": "string", "format": "uri" },
+            "sla_monitoring_api": { "type": "string", "format": "uri" }
+          }
+        },
+        "performance_metrics": {
+          "type": "object",
+          "properties": {
+            "track_performance_monitoring": { "type": "boolean" },
+            "track_performance_analysis": { "type": "boolean" },
+            "track_sla_monitoring": { "type": "boolean" },
+            "track_capacity_planning": { "type": "boolean" }
+          }
+        },
+        "export_formats": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["prometheus", "opentelemetry", "custom"]
+          }
+        }
+      },
+      "required": ["enabled", "supported_providers"]
+    },
+    "performance_metrics": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "collection_interval_seconds": { "type": "integer", "minimum": 10, "maximum": 3600 },
+        "metrics": {
+          "type": "object",
+          "properties": {
+            "monitoring_overhead_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+            "performance_analysis_accuracy_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+            "sla_compliance_rate_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+            "capacity_prediction_accuracy_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+            "performance_optimization_score": { "type": "number", "minimum": 0, "maximum": 10 },
+            "active_monitors_count": { "type": "integer", "minimum": 0 },
+            "alert_frequency_per_hour": { "type": "number", "minimum": 0 },
+            "false_positive_rate_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+            "average_response_time_ms": { "type": "number", "minimum": 0 }
+          }
+        },
+        "health_status": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": ["healthy", "degraded", "unhealthy", "overloaded"]
+            },
+            "last_check": { "$ref": "#/$defs/timestamp" },
+            "checks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "check_name": { "type": "string" },
+                  "status": {
+                    "type": "string",
+                    "enum": ["pass", "fail", "warn"]
+                  },
+                  "message": { "type": "string" },
+                  "duration_ms": { "type": "number", "minimum": 0 }
+                },
+                "required": ["check_name", "status"]
+              }
+            }
+          }
+        },
+        "alerting": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "thresholds": {
+              "type": "object",
+              "properties": {
+                "max_monitoring_overhead_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+                "min_performance_analysis_accuracy_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+                "min_sla_compliance_rate_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+                "min_capacity_prediction_accuracy_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+                "max_false_positive_rate_percent": { "type": "number", "minimum": 0, "maximum": 100 }
+              }
+            },
+            "notification_channels": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["email", "slack", "webhook", "sms", "pagerduty"]
+              }
+            }
+          }
+        }
+      },
+      "required": ["enabled", "collection_interval_seconds"]
+    },
+    "version_history": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "max_versions": { "type": "integer", "minimum": 1, "maximum": 100, "default": 50 },
+        "versions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "version_id": { "$ref": "#/$defs/uuid" },
+              "version_number": { "type": "integer", "minimum": 1 },
+              "created_at": { "$ref": "#/$defs/timestamp" },
+              "created_by": { "type": "string" },
+              "change_summary": { "type": "string" },
+              "performance_snapshot": { "type": "object" },
+              "change_type": {
+                "type": "string",
+                "enum": ["performance_config_created", "baseline_updated", "sla_modified", "alert_rules_changed", "monitoring_enhanced"]
+              }
+            },
+            "required": ["version_id", "version_number", "created_at", "created_by", "change_type"]
+          }
+        },
+        "auto_versioning": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "version_on_config_change": { "type": "boolean" },
+            "version_on_baseline_change": { "type": "boolean" },
+            "version_on_sla_change": { "type": "boolean" }
+          }
+        }
+      },
+      "required": ["enabled", "max_versions"]
+    },
+    "search_metadata": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "indexing_strategy": {
+          "type": "string",
+          "enum": ["full_text", "keyword", "semantic", "hybrid"]
+        },
+        "searchable_fields": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["metric_name", "alert_level", "sla_status", "source_module", "performance_data", "enterprise_performance_metrics", "metadata", "audit_logs"]
+          }
+        },
+        "search_indexes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "index_id": { "type": "string" },
+              "index_name": { "type": "string" },
+              "fields": { "type": "array", "items": { "type": "string" } },
+              "index_type": {
+                "type": "string",
+                "enum": ["btree", "hash", "gin", "gist", "full_text"]
+              },
+              "created_at": { "$ref": "#/$defs/timestamp" },
+              "last_updated": { "$ref": "#/$defs/timestamp" }
+            },
+            "required": ["index_id", "index_name", "fields", "index_type"]
+          }
+        },
+        "performance_indexing": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "index_performance_data": { "type": "boolean" },
+            "index_enterprise_performance_metrics": { "type": "boolean" },
+            "index_audit_logs": { "type": "boolean" }
+          }
+        },
+        "auto_indexing": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "index_new_metrics": { "type": "boolean" },
+            "reindex_interval_hours": { "type": "integer", "minimum": 1 }
+          }
+        }
+      },
+      "required": ["enabled", "indexing_strategy"]
+    },
+
+    "performance_operation": {
+
+      "type": "string",
+
+      "enum": [
+
+        "collect",
+
+        "analyze",
+
+        "report",
+
+        "alert",
+
+        "optimize"
+
+      ],
+
+      "description": "性能操作类型"
+
+    },
+
+    "performance_details": {
+
+      "type": "object",
+
+      "properties": {
+
+        "collection_strategy": {
+
+          "type": "string",
+
+          "enum": [
+
+            "continuous",
+
+            "periodic",
+
+            "on_demand"
+
+          ]
+
+        },
+
+        "aggregation_level": {
+
+          "type": "string",
+
+          "enum": [
+
+            "raw",
+
+            "summary",
+
+            "statistical"
+
+          ]
+
+        },
+
+        "retention_policy": {
+
+          "type": "string",
+
+          "enum": [
+
+            "short_term",
+
+            "medium_term",
+
+            "long_term"
+
+          ]
+
+        }
+
+      },
+
+      "description": "性能详细配置"
+
+    },
+    "event_integration": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "event_bus_connection": {
+          "type": "object",
+          "properties": {
+            "bus_type": {
+              "type": "string",
+              "enum": ["kafka", "rabbitmq", "redis", "nats", "custom"]
+            },
+            "connection_string": { "type": "string" },
+            "topic_prefix": { "type": "string" },
+            "consumer_group": { "type": "string" }
+          }
+        },
+        "published_events": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["performance_metric_collected", "performance_baseline_established", "performance_sla_defined", "performance_alert_triggered", "performance_report_generated", "performance_capacity_planned", "performance_optimized", "performance_threshold_breached"]
+          }
+        },
+        "subscribed_events": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["context_updated", "plan_executed", "confirm_approved", "trace_completed", "role_assigned", "extension_activated", "dialog_started", "network_connected", "collab_coordinated", "orchestration_executed", "coordination_synchronized", "event_bus_message_published", "state_sync_sync_completed", "transaction_committed", "protocol_version_version_checked", "error_handling_error_occurred", "security_authentication_attempted"]
+          }
+        },
+        "event_routing": {
+          "type": "object",
+          "properties": {
+            "routing_rules": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "rule_id": { "type": "string" },
+                  "condition": { "type": "string" },
+                  "target_topic": { "type": "string" },
+                  "enabled": { "type": "boolean" }
+                },
+                "required": ["rule_id", "condition", "target_topic"]
+              }
+            }
+          }
+        }
+      },
+      "required": ["enabled"]
+    }
+  },
+  "oneOf": [
+    {"required": ["protocol_version", "timestamp", "performance_metrics", "audit_trail", "monitoring_integration", "version_history", "search_metadata", "performance_operation", "event_integration"]},
+    {"required": ["protocol_version", "timestamp", "performance_baseline", "audit_trail", "monitoring_integration", "performance_metrics", "version_history", "search_metadata", "performance_operation", "event_integration"]},
+    {"required": ["protocol_version", "timestamp", "sla_definition", "audit_trail", "monitoring_integration", "performance_metrics", "version_history", "search_metadata", "performance_operation", "event_integration"]},
+    {"required": ["protocol_version", "timestamp", "performance_alert", "audit_trail", "monitoring_integration", "performance_metrics", "version_history", "search_metadata", "performance_operation", "event_integration"]},
+    {"required": ["protocol_version", "timestamp", "performance_report", "audit_trail", "monitoring_integration", "performance_metrics", "version_history", "search_metadata", "performance_operation", "event_integration"]},
+    {"required": ["protocol_version", "timestamp", "capacity_planning", "audit_trail", "monitoring_integration", "performance_metrics", "version_history", "search_metadata", "performance_operation", "event_integration"]}
+  ]
+}

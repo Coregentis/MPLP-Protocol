@@ -416,17 +416,17 @@
               "event_type": {
                 "type": "string",
                 "enum": [
-                  "workflow.created",
-                  "workflow.started",
-                  "workflow.completed",
-                  "workflow.failed",
-                  "workflow.cancelled",
-                  "stage.started",
-                  "stage.completed",
-                  "stage.failed",
-                  "module.connected",
-                  "module.disconnected",
-                  "data.transferred"
+                  "workflow_created",
+                  "workflow_started",
+                  "workflow_completed",
+                  "workflow_failed",
+                  "workflow_cancelled",
+                  "stage_started",
+                  "stage_completed",
+                  "stage_failed",
+                  "module_connected",
+                  "module_disconnected",
+                  "data_transferred"
                 ],
                 "description": "事件类型"
               },
@@ -481,6 +481,519 @@
         }
       },
       "additionalProperties": false
+    },
+    "audit_trail": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "retention_days": { "type": "integer", "minimum": 1, "maximum": 2555 },
+        "audit_events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "event_id": { "$ref": "#/$defs/uuid" },
+              "event_type": {
+                "type": "string",
+                "enum": ["workflow_started", "workflow_completed", "workflow_failed", "module_coordinated", "resource_allocated", "system_recovered", "cluster_scaled", "configuration_changed", "orchestration_updated"]
+              },
+              "timestamp": { "$ref": "#/$defs/timestamp" },
+              "user_id": { "type": "string" },
+              "user_role": { "type": "string" },
+              "action": { "type": "string" },
+              "resource": { "type": "string" },
+              "system_operation": { "type": "string" },
+              "workflow_id": { "$ref": "#/$defs/uuid" },
+              "orchestrator_id": { "$ref": "#/$defs/uuid" },
+              "core_operation": { "type": "string" },
+              "core_status": { "type": "string" },
+              "module_ids": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "core_details": { "type": "object" },
+              "ip_address": { "type": "string" },
+              "user_agent": { "type": "string" },
+              "session_id": { "type": "string" },
+              "correlation_id": { "$ref": "#/$defs/uuid" }
+            },
+            "required": ["event_id", "event_type", "timestamp", "user_id", "action", "resource"]
+          }
+        },
+        "compliance_settings": {
+          "type": "object",
+          "properties": {
+            "gdpr_enabled": { "type": "boolean" },
+            "hipaa_enabled": { "type": "boolean" },
+            "sox_enabled": { "type": "boolean" },
+            "core_audit_level": {
+              "type": "string",
+              "enum": ["basic", "detailed", "comprehensive"]
+            },
+            "core_data_logging": { "type": "boolean" },
+            "custom_compliance": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      },
+      "required": ["enabled", "retention_days"]
+    },
+    "monitoring_integration": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "supported_providers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["prometheus", "grafana", "datadog", "new_relic", "elastic_apm", "custom"]
+          }
+        },
+        "integration_endpoints": {
+          "type": "object",
+          "properties": {
+            "metrics_api": { "type": "string", "format": "uri" },
+            "system_health_api": { "type": "string", "format": "uri" },
+            "workflow_metrics_api": { "type": "string", "format": "uri" },
+            "resource_metrics_api": { "type": "string", "format": "uri" }
+          }
+        },
+        "system_metrics": {
+          "type": "object",
+          "properties": {
+            "track_workflow_execution": { "type": "boolean" },
+            "track_module_coordination": { "type": "boolean" },
+            "track_resource_usage": { "type": "boolean" },
+            "track_system_health": { "type": "boolean" }
+          }
+        },
+        "export_formats": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["prometheus", "opentelemetry", "custom"]
+          }
+        }
+      },
+      "required": ["enabled", "supported_providers"]
+    },
+    "performance_metrics": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "collection_interval_seconds": { "type": "integer", "minimum": 10, "maximum": 3600 },
+        "metrics": {
+          "type": "object",
+          "properties": {
+            "core_orchestration_latency_ms": { "type": "number", "minimum": 0 },
+            "workflow_coordination_efficiency_score": { "type": "number", "minimum": 0, "maximum": 10 },
+            "system_reliability_score": { "type": "number", "minimum": 0, "maximum": 10 },
+            "module_integration_success_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+            "core_management_efficiency_score": { "type": "number", "minimum": 0, "maximum": 10 },
+            "active_workflows_count": { "type": "integer", "minimum": 0 },
+            "core_operations_per_second": { "type": "number", "minimum": 0 },
+            "core_memory_usage_mb": { "type": "number", "minimum": 0 },
+            "average_workflow_complexity_score": { "type": "number", "minimum": 0, "maximum": 10 }
+          }
+        },
+        "health_status": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": ["healthy", "degraded", "unhealthy", "critical"]
+            },
+            "last_check": { "$ref": "#/$defs/timestamp" },
+            "checks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "check_name": { "type": "string" },
+                  "status": {
+                    "type": "string",
+                    "enum": ["pass", "fail", "warn"]
+                  },
+                  "message": { "type": "string" },
+                  "duration_ms": { "type": "number", "minimum": 0 }
+                },
+                "required": ["check_name", "status"]
+              }
+            }
+          }
+        },
+        "alerting": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "thresholds": {
+              "type": "object",
+              "properties": {
+                "max_core_orchestration_latency_ms": { "type": "number", "minimum": 0 },
+                "min_workflow_coordination_efficiency_score": { "type": "number", "minimum": 0, "maximum": 10 },
+                "min_system_reliability_score": { "type": "number", "minimum": 0, "maximum": 10 },
+                "min_module_integration_success_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+                "min_core_management_efficiency_score": { "type": "number", "minimum": 0, "maximum": 10 }
+              }
+            },
+            "notification_channels": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["email", "slack", "webhook", "sms", "pagerduty"]
+              }
+            }
+          }
+        }
+      },
+      "required": ["enabled", "collection_interval_seconds"]
+    },
+    "version_history": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "max_versions": { "type": "integer", "minimum": 1, "maximum": 100, "default": 50 },
+        "versions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "version_id": { "$ref": "#/$defs/uuid" },
+              "version_number": { "type": "integer", "minimum": 1 },
+              "created_at": { "$ref": "#/$defs/timestamp" },
+              "created_by": { "type": "string" },
+              "change_summary": { "type": "string" },
+              "system_snapshot": { "type": "object" },
+              "change_type": {
+                "type": "string",
+                "enum": ["system_initialized", "configuration_updated", "workflow_deployed", "cluster_scaled", "recovery_executed"]
+              }
+            },
+            "required": ["version_id", "version_number", "created_at", "created_by", "change_type"]
+          }
+        },
+        "auto_versioning": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "version_on_config_change": { "type": "boolean" },
+            "version_on_deployment": { "type": "boolean" },
+            "version_on_scaling": { "type": "boolean" }
+          }
+        }
+      },
+      "required": ["enabled", "max_versions"]
+    },
+    "search_metadata": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "indexing_strategy": {
+          "type": "string",
+          "enum": ["full_text", "keyword", "semantic", "hybrid"]
+        },
+        "searchable_fields": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["workflow_id", "orchestrator_id", "workflow_config", "execution_status", "system_metrics", "audit_logs", "metadata"]
+          }
+        },
+        "search_indexes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "index_id": { "type": "string" },
+              "index_name": { "type": "string" },
+              "fields": { "type": "array", "items": { "type": "string" } },
+              "index_type": {
+                "type": "string",
+                "enum": ["btree", "hash", "gin", "gist", "full_text"]
+              },
+              "created_at": { "$ref": "#/$defs/timestamp" },
+              "last_updated": { "$ref": "#/$defs/timestamp" }
+            },
+            "required": ["index_id", "index_name", "fields", "index_type"]
+          }
+        },
+        "system_indexing": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "index_workflow_data": { "type": "boolean" },
+            "index_system_metrics": { "type": "boolean" },
+            "index_audit_logs": { "type": "boolean" }
+          }
+        },
+        "auto_indexing": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "index_new_workflows": { "type": "boolean" },
+            "reindex_interval_hours": { "type": "integer", "minimum": 1 }
+          }
+        }
+      },
+      "required": ["enabled", "indexing_strategy"]
+    },
+
+    "core_operation": {
+
+      "type": "string",
+
+      "enum": [
+
+        "initialize",
+
+        "orchestrate",
+
+        "monitor",
+
+        "shutdown",
+
+        "recover"
+
+      ],
+
+      "description": "核心操作类型"
+
+    },
+
+    "core_details": {
+
+      "type": "object",
+
+      "properties": {
+
+        "orchestration_mode": {
+
+          "type": "string",
+
+          "enum": [
+
+            "centralized",
+
+            "distributed",
+
+            "hybrid"
+
+          ]
+
+        },
+
+        "resource_allocation": {
+
+          "type": "string",
+
+          "enum": [
+
+            "static",
+
+            "dynamic",
+
+            "adaptive"
+
+          ]
+
+        },
+
+        "fault_tolerance": {
+
+          "type": "string",
+
+          "enum": [
+
+            "none",
+
+            "basic",
+
+            "advanced"
+
+          ]
+
+        }
+
+      },
+
+      "description": "核心详细配置"
+
+    },
+
+
+    "core_operation": {
+
+
+      "type": "string",
+
+
+      "enum": [
+
+
+        "initialize",
+
+
+        "orchestrate",
+
+
+        "monitor",
+
+
+        "shutdown",
+
+
+        "recover"
+
+
+      ],
+
+
+      "description": "核心操作类型"
+
+
+    },
+
+
+    "core_details": {
+
+
+      "type": "object",
+
+
+      "properties": {
+
+
+        "orchestration_mode": {
+
+
+          "type": "string",
+
+
+          "enum": [
+
+
+            "centralized",
+
+
+            "distributed",
+
+
+            "hybrid"
+
+
+          ]
+
+
+        },
+
+
+        "resource_allocation": {
+
+
+          "type": "string",
+
+
+          "enum": [
+
+
+            "static",
+
+
+            "dynamic",
+
+
+            "adaptive"
+
+
+          ]
+
+
+        },
+
+
+        "fault_tolerance": {
+
+
+          "type": "string",
+
+
+          "enum": [
+
+
+            "none",
+
+
+            "basic",
+
+
+            "advanced"
+
+
+          ]
+
+
+        }
+
+
+      },
+
+
+      "description": "核心详细配置"
+
+
+    },
+    "event_integration": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "event_bus_connection": {
+          "type": "object",
+          "properties": {
+            "bus_type": {
+              "type": "string",
+              "enum": ["kafka", "rabbitmq", "redis", "nats", "custom"]
+            },
+            "connection_string": { "type": "string" },
+            "topic_prefix": { "type": "string" },
+            "consumer_group": { "type": "string" }
+          }
+        },
+        "published_events": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["system_started", "system_stopped", "workflow_executed", "workflow_failed", "module_coordinated", "resource_allocated", "system_recovered", "cluster_scaled"]
+          }
+        },
+        "subscribed_events": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["context_updated", "plan_executed", "confirm_approved", "trace_completed", "role_assigned", "extension_activated", "dialog_started", "network_connected"]
+          }
+        },
+        "event_routing": {
+          "type": "object",
+          "properties": {
+            "routing_rules": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "rule_id": { "type": "string" },
+                  "condition": { "type": "string" },
+                  "target_topic": { "type": "string" },
+                  "enabled": { "type": "boolean" }
+                },
+                "required": ["rule_id", "condition", "target_topic"]
+              }
+            }
+          }
+        }
+      },
+      "required": ["enabled"]
     }
   },
   "required": [
@@ -490,8 +1003,13 @@
     "orchestrator_id",
     "workflow_config",
     "execution_context",
-    "execution_status"
+    "execution_status",
+    "audit_trail",
+    "monitoring_integration",
+    "performance_metrics",
+    "version_history",
+    "search_metadata", "core_operation",
+    "event_integration"
   ],
-  "additionalProperties": false,
-  "vendorNeutral": true
+  "additionalProperties": false
 }

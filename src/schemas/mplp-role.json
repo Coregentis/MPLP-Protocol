@@ -395,7 +395,7 @@
     "protocol_version": {
       "$ref": "#/$defs/version",
       "description": "MPLP协议版本",
-      "const": "1.0.1"
+      "const": "1.0.0"
     },
     "timestamp": {
       "$ref": "#/$defs/timestamp",
@@ -1083,6 +1083,514 @@
           ]
         }
       }
+    },
+    "performance_metrics": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "collection_interval_seconds": { "type": "integer", "minimum": 10, "maximum": 3600 },
+        "metrics": {
+          "type": "object",
+          "properties": {
+            "role_assignment_latency_ms": { "type": "number", "minimum": 0 },
+            "permission_check_latency_ms": { "type": "number", "minimum": 0 },
+            "role_security_score": { "type": "number", "minimum": 0, "maximum": 10 },
+            "permission_accuracy_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+            "role_management_efficiency_score": { "type": "number", "minimum": 0, "maximum": 10 },
+            "active_roles_count": { "type": "integer", "minimum": 0 },
+            "role_operations_per_second": { "type": "number", "minimum": 0 },
+            "role_memory_usage_mb": { "type": "number", "minimum": 0 },
+            "average_role_complexity_score": { "type": "number", "minimum": 0, "maximum": 10 }
+          }
+        },
+        "health_status": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": ["healthy", "degraded", "unhealthy", "unauthorized"]
+            },
+            "last_check": { "$ref": "#/$defs/timestamp" },
+            "checks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "check_name": { "type": "string" },
+                  "status": {
+                    "type": "string",
+                    "enum": ["pass", "fail", "warn"]
+                  },
+                  "message": { "type": "string" },
+                  "duration_ms": { "type": "number", "minimum": 0 }
+                },
+                "required": ["check_name", "status"]
+              }
+            }
+          }
+        },
+        "alerting": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "thresholds": {
+              "type": "object",
+              "properties": {
+                "max_role_assignment_latency_ms": { "type": "number", "minimum": 0 },
+                "max_permission_check_latency_ms": { "type": "number", "minimum": 0 },
+                "min_role_security_score": { "type": "number", "minimum": 0, "maximum": 10 },
+                "min_permission_accuracy_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+                "min_role_management_efficiency_score": { "type": "number", "minimum": 0, "maximum": 10 }
+              }
+            },
+            "notification_channels": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["email", "slack", "webhook", "sms", "pagerduty"]
+              }
+            }
+          }
+        }
+      },
+      "required": ["enabled", "collection_interval_seconds"]
+    },
+    "monitoring_integration": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "supported_providers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["prometheus", "grafana", "datadog", "new_relic", "elastic_apm", "custom"]
+          }
+        },
+        "integration_endpoints": {
+          "type": "object",
+          "properties": {
+            "metrics_api": { "type": "string", "format": "uri" },
+            "role_access_api": { "type": "string", "format": "uri" },
+            "permission_metrics_api": { "type": "string", "format": "uri" },
+            "security_events_api": { "type": "string", "format": "uri" }
+          }
+        },
+        "role_metrics": {
+          "type": "object",
+          "properties": {
+            "track_role_usage": { "type": "boolean" },
+            "track_permission_checks": { "type": "boolean" },
+            "track_access_patterns": { "type": "boolean" },
+            "track_security_events": { "type": "boolean" }
+          }
+        },
+        "export_formats": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["prometheus", "opentelemetry", "custom"]
+          }
+        }
+      },
+      "required": ["enabled", "supported_providers"]
+    },
+    "version_history": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "max_versions": { "type": "integer", "minimum": 1, "maximum": 100, "default": 50 },
+        "versions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "version_id": { "$ref": "#/$defs/uuid" },
+              "version_number": { "type": "integer", "minimum": 1 },
+              "created_at": { "$ref": "#/$defs/timestamp" },
+              "created_by": { "type": "string" },
+              "change_summary": { "type": "string" },
+              "role_snapshot": { "type": "object" },
+              "change_type": {
+                "type": "string",
+                "enum": ["created", "updated", "permission_changed", "status_changed", "deleted"]
+              }
+            },
+            "required": ["version_id", "version_number", "created_at", "created_by", "change_type"]
+          }
+        },
+        "auto_versioning": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "version_on_permission_change": { "type": "boolean" },
+            "version_on_status_change": { "type": "boolean" }
+          }
+        }
+      },
+      "required": ["enabled", "max_versions"]
+    },
+    "search_metadata": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "indexing_strategy": {
+          "type": "string",
+          "enum": ["full_text", "keyword", "semantic", "hybrid"]
+        },
+        "searchable_fields": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["role_id", "name", "role_type", "permissions", "agents", "metadata", "description"]
+          }
+        },
+        "search_indexes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "index_id": { "type": "string" },
+              "index_name": { "type": "string" },
+              "fields": { "type": "array", "items": { "type": "string" } },
+              "index_type": {
+                "type": "string",
+                "enum": ["btree", "hash", "gin", "gist", "full_text"]
+              },
+              "created_at": { "$ref": "#/$defs/timestamp" },
+              "last_updated": { "$ref": "#/$defs/timestamp" }
+            },
+            "required": ["index_id", "index_name", "fields", "index_type"]
+          }
+        },
+        "auto_indexing": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "index_new_roles": { "type": "boolean" },
+            "reindex_interval_hours": { "type": "integer", "minimum": 1 }
+          }
+        }
+      },
+      "required": ["enabled", "indexing_strategy"]
+    },
+
+    "role_operation": {
+
+      "type": "string",
+
+      "enum": [
+
+        "create",
+
+        "assign",
+
+        "revoke",
+
+        "update",
+
+        "delete"
+
+      ],
+
+      "description": "角色操作类型"
+
+    },
+
+    "role_details": {
+
+      "type": "object",
+
+      "properties": {
+
+        "role_type": {
+
+          "type": "string",
+
+          "enum": [
+
+            "system",
+
+            "user",
+
+            "service",
+
+            "temporary"
+
+          ]
+
+        },
+
+        "inheritance_mode": {
+
+          "type": "string",
+
+          "enum": [
+
+            "none",
+
+            "single",
+
+            "multiple"
+
+          ]
+
+        },
+
+        "permission_model": {
+
+          "type": "string",
+
+          "enum": [
+
+            "rbac",
+
+            "abac",
+
+            "hybrid"
+
+          ]
+
+        }
+
+      },
+
+      "description": "角色详细配置"
+
+    },
+
+
+    "role_operation": {
+
+
+      "type": "string",
+
+
+      "enum": [
+
+
+        "create",
+
+
+        "assign",
+
+
+        "revoke",
+
+
+        "update",
+
+
+        "delete"
+
+
+      ],
+
+
+      "description": "角色操作类型"
+
+
+    },
+
+
+    "role_details": {
+
+
+      "type": "object",
+
+
+      "properties": {
+
+
+        "role_type": {
+
+
+          "type": "string",
+
+
+          "enum": [
+
+
+            "system",
+
+
+            "user",
+
+
+            "service",
+
+
+            "temporary"
+
+
+          ]
+
+
+        },
+
+
+        "inheritance_mode": {
+
+
+          "type": "string",
+
+
+          "enum": [
+
+
+            "none",
+
+
+            "single",
+
+
+            "multiple"
+
+
+          ]
+
+
+        },
+
+
+        "permission_model": {
+
+
+          "type": "string",
+
+
+          "enum": [
+
+
+            "rbac",
+
+
+            "abac",
+
+
+            "hybrid"
+
+
+          ]
+
+
+        }
+
+
+      },
+
+
+      "description": "角色详细配置"
+
+
+    },
+    "event_integration": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "event_bus_connection": {
+          "type": "object",
+          "properties": {
+            "bus_type": {
+              "type": "string",
+              "enum": ["kafka", "rabbitmq", "redis", "nats", "custom"]
+            },
+            "connection_string": { "type": "string" },
+            "topic_prefix": { "type": "string" },
+            "consumer_group": { "type": "string" }
+          }
+        },
+        "published_events": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["role_created", "role_updated", "role_deleted", "permission_granted", "permission_revoked", "access_granted", "access_denied"]
+          }
+        },
+        "subscribed_events": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["context_updated", "plan_executed", "confirm_approved", "security_alert"]
+          }
+        },
+        "event_routing": {
+          "type": "object",
+          "properties": {
+            "routing_rules": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "rule_id": { "type": "string" },
+                  "condition": { "type": "string" },
+                  "target_topic": { "type": "string" },
+                  "enabled": { "type": "boolean" }
+                },
+                "required": ["rule_id", "condition", "target_topic"]
+              }
+            }
+          }
+        }
+      },
+      "required": ["enabled"]
+    },
+    "audit_trail": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "retention_days": { "type": "integer", "minimum": 1, "maximum": 2555 },
+        "audit_events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "event_id": { "$ref": "#/$defs/uuid" },
+              "event_type": {
+                "type": "string",
+                "enum": ["role_created", "role_updated", "role_assigned", "role_revoked", "permission_granted", "permission_revoked", "role_activated", "role_deactivated"]
+              },
+              "timestamp": { "$ref": "#/$defs/timestamp" },
+              "user_id": { "type": "string" },
+              "user_role": { "type": "string" },
+              "action": { "type": "string" },
+              "resource": { "type": "string" },
+              "role_operation": { "type": "string" },
+              "role_id": { "$ref": "#/$defs/uuid" },
+              "role_name": { "type": "string" },
+              "role_type": { "type": "string" },
+              "permission_ids": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "role_status": { "type": "string" },
+              "role_details": { "type": "object" },
+              "ip_address": { "type": "string" },
+              "user_agent": { "type": "string" },
+              "session_id": { "type": "string" },
+              "correlation_id": { "$ref": "#/$defs/uuid" }
+            },
+            "required": ["event_id", "event_type", "timestamp", "user_id", "action", "resource"]
+          }
+        },
+        "compliance_settings": {
+          "type": "object",
+          "properties": {
+            "gdpr_enabled": { "type": "boolean" },
+            "hipaa_enabled": { "type": "boolean" },
+            "sox_enabled": { "type": "boolean" },
+            "role_audit_level": {
+              "type": "string",
+              "enum": ["basic", "detailed", "comprehensive"]
+            },
+            "role_data_logging": { "type": "boolean" },
+            "custom_compliance": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      },
+      "required": ["enabled", "retention_days"]
     }
   },
   "required": [
@@ -1093,7 +1601,13 @@
     "name",
     "role_type",
     "status",
-    "permissions"
+    "permissions",
+    "performance_metrics",
+    "monitoring_integration",
+    "version_history",
+    "search_metadata", "role_operation",
+    "event_integration",
+    "audit_trail"
   ],
   "additionalProperties": false
 }

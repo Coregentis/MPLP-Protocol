@@ -1,0 +1,559 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://mplp.dev/schemas/v1.0/mplp-coordination.json",
+  "title": "MPLP Cross-Module Coordination Protocol v1.0",
+  "description": "多智能体协议生命周期平台跨模块协调通信协议Schema",
+  "version": "1.0.0",
+  "type": "object",
+  "$defs": {
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "description": "UUID v4 format"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp"
+    },
+    "module_type": {
+      "type": "string",
+      "enum": ["core", "context", "plan", "confirm", "trace", "role", "extension", "collab", "dialog", "network"],
+      "description": "MPLP模块类型"
+    },
+    "coordination_type": {
+      "type": "string",
+      "enum": ["request", "response", "notification", "query", "command", "event"],
+      "description": "协调通信类型"
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["low", "normal", "high", "urgent", "critical"],
+      "default": "normal",
+      "description": "协调请求优先级"
+    },
+    "response_status": {
+      "type": "string",
+      "enum": ["success", "error", "timeout", "cancelled", "pending"],
+      "description": "协调响应状态"
+    },
+    "error_info": {
+      "type": "object",
+      "properties": {
+        "error_code": {
+          "type": "string",
+          "pattern": "^[A-Z]{4}[0-9]{4}$",
+          "description": "标准化错误代码格式: ABCD1234"
+        },
+        "error_message": {
+          "type": "string",
+          "description": "错误描述信息"
+        },
+        "error_details": {
+          "type": "object",
+          "description": "详细错误信息"
+        },
+        "stack_trace": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "错误堆栈追踪"
+        }
+      },
+      "required": ["error_code", "error_message"]
+    },
+    "coordination_request": {
+      "type": "object",
+      "properties": {
+        "request_id": {"$ref": "#/$defs/uuid"},
+        "source_module": {"$ref": "#/$defs/module_type"},
+        "target_module": {"$ref": "#/$defs/module_type"},
+        "coordination_type": {"$ref": "#/$defs/coordination_type"},
+        "operation": {
+          "type": "string",
+          "description": "具体的协调操作名称"
+        },
+        "payload": {
+          "type": "object",
+          "description": "协调请求数据载荷"
+        },
+        "priority": {"$ref": "#/$defs/priority"},
+        "timeout_ms": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 300000,
+          "default": 30000,
+          "description": "超时时间(毫秒)"
+        },
+        "retry_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5,
+          "default": 0,
+          "description": "重试次数"
+        },
+        "correlation_id": {
+          "$ref": "#/$defs/uuid",
+          "description": "关联ID，用于追踪相关请求"
+        },
+        "context": {
+          "type": "object",
+          "description": "协调上下文信息"
+        },
+        "created_at": {"$ref": "#/$defs/timestamp"}
+      },
+      "required": ["request_id", "source_module", "target_module", "coordination_type", "operation", "payload", "created_at"]
+    },
+    "coordination_response": {
+      "type": "object",
+      "properties": {
+        "request_id": {"$ref": "#/$defs/uuid"},
+        "response_id": {"$ref": "#/$defs/uuid"},
+        "status": {"$ref": "#/$defs/response_status"},
+        "result": {
+          "type": "object",
+          "description": "协调响应结果数据"
+        },
+        "error": {"$ref": "#/$defs/error_info"},
+        "execution_time_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "执行时间(毫秒)"
+        },
+        "metadata": {
+          "type": "object",
+          "description": "响应元数据"
+        },
+        "completed_at": {"$ref": "#/$defs/timestamp"}
+      },
+      "required": ["request_id", "response_id", "status", "completed_at"]
+    },
+    "coordination_notification": {
+      "type": "object",
+      "properties": {
+        "notification_id": {"$ref": "#/$defs/uuid"},
+        "source_module": {"$ref": "#/$defs/module_type"},
+        "target_modules": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/module_type"},
+          "minItems": 1,
+          "description": "目标模块列表"
+        },
+        "event_type": {
+          "type": "string",
+          "description": "事件类型"
+        },
+        "payload": {
+          "type": "object",
+          "description": "通知数据载荷"
+        },
+        "priority": {"$ref": "#/$defs/priority"},
+        "created_at": {"$ref": "#/$defs/timestamp"}
+      },
+      "required": ["notification_id", "source_module", "target_modules", "event_type", "payload", "created_at"]
+    }
+  },
+  "properties": {
+    "protocol_version": {
+      "type": "string",
+      "const": "1.0.0",
+      "description": "MPLP协议版本"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601格式时间戳"
+    },
+    "coordination_request": {"$ref": "#/$defs/coordination_request"},
+    "coordination_response": {"$ref": "#/$defs/coordination_response"},
+    "coordination_notification": {"$ref": "#/$defs/coordination_notification"},
+    "audit_trail": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "retention_days": { "type": "integer", "minimum": 1, "maximum": 2555 },
+        "audit_events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "event_id": { "$ref": "#/$defs/uuid" },
+              "event_type": {
+                "type": "string",
+                "enum": ["coordination_started", "coordination_completed", "coordination_failed", "module_synchronized", "conflict_detected", "conflict_resolved", "state_updated", "lock_acquired"]
+              },
+              "timestamp": { "$ref": "#/$defs/timestamp" },
+              "user_id": { "type": "string" },
+              "user_role": { "type": "string" },
+              "action": { "type": "string" },
+              "resource": { "type": "string" },
+              "coordination_operation": { "type": "string" },
+              "source_module": { "$ref": "#/$defs/module_type" },
+              "target_module": { "$ref": "#/$defs/module_type" },
+              "coordination_details": { "type": "object" },
+              "ip_address": { "type": "string" },
+              "user_agent": { "type": "string" },
+              "session_id": { "type": "string" },
+              "correlation_id": { "$ref": "#/$defs/uuid" }
+            },
+            "required": ["event_id", "event_type", "timestamp", "user_id", "action", "resource"]
+          }
+        },
+        "compliance_settings": {
+          "type": "object",
+          "properties": {
+            "gdpr_enabled": { "type": "boolean" },
+            "hipaa_enabled": { "type": "boolean" },
+            "sox_enabled": { "type": "boolean" },
+            "coordination_audit_level": {
+              "type": "string",
+              "enum": ["basic", "detailed", "comprehensive"]
+            },
+            "synchronization_logging": { "type": "boolean" },
+            "custom_compliance": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      },
+      "required": ["enabled", "retention_days"]
+    },
+    "monitoring_integration": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "supported_providers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["prometheus", "grafana", "datadog", "new_relic", "elastic_apm", "custom"]
+          }
+        },
+        "integration_endpoints": {
+          "type": "object",
+          "properties": {
+            "metrics_api": { "type": "string", "format": "uri" },
+            "coordination_efficiency_api": { "type": "string", "format": "uri" },
+            "synchronization_performance_api": { "type": "string", "format": "uri" },
+            "conflict_resolution_api": { "type": "string", "format": "uri" }
+          }
+        },
+        "coordination_metrics": {
+          "type": "object",
+          "properties": {
+            "track_coordination_efficiency": { "type": "boolean" },
+            "track_synchronization_performance": { "type": "boolean" },
+            "track_conflict_resolution": { "type": "boolean" },
+            "track_state_consistency": { "type": "boolean" }
+          }
+        },
+        "export_formats": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["prometheus", "opentelemetry", "custom"]
+          }
+        }
+      },
+      "required": ["enabled", "supported_providers"]
+    },
+    "performance_metrics": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "collection_interval_seconds": { "type": "integer", "minimum": 10, "maximum": 3600 },
+        "metrics": {
+          "type": "object",
+          "properties": {
+            "coordination_latency_ms": { "type": "number", "minimum": 0 },
+            "synchronization_efficiency_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+            "conflict_resolution_time_ms": { "type": "number", "minimum": 0 },
+            "state_consistency_score": { "type": "number", "minimum": 0, "maximum": 10 },
+            "coordination_success_rate_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+            "active_coordinations_count": { "type": "integer", "minimum": 0 },
+            "failed_coordinations_count": { "type": "integer", "minimum": 0 },
+            "lock_contention_rate_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+            "average_sync_time_ms": { "type": "number", "minimum": 0 }
+          }
+        },
+        "health_status": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": ["healthy", "degraded", "unhealthy", "inconsistent"]
+            },
+            "last_check": { "$ref": "#/$defs/timestamp" },
+            "checks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "check_name": { "type": "string" },
+                  "status": {
+                    "type": "string",
+                    "enum": ["pass", "fail", "warn"]
+                  },
+                  "message": { "type": "string" },
+                  "duration_ms": { "type": "number", "minimum": 0 }
+                },
+                "required": ["check_name", "status"]
+              }
+            }
+          }
+        },
+        "alerting": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "thresholds": {
+              "type": "object",
+              "properties": {
+                "max_coordination_latency_ms": { "type": "number", "minimum": 0 },
+                "min_synchronization_efficiency_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+                "max_conflict_resolution_time_ms": { "type": "number", "minimum": 0 },
+                "min_state_consistency_score": { "type": "number", "minimum": 0, "maximum": 10 },
+                "min_coordination_success_rate_percent": { "type": "number", "minimum": 0, "maximum": 100 }
+              }
+            },
+            "notification_channels": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["email", "slack", "webhook", "sms", "pagerduty"]
+              }
+            }
+          }
+        }
+      },
+      "required": ["enabled", "collection_interval_seconds"]
+    },
+    "version_history": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "max_versions": { "type": "integer", "minimum": 1, "maximum": 100, "default": 50 },
+        "versions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "version_id": { "$ref": "#/$defs/uuid" },
+              "version_number": { "type": "integer", "minimum": 1 },
+              "created_at": { "$ref": "#/$defs/timestamp" },
+              "created_by": { "type": "string" },
+              "change_summary": { "type": "string" },
+              "coordination_snapshot": { "type": "object" },
+              "change_type": {
+                "type": "string",
+                "enum": ["coordination_created", "configuration_updated", "modules_added", "modules_removed", "sync_strategy_changed"]
+              }
+            },
+            "required": ["version_id", "version_number", "created_at", "created_by", "change_type"]
+          }
+        },
+        "auto_versioning": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "version_on_config_change": { "type": "boolean" },
+            "version_on_module_change": { "type": "boolean" },
+            "version_on_strategy_change": { "type": "boolean" }
+          }
+        }
+      },
+      "required": ["enabled", "max_versions"]
+    },
+    "search_metadata": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "indexing_strategy": {
+          "type": "string",
+          "enum": ["full_text", "keyword", "semantic", "hybrid"]
+        },
+        "searchable_fields": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["coordination_id", "source_module", "target_module", "coordination_type", "performance_metrics", "metadata", "audit_logs"]
+          }
+        },
+        "search_indexes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "index_id": { "type": "string" },
+              "index_name": { "type": "string" },
+              "fields": { "type": "array", "items": { "type": "string" } },
+              "index_type": {
+                "type": "string",
+                "enum": ["btree", "hash", "gin", "gist", "full_text"]
+              },
+              "created_at": { "$ref": "#/$defs/timestamp" },
+              "last_updated": { "$ref": "#/$defs/timestamp" }
+            },
+            "required": ["index_id", "index_name", "fields", "index_type"]
+          }
+        },
+        "coordination_indexing": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "index_coordination_data": { "type": "boolean" },
+            "index_performance_metrics": { "type": "boolean" },
+            "index_audit_logs": { "type": "boolean" }
+          }
+        },
+        "auto_indexing": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "index_new_coordinations": { "type": "boolean" },
+            "reindex_interval_hours": { "type": "integer", "minimum": 1 }
+          }
+        }
+      },
+      "required": ["enabled", "indexing_strategy"]
+    },
+
+    "coordination_operation": {
+
+      "type": "string",
+
+      "enum": [
+
+        "initiate",
+
+        "coordinate",
+
+        "synchronize",
+
+        "resolve",
+
+        "finalize"
+
+      ],
+
+      "description": "协调操作类型"
+
+    },
+
+    "coordination_details": {
+
+      "type": "object",
+
+      "properties": {
+
+        "coordination_pattern": {
+
+          "type": "string",
+
+          "enum": [
+
+            "leader_follower",
+
+            "peer_to_peer",
+
+            "hierarchical"
+
+          ]
+
+        },
+
+        "consensus_algorithm": {
+
+          "type": "string",
+
+          "enum": [
+
+            "raft",
+
+            "pbft",
+
+            "simple_majority"
+
+          ]
+
+        },
+
+        "conflict_resolution": {
+
+          "type": "string",
+
+          "enum": [
+
+            "last_write_wins",
+
+            "merge",
+
+            "manual"
+
+          ]
+
+        }
+
+      },
+
+      "description": "协调详细配置"
+
+    },
+    "event_integration": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "event_bus_connection": {
+          "type": "object",
+          "properties": {
+            "bus_type": {
+              "type": "string",
+              "enum": ["kafka", "rabbitmq", "redis", "nats", "custom"]
+            },
+            "connection_string": { "type": "string" },
+            "topic_prefix": { "type": "string" },
+            "consumer_group": { "type": "string" }
+          }
+        },
+        "published_events": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["coordination_started", "coordination_completed", "coordination_failed", "module_synchronized", "conflict_detected", "conflict_resolved", "state_updated", "lock_acquired"]
+          }
+        },
+        "subscribed_events": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["context_updated", "plan_executed", "confirm_approved", "trace_completed", "role_assigned", "extension_activated", "dialog_started", "network_connected", "collab_coordinated", "orchestration_executed"]
+          }
+        },
+        "event_routing": {
+          "type": "object",
+          "properties": {
+            "routing_rules": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "rule_id": { "type": "string" },
+                  "condition": { "type": "string" },
+                  "target_topic": { "type": "string" },
+                  "enabled": { "type": "boolean" }
+                },
+                "required": ["rule_id", "condition", "target_topic"]
+              }
+            }
+          }
+        }
+      },
+      "required": ["enabled"]
+    }
+  },
+  "oneOf": [
+    {"required": ["protocol_version", "timestamp", "coordination_request", "audit_trail", "monitoring_integration", "performance_metrics", "version_history", "search_metadata", "coordination_operation", "event_integration"]},
+    {"required": ["protocol_version", "timestamp", "coordination_response", "audit_trail", "monitoring_integration", "performance_metrics", "version_history", "search_metadata", "coordination_operation", "event_integration"]},
+    {"required": ["protocol_version", "timestamp", "coordination_notification", "audit_trail", "monitoring_integration", "performance_metrics", "version_history", "search_metadata", "coordination_operation", "event_integration"]}
+  ]
+}

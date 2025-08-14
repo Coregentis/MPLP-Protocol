@@ -7,13 +7,63 @@ description: "MPLP v1.0 Core Development Rules - Consolidated"
 
 ## 🏗️ **Project Reality**
 
-**MPLP v1.0**: Production-ready L4 Intelligent Agent Operating System
+**MPLP v1.0**: Multi-Agent Protocol Lifecycle Platform (L1-L3 Protocol Stack)
+- **Project Name**: MPLP - Multi-Agent Protocol Lifecycle Platform
+- **Implementation Scope**: L1-L3 layered architecture (Protocol Layer, Coordination Layer, Execution Layer)
 - **10 Complete Modules**: Context, Plan, Confirm, Trace, Role, Extension, Collab, Dialog, Network, Core
-- **Current Status**: 5 modules completed (Plan, Context, Confirm, Trace, Role), 5 modules pending (Extension, Collab, Dialog, Network, Core)
-- **Quality Achievement**: Role module reached enterprise-grade standard (75.31% coverage, 333 tests), Trace module achieved 100% test pass rate (107/107 tests)
-- **Progress**: 50% completion (5/10 modules) with enterprise-grade quality standards
+- **Current Status**: 6 modules completed (Plan, Context, Confirm, Trace, Role, Extension), 4 modules pending (Collab, Dialog, Network, Core)
+- **Quality Achievement**:
+  - Role module reached enterprise-grade standard (75.31% coverage, 333 tests)
+  - Trace module achieved 100% test pass rate (107/107 tests)
+  - **Extension module achieved Multi-Agent Protocol Platform standard** (54 functional tests 100% pass rate, 8 MPLP module reserved interfaces, 10 CoreOrchestrator coordination scenarios)
+- **Progress**: 60% completion (6/10 modules) with Multi-Agent Protocol Platform quality standards
 
 ## 🎯 **Core Principles (MANDATORY)**
+
+### 0. MPLP v1.0 Architecture Positioning (HIGHEST PRIORITY)
+```markdown
+RULE: MPLP v1.0 is "Intelligent Agent Construction Framework Protocol"
+
+✅ Correct Positioning:
+- MPLP v1.0 = Framework for building intelligent agents, NOT agents themselves
+- L1-L3 Protocol Stack: Provides standardized infrastructure for agent construction
+- Protocol Layer: Defines interfaces and standards, NOT implementations
+- Coordination Layer: Enables agent collaboration and composition
+- Execution Layer: Supports agent orchestration and workflow management
+
+❌ Incorrect Positioning:
+- MPLP v1.0 = Intelligent agents with AI brains
+- Implementing AI decision algorithms in protocol layer
+- Including machine learning models in protocol definitions
+- Binding to specific AI technology stacks
+
+ENFORCEMENT: Any violation of this positioning will be rejected
+```
+
+### 0.1. AI Function Architecture Boundary (CRITICAL)
+```markdown
+RULE: AI decisions and learning systems belong to L4 Agent layer
+
+✅ L1-L3 Protocol Layer Responsibilities:
+- Provide standardized AI system integration interfaces
+- Define AI service request/response formats
+- Support pluggable integration of multiple AI providers
+- Maintain vendor neutrality and universality
+
+❌ L1-L3 Protocol Layer Prohibitions:
+- Implement specific AI decision algorithms
+- Include machine learning models and training logic
+- Bind to specific AI technology stacks
+- Implement industry-specific intelligent functions
+
+✅ L4 Agent Layer Responsibilities:
+- Implement specific AI decision and learning logic
+- Choose most suitable AI technology stacks
+- Implement domain-specific intelligent functions
+- Provide personalized AI capabilities
+
+ENFORCEMENT: Code violating this boundary will be rejected
+```
 
 ### 1. Absolute Honesty
 - Report all problems truthfully; never hide technical debt
@@ -24,7 +74,7 @@ description: "MPLP v1.0 Core Development Rules - Consolidated"
 - **ABSOLUTE PROHIBITION**: Never use `any` type (ZERO TOLERANCE)
 - TypeScript: 0 errors, ESLint: 0 errors/warnings (MANDATORY)
 - All quality gates must pass before commit
-- **Proven Standard**: 5 modules already achieved zero technical debt
+- **Proven Standard**: 6 modules already achieved zero technical debt
 
 ### 3. MPLP Dual Naming Convention (CRITICAL)
 - **Schema**: snake_case, **TypeScript**: camelCase
@@ -60,8 +110,9 @@ description: "MPLP v1.0 Core Development Rules - Consolidated"
 - **4-Layer System**: Functional (90%+) + Unit (90%+) + Integration + E2E
 - Test coverage > 90%, all tests must pass
 - Fix source code when tests reveal issues
-- **Proven Results**: 5 modules achieved 100% test pass rates
+- **Proven Results**: 6 modules achieved 100% test pass rates
 - **Enterprise Standard**: Role module 75.31% coverage, Trace module 100% pass rate
+- **Multi-Agent Protocol Platform Standard**: Extension module 54 functional tests 100% pass rate, 8 MPLP module integrations
 
 ### Development Workflow
 - **Information First**: Use codebase-retrieval before coding
@@ -79,6 +130,11 @@ description: "MPLP v1.0 Core Development Rules - Consolidated"
 - Ignore TypeScript/ESLint errors
 - Hide technical debt or problems
 - Mix snake_case/camelCase in same layer
+- Implement AI decision algorithms in L1-L3 protocol layer
+- Include machine learning models in protocol definitions
+- Bind protocols to specific AI technology stacks
+- Confuse protocol modules with individual agents
+- Implement industry-specific AI logic in protocol layer
 ```
 
 ## ✅ **Mandatory Quality Gates**
@@ -115,5 +171,6 @@ npm run check:naming     # Must pass: 100% compliance
 
 **ENFORCEMENT**: These rules are **mandatory**. Violations result in code rejection.
 
-**VERSION**: 2.1.0
-**EFFECTIVE**: August 8, 2025
+**VERSION**: 3.0.0
+**EFFECTIVE**: August 13, 2025
+**UPDATED**: Added AI function architecture boundary principles, MPLP v1.0 positioning clarification, protocol-agent relationship definition

@@ -52,7 +52,7 @@ class SecurityPerformanceMetrics {
       string,
       { avg: number; count: number; latest: number }
     > = {};
-    for (const [name, values] of this.metrics.entries()) {
+    for (const [name, values] of Array.from(this.metrics.entries())) {
       report[name] = {
         avg: this.getAverageMetric(name),
         count: values.length,
@@ -911,7 +911,7 @@ export class ExtensionSecurityService implements IExtensionSecurityService {
     recommendations.push(...permissionsValidation.recommendations);
     recommendations.push(...vulnerabilityValidation.recommendations);
 
-    return [...new Set(recommendations)]; // 去重
+    return Array.from(new Set(recommendations)); // 去重
   }
 
   private createFailedValidationResult(

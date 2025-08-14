@@ -400,6 +400,7 @@ export class ExtensionModuleAdapter implements ModuleInterface {
 
   /**
    * 处理业务协调
+   * 增强版本：支持智能协作和预留接口模式
    */
   private async processBusinessCoordination(
     request: BusinessCoordinationRequest
@@ -409,13 +410,342 @@ export class ExtensionModuleAdapter implements ModuleInterface {
       throw new Error('Invalid request: missing coordination_id');
     }
 
-    // 模拟业务协调处理
-    return {
-      extension_id: uuidv4(),
-      coordination_type: request.coordination_type,
-      plugins_executed: ['plugin-1', 'plugin-2'],
-      execution_result: 'success',
-      timestamp: new Date().toISOString(),
-    };
+    // 根据协调类型处理不同的业务场景
+    switch (request.coordination_type) {
+      case 'extension_coordination':
+        return await this.handleExtensionCoordination(request);
+
+      default:
+        // 默认扩展处理
+        return {
+          extension_id: uuidv4(),
+          coordination_type: request.coordination_type,
+          plugins_executed: ['plugin-1', 'plugin-2'],
+          execution_result: 'success',
+          timestamp: new Date().toISOString(),
+        };
+    }
+  }
+
+  /**
+   * 处理扩展协调请求
+   * 统一处理各种扩展相关的协调场景
+   */
+  private async handleExtensionCoordination(
+    request: BusinessCoordinationRequest
+  ): Promise<Record<string, unknown>> {
+    const inputData = request.input_data?.payload as any;
+    const action = inputData?.action;
+
+    switch (action) {
+      case 'recommend_extensions':
+        return await this.handleExtensionRecommendation(request);
+
+      case 'manage_lifecycle':
+        return await this.handleExtensionLifecycle(request);
+
+      case 'security_audit':
+        return await this.handleExtensionSecurityAudit(request);
+
+      case 'load_for_role':
+        return await this.handleLoadExtensionsForRole(request);
+
+      case 'manage_plan_driven':
+        return await this.handlePlanDrivenExtensions(request);
+
+      case 'manage_approval_workflow':
+        return await this.handleApprovalWorkflow(request);
+
+      case 'manage_collaborative':
+        return await this.handleCollaborativeExtensions(request);
+
+      case 'manage_network_distribution':
+        return await this.handleNetworkDistribution(request);
+
+      case 'manage_dialog_driven':
+        return await this.handleDialogDrivenExtensions(request);
+
+      case 'orchestrate_mplp':
+        return await this.handleMPLPOrchestration(request);
+
+      default:
+        // 默认扩展协调处理
+        return {
+          coordination_id: request.coordination_id,
+          coordination_type: 'extension_coordination',
+          action: action || 'default',
+          execution_result: 'success',
+          timestamp: new Date().toISOString(),
+        };
+    }
+  }
+
+  /**
+   * 处理扩展推荐协调请求
+   */
+  private async handleExtensionRecommendation(
+    request: BusinessCoordinationRequest
+  ): Promise<Record<string, unknown>> {
+    const inputData = request.input_data?.payload as any;
+
+    if (inputData?.userId && inputData?.contextId) {
+      // 调用智能推荐服务
+      const recommendations = await this.extensionService.getIntelligentExtensionRecommendations(
+        inputData.userId,
+        inputData.contextId,
+        inputData.requirements
+      );
+
+      return {
+        coordination_id: request.coordination_id,
+        action: 'recommend_extensions',
+        recommendations: recommendations.data,
+        execution_result: recommendations.success ? 'success' : 'failed',
+        timestamp: new Date().toISOString(),
+      };
+    }
+
+    throw new Error('Invalid extension recommendation request: missing userId or contextId');
+  }
+
+  /**
+   * 处理扩展生命周期协调请求
+   */
+  private async handleExtensionLifecycle(
+    request: BusinessCoordinationRequest
+  ): Promise<Record<string, unknown>> {
+    const inputData = request.input_data?.payload as any;
+
+    if (inputData?.contextId && inputData?.policy) {
+      // 调用自动化生命周期管理
+      const automation = await this.extensionService.automateExtensionLifecycle(
+        inputData.contextId,
+        inputData.policy
+      );
+
+      return {
+        coordination_id: request.coordination_id,
+        action: 'manage_lifecycle',
+        automation_result: automation.data,
+        execution_result: automation.success ? 'success' : 'failed',
+        timestamp: new Date().toISOString(),
+      };
+    }
+
+    throw new Error('Invalid extension lifecycle request: missing contextId or policy');
+  }
+
+  /**
+   * 处理扩展安全审计协调请求
+   */
+  private async handleExtensionSecurityAudit(
+    request: BusinessCoordinationRequest
+  ): Promise<Record<string, unknown>> {
+    const inputData = request.input_data?.payload as any;
+
+    if (inputData?.extensionId) {
+      // 调用安全审计服务
+      const audit = await this.extensionService.auditExtensionSecurity(
+        inputData.extensionId,
+        inputData.userId
+      );
+
+      return {
+        coordination_id: request.coordination_id,
+        action: 'security_audit',
+        audit_result: audit.data,
+        execution_result: audit.success ? 'success' : 'failed',
+        timestamp: new Date().toISOString(),
+      };
+    }
+
+    throw new Error('Invalid extension security audit request: missing extensionId');
+  }
+
+  /**
+   * 处理为角色加载扩展的协调请求
+   */
+  private async handleLoadExtensionsForRole(
+    request: BusinessCoordinationRequest
+  ): Promise<Record<string, unknown>> {
+    const inputData = request.input_data?.payload as any;
+
+    if (inputData?.roleId && inputData?.capabilities) {
+      // 调用角色扩展加载服务
+      const loadResult = await this.extensionService.loadExtensionsForRole(
+        inputData.roleId,
+        inputData.capabilities
+      );
+
+      return {
+        coordination_id: request.coordination_id,
+        action: 'load_for_role',
+        loaded_extensions: loadResult.data,
+        execution_result: loadResult.success ? 'success' : 'failed',
+        timestamp: new Date().toISOString(),
+      };
+    }
+
+    throw new Error('Invalid load extensions for role request: missing roleId or capabilities');
+  }
+
+  /**
+   * 处理计划驱动扩展协调请求
+   */
+  private async handlePlanDrivenExtensions(
+    request: BusinessCoordinationRequest
+  ): Promise<Record<string, unknown>> {
+    const inputData = request.input_data?.payload as any;
+
+    if (inputData?.planId && inputData?.planType) {
+      const result = await this.extensionService.managePlanDrivenExtensions(
+        inputData.planId,
+        inputData.planType,
+        inputData.userId
+      );
+
+      return {
+        coordination_id: request.coordination_id,
+        action: 'manage_plan_driven',
+        plan_extensions: result.data,
+        execution_result: result.success ? 'success' : 'failed',
+        timestamp: new Date().toISOString(),
+      };
+    }
+
+    throw new Error('Invalid plan driven extensions request: missing planId or planType');
+  }
+
+  /**
+   * 处理审批工作流协调请求
+   */
+  private async handleApprovalWorkflow(
+    request: BusinessCoordinationRequest
+  ): Promise<Record<string, unknown>> {
+    const inputData = request.input_data?.payload as any;
+
+    if (inputData?.extensionId && inputData?.operation && inputData?.userId) {
+      const result = await this.extensionService.manageExtensionApprovalWorkflow(
+        inputData.extensionId,
+        inputData.operation,
+        inputData.userId
+      );
+
+      return {
+        coordination_id: request.coordination_id,
+        action: 'manage_approval_workflow',
+        approval_result: result.data,
+        execution_result: result.success ? 'success' : 'failed',
+        timestamp: new Date().toISOString(),
+      };
+    }
+
+    throw new Error('Invalid approval workflow request: missing extensionId, operation, or userId');
+  }
+
+  /**
+   * 处理协作扩展协调请求
+   */
+  private async handleCollaborativeExtensions(
+    request: BusinessCoordinationRequest
+  ): Promise<Record<string, unknown>> {
+    const inputData = request.input_data?.payload as any;
+
+    if (inputData?.collabId && inputData?.agentIds) {
+      const result = await this.extensionService.manageCollaborativeExtensions(
+        inputData.collabId,
+        inputData.agentIds
+      );
+
+      return {
+        coordination_id: request.coordination_id,
+        action: 'manage_collaborative',
+        collab_result: result.data,
+        execution_result: result.success ? 'success' : 'failed',
+        timestamp: new Date().toISOString(),
+      };
+    }
+
+    throw new Error('Invalid collaborative extensions request: missing collabId or agentIds');
+  }
+
+  /**
+   * 处理网络分发协调请求
+   */
+  private async handleNetworkDistribution(
+    request: BusinessCoordinationRequest
+  ): Promise<Record<string, unknown>> {
+    const inputData = request.input_data?.payload as any;
+
+    if (inputData?.networkId && inputData?.extensionId && inputData?.distributionPolicy) {
+      const result = await this.extensionService.manageNetworkExtensionDistribution(
+        inputData.networkId,
+        inputData.extensionId,
+        inputData.distributionPolicy
+      );
+
+      return {
+        coordination_id: request.coordination_id,
+        action: 'manage_network_distribution',
+        distribution_result: result.data,
+        execution_result: result.success ? 'success' : 'failed',
+        timestamp: new Date().toISOString(),
+      };
+    }
+
+    throw new Error('Invalid network distribution request: missing networkId, extensionId, or distributionPolicy');
+  }
+
+  /**
+   * 处理对话驱动扩展协调请求
+   */
+  private async handleDialogDrivenExtensions(
+    request: BusinessCoordinationRequest
+  ): Promise<Record<string, unknown>> {
+    const inputData = request.input_data?.payload as any;
+
+    if (inputData?.dialogId && inputData?.userQuery) {
+      const result = await this.extensionService.manageExtensionsThroughDialog(
+        inputData.dialogId,
+        inputData.userQuery,
+        inputData.context
+      );
+
+      return {
+        coordination_id: request.coordination_id,
+        action: 'manage_dialog_driven',
+        dialog_result: result.data,
+        execution_result: result.success ? 'success' : 'failed',
+        timestamp: new Date().toISOString(),
+      };
+    }
+
+    throw new Error('Invalid dialog driven extensions request: missing dialogId or userQuery');
+  }
+
+  /**
+   * 处理MPLP编排协调请求
+   */
+  private async handleMPLPOrchestration(
+    request: BusinessCoordinationRequest
+  ): Promise<Record<string, unknown>> {
+    const inputData = request.input_data?.payload as any;
+
+    if (inputData?.contextId && inputData?.orchestrationRequest) {
+      const result = await this.extensionService.orchestrateExtensionsAcrossMPLP(
+        inputData.contextId,
+        inputData.orchestrationRequest
+      );
+
+      return {
+        coordination_id: request.coordination_id,
+        action: 'orchestrate_mplp',
+        orchestration_result: result.data,
+        execution_result: result.success ? 'success' : 'failed',
+        timestamp: new Date().toISOString(),
+      };
+    }
+
+    throw new Error('Invalid MPLP orchestration request: missing contextId or orchestrationRequest');
   }
 }

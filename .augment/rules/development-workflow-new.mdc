@@ -7,10 +7,21 @@ description: "Development workflow for MPLP v1.0"
 
 ## 🏗️ **MPLP v1.0 Context**
 
-**CRITICAL**: MPLP v1.0 is a **production-ready L4 Intelligent Agent Operating System** with **10 complete modules**, currently **50% completed** (5/10 modules). All development must acknowledge this reality.
+**CRITICAL**: MPLP v1.0 is a **Multi-Agent Protocol Lifecycle Platform** with **L1-L3 layered architecture**, containing **10 complete modules**, currently **60% completed** (6/10 modules). All development must acknowledge this reality.
 
-**Current Status**: 5 modules completed (Plan, Context, Confirm, Trace, Role), 5 modules pending (Extension, Collab, Dialog, Network, Core)
-**Quality Achievement**: Role module reached enterprise-grade standard (75.31% coverage, 333 tests), Trace module achieved 100% test pass rate (107/107 tests)
+**Project Name**: MPLP - Multi-Agent Protocol Lifecycle Platform
+**Implementation Scope**: L1-L3 layered architecture (Protocol Layer, Coordination Layer, Execution Layer)
+**Architecture Positioning**: "Intelligent Agent Construction Framework Protocol" - NOT agents themselves
+**Current Status**: 6 modules completed (Plan, Context, Confirm, Trace, Role, Extension), 4 modules pending (Collab, Dialog, Network, Core)
+**Quality Achievement**:
+- Role module reached enterprise-grade standard (75.31% coverage, 333 tests)
+- Trace module achieved 100% test pass rate (107/107 tests)
+- **Extension module achieved Multi-Agent Protocol Platform standard** (54 functional tests 100% pass rate, 8 MPLP module reserved interfaces, 10 CoreOrchestrator coordination scenarios)
+
+**Architecture Boundary**:
+- L1-L3 Protocol Layer: Provides standardized interfaces and coordination infrastructure
+- L4 Agent Layer: Implements specific AI decision and learning logic (FUTURE)
+- Current Focus: Protocol standardization and integration interfaces, NOT AI implementation
 
 ## 🎯 核心原则
 
@@ -21,8 +32,11 @@ RULE: 在执行任何代码修改前，必须先进行充分的信息收集
 - 使用 git-commit-retrieval 工具查看历史变更
 - 分析相关模块的依赖关系和接口
 - 理解业务逻辑和架构设计
-- 特别注意：MPLP已有10个完整模块，5个已完成企业级标准，避免重复开发
+- 特别注意：MPLP已有10个完整模块，6个已完成企业级标准，避免重复开发
 - 参考已完成模块的成功经验和质量标准
+- **Extension模块成功经验**: 8个MPLP模块预留接口、智能协作功能、企业级功能、分布式支持
+- **架构边界意识**: 明确当前开发属于L1-L3协议层，不包含AI决策和学习实现
+- **协议模块理解**: 协议是"积木"，Agent是"建筑"，一个Agent可使用多个协议
 ```
 
 ### 2. Schema驱动开发 + 双重命名约定 + 零技术债务

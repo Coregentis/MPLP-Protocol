@@ -133,9 +133,10 @@
       "$ref": "#/$defs/uuid",
       "description": "协作唯一标识符"
     },
-    "version": {
-      "$ref": "#/$defs/version",
-      "description": "协议版本号"
+    "protocol_version": {
+      "type": "string",
+      "const": "1.0.0",
+      "description": "MPLP协议版本"
     },
     "timestamp": {
       "$ref": "#/$defs/timestamp",
@@ -238,7 +239,7 @@
             "centralized",
             "distributed",
             "hierarchical",
-            "peer-to-peer"
+            "peer_to_peer"
           ],
           "description": "协调策略类型"
         },
@@ -364,11 +365,463 @@
       "type": "object",
       "additionalProperties": true,
       "description": "协作元数据"
+    },
+    "audit_trail": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "retention_days": { "type": "integer", "minimum": 1, "maximum": 2555 },
+        "audit_events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "event_id": { "$ref": "#/$defs/uuid" },
+              "event_type": {
+                "type": "string",
+                "enum": ["collaboration_started", "collaboration_ended", "participant_joined", "participant_left", "task_assigned", "task_completed", "decision_made", "conflict_resolved", "collaboration_updated"]
+              },
+              "timestamp": { "$ref": "#/$defs/timestamp" },
+              "user_id": { "type": "string" },
+              "user_role": { "type": "string" },
+              "action": { "type": "string" },
+              "resource": { "type": "string" },
+              "collaboration_operation": { "type": "string" },
+              "collab_id": { "$ref": "#/$defs/uuid" },
+              "collab_name": { "type": "string" },
+              "collab_type": { "type": "string" },
+              "participant_ids": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "collab_status": { "type": "string" },
+              "participant_id": { "$ref": "#/$defs/uuid" },
+              "task_details": { "type": "object" },
+              "decision_details": { "type": "object" },
+              "collab_details": { "type": "object" },
+              "ip_address": { "type": "string" },
+              "user_agent": { "type": "string" },
+              "session_id": { "type": "string" },
+              "correlation_id": { "$ref": "#/$defs/uuid" }
+            },
+            "required": ["event_id", "event_type", "timestamp", "user_id", "action", "resource"]
+          }
+        },
+        "compliance_settings": {
+          "type": "object",
+          "properties": {
+            "gdpr_enabled": { "type": "boolean" },
+            "hipaa_enabled": { "type": "boolean" },
+            "sox_enabled": { "type": "boolean" },
+            "collab_audit_level": {
+              "type": "string",
+              "enum": ["basic", "detailed", "comprehensive"]
+            },
+            "collab_data_logging": { "type": "boolean" },
+            "decision_logging": { "type": "boolean" },
+            "custom_compliance": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      },
+      "required": ["enabled", "retention_days"]
+    },
+    "monitoring_integration": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "supported_providers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["prometheus", "grafana", "datadog", "new_relic", "elastic_apm", "custom"]
+          }
+        },
+        "integration_endpoints": {
+          "type": "object",
+          "properties": {
+            "metrics_api": { "type": "string", "format": "uri" },
+            "collaboration_efficiency_api": { "type": "string", "format": "uri" },
+            "team_performance_api": { "type": "string", "format": "uri" },
+            "task_coordination_api": { "type": "string", "format": "uri" }
+          }
+        },
+        "collaboration_metrics": {
+          "type": "object",
+          "properties": {
+            "track_collaboration_efficiency": { "type": "boolean" },
+            "track_team_performance": { "type": "boolean" },
+            "track_task_coordination": { "type": "boolean" },
+            "track_decision_quality": { "type": "boolean" }
+          }
+        },
+        "export_formats": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["prometheus", "opentelemetry", "custom"]
+          }
+        }
+      },
+      "required": ["enabled", "supported_providers"]
+    },
+    "performance_metrics": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "collection_interval_seconds": { "type": "integer", "minimum": 10, "maximum": 3600 },
+        "metrics": {
+          "type": "object",
+          "properties": {
+            "collab_coordination_latency_ms": { "type": "number", "minimum": 0 },
+            "team_collaboration_efficiency_score": { "type": "number", "minimum": 0, "maximum": 10 },
+            "collaboration_quality_score": { "type": "number", "minimum": 0, "maximum": 10 },
+            "participant_engagement_satisfaction_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+            "collab_management_efficiency_score": { "type": "number", "minimum": 0, "maximum": 10 },
+            "active_collaborations_count": { "type": "integer", "minimum": 0 },
+            "collab_operations_per_second": { "type": "number", "minimum": 0 },
+            "collab_memory_usage_mb": { "type": "number", "minimum": 0 },
+            "average_collaboration_complexity_score": { "type": "number", "minimum": 0, "maximum": 10 }
+          }
+        },
+        "health_status": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": ["healthy", "degraded", "unhealthy", "conflicted"]
+            },
+            "last_check": { "$ref": "#/$defs/timestamp" },
+            "checks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "check_name": { "type": "string" },
+                  "status": {
+                    "type": "string",
+                    "enum": ["pass", "fail", "warn"]
+                  },
+                  "message": { "type": "string" },
+                  "duration_ms": { "type": "number", "minimum": 0 }
+                },
+                "required": ["check_name", "status"]
+              }
+            }
+          }
+        },
+        "alerting": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "thresholds": {
+              "type": "object",
+              "properties": {
+                "max_collab_coordination_latency_ms": { "type": "number", "minimum": 0 },
+                "min_team_collaboration_efficiency_score": { "type": "number", "minimum": 0, "maximum": 10 },
+                "min_collaboration_quality_score": { "type": "number", "minimum": 0, "maximum": 10 },
+                "min_participant_engagement_satisfaction_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+                "min_collab_management_efficiency_score": { "type": "number", "minimum": 0, "maximum": 10 }
+              }
+            },
+            "notification_channels": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["email", "slack", "webhook", "sms", "pagerduty"]
+              }
+            }
+          }
+        }
+      },
+      "required": ["enabled", "collection_interval_seconds"]
+    },
+    "version_history": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "max_versions": { "type": "integer", "minimum": 1, "maximum": 100, "default": 50 },
+        "versions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "version_id": { "$ref": "#/$defs/uuid" },
+              "version_number": { "type": "integer", "minimum": 1 },
+              "created_at": { "$ref": "#/$defs/timestamp" },
+              "created_by": { "type": "string" },
+              "change_summary": { "type": "string" },
+              "collaboration_snapshot": { "type": "object" },
+              "change_type": {
+                "type": "string",
+                "enum": ["collaboration_created", "participants_updated", "strategy_changed", "configuration_updated", "permissions_modified"]
+              }
+            },
+            "required": ["version_id", "version_number", "created_at", "created_by", "change_type"]
+          }
+        },
+        "auto_versioning": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "version_on_participant_change": { "type": "boolean" },
+            "version_on_strategy_change": { "type": "boolean" },
+            "version_on_permission_change": { "type": "boolean" }
+          }
+        }
+      },
+      "required": ["enabled", "max_versions"]
+    },
+    "search_metadata": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "indexing_strategy": {
+          "type": "string",
+          "enum": ["full_text", "keyword", "semantic", "hybrid"]
+        },
+        "searchable_fields": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["collaboration_id", "name", "participants", "tasks", "decisions", "coordination_strategy", "metadata", "audit_logs"]
+          }
+        },
+        "search_indexes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "index_id": { "type": "string" },
+              "index_name": { "type": "string" },
+              "fields": { "type": "array", "items": { "type": "string" } },
+              "index_type": {
+                "type": "string",
+                "enum": ["btree", "hash", "gin", "gist", "full_text"]
+              },
+              "created_at": { "$ref": "#/$defs/timestamp" },
+              "last_updated": { "$ref": "#/$defs/timestamp" }
+            },
+            "required": ["index_id", "index_name", "fields", "index_type"]
+          }
+        },
+        "collaboration_indexing": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "index_task_data": { "type": "boolean" },
+            "index_decision_data": { "type": "boolean" },
+            "index_performance_metrics": { "type": "boolean" }
+          }
+        },
+        "auto_indexing": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "index_new_collaborations": { "type": "boolean" },
+            "reindex_interval_hours": { "type": "integer", "minimum": 1 }
+          }
+        }
+      },
+      "required": ["enabled", "indexing_strategy"]
+    },
+    "collab_operation": {
+      "type": "string",
+      "enum": ["initiate", "join", "coordinate", "synchronize", "finalize"],
+      "description": "协作操作类型"
+    },
+
+    "collab_details": {
+
+      "type": "object",
+
+      "properties": {
+
+        "collaboration_type": {
+
+          "type": "string",
+
+          "enum": [
+
+            "real_time",
+
+            "asynchronous",
+
+            "hybrid"
+
+          ]
+
+        },
+
+        "participant_limit": {
+
+          "type": "integer",
+
+          "minimum": 2,
+
+          "maximum": 100
+
+        },
+
+        "coordination_strategy": {
+
+          "type": "string",
+
+          "enum": [
+
+            "centralized",
+
+            "distributed",
+
+            "peer_to_peer"
+
+          ]
+
+        }
+
+      },
+
+      "description": "协作详细配置"
+
+    },
+
+
+    "collab_details": {
+
+
+      "type": "object",
+
+
+      "properties": {
+
+
+        "collaboration_type": {
+
+
+          "type": "string",
+
+
+          "enum": [
+
+
+            "real_time",
+
+
+            "asynchronous",
+
+
+            "hybrid"
+
+
+          ]
+
+
+        },
+
+
+        "participant_limit": {
+
+
+          "type": "integer",
+
+
+          "minimum": 2,
+
+
+          "maximum": 100
+
+
+        },
+
+
+        "coordination_strategy": {
+
+
+          "type": "string",
+
+
+          "enum": [
+
+
+            "centralized",
+
+
+            "distributed",
+
+
+            "peer_to_peer"
+
+
+          ]
+
+
+        }
+
+
+      },
+
+
+      "description": "协作详细配置"
+
+
+    },
+    "event_integration": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "event_bus_connection": {
+          "type": "object",
+          "properties": {
+            "bus_type": {
+              "type": "string",
+              "enum": ["kafka", "rabbitmq", "redis", "nats", "custom"]
+            },
+            "connection_string": { "type": "string" },
+            "topic_prefix": { "type": "string" },
+            "consumer_group": { "type": "string" }
+          }
+        },
+        "published_events": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["collaboration_started", "collaboration_ended", "participant_joined", "participant_left", "task_assigned", "task_completed", "decision_made", "conflict_resolved"]
+          }
+        },
+        "subscribed_events": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["context_updated", "plan_executed", "confirm_approved", "trace_completed", "role_assigned", "extension_activated", "dialog_started", "network_connected"]
+          }
+        },
+        "event_routing": {
+          "type": "object",
+          "properties": {
+            "routing_rules": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "rule_id": { "type": "string" },
+                  "condition": { "type": "string" },
+                  "target_topic": { "type": "string" },
+                  "enabled": { "type": "boolean" }
+                },
+                "required": ["rule_id", "condition", "target_topic"]
+              }
+            }
+          }
+        }
+      },
+      "required": ["enabled"]
     }
   },
   "required": [
     "collaboration_id",
-    "version",
+    "protocol_version",
     "timestamp",
     "context_id",
     "plan_id",
@@ -378,7 +831,14 @@
     "coordination_strategy",
     "status",
     "created_at",
-    "created_by"
+    "created_by",
+    "audit_trail",
+    "monitoring_integration",
+    "performance_metrics",
+    "version_history",
+    "search_metadata",
+    "collab_operation",
+    "event_integration"
   ],
   "additionalProperties": false
 }
