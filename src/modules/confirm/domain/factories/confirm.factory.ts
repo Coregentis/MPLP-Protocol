@@ -68,7 +68,7 @@ export class ConfirmFactory {
         approverId: approverRole,
         name: `${approverRole} 审批者`,
         role: approverRole,
-        email: `${approverRole}@company.com`,
+        email: `${approverRole}@${process.env.COMPANY_DOMAIN || 'example.com'}`,
         priority: 1,
         isActive: true
       }],
@@ -84,26 +84,27 @@ export class ConfirmFactory {
    * 创建新的确认实体
    */
   static create(request: CreateConfirmRequest): Confirm {
-    const now = new Date().toISOString();
+    const now = new Date();
     const confirmId = uuidv4();
 
-    return new Confirm(
+    return new Confirm({
       confirmId,
-      request.contextId,
-      this.PROTOCOL_VERSION,
-      request.confirmationType,
-      ConfirmStatus.PENDING, // 新创建的确认默认为待处理状态
-      request.priority,
-      request.subject,
-      request.requester,
-      request.approvalWorkflow,
-      now,
-      now,
-      request.planId,
-      undefined, // 新创建时没有决策
-      request.expiresAt,
-      request.metadata
-    );
+      contextId: request.contextId,
+      protocolVersion: this.PROTOCOL_VERSION,
+      timestamp: now,
+      confirmationType: request.confirmationType,
+      status: ConfirmStatus.PENDING, // 新创建的确认默认为待处理状态
+      priority: request.priority,
+      subject: request.subject,
+      requester: request.requester,
+      approvalWorkflow: request.approvalWorkflow,
+      createdAt: now,
+      updatedAt: now,
+      planId: request.planId,
+      decision: undefined, // 新创建时没有决策
+      expiresAt: request.expiresAt ? new Date(request.expiresAt) : undefined,
+      metadata: request.metadata
+    });
   }
 
   /**
@@ -115,7 +116,7 @@ export class ConfirmFactory {
     requester: Requester,
     plan_id?: UUID
   ): Confirm {
-    // 紧急审批使用简化的工作流
+    // 紧急审批使用简化的工作流，但需要至少2个审批者以满足高优先级要求
     const emergencyWorkflow: ApprovalWorkflow = {
       workflowType: 'sequential',
       steps: [
@@ -123,25 +124,31 @@ export class ConfirmFactory {
           stepId: `step_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
           name: '紧急审批',
           stepOrder: 1,
-          approvers: [{
-            approverId: 'emergency_approver',
-            name: '紧急审批者',
-            role: 'emergency_approver',
-            email: 'emergency@company.com',
-            priority: 1,
-            isActive: true
-          }],
-          approverRole: 'emergency_approver',
-          isRequired: true,
-          timeoutHours: 2, // 2小时超时
+          level: 1,
+          approvers: [
+            {
+              approverId: 'emergency_approver_1',
+              name: '紧急审批者1',
+              role: 'emergency_approver',
+              email: `emergency1@${process.env.COMPANY_DOMAIN || 'example.com'}`,
+              priority: 1,
+              isActive: true
+            },
+            {
+              approverId: 'emergency_approver_2',
+              name: '紧急审批者2',
+              role: 'senior_manager',
+              email: `emergency2@${process.env.COMPANY_DOMAIN || 'example.com'}`,
+              priority: 2,
+              isActive: true
+            }
+          ],
           status: StepStatus.PENDING,
-          escalationRules: {
-            enabled: true,
-            escalationTimeoutHours: 1,
-            escalationTarget: 'senior_manager'
-          }
+          timeoutHours: 2 // 2小时超时
         }
       ],
+      requireAllApprovers: false,
+      allowDelegation: true,
       autoApprovalRules: {
         enabled: false
       }
@@ -188,7 +195,7 @@ export class ConfirmFactory {
       subject,
       requester,
       approvalWorkflow: planApprovalWorkflow,
-      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() // 7天后过期
+      expiresAt: this.calculateExpirationTime(priority)
     });
   }
 
@@ -254,7 +261,7 @@ export class ConfirmFactory {
       subject,
       requester,
       approvalWorkflow: riskWorkflow,
-      expiresAt: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString() // 5天后过期
+      expiresAt: this.calculateExpirationTime(priority)
     });
   }
 
@@ -262,7 +269,24 @@ export class ConfirmFactory {
    * 从协议数据重建确认实体
    */
   static fromProtocol(protocol: ConfirmProtocol): Confirm {
-    return Confirm.fromProtocol(protocol);
+    return new Confirm({
+      protocolVersion: protocol.protocolVersion,
+      timestamp: new Date(protocol.timestamp),
+      confirmId: protocol.confirmId,
+      contextId: protocol.contextId,
+      planId: protocol.planId,
+      confirmationType: protocol.confirmationType,
+      status: protocol.status,
+      priority: protocol.priority,
+      subject: protocol.subject,
+      requester: protocol.requester,
+      approvalWorkflow: protocol.approvalWorkflow,
+      decision: protocol.decision,
+      createdAt: new Date(protocol.createdAt),
+      updatedAt: new Date(protocol.updatedAt),
+      expiresAt: protocol.expiresAt ? new Date(protocol.expiresAt) : undefined,
+      metadata: protocol.metadata
+    });
   }
 
   /**
@@ -291,5 +315,33 @@ export class ConfirmFactory {
       isValid: errors.length === 0,
       errors
     };
+  }
+
+  /**
+   * 根据优先级计算合理的过期时间
+   */
+  private static calculateExpirationTime(priority: Priority): string {
+    const now = new Date();
+    let expirationDays: number;
+
+    switch (priority) {
+      case Priority.URGENT:
+        expirationDays = 1; // 1天
+        break;
+      case Priority.HIGH:
+        expirationDays = 3; // 3天
+        break;
+      case Priority.MEDIUM:
+        expirationDays = 7; // 7天
+        break;
+      case Priority.LOW:
+        expirationDays = 30; // 30天
+        break;
+      default:
+        expirationDays = 7; // 默认7天
+    }
+
+    const expirationTime = new Date(now.getTime() + expirationDays * 24 * 60 * 60 * 1000);
+    return expirationTime.toISOString();
   }
 }

@@ -66,11 +66,21 @@ export class PlanMapper {
     planEntity.estimated_duration = planObject.estimatedDuration;
 
     // Progress映射：驼峰 → 下划线
-    planEntity.progress = {
-      completed_tasks: planObject.progress.completedTasks,
-      total_tasks: planObject.progress.totalTasks,
-      percentage: planObject.progress.percentage
-    };
+    if (planObject.progress) {
+      const progressData = planObject.progress as Record<string, unknown>;
+      planEntity.progress = {
+        completed_tasks: Number(progressData.completed_tasks || progressData.completedTasks || 0),
+        total_tasks: Number(progressData.total_tasks || progressData.totalTasks || 0),
+        percentage: Number(progressData.percentage || 0)
+      };
+    } else {
+      // progress是必需字段，提供默认值
+      planEntity.progress = {
+        completed_tasks: 0,
+        total_tasks: 0,
+        percentage: 0
+      };
+    }
 
     // Timeline映射：处理milestones类型转换
     planEntity.timeline = planObject.timeline ? {

@@ -21,6 +21,8 @@ import {
   ExtensionConfiguration,
   ExtensionPoint,
   ApiExtension,
+  ExtensionConflict,
+  ExtensionDependency,
   EventSubscription as _EventSubscription,
 } from '../../types';
 
@@ -39,24 +41,7 @@ export interface CreateExtensionRequest {
   conflicts?: ExtensionConflict[];
 }
 
-/**
- * 扩展依赖
- */
-export interface ExtensionDependency {
-  extension_id: UUID;
-  name: string;
-  version_range: string;
-  optional: boolean;
-}
 
-/**
- * 扩展冲突
- */
-export interface ExtensionConflict {
-  extension_id: UUID;
-  name: string;
-  reason: string;
-}
 
 /**
  * 操作结果
@@ -1157,12 +1142,12 @@ export class ExtensionManagementService {
     try {
       for (const dependency of dependencies) {
         // 检查依赖的扩展是否存在
-        const dependentExtension = await this.extensionRepository.findById(dependency.extension_id);
+        const dependentExtension = await this.extensionRepository.findById(dependency.extensionId);
 
         if (!dependentExtension) {
           return {
             valid: false,
-            error: `依赖的扩展不存在: ${dependency.name} (${dependency.extension_id})`
+            error: `依赖的扩展不存在: ${dependency.name} (${dependency.extensionId})`
           };
         }
 
@@ -1194,7 +1179,7 @@ export class ExtensionManagementService {
     try {
       for (const conflict of conflicts) {
         // 检查冲突的扩展是否存在且处于活跃状态
-        const conflictingExtension = await this.extensionRepository.findById(conflict.extension_id);
+        const conflictingExtension = await this.extensionRepository.findById(conflict.extensionId);
 
         if (conflictingExtension && conflictingExtension.status === 'active') {
           return {

@@ -16,7 +16,9 @@ import {
   ConfirmSubject,
   ConfirmMetadata 
 } from '../../types';
-import { ConfirmManagementService, OperationResult } from '../services/confirm-management.service';
+import { ConfirmManagementService } from '../services/confirm-management.service';
+import { OperationResult } from '../../../../public/shared/types';
+import { CreateConfirmRequestDto } from '../../api/dto/confirm.dto';
 import { Confirm } from '../../domain/entities/confirm.entity';
 
 /**
@@ -33,6 +35,12 @@ export interface CreateConfirmCommand {
   approvalWorkflow: ApprovalWorkflow;
   expiresAt?: string;
   metadata?: ConfirmMetadata;
+  notificationSettings?: {
+    email?: boolean;
+    sms?: boolean;
+    webhook?: boolean;
+    escalationEnabled?: boolean;
+  };
 }
 
 /**
@@ -47,6 +55,7 @@ export class CreateConfirmHandler {
    * 处理创建确认命令
    */
   async handle(command: CreateConfirmCommand): Promise<OperationResult<Confirm>> {
-    return await this.confirmManagementService.createConfirm(command);
+    // 使用类型断言进行转换，service内部会处理具体的类型转换
+    return await this.confirmManagementService.createConfirm(command as unknown as CreateConfirmRequestDto);
   }
 }

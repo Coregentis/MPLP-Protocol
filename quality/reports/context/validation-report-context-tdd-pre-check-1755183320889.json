@@ -1,0 +1,42 @@
+{
+  "module": "context",
+  "validation_type": "tdd-pre-check",
+  "timestamp": "2025-08-14T14:55:20.888Z",
+  "config_version": "1.0.0",
+  "execution_log": [
+    {
+      "check": "TDD重构前质量基线检查",
+      "command": "node scripts/tdd/tdd-quality-enforcer.js pre-check context",
+      "status": "failed",
+      "duration": 21697,
+      "error": "spawnSync C:\\WINDOWS\\system32\\cmd.exe ENOBUFS",
+      "output": "🔍 TDD重构前检查: context模块\n"
+    },
+    {
+      "check": "Schema合规性验证",
+      "command": "npm run validate:schemas",
+      "status": "success",
+      "duration": 2904,
+      "output": "\n> mplp@1.0.0 validate:schemas\n> ts-node src/tools/schema-validator/cli/validator-cli.ts check-syntax\n\n🔍 MPLP Schema Syntax Validation\n================================\nValidating directory: src/schemas\n\n================================================================================\nMPLP Schema Validation Report\n================================================================================\nGenerated: 2025-08-14T14:55:18.747Z\nReport Version: 1.1.0\n\nSUMMARY\n-------------------------------------"
+    },
+    {
+      "check": "双重命名约定验证",
+      "command": "npm run validate:naming",
+      "status": "failed",
+      "duration": 2101,
+      "error": "Command failed: npm run validate:naming\nerror: unknown command 'check-naming'\n",
+      "output": "\n> mplp@1.0.0 validate:naming\n> ts-node src/tools/schema-validator/cli/validator-cli.ts check-naming\n\n"
+    }
+  ],
+  "violations": [
+    "TDD重构前检查: TDD重构前质量基线检查 - spawnSync C:\\WINDOWS\\system32\\cmd.exe ENOBUFS"
+  ],
+  "warnings": [],
+  "summary": {
+    "total_checks": 3,
+    "passed_checks": 1,
+    "failed_checks": 2,
+    "total_duration": 26702,
+    "quality_score": 23
+  }
+}

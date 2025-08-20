@@ -1,0 +1,4527 @@
+[
+  {
+    "description": "  作为MPLP协议平台的协议确认协调器\n  我希望能够协调完整的协议生命周期流程\n  以便实现Plan-Confirm-Trace-Delivery的无缝协作",
+    "elements": [
+      {
+        "description": "",
+        "id": "plan-confirm-trace-delivery完整流程协调;完整协议生命周期流程协调",
+        "keyword": "Scenario",
+        "line": 21,
+        "name": "完整协议生命周期流程协调",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1158100
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 15,
+            "name": "MPLP协议平台已初始化",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:133"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 621099
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "Plan、Confirm、Trace、Delivery模块已启动",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 17,
+            "name": "完整流程协调通道已建立",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 18,
+            "name": "系统处于测试模式",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:150"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 22,
+            "name": "Plan模块创建了新的协议规划",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 23,
+            "name": "协议规划ID为\"protocol-lifecycle-001\"",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 24,
+            "name": "协议需要经过完整的PCTD流程",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 25,
+            "name": "启动Plan-Confirm-Trace-Delivery完整流程",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 26,
+            "name": "Plan模块应该生成协议规划并发送给Confirm模块",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 27,
+            "name": "Confirm模块应该在100ms内完成协议确认",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 28,
+            "name": "Trace模块应该记录完整的流程追踪数据",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 29,
+            "name": "Delivery模块应该准备协议交付",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 30,
+            "name": "完整流程应该在500ms内完成",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 31,
+            "name": "流程协调成功率应该≥98%",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 229500
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@high-priority",
+            "line": 8
+          },
+          {
+            "name": "@pctd-workflow",
+            "line": 8
+          },
+          {
+            "name": "@end-to-end-coordination",
+            "line": 8
+          },
+          {
+            "name": "@complete-lifecycle",
+            "line": 20
+          },
+          {
+            "name": "@end-to-end-flow",
+            "line": 20
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "plan-confirm-trace-delivery完整流程协调;pctd阶段性协调处理",
+        "keyword": "Scenario",
+        "line": 34,
+        "name": "PCTD阶段性协调处理",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 232400
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 15,
+            "name": "MPLP协议平台已初始化",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:133"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 280000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "Plan、Confirm、Trace、Delivery模块已启动",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 17,
+            "name": "完整流程协调通道已建立",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 18,
+            "name": "系统处于测试模式",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:150"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 35,
+            "name": "协议流程包含多个协调阶段",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 36,
+            "name": "每个阶段都有特定的协调要求",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 37,
+            "name": "执行阶段性协调处理",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 38,
+            "name": "Plan阶段应该完成协议规划和初始化",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 39,
+            "name": "Confirm阶段应该完成协议确认和验证",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 40,
+            "name": "Trace阶段应该完成流程监控和记录",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 41,
+            "name": "Delivery阶段应该完成协议交付和部署",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 42,
+            "name": "每个阶段的协调时间应该<150ms",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 43,
+            "name": "阶段间协调延迟应该<20ms",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 121700
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@high-priority",
+            "line": 8
+          },
+          {
+            "name": "@pctd-workflow",
+            "line": 8
+          },
+          {
+            "name": "@end-to-end-coordination",
+            "line": 8
+          },
+          {
+            "name": "@phase-coordination",
+            "line": 33
+          },
+          {
+            "name": "@sequential-processing",
+            "line": 33
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "plan-confirm-trace-delivery完整流程协调;pctd并行协调处理",
+        "keyword": "Scenario",
+        "line": 46,
+        "name": "PCTD并行协调处理",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 248000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 15,
+            "name": "MPLP协议平台已初始化",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:133"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 333900
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "Plan、Confirm、Trace、Delivery模块已启动",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 17,
+            "name": "完整流程协调通道已建立",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 18,
+            "name": "系统处于测试模式",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:150"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 47,
+            "name": "系统接收多个并发的协议流程请求",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 48,
+            "name": "每个流程都需要完整的PCTD协调",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 49,
+            "name": "并发流程数量为50个",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 50,
+            "name": "启动并行协调处理",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 51,
+            "name": "系统应该并行处理多个PCTD流程",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 52,
+            "name": "每个流程应该独立完成协调",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 53,
+            "name": "并行处理不应该影响协调质量",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 54,
+            "name": "平均流程完成时间应该<600ms",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 55,
+            "name": "并行协调成功率应该≥96%",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 335999
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@high-priority",
+            "line": 8
+          },
+          {
+            "name": "@pctd-workflow",
+            "line": 8
+          },
+          {
+            "name": "@end-to-end-coordination",
+            "line": 8
+          },
+          {
+            "name": "@parallel-coordination",
+            "line": 45
+          },
+          {
+            "name": "@concurrent-processing",
+            "line": 45
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "plan-confirm-trace-delivery完整流程协调;pctd流程错误恢复",
+        "keyword": "Scenario",
+        "line": 58,
+        "name": "PCTD流程错误恢复",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 196699
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 15,
+            "name": "MPLP协议平台已初始化",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:133"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 155600
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "Plan、Confirm、Trace、Delivery模块已启动",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 17,
+            "name": "完整流程协调通道已建立",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 18,
+            "name": "系统处于测试模式",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:150"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 59,
+            "name": "PCTD流程正在执行",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 60,
+            "name": "流程中的某个阶段发生错误",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 61,
+            "name": "检测到流程错误",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 62,
+            "name": "系统应该立即识别错误阶段",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 63,
+            "name": "应该启动错误恢复机制",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 64,
+            "name": "应该尝试重新执行失败的阶段",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 65,
+            "name": "应该保持其他阶段的正常运行",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 66,
+            "name": "错误恢复时间应该<200ms",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 67,
+            "name": "流程恢复成功率应该≥94%",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 249000
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@high-priority",
+            "line": 8
+          },
+          {
+            "name": "@pctd-workflow",
+            "line": 8
+          },
+          {
+            "name": "@end-to-end-coordination",
+            "line": 8
+          },
+          {
+            "name": "@error-recovery",
+            "line": 57
+          },
+          {
+            "name": "@resilient-workflow",
+            "line": 57
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "plan-confirm-trace-delivery完整流程协调;pctd跨模块数据一致性",
+        "keyword": "Scenario",
+        "line": 70,
+        "name": "PCTD跨模块数据一致性",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 176600
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 15,
+            "name": "MPLP协议平台已初始化",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:133"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 128400
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "Plan、Confirm、Trace、Delivery模块已启动",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 17,
+            "name": "完整流程协调通道已建立",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 18,
+            "name": "系统处于测试模式",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:150"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 71,
+            "name": "PCTD流程涉及多个模块的数据交换",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 72,
+            "name": "每个模块都维护相关的协议数据",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 73,
+            "name": "执行跨模块数据一致性检查",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 74,
+            "name": "应该验证Plan模块的协议规划数据",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 75,
+            "name": "应该验证Confirm模块的确认状态数据",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 76,
+            "name": "应该验证Trace模块的追踪记录数据",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 77,
+            "name": "应该验证Delivery模块的交付状态数据",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 78,
+            "name": "数据一致性检查应该100%通过",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 79,
+            "name": "应该自动修复任何数据不一致问题",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 93100
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@high-priority",
+            "line": 8
+          },
+          {
+            "name": "@pctd-workflow",
+            "line": 8
+          },
+          {
+            "name": "@end-to-end-coordination",
+            "line": 8
+          },
+          {
+            "name": "@data-consistency",
+            "line": 69
+          },
+          {
+            "name": "@cross-module-integrity",
+            "line": 69
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "plan-confirm-trace-delivery完整流程协调;pctd流程性能监控",
+        "keyword": "Scenario",
+        "line": 82,
+        "name": "PCTD流程性能监控",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 193800
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 15,
+            "name": "MPLP协议平台已初始化",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:133"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 156800
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "Plan、Confirm、Trace、Delivery模块已启动",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 17,
+            "name": "完整流程协调通道已建立",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 18,
+            "name": "系统处于测试模式",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:150"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 83,
+            "name": "PCTD流程正在运行",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 84,
+            "name": "需要实时监控流程性能",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 85,
+            "name": "启用流程性能监控",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 86,
+            "name": "应该实时收集每个阶段的性能指标",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 87,
+            "name": "应该监控流程的整体执行时间",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 88,
+            "name": "应该跟踪资源使用情况",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 89,
+            "name": "应该检测性能瓶颈",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 90,
+            "name": "性能监控延迟应该<5ms",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 91,
+            "name": "监控数据准确率应该≥99%",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 84100
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@high-priority",
+            "line": 8
+          },
+          {
+            "name": "@pctd-workflow",
+            "line": 8
+          },
+          {
+            "name": "@end-to-end-coordination",
+            "line": 8
+          },
+          {
+            "name": "@performance-monitoring",
+            "line": 81
+          },
+          {
+            "name": "@real-time-metrics",
+            "line": 81
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "plan-confirm-trace-delivery完整流程协调;pctd流程可扩展性验证",
+        "keyword": "Scenario",
+        "line": 94,
+        "name": "PCTD流程可扩展性验证",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 105900
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 15,
+            "name": "MPLP协议平台已初始化",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:133"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 135800
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "Plan、Confirm、Trace、Delivery模块已启动",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 17,
+            "name": "完整流程协调通道已建立",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 18,
+            "name": "系统处于测试模式",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:150"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 95,
+            "name": "系统需要处理大量的PCTD流程",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 96,
+            "name": "目标吞吐量为1000 flows/minute",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 97,
+            "name": "执行可扩展性验证测试",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 98,
+            "name": "系统应该维持稳定的流程处理能力",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 99,
+            "name": "应该支持动态扩展处理能力",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 100,
+            "name": "平均流程处理时间应该保持稳定",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 101,
+            "name": "系统吞吐量应该≥1000 flows/minute",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 102,
+            "name": "可扩展性测试成功率应该≥95%",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 122699
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@high-priority",
+            "line": 8
+          },
+          {
+            "name": "@pctd-workflow",
+            "line": 8
+          },
+          {
+            "name": "@end-to-end-coordination",
+            "line": 8
+          },
+          {
+            "name": "@scalability-validation",
+            "line": 93
+          },
+          {
+            "name": "@high-throughput",
+            "line": 93
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "plan-confirm-trace-delivery完整流程协调;pctd模块集成验证",
+        "keyword": "Scenario",
+        "line": 105,
+        "name": "PCTD模块集成验证",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 87500
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 15,
+            "name": "MPLP协议平台已初始化",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:133"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 124000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "Plan、Confirm、Trace、Delivery模块已启动",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 17,
+            "name": "完整流程协调通道已建立",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 18,
+            "name": "系统处于测试模式",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:150"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 106,
+            "name": "PCTD流程需要验证模块间的集成质量",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 107,
+            "name": "每个模块都有特定的集成接口",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 108,
+            "name": "执行模块集成验证",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 109,
+            "name": "应该验证Plan-Confirm接口的兼容性",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 110,
+            "name": "应该验证Confirm-Trace接口的兼容性",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 111,
+            "name": "应该验证Trace-Delivery接口的兼容性",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 112,
+            "name": "应该验证跨模块协议的一致性",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 113,
+            "name": "集成验证应该100%通过",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 114,
+            "name": "应该生成详细的集成质量报告",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 84899
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@high-priority",
+            "line": 8
+          },
+          {
+            "name": "@pctd-workflow",
+            "line": 8
+          },
+          {
+            "name": "@end-to-end-coordination",
+            "line": 8
+          },
+          {
+            "name": "@integration-validation",
+            "line": 104
+          },
+          {
+            "name": "@module-compatibility",
+            "line": 104
+          }
+        ],
+        "type": "scenario"
+      }
+    ],
+    "id": "plan-confirm-trace-delivery完整流程协调",
+    "line": 9,
+    "keyword": "Feature",
+    "name": "Plan-Confirm-Trace-Delivery完整流程协调",
+    "tags": [
+      {
+        "name": "@high-priority",
+        "line": 8
+      },
+      {
+        "name": "@pctd-workflow",
+        "line": 8
+      },
+      {
+        "name": "@end-to-end-coordination",
+        "line": 8
+      }
+    ],
+    "uri": "tests\\bdd\\confirm\\features\\pctd-complete-workflow.feature"
+  },
+  {
+    "description": "  作为MPLP协议平台的协议确认协调器\n  我希望能够与Plan模块进行深度协作\n  以便实现基于plan_id的协议确认和验证",
+    "elements": [
+      {
+        "description": "",
+        "id": "plan-confirm协作系统;plan模块协议变更确认协作",
+        "keyword": "Scenario",
+        "line": 21,
+        "name": "Plan模块协议变更确认协作",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 202200
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 15,
+            "name": "MPLP协议平台已初始化",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:133"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 369700
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "Plan模块和Confirm模块已启动",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 17,
+            "name": "模块间协作通道已建立",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 18,
+            "name": "系统处于测试模式",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:150"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 22,
+            "name": "Plan模块生成了新的协议规划",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 23,
+            "name": "协议规划包含plan_id \"plan-integration-001\"",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 24,
+            "name": "协议变更需要确认审批",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 25,
+            "name": "Plan模块向Confirm模块发送确认请求",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 26,
+            "name": "请求包含plan_details和approval_requirements",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 27,
+            "name": "Confirm模块应该接收并解析Plan协议数据",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 28,
+            "name": "应该验证协议规划的完整性和合规性",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 29,
+            "name": "应该在150ms内完成Plan协议确认",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 30,
+            "name": "应该向Plan模块返回确认结果",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 31,
+            "name": "Plan-Confirm协作成功率应该≥98%",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 197599
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@high-priority",
+            "line": 8
+          },
+          {
+            "name": "@plan-confirm-collaboration",
+            "line": 8
+          },
+          {
+            "name": "@deep-integration",
+            "line": 8
+          },
+          {
+            "name": "@plan-integration",
+            "line": 20
+          },
+          {
+            "name": "@deep-collaboration",
+            "line": 20
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "plan-confirm协作系统;协作决策确认管理",
+        "keyword": "Scenario",
+        "line": 34,
+        "name": "协作决策确认管理",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 225500
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 15,
+            "name": "MPLP协议平台已初始化",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:133"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 154799
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "Plan模块和Confirm模块已启动",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 17,
+            "name": "模块间协作通道已建立",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 18,
+            "name": "系统处于测试模式",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:150"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 35,
+            "name": "Plan模块提出了多个决策选项",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 36,
+            "name": "决策选项包含decision_id和decision_criteria",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 37,
+            "name": "需要Confirm模块进行决策确认",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 38,
+            "name": "Confirm模块接收决策确认请求",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 39,
+            "name": "分析每个决策选项的风险和收益",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 40,
+            "name": "应该评估决策质量和可行性",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 41,
+            "name": "应该生成决策确认建议",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 42,
+            "name": "应该在200ms内完成决策确认分析",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 43,
+            "name": "决策确认质量评估应该≥95%",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 44,
+            "name": "应该提供决策风险评估报告",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 87500
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@high-priority",
+            "line": 8
+          },
+          {
+            "name": "@plan-confirm-collaboration",
+            "line": 8
+          },
+          {
+            "name": "@deep-integration",
+            "line": 8
+          },
+          {
+            "name": "@decision-confirmation",
+            "line": 33
+          },
+          {
+            "name": "@collaborative-decision",
+            "line": 33
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "plan-confirm协作系统;plan-confirm数据一致性检查",
+        "keyword": "Scenario",
+        "line": 47,
+        "name": "Plan-Confirm数据一致性检查",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 95699
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 15,
+            "name": "MPLP协议平台已初始化",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:133"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 246499
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "Plan模块和Confirm模块已启动",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 17,
+            "name": "模块间协作通道已建立",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 18,
+            "name": "系统处于测试模式",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:150"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 48,
+            "name": "Plan模块和Confirm模块都有协议数据",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 49,
+            "name": "数据包含相同的plan_id引用",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 50,
+            "name": "执行Plan-Confirm数据一致性检查",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 51,
+            "name": "应该验证plan_id的数据一致性",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 52,
+            "name": "应该检查协议状态的同步性",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 53,
+            "name": "应该识别任何数据不一致问题",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 54,
+            "name": "应该协调执行一致性修复策略",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 55,
+            "name": "数据一致性检查成功率应该≥98%",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 56,
+            "name": "应该记录完整的一致性检查协调审计日志",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 132900
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@high-priority",
+            "line": 8
+          },
+          {
+            "name": "@plan-confirm-collaboration",
+            "line": 8
+          },
+          {
+            "name": "@deep-integration",
+            "line": 8
+          },
+          {
+            "name": "@consistency-check",
+            "line": 46
+          },
+          {
+            "name": "@data-integrity",
+            "line": 46
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "plan-confirm协作系统;plan-confirm工作流协调",
+        "keyword": "Scenario",
+        "line": 59,
+        "name": "Plan-Confirm工作流协调",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 133900
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 15,
+            "name": "MPLP协议平台已初始化",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:133"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 161999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "Plan模块和Confirm模块已启动",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 17,
+            "name": "模块间协作通道已建立",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 18,
+            "name": "系统处于测试模式",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:150"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 60,
+            "name": "Plan模块启动了复杂的协议工作流",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 61,
+            "name": "工作流包含多个需要确认的阶段",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 62,
+            "name": "每个阶段都有特定的确认要求",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 63,
+            "name": "Confirm模块参与工作流协调",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 64,
+            "name": "应该按照工作流顺序处理确认请求",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 65,
+            "name": "应该维护工作流状态的一致性",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 66,
+            "name": "应该在每个阶段提供及时的确认反馈",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 67,
+            "name": "工作流协调效率应该≥96%",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 68,
+            "name": "应该支持工作流的暂停和恢复",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 188899
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@high-priority",
+            "line": 8
+          },
+          {
+            "name": "@plan-confirm-collaboration",
+            "line": 8
+          },
+          {
+            "name": "@deep-integration",
+            "line": 8
+          },
+          {
+            "name": "@workflow-coordination",
+            "line": 58
+          },
+          {
+            "name": "@process-integration",
+            "line": 58
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "plan-confirm协作系统;plan-confirm实时同步协作",
+        "keyword": "Scenario",
+        "line": 71,
+        "name": "Plan-Confirm实时同步协作",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 99000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 15,
+            "name": "MPLP协议平台已初始化",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:133"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 164500
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "Plan模块和Confirm模块已启动",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 17,
+            "name": "模块间协作通道已建立",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 18,
+            "name": "系统处于测试模式",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:150"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 72,
+            "name": "Plan模块和Confirm模块建立实时同步连接",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 73,
+            "name": "启用了实时协作模式",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 74,
+            "name": "Plan模块实时更新协议状态",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 75,
+            "name": "Confirm模块需要实时响应变更",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 76,
+            "name": "Confirm模块应该在10ms内接收到更新通知",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 77,
+            "name": "应该实时验证协议变更的影响",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 78,
+            "name": "应该提供实时的确认状态反馈",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 79,
+            "name": "实时同步延迟应该<20ms",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 80,
+            "name": "实时协作可靠性应该≥99%",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 184700
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@high-priority",
+            "line": 8
+          },
+          {
+            "name": "@plan-confirm-collaboration",
+            "line": 8
+          },
+          {
+            "name": "@deep-integration",
+            "line": 8
+          },
+          {
+            "name": "@real-time-sync",
+            "line": 70
+          },
+          {
+            "name": "@live-collaboration",
+            "line": 70
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "plan-confirm协作系统;plan-confirm协作错误处理",
+        "keyword": "Scenario",
+        "line": 83,
+        "name": "Plan-Confirm协作错误处理",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 108799
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 15,
+            "name": "MPLP协议平台已初始化",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:133"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 163700
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "Plan模块和Confirm模块已启动",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 17,
+            "name": "模块间协作通道已建立",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 18,
+            "name": "系统处于测试模式",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:150"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 84,
+            "name": "Plan模块和Confirm模块正在协作",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 85,
+            "name": "协作过程中可能出现网络或系统错误",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 86,
+            "name": "协作过程中发生错误",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 87,
+            "name": "Confirm模块应该检测到协作错误",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 88,
+            "name": "应该启动错误恢复机制",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 89,
+            "name": "应该尝试重新建立协作连接",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 90,
+            "name": "应该保持数据的完整性",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 91,
+            "name": "错误恢复成功率应该≥95%",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 92,
+            "name": "应该记录详细的错误处理日志",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 94799
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@high-priority",
+            "line": 8
+          },
+          {
+            "name": "@plan-confirm-collaboration",
+            "line": 8
+          },
+          {
+            "name": "@deep-integration",
+            "line": 8
+          },
+          {
+            "name": "@error-handling",
+            "line": 82
+          },
+          {
+            "name": "@resilient-collaboration",
+            "line": 82
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "plan-confirm协作系统;plan-confirm协作性能优化",
+        "keyword": "Scenario",
+        "line": 95,
+        "name": "Plan-Confirm协作性能优化",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 78599
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 15,
+            "name": "MPLP协议平台已初始化",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:133"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 114000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "Plan模块和Confirm模块已启动",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 17,
+            "name": "模块间协作通道已建立",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 18,
+            "name": "系统处于测试模式",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:150"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 96,
+            "name": "Plan模块和Confirm模块需要高效协作",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 97,
+            "name": "系统负载较高",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 98,
+            "name": "启用协作性能优化模式",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 99,
+            "name": "应该优化协作通信协议",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 100,
+            "name": "应该减少不必要的数据传输",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 101,
+            "name": "应该使用缓存提高响应速度",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 102,
+            "name": "协作响应时间应该<100ms",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 103,
+            "name": "协作吞吐量应该≥300 operations/second",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 167700
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@high-priority",
+            "line": 8
+          },
+          {
+            "name": "@plan-confirm-collaboration",
+            "line": 8
+          },
+          {
+            "name": "@deep-integration",
+            "line": 8
+          },
+          {
+            "name": "@performance-optimization",
+            "line": 94
+          },
+          {
+            "name": "@collaboration-efficiency",
+            "line": 94
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "plan-confirm协作系统;plan-confirm大规模协作测试",
+        "keyword": "Scenario",
+        "line": 106,
+        "name": "Plan-Confirm大规模协作测试",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 81000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 15,
+            "name": "MPLP协议平台已初始化",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:133"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 135199
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "Plan模块和Confirm模块已启动",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 17,
+            "name": "模块间协作通道已建立",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 18,
+            "name": "系统处于测试模式",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:150"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 107,
+            "name": "系统需要处理大量的Plan-Confirm协作请求",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 108,
+            "name": "并发协作会话数量为100+",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 109,
+            "name": "执行大规模协作测试",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 110,
+            "name": "系统应该维持稳定的协作性能",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 111,
+            "name": "所有协作会话应该正常运行",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 112,
+            "name": "平均协作延迟应该<200ms",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 113,
+            "name": "协作成功率应该≥97%",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 114,
+            "name": "系统资源使用应该保持在合理范围内",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 76900
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@high-priority",
+            "line": 8
+          },
+          {
+            "name": "@plan-confirm-collaboration",
+            "line": 8
+          },
+          {
+            "name": "@deep-integration",
+            "line": 8
+          },
+          {
+            "name": "@scalability-test",
+            "line": 105
+          },
+          {
+            "name": "@high-volume-collaboration",
+            "line": 105
+          }
+        ],
+        "type": "scenario"
+      }
+    ],
+    "id": "plan-confirm协作系统",
+    "line": 9,
+    "keyword": "Feature",
+    "name": "Plan-Confirm协作系统",
+    "tags": [
+      {
+        "name": "@high-priority",
+        "line": 8
+      },
+      {
+        "name": "@plan-confirm-collaboration",
+        "line": 8
+      },
+      {
+        "name": "@deep-integration",
+        "line": 8
+      }
+    ],
+    "uri": "tests\\bdd\\confirm\\features\\plan-confirm-collaboration.feature"
+  },
+  {
+    "description": "  作为MPLP v1.0协议平台的协议确认协调器\n  我希望能够专业化处理6种confirmation_type的协议确认\n  以便实现协议生命周期的专业化确认和验证",
+    "elements": [
+      {
+        "description": "",
+        "id": "协议确认协调引擎;plan_approval协议确认处理",
+        "keyword": "Scenario",
+        "line": 20,
+        "name": "plan_approval协议确认处理",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 82899
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 15,
+            "name": "MPLP协议平台已初始化",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:133"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 109699
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "协议确认协调引擎已启动",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:142"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 185899
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 17,
+            "name": "系统处于测试模式",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:150"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 244499
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 21,
+            "name": "我收到Plan模块的plan_approval确认请求",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:158"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 145500
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 22,
+            "name": "请求包含plan_id和approval_required标志",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:174"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 216400
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 23,
+            "name": "plan_id为\"plan-project-001\"",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 24,
+            "name": "approval_required为true",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 25,
+            "name": "我处理plan_approval协议确认",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:184"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 26,
+            "name": "系统应该在100ms内完成协议规划确认",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:202"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 27,
+            "name": "应该验证协议规划的合规性和可行性",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:209"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 28,
+            "name": "应该为Trace模块提供确认状态数据",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:217"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 29,
+            "name": "协议确认准确率应该≥95%",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:224"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 30,
+            "name": "确认结果应该包含confirmation_id",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 31,
+            "name": "确认状态应该为\"approved\"",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 125599
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@high-priority",
+            "line": 8
+          },
+          {
+            "name": "@protocol-confirmation",
+            "line": 8
+          },
+          {
+            "name": "@coordination-engine",
+            "line": 8
+          },
+          {
+            "name": "@plan-approval",
+            "line": 19
+          },
+          {
+            "name": "@core-confirmation",
+            "line": 19
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "协议确认协调引擎;emergency_approval紧急协议确认",
+        "keyword": "Scenario",
+        "line": 34,
+        "name": "emergency_approval紧急协议确认",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 182099
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 15,
+            "name": "MPLP协议平台已初始化",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:133"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 119999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "协议确认协调引擎已启动",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:142"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 115299
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 17,
+            "name": "系统处于测试模式",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:150"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 90400
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 35,
+            "name": "我收到emergency_approval紧急协议确认请求",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:234"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 137699
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 36,
+            "name": "协议变更具有critical优先级",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:249"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 120499
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 37,
+            "name": "请求包含emergency_context和urgency_level",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:254"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 138699
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 38,
+            "name": "urgency_level为\"critical\"",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 39,
+            "name": "我处理emergency_approval协议确认",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:259"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 40,
+            "name": "系统应该在50ms内完成紧急协议确认",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:273"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 41,
+            "name": "应该触发快速确认流程",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:278"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 42,
+            "name": "应该通知相关模块紧急协议变更",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:283"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 43,
+            "name": "紧急确认响应时间应该<50ms",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:289"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 44,
+            "name": "应该生成紧急确认审计日志",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 45,
+            "name": "确认状态应该为\"emergency_approved\"",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 75400
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@high-priority",
+            "line": 8
+          },
+          {
+            "name": "@protocol-confirmation",
+            "line": 8
+          },
+          {
+            "name": "@coordination-engine",
+            "line": 8
+          },
+          {
+            "name": "@emergency-approval",
+            "line": 33
+          },
+          {
+            "name": "@critical-priority",
+            "line": 33
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "协议确认协调引擎;task_approval任务协议确认",
+        "keyword": "Scenario",
+        "line": 48,
+        "name": "task_approval任务协议确认",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 63300
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 15,
+            "name": "MPLP协议平台已初始化",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:133"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 132100
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "协议确认协调引擎已启动",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:142"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 97999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 17,
+            "name": "系统处于测试模式",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:150"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 122799
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 49,
+            "name": "我收到task_approval任务协议确认请求",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 50,
+            "name": "请求包含task_id和task_requirements",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 51,
+            "name": "task_id为\"task-workflow-001\"",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 52,
+            "name": "我处理task_approval协议确认",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 53,
+            "name": "系统应该验证任务协议的完整性",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 54,
+            "name": "应该检查任务依赖关系",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 55,
+            "name": "应该在80ms内完成任务协议确认",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 56,
+            "name": "确认结果应该包含task_confirmation_details",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 57,
+            "name": "任务协议确认准确率应该≥95%",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 100399
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@high-priority",
+            "line": 8
+          },
+          {
+            "name": "@protocol-confirmation",
+            "line": 8
+          },
+          {
+            "name": "@coordination-engine",
+            "line": 8
+          },
+          {
+            "name": "@task-approval",
+            "line": 47
+          },
+          {
+            "name": "@workflow-confirmation",
+            "line": 47
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "协议确认协调引擎;milestone_confirmation里程碑协议确认",
+        "keyword": "Scenario",
+        "line": 60,
+        "name": "milestone_confirmation里程碑协议确认",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 65099
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 15,
+            "name": "MPLP协议平台已初始化",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:133"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 91700
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "协议确认协调引擎已启动",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:142"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 73500
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 17,
+            "name": "系统处于测试模式",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:150"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 97199
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 61,
+            "name": "我收到milestone_confirmation里程碑协议确认请求",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 62,
+            "name": "请求包含milestone_id和completion_criteria",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 63,
+            "name": "milestone_id为\"milestone-phase-001\"",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 64,
+            "name": "我处理milestone_confirmation协议确认",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 65,
+            "name": "系统应该验证里程碑完成标准",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 66,
+            "name": "应该检查里程碑依赖项",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 67,
+            "name": "应该在120ms内完成里程碑协议确认",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 68,
+            "name": "确认结果应该包含milestone_validation_report",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 69,
+            "name": "里程碑确认准确率应该≥98%",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 52300
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@high-priority",
+            "line": 8
+          },
+          {
+            "name": "@protocol-confirmation",
+            "line": 8
+          },
+          {
+            "name": "@coordination-engine",
+            "line": 8
+          },
+          {
+            "name": "@milestone-confirmation",
+            "line": 59
+          },
+          {
+            "name": "@progress-validation",
+            "line": 59
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "协议确认协调引擎;risk_acceptance风险协议确认",
+        "keyword": "Scenario",
+        "line": 72,
+        "name": "risk_acceptance风险协议确认",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 130299
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 15,
+            "name": "MPLP协议平台已初始化",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:133"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 132499
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "协议确认协调引擎已启动",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:142"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 109300
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 17,
+            "name": "系统处于测试模式",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:150"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 143900
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 73,
+            "name": "我收到risk_acceptance风险协议确认请求",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 74,
+            "name": "请求包含risk_id和risk_assessment",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 75,
+            "name": "risk_level为\"medium\"",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 76,
+            "name": "我处理risk_acceptance协议确认",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 77,
+            "name": "系统应该评估风险接受标准",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 78,
+            "name": "应该生成风险缓解建议",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 79,
+            "name": "应该在90ms内完成风险协议确认",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 80,
+            "name": "确认结果应该包含risk_mitigation_plan",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 81,
+            "name": "风险确认准确率应该≥92%",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 116899
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@high-priority",
+            "line": 8
+          },
+          {
+            "name": "@protocol-confirmation",
+            "line": 8
+          },
+          {
+            "name": "@coordination-engine",
+            "line": 8
+          },
+          {
+            "name": "@risk-acceptance",
+            "line": 71
+          },
+          {
+            "name": "@risk-management",
+            "line": 71
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "协议确认协调引擎;resource_allocation资源协议确认",
+        "keyword": "Scenario",
+        "line": 84,
+        "name": "resource_allocation资源协议确认",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 63099
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 15,
+            "name": "MPLP协议平台已初始化",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:133"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 121599
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "协议确认协调引擎已启动",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:142"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 99799
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 17,
+            "name": "系统处于测试模式",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:150"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 108099
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 85,
+            "name": "我收到resource_allocation资源协议确认请求",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 86,
+            "name": "请求包含resource_requirements和allocation_strategy",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 87,
+            "name": "资源类型为\"compute_resources\"",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 88,
+            "name": "我处理resource_allocation协议确认",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 89,
+            "name": "系统应该验证资源可用性",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 90,
+            "name": "应该优化资源分配策略",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 91,
+            "name": "应该在110ms内完成资源协议确认",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 92,
+            "name": "确认结果应该包含optimized_allocation_plan",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 93,
+            "name": "资源确认准确率应该≥94%",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 62899
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@high-priority",
+            "line": 8
+          },
+          {
+            "name": "@protocol-confirmation",
+            "line": 8
+          },
+          {
+            "name": "@coordination-engine",
+            "line": 8
+          },
+          {
+            "name": "@resource-allocation",
+            "line": 83
+          },
+          {
+            "name": "@resource-management",
+            "line": 83
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "协议确认协调引擎;6种confirmation_type并发处理",
+        "keyword": "Scenario",
+        "line": 96,
+        "name": "6种confirmation_type并发处理",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 80699
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 15,
+            "name": "MPLP协议平台已初始化",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:133"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 127099
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "协议确认协调引擎已启动",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:142"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 135600
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 17,
+            "name": "系统处于测试模式",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:150"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 106600
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 97,
+            "name": "我同时收到6种不同类型的协议确认请求",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:296"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 162899
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 98,
+            "name": "包含plan_approval、task_approval、milestone_confirmation等",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:311"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 650200
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 99,
+            "name": "每种类型有10个并发请求",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 100,
+            "name": "我启动并发协议确认处理",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:316"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 101,
+            "name": "系统应该根据confirmation_type进行专业化处理",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:333"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 102,
+            "name": "应该在200ms内完成所有类型的协议确认",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:341"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 103,
+            "name": "协议确认协调效率应该达到95%以上",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:346"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 104,
+            "name": "所有确认结果应该保持数据一致性",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 105,
+            "name": "并发处理不应该影响确认准确率",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 107399
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@high-priority",
+            "line": 8
+          },
+          {
+            "name": "@protocol-confirmation",
+            "line": 8
+          },
+          {
+            "name": "@coordination-engine",
+            "line": 8
+          },
+          {
+            "name": "@concurrent-processing",
+            "line": 95
+          },
+          {
+            "name": "@performance-test",
+            "line": 95
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "协议确认协调引擎;高负载协议确认性能测试",
+        "keyword": "Scenario",
+        "line": 108,
+        "name": "高负载协议确认性能测试",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 93200
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 15,
+            "name": "MPLP协议平台已初始化",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:133"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 348700
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "协议确认协调引擎已启动",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:142"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 239000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 17,
+            "name": "系统处于测试模式",
+            "match": {
+              "location": "tests\\bdd\\confirm\\step-definitions\\confirm-steps.ts:150"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 296200
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 109,
+            "name": "系统接收1000个并发协议确认请求",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 110,
+            "name": "请求类型随机分布在6种confirmation_type中",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 111,
+            "name": "系统处理高负载协议确认",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 112,
+            "name": "平均响应时间应该<150ms",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 113,
+            "name": "99%的请求应该在300ms内完成",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 114,
+            "name": "系统吞吐量应该≥500 requests/second",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 115,
+            "name": "错误率应该<1%",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 116,
+            "name": "内存使用应该保持稳定",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 89199
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@high-priority",
+            "line": 8
+          },
+          {
+            "name": "@protocol-confirmation",
+            "line": 8
+          },
+          {
+            "name": "@coordination-engine",
+            "line": 8
+          },
+          {
+            "name": "@performance-benchmark",
+            "line": 107
+          },
+          {
+            "name": "@load-testing",
+            "line": 107
+          }
+        ],
+        "type": "scenario"
+      }
+    ],
+    "id": "协议确认协调引擎",
+    "line": 9,
+    "keyword": "Feature",
+    "name": "协议确认协调引擎",
+    "tags": [
+      {
+        "name": "@high-priority",
+        "line": 8
+      },
+      {
+        "name": "@protocol-confirmation",
+        "line": 8
+      },
+      {
+        "name": "@coordination-engine",
+        "line": 8
+      }
+    ],
+    "uri": "tests\\bdd\\confirm\\features\\protocol-confirmation-coordination.feature"
+  }
+]

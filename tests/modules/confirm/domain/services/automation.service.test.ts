@@ -26,7 +26,8 @@ import { ConfirmEventManager } from '../../../../../src/modules/confirm/domain/s
 import { NotificationService } from '../../../../../src/modules/confirm/domain/services/notification.service';
 import { EventPushService } from '../../../../../src/modules/confirm/domain/services/event-push.service';
 import { Confirm } from '../../../../../src/modules/confirm/domain/entities/confirm.entity';
-import { ConfirmStatus, Priority, ConfirmationType, RiskLevel } from '../../../../../src/modules/confirm/types';
+import { ConfirmEntityData } from '../../../../../src/modules/confirm/api/mappers/confirm.mapper';
+import { ConfirmStatus, Priority, ConfirmationType, RiskLevel, StepStatus } from '../../../../../src/modules/confirm/types';
 import { TestDataFactory } from '../../../../test-utils/test-data-factory';
 
 describe('AutomationService - 协议级测试', () => {
@@ -440,30 +441,30 @@ describe('AutomationService - 协议级测试', () => {
  * 创建测试用的Confirm实例
  */
 function createTestConfirm(
-  id: string, 
+  id: string,
   priority: Priority = Priority.MEDIUM,
   status: ConfirmStatus = ConfirmStatus.PENDING,
   confirmationType: ConfirmationType = ConfirmationType.TASK_APPROVAL
 ): Confirm {
-  return new Confirm(
-    id as any, // confirmId
-    TestDataFactory.generateUUID(), // contextId
-    '1.0.0', // protocolVersion
-    confirmationType, // confirmationType
-    status, // status
-    priority, // priority
-    { // subject
+  const confirmData: ConfirmEntityData = {
+    protocolVersion: '1.0.0',
+    timestamp: new Date(),
+    confirmId: id,
+    contextId: TestDataFactory.generateUUID(),
+    confirmationType: confirmationType,
+    status: status,
+    priority: priority,
+    subject: {
       title: `Test Confirm ${id}`,
       description: 'Test description for automation',
       impactAssessment: {
-        businessImpact: 'low',
-        technicalImpact: 'low',
+        businessImpact: 'Low impact',
+        technicalImpact: 'Low impact',
         riskLevel: RiskLevel.LOW,
         impactScope: ['test-system'],
-        estimatedCost: 5000
-      }
+      },
     },
-    { // requester
+    requester: {
       userId: 'test-user',
       name: 'Test User',
       role: 'developer',
@@ -471,23 +472,56 @@ function createTestConfirm(
       department: 'engineering',
       requestReason: 'Testing automation functionality'
     },
-    { // approvalWorkflow
+    approvalWorkflow: {
       workflowType: 'consensus',
-      steps: [],
+      steps: [{
+        stepId: 'step-1',
+        name: 'Test Approval',
+        stepOrder: 1,
+        level: 1,
+        approvers: priority === Priority.HIGH || priority === Priority.URGENT ? [
+          {
+            approverId: 'approver-1',
+            name: 'Test Approver 1',
+            role: 'approver',
+            email: 'approver1@example.com',
+            priority: 1,
+            isActive: true,
+          },
+          {
+            approverId: 'approver-2',
+            name: 'Test Approver 2',
+            role: 'approver',
+            email: 'approver2@example.com',
+            priority: 2,
+            isActive: true,
+          }
+        ] : [{
+          approverId: 'approver-1',
+          name: 'Test Approver',
+          role: 'approver',
+          email: 'approver@example.com',
+          priority: 1,
+          isActive: true,
+        }],
+        status: StepStatus.PENDING,
+        timeoutHours: 24,
+      }],
+      requireAllApprovers: false,
+      allowDelegation: true,
       autoApprovalRules: {
         enabled: false,
-        conditions: []
       }
     },
-    new Date().toISOString(), // createdAt
-    new Date().toISOString(), // updatedAt
-    TestDataFactory.generateUUID(), // planId (optional)
-    undefined, // decision (optional)
-    new Date(Date.now() + 3600000).toISOString(), // expires_at (optional)
-    { // metadata (optional)
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    expiresAt: new Date(Date.now() + 3600000),
+    metadata: {
       source: 'test',
       tags: ['automation-test'],
       customFields: {}
     }
-  );
+  };
+
+  return new Confirm(confirmData);
 }

@@ -10,6 +10,7 @@
 import { Context } from '../entities/context.entity';
 import { ContextLifecycleStage } from '../../../../public/shared/types/context-types';
 import { EntityStatus } from '../../../../public/shared/types';
+import { ContextStatus } from '../../types';
 
 /**
  * 验证错误
@@ -152,25 +153,37 @@ export class ContextValidationService {
     const nameError = this.validateName(context.name);
     if (nameError) errors.push(nameError);
     
-    const descriptionError = this.validateDescription(context.description);
+    const descriptionError = this.validateDescription(context.description || null);
     if (descriptionError) errors.push(descriptionError);
     
-    const lifecycleError = this.validateLifecycleStage(context.lifecycleStage);
+    const lifecycleError = this.validateLifecycleStage(context.lifecycleStage || 'planning');
     if (lifecycleError) errors.push(lifecycleError);
     
     const statusError = this.validateStatus(context.status);
     if (statusError) errors.push(statusError);
     
-    // 验证会话ID数量是否超过配置限制
-    if (context.configuration && 
-        typeof context.configuration.maxSessions === 'number' && 
-        context.sessionIds.length > context.configuration.maxSessions) {
-      errors.push({
-        field: 'sessionIds',
-        message: `Number of sessions (${context.sessionIds.length}) exceeds configured maximum (${context.configuration.maxSessions})`
-      });
+    // 验证配置完整性
+    if (context.configuration) {
+      // 验证配置对象的基本结构
+      if (typeof context.configuration !== 'object') {
+        errors.push({
+          field: 'configuration',
+          message: 'Configuration must be an object'
+        });
+      }
+
+      // 验证session count限制
+      if (context.configuration.maxSessions &&
+          typeof context.configuration.maxSessions === 'number' &&
+          context.sessionIds &&
+          context.sessionIds.length > context.configuration.maxSessions) {
+        errors.push({
+          field: 'sessionIds',
+          message: `Number of sessions (${context.sessionIds.length}) exceeds configured maximum (${context.configuration.maxSessions})`
+        });
+      }
     }
-    
+
     return errors;
   }
   
@@ -179,7 +192,7 @@ export class ContextValidationService {
    */
   validateDeletion(context: Context): ValidationError | null {
     // 已经处于deleted状态的Context不能再次删除
-    if (context.status === 'deleted') {
+    if (context.status === ContextStatus.TERMINATED) {
       return {
         field: 'status',
         message: 'Context is already deleted'

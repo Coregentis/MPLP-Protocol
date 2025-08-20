@@ -567,7 +567,7 @@ export class AutomationService implements IAutomationService {
   /**
    * 计算置信度
    */
-  private async calculateConfidence(rule: AutomationRule, confirm: Confirm): Promise<number> {
+  private async calculateConfidence(_rule: AutomationRule, confirm: Confirm): Promise<number> {
     let confidence = 0.5; // 基础置信度
 
     // 基于超时状态调整置信度
@@ -643,7 +643,7 @@ export class AutomationService implements IAutomationService {
    * 执行自动批准
    */
   private async executeAutoApprove(confirm: Confirm, decision: AutomationDecisionResult): Promise<void> {
-    await confirm.updateStatus(ConfirmStatus.APPROVED);
+    confirm.updateStatus(ConfirmStatus.APPROVED);
     
     await this.eventManager.emitEvent(ConfirmEventType.CONFIRMATION_APPROVED, {
       eventType: ConfirmEventType.CONFIRMATION_APPROVED,
@@ -665,7 +665,7 @@ export class AutomationService implements IAutomationService {
    * 执行自动拒绝
    */
   private async executeAutoReject(confirm: Confirm, decision: AutomationDecisionResult): Promise<void> {
-    await confirm.updateStatus(ConfirmStatus.REJECTED);
+    confirm.updateStatus(ConfirmStatus.REJECTED);
     
     await this.eventManager.emitEvent(ConfirmEventType.CONFIRMATION_REJECTED, {
       eventType: ConfirmEventType.CONFIRMATION_REJECTED,
@@ -728,7 +728,7 @@ export class AutomationService implements IAutomationService {
    */
   private async executeExtendDeadline(confirm: Confirm, decision: AutomationDecisionResult): Promise<void> {
     const extensionMs = (decision.parameters?.extensionMs as number) || (24 * 60 * 60 * 1000); // 默认延长24小时
-    const currentExpiry = confirm.expires_at ? new Date(confirm.expires_at) : new Date(Date.now() + 24 * 60 * 60 * 1000);
+    const currentExpiry = confirm.expiresAt ? new Date(confirm.expiresAt) : new Date(Date.now() + 24 * 60 * 60 * 1000);
     const newExpiry = new Date(currentExpiry.getTime() + extensionMs);
     
     // TODO: 实现更新过期时间的方法
@@ -754,7 +754,7 @@ export class AutomationService implements IAutomationService {
    * 执行取消
    */
   private async executeCancel(confirm: Confirm, decision: AutomationDecisionResult): Promise<void> {
-    await confirm.cancel();
+    confirm.cancel();
     
     await this.eventManager.emitEvent(ConfirmEventType.CONFIRMATION_CANCELLED, {
       eventType: ConfirmEventType.CONFIRMATION_CANCELLED,

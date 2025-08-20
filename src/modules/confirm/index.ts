@@ -20,7 +20,7 @@ export * from './application/services/confirm-management.service';
 
 // 领域层
 export * from './domain/entities/confirm.entity';
-export * from './domain/repositories/confirm-repository.interface';
+export { IConfirmRepository } from './domain/repositories/confirm-repository.interface';
 
 // 基础设施层
 export * from './infrastructure/repositories/confirm.repository';

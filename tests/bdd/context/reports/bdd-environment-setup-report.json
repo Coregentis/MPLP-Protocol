@@ -1,0 +1,24 @@
+{
+  "timestamp": "2025-08-15T04:47:04.989Z",
+  "module": "context",
+  "result": {
+    "success": true,
+    "setupResults": [
+      "目录已存在: tests/bdd/context",
+      "目录已存在: tests/bdd/context/reports",
+      "创建目录: tests/bdd/context/fixtures",
+      "创建目录: tests/bdd/context/helpers",
+      "目录已存在: scripts/validation",
+      "目录已存在: scripts/test",
+      "目录已存在: scripts/monitoring",
+      "创建BDD配置: tests/bdd/context/bdd.config.json",
+      "创建测试数据工厂: tests/bdd/context/helpers/context-test-data-factory.js",
+      "创建BDD测试助手: tests/bdd/context/helpers/bdd-test-helpers.js",
+      "验证文件存在: tests/bdd/context/bdd.config.json",
+      "验证文件存在: tests/bdd/context/helpers/context-test-data-factory.js",
+      "验证文件存在: tests/bdd/context/helpers/bdd-test-helpers.js",
+      "验证BDD依赖包: 可用"
+    ],
+    "errors": []
+  }
+}

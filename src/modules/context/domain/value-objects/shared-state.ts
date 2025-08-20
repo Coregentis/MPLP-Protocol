@@ -327,29 +327,29 @@ export class SharedState {
   static fromSchemaFormat(data: Record<string, unknown>): SharedState {
     const variables = (data.variables as Record<string, unknown>) || {};
     
-    const resources = data.resources as any || {};
-    const allocatedResources = resources.allocated || {};
-    const resourceRequirements = resources.requirements || {};
-    
-    const dependencies = (data.dependencies as any[] || []).map(dep => ({
-      id: dep.id,
+    const resources = data.resources as Record<string, unknown> || {};
+    const allocatedResources = (resources.allocated as Record<string, Resource>) || {};
+    const resourceRequirements = (resources.requirements as Record<string, ResourceRequirement>) || {};
+
+    const dependencies = (data.dependencies as Record<string, unknown>[] || []).map(dep => ({
+      id: dep.id as string,
       type: dep.type as DependencyType,
-      name: dep.name,
-      version: dep.version,
+      name: dep.name as string,
+      version: dep.version as string,
       status: dep.status as DependencyStatus
     }));
     
-    const goals = (data.goals as any[] || []).map(goal => ({
-      id: goal.id,
-      name: goal.name,
-      description: goal.description,
+    const goals = (data.goals as Record<string, unknown>[] || []).map(goal => ({
+      id: goal.id as string,
+      name: goal.name as string,
+      description: goal.description as string,
       priority: goal.priority as Priority,
       status: goal.status as GoalStatus,
-      successCriteria: (goal.success_criteria || []).map((criteria: any) => ({
-        metric: criteria.metric,
+      successCriteria: (goal.success_criteria as Record<string, unknown>[] || []).map((criteria: Record<string, unknown>) => ({
+        metric: criteria.metric as string,
         operator: criteria.operator as SuccessCriteriaOperator,
-        value: criteria.value,
-        unit: criteria.unit
+        value: criteria.value as string | number | boolean,
+        unit: criteria.unit as string
       }))
     }));
 

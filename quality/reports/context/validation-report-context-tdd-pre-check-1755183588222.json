@@ -1,0 +1,48 @@
+{
+  "module": "context",
+  "validation_type": "tdd-pre-check",
+  "timestamp": "2025-08-14T14:59:48.221Z",
+  "config_version": "1.0.0",
+  "execution_log": [
+    {
+      "check": "TDD重构前质量基线检查",
+      "command": "node scripts/tdd/tdd-quality-enforcer.js pre-check context",
+      "status": "failed",
+      "duration": 6684,
+      "error": "spawnSync C:\\WINDOWS\\system32\\cmd.exe ENOBUFS",
+      "output": "🔍 TDD重构前检查: context模块\n"
+    },
+    {
+      "check": "Schema合规性验证",
+      "command": "npm run validate:schemas",
+      "status": "success",
+      "duration": 2642,
+      "output": "\n> mplp@1.0.0 validate:schemas\n> ts-node src/tools/schema-validator/cli/validator-cli.ts check-syntax\n\n🔍 MPLP Schema Syntax Validation\n================================\nValidating directory: src/schemas\n\n================================================================================\nMPLP Schema Validation Report\n================================================================================\nGenerated: 2025-08-14T14:59:45.053Z\nReport Version: 1.1.0\n\nSUMMARY\n-------------------------------------"
+    },
+    {
+      "check": "双重命名约定验证",
+      "command": "npm run validate:naming",
+      "status": "success",
+      "duration": 351,
+      "output": "\n> mplp@1.0.0 validate:naming\n> node scripts/validation/naming-convention-validator.js\n\n🔍 验证双重命名约定...\n\n========================================\n📊 命名约定验证结果\n========================================\n❌ 违规数量: 0\n⚠️ 警告数量: 0\n\n✅ 命名约定验证通过！\n========================================\n\n"
+    },
+    {
+      "check": "CircleCI配置验证",
+      "command": "npm run circleci:validate",
+      "status": "success",
+      "duration": 2780,
+      "output": "\n> mplp@1.0.0 circleci:validate\n> ts-node scripts/validate-circleci-config.ts\n\n[2025-08-14T14:59:48.177Z] [INFO] [CircleCIConfigValidator]: 🔍 验证CircleCI配置...\n[2025-08-14T14:59:48.188Z] [INFO] [CircleCIConfigValidator]: \n📊 CircleCI配置验证结果:\n[2025-08-14T14:59:48.188Z] [INFO] [CircleCIConfigValidator]: ✅ 配置验证通过\n[2025-08-14T14:59:48.188Z] [INFO] [CircleCIConfigValidator]: \n💡 建议:\n[2025-08-14T14:59:48.188Z] [INFO] [CircleCIConfigValidator]:   • 考虑使用缓存提高构建速度\n[2025-08-14T14:59:48.188Z] [INFO] [CircleCI"
+    }
+  ],
+  "violations": [
+    "TDD重构前检查: TDD重构前质量基线检查 - spawnSync C:\\WINDOWS\\system32\\cmd.exe ENOBUFS"
+  ],
+  "warnings": [],
+  "summary": {
+    "total_checks": 4,
+    "passed_checks": 3,
+    "failed_checks": 1,
+    "total_duration": 12457,
+    "quality_score": 65
+  }
+}

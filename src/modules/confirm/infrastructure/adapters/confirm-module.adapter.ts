@@ -1,22 +1,30 @@
 /**
- * Confirm模块适配器
+ * 企业级审批和决策协调模块适配器
  *
- * 实现Core模块的ModuleInterface接口，提供确认和审批流程功能
+ * 实现Core模块的ModuleInterface接口，提供企业级确认和审批流程功能
+ * 支持5种审批工作流、AI集成、风险评估等企业级功能
+ * 基于完整的Schema定义实现MPLP生态系统集成
  *
- * @version 2.0.0
- * @created 2025-08-04
- * @updated 2025-08-04 23:32
+ * @version 3.0.0
+ * @created 2025-08-18
+ * @updated 2025-08-18
  */
 
 /**
- * 业务数据载荷接口
+ * 企业级业务数据载荷接口
  */
 interface BusinessPayload {
-  confirmation_strategy?: 'manual' | 'automatic' | 'conditional' | 'multi_stage';
-  approval_type?: string;
+  confirmation_strategy?: 'single_approver' | 'sequential' | 'parallel' | 'consensus' | 'escalation';
+  approval_type?: 'plan_approval' | 'task_approval' | 'milestone_confirmation' | 'risk_acceptance' | 'resource_allocation' | 'emergency_approval';
   approvers?: string[];
-  approvalCriteria?: Record<string, unknown>;
-  contextId?: UUID;
+  approval_criteria?: Record<string, unknown>;
+  context_id?: string;
+  plan_id?: string;
+  priority?: 'low' | 'normal' | 'high' | 'urgent' | 'critical';
+  risk_level?: 'low' | 'medium' | 'high' | 'critical';
+  compliance_requirements?: string[];
+  ai_analysis_enabled?: boolean;
+  performance_monitoring_enabled?: boolean;
   [key: string]: unknown;
 }
 
@@ -38,17 +46,15 @@ import {
   ErrorHandlingResult
 } from '../../../../public/modules/core/types/core.types';
 import { ConfirmManagementService } from '../../application/services/confirm-management.service';
-import { ConfirmFactory, CreateConfirmRequest } from '../../domain/factories/confirm.factory';
-import { ConfirmValidationService } from '../../domain/services/confirm-validation.service';
+import { ConfirmMapper, ConfirmEntityData } from '../../api/mappers/confirm.mapper';
+import { CreateConfirmRequestDto } from '../../api/dto/confirm.dto';
 import { Logger } from '../../../../public/utils/logger';
 import {
   ConfirmationType,
   Priority,
   UUID,
   Timestamp,
-  RiskLevel,
-  ApprovalStep,
-  StepStatus
+  RiskLevel
 } from '../../types';
 
 /**
@@ -65,9 +71,7 @@ export class ConfirmModuleAdapter implements ModuleInterface {
   };
 
   constructor(
-    private confirmManagementService: ConfirmManagementService,
-    private confirmFactory: ConfirmFactory,
-    private confirmValidationService: ConfirmValidationService
+    private confirmManagementService: ConfirmManagementService
   ) {}
 
   /**
@@ -76,11 +80,16 @@ export class ConfirmModuleAdapter implements ModuleInterface {
   async initialize(): Promise<void> {
     try {
       this.logger.info('Initializing Confirm module adapter');
-      
+
       // 检查服务是否可用
-      if (!this.confirmManagementService || !this.confirmFactory || !this.confirmValidationService) {
-        throw new Error('Confirm services not available');
+      if (!this.confirmManagementService) {
+        throw new Error('Confirm management service not available');
       }
+
+      // 启用企业级功能
+      this.confirmManagementService.enableAIAnalysis();
+      this.confirmManagementService.enableComplianceCheck();
+      this.confirmManagementService.enablePerformanceMonitoring();
 
       this.moduleStatus.status = 'initialized';
       this.logger.info('Confirm module adapter initialized successfully');
@@ -208,8 +217,11 @@ export class ConfirmModuleAdapter implements ModuleInterface {
     // 根据策略生成确认数据
     const confirmData = await this.generateConfirmData(request);
 
+    // 转换为CreateConfirmRequestDto
+    const createRequest = this.convertToCreateRequest(confirmData);
+
     // 创建确认
-    const createResult = await this.confirmManagementService.createConfirm(confirmData);
+    const createResult = await this.confirmManagementService.createConfirm(createRequest);
     if (!createResult.success || !createResult.data) {
       throw new Error(`Failed to create confirmation: ${createResult.error}`);
     }
@@ -232,23 +244,24 @@ export class ConfirmModuleAdapter implements ModuleInterface {
   /**
    * 生成确认数据
    */
-  private async generateConfirmData(request: ConfirmationCoordinationRequest): Promise<CreateConfirmRequest> {
+  private async generateConfirmData(request: ConfirmationCoordinationRequest): Promise<ConfirmEntityData> {
     const confirmationType = this.mapStrategyToConfirmationType(request.confirmation_strategy);
     const priority = this.determinePriority(request);
 
-    return {
+    // 使用ConfirmMapper创建默认的确认数据
+    const confirmData = ConfirmMapper.createDefaultEntityData({
       contextId: request.contextId,
       confirmationType: confirmationType,
-      priority: priority,
+      priority: this.mapPriorityToEnum(priority),
       subject: {
         title: `Confirmation for ${request.confirmation_strategy} strategy`,
         description: `Confirmation request created using ${request.confirmation_strategy} strategy`,
         impactAssessment: {
-          businessImpact: 'medium',
-          technicalImpact: 'low',
+          businessImpact: 'Medium impact',
+          technicalImpact: 'Medium impact',
           riskLevel: RiskLevel.MEDIUM,
-          impactScope: ['core-orchestrator', 'system']
-        }
+          impactScope: ['system'],
+        },
       },
       requester: {
         userId: 'core-orchestrator',
@@ -256,29 +269,44 @@ export class ConfirmModuleAdapter implements ModuleInterface {
         role: 'system',
         email: 'core@system.com',
         department: 'core',
-        requestReason: `Coordination request using ${request.confirmation_strategy} strategy`
       },
       approvalWorkflow: {
-        workflowType: request.confirmation_strategy === 'multi_stage' ? 'sequential' :
-                      request.approvalWorkflow?.parallel_approval ? 'parallel' : 'consensus',
-        steps: this.generateApprovalSteps(request),
-        autoApprovalRules: request.confirmation_strategy === 'automatic' ? {
-          enabled: true,
-          conditions: ['system_request']
-        } : undefined
+        workflowType: this.mapStrategyToWorkflowType(request.confirmation_strategy),
+        steps: [],
       },
       expiresAt: request.parameters.timeoutMs ?
-        new Date(Date.now() + (request.parameters.timeoutMs as number)).toISOString() : undefined,
-      metadata: {
-        source: 'core-orchestrator',
-        tags: [request.confirmation_strategy, 'coordination'],
-        customFields: {
-          strategy: request.confirmation_strategy,
-          auto_approval: request.confirmation_strategy === 'automatic',
-          conditional_rules: request.parameters.approval_rules || []
-        }
-      }
-    };
+        new Date(Date.now() + (request.parameters.timeoutMs as number)) : undefined,
+    });
+
+    return confirmData;
+  }
+
+  /**
+   * 映射策略到工作流类型
+   */
+  private mapStrategyToWorkflowType(strategy: string): 'sequential' | 'parallel' | 'consensus' {
+    switch (strategy) {
+      case 'manual':
+        return 'sequential';
+      case 'automatic':
+        return 'sequential';
+      case 'conditional':
+        return 'consensus';
+      case 'multi_stage':
+        return 'sequential';
+      case 'single_approver':
+        return 'sequential';  // 映射到sequential
+      case 'sequential':
+        return 'sequential';
+      case 'parallel':
+        return 'parallel';
+      case 'consensus':
+        return 'consensus';
+      case 'escalation':
+        return 'sequential';  // 映射到sequential
+      default:
+        return 'sequential';
+    }
   }
 
   /**
@@ -457,39 +485,7 @@ export class ConfirmModuleAdapter implements ModuleInterface {
     return true;
   }
 
-  /**
-   * 生成审批步骤
-   */
-  private generateApprovalSteps(request: ConfirmationCoordinationRequest): ApprovalStep[] {
-    const approvers = request.approvalWorkflow?.required_approvers || ['system'];
-    const steps: ApprovalStep[] = [];
 
-    if (request.confirmation_strategy === 'multi_stage') {
-      // 多阶段：每个审批者一个步骤
-      approvers.forEach((approver, index) => {
-        steps.push({
-          stepId: `step_${index + 1}`,
-          name: `Stage ${index + 1} Approval`,
-          stepOrder: index + 1,
-          approverRole: approver,
-          timeoutHours: 1,
-          status: StepStatus.PENDING
-        });
-      });
-    } else {
-      // 单阶段：所有审批者在一个步骤中
-      steps.push({
-        stepId: 'step_1',
-        name: 'Single Stage Approval',
-        stepOrder: 1,
-        approverRole: approvers[0] || 'system',
-        timeoutHours: Math.ceil((typeof request.parameters.timeoutMs === 'number' ? request.parameters.timeoutMs : 3600000) / (1000 * 60 * 60)),
-        status: StepStatus.PENDING
-      });
-    }
-
-    return steps;
-  }
 
   /**
    * P0修复：执行工作流阶段
@@ -544,9 +540,27 @@ export class ConfirmModuleAdapter implements ModuleInterface {
     try {
       // 转换为原有的确认请求格式
       const payload = request.input_data.payload as BusinessPayload;
+
+      // 转换BusinessPayload的confirmation_strategy到ConfirmationCoordinationRequest的格式
+      const mapConfirmationStrategy = (strategy?: string): 'manual' | 'automatic' | 'conditional' | 'multi_stage' => {
+        switch (strategy) {
+          case 'single_approver':
+          case 'manual':
+            return 'manual';
+          case 'sequential':
+          case 'escalation':
+            return 'multi_stage';
+          case 'parallel':
+          case 'consensus':
+            return 'conditional';
+          default:
+            return 'manual';
+        }
+      };
+
       const confirmRequest: ConfirmationCoordinationRequest = {
         contextId: request.contextId,
-        confirmation_strategy: payload?.confirmation_strategy || 'manual',
+        confirmation_strategy: mapConfirmationStrategy(payload?.confirmation_strategy),
         parameters: {
           approval_type: payload?.approval_type || 'manual',
           approvers: payload?.approvers || ['default-approver'],
@@ -685,6 +699,73 @@ export class ConfirmModuleAdapter implements ModuleInterface {
     return {
       handled: true,
       recovery_action: recoveryAction
+    };
+  }
+
+  /**
+   * 映射优先级字符串到Priority枚举
+   */
+  private mapPriorityToEnum(priority: string): Priority {
+    switch (priority) {
+      case 'low':
+        return Priority.LOW;
+      case 'medium':
+        return Priority.MEDIUM;
+      case 'high':
+        return Priority.HIGH;
+      case 'urgent':
+        return Priority.URGENT;
+      default:
+        return Priority.MEDIUM;
+    }
+  }
+
+  /**
+   * 转换ConfirmEntityData为CreateConfirmRequestDto
+   */
+  private convertToCreateRequest(entityData: ConfirmEntityData): CreateConfirmRequestDto {
+    return {
+      contextId: entityData.contextId,
+      planId: entityData.planId,
+      confirmationType: entityData.confirmationType,
+      priority: entityData.priority,
+      subject: {
+        title: entityData.subject.title,
+        description: entityData.subject.description,
+        impactAssessment: `${entityData.subject.impactAssessment.businessImpact}; ${entityData.subject.impactAssessment.technicalImpact}`,
+        riskLevel: entityData.subject.impactAssessment.riskLevel,
+      },
+      requester: {
+        userId: entityData.requester.userId,
+        name: entityData.requester.name,
+        role: entityData.requester.role,
+        department: entityData.requester.department,
+        contactInfo: {
+          email: entityData.requester.email,
+        },
+      },
+      approvalWorkflow: {
+        workflowType: entityData.approvalWorkflow.workflowType || 'sequential',
+        currentStep: 1,
+        totalSteps: Math.max(1, entityData.approvalWorkflow.steps.length),
+        steps: entityData.approvalWorkflow.steps.map(step => ({
+          stepId: step.stepId,
+          stepName: step.name,
+          approverId: step.approvers?.[0]?.approverId || 'system',
+          approverName: step.approvers?.[0]?.name || 'System',
+          approverRole: step.approvers?.[0]?.role || step.approverRole || 'system',
+          status: step.status,
+          decisionDeadline: step.startedAt,
+          comments: undefined,
+          decidedAt: step.completedAt,
+        })),
+      },
+      expiresAt: entityData.expiresAt?.toISOString(),
+      notificationSettings: {
+        enabled: true,
+        channels: ['email'],
+        stakeholders: [],
+      },
     };
   }
 }

@@ -39,6 +39,7 @@ describe('ContextManagementService', () => {
     mockContextRepository = {
       save: jest.fn(),
       findById: jest.fn(),
+      findByName: jest.fn(),
       findByFilter: jest.fn(),
       delete: jest.fn(),
       exists: jest.fn()
@@ -76,10 +77,8 @@ describe('ContextManagementService', () => {
     // 创建服务实例
     contextManagementService = new ContextManagementService(
       mockContextRepository,
-      mockContextFactory,
       mockValidationService,
-      mockSharedStateService,
-      mockAccessControlService
+      mockContextFactory
     );
   });
 
@@ -106,6 +105,7 @@ describe('ContextManagementService', () => {
       // Arrange
       mockContextFactory.createContext.mockReturnValue(mockContext);
       mockValidationService.validateContext.mockReturnValue([]);
+      mockContextRepository.findByName.mockResolvedValue(null); // 名称不存在
       mockContextRepository.save.mockResolvedValue(undefined);
 
       // Act
@@ -116,6 +116,7 @@ describe('ContextManagementService', () => {
       expect(result.data).toBe(mockContext);
       expect(mockContextFactory.createContext).toHaveBeenCalledWith(mockCreateParams);
       expect(mockValidationService.validateContext).toHaveBeenCalledWith(mockContext);
+      expect(mockContextRepository.findByName).toHaveBeenCalledWith(mockCreateParams.name);
       expect(mockContextRepository.save).toHaveBeenCalledWith(mockContext);
     });
 
@@ -126,6 +127,7 @@ describe('ContextManagementService', () => {
       ];
       mockContextFactory.createContext.mockReturnValue(mockContext);
       mockValidationService.validateContext.mockReturnValue(validationErrors);
+      mockContextRepository.findByName.mockResolvedValue(null);
 
       // Act
       const result = await contextManagementService.createContext(mockCreateParams);
@@ -141,6 +143,7 @@ describe('ContextManagementService', () => {
       const saveError = new Error('Database connection failed');
       mockContextFactory.createContext.mockReturnValue(mockContext);
       mockValidationService.validateContext.mockReturnValue([]);
+      mockContextRepository.findByName.mockResolvedValue(null);
       mockContextRepository.save.mockRejectedValue(saveError);
 
       // Act

@@ -1,415 +1,516 @@
 /**
- * Context仓库实现
- * 
- * 实现领域仓库接口，提供Context的持久化操作
- * 
+ * Context Repository实现 - MPLP v1.0 内存存储
+ *
+ * 基于内存的Context仓库实现
+ * 支持完整的14个功能域
+ *
  * @version 1.0.0
- * @created 2025-09-16
+ * @updated 2025-08-14
  */
 
-// 从具体路径导入TypeORM组件
-import { Repository } from 'typeorm/repository/Repository';
-import { DataSource } from 'typeorm/data-source/DataSource';
-import { SelectQueryBuilder } from 'typeorm/query-builder/SelectQueryBuilder';
-import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
-import { DeleteResult } from 'typeorm/query-builder/result/DeleteResult';
-import { UUID, EntityStatus, PaginationParams, PaginatedResult } from '../../../../public/shared/types';
-import { ContextLifecycleStage } from '../../../../public/shared/types/context-types';
+import { UUID } from '../../../../public/shared/types';
 import { Context } from '../../domain/entities/context.entity';
-import { IContextRepository, ContextFilter, ContextSortField } from '../../domain/repositories/context-repository.interface';
-import { ContextEntity, ContextEntitySchema } from '../persistence/context.entity';
-import { Logger } from '../../../../public/utils/logger';
+import {
+  IContextRepository,
+  ContextFilter,
+  ContextSortField,
+  PaginationParams,
+  PaginatedResult
+} from '../../domain/repositories/context-repository.interface';
 
 /**
- * Context仓库实现
+ * 内存Context仓库实现 - MPLP v1.0
  */
 export class ContextRepository implements IContextRepository {
-  private readonly logger = new Logger('ContextRepository');
-  private repository: Repository<ContextEntity>;
-  
-  /**
-   * 构造函数
-   */
-  constructor(private readonly dataSource: DataSource) {
-    this.repository = dataSource.getRepository<ContextEntity>(ContextEntitySchema);
-  }
-  
+  private contexts: Map<UUID, Context> = new Map();
+
   /**
    * 通过ID查找Context
    */
   async findById(id: UUID): Promise<Context | null> {
-    this.logger.debug('Finding context by ID', { contextId: id });
-    
-    try {
-      const where: FindOptionsWhere<ContextEntity> = { context_id: id } as FindOptionsWhere<ContextEntity>;
-      
-      const entity = await this.repository.findOne({
-        where
-      });
-      
-      if (!entity) {
-        return null;
-      }
-      
-      return this.mapToDomain(entity);
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error('Error finding context by ID', { error, contextId: id });
-      throw new Error(`Failed to find context: ${errorMessage}`);
-    }
+    const context = this.contexts.get(id);
+    return context ? context.clone() : null;
   }
 
   /**
    * 保存Context
    */
   async save(context: Context): Promise<void> {
-    this.logger.debug('Saving context', { contextId: context.contextId });
-
-    try {
-      const entity = this.mapToEntity(context);
-      await this.repository.save(entity);
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error('Error saving context', { error, contextId: context.contextId });
-      throw new Error(`Failed to save context: ${errorMessage}`);
-    }
+    this.contexts.set(context.contextId, context.clone());
   }
-  
+
   /**
    * 删除Context
    */
-  async delete(id: UUID): Promise<boolean> {
-    this.logger.debug('Deleting context', { contextId: id });
-    
-    try {
-      const where: FindOptionsWhere<ContextEntity> = { context_id: id } as FindOptionsWhere<ContextEntity>;
-      const result: DeleteResult = await this.repository.delete(where);
-      return !!result.affected && result.affected > 0;
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error('Error deleting context', { error, contextId: id });
-      throw new Error(`Failed to delete context: ${errorMessage}`);
-    }
-  }
-  
-  /**
-   * 通过过滤条件查找Context
-   */
-  async findByFilter(
-    filter: ContextFilter, 
-    pagination: PaginationParams,
-    sortField?: ContextSortField,
-    sortOrder?: 'asc' | 'desc'
-  ): Promise<PaginatedResult<Context>> {
-    this.logger.debug('Finding contexts by filter', { filter, pagination });
-    
-    try {
-      const queryBuilder = this.repository.createQueryBuilder('context') as SelectQueryBuilder<ContextEntity>;
-      
-      // 应用过滤条件
-      if (filter.name) {
-        queryBuilder.andWhere('context.name LIKE :name', { name: `%${filter.name}%` });
-      }
-      
-      if (filter.status) {
-        queryBuilder.andWhere('context.status = :status', { status: filter.status });
-      }
-      
-      if (filter.lifecycleStage) {
-        queryBuilder.andWhere('context.lifecycleStage = :lifecycleStage', { 
-          lifecycleStage: filter.lifecycleStage 
-        });
-      }
-      
-      if (filter.createdAfter) {
-        queryBuilder.andWhere('context.createdAt >= :createdAfter', { 
-          createdAfter: filter.createdAfter 
-        });
-      }
-      
-      if (filter.createdBefore) {
-        queryBuilder.andWhere('context.createdAt <= :createdBefore', { 
-          createdBefore: filter.createdBefore 
-        });
-      }
-      
-      if (filter.updatedAfter) {
-        queryBuilder.andWhere('context.updatedAt >= :updatedAfter', { 
-          updatedAfter: filter.updatedAfter 
-        });
-      }
-      
-      if (filter.updatedBefore) {
-        queryBuilder.andWhere('context.updatedAt <= :updatedBefore', { 
-          updatedBefore: filter.updatedBefore 
-        });
-      }
-      
-      if (filter.hasSessionId) {
-        queryBuilder.andWhere("context.session_ids LIKE :sessionId", { 
-          sessionId: `%${filter.hasSessionId}%` 
-        });
-      }
-      
-      if (filter.hasSharedStateId) {
-        queryBuilder.andWhere("context.shared_state_ids LIKE :sharedStateId", { 
-          sharedStateId: `%${filter.hasSharedStateId}%` 
-        });
-      }
-      
-      // 应用排序
-      const orderField = this.mapSortFieldToColumn(sortField || 'createdAt');
-      queryBuilder.orderBy(`context.${orderField}`, sortOrder?.toUpperCase() as 'ASC' | 'DESC' || 'DESC');
-      
-      // 应用分页
-      const page = pagination.page || 1;
-      const limit = pagination.limit || 10;
-      const skip = (page - 1) * limit;
-      
-      queryBuilder.skip(skip).take(limit);
-      
-      // 执行查询
-      const [entities, total] = await queryBuilder.getManyAndCount();
-      
-      // 转换为领域对象
-      const items = entities.map((entity: ContextEntity) => this.mapToDomain(entity));
-      
-      return {
-        data: items,
-        items,
-        total,
-        page,
-        limit,
-        pagination: {
-          page,
-          limit,
-          total,
-          totalPages: Math.ceil(total / limit),
-          hasNext: page * limit < total,
-          hasPrev: page > 1
-        }
-      };
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error('Error finding contexts by filter', error);
-      throw new Error(`Failed to find contexts: ${errorMessage}`);
-    }
-  }
-  
-  /**
-   * 通过名称查找Context
-   */
-  async findByName(name: string): Promise<Context[]> {
-    this.logger.debug('Finding contexts by name', { name });
-    
-    try {
-      const where: FindOptionsWhere<ContextEntity> = { name } as FindOptionsWhere<ContextEntity>;
-      
-      const entities = await this.repository.find({
-        where
-      });
-      
-      return entities.map((entity: ContextEntity) => this.mapToDomain(entity));
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error('Error finding contexts by name', { error, name });
-      throw new Error(`Failed to find contexts by name: ${errorMessage}`);
-    }
-  }
-
-  /**
-   * 通过状态查找Context
-   */
-  async findByStatus(status: EntityStatus): Promise<Context[]> {
-    this.logger.debug('Finding contexts by status', { status });
-
-    try {
-      const where: FindOptionsWhere<ContextEntity> = { status } as FindOptionsWhere<ContextEntity>;
-
-      const entities = await this.repository.find({
-        where
-      });
-
-      return entities.map((entity: ContextEntity) => this.mapToDomain(entity));
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error('Error finding contexts by status', { error, status });
-      throw new Error(`Failed to find contexts by status: ${errorMessage}`);
-    }
-  }
-  
-  /**
-   * 通过生命周期阶段查找Context
-   */
-  async findByLifecycleStage(stage: ContextLifecycleStage): Promise<Context[]> {
-    this.logger.debug('Finding contexts by lifecycle stage', { stage });
-    
-    try {
-      const where: FindOptionsWhere<ContextEntity> = { 
-        lifecycle_stage: stage 
-      } as FindOptionsWhere<ContextEntity>;
-      
-      const entities = await this.repository.find({
-        where
-      });
-      
-      return entities.map((entity: ContextEntity) => this.mapToDomain(entity));
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error('Error finding contexts by lifecycle stage', { error, stage });
-      throw new Error(`Failed to find contexts by lifecycle stage: ${errorMessage}`);
-    }
+  async delete(id: UUID): Promise<void> {
+    this.contexts.delete(id);
   }
 
   /**
    * 检查Context是否存在
    */
   async exists(id: UUID): Promise<boolean> {
-    this.logger.debug('Checking if context exists', { contextId: id });
-
-    try {
-      const where: FindOptionsWhere<ContextEntity> = {
-        context_id: id
-      } as FindOptionsWhere<ContextEntity>;
-
-      const count = await this.repository.count({
-        where
-      });
-
-      return count > 0;
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error('Error checking if context exists', { error, contextId: id });
-      throw new Error(`Failed to check if context exists: ${errorMessage}`);
-    }
+    return this.contexts.has(id);
   }
-  
+
   /**
-   * 计算符合条件的Context数量
+   * 通过名称查找Context
+   */
+  async findByName(name: string): Promise<Context | null> {
+    for (const context of Array.from(this.contexts.values())) {
+      if (context.name === name) {
+        return context.clone();
+      }
+    }
+    return null;
+  }
+
+  /**
+   * 查找多个Context
+   */
+  async findMany(filter?: ContextFilter, pagination?: PaginationParams): Promise<PaginatedResult<Context>> {
+    let filteredContexts = Array.from(this.contexts.values());
+
+    // 应用过滤器
+    if (filter) {
+      filteredContexts = this.applyFilter(filteredContexts, filter);
+    }
+
+    // 应用排序
+    if (pagination?.sortField) {
+      filteredContexts = this.applySorting(filteredContexts, pagination.sortField, pagination.sortOrder || 'asc');
+    }
+
+    // 应用分页
+    const total = filteredContexts.length;
+    const page = pagination?.page || 1;
+    const limit = pagination?.limit || 10;
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
+    
+    const items = filteredContexts
+      .slice(startIndex, endIndex)
+      .map(context => context.clone());
+
+    return {
+      items,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit)
+    };
+  }
+
+  /**
+   * 统计Context数量
    */
   async count(filter?: ContextFilter): Promise<number> {
-    this.logger.debug('Counting contexts', { filter });
+    if (!filter) {
+      return this.contexts.size;
+    }
+
+    const filteredContexts = this.applyFilter(Array.from(this.contexts.values()), filter);
+    return filteredContexts.length;
+  }
+
+  /**
+   * 批量保存Context
+   */
+  async saveMany(contexts: Context[]): Promise<void> {
+    for (const context of contexts) {
+      await this.save(context);
+    }
+  }
+
+  /**
+   * 批量删除Context
+   */
+  async deleteMany(ids: UUID[]): Promise<void> {
+    for (const id of ids) {
+      await this.delete(id);
+    }
+  }
+
+  // ===== 功能域特定查询 =====
+
+  /**
+   * 查找具有特定共享状态的Context
+   */
+  async findBySharedState(variables: Record<string, unknown>): Promise<Context[]> {
+    const results: Context[] = [];
     
-    try {
-      if (!filter) {
-        return await this.repository.count();
+    for (const context of Array.from(this.contexts.values())) {
+      const contextVariables = context.sharedState?.variables || {};
+      let matches = true;
+      
+      for (const [key, value] of Object.entries(variables)) {
+        if (contextVariables[key] !== value) {
+          matches = false;
+          break;
+        }
       }
       
-      const queryBuilder = this.repository.createQueryBuilder('context') as SelectQueryBuilder<ContextEntity>;
-      
-      // 应用过滤条件
-      if (filter.name) {
-        queryBuilder.andWhere('context.name LIKE :name', { name: `%${filter.name}%` });
+      if (matches) {
+        results.push(context.clone());
       }
-      
-      if (filter.status) {
-        queryBuilder.andWhere('context.status = :status', { status: filter.status });
-      }
-      
-      if (filter.lifecycleStage) {
-        queryBuilder.andWhere('context.lifecycleStage = :lifecycleStage', { 
-          lifecycleStage: filter.lifecycleStage 
-        });
-      }
-      
-      return await queryBuilder.getCount();
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error('Error counting contexts', error);
-      throw new Error(`Failed to count contexts: ${errorMessage}`);
     }
-  }
-  
-  /**
-   * 查找包含指定会话ID的Context
-   */
-  async findBySessionId(sessionId: UUID): Promise<Context[]> {
-    this.logger.debug('Finding contexts by session ID', { sessionId });
     
-    try {
-      const queryBuilder = this.repository.createQueryBuilder('context') as SelectQueryBuilder<ContextEntity>;
-      queryBuilder.where("context.session_ids LIKE :sessionId", { sessionId: `%${sessionId}%` });
+    return results;
+  }
+
+  /**
+   * 查找具有特定访问控制的Context
+   */
+  async findByOwner(userId: string): Promise<Context[]> {
+    const results: Context[] = [];
+    
+    for (const context of Array.from(this.contexts.values())) {
+      if (context.accessControl?.owner?.userId === userId) {
+        results.push(context.clone());
+      }
+    }
+    
+    return results;
+  }
+
+  /**
+   * 查找具有特定配置的Context
+   */
+  async findByConfiguration(storageBackend: string): Promise<Context[]> {
+    const results: Context[] = [];
+    
+    for (const context of Array.from(this.contexts.values())) {
+      if ((context.configuration.persistence as { storageBackend?: string })?.storageBackend === storageBackend) {
+        results.push(context.clone());
+      }
+    }
+    
+    return results;
+  }
+
+  /**
+   * 查找启用审计的Context
+   */
+  async findWithAuditEnabled(): Promise<Context[]> {
+    const results: Context[] = [];
+    
+    for (const context of Array.from(this.contexts.values())) {
+      if (context.auditTrail.enabled) {
+        results.push(context.clone());
+      }
+    }
+    
+    return results;
+  }
+
+  /**
+   * 查找启用监控的Context
+   */
+  async findWithMonitoringEnabled(): Promise<Context[]> {
+    const results: Context[] = [];
+    
+    for (const context of Array.from(this.contexts.values())) {
+      if (context.monitoringIntegration.enabled) {
+        results.push(context.clone());
+      }
+    }
+    
+    return results;
+  }
+
+  /**
+   * 查找具有特定性能配置的Context
+   */
+  async findByPerformanceConfig(collectionInterval: number): Promise<Context[]> {
+    const results: Context[] = [];
+    
+    for (const context of Array.from(this.contexts.values())) {
+      if (context.performanceMetrics.collectionIntervalSeconds === collectionInterval) {
+        results.push(context.clone());
+      }
+    }
+    
+    return results;
+  }
+
+  /**
+   * 查找启用版本控制的Context
+   */
+  async findWithVersioningEnabled(): Promise<Context[]> {
+    const results: Context[] = [];
+    
+    for (const context of Array.from(this.contexts.values())) {
+      if (context.versionHistory.enabled) {
+        results.push(context.clone());
+      }
+    }
+    
+    return results;
+  }
+
+  /**
+   * 查找具有特定搜索配置的Context
+   */
+  async findBySearchConfig(indexingStrategy: string): Promise<Context[]> {
+    const results: Context[] = [];
+    
+    for (const context of Array.from(this.contexts.values())) {
+      if (context.searchMetadata.indexingStrategy === indexingStrategy) {
+        results.push(context.clone());
+      }
+    }
+    
+    return results;
+  }
+
+  /**
+   * 查找具有特定缓存策略的Context
+   */
+  async findByCacheStrategy(strategy: string): Promise<Context[]> {
+    const results: Context[] = [];
+    
+    for (const context of Array.from(this.contexts.values())) {
+      if (context.cachingPolicy.cacheStrategy === strategy) {
+        results.push(context.clone());
+      }
+    }
+    
+    return results;
+  }
+
+  /**
+   * 查找具有特定同步配置的Context
+   */
+  async findBySyncStrategy(strategy: string): Promise<Context[]> {
+    const results: Context[] = [];
+    
+    for (const context of Array.from(this.contexts.values())) {
+      if (context.syncConfiguration.syncStrategy === strategy) {
+        results.push(context.clone());
+      }
+    }
+    
+    return results;
+  }
+
+  /**
+   * 查找启用错误处理的Context
+   */
+  async findWithErrorHandlingEnabled(): Promise<Context[]> {
+    const results: Context[] = [];
+    
+    for (const context of Array.from(this.contexts.values())) {
+      if (context.errorHandling.enabled) {
+        results.push(context.clone());
+      }
+    }
+    
+    return results;
+  }
+
+  /**
+   * 查找具有集成端点的Context
+   */
+  async findWithIntegrationEndpoints(): Promise<Context[]> {
+    const results: Context[] = [];
+    
+    for (const context of Array.from(this.contexts.values())) {
+      if (context.integrationEndpoints.enabled) {
+        results.push(context.clone());
+      }
+    }
+    
+    return results;
+  }
+
+  /**
+   * 查找具有事件集成的Context
+   */
+  async findWithEventIntegration(): Promise<Context[]> {
+    const results: Context[] = [];
+    
+    for (const context of Array.from(this.contexts.values())) {
+      if (context.eventIntegration.enabled) {
+        results.push(context.clone());
+      }
+    }
+    
+    return results;
+  }
+
+  // ===== 私有辅助方法 =====
+
+  /**
+   * 应用过滤器
+   */
+  private applyFilter(contexts: Context[], filter: ContextFilter): Context[] {
+    return contexts.filter(context => {
+      // 基础字段过滤
+      if (filter.name && !context.name.includes(filter.name)) return false;
+      if (filter.status && context.status !== filter.status) return false;
+      if (filter.lifecycleStage && context.lifecycleStage !== filter.lifecycleStage) return false;
+      if (filter.protocolVersion && context.protocolVersion !== filter.protocolVersion) return false;
       
-      const entities = await queryBuilder.getMany();
-      return entities.map((entity: ContextEntity) => this.mapToDomain(entity));
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error('Error finding contexts by session ID', { error, sessionId });
-      throw new Error(`Failed to find contexts by session ID: ${errorMessage}`);
+      // 时间范围过滤
+      if (filter.timestampAfter && context.timestamp < filter.timestampAfter) return false;
+      if (filter.timestampBefore && context.timestamp > filter.timestampBefore) return false;
+      
+      // 审计过滤
+      if (filter.auditEnabled !== undefined && context.auditTrail.enabled !== filter.auditEnabled) return false;
+      
+      // 监控过滤
+      if (filter.monitoringEnabled !== undefined && context.monitoringIntegration.enabled !== filter.monitoringEnabled) return false;
+      
+      // 其他过滤条件...
+      
+      return true;
+    });
+  }
+
+  /**
+   * 应用排序
+   */
+  private applySorting(contexts: Context[], sortField: ContextSortField, sortOrder: 'asc' | 'desc'): Context[] {
+    return contexts.sort((a, b) => {
+      let aValue: string | Date;
+      let bValue: string | Date;
+      
+      switch (sortField) {
+        case 'name':
+          aValue = a.name;
+          bValue = b.name;
+          break;
+        case 'status':
+          aValue = a.status;
+          bValue = b.status;
+          break;
+        case 'timestamp':
+          aValue = a.timestamp;
+          bValue = b.timestamp;
+          break;
+        default:
+          aValue = a.name;
+          bValue = b.name;
+      }
+      
+      if (sortOrder === 'desc') {
+        [aValue, bValue] = [bValue, aValue];
+      }
+      
+      if (aValue < bValue) return -1;
+      if (aValue > bValue) return 1;
+      return 0;
+    });
+  }
+
+  // ===== 聚合查询 =====
+
+  /**
+   * 获取状态统计
+   */
+  async getStatusStatistics(): Promise<Record<string, number>> {
+    const stats: Record<string, number> = {};
+
+    for (const context of Array.from(this.contexts.values())) {
+      const status = context.status;
+      stats[status] = (stats[status] || 0) + 1;
     }
+
+    return stats;
   }
 
   /**
-   * 查找包含指定共享状态ID的Context
+   * 获取生命周期阶段统计
    */
-  async findBySharedStateId(sharedStateId: UUID): Promise<Context[]> {
-    this.logger.debug('Finding contexts by shared state ID', { sharedStateId });
+  async getLifecycleStageStatistics(): Promise<Record<string, number>> {
+    const stats: Record<string, number> = {};
 
-    try {
-      const queryBuilder = this.repository.createQueryBuilder('context') as SelectQueryBuilder<ContextEntity>;
-      queryBuilder.where("context.shared_state_ids LIKE :sharedStateId", {
-        sharedStateId: `%${sharedStateId}%`
-      });
-
-      const entities = await queryBuilder.getMany();
-      return entities.map((entity: ContextEntity) => this.mapToDomain(entity));
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error('Error finding contexts by shared state ID', { error, sharedStateId });
-      throw new Error(`Failed to find contexts by shared state ID: ${errorMessage}`);
+    for (const context of Array.from(this.contexts.values())) {
+      const stage = context.lifecycleStage || 'planning';
+      stats[stage] = (stats[stage] || 0) + 1;
     }
+
+    return stats;
   }
-  
+
   /**
-   * 将持久化实体映射到领域对象
-   * Infrastructure层(snake_case) → Domain层(camelCase)
+   * 获取功能域启用统计
    */
-  private mapToDomain(entity: ContextEntity): Context {
-    return new Context(
-      entity.context_id,        // snake_case → camelCase映射
-      entity.name,
-      entity.description,
-      entity.lifecycle_stage,   // snake_case → camelCase映射
-      entity.status,
-      entity.created_at,        // snake_case → camelCase映射
-      entity.updated_at,        // snake_case → camelCase映射
-      entity.session_ids || [],
-      entity.shared_state_ids || [],
-      entity.configuration || {},
-      entity.metadata || {}
-    );
-  }
-  
-  /**
-   * 将领域对象映射到持久化实体
-   */
-  private mapToEntity(domain: Context): ContextEntity {
-    return {
-      context_id: domain.contextId,
-      name: domain.name,
-      description: domain.description,
-      lifecycle_stage: domain.lifecycleStage,
-      status: domain.status,
-      created_at: domain.createdAt,
-      updated_at: domain.updatedAt,
-      session_ids: domain.sessionIds,
-      shared_state_ids: domain.sharedStateIds,
-      configuration: domain.configuration,
-      metadata: domain.metadata
+  async getFeatureDomainStatistics(): Promise<{
+    auditEnabled: number;
+    monitoringEnabled: number;
+    performanceEnabled: number;
+    versioningEnabled: number;
+    searchEnabled: number;
+    cachingEnabled: number;
+    syncEnabled: number;
+    errorHandlingEnabled: number;
+    integrationEnabled: number;
+    eventIntegrationEnabled: number;
+  }> {
+    const stats = {
+      auditEnabled: 0,
+      monitoringEnabled: 0,
+      performanceEnabled: 0,
+      versioningEnabled: 0,
+      searchEnabled: 0,
+      cachingEnabled: 0,
+      syncEnabled: 0,
+      errorHandlingEnabled: 0,
+      integrationEnabled: 0,
+      eventIntegrationEnabled: 0
     };
+
+    for (const context of Array.from(this.contexts.values())) {
+      if (context.auditTrail.enabled) stats.auditEnabled++;
+      if (context.monitoringIntegration.enabled) stats.monitoringEnabled++;
+      if (context.performanceMetrics.enabled) stats.performanceEnabled++;
+      if (context.versionHistory.enabled) stats.versioningEnabled++;
+      if (context.searchMetadata.enabled) stats.searchEnabled++;
+      if (context.cachingPolicy.enabled) stats.cachingEnabled++;
+      if (context.syncConfiguration.enabled) stats.syncEnabled++;
+      if (context.errorHandling.enabled) stats.errorHandlingEnabled++;
+      if (context.integrationEndpoints.enabled) stats.integrationEnabled++;
+      if (context.eventIntegration.enabled) stats.eventIntegrationEnabled++;
+    }
+
+    return stats;
   }
-  
+
   /**
-   * 将排序字段映射到数据库列
+   * 获取配置分布统计
    */
-  private mapSortFieldToColumn(field: ContextSortField): string {
-    const mapping: Record<ContextSortField, string> = {
-      'name': 'name',
-      'status': 'status',
-      'createdAt': 'created_at',
-      'updatedAt': 'updated_at'
+  async getConfigurationStatistics(): Promise<{
+    storageBackends: Record<string, number>;
+    cacheStrategies: Record<string, number>;
+    syncStrategies: Record<string, number>;
+    indexingStrategies: Record<string, number>;
+  }> {
+    const stats = {
+      storageBackends: {} as Record<string, number>,
+      cacheStrategies: {} as Record<string, number>,
+      syncStrategies: {} as Record<string, number>,
+      indexingStrategies: {} as Record<string, number>
     };
-    
-    return mapping[field] || 'created_at';
+
+    for (const context of Array.from(this.contexts.values())) {
+      // 存储后端统计
+      const storageBackend = (context.configuration.persistence as { storageBackend?: string })?.storageBackend || 'unknown';
+      stats.storageBackends[storageBackend] = (stats.storageBackends[storageBackend] || 0) + 1;
+
+      // 缓存策略统计
+      const cacheStrategy = context.cachingPolicy.cacheStrategy;
+      stats.cacheStrategies[cacheStrategy] = (stats.cacheStrategies[cacheStrategy] || 0) + 1;
+
+      // 同步策略统计
+      const syncStrategy = context.syncConfiguration.syncStrategy;
+      stats.syncStrategies[syncStrategy] = (stats.syncStrategies[syncStrategy] || 0) + 1;
+
+      // 索引策略统计
+      const indexingStrategy = context.searchMetadata.indexingStrategy;
+      stats.indexingStrategies[indexingStrategy] = (stats.indexingStrategies[indexingStrategy] || 0) + 1;
+    }
+
+    return stats;
   }
-} 
+}

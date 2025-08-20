@@ -67,6 +67,10 @@ docs/others/
 test-results/
 playwright-report/
 
+# GLFB methodology reports
+glfb-pseudocode-report.txt
+**/glfb-pseudocode-report.txt
+
 # MPLP specific
 schemas/compiled/
 extensions/compiled/ 

@@ -49,26 +49,22 @@ export async function initializeContextModule(options: ContextModuleOptions): Pr
   
   try {
     // 创建领域层组件
-    const contextFactory = new ContextFactory();
-    const validationService = new ContextValidationService();
-    
+    const _contextFactory = new ContextFactory();
+    const _validationService = new ContextValidationService();
+
     // 创建基础设施层组件
     if (!options.dataSource) {
       throw new Error('DataSource is required for ContextModule');
     }
-    const contextRepository = new ContextRepository(options.dataSource);
+    const contextRepository = new ContextRepository();
 
     // 创建应用层服务
-    const sharedStateService = new SharedStateManagementService();
-    const accessControlService = new AccessControlManagementService();
+    const _sharedStateService = new SharedStateManagementService();
+    const _accessControlService = new AccessControlManagementService();
 
     // 创建应用层组件
     const contextManagementService = new ContextManagementService(
-      contextRepository,
-      contextFactory,
-      validationService,
-      sharedStateService,
-      accessControlService
+      contextRepository
     );
     
     // 创建命令和查询处理器

@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://mplp.dev/schemas/v1.0/mplp-core.json",
   "title": "MPLP Core Protocol v1.0",
-  "description": "Core协议Schema - MPLP协议簇的统一协调和工作流管理",
+  "description": "Core协议Schema - MPLP工作流定义和生命周期管理。职责：工作流配置、状态跟踪、模块适配器管理。不包含具体执行逻辑（由Orchestration负责）。",
   "type": "object",
   "$defs": {
     "uuid": {

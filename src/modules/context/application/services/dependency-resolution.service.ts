@@ -300,7 +300,7 @@ export class DependencyResolutionService {
   /**
    * 检测资源冲突
    */
-  private detectResourceConflicts(dependencies: Dependency[]): DependencyConflict[] {
+  private detectResourceConflicts(_dependencies: Dependency[]): DependencyConflict[] {
     // 简化的资源冲突检测
     return [];
   }

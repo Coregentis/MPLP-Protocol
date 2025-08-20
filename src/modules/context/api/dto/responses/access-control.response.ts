@@ -7,7 +7,7 @@
  * @created 2025-08-07
  */
 
-import { UUID } from '../../../../../public/shared/types';
+// UUID type is available from other imports if needed
 import {
   OwnerSchema,
   PermissionSchema,

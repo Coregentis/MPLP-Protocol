@@ -15,9 +15,7 @@ import {
   Permission,
   Policy,
   Action,
-  PrincipalType,
-  PolicyType,
-  PolicyEnforcement
+  PrincipalType
 } from '../../domain/value-objects/access-control';
 
 /**

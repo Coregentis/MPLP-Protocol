@@ -262,23 +262,23 @@ export class AccessControl {
    * 从Schema格式创建（snake_case）
    */
   static fromSchemaFormat(data: Record<string, unknown>): AccessControl {
-    const ownerData = data.owner as any;
+    const ownerData = data.owner as Record<string, unknown>;
     const owner: Owner = {
-      userId: ownerData.user_id,
-      role: ownerData.role
+      userId: ownerData.user_id as string,
+      role: ownerData.role as string
     };
 
-    const permissions = (data.permissions as any[] || []).map(perm => ({
-      principal: perm.principal,
+    const permissions = (data.permissions as Record<string, unknown>[] || []).map(perm => ({
+      principal: perm.principal as string,
       principalType: perm.principal_type as PrincipalType,
-      resource: perm.resource,
+      resource: perm.resource as string,
       actions: perm.actions as Action[],
-      conditions: perm.conditions
+      conditions: perm.conditions as Record<string, unknown>
     }));
 
-    const policies = (data.policies as any[] || []).map(policy => ({
-      id: policy.id,
-      name: policy.name,
+    const policies = (data.policies as Record<string, unknown>[] || []).map(policy => ({
+      id: policy.id as string,
+      name: policy.name as string,
       type: policy.type as PolicyType,
       rules: policy.rules as PolicyRule[],
       enforcement: policy.enforcement as PolicyEnforcement

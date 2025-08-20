@@ -18,6 +18,7 @@ import { ConfirmManagementService, OperationResult } from '../../../src/modules/
 import { ConfirmFactory, CreateConfirmRequest } from '../../../src/modules/confirm/domain/factories/confirm.factory';
 import { ConfirmValidationService, ValidationResult } from '../../../src/modules/confirm/domain/services/confirm-validation.service';
 import { Confirm } from '../../../src/modules/confirm/domain/entities/confirm.entity';
+import { ConfirmEntityData } from '../../../src/modules/confirm/api/mappers/confirm.mapper';
 import { ConfirmationCoordinationRequest, ConfirmationResult, ModuleStatus } from '../../../src/public/modules/core/types/core.types';
 import {
   ConfirmationType,
@@ -48,54 +49,67 @@ describe('ConfirmModuleAdapter单元测试', () => {
     confirmationType: ConfirmationType = ConfirmationType.TASK_APPROVAL,
     title: string = 'Test Confirmation'
   ): Confirm => {
-    return new Confirm(
-      TestDataFactory.Base.generateUUID() as UUID,
-      contextId as UUID,
-      '1.0.0',
-      confirmationType,
-      ConfirmStatus.PENDING,
-      Priority.MEDIUM,
-      {
+    const confirmData: ConfirmEntityData = {
+      protocolVersion: '1.0.0',
+      timestamp: new Date(),
+      confirmId: TestDataFactory.Base.generateUUID(),
+      contextId: contextId,
+      confirmationType: confirmationType,
+      status: ConfirmStatus.PENDING,
+      priority: Priority.MEDIUM,
+      subject: {
         title: title,
         description: 'Test Description',
         impactAssessment: {
-          scope: 'project',
-          businessImpact: 'medium',
-          technicalImpact: 'low',
+          businessImpact: 'Medium impact',
+          technicalImpact: 'Low impact',
           riskLevel: 'low',
           impactScope: ['core-orchestrator'],
-          estimatedCost: 1000
-        }
-      } as ConfirmSubject,
-      {
+        },
+      },
+      requester: {
         userId: 'core-orchestrator',
         name: 'System User',
         role: 'system',
         email: 'system@example.com',
         department: 'core',
         requestReason: 'Test request reason'
-      } as Requester,
-      {
-        workflowId: TestDataFactory.Base.generateUUID(),
-        name: 'Test Workflow',
+      },
+      approvalWorkflow: {
+        workflowType: 'consensus',
         steps: [{
-          stepId: 'step_1',
+          stepId: 'step-1',
           name: 'Test Approval',
           stepOrder: 1,
-          approverRole: 'system',
-          isRequired: true,
+          level: 1,
+          approvers: [{
+            approverId: 'approver-1',
+            name: 'Test Approver',
+            role: 'system',
+            email: 'approver@example.com',
+            priority: 1,
+            isActive: true,
+          }],
+          status: StepStatus.PENDING,
           timeoutHours: 24,
-          status: StepStatus.PENDING
         }],
-        parallelExecution: false,
-        autoApprovalRules: [{
+        requireAllApprovers: false,
+        allowDelegation: true,
+        autoApprovalRules: {
           enabled: false,
-          conditions: []
-        }]
-      } as ApprovalWorkflow,
-      new Date().toISOString() as Timestamp,
-      new Date().toISOString() as Timestamp
-    );
+        }
+      },
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      expiresAt: new Date(Date.now() + 3600000),
+      metadata: {
+        source: 'test',
+        tags: ['adapter-test'],
+        customFields: {}
+      }
+    };
+
+    return new Confirm(confirmData);
   };
 
   beforeEach(async () => {
@@ -111,7 +125,10 @@ describe('ConfirmModuleAdapter单元测试', () => {
       findExpiredConfirms: jest.fn(),
       bulkUpdateStatus: jest.fn(),
       getConfirmHistory: jest.fn(),
-      validateConfirmWorkflow: jest.fn()
+      validateConfirmWorkflow: jest.fn(),
+      enableAIAnalysis: jest.fn(),
+      enableComplianceCheck: jest.fn(),
+      enablePerformanceMonitoring: jest.fn()
     } as jest.Mocked<ConfirmManagementService>;
 
     mockConfirmFactory = {
@@ -153,7 +170,7 @@ describe('ConfirmModuleAdapter单元测试', () => {
       // 创建一个没有服务的适配器来模拟初始化失败
       const invalidAdapter = new ConfirmModuleAdapter(null as any, null as any, null as any);
 
-      await expect(invalidAdapter.initialize()).rejects.toThrow('Confirm services not available');
+      await expect(invalidAdapter.initialize()).rejects.toThrow('Confirm management service not available');
 
       const status = invalidAdapter.getStatus();
       expect(status.status).toBe('error');

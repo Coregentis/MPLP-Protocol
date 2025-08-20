@@ -1,0 +1,21 @@
+{
+  "timestamp": "2025-08-17T14:37:24.277Z",
+  "testResult": {
+    "success": true,
+    "duration": 7.98,
+    "dryRun": true
+  },
+  "config": {
+    "features": "tests/bdd/plan/features/*.feature",
+    "stepDefinitions": "tests/bdd/plan/step-definitions/*.ts",
+    "reportDir": "tests/bdd/plan/reports",
+    "timeout": 30000,
+    "parallel": 2,
+    "tags": "@high-priority or @medium-priority"
+  },
+  "environment": {
+    "nodeVersion": "v22.17.0",
+    "platform": "win32",
+    "arch": "x64"
+  }
+}

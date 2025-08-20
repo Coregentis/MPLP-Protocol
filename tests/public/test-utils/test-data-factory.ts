@@ -88,7 +88,7 @@ export class ContextTestDataFactory extends BaseTestDataFactory {
       contextId,
       name: `Test Context ${this.generateRandomString()}`,
       description: `Test context description ${this.generateRandomString()}`,
-      lifecycleStage: ContextLifecycleStage.ACTIVE,
+      lifecycleStage: undefined,
       status: EntityStatus.ACTIVE,
       createdAt: new Date(),
       updatedAt: new Date(),

@@ -208,7 +208,7 @@ export class TimeoutService implements ITimeoutService {
   async checkTimeout(confirm: Confirm): Promise<TimeoutCheckResultData> {
     const now = Date.now();
     const createdAt = new Date(confirm.createdAt).getTime();
-    const expiresAt = confirm.expires_at ? new Date(confirm.expires_at).getTime() : null;
+    const expiresAt = confirm.expiresAt ? new Date(confirm.expiresAt).getTime() : null;
     
     // 获取适用的规则
     const rule = this.getApplicableRule(confirm);

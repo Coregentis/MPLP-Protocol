@@ -1,0 +1,382 @@
+{
+  "validation_config": {
+    "version": "1.0.0",
+    "description": "MPLP项目强制质量约束配置",
+    "based_on_rules": [
+      ".augment/rules/circleci-workflow.mdc",
+      ".augment/rules/import-all.mdc",
+      ".augment/rules/dual-naming-convention.mdc",
+      ".augment/rules/testing-strategy-new.mdc"
+    ],
+    "enforcement_level": "zero_tolerance"
+  },
+
+  "tdd_constraints": {
+    "pre_refactor_checks": [
+      {
+        "name": "TDD重构前质量基线检查",
+        "command": "node scripts/tdd/tdd-quality-enforcer.js pre-check {module}",
+        "enforcement": "mandatory",
+        "timeout": 300
+      },
+      {
+        "name": "Schema合规性验证",
+        "command": "npm run validate:schemas",
+        "enforcement": "zero_tolerance",
+        "timeout": 120
+      },
+      {
+        "name": "双重命名约定验证",
+        "command": "npm run validate:naming",
+        "enforcement": "zero_tolerance",
+        "timeout": 60
+      },
+      {
+        "name": "CircleCI配置验证",
+        "command": "npm run circleci:validate",
+        "enforcement": "mandatory",
+        "timeout": 180
+      }
+    ],
+
+    "stage_validations": {
+      "stage1_schema_mapping": [
+        {
+          "name": "Mapper层验证",
+          "command": "node scripts/tdd/tdd-quality-enforcer.js stage1 {module}",
+          "enforcement": "mandatory",
+          "timeout": 300
+        },
+        {
+          "name": "Mapper单元测试",
+          "command": "npm run test:unit -- --testPathPattern={module}.mapper",
+          "enforcement": "zero_tolerance",
+          "timeout": 180
+        },
+        {
+          "name": "Mapper一致性验证",
+          "command": "npm run validate:mapping -- --module={module}",
+          "enforcement": "zero_tolerance",
+          "timeout": 120
+        }
+      ],
+
+      "stage2_dto_layer": [
+        {
+          "name": "DTO层验证",
+          "command": "node scripts/tdd/tdd-quality-enforcer.js stage2 {module}",
+          "enforcement": "mandatory",
+          "timeout": 300
+        },
+        {
+          "name": "DTO单元测试",
+          "command": "npm run test:unit -- --testPathPattern={module}.dto",
+          "enforcement": "zero_tolerance",
+          "timeout": 180
+        },
+        {
+          "name": "TypeScript编译检查",
+          "command": "npm run typecheck",
+          "enforcement": "zero_tolerance",
+          "timeout": 120
+        }
+      ],
+
+      "stage3_repository_layer": [
+        {
+          "name": "Repository层验证",
+          "command": "node scripts/tdd/tdd-quality-enforcer.js stage3 {module}",
+          "enforcement": "mandatory",
+          "timeout": 300
+        },
+        {
+          "name": "集成测试",
+          "command": "npm run test:integration -- --module={module}",
+          "enforcement": "zero_tolerance",
+          "timeout": 600
+        },
+        {
+          "name": "企业级功能验证",
+          "command": "npm run validate:enterprise -- --module={module}",
+          "enforcement": "mandatory",
+          "timeout": 180
+        }
+      ],
+
+      "stage4_business_logic": [
+        {
+          "name": "业务逻辑验证",
+          "command": "node scripts/tdd/tdd-quality-enforcer.js stage4 {module}",
+          "enforcement": "mandatory",
+          "timeout": 300
+        },
+        {
+          "name": "性能测试",
+          "command": "npm run test:performance -- --module={module}",
+          "enforcement": "mandatory",
+          "timeout": 900
+        },
+        {
+          "name": "测试覆盖率验证",
+          "command": "npm run test:coverage -- --module={module}",
+          "enforcement": "mandatory",
+          "timeout": 300
+        }
+      ]
+    },
+
+    "post_tdd_checks": [
+      {
+        "name": "TDD完成后验证",
+        "command": "node scripts/tdd/tdd-quality-enforcer.js post-check {module}",
+        "enforcement": "mandatory",
+        "timeout": 600
+      },
+      {
+        "name": "综合质量验证",
+        "command": "node scripts/validation/comprehensive-validator.js",
+        "enforcement": "mandatory",
+        "timeout": 900
+      },
+      {
+        "name": "质量仪表板更新",
+        "command": "node scripts/monitoring/quality-dashboard.js --module={module}",
+        "enforcement": "advisory",
+        "timeout": 300
+      }
+    ]
+  },
+
+  "bdd_constraints": {
+    "pre_bdd_checks": [
+      {
+        "name": "TDD完成验证",
+        "command": "node scripts/tdd/tdd-quality-enforcer.js post-check {module}",
+        "enforcement": "mandatory",
+        "timeout": 300
+      },
+      {
+        "name": "BDD前置条件验证",
+        "command": "npm run validate:bdd-prerequisites -- --module={module}",
+        "enforcement": "mandatory",
+        "timeout": 180
+      },
+      {
+        "name": "行为测试环境准备",
+        "command": "npm run test:setup-bdd-environment -- --module={module}",
+        "enforcement": "mandatory",
+        "timeout": 300
+      },
+      {
+        "name": "Schema行为合规性验证",
+        "command": "npm run validate:schema-behavior -- --module={module}",
+        "enforcement": "zero_tolerance",
+        "timeout": 120
+      }
+    ],
+
+    "scenario_validations": {
+      "basic_protocol_scenarios": [
+        {
+          "name": "基础协议行为验证",
+          "command": "npm run test:bdd -- --feature=\"基础上下文管理协议\" --module={module}",
+          "enforcement": "zero_tolerance",
+          "timeout": 600
+        },
+        {
+          "name": "协议合规性验证",
+          "command": "npm run validate:protocol-compliance -- --feature=\"context-management\"",
+          "enforcement": "zero_tolerance",
+          "timeout": 180
+        }
+      ],
+
+      "advanced_protocol_scenarios": [
+        {
+          "name": "高级协议行为验证",
+          "command": "npm run test:bdd -- --feature=\"访问控制协议\" --module={module}",
+          "enforcement": "zero_tolerance",
+          "timeout": 600
+        },
+        {
+          "name": "安全合规性验证",
+          "command": "npm run validate:security-compliance -- --feature=\"access-control\"",
+          "enforcement": "zero_tolerance",
+          "timeout": 300
+        },
+        {
+          "name": "厂商中立性验证",
+          "command": "npm run validate:vendor-neutrality -- --feature=\"monitoring-integration\"",
+          "enforcement": "zero_tolerance",
+          "timeout": 300
+        }
+      ],
+
+      "integration_protocol_scenarios": [
+        {
+          "name": "集成协议行为验证",
+          "command": "npm run test:bdd -- --feature=\"事件集成协议\" --module={module}",
+          "enforcement": "zero_tolerance",
+          "timeout": 600
+        },
+        {
+          "name": "端到端测试",
+          "command": "npm run test:end-to-end -- --module={module}",
+          "enforcement": "zero_tolerance",
+          "timeout": 1200
+        },
+        {
+          "name": "性能行为验证",
+          "command": "npm run validate:performance-behavior -- --module={module}",
+          "enforcement": "mandatory",
+          "timeout": 600
+        }
+      ]
+    },
+
+    "post_bdd_checks": [
+      {
+        "name": "BDD完整测试套件",
+        "command": "npm run test:bdd -- --module={module}",
+        "enforcement": "zero_tolerance",
+        "timeout": 1800
+      },
+      {
+        "name": "BDD质量验证",
+        "command": "node scripts/validation/comprehensive-validator.js",
+        "enforcement": "mandatory",
+        "timeout": 600
+      },
+      {
+        "name": "BDD质量仪表板",
+        "command": "node scripts/monitoring/quality-dashboard.js --module={module}",
+        "enforcement": "advisory",
+        "timeout": 300
+      }
+    ]
+  },
+
+  "circleci_integration": {
+    "development_workflow": {
+      "trigger": "每次代码推送",
+      "strategy": "并行执行，快速反馈",
+      "required_jobs": [
+        "test-unit",
+        "test-integration", 
+        "build-and-validate",
+        "security-audit",
+        "schema-validation",
+        "naming-convention",
+        "mapper-consistency"
+      ],
+      "quality_gates": {
+        "test_coverage": ">89.2%",
+        "test_pass_rate": "100%",
+        "typescript_errors": "0",
+        "eslint_issues": "0",
+        "schema_compliance": "100%",
+        "naming_compliance": "100%"
+      }
+    },
+
+    "bdd_validation_workflow": {
+      "trigger": "BDD场景执行",
+      "strategy": "顺序执行，严格验证",
+      "required_jobs": [
+        "test-bdd-scenarios",
+        "validate-protocol-behavior",
+        "test-end-to-end",
+        "validate-performance-behavior",
+        "security-behavior-audit"
+      ],
+      "quality_gates": {
+        "bdd_scenario_coverage": "100%",
+        "protocol_compliance": "100%",
+        "vendor_neutrality": "100%",
+        "performance_behavior": "达标",
+        "security_behavior": "合规"
+      }
+    }
+  },
+
+  "enforcement_rules": {
+    "zero_tolerance": {
+      "description": "零容忍违规，立即阻断流程",
+      "violations": [
+        "TypeScript编译错误",
+        "ESLint错误",
+        "Schema验证失败",
+        "双重命名约定违规",
+        "any类型使用",
+        "测试失败",
+        "BDD场景失败",
+        "协议合规性验证失败"
+      ],
+      "action": "immediate_block"
+    },
+
+    "mandatory": {
+      "description": "强制要求，必须通过",
+      "violations": [
+        "测试覆盖率不足",
+        "性能基准不达标",
+        "企业级功能缺失",
+        "文档同步延迟"
+      ],
+      "action": "require_fix"
+    },
+
+    "advisory": {
+      "description": "建议性检查，记录但不阻断",
+      "violations": [
+        "代码复杂度偏高",
+        "文档覆盖率不足",
+        "性能轻微偏差"
+      ],
+      "action": "log_warning"
+    }
+  },
+
+  "quality_standards": {
+    "mplp_baseline": {
+      "test_coverage": "89.2%",
+      "test_pass_rate": "353/353",
+      "typescript_errors": "0",
+      "eslint_issues": "0",
+      "schema_compliance": "100%",
+      "naming_compliance": "100%",
+      "enterprise_features": "100%",
+      "mapper_consistency": "100%",
+      "performance_score": "85+"
+    },
+
+    "performance_benchmarks": {
+      "api_response_time": "<100ms (P95)",
+      "event_processing_delay": "<50ms",
+      "schema_validation_time": "<10ms",
+      "mapper_conversion_time": "<5ms",
+      "unit_test_execution": "<5min",
+      "integration_test_execution": "<10min",
+      "bdd_scenario_execution": "<15min"
+    }
+  },
+
+  "notification_config": {
+    "success": {
+      "message": "✅ 质量验证通过",
+      "channels": ["console", "log"]
+    },
+    "warning": {
+      "message": "⚠️ 发现质量问题",
+      "channels": ["console", "log", "report"]
+    },
+    "error": {
+      "message": "❌ 质量验证失败",
+      "channels": ["console", "log", "report", "alert"]
+    },
+    "block": {
+      "message": "🚫 流程被阻断",
+      "channels": ["console", "log", "report", "alert", "notification"]
+    }
+  }
+}

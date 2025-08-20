@@ -1,0 +1,40 @@
+{
+  "timestamp": "2025-08-15T04:46:54.355Z",
+  "module": "context",
+  "result": {
+    "passed": [
+      "context模块TypeScript编译: 0错误",
+      "context模块编译检查: 通过",
+      "context模块TDD文件完整性: 100%",
+      "Schema文件验证: 22个字段",
+      "BDD测试目录存在: tests/bdd/context",
+      "BDD报告目录存在: tests/bdd/context/reports",
+      "BDD依赖包完整性: 100%",
+      "BDD测试文件完整性: 3/3",
+      "测试文件可执行: run-schema-based-bdd-tests.js",
+      "测试文件可执行: run-advanced-coordination-tests.js",
+      "测试文件可执行: run-complete-bdd-tests.js"
+    ],
+    "errors": [],
+    "warnings": []
+  },
+  "summary": {
+    "passed": [
+      "context模块TypeScript编译: 0错误",
+      "context模块编译检查: 通过",
+      "context模块TDD文件完整性: 100%",
+      "Schema文件验证: 22个字段",
+      "BDD测试目录存在: tests/bdd/context",
+      "BDD报告目录存在: tests/bdd/context/reports",
+      "BDD依赖包完整性: 100%",
+      "BDD测试文件完整性: 3/3",
+      "测试文件可执行: run-schema-based-bdd-tests.js",
+      "测试文件可执行: run-advanced-coordination-tests.js",
+      "测试文件可执行: run-complete-bdd-tests.js"
+    ],
+    "totalChecks": 11,
+    "passedChecks": 11,
+    "errorChecks": 0,
+    "warningChecks": 0
+  }
+}

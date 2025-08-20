@@ -8,7 +8,8 @@
  */
 
 import { UUID } from '../../../../public/shared/types';
-import { ConfirmManagementService, OperationResult } from '../services/confirm-management.service';
+import { ConfirmManagementService } from '../services/confirm-management.service';
+import { OperationResult } from '../../../../public/shared/types';
 import { Confirm } from '../../domain/entities/confirm.entity';
 
 /**

@@ -170,7 +170,12 @@ export class ContextPerformanceMonitorService {
       value: number;
     }>;
   } {
-    const alerts: any[] = [];
+    const alerts: Array<{
+      type: 'high_response_time' | 'high_error_rate';
+      severity: 'warning' | 'critical';
+      message: string;
+      value: number;
+    }> = [];
 
     try {
       const report = this.getPerformanceReport(contextId);

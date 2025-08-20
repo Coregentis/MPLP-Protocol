@@ -1,0 +1,186 @@
+---
+type: "always_apply"
+description: "CircleCI CI/CD workflow management and best practices for MPLP v1.0"
+priority: "high"
+category: "cicd"
+---
+
+# CircleCI Workflow Rules
+
+## 🎯 CI/CD核心原则
+
+### 1. 使用CircleCI MCP工具
+```markdown
+RULE: 优先使用CircleCI MCP工具进行CI/CD操作
+- 使用list_followed_projects_Circle_CI查看可用项目
+- 使用get_latest_pipeline_status_Circle_CI检查流水线状态
+- 使用run_pipeline_Circle_CI触发新的流水线
+- 使用config_helper_Circle_CI验证配置文件
+- 使用get_build_failure_logs_Circle_CI调试构建问题
+```
+
+### 2. 配置验证优先
+```yaml
+RULE: 在部署前必须验证CircleCI配置
+- 使用config_helper_Circle_CI验证语法正确性
+- 运行本地验证脚本检查配置完整性
+- 确保所有必需的环境变量已配置
+- 验证工作流依赖关系的正确性
+
+# 验证命令示例
+npm run circleci:validate
+circleci config validate .circleci/config.yml
+```
+
+### 3. 渐进式部署策略
+```markdown
+RULE: 采用渐进式和安全的部署策略
+- 开发分支触发完整测试套件
+- 主分支触发额外的安全和性能检查
+- 版本标签触发发布流程
+- 定时任务执行维护和备份操作
+```
+
+## 🔄 工作流设计规范
+
+### 1. 开发工作流 (development)
+```yaml
+RULE: 开发工作流的标准配置
+触发条件: 每次代码推送
+执行策略: 并行执行，快速反馈
+
+必需任务:
+- test-unit: 单元测试 (快速验证)
+- test-integration: 集成测试 (模块协作)
+- build-and-validate: 构建验证 (编译检查)
+- security-audit: 安全扫描 (漏洞检测)
+
+可选任务:
+- test-performance: 性能测试 (资源密集)
+- backup-check: 备份检查 (main分支)
+- flaky-test-detection: 不稳定测试检测 (main分支)
+
+# 配置示例
+development:
+  jobs:
+    - test-unit
+    - test-integration
+    - build-and-validate
+    - security-audit
+    - backup-check
+    - flaky-test-detection:
+        filters:
+          branches:
+            only: main
+```
+
+### 2. 发布工作流 (release)
+```yaml
+RULE: 发布工作流的严格控制
+触发条件: 版本标签推送 (v*.*.*)
+执行策略: 顺序执行，严格验证
+
+必需流程:
+1. test-unit: 完整单元测试
+2. test-integration: 完整集成测试
+3. build-public-release: 构建开源版本
+4. deploy-to-npm: 发布到npm注册表
+
+质量门禁:
+- 所有测试必须通过
+- 构建必须成功
+- 安全扫描必须通过
+- 版本号必须符合语义化版本规范
+
+# 配置示例
+release:
+  jobs:
+    - test-unit:
+        filters:
+          tags:
+            only: /^v.*/
+          branches:
+            ignore: /.*/
+    - test-integration:
+        requires:
+          - test-unit
+    - build-public-release:
+        requires:
+          - test-integration
+    - deploy-to-npm:
+        requires:
+          - build-public-release
+```
+
+## 🔍 监控和调试
+
+### 1. 构建失败处理
+```markdown
+RULE: 系统化处理构建失败
+- 使用get_build_failure_logs_Circle_CI获取详细日志
+- 分析失败原因：编译错误、测试失败、依赖问题
+- 快速修复并重新触发构建
+- 记录失败原因和解决方案
+
+调试流程:
+1. 获取失败日志
+2. 识别错误类型
+3. 本地复现问题
+4. 修复并验证
+5. 重新提交
+```
+
+### 2. 性能监控
+```markdown
+RULE: 持续监控CI/CD性能
+- 跟踪构建时间趋势
+- 监控测试执行时间
+- 优化缓存策略
+- 并行化可并行的任务
+
+性能基准:
+- 单元测试: < 5分钟
+- 集成测试: < 10分钟
+- 完整构建: < 15分钟
+- 发布流程: < 30分钟
+```
+
+## 🛡️ 安全和质量
+
+### 1. 安全扫描
+```markdown
+RULE: 强制性安全检查
+- 依赖漏洞扫描 (npm audit)
+- 代码安全扫描 (CodeQL)
+- 密钥泄露检测 (git-secrets)
+- 许可证合规检查
+
+安全门禁:
+- 高危漏洞: 0个
+- 中危漏洞: < 5个
+- 密钥泄露: 0个
+- 许可证冲突: 0个
+```
+
+### 2. 质量门禁
+```markdown
+RULE: 严格的质量标准
+- 测试覆盖率 > 89.2% (MPLP基准)
+- 所有测试必须通过 (353/353)
+- TypeScript编译零错误
+- ESLint检查通过
+- 性能测试达标
+
+质量指标:
+- 代码重复率 < 3%
+- 圈复杂度 < 10
+- 技术债务 < 1小时
+- 文档覆盖率 > 80%
+```
+
+---
+
+**ENFORCEMENT**: 这些CI/CD规则是**强制性的**，所有构建和部署必须严格遵循。
+
+**VERSION**: 1.0.0  
+**EFFECTIVE**: August 2, 2025

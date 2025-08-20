@@ -1,24 +1,21 @@
 /**
- * Confirm模块集成
- * 
- * DDD架构的模块集成和依赖注入配置
- * 
- * @version 1.0.0
- * @created 2025-09-16
+ * 企业级审批和决策协调模块集成
+ *
+ * L2协调层的企业级审批专业化组件
+ * 支持5种approval_workflow类型的企业级审批工作流处理
+ *
+ * @version 2.0.0
+ * @created 2025-08-18
+ * @updated 2025-08-18 - TDD重构完成
  */
 
 import { Logger } from '../../public/utils/logger';
-
-// Domain层
-import { ConfirmValidationService } from './domain/services/confirm-validation.service';
 
 // Infrastructure层
 import { ConfirmRepository } from './infrastructure/repositories/confirm.repository';
 
 // Application层
 import { ConfirmManagementService } from './application/services/confirm-management.service';
-import { CreateConfirmHandler } from './application/commands/create-confirm.command';
-import { GetConfirmByIdHandler } from './application/queries/get-confirm-by-id.query';
 
 // API层
 import { ConfirmController } from './api/controllers/confirm.controller';
@@ -41,43 +38,32 @@ export interface ConfirmModuleExports {
 }
 
 /**
- * 初始化Confirm模块
+ * 初始化企业级审批和决策协调模块
  */
 export async function initializeConfirmModule(
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   options: ConfirmModuleOptions = {}
 ): Promise<ConfirmModuleExports> {
   const logger = new Logger('ConfirmModule');
-  
+
   try {
-    // 创建领域层组件
-    const validationService = new ConfirmValidationService();
-    
     // 创建基础设施层组件
     const confirmRepository = new ConfirmRepository();
-    
-    // 创建应用层组件
-    const confirmManagementService = new ConfirmManagementService(
-      confirmRepository,
-      validationService
-    );
 
-    // 初始化事件系统
-    confirmManagementService.initializeEventSystem();
-    
-    // 创建命令和查询处理器
-    const createConfirmHandler = new CreateConfirmHandler(confirmManagementService);
-    const getConfirmByIdHandler = new GetConfirmByIdHandler(confirmManagementService);
-    
+    // 创建应用层组件
+    const confirmManagementService = new ConfirmManagementService(confirmRepository);
+
+    // 启用企业级功能
+    if (options.enablePerformanceMonitoring) {
+      confirmManagementService.enablePerformanceMonitoring();
+    }
+    confirmManagementService.enableAIAnalysis();
+    confirmManagementService.enableComplianceCheck();
+
     // 创建API层组件
-    const confirmController = new ConfirmController(
-      createConfirmHandler,
-      getConfirmByIdHandler,
-      confirmManagementService
-    );
-    
-    logger.info('Confirm module initialized successfully');
-    
+    const confirmController = new ConfirmController(confirmManagementService);
+
+    logger.info('企业级审批和决策协调模块初始化成功');
+
     return {
       confirmController,
       confirmManagementService

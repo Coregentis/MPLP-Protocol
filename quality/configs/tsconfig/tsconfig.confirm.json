@@ -1,0 +1,31 @@
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "../../../src",
+    "outDir": "../../../dist",
+    "baseUrl": "../../../",
+    "paths": {
+      "@/*": ["src/*"],
+      "@modules/*": ["src/modules/*"],
+      "@confirm/*": ["src/modules/confirm/*"],
+      "@shared/*": ["src/shared/*"],
+      "@types/*": ["src/types/*"]
+    },
+    "typeRoots": [
+      "../../../node_modules/@types",
+      "../../../src/types"
+    ]
+  },
+  "include": [
+    "../../../src/modules/confirm/**/*",
+    "../../../src/shared/**/*",
+    "../../../src/types/**/*"
+  ],
+  "exclude": [
+    "../../../node_modules",
+    "../../../dist",
+    "../../../tests",
+    "../../../src/modules/!(confirm|shared)",
+    "../../../src/!(modules|shared|types)"
+  ]
+}

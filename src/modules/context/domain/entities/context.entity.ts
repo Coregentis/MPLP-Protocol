@@ -1,104 +1,390 @@
 /**
- * Context实体
- * 
+ * Context实体 - MPLP v1.0 基于完整Schema的14个功能域
+ *
  * 领域实体，代表上下文的核心业务对象
- * 
+ * 支持完整的mplp-context.json Schema
+ * 兼容测试期望的构造函数和方法
+ *
  * @version 1.0.0
- * @created 2025-09-16
+ * @updated 2025-08-15
  */
 
-import { UUID, EntityStatus } from '../../../../public/shared/types';
-import { ContextLifecycleStage } from '../../../../public/shared/types/context-types';
-import { SharedState, Dependency, Goal, Resource } from '../value-objects/shared-state';
-import { AccessControl, Action } from '../value-objects/access-control';
+import { UUID } from '../../../../public/shared/types';
+import { ContextEntityData } from '../../api/mappers/context.mapper';
+import { EntityStatus, ContextStatus } from '../../types';
 
 /**
- * Context实体类
- * 包含上下文的核心属性和领域行为
- * 遵循MPLP双重命名约定：实体层使用snake_case
+ * Context实体类 - MPLP v1.0
+ * 包含14个功能域的完整上下文管理
+ * 遵循MPLP双重命名约定：实体层使用camelCase
+ * 兼容测试期望的接口
  */
 export class Context {
-  // 私有字段使用snake_case命名约定
-  private readonly _context_id: UUID;
+  // 基础协议字段
+  private readonly _contextId: UUID;
   private _name: string;
-  private _description: string | null;
-  private _lifecycle_stage: ContextLifecycleStage;
+  private _description?: string;
+  private _lifecycleStage: string | undefined;
   private _status: EntityStatus;
-  private readonly _created_at: Date;
-  private _updated_at: Date;
-  private _session_ids: UUID[];
-  private _shared_state_ids: UUID[];
+  private _createdAt: Date;
+  private _updatedAt: Date;
+  private _sessionIds: UUID[];
+  private _sharedStateIds: UUID[];
   private _configuration: Record<string, unknown>;
   private _metadata: Record<string, unknown>;
-  private _shared_state?: SharedState;
-  private _access_control?: AccessControl;
 
+  // 14个功能域 (保持向后兼容)
+  private _sharedState?: ContextEntityData['sharedState'];
+  private _accessControl?: ContextEntityData['accessControl'];
+  private _auditTrail?: ContextEntityData['auditTrail'];
+  private _monitoringIntegration?: ContextEntityData['monitoringIntegration'];
+  private _performanceMetrics?: ContextEntityData['performanceMetrics'];
+  private _versionHistory?: ContextEntityData['versionHistory'];
+  private _searchMetadata?: ContextEntityData['searchMetadata'];
+  private _cachingPolicy?: ContextEntityData['cachingPolicy'];
+  private _syncConfiguration?: ContextEntityData['syncConfiguration'];
+  private _errorHandling?: ContextEntityData['errorHandling'];
+  private _integrationEndpoints?: ContextEntityData['integrationEndpoints'];
+  private _eventIntegration?: ContextEntityData['eventIntegration'];
+
+  // 支持测试期望的构造函数
   constructor(
     contextId: UUID,
     name: string,
-    description: string | null,
-    lifecycleStage: ContextLifecycleStage,
-    status: EntityStatus,
-    createdAt: Date,
-    updatedAt: Date,
-    sessionIds: UUID[] = [],
-    sharedStateIds: UUID[] = [],
-    configuration: Record<string, unknown> = {},
-    metadata: Record<string, unknown> = {},
-    sharedState?: SharedState,
-    accessControl?: AccessControl
+    description?: string,
+    lifecycleStage?: string,
+    status?: EntityStatus,
+    createdAt?: Date,
+    updatedAt?: Date,
+    sessionIds?: UUID[],
+    sharedStateIds?: UUID[],
+    configuration?: Record<string, unknown>,
+    metadata?: Record<string, unknown>
+  );
+
+  // 支持原有的数据对象构造函数
+  constructor(data: ContextEntityData);
+
+  // 实际构造函数实现
+  constructor(
+    contextIdOrData: UUID | ContextEntityData,
+    name?: string,
+    description?: string,
+    lifecycleStage?: string,
+    status?: EntityStatus,
+    createdAt?: Date,
+    updatedAt?: Date,
+    sessionIds?: UUID[],
+    sharedStateIds?: UUID[],
+    configuration?: Record<string, unknown>,
+    metadata?: Record<string, unknown>
   ) {
-    this._context_id = contextId;
-    this._name = name;
-    this._description = description;
-    this._lifecycle_stage = lifecycleStage;
-    this._status = status;
-    this._created_at = createdAt;
-    this._updated_at = updatedAt;
-    this._session_ids = sessionIds;
-    this._shared_state_ids = sharedStateIds;
-    this._configuration = configuration;
-    this._metadata = metadata;
-    this._shared_state = sharedState;
-    this._access_control = accessControl;
+    if (typeof contextIdOrData === 'object') {
+      // 使用数据对象构造
+      const data = contextIdOrData as ContextEntityData;
+      this._contextId = data.contextId;
+      this._name = data.name;
+      this._description = data.description;
+      this._lifecycleStage = data.lifecycleStage;
+      this._status = data.status as EntityStatus;
+      this._createdAt = data.timestamp;
+      this._updatedAt = data.timestamp;
+      this._sessionIds = [];
+      this._sharedStateIds = [];
+      this._configuration = {};
+      this._metadata = {};
+
+      // 14个功能域
+      this._sharedState = data.sharedState;
+      this._accessControl = data.accessControl;
+      this._auditTrail = data.auditTrail;
+      this._monitoringIntegration = data.monitoringIntegration;
+      this._performanceMetrics = data.performanceMetrics;
+      this._versionHistory = data.versionHistory;
+      this._searchMetadata = data.searchMetadata;
+      this._cachingPolicy = data.cachingPolicy;
+      this._syncConfiguration = data.syncConfiguration;
+      this._errorHandling = data.errorHandling;
+      this._integrationEndpoints = data.integrationEndpoints;
+      this._eventIntegration = data.eventIntegration;
+    } else {
+      // 使用参数构造
+      this._contextId = contextIdOrData;
+      this._name = name!;
+      this._description = description;
+      this._lifecycleStage = lifecycleStage;
+      this._status = status !== undefined ? status : ContextStatus.ACTIVE;
+      this._createdAt = createdAt || new Date();
+      this._updatedAt = updatedAt || new Date();
+      this._sessionIds = sessionIds || [];
+      this._sharedStateIds = sharedStateIds || [];
+      this._configuration = configuration || {};
+      this._metadata = metadata || {};
+    }
   }
 
-  // Getter方法 - 提供对私有字段的访问
-  get contextId(): UUID { return this._context_id; }
-  get name(): string { return this._name; }
-  get description(): string | null { return this._description; }
-  get lifecycleStage(): ContextLifecycleStage { return this._lifecycle_stage; }
-  get status(): EntityStatus { return this._status; }
-  get createdAt(): Date { return this._created_at; }
-  get updatedAt(): Date { return this._updated_at; }
-  get sessionIds(): UUID[] { return [...this._session_ids]; }
-  get sharedStateIds(): UUID[] { return [...this._shared_state_ids]; }
-  get configuration(): Record<string, unknown> { return { ...this._configuration }; }
-  get metadata(): Record<string, unknown> { return { ...this._metadata }; }
-  get sharedState(): SharedState | undefined { return this._shared_state; }
-  get accessControl(): AccessControl | undefined { return this._access_control; }
+  // ===== 基础协议字段访问器 =====
 
-  // Setter方法 - 提供对可变字段的修改
-  set name(value: string) { this._name = value; }
-  set description(value: string | null) { this._description = value; }
-  set lifecycleStage(value: ContextLifecycleStage) { this._lifecycle_stage = value; }
-  set status(value: EntityStatus) { this._status = value; }
-  set updatedAt(value: Date) { this._updated_at = value; }
-  set sessionIds(value: UUID[]) { this._session_ids = [...value]; }
-  set sharedStateIds(value: UUID[]) { this._shared_state_ids = [...value]; }
-  set configuration(value: Record<string, unknown>) { this._configuration = { ...value }; }
-  set metadata(value: Record<string, unknown>) { this._metadata = { ...value }; }
-  set sharedState(value: SharedState | undefined) { this._shared_state = value; }
-  set accessControl(value: AccessControl | undefined) { this._access_control = value; }
+  get contextId(): UUID {
+    return this._contextId;
+  }
+
+  get name(): string {
+    return this._name;
+  }
+
+  set name(value: string) {
+    this._name = value;
+    this._updatedAt = new Date();
+  }
+
+  get description(): string | undefined {
+    return this._description;
+  }
+
+  set description(value: string | undefined) {
+    this._description = value;
+    this._updatedAt = new Date();
+  }
+
+  get status(): EntityStatus {
+    return this._status;
+  }
+
+  set status(value: EntityStatus) {
+    this._status = value;
+    this._updatedAt = new Date();
+  }
+
+  get lifecycleStage(): string | undefined {
+    return this._lifecycleStage;
+  }
+
+  set lifecycleStage(value: string | undefined) {
+    this._lifecycleStage = value;
+    this._updatedAt = new Date();
+  }
+
+  get createdAt(): Date {
+    return this._createdAt;
+  }
+
+  get updatedAt(): Date {
+    return this._updatedAt;
+  }
+
+  get protocolVersion(): string {
+    return '1.0.0'; // MPLP协议版本
+  }
+
+  get timestamp(): Date {
+    return this._updatedAt; // 使用更新时间作为时间戳
+  }
+
+  get sessionIds(): UUID[] {
+    return this._sessionIds;
+  }
+
+  set sessionIds(value: UUID[]) {
+    this._sessionIds = value;
+    this._updatedAt = new Date();
+  }
+
+  get sharedStateIds(): UUID[] {
+    return this._sharedStateIds;
+  }
+
+  set sharedStateIds(value: UUID[]) {
+    this._sharedStateIds = value;
+    this._updatedAt = new Date();
+  }
+
+  get configuration(): Record<string, unknown> {
+    return this._configuration;
+  }
+
+  set configuration(value: Record<string, unknown>) {
+    this._configuration = value;
+    this._updatedAt = new Date();
+  }
+
+  get metadata(): Record<string, unknown> {
+    return this._metadata;
+  }
+
+  set metadata(value: Record<string, unknown>) {
+    this._metadata = value;
+    this._updatedAt = new Date();
+  }
+
+  // 14个功能域的getter方法
+  get auditTrail(): NonNullable<ContextEntityData['auditTrail']> {
+    return this._auditTrail || {
+      enabled: true,
+      retentionDays: 30,
+      auditEvents: []
+    };
+  }
+
+  set auditTrail(value: ContextEntityData['auditTrail']) {
+    this._auditTrail = value;
+    this._updatedAt = new Date();
+  }
+
+  get monitoringIntegration(): NonNullable<ContextEntityData['monitoringIntegration']> {
+    return this._monitoringIntegration || {
+      enabled: true,
+      supportedProviders: ['prometheus'],
+      exportFormats: ['json']
+    };
+  }
+
+  set monitoringIntegration(value: ContextEntityData['monitoringIntegration']) {
+    this._monitoringIntegration = value;
+    this._updatedAt = new Date();
+  }
+
+  get performanceMetrics(): NonNullable<ContextEntityData['performanceMetrics']> {
+    return this._performanceMetrics || {
+      enabled: true,
+      collectionIntervalSeconds: 60
+    };
+  }
+
+  set performanceMetrics(value: ContextEntityData['performanceMetrics']) {
+    this._performanceMetrics = value;
+    this._updatedAt = new Date();
+  }
+
+  get versionHistory(): NonNullable<ContextEntityData['versionHistory']> {
+    return this._versionHistory || {
+      enabled: true,
+      maxVersions: 10,
+      versions: []
+    };
+  }
+
+  set versionHistory(value: ContextEntityData['versionHistory']) {
+    this._versionHistory = value;
+    this._updatedAt = new Date();
+  }
+
+  get searchMetadata(): NonNullable<ContextEntityData['searchMetadata']> {
+    return this._searchMetadata || {
+      enabled: true,
+      indexingStrategy: 'full_text',
+      searchableFields: ['context_id', 'context_name'],
+      searchIndexes: []
+    };
+  }
+
+  set searchMetadata(value: ContextEntityData['searchMetadata']) {
+    this._searchMetadata = value;
+    this._updatedAt = new Date();
+  }
+
+  get cachingPolicy(): NonNullable<ContextEntityData['cachingPolicy']> {
+    return this._cachingPolicy || {
+      enabled: true,
+      cacheStrategy: 'lru',
+      cacheLevels: []
+    };
+  }
+
+  set cachingPolicy(value: ContextEntityData['cachingPolicy']) {
+    this._cachingPolicy = value;
+    this._updatedAt = new Date();
+  }
+
+  get syncConfiguration(): NonNullable<ContextEntityData['syncConfiguration']> {
+    return this._syncConfiguration || {
+      enabled: true,
+      syncStrategy: 'real_time',
+      syncTargets: []
+    };
+  }
+
+  set syncConfiguration(value: ContextEntityData['syncConfiguration']) {
+    this._syncConfiguration = value;
+    this._updatedAt = new Date();
+  }
+
+  get errorHandling(): NonNullable<ContextEntityData['errorHandling']> {
+    return this._errorHandling || {
+      enabled: true,
+      errorPolicies: []
+    };
+  }
+
+  set errorHandling(value: ContextEntityData['errorHandling']) {
+    this._errorHandling = value;
+    this._updatedAt = new Date();
+  }
+
+  get integrationEndpoints(): NonNullable<ContextEntityData['integrationEndpoints']> {
+    return this._integrationEndpoints || {
+      enabled: true,
+      webhooks: [],
+      apiEndpoints: []
+    };
+  }
+
+  set integrationEndpoints(value: ContextEntityData['integrationEndpoints']) {
+    this._integrationEndpoints = value;
+    this._updatedAt = new Date();
+  }
+
+  get eventIntegration(): NonNullable<ContextEntityData['eventIntegration']> {
+    return this._eventIntegration || {
+      enabled: true,
+      publishedEvents: [],
+      subscribedEvents: []
+    };
+  }
+
+  set eventIntegration(value: ContextEntityData['eventIntegration']) {
+    this._eventIntegration = value;
+    this._updatedAt = new Date();
+  }
+
+  // ===== 14个功能域访问器 =====
+
+  get sharedState(): ContextEntityData['sharedState'] | undefined {
+    return this._sharedState;
+  }
+
+  set sharedState(value: ContextEntityData['sharedState'] | undefined) {
+    this._sharedState = value;
+    this.updateTimestamp();
+  }
+
+  get accessControl(): ContextEntityData['accessControl'] | undefined {
+    return this._accessControl;
+  }
+
+  set accessControl(value: ContextEntityData['accessControl'] | undefined) {
+    this._accessControl = value;
+    this.updateTimestamp();
+  }
+
+
+
+  // ===== 领域方法 =====
+
+  /**
+   * 更新时间戳
+   */
+  private updateTimestamp(): void {
+    this._updatedAt = new Date();
+  }
 
   /**
    * 激活上下文
-   * @returns 如果状态发生变化则返回true
    */
-  activate(): boolean {
-    if (this.status === EntityStatus.SUSPENDED) {
-      this.status = EntityStatus.ACTIVE;
-      this.updatedAt = new Date();
+  public activate(): boolean {
+    if (this._status === ContextStatus.SUSPENDED) {
+      this._status = ContextStatus.ACTIVE;
+      this._updatedAt = new Date();
       return true;
     }
     return false;
@@ -106,58 +392,11 @@ export class Context {
 
   /**
    * 暂停上下文
-   * @returns 如果状态发生变化则返回true
    */
-  suspend(): boolean {
-    if (this.status === EntityStatus.ACTIVE) {
-      this.status = EntityStatus.SUSPENDED;
-      this.updatedAt = new Date();
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * 终止上下文
-   * @returns 如果状态发生变化则返回true
-   */
-  terminate(): boolean {
-    if (this.status !== EntityStatus.DELETED) {
-      this.status = EntityStatus.DELETED;
-      this.updatedAt = new Date();
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * 更新上下文的基本信息
-   */
-  update(name?: string, description?: string | null): void {
-    let changed = false;
-
-    if (name !== undefined && name !== this.name) {
-      this.name = name;
-      changed = true;
-    }
-
-    if (description !== undefined && description !== this.description) {
-      this.description = description;
-      changed = true;
-    }
-
-    if (changed) {
-      this.updatedAt = new Date();
-    }
-  }
-
-  /**
-   * 更新上下文的生命周期阶段
-   */
-  updateLifecycleStage(stage: ContextLifecycleStage): boolean {
-    if (stage !== this.lifecycleStage) {
-      this.lifecycleStage = stage;
-      this.updatedAt = new Date();
+  public suspend(): boolean {
+    if (this._status === ContextStatus.ACTIVE) {
+      this._status = ContextStatus.SUSPENDED;
+      this._updatedAt = new Date();
       return true;
     }
     return false;
@@ -166,10 +405,10 @@ export class Context {
   /**
    * 添加会话ID
    */
-  addSessionId(sessionId: UUID): boolean {
-    if (!this._session_ids.includes(sessionId)) {
-      this._session_ids.push(sessionId);
-      this.updatedAt = new Date();
+  public addSessionId(sessionId: UUID): boolean {
+    if (!this._sessionIds.includes(sessionId)) {
+      this._sessionIds.push(sessionId);
+      this._updatedAt = new Date();
       return true;
     }
     return false;
@@ -178,38 +417,11 @@ export class Context {
   /**
    * 移除会话ID
    */
-  removeSessionId(sessionId: UUID): boolean {
-    const initialLength = this._session_ids.length;
-    this._session_ids = this._session_ids.filter(id => id !== sessionId);
-
-    if (this._session_ids.length !== initialLength) {
-      this.updatedAt = new Date();
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * 添加共享状态ID
-   */
-  addSharedStateId(sharedStateId: UUID): boolean {
-    if (!this.sharedStateIds.includes(sharedStateId)) {
-      this.sharedStateIds.push(sharedStateId);
-      this.updatedAt = new Date();
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * 移除共享状态ID
-   */
-  removeSharedStateId(sharedStateId: UUID): boolean {
-    const initialLength = this.sharedStateIds.length;
-    this.sharedStateIds = this.sharedStateIds.filter(id => id !== sharedStateId);
-    
-    if (this.sharedStateIds.length !== initialLength) {
-      this.updatedAt = new Date();
+  public removeSessionId(sessionId: UUID): boolean {
+    const index = this._sessionIds.indexOf(sessionId);
+    if (index > -1) {
+      this._sessionIds.splice(index, 1);
+      this._updatedAt = new Date();
       return true;
     }
     return false;
@@ -218,141 +430,199 @@ export class Context {
   /**
    * 更新配置
    */
-  updateConfiguration(config: Record<string, unknown>): void {
-    this.configuration = {
-      ...this.configuration,
-      ...config
-    };
-    this.updatedAt = new Date();
+  public updateConfiguration(configOrKey: Record<string, unknown> | string, value?: unknown): void {
+    if (typeof configOrKey === 'object' && configOrKey !== null) {
+      // 如果传入的是配置对象，合并到现有配置
+      Object.assign(this._configuration, configOrKey);
+    } else {
+      // 如果传入的是key-value对
+      this._configuration = { ...this._configuration, [configOrKey as string]: value };
+    }
+    this._updatedAt = new Date();
   }
 
   /**
-   * 更新元数据
+   * 终止上下文
    */
-  updateMetadata(meta: Record<string, unknown>): void {
-    this.metadata = {
-      ...this.metadata,
-      ...meta
-    };
-    this.updatedAt = new Date();
+  public terminate(): boolean {
+    if (this._status !== ContextStatus.TERMINATED) {
+      this._status = ContextStatus.TERMINATED;
+      this._updatedAt = new Date();
+      return true;
+    }
+    return false;
   }
 
   /**
    * 更新共享状态
    */
-  updateSharedState(sharedState: SharedState): void {
-    this.sharedState = sharedState;
-    this.updatedAt = new Date();
-  }
+  public updateSharedState(sharedStateOrKey: Record<string, unknown> | string, value?: unknown): void {
+    // 如果第一个参数是SharedState对象
+    if (typeof sharedStateOrKey === 'object' && sharedStateOrKey !== null && !value) {
+      // 假设SharedState对象有一个data属性或者直接是数据
+      const sharedStateData = (sharedStateOrKey as Record<string, unknown>).data || sharedStateOrKey;
 
-  /**
-   * 更新访问控制
-   */
-  updateAccessControl(accessControl: AccessControl): void {
-    this.accessControl = accessControl;
-    this.updatedAt = new Date();
-  }
+      // 如果没有共享状态，创建一个基本结构
+      if (!this._sharedState) {
+        this._sharedState = {
+          variables: {},
+          resources: {
+            allocated: {},
+            requirements: {}
+          },
+          dependencies: [],
+          goals: []
+        };
+      }
 
-  /**
-   * 更新名称
-   */
-  updateName(name: string): void {
-    this.name = name;
-    this.updatedAt = new Date();
-  }
-
-  /**
-   * 更新描述
-   */
-  updateDescription(description: string | null): void {
-    this.description = description;
-    this.updatedAt = new Date();
-  }
-
-  /**
-   * 获取共享状态变量
-   */
-  getSharedVariable(key: string): unknown {
-    return this.sharedState?.variables[key];
-  }
-
-  /**
-   * 设置共享状态变量
-   */
-  setSharedVariable(key: string, value: unknown): void {
-    if (!this.sharedState) {
-      this.sharedState = new SharedState({ [key]: value });
+      // 更新变量
+      if (this._sharedState.variables && sharedStateData) {
+        Object.assign(this._sharedState.variables, sharedStateData);
+      }
     } else {
-      this.sharedState = this.sharedState.updateVariables({ [key]: value });
+      // 传统的key-value更新方式
+      const key = sharedStateOrKey as string;
+
+      // 如果没有共享状态，创建一个基本结构
+      if (!this._sharedState) {
+        this._sharedState = {
+          variables: {},
+          resources: {
+            allocated: {},
+            requirements: {}
+          },
+          dependencies: [],
+          goals: []
+        };
+      }
+
+      if (this._sharedState.variables) {
+        this._sharedState.variables[key] = value;
+      }
     }
-    this.updatedAt = new Date();
+
+    this._updatedAt = new Date();
   }
 
+
+
   /**
-   * 检查访问权限
+   * 验证实体完整性
    */
-  hasPermission(principal: string, resource: string, action: Action): boolean {
-    if (!this.accessControl) {
-      return false;
-    }
-    return this.accessControl.hasPermission(principal, resource, action);
+  validate(): { isValid: boolean; errors: string[] } {
+    const errors: string[] = [];
+
+    // 验证基础字段
+    if (!this._contextId) errors.push('contextId is required');
+    if (!this._name) errors.push('name is required');
+    if (!this._status) errors.push('status is required');
+    if (!this._lifecycleStage) errors.push('lifecycleStage is required');
+
+    // 验证必需的功能域
+    if (!this._sharedState) errors.push('sharedState is required');
+    if (!this._accessControl) errors.push('accessControl is required');
+    if (!this._configuration) errors.push('configuration is required');
+
+    return {
+      isValid: errors.length === 0,
+      errors
+    };
   }
 
   /**
-   * 获取所有依赖
+   * 转换为数据对象（向后兼容）
    */
-  getDependencies(): Dependency[] {
-    return this.sharedState?.dependencies || [];
+  toData(): ContextEntityData {
+    return {
+      protocolVersion: '1.0.0',
+      timestamp: this._updatedAt,
+      contextId: this._contextId,
+      name: this._name,
+      description: this._description,
+      status: this._status,
+      lifecycleStage: this._lifecycleStage || 'planning',
+      sharedState: this._sharedState || {
+        variables: {},
+        resources: { allocated: {}, requirements: {} },
+        dependencies: [],
+        goals: []
+      },
+      accessControl: this._accessControl || {
+        owner: { userId: 'system', role: 'admin' },
+        permissions: []
+      },
+      configuration: {
+        timeoutSettings: { defaultTimeout: 300, maxTimeout: 3600 },
+        persistence: { enabled: true, storageBackend: 'memory' }
+      },
+      auditTrail: this._auditTrail || {
+        enabled: true,
+        retentionDays: 30,
+        auditEvents: []
+      },
+      monitoringIntegration: this._monitoringIntegration || {
+        enabled: true,
+        supportedProviders: ['prometheus'],
+        exportFormats: ['json']
+      },
+      performanceMetrics: this._performanceMetrics || {
+        enabled: true,
+        collectionIntervalSeconds: 60
+      },
+      versionHistory: this._versionHistory || {
+        enabled: true,
+        maxVersions: 10,
+        versions: []
+      },
+      searchMetadata: this._searchMetadata || {
+        enabled: true,
+        indexingStrategy: 'auto',
+        searchableFields: ['name', 'description'],
+        searchIndexes: []
+      },
+      cachingPolicy: this._cachingPolicy || {
+        enabled: true,
+        cacheStrategy: 'lru',
+        cacheLevels: []
+      },
+      syncConfiguration: this._syncConfiguration || {
+        enabled: true,
+        syncStrategy: 'push_pull',
+        syncTargets: []
+      },
+      errorHandling: this._errorHandling || {
+        enabled: true,
+        errorPolicies: []
+      },
+      integrationEndpoints: this._integrationEndpoints || {
+        enabled: true,
+        webhooks: [],
+        apiEndpoints: []
+      },
+      eventIntegration: this._eventIntegration || {
+        enabled: true,
+        publishedEvents: ['context_created', 'context_updated'],
+        subscribedEvents: []
+      }
+    };
   }
 
   /**
-   * 获取所有目标
-   */
-  getGoals(): Goal[] {
-    return this.sharedState?.goals || [];
-  }
-
-  /**
-   * 检查目标是否完成
-   */
-  isGoalAchieved(goalId: UUID): boolean {
-    const goal = this.sharedState?.goals.find(g => g.id === goalId);
-    return goal?.status === 'achieved';
-  }
-
-  /**
-   * 获取资源分配状态
-   */
-  getResourceAllocation(resourceKey: string): Resource | undefined {
-    return this.sharedState?.allocatedResources[resourceKey];
-  }
-
-  /**
-   * 检查资源是否可用
-   */
-  isResourceAvailable(resourceKey: string): boolean {
-    const resource = this.getResourceAllocation(resourceKey);
-    return resource?.status === 'available';
-  }
-
-  /**
-   * 创建Context的深拷贝
+   * 克隆实体
    */
   clone(): Context {
     return new Context(
-      this.contextId,
-      this.name,
-      this.description,
-      this.lifecycleStage,
-      this.status,
-      new Date(this.createdAt),
-      new Date(this.updatedAt),
-      [...this.sessionIds],
-      [...this.sharedStateIds],
-      JSON.parse(JSON.stringify(this.configuration)),
-      JSON.parse(JSON.stringify(this.metadata)),
-      this.sharedState,
-      this.accessControl
+      this._contextId,
+      this._name,
+      this._description,
+      this._lifecycleStage,
+      this._status,
+      new Date(this._createdAt),
+      new Date(this._updatedAt),
+      [...this._sessionIds],
+      [...this._sharedStateIds],
+      { ...this._configuration },
+      { ...this._metadata }
     );
   }
 }

@@ -32,6 +32,10 @@ export interface PlanSchema {
     description?: string;
     dependencies: string[];
     estimated_duration?: number;
+    estimated_effort?: {
+      value: number;
+      unit: string;
+    };
     priority: string;
     status: string;
     assigned_agents?: string[];
@@ -123,10 +127,13 @@ export class PlanMapper {
         task_id: task.taskId,
         name: task.name,
         description: task.description || '',
-        dependencies: task.dependencies,
-        estimated_duration: typeof task.estimatedDuration === 'object' ? task.estimatedDuration.value : task.estimatedDuration,
-        priority: task.priority,
-        status: task.status,
+        dependencies: task.dependencies || [],
+        estimated_effort: typeof task.estimatedDuration === 'number' ? {
+          value: task.estimatedDuration,
+          unit: 'seconds'
+        } : task.estimatedDuration,
+        priority: task.priority || 'medium',
+        status: task.status || 'pending',
         assigned_agents: [],
         created_by: 'system'
       }));
@@ -178,7 +185,7 @@ export class PlanMapper {
         name: task.name,
         description: task.description,
         dependencies: task.dependencies,
-        estimatedDuration: task.estimated_duration,
+        estimatedDuration: task.estimated_effort ? task.estimated_effort.value : task.estimated_duration,
         priority: task.priority,
         status: task.status,
         assignedAgents: task.assigned_agents,

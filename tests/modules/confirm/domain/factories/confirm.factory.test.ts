@@ -38,23 +38,19 @@ describe('ConfirmFactory - 协议级测试', () => {
         title: '项目计划审批',
         description: '需要对项目计划进行审批确认',
         impactAssessment: {
-          scope: 'project',
-          businessImpact: 'medium',
-          technicalImpact: 'low',
+          businessImpact: 'Medium impact',
+          technicalImpact: 'Low impact',
           riskLevel: 'low',
-          affectedSystems: ['system1', 'system2'],
-          estimatedEffort: 'medium'
+          impactScope: ['system1', 'system2']
         } as ImpactAssessment
       } as ConfirmSubject,
       requester: {
         userId: 'user-12345',
+        name: 'Project Manager',
         role: 'project_manager',
-        requestReason: '项目进入下一阶段需要管理层确认',
+        email: 'pm@example.com',
         department: 'engineering',
-        contactInfo: {
-          email: 'pm@example.com',
-          phone: '+86-138-0000-0000'
-        }
+        requestReason: '项目进入下一阶段需要管理层确认'
       } as Requester,
       approvalWorkflow: {
         workflowId: 'workflow-123',
@@ -65,28 +61,38 @@ describe('ConfirmFactory - 协议级测试', () => {
             stepId: 'step-1',
             name: '技术负责人审批',
             stepOrder: 1,
-            approverRole: 'tech_lead',
-            isRequired: true,
-            timeoutHours: 24,
-            escalationRule: {
-              enabled: true,
-              escalateToRole: 'engineering_manager',
-              escalateAfterHours: 48
-            }
-          } as ApprovalStep,
+            level: 1,
+            approvers: [
+              {
+                approverId: 'tech-lead-1',
+                name: 'Tech Lead',
+                role: 'tech_lead',
+                email: 'tech.lead@example.com',
+                priority: 1,
+                isActive: true
+              }
+            ],
+            status: 'pending',
+            timeoutHours: 24
+          },
           {
             stepId: 'step-2',
             name: '项目经理审批',
             stepOrder: 2,
-            approverRole: 'project_manager',
-            isRequired: true,
-            timeoutHours: 48,
-            escalationRule: {
-              enabled: true,
-              escalateToRole: 'director',
-              escalateAfterHours: 72
-            }
-          } as ApprovalStep
+            level: 2,
+            approvers: [
+              {
+                approverId: 'pm-1',
+                name: 'Project Manager',
+                role: 'project_manager',
+                email: 'pm@example.com',
+                priority: 1,
+                isActive: true
+              }
+            ],
+            status: 'pending',
+            timeoutHours: 48
+          }
         ],
         parallelExecution: false,
         autoApprovalRules: []
@@ -119,7 +125,7 @@ describe('ConfirmFactory - 协议级测试', () => {
       expect(confirm.subject).toEqual(request.subject);
       expect(confirm.requester).toEqual(request.requester);
       expect(confirm.approvalWorkflow).toEqual(request.approvalWorkflow);
-      expect(confirm.expiresAt).toBe(request.expiresAt);
+      expect(confirm.expiresAt).toEqual(new Date(request.expiresAt));
       expect(confirm.metadata).toEqual(request.metadata);
     });
 
@@ -153,27 +159,43 @@ describe('ConfirmFactory - 协议级测试', () => {
         subject: {
           title: '测试确认',
           description: '测试描述',
-          impactAssessment: {} as ImpactAssessment
+          impactAssessment: {
+            businessImpact: 'Low impact',
+            technicalImpact: 'Low impact',
+            riskLevel: 'low',
+            impactScope: ['test-system']
+          } as ImpactAssessment
         },
         requester: {
           userId: 'user-123',
+          name: 'Test User',
           role: 'manager',
+          email: 'test@example.com',
           requestReason: '测试原因'
         },
         approvalWorkflow: {
-          workflowId: 'workflow-123',
-          name: '测试工作流',
-          description: '测试',
+          workflowType: 'sequential',
           steps: [{
             stepId: 'step-1',
             name: '步骤1',
             stepOrder: 1,
-            approverRole: 'manager',
-            isRequired: true,
+            level: 1,
+            approvers: [{
+              approverId: 'manager-1',
+              name: 'Test Manager',
+              role: 'manager',
+              email: 'manager@example.com',
+              priority: 1,
+              isActive: true
+            }],
+            status: 'pending',
             timeoutHours: 24
-          } as ApprovalStep],
-          parallelExecution: false,
-          autoApprovalRules: []
+          }],
+          requireAllApprovers: false,
+          allowDelegation: true,
+          autoApprovalRules: {
+            enabled: false
+          }
         }
         // planId, expiresAt, metadata 为 undefined
       };
@@ -353,12 +375,10 @@ describe('ConfirmFactory - 协议级测试', () => {
           title: '测试确认',
           description: '测试描述',
           impactAssessment: {
-            scope: 'project',
-            businessImpact: 'medium',
-            technicalImpact: 'low',
+            businessImpact: 'Medium impact',
+            technicalImpact: 'Low impact',
             riskLevel: 'low',
-            impactScope: ['system1'],
-            estimatedCost: 1000
+            impactScope: ['system1']
           }
         },
         requester: {
@@ -369,23 +389,28 @@ describe('ConfirmFactory - 协议级测试', () => {
           requestReason: '测试原因'
         },
         approvalWorkflow: {
-          workflowId: 'workflow-123',
-          name: '测试工作流',
-          description: '测试',
+          workflowType: 'sequential',
           steps: [{
             stepId: 'step-1',
             name: '测试步骤',
             stepOrder: 1,
-            approverRole: 'manager',
-            isRequired: true,
-            timeoutHours: 24,
-            status: StepStatus.PENDING
+            level: 1,
+            approvers: [{
+              approverId: 'manager-1',
+              name: 'Test Manager',
+              role: 'manager',
+              email: 'manager@example.com',
+              priority: 1,
+              isActive: true
+            }],
+            status: 'pending',
+            timeoutHours: 24
           }],
-          parallelExecution: false,
-          autoApprovalRules: [{
-            enabled: false,
-            conditions: []
-          }]
+          requireAllApprovers: false,
+          allowDelegation: true,
+          autoApprovalRules: {
+            enabled: false
+          }
         },
         createdAt: '2025-08-08T10:00:00Z',
         updatedAt: '2025-08-08T10:00:00Z'
@@ -399,8 +424,8 @@ describe('ConfirmFactory - 协议级测试', () => {
       expect(confirm.confirmationType).toBe(protocol.confirmationType);
       expect(confirm.status).toBe(protocol.status);
       expect(confirm.priority).toBe(protocol.priority);
-      expect(confirm.createdAt).toBe(protocol.createdAt);
-      expect(confirm.updatedAt).toBe(protocol.updatedAt);
+      expect(confirm.createdAt).toEqual(new Date(protocol.createdAt));
+      expect(confirm.updatedAt).toEqual(new Date(protocol.updatedAt));
     });
   });
 });

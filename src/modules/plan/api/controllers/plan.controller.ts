@@ -186,7 +186,7 @@ export class PlanController {
           res.status(400).json(this.buildErrorResponse({
             code: 'VALIDATION_ERROR',
             message: result.error || 'Failed to create plan',
-            details: (result as any).validationErrors || undefined
+            details: 'validationErrors' in result ? (result as { validationErrors?: unknown }).validationErrors : undefined
           }, requestId));
         }
       }
@@ -249,7 +249,7 @@ export class PlanController {
           res.status(400).json(this.buildErrorResponse({
             code: 'VALIDATION_ERROR',
             message: result.error,
-            details: (result as any).validationErrors || undefined
+            details: 'validationErrors' in result ? (result as { validationErrors?: unknown }).validationErrors : undefined
           }, requestId));
         } else {
           res.status(404).json(this.buildErrorResponse({

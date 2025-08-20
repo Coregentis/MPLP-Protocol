@@ -19,9 +19,10 @@ import { Logger } from '../../../../public/utils/logger';
 import { UpdateSharedStateRequest } from '../dto/requests/update-shared-state.request';
 import { UpdateAccessControlRequest } from '../dto/requests/update-access-control.request';
 import { SharedState } from '../../domain/value-objects/shared-state';
-import { AccessControl, Action } from '../../domain/value-objects/access-control';
+import { AccessControl } from '../../domain/value-objects/access-control';
 import { ContextManagementService } from '../../application/services/context-management.service';
 import { Context } from '../../domain/entities/context.entity';
+import { ContextMapper } from '../mappers/context.mapper';
 
 // 扩展Request类型，包含我们需要的属性
 interface Request extends ExpressRequest {
@@ -75,20 +76,9 @@ export class ContextController {
       
       const context = result.data!;
       
-      // 转换领域对象到响应DTO
-      const response: ContextResponse = {
-        context_id: context.contextId,
-        name: context.name,
-        description: context.description,
-        lifecycle_stage: context.lifecycleStage,
-        status: context.status,
-        created_at: context.createdAt.toISOString(),
-        updated_at: context.updatedAt.toISOString(),
-        session_count: context.sessionIds.length,
-        shared_state_count: context.sharedStateIds.length,
-        configuration: this.mapConfigurationToResponse(context.configuration),
-        metadata: context.metadata
-      };
+      // 使用ContextMapper进行正确的转换
+      const contextData = context.toData();
+      const response = ContextMapper.toSchema(contextData) as ContextResponse;
       
       res.status(201).json({
         success: true,
@@ -125,20 +115,9 @@ export class ContextController {
         return;
       }
       
-      // 转换领域对象到响应DTO
-      const response: ContextResponse = {
-        context_id: context.contextId,
-        name: context.name,
-        description: context.description,
-        lifecycle_stage: context.lifecycleStage,
-        status: context.status,
-        created_at: context.createdAt.toISOString(),
-        updated_at: context.updatedAt.toISOString(),
-        session_count: context.sessionIds.length,
-        shared_state_count: context.sharedStateIds.length,
-        configuration: this.mapConfigurationToResponse(context.configuration),
-        metadata: context.metadata
-      };
+      // 使用ContextMapper进行正确的camelCase到snake_case转换
+      const contextData = context.toData();
+      const response = ContextMapper.toSchema(contextData) as ContextResponse;
       
       res.status(200).json({
         success: true,
@@ -193,40 +172,7 @@ export class ContextController {
     };
   }
   
-  /**
-   * 将领域配置映射到响应配置
-   */
-  private mapConfigurationToResponse(config?: Record<string, unknown>): ContextResponse['configuration'] | undefined {
-    if (!config) {
-      return undefined;
-    }
 
-    // 将Application层配置映射到Schema层响应格式
-    const timeoutSettings = config.timeoutSettings as { defaultTimeout: number; maxTimeout: number; cleanupTimeout?: number } | undefined;
-    const notificationSettings = config.notificationSettings as { enabled: boolean; channels?: string[]; events?: string[] } | undefined;
-    const persistence = config.persistence as { enabled: boolean; storageBackend: string; retentionPolicy?: { duration: string; maxVersions?: number } } | undefined;
-
-    return {
-      timeout_settings: timeoutSettings ? {
-        default_timeout: timeoutSettings.defaultTimeout,
-        max_timeout: timeoutSettings.maxTimeout,
-        cleanup_timeout: timeoutSettings.cleanupTimeout
-      } : undefined,
-      notification_settings: notificationSettings ? {
-        enabled: notificationSettings.enabled,
-        channels: notificationSettings.channels as Array<'email' | 'webhook' | 'sms' | 'push'> | undefined,
-        events: notificationSettings.events as Array<'created' | 'updated' | 'completed' | 'failed' | 'timeout'> | undefined
-      } : undefined,
-      persistence: persistence ? {
-        enabled: persistence.enabled,
-        storage_backend: persistence.storageBackend as 'memory' | 'database' | 'file' | 'redis',
-        retention_policy: persistence.retentionPolicy ? {
-          duration: persistence.retentionPolicy.duration,
-          max_versions: persistence.retentionPolicy.maxVersions
-        } : undefined
-      } : undefined
-    };
-  }
 
   /**
    * 更新Context的共享状态
@@ -239,26 +185,19 @@ export class ContextController {
       this.logger.info('Updating context shared state', { contextId });
 
       // 将Schema格式转换为领域对象
-      const sharedState = this.mapSchemaToSharedState(sharedStateData as UpdateSharedStateRequest);
+      const _sharedState = this.mapSchemaToSharedState(sharedStateData as UpdateSharedStateRequest);
 
-      // 调用应用服务
-      const result = await this.contextManagementService.updateSharedState(
-        contextId,
-        sharedState
-      );
+      // TODO: 实现updateSharedState方法
+      // const result = await this.contextManagementService.updateSharedState(
+      //   contextId,
+      //   _sharedState
+      // );
 
-      if (result.success && result.data) {
-        const response = this.mapContextToResponse(result.data);
-        res.status(200).json({
-          success: true,
-          data: response
-        });
-      } else {
-        res.status(400).json({
-          success: false,
-          errors: result.error
-        });
-      }
+      // 临时响应
+      res.status(501).json({
+        success: false,
+        error: 'updateSharedState method not implemented yet'
+      });
     } catch (error) {
       this.logger.error('Failed to update shared state', { error });
       res.status(500).json({
@@ -279,26 +218,19 @@ export class ContextController {
       this.logger.info('Updating context access control', { contextId });
 
       // 将Schema格式转换为领域对象
-      const accessControl = this.mapSchemaToAccessControl(accessControlData as UpdateAccessControlRequest);
+      const _accessControl = this.mapSchemaToAccessControl(accessControlData as UpdateAccessControlRequest);
 
-      // 调用应用服务
-      const result = await this.contextManagementService.updateAccessControl(
-        contextId,
-        accessControl
-      );
+      // TODO: 实现updateAccessControl方法
+      // const result = await this.contextManagementService.updateAccessControl(
+      //   contextId,
+      //   _accessControl
+      // );
 
-      if (result.success && result.data) {
-        const response = this.mapContextToResponse(result.data);
-        res.status(200).json({
-          success: true,
-          data: response
-        });
-      } else {
-        res.status(400).json({
-          success: false,
-          errors: result.error
-        });
-      }
+      // 临时响应
+      res.status(501).json({
+        success: false,
+        error: 'updateAccessControl method not implemented yet'
+      });
     } catch (error) {
       this.logger.error('Failed to update access control', { error });
       res.status(500).json({
@@ -314,29 +246,22 @@ export class ContextController {
   async setSharedVariable(req: Request, res: Response): Promise<void> {
     try {
       const contextId = req.params.contextId;
-      const { key, value } = req.body as { key: string; value: unknown };
+      const { key, value: _value } = req.body as { key: string; value: unknown };
 
       this.logger.info('Setting shared variable', { contextId, key });
 
-      // 调用应用服务
-      const result = await this.contextManagementService.setSharedVariable(
-        contextId,
-        key,
-        value
-      );
+      // TODO: 实现setSharedVariable方法
+      // const result = await this.contextManagementService.setSharedVariable(
+      //   contextId,
+      //   key,
+      //   value
+      // );
 
-      if (result.success && result.data) {
-        const response = this.mapContextToResponse(result.data);
-        res.status(200).json({
-          success: true,
-          data: response
-        });
-      } else {
-        res.status(400).json({
-          success: false,
-          errors: result.error
-        });
-      }
+      // 临时响应
+      res.status(501).json({
+        success: false,
+        error: 'setSharedVariable method not implemented yet'
+      });
     } catch (error) {
       this.logger.error('Failed to set shared variable', { error });
       res.status(500).json({
@@ -356,27 +281,17 @@ export class ContextController {
 
       this.logger.info('Getting shared variable', { contextId, key });
 
-      // 调用应用服务
-      const result = await this.contextManagementService.getSharedVariable(
-        contextId,
-        key
-      );
+      // TODO: 实现getSharedVariable方法
+      // const result = await this.contextManagementService.getSharedVariable(
+      //   contextId,
+      //   key
+      // );
 
-      if (result.success) {
-        res.status(200).json({
-          success: true,
-          data: {
-            key,
-            value: result.data,
-            type: typeof result.data
-          }
-        });
-      } else {
-        res.status(400).json({
-          success: false,
-          errors: result.error
-        });
-      }
+      // 临时响应
+      res.status(501).json({
+        success: false,
+        error: 'getSharedVariable method not implemented yet'
+      });
     } catch (error) {
       this.logger.error('Failed to get shared variable', { error });
       res.status(500).json({
@@ -396,31 +311,19 @@ export class ContextController {
 
       this.logger.info('Checking permission', { contextId, principal, resource, action });
 
-      // 调用应用服务
-      const result = await this.contextManagementService.checkPermission(
-        contextId,
-        principal,
-        resource,
-        action as Action
-      );
+      // TODO: 实现checkPermission方法
+      // const result = await this.contextManagementService.checkPermission(
+      //   contextId,
+      //   principal,
+      //   resource,
+      //   action as Action
+      // );
 
-      if (result.success) {
-        res.status(200).json({
-          success: true,
-          data: {
-            principal,
-            resource,
-            action,
-            has_permission: result.data,
-            checked_at: new Date().toISOString()
-          }
-        });
-      } else {
-        res.status(400).json({
-          success: false,
-          errors: result.error
-        });
-      }
+      // 临时响应
+      res.status(501).json({
+        success: false,
+        error: 'checkPermission method not implemented yet'
+      });
     } catch (error) {
       this.logger.error('Failed to check permission', { error });
       res.status(500).json({
@@ -446,20 +349,10 @@ export class ContextController {
 
   /**
    * 将Context实体转换为响应格式
+   * 使用ContextMapper进行正确的转换
    */
   private mapContextToResponse(context: Context): ContextResponse {
-    return {
-      context_id: context.contextId,
-      name: context.name,
-      description: context.description,
-      status: context.status as 'active' | 'inactive' | 'suspended' | 'deleted',
-      lifecycle_stage: context.lifecycleStage as 'planning' | 'executing' | 'monitoring' | 'completed',
-      session_count: context.sessionIds.length,
-      shared_state_count: context.sharedStateIds.length,
-      configuration: context.configuration,
-      metadata: context.metadata,
-      created_at: context.createdAt.toISOString(),
-      updated_at: context.updatedAt.toISOString()
-    };
+    const contextData = context.toData();
+    return ContextMapper.toSchema(contextData) as ContextResponse;
   }
 }

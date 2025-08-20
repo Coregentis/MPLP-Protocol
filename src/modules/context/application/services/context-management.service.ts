@@ -1,859 +1,613 @@
 /**
- * Context管理服务
- * 
- * 应用层服务，实现Context的核心业务逻辑
- * 
+ * Context管理服务 - MPLP v1.0 支持14个功能域
+ *
+ * 核心业务逻辑层，处理Context的业务操作
+ * 基于完整的mplp-context.json Schema
+ *
  * @version 1.0.0
- * @created 2025-09-16
+ * @updated 2025-08-14
  */
 
-import { UUID, Result, PaginationParams, PaginatedResult } from '../../../../public/shared/types';
+import { UUID } from '../../../../public/shared/types';
 import { Context } from '../../domain/entities/context.entity';
-import { ContextFactory, CreateContextParams } from '../../domain/factories/context.factory';
-import { IContextRepository, ContextFilter, ContextSortField } from '../../domain/repositories/context-repository.interface';
-import { ContextValidationService } from '../../domain/services/context-validation.service';
-import { Logger } from '../../../../public/utils/logger';
-import { SharedStateManagementService } from './shared-state-management.service';
-import { AccessControlManagementService } from './access-control-management.service';
-import { SharedState } from '../../domain/value-objects/shared-state';
-import { AccessControl, Action } from '../../domain/value-objects/access-control';
-import {
-  ContextSyncRequest,
-  ContextOperationRequest,
-  ContextAnalysisRequest,
-  StatusOptions
-} from '../../types';
+import { IContextRepository, ContextFilter, PaginationParams, PaginatedResult } from '../../domain/repositories/context-repository.interface';
+import { ContextEntityData } from '../../api/mappers/context.mapper';
+import { EntityStatus, ContextStatus } from '../../types';
 
 /**
- * Context操作结果
+ * Context创建请求
  */
-export interface ContextOperationResult extends Result<Context> {}
+export interface CreateContextRequest {
+  name: string;
+  description?: string;
+  status: string;
+  lifecycleStage: string;
+  
+  // 可选的功能域配置
+  sharedStateConfig?: Partial<ContextEntityData['sharedState']>;
+  accessControlConfig?: Partial<ContextEntityData['accessControl']>;
+  configurationConfig?: Partial<ContextEntityData['configuration']>;
+  auditConfig?: Partial<ContextEntityData['auditTrail']>;
+  monitoringConfig?: Partial<ContextEntityData['monitoringIntegration']>;
+  performanceConfig?: Partial<ContextEntityData['performanceMetrics']>;
+  versioningConfig?: Partial<ContextEntityData['versionHistory']>;
+  searchConfig?: Partial<ContextEntityData['searchMetadata']>;
+  cachingConfig?: Partial<ContextEntityData['cachingPolicy']>;
+  syncConfig?: Partial<ContextEntityData['syncConfiguration']>;
+  errorHandlingConfig?: Partial<ContextEntityData['errorHandling']>;
+  integrationConfig?: Partial<ContextEntityData['integrationEndpoints']>;
+  eventConfig?: Partial<ContextEntityData['eventIntegration']>;
+}
 
 /**
- * Context管理服务
+ * Context更新请求
+ */
+export interface UpdateContextRequest {
+  name?: string;
+  description?: string;
+  status?: EntityStatus;
+  lifecycleStage?: string;
+  
+  // 功能域更新
+  sharedStateUpdates?: Partial<ContextEntityData['sharedState']>;
+  accessControlUpdates?: Partial<ContextEntityData['accessControl']>;
+  configurationUpdates?: Partial<ContextEntityData['configuration']>;
+  auditUpdates?: Partial<ContextEntityData['auditTrail']>;
+  monitoringUpdates?: Partial<ContextEntityData['monitoringIntegration']>;
+  performanceUpdates?: Partial<ContextEntityData['performanceMetrics']>;
+  versioningUpdates?: Partial<ContextEntityData['versionHistory']>;
+  searchUpdates?: Partial<ContextEntityData['searchMetadata']>;
+  cachingUpdates?: Partial<ContextEntityData['cachingPolicy']>;
+  syncUpdates?: Partial<ContextEntityData['syncConfiguration']>;
+  errorHandlingUpdates?: Partial<ContextEntityData['errorHandling']>;
+  integrationUpdates?: Partial<ContextEntityData['integrationEndpoints']>;
+  eventUpdates?: Partial<ContextEntityData['eventIntegration']>;
+}
+
+/**
+ * Context管理服务结果
+ */
+export interface ContextServiceResult<T = Context> {
+  success: boolean;
+  data?: T;
+  error?: string | Array<{ field: string; message: string }>;
+  validationErrors?: string[];
+}
+
+/**
+ * 验证服务接口
+ */
+interface ValidationService {
+  validateContext(context: Context): Array<{ field: string; message: string }>;
+  validateDeletion?(context: Context): { field: string; message: string } | null;
+}
+
+/**
+ * Context工厂接口
+ */
+interface ContextFactory {
+  createContext(request: CreateContextRequest): Context;
+}
+
+/**
+ * Context管理服务 v2.0
  */
 export class ContextManagementService {
-  private readonly logger = new Logger('ContextManagementService');
-  
   constructor(
-    private readonly contextRepository: IContextRepository,
-    private readonly contextFactory: ContextFactory,
-    private readonly validationService: ContextValidationService,
-    private readonly sharedStateService: SharedStateManagementService,
-    private readonly accessControlService: AccessControlManagementService
+    private readonly repository: IContextRepository,
+    private readonly validationService?: ValidationService,
+    private readonly contextFactory?: ContextFactory
   ) {}
-  
+
   /**
-   * 创建Context
+   * 创建新的Context
    */
-  async createContext(params: CreateContextParams): Promise<ContextOperationResult> {
-    this.logger.info('Creating new context', { name: params.name });
-    
+  async createContext(request: CreateContextRequest): Promise<ContextServiceResult> {
     try {
-      // 创建Context实体
-      const context = this.contextFactory.createContext(params);
-      
+      // 创建Context实例
+      let context: Context;
+      if (this.contextFactory) {
+        context = this.contextFactory.createContext(request);
+      } else {
+        // 创建Context数据
+        const contextData = this.buildContextData(request);
+        context = new Context(contextData);
+      }
+
       // 验证Context
-      const validationErrors = this.validationService.validateContext(context);
+      let validationErrors: Array<{ field: string; message: string }> = [];
+      if (this.validationService) {
+        validationErrors = this.validationService.validateContext(context);
+      } else {
+        // 使用内置验证
+        const validationResult = this.validateCreateRequest(request);
+        if (!validationResult.isValid) {
+          validationErrors = validationResult.errors.map(error => ({ field: 'general', message: error }));
+        }
+      }
+
       if (validationErrors.length > 0) {
-        this.logger.warn('Context validation failed', { errors: validationErrors });
         return {
           success: false,
           error: validationErrors
         };
       }
-      
-      // 保存Context
-      await this.contextRepository.save(context);
-      
-      this.logger.info('Context created successfully', { contextId: context.contextId });
-      
+
+      // 检查名称唯一性
+      const existing = await this.repository.findByName(request.name);
+      if (existing) {
+        return {
+          success: false,
+          error: `Context with name "${request.name}" already exists`
+        };
+      }
+
+      // 保存
+      await this.repository.save(context);
+
       return {
         success: true,
         data: context
       };
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error('Failed to create context', error);
+
+    } catch (error) {
       return {
         success: false,
-        error: [{ field: 'system', message: `System error: ${errorMessage}` }]
+        error: [{
+          field: 'system',
+          message: `System error: ${error instanceof Error ? error.message : 'Unknown error'}`
+        }]
       };
     }
   }
-  
-  /**
-   * 获取Context
-   */
-  async getContextById(contextId: UUID): Promise<Context | null> {
-    this.logger.debug('Getting context by ID', { contextId });
-    
-    try {
-      const context = await this.contextRepository.findById(contextId);
-      
-      if (!context) {
-        this.logger.debug('Context not found', { contextId });
-        return null;
-      }
-      
-      return context;
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error('Error getting context by ID', { error, contextId });
-      throw new Error(`Failed to get context: ${errorMessage}`);
-    }
-  }
-  
+
   /**
    * 更新Context
    */
-  async updateContext(
-    contextId: UUID, 
-    updates: Partial<CreateContextParams>
-  ): Promise<ContextOperationResult> {
-    this.logger.info('Updating context', { contextId });
-    
+  async updateContext(id: UUID, request: UpdateContextRequest): Promise<ContextServiceResult> {
     try {
-      // 获取现有Context
-      const existingContext = await this.contextRepository.findById(contextId);
-      
-      if (!existingContext) {
-        this.logger.warn('Context not found for update', { contextId });
+      // 查找现有Context
+      const existing = await this.repository.findById(id);
+      if (!existing) {
         return {
           success: false,
-          error: [{ field: 'contextId', message: 'Context not found' }]
+          error: `Context with id "${id}" not found`
         };
       }
-      
+
       // 应用更新
-      if (updates.name !== undefined) {
-        existingContext.update(updates.name, updates.description);
-      } else if (updates.description !== undefined) {
-        existingContext.update(existingContext.name, updates.description);
-      }
-      
-      if (updates.lifecycleStage !== undefined) {
-        // 验证生命周期阶段转换
-        const transitionError = this.validationService.validateLifecycleTransition(
-          existingContext.lifecycleStage,
-          updates.lifecycleStage
-        );
-        
-        if (transitionError) {
-          return {
-            success: false,
-            error: [transitionError]
-          };
-        }
-        
-        existingContext.updateLifecycleStage(updates.lifecycleStage);
-      }
-      
-      if (updates.status !== undefined) {
-        // 验证状态转换
-        const statusTransitionError = this.validationService.validateStatusTransition(
-          existingContext.status,
-          updates.status
-        );
-        
-        if (statusTransitionError) {
-          return {
-            success: false,
-            error: [statusTransitionError]
-          };
-        }
-        
-        // 应用状态变更
-        switch (updates.status) {
-          case 'active':
-            existingContext.activate();
-            break;
-          case 'suspended':
-            existingContext.suspend();
-            break;
-          case 'deleted':
-            existingContext.terminate();
-            break;
-          default:
-            // 其他状态变更通过直接赋值处理
-            existingContext.status = updates.status;
-            existingContext.updatedAt = new Date();
-        }
-      }
-      
-      if (updates.configuration) {
-        existingContext.updateConfiguration(updates.configuration);
-      }
-      
-      if (updates.metadata) {
-        existingContext.updateMetadata(updates.metadata);
-      }
-      
-      // 验证更新后的Context
-      const validationErrors = this.validationService.validateContext(existingContext);
-      if (validationErrors.length > 0) {
-        this.logger.warn('Updated context validation failed', { errors: validationErrors });
+      this.applyUpdates(existing, request);
+
+      // 验证更新后的实体
+      const validation = existing.validate();
+      if (!validation.isValid) {
         return {
           success: false,
-          error: validationErrors
+          error: 'Validation failed after update',
+          validationErrors: validation.errors
         };
       }
-      
-      // 保存更新后的Context
-      await this.contextRepository.save(existingContext);
-      
-      this.logger.info('Context updated successfully', { contextId });
-      
+
+      // 保存更新
+      await this.repository.save(existing);
+
       return {
         success: true,
-        data: existingContext
+        data: existing
       };
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error('Failed to update context', { error, contextId });
+
+    } catch (error) {
       return {
         success: false,
-        error: [{ field: 'system', message: `System error: ${errorMessage}` }]
+        error: error instanceof Error ? error.message : 'Unknown error'
       };
     }
   }
+
+
+
+  /**
+   * 获取Context
+   */
+  async getContext(id: UUID): Promise<ContextServiceResult> {
+    try {
+      const context = await this.repository.findById(id);
+      if (!context) {
+        return {
+          success: false,
+          error: `Context with id "${id}" not found`
+        };
+      }
+
+      return {
+        success: true,
+        data: context
+      };
+
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      };
+    }
+  }
+
+  /**
+   * 查询Context列表
+   */
+  async queryContexts(
+    filter?: ContextFilter, 
+    pagination?: PaginationParams
+  ): Promise<ContextServiceResult<PaginatedResult<Context>>> {
+    try {
+      const result = await this.repository.findMany(filter, pagination);
+
+      return {
+        success: true,
+        data: result
+      };
+
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      };
+    }
+  }
+
+  /**
+   * 获取Context统计信息
+   */
+  async getContextStatistics(): Promise<ContextServiceResult<{
+    total: number;
+    statusStats: Record<string, number>;
+    lifecycleStats: Record<string, number>;
+    featureDomainStats: Record<string, unknown>;
+    configurationStats: Record<string, unknown>;
+  }>> {
+    try {
+      const [
+        total,
+        statusStats,
+        lifecycleStats,
+        featureDomainStats,
+        configurationStats
+      ] = await Promise.all([
+        this.repository.count(),
+        this.repository.getStatusStatistics(),
+        this.repository.getLifecycleStageStatistics(),
+        this.repository.getFeatureDomainStatistics(),
+        this.repository.getConfigurationStatistics()
+      ]);
+
+      return {
+        success: true,
+        data: {
+          total,
+          statusStats,
+          lifecycleStats,
+          featureDomainStats,
+          configurationStats
+        }
+      };
+
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      };
+    }
+  }
+
+  // ===== 私有辅助方法 =====
+
+  /**
+   * 验证创建请求
+   */
+  private validateCreateRequest(request: CreateContextRequest): { isValid: boolean; errors: string[] } {
+    const errors: string[] = [];
+
+    if (!request.name || request.name.trim().length === 0) {
+      errors.push('Name is required');
+    }
+
+    if (!request.status) {
+      errors.push('Status is required');
+    }
+
+    if (!request.lifecycleStage) {
+      errors.push('Lifecycle stage is required');
+    }
+
+    return {
+      isValid: errors.length === 0,
+      errors
+    };
+  }
+
+  /**
+   * 构建Context数据
+   */
+  private buildContextData(request: CreateContextRequest): ContextEntityData {
+    const defaultSharedState = this.getDefaultSharedState();
+    const defaultAccessControl = this.getDefaultAccessControl();
+    const defaultConfiguration = this.getDefaultConfiguration();
+    const defaultAuditTrail = this.getDefaultAuditTrail();
+    const defaultMonitoringIntegration = this.getDefaultMonitoringIntegration();
+    const defaultPerformanceMetrics = this.getDefaultPerformanceMetrics();
+    const defaultVersionHistory = this.getDefaultVersionHistory();
+    const defaultSearchMetadata = this.getDefaultSearchMetadata();
+    const defaultCachingPolicy = this.getDefaultCachingPolicy();
+    const defaultSyncConfiguration = this.getDefaultSyncConfiguration();
+    const defaultErrorHandling = this.getDefaultErrorHandling();
+    const defaultIntegrationEndpoints = this.getDefaultIntegrationEndpoints();
+    const defaultEventIntegration = this.getDefaultEventIntegration();
+
+    return {
+      protocolVersion: '1.0.0',
+      timestamp: new Date(),
+      contextId: this.generateUUID(),
+      name: request.name,
+      description: request.description,
+      status: request.status,
+      lifecycleStage: request.lifecycleStage,
+
+      // 合并默认配置和请求中的配置
+      sharedState: request.sharedStateConfig ? { ...defaultSharedState, ...request.sharedStateConfig } : defaultSharedState,
+      accessControl: request.accessControlConfig ? { ...defaultAccessControl, ...request.accessControlConfig } : defaultAccessControl,
+      configuration: request.configurationConfig ? { ...defaultConfiguration, ...request.configurationConfig } : defaultConfiguration,
+      auditTrail: request.auditConfig ? { ...defaultAuditTrail, ...request.auditConfig } : defaultAuditTrail,
+      monitoringIntegration: request.monitoringConfig ? { ...defaultMonitoringIntegration, ...request.monitoringConfig } : defaultMonitoringIntegration,
+      performanceMetrics: request.performanceConfig ? { ...defaultPerformanceMetrics, ...request.performanceConfig } : defaultPerformanceMetrics,
+      versionHistory: request.versioningConfig ? { ...defaultVersionHistory, ...request.versioningConfig } : defaultVersionHistory,
+      searchMetadata: request.searchConfig ? { ...defaultSearchMetadata, ...request.searchConfig } : defaultSearchMetadata,
+      cachingPolicy: request.cachingConfig ? { ...defaultCachingPolicy, ...request.cachingConfig } : defaultCachingPolicy,
+      syncConfiguration: request.syncConfig ? { ...defaultSyncConfiguration, ...request.syncConfig } : defaultSyncConfiguration,
+      errorHandling: request.errorHandlingConfig ? { ...defaultErrorHandling, ...request.errorHandlingConfig } : defaultErrorHandling,
+      integrationEndpoints: request.integrationConfig ? { ...defaultIntegrationEndpoints, ...request.integrationConfig } : defaultIntegrationEndpoints,
+      eventIntegration: request.eventConfig ? { ...defaultEventIntegration, ...request.eventConfig } : defaultEventIntegration
+    };
+  }
+
+  /**
+   * 应用更新
+   */
+  private applyUpdates(context: Context, request: UpdateContextRequest): void {
+    if (request.name !== undefined) context.name = request.name;
+    if (request.description !== undefined) context.description = request.description;
+    if (request.status !== undefined) context.status = request.status;
+    if (request.lifecycleStage !== undefined) context.lifecycleStage = request.lifecycleStage;
+
+    // 应用功能域更新
+    if (request.sharedStateUpdates) {
+      const currentSharedState = context.sharedState || {
+        variables: {},
+        resources: { allocated: {}, requirements: {} },
+        dependencies: [],
+        goals: []
+      };
+      context.sharedState = { ...currentSharedState, ...request.sharedStateUpdates };
+    }
+    if (request.accessControlUpdates) {
+      const currentAccessControl = context.accessControl || {
+        owner: { userId: '', role: '' },
+        permissions: []
+      };
+      context.accessControl = { ...currentAccessControl, ...request.accessControlUpdates };
+    }
+    if (request.configurationUpdates) {
+      context.configuration = { ...context.configuration, ...request.configurationUpdates };
+    }
+    if (request.auditUpdates) {
+      context.auditTrail = { ...context.auditTrail, ...request.auditUpdates };
+    }
+    if (request.monitoringUpdates) {
+      context.monitoringIntegration = { ...context.monitoringIntegration, ...request.monitoringUpdates };
+    }
+    if (request.performanceUpdates) {
+      context.performanceMetrics = { ...context.performanceMetrics, ...request.performanceUpdates };
+    }
+    if (request.versioningUpdates) {
+      context.versionHistory = { ...context.versionHistory, ...request.versioningUpdates };
+    }
+    if (request.searchUpdates) {
+      context.searchMetadata = { ...context.searchMetadata, ...request.searchUpdates };
+    }
+    if (request.cachingUpdates) {
+      context.cachingPolicy = { ...context.cachingPolicy, ...request.cachingUpdates };
+    }
+    if (request.syncUpdates) {
+      context.syncConfiguration = { ...context.syncConfiguration, ...request.syncUpdates };
+    }
+    if (request.errorHandlingUpdates) {
+      context.errorHandling = { ...context.errorHandling, ...request.errorHandlingUpdates };
+    }
+    if (request.integrationUpdates) {
+      context.integrationEndpoints = { ...context.integrationEndpoints, ...request.integrationUpdates };
+    }
+    if (request.eventUpdates) {
+      context.eventIntegration = { ...context.eventIntegration, ...request.eventUpdates };
+    }
+  }
+
+  /**
+   * 生成UUID
+   */
+  private generateUUID(): UUID {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      const r = Math.random() * 16 | 0;
+      const v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+
+  // ===== 默认配置方法 =====
   
+  private getDefaultSharedState(): ContextEntityData['sharedState'] {
+    return {
+      variables: {},
+      resources: { allocated: {}, requirements: {} },
+      dependencies: [],
+      goals: []
+    };
+  }
+
+  private getDefaultAccessControl(): ContextEntityData['accessControl'] {
+    return {
+      owner: { userId: 'system', role: 'owner' },
+      permissions: []
+    };
+  }
+
+  private getDefaultConfiguration(): ContextEntityData['configuration'] {
+    return {
+      timeoutSettings: { defaultTimeout: 300, maxTimeout: 3600 },
+      persistence: { enabled: true, storageBackend: 'memory' }
+    };
+  }
+
+  private getDefaultAuditTrail(): ContextEntityData['auditTrail'] {
+    return {
+      enabled: false,
+      retentionDays: 30,
+      auditEvents: []
+    };
+  }
+
+  private getDefaultMonitoringIntegration(): ContextEntityData['monitoringIntegration'] {
+    return {
+      enabled: false,
+      supportedProviders: [],
+      exportFormats: []
+    };
+  }
+
+  private getDefaultPerformanceMetrics(): ContextEntityData['performanceMetrics'] {
+    return {
+      enabled: false,
+      collectionIntervalSeconds: 60
+    };
+  }
+
+  private getDefaultVersionHistory(): ContextEntityData['versionHistory'] {
+    return {
+      enabled: false,
+      maxVersions: 10,
+      versions: []
+    };
+  }
+
+  private getDefaultSearchMetadata(): ContextEntityData['searchMetadata'] {
+    return {
+      enabled: false,
+      indexingStrategy: 'none',
+      searchableFields: [],
+      searchIndexes: []
+    };
+  }
+
+  private getDefaultCachingPolicy(): ContextEntityData['cachingPolicy'] {
+    return {
+      enabled: false,
+      cacheStrategy: 'none',
+      cacheLevels: []
+    };
+  }
+
+  private getDefaultSyncConfiguration(): ContextEntityData['syncConfiguration'] {
+    return {
+      enabled: false,
+      syncStrategy: 'none',
+      syncTargets: []
+    };
+  }
+
+  private getDefaultErrorHandling(): ContextEntityData['errorHandling'] {
+    return {
+      enabled: false,
+      errorPolicies: []
+    };
+  }
+
+  private getDefaultIntegrationEndpoints(): ContextEntityData['integrationEndpoints'] {
+    return {
+      enabled: false,
+      webhooks: [],
+      apiEndpoints: []
+    };
+  }
+
+  private getDefaultEventIntegration(): ContextEntityData['eventIntegration'] {
+    return {
+      enabled: false,
+      publishedEvents: [],
+      subscribedEvents: []
+    };
+  }
+
+  /**
+   * 根据ID获取Context
+   */
+  async getContextById(id: UUID): Promise<Context | null> {
+    try {
+      const context = await this.repository.findById(id);
+      return context;
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(`Failed to get context: ${error.message}`);
+      }
+      throw new Error('Failed to get context: Unknown error');
+    }
+  }
+
   /**
    * 删除Context
    */
-  async deleteContext(contextId: UUID): Promise<ContextOperationResult> {
-    this.logger.info('Deleting context', { contextId });
-    
+  async deleteContext(id: UUID): Promise<ContextServiceResult> {
     try {
-      // 获取现有Context
-      const existingContext = await this.contextRepository.findById(contextId);
-      
-      if (!existingContext) {
-        this.logger.warn('Context not found for deletion', { contextId });
+      // 查找现有Context
+      const existing = await this.repository.findById(id);
+      if (!existing) {
         return {
           success: false,
-          error: [{ field: 'contextId', message: 'Context not found' }]
+          error: [{
+            field: 'contextId',
+            message: 'Context not found'
+          }]
         };
       }
-      
+
       // 验证是否可以删除
-      const deletionError = this.validationService.validateDeletion(existingContext);
-      if (deletionError) {
-        return {
-          success: false,
-          error: [deletionError]
-        };
-      }
-      
-      // 标记为已删除
-      existingContext.terminate();
-      
-      // 保存更新后的Context
-      await this.contextRepository.save(existingContext);
-      
-      this.logger.info('Context marked as deleted', { contextId });
-      
-      return {
-        success: true,
-        data: existingContext
-      };
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error('Failed to delete context', { error, contextId });
-      return {
-        success: false,
-        error: [{ field: 'system', message: `System error: ${errorMessage}` }]
-      };
-    }
-  }
-  
-  /**
-   * 查找Context
-   */
-  async findContexts(
-    filter: ContextFilter,
-    pagination: PaginationParams
-  ): Promise<PaginatedResult<Context>> {
-    this.logger.debug('Finding contexts with filter', { filter, pagination });
-    
-    try {
-      // 将sort_by转换为ContextSortField类型
-      const sortField = pagination.sort_by as ContextSortField | undefined;
-      return await this.contextRepository.findByFilter(
-        filter,
-        pagination,
-        sortField,
-        pagination.sort_order
-      );
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error('Error finding contexts', error);
-      throw new Error(`Failed to find contexts: ${errorMessage}`);
-    }
-  }
-  
-  /**
-   * 克隆Context
-   */
-  async cloneContext(
-    contextId: UUID,
-    overrides: Partial<CreateContextParams> = {}
-  ): Promise<ContextOperationResult> {
-    this.logger.info('Cloning context', { contextId });
-    
-    try {
-      // 获取源Context
-      const sourceContext = await this.contextRepository.findById(contextId);
-      
-      if (!sourceContext) {
-        this.logger.warn('Source context not found for cloning', { contextId });
-        return {
-          success: false,
-          error: [{ field: 'contextId', message: 'Source context not found' }]
-        };
-      }
-      
-      // 克隆Context
-      const clonedContext = this.contextFactory.cloneContext(sourceContext, overrides);
-      
-      // 验证克隆后的Context
-      const validationErrors = this.validationService.validateContext(clonedContext);
-      if (validationErrors.length > 0) {
-        this.logger.warn('Cloned context validation failed', { errors: validationErrors });
-        return {
-          success: false,
-          error: validationErrors
-        };
-      }
-      
-      // 保存克隆后的Context
-      await this.contextRepository.save(clonedContext);
-      
-      this.logger.info('Context cloned successfully', { 
-        sourceContextId: contextId,
-        clonedContextId: clonedContext.contextId
-      });
-      
-      return {
-        success: true,
-        data: clonedContext
-      };
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error('Failed to clone context', { error, contextId });
-      return {
-        success: false,
-        error: [{ field: 'system', message: `System error: ${errorMessage}` }]
-      };
-    }
-  }
-
-  /**
-   * 更新Context的共享状态
-   */
-  async updateSharedState(
-    contextId: UUID,
-    sharedState: SharedState
-  ): Promise<ContextOperationResult> {
-    try {
-      this.logger.info('Updating context shared state', { contextId });
-
-      // 获取现有Context
-      const existingContext = await this.contextRepository.findById(contextId);
-      if (!existingContext) {
-        return {
-          success: false,
-          error: [{ field: 'contextId', message: 'Context not found' }]
-        };
-      }
-
-      // 更新共享状态
-      existingContext.updateSharedState(sharedState);
-
-      // 保存更新
-      await this.contextRepository.save(existingContext);
-
-      this.logger.info('Context shared state updated successfully', { contextId });
-
-      return {
-        success: true,
-        data: existingContext
-      };
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error('Failed to update context shared state', { error, contextId });
-      return {
-        success: false,
-        error: [{ field: 'system', message: `System error: ${errorMessage}` }]
-      };
-    }
-  }
-
-  /**
-   * 更新Context的访问控制
-   */
-  async updateAccessControl(
-    contextId: UUID,
-    accessControl: AccessControl
-  ): Promise<ContextOperationResult> {
-    try {
-      this.logger.info('Updating context access control', { contextId });
-
-      // 获取现有Context
-      const existingContext = await this.contextRepository.findById(contextId);
-      if (!existingContext) {
-        return {
-          success: false,
-          error: [{ field: 'contextId', message: 'Context not found' }]
-        };
-      }
-
-      // 更新访问控制
-      existingContext.updateAccessControl(accessControl);
-
-      // 保存更新
-      await this.contextRepository.save(existingContext);
-
-      this.logger.info('Context access control updated successfully', { contextId });
-
-      return {
-        success: true,
-        data: existingContext
-      };
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error('Failed to update context access control', { error, contextId });
-      return {
-        success: false,
-        error: [{ field: 'system', message: `System error: ${errorMessage}` }]
-      };
-    }
-  }
-
-  /**
-   * 设置共享变量
-   */
-  async setSharedVariable(
-    contextId: UUID,
-    key: string,
-    value: unknown
-  ): Promise<ContextOperationResult> {
-    try {
-      this.logger.info('Setting shared variable', { contextId, key });
-
-      // 获取现有Context
-      const existingContext = await this.contextRepository.findById(contextId);
-      if (!existingContext) {
-        return {
-          success: false,
-          error: [{ field: 'contextId', message: 'Context not found' }]
-        };
-      }
-
-      // 设置共享变量
-      existingContext.setSharedVariable(key, value);
-
-      // 保存更新
-      await this.contextRepository.save(existingContext);
-
-      this.logger.info('Shared variable set successfully', { contextId, key });
-
-      return {
-        success: true,
-        data: existingContext
-      };
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error('Failed to set shared variable', { error, contextId, key });
-      return {
-        success: false,
-        error: [{ field: 'system', message: `System error: ${errorMessage}` }]
-      };
-    }
-  }
-
-  /**
-   * 获取共享变量
-   */
-  async getSharedVariable(
-    contextId: UUID,
-    key: string
-  ): Promise<Result<unknown>> {
-    try {
-      this.logger.info('Getting shared variable', { contextId, key });
-
-      // 获取现有Context
-      const existingContext = await this.contextRepository.findById(contextId);
-      if (!existingContext) {
-        return {
-          success: false,
-          error: [{ field: 'contextId', message: 'Context not found' }]
-        };
-      }
-
-      // 获取共享变量
-      const value = existingContext.getSharedVariable(key);
-
-      this.logger.info('Shared variable retrieved successfully', { contextId, key });
-
-      return {
-        success: true,
-        data: value
-      };
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error('Failed to get shared variable', { error, contextId, key });
-      return {
-        success: false,
-        error: [{ field: 'system', message: `System error: ${errorMessage}` }]
-      };
-    }
-  }
-
-  /**
-   * 检查访问权限
-   */
-  async checkPermission(
-    contextId: UUID,
-    principal: string,
-    resource: string,
-    action: Action
-  ): Promise<Result<boolean>> {
-    try {
-      this.logger.info('Checking permission', { contextId, principal, resource, action });
-
-      // 获取现有Context
-      const existingContext = await this.contextRepository.findById(contextId);
-      if (!existingContext) {
-        return {
-          success: false,
-          error: [{ field: 'contextId', message: 'Context not found' }]
-        };
-      }
-
-      // 检查权限
-      const hasPermission = existingContext.hasPermission(principal, resource, action);
-
-      this.logger.info('Permission check completed', {
-        contextId,
-        principal,
-        resource,
-        action,
-        hasPermission
-      });
-
-      return {
-        success: true,
-        data: hasPermission
-      };
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error('Failed to check permission', {
-        error,
-        contextId,
-        principal,
-        resource,
-        action
-      });
-      return {
-        success: false,
-        error: [{ field: 'system', message: `System error: ${errorMessage}` }]
-      };
-    }
-  }
-
-  /**
-   * 同步上下文
-   */
-  async syncContext(request: ContextSyncRequest): Promise<Result<{
-    contextId: UUID;
-    syncStatus: string;
-    conflicts: unknown[];
-  }>> {
-    this.logger.info('Syncing context', { contextId: request.contextId });
-
-    try {
-      // 获取源上下文
-      const sourceContext = await this.contextRepository.findById(request.contextId);
-      if (!sourceContext) {
-        return {
-          success: false,
-          error: [{ field: 'contextId', message: 'Source context not found' }]
-        };
-      }
-
-      // 模拟同步逻辑
-      const syncResult = {
-        contextId: request.contextId,
-        syncStatus: 'synchronized',
-        conflicts: []
-      };
-
-      this.logger.info('Context synchronized successfully', { contextId: request.contextId });
-
-      return {
-        success: true,
-        data: syncResult
-      };
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error('Failed to sync context', error);
-      return {
-        success: false,
-        error: [{ field: 'system', message: `System error: ${errorMessage}` }]
-      };
-    }
-  }
-
-  /**
-   * 执行上下文操作
-   */
-  async operateContext(request: ContextOperationRequest): Promise<Result<{
-    result: {
-      operation: string;
-      status: string;
-      data?: unknown;
-    };
-    contextState?: {
-      version: number;
-    };
-    metadata: {
-      capabilitiesUsed: string[];
-      resourceUsage?: {
-        memory: number;
-      };
-    };
-  }>> {
-    this.logger.info('Operating on context', {
-      contextId: request.contextId,
-      operation: request.operation.type
-    });
-
-    try {
-      // 获取上下文
-      const context = await this.contextRepository.findById(request.contextId);
-      if (!context) {
-        return {
-          success: false,
-          error: [{ field: 'contextId', message: 'Context not found' }]
-        };
-      }
-
-      // 模拟操作逻辑
-      const operationResult = {
-        result: {
-          operation: request.operation.type,
-          status: 'completed',
-          data: request.operation.data
-        },
-        contextState: {
-          version: 1
-        },
-        metadata: {
-          capabilitiesUsed: ['storage'],
-          resourceUsage: request.operation.type === 'write' ? { memory: 1024 } : undefined
+      if (this.validationService && this.validationService.validateDeletion) {
+        const deletionValidation = this.validationService.validateDeletion(existing);
+        if (deletionValidation) {
+          return {
+            success: false,
+            error: [deletionValidation]
+          };
         }
-      };
-
-      this.logger.info('Context operation completed', {
-        contextId: request.contextId,
-        operation: request.operation.type
-      });
-
-      return {
-        success: true,
-        data: operationResult
-      };
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error('Failed to operate on context', error);
-      return {
-        success: false,
-        error: [{ field: 'system', message: `System error: ${errorMessage}` }]
-      };
-    }
-  }
-
-  /**
-   * 获取上下文状态
-   */
-  async getContextStatus(contextId: UUID, options?: StatusOptions): Promise<Result<{
-    contextId: UUID;
-    status: string;
-    performance?: unknown;
-  }>> {
-    this.logger.debug('Getting context status', { contextId });
-
-    try {
-      const context = await this.contextRepository.findById(contextId);
-      if (!context) {
-        return {
-          success: false,
-          error: [{ field: 'contextId', message: 'Context not found' }]
-        };
       }
 
-      const statusResult = {
-        contextId,
-        status: context.status,
-        performance: options?.includePerformance ? { responseTime: 5.49 } : undefined
-      };
-
-      return {
-        success: true,
-        data: statusResult
-      };
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error('Failed to get context status', error);
-      return {
-        success: false,
-        error: [{ field: 'system', message: `System error: ${errorMessage}` }]
-      };
-    }
-  }
-
-  /**
-   * 分析上下文
-   */
-  async analyzeContext(request: ContextAnalysisRequest): Promise<Result<{
-    contextId: UUID;
-    quality?: {
-      overall: number;
-      metrics: Record<string, number>;
-    };
-    insights?: Array<{
-      type: string;
-      message: string;
-      severity: string;
-    }>;
-  }>> {
-    this.logger.info('Analyzing context', {
-      contextId: request.contextId,
-      analysisType: request.analysisType
-    });
-
-    try {
-      const context = await this.contextRepository.findById(request.contextId);
-      if (!context) {
-        return {
-          success: false,
-          error: [{ field: 'contextId', message: 'Context not found' }]
-        };
+      // 标记为已终止
+      if (typeof existing.terminate === 'function') {
+        existing.terminate();
+      } else {
+        // 如果没有terminate方法，设置状态为terminated
+        existing.status = ContextStatus.TERMINATED;
       }
 
-      // 模拟分析逻辑
-      const analysisResult: {
-        contextId: UUID;
-        quality?: {
-          overall: number;
-          metrics: Record<string, number>;
-        };
-        insights?: Array<{
-          type: string;
-          message: string;
-          severity: string;
-        }>;
-      } = {
-        contextId: request.contextId
-      };
-
-      if (request.analysisType === 'quality' || request.analysisType === 'comprehensive') {
-        analysisResult.quality = {
-          overall: 0.85,
-          metrics: {
-            completeness: 0.9,
-            consistency: 0.8,
-            performance: 0.85
-          }
-        };
-      }
-
-      if (request.analysisType === 'insights' || request.analysisType === 'comprehensive') {
-        analysisResult.insights = [
-          {
-            type: 'performance',
-            message: '上下文响应时间优秀',
-            severity: 'info'
-          },
-          {
-            type: 'optimization',
-            message: '建议优化内存使用',
-            severity: 'warning'
-          }
-        ];
-      }
-
-      this.logger.info('Context analysis completed', { contextId: request.contextId });
+      // 保存更改
+      await this.repository.save(existing);
 
       return {
         success: true,
-        data: analysisResult
+        data: existing
       };
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error('Failed to analyze context', error);
+
+    } catch (error) {
       return {
         success: false,
-        error: [{ field: 'system', message: `System error: ${errorMessage}` }]
-      };
-    }
-  }
-
-
-
-  /**
-   * 查询上下文列表
-   */
-  async queryContexts(filter: ContextFilter): Promise<Result<{
-    contexts: Context[];
-    total: number;
-    hasMore: boolean;
-  }>> {
-    this.logger.debug('Querying contexts', { filter });
-
-    try {
-      // 模拟查询逻辑
-      const queryResult = {
-        contexts: [],
-        total: 0,
-        hasMore: false
-      };
-
-      return {
-        success: true,
-        data: queryResult
-      };
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error('Failed to query contexts', error);
-      return {
-        success: false,
-        error: [{ field: 'system', message: `System error: ${errorMessage}` }]
-      };
-    }
-  }
-
-  /**
-   * 删除遗留上下文
-   */
-  async deleteLegacyContextById(contextId: UUID): Promise<Result<undefined>> {
-    this.logger.info('Deleting legacy context', { contextId });
-
-    try {
-      // 模拟删除逻辑
-      this.logger.info('Legacy context deleted successfully', { contextId });
-
-      return {
-        success: true,
-        data: undefined
-      };
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error('Failed to delete legacy context', error);
-      return {
-        success: false,
-        error: [{ field: 'system', message: `System error: ${errorMessage}` }]
+        error: error instanceof Error ? error.message : 'Unknown error'
       };
     }
   }

@@ -185,14 +185,14 @@ export class ContextSynchronizationService {
       // 同步基本属性
       if (config.syncFields.includes('name') || config.mode === 'full') {
         if (sourceContext.name !== targetContext.name) {
-          targetContext.updateName(sourceContext.name);
+          targetContext.name = sourceContext.name;
           result.syncedFields.push('name');
         }
       }
 
       if (config.syncFields.includes('description') || config.mode === 'full') {
         if (sourceContext.description !== targetContext.description) {
-          targetContext.updateDescription(sourceContext.description);
+          targetContext.description = sourceContext.description;
           result.syncedFields.push('description');
         }
       }
@@ -200,7 +200,7 @@ export class ContextSynchronizationService {
       // 同步共享状态（简化版本）
       if (config.syncFields.includes('sharedState') || config.mode === 'full') {
         if (sourceContext.sharedState && !targetContext.sharedState) {
-          targetContext.updateSharedState(sourceContext.sharedState);
+          targetContext.sharedState = sourceContext.sharedState;
           result.syncedFields.push('sharedState');
         }
       }

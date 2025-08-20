@@ -11,7 +11,7 @@
  * - Schema驱动开发：基于context-protocol.json Schema
  */
 
-import { v4 as uuidv4 } from 'uuid';
+// UUID generation available if needed
 import { Logger } from '../../../../public/utils/logger';
 import { ContextManagementService } from '../../application/services/context-management.service';
 import {
@@ -283,7 +283,7 @@ export class ContextModuleAdapter implements ModuleInterface {
   /**
    * 处理错误
    */
-  async handleError(error: BusinessError, context: BusinessContext): Promise<ErrorHandlingResult> {
+  async handleError(error: BusinessError, _context: BusinessContext): Promise<ErrorHandlingResult> {
     try {
       this.logger.warn('Handling context error', { 
         error_id: error.error_id, 

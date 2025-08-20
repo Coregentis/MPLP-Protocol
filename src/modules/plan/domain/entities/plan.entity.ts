@@ -105,6 +105,9 @@ constructor(params: Record<string, unknown>) {
     this._risk_assessment = normalizedParams.riskAssessment;
     this.createdBy = normalizedParams.createdBy || 'system';
     this.updatedBy = normalizedParams.updatedBy;
+
+    // 重新计算进度以确保准确性
+    this.recalculateProgress();
   }
 
   /**
@@ -338,7 +341,335 @@ constructor(params: Record<string, unknown>) {
     return this._risk_assessment ? { ...this._risk_assessment } : undefined;
   }
 
+  // ===== Schema映射支持方法 =====
 
+  /**
+   * 转换为Schema格式 (snake_case)
+   * 支持PlanMapper的toSchema方法
+   */
+  toSchemaFormat(): Record<string, unknown> {
+    return {
+      plan_id: this._plan_id,
+      context_id: this._context_id,
+      name: this._name,
+      description: this._description,
+      status: this._status,
+      version: this._version,
+      created_at: this._created_at,
+      updated_at: this._updated_at,
+      goals: [...this._goals],
+      tasks: this._tasks.map(task => ({
+        task_id: task.taskId || (task as unknown as { task_id?: string }).task_id,
+        name: task.name,
+        description: task.description,
+        dependencies: task.dependencies || [],
+        estimated_effort: task.estimatedDuration ? {
+          value: typeof task.estimatedDuration === 'object' ? task.estimatedDuration.value : task.estimatedDuration,
+          unit: typeof task.estimatedDuration === 'object' ? task.estimatedDuration.unit : 'seconds'
+        } : undefined,
+        priority: task.priority,
+        status: task.status,
+        assigned_agents: (task as unknown as { assignedAgents?: string[] }).assignedAgents || [],
+        created_by: (task as unknown as { createdBy?: string }).createdBy || this.createdBy
+      })),
+      dependencies: this._dependencies.map(dep => ({
+        id: dep.dependencyId,
+        source_task_id: dep.sourceTaskId,
+        target_task_id: dep.targetTaskId,
+        dependency_type: (dep as unknown as { dependencyType?: string }).dependencyType || 'finish_to_start',
+        lag: (dep as unknown as { lag?: unknown }).lag,
+        criticality: (dep as unknown as { criticality?: string }).criticality || 'normal',
+        condition: (dep as unknown as { condition?: string }).condition
+      })),
+      execution_strategy: this._execution_strategy,
+      priority: this._priority,
+      estimated_duration: this._estimated_duration,
+      progress: {
+        completed_tasks: this._progress.completed_tasks,
+        total_tasks: this._progress.total_tasks,
+        percentage: this._progress.percentage
+      },
+      timeline: this._timeline,
+      configuration: this._configuration,
+      metadata: this._metadata,
+      risk_assessment: this._risk_assessment,
+      created_by: this.createdBy,
+      updated_by: this.updatedBy
+    };
+  }
+
+  /**
+   * 从Schema格式创建Plan实例
+   * 支持PlanMapper的fromSchema方法
+   */
+  static fromSchemaFormat(schemaData: Record<string, unknown>): Plan {
+    return new Plan({
+      planId: schemaData.plan_id,
+      contextId: schemaData.context_id,
+      name: schemaData.name,
+      description: schemaData.description,
+      status: schemaData.status,
+      version: schemaData.version,
+      createdAt: schemaData.created_at,
+      updatedAt: schemaData.updated_at,
+      goals: schemaData.goals,
+      tasks: schemaData.tasks,
+      dependencies: schemaData.dependencies,
+      executionStrategy: schemaData.execution_strategy,
+      priority: schemaData.priority,
+      estimatedDuration: schemaData.estimated_duration,
+      progress: schemaData.progress,
+      timeline: schemaData.timeline,
+      configuration: schemaData.configuration,
+      metadata: schemaData.metadata,
+      riskAssessment: schemaData.risk_assessment,
+      createdBy: schemaData.created_by,
+      updatedBy: schemaData.updated_by
+    });
+  }
+
+  /**
+   * 验证Schema数据的完整性
+   */
+  static validateSchemaData(schemaData: Record<string, unknown>): { isValid: boolean; errors: string[] } {
+    const errors: string[] = [];
+
+    // 验证必需字段
+    if (!schemaData.plan_id) {
+      errors.push('plan_id is required');
+    }
+    if (!schemaData.context_id) {
+      errors.push('context_id is required');
+    }
+    if (!schemaData.name) {
+      errors.push('name is required');
+    }
+
+    // 验证字段类型
+    if (schemaData.goals && !Array.isArray(schemaData.goals)) {
+      errors.push('goals must be an array');
+    }
+    if (schemaData.tasks && !Array.isArray(schemaData.tasks)) {
+      errors.push('tasks must be an array');
+    }
+    if (schemaData.dependencies && !Array.isArray(schemaData.dependencies)) {
+      errors.push('dependencies must be an array');
+    }
+
+    return {
+      isValid: errors.length === 0,
+      errors
+    };
+  }
+
+  // ===== 企业级功能方法 =====
+
+  /**
+   * 获取计划的完整状态报告
+   */
+  getStatusReport(): {
+    planId: UUID;
+    name: string;
+    status: PlanStatus;
+    progress: {
+      completedTasks: number;
+      totalTasks: number;
+      percentage: number;
+    };
+    health: 'healthy' | 'warning' | 'critical';
+    issues: string[];
+    recommendations: string[];
+  } {
+    const issues: string[] = [];
+    const recommendations: string[] = [];
+    let health: 'healthy' | 'warning' | 'critical' = 'healthy';
+
+    // 检查计划健康状态
+    if (this._tasks.length === 0) {
+      issues.push('No tasks defined');
+      health = 'warning';
+      recommendations.push('Add tasks to the plan');
+    }
+
+    if (this.hasCyclicDependencies()) {
+      issues.push('Cyclic dependencies detected');
+      health = 'critical';
+      recommendations.push('Remove cyclic dependencies');
+    }
+
+    const invalidDeps = this.validateDependencies();
+    if (invalidDeps.length > 0) {
+      issues.push(`${invalidDeps.length} invalid dependencies`);
+      health = 'warning';
+      recommendations.push('Fix invalid dependencies');
+    }
+
+    if (this._progress.percentage < 10 && this._status === PlanStatus.ACTIVE) {
+      recommendations.push('Consider starting task execution');
+    }
+
+    return {
+      planId: this._plan_id,
+      name: this._name,
+      status: this._status,
+      progress: {
+        completedTasks: this._progress.completed_tasks,
+        totalTasks: this._progress.total_tasks,
+        percentage: this._progress.percentage
+      },
+      health,
+      issues,
+      recommendations
+    };
+  }
+
+  /**
+   * 获取计划的执行准备状态
+   */
+  getExecutionReadiness(): {
+    ready: boolean;
+    score: number; // 0-100
+    checklist: Array<{
+      item: string;
+      status: 'pass' | 'fail' | 'warning';
+      message: string;
+    }>;
+  } {
+    const checklist: Array<{
+      item: string;
+      status: 'pass' | 'fail' | 'warning';
+      message: string;
+    }> = [];
+
+    let score = 0;
+    const maxScore = 100;
+    const itemWeight = maxScore / 7; // 7个检查项
+
+    // 1. 状态检查
+    if (this._status === PlanStatus.ACTIVE || this._status === PlanStatus.APPROVED) {
+      checklist.push({
+        item: 'Plan Status',
+        status: 'pass',
+        message: `Plan is in ${this._status} status`
+      });
+      score += itemWeight;
+    } else {
+      checklist.push({
+        item: 'Plan Status',
+        status: 'fail',
+        message: `Plan must be ACTIVE or APPROVED, currently ${this._status}`
+      });
+    }
+
+    // 2. 任务检查
+    if (this._tasks.length > 0) {
+      checklist.push({
+        item: 'Tasks Defined',
+        status: 'pass',
+        message: `${this._tasks.length} tasks defined`
+      });
+      score += itemWeight;
+    } else {
+      checklist.push({
+        item: 'Tasks Defined',
+        status: 'fail',
+        message: 'No tasks defined'
+      });
+    }
+
+    // 3. 依赖关系检查
+    const invalidDeps = this.validateDependencies();
+    if (invalidDeps.length === 0) {
+      checklist.push({
+        item: 'Dependencies Valid',
+        status: 'pass',
+        message: 'All dependencies are valid'
+      });
+      score += itemWeight;
+    } else {
+      checklist.push({
+        item: 'Dependencies Valid',
+        status: 'fail',
+        message: `${invalidDeps.length} invalid dependencies`
+      });
+    }
+
+    // 4. 循环依赖检查
+    if (!this.hasCyclicDependencies()) {
+      checklist.push({
+        item: 'No Cyclic Dependencies',
+        status: 'pass',
+        message: 'No cyclic dependencies detected'
+      });
+      score += itemWeight;
+    } else {
+      checklist.push({
+        item: 'No Cyclic Dependencies',
+        status: 'fail',
+        message: 'Cyclic dependencies detected'
+      });
+    }
+
+    // 5. 配置检查
+    const hasConfiguration = this._configuration && Object.keys(this._configuration).length > 0;
+    if (hasConfiguration) {
+      checklist.push({
+        item: 'Configuration Present',
+        status: 'pass',
+        message: 'Plan configuration is defined'
+      });
+      score += itemWeight;
+    } else {
+      checklist.push({
+        item: 'Configuration Present',
+        status: 'warning',
+        message: 'No configuration defined, using defaults'
+      });
+      score += itemWeight * 0.5;
+    }
+
+    // 6. 执行策略检查
+    if (this._execution_strategy) {
+      checklist.push({
+        item: 'Execution Strategy',
+        status: 'pass',
+        message: `Execution strategy: ${this._execution_strategy}`
+      });
+      score += itemWeight;
+    } else {
+      checklist.push({
+        item: 'Execution Strategy',
+        status: 'warning',
+        message: 'No execution strategy defined'
+      });
+      score += itemWeight * 0.5;
+    }
+
+    // 7. 风险评估检查
+    if (this._risk_assessment) {
+      checklist.push({
+        item: 'Risk Assessment',
+        status: 'pass',
+        message: 'Risk assessment completed'
+      });
+      score += itemWeight;
+    } else {
+      checklist.push({
+        item: 'Risk Assessment',
+        status: 'warning',
+        message: 'No risk assessment performed'
+      });
+      score += itemWeight * 0.5;
+    }
+
+    const ready = score >= 70; // 70分以上认为准备就绪
+
+    return {
+      ready,
+      score: Math.round(score),
+      checklist
+    };
+  }
 
   // ===== 业务方法 =====
 

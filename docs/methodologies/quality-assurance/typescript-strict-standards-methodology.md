@@ -1,0 +1,146 @@
+---
+type: "always_apply"
+description: "TypeScript standards for MPLP v1.0"
+priority: "high"
+---
+
+# TypeScript Standards
+
+## 🎯 **Core Principles**
+
+### Strict Mode + Zero Any Policy
+```typescript
+// tsconfig.json - Required
+{
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true
+  }
+}
+
+❌ ABSOLUTELY PROHIBITED:
+- Using 'any' type (ZERO TOLERANCE)
+- Using @ts-ignore without justification
+- Ignoring TypeScript compilation errors
+- Disabling strict mode
+
+✅ MANDATORY WORKFLOW:
+1. npm run typecheck before commit (MUST PASS)
+2. npm run lint before commit (MUST PASS)
+3. Fix ALL TypeScript errors immediately
+4. Fix ALL ESLint warnings immediately
+```
+
+### Interface-First Design
+```typescript
+// ✅ Correct
+interface IContextService {
+  createContext(request: CreateContextRequest): Promise<Context>;
+  getContext(id: string): Promise<Context>;
+}
+
+// ❌ Wrong
+function createContext(request: any): any {
+  // No type safety
+}
+```
+
+### Generics and Type Safety
+```typescript
+// ✅ Correct
+interface Repository<TEntity, TKey = string> {
+  create(entity: Omit<TEntity, 'id'>): Promise<TEntity>;
+  findById(id: TKey): Promise<TEntity | null>;
+}
+
+// ❌ Wrong
+interface Repository {
+  create(entity: any): Promise<any>;
+  findById(id: any): Promise<any>;
+}
+```
+
+## 🏗️ **DDD Architecture**
+
+### Layer Structure
+```
+src/modules/{module}/
+├── api/                 # API Layer
+├── application/         # Application Layer
+├── domain/             # Domain Layer
+└── infrastructure/     # Infrastructure Layer
+```
+
+### Dependency Injection
+```typescript
+// ✅ Correct
+export class ContextService {
+  constructor(
+    private readonly repository: IContextRepository,
+    private readonly validator: ISchemaValidator
+  ) {}
+}
+
+// ❌ Wrong
+export class ContextService {
+  private repository = new ContextRepository(); // Static dependency
+}
+```
+
+## 🚫 **Prohibited Practices**
+
+### Technical Level
+- Using any type to escape type checking
+- Ignoring TypeScript compilation errors
+- Using non-null assertion (!) to bypass checks
+- Creating circular dependencies
+
+### Architecture Level
+- Cross-layer direct calls (API → Infrastructure)
+- Domain layer external dependencies
+- Violating single responsibility principle
+
+## ✅ **Quality Checks**
+
+### Compilation Checks
+```bash
+npm run typecheck              # TypeScript compilation
+npm run lint                   # ESLint code standards
+npm run test                   # Unit tests
+npm run validate:mapping       # Schema-TypeScript mapping
+npm run check:naming           # Dual naming convention
+```
+
+### Quality Metrics
+- TypeScript strict mode: 100% enabled
+- Type coverage: > 95%
+- Interface definition completeness: 100%
+- Circular dependencies: 0
+- any type usage: 0 (except with justification)
+- Schema-TypeScript mapping consistency: 100%
+- Dual naming convention compliance: 100%
+
+### Mandatory Quality Gates
+```markdown
+1. TypeScript compilation: 0 errors (ZERO TOLERANCE)
+2. ESLint checks: 0 errors, 0 warnings (ZERO TOLERANCE)
+3. any type usage: 0 (ZERO TOLERANCE)
+4. Schema-TypeScript mapping: 100% consistency (ZERO TOLERANCE)
+5. Naming convention: 100% compliance (ZERO TOLERANCE)
+6. Unit tests: 100% pass
+7. Test coverage: >90%
+
+Violating any quality gate will result in code rejection.
+
+PROVEN SUCCESS: 6 MPLP modules (Plan, Context, Confirm, Trace, Role, Extension) have successfully achieved all quality gates with enterprise-grade standards. Extension module achieved Multi-Agent Protocol Platform standard.
+```
+
+---
+
+**ENFORCEMENT**: These TypeScript standards are **mandatory**. Any violation will result in code rejection.
+
+**VERSION**: 1.0.0  
+**EFFECTIVE**: August 8, 2025

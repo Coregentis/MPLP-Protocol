@@ -32,4 +32,6 @@ export { ContextModuleAdapter } from './infrastructure/adapters/context-module.a
 export * from './module';
 
 // ===== 类型定义导出 =====
-export * from './types';
+// 注意：types.ts中的接口与context-management.service.ts中的接口有冲突
+// 暂时注释掉以避免重复导出错误
+// export * from './types';

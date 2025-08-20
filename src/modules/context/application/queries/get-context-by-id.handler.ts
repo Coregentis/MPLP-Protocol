@@ -32,7 +32,8 @@ export class GetContextByIdHandler {
     
     try {
       // 调用应用服务获取Context
-      const context = await this.contextService.getContextById(query.contextId);
+      const result = await this.contextService.getContext(query.contextId);
+      const context = result.success ? result.data : null;
       
       if (!context) {
         this.logger.debug('Context not found', { contextId: query.contextId });

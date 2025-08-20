@@ -7,7 +7,7 @@
  * @created 2025-09-16
  */
 
-import { ContextManagementService, ContextOperationResult } from '../../application/services/context-management.service';
+import { ContextManagementService, ContextServiceResult } from '../../application/services/context-management.service';
 import { CreateContextCommand } from './create-context.command';
 import { Logger } from '../../../../public/utils/logger';
 
@@ -26,18 +26,16 @@ export class CreateContextHandler {
    * 执行命令
    * @returns 操作结果，成功时包含新创建的Context ID
    */
-  async execute(command: CreateContextCommand): Promise<ContextOperationResult> {
+  async execute(command: CreateContextCommand): Promise<ContextServiceResult> {
     this.logger.debug('Executing CreateContext command', { name: command.name });
     
     try {
       // 调用应用服务创建Context
       return await this.contextService.createContext({
         name: command.name,
-        description: command.description,
-        lifecycleStage: command.lifecycleStage,
-        status: command.status,
-        configuration: command.configuration,
-        metadata: command.metadata
+        description: command.description || undefined,
+        lifecycleStage: command.lifecycleStage || 'planning',
+        status: command.status || 'active'
       });
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';

@@ -16,6 +16,9 @@
 
 import { UUID, Timestamp, Version } from '../../public/shared/types';
 
+// 重新导出UUID类型供模块内部使用
+export { UUID, Timestamp, Version };
+
 // ===== 基础枚举类型 =====
 
 /**
@@ -41,6 +44,9 @@ export enum ContextStatus {
   COMPLETED = 'completed',
   TERMINATED = 'terminated'
 }
+
+// 实体状态类型别名
+export type EntityStatus = ContextStatus;
 
 /**
  * 优先级枚举

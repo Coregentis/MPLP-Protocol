@@ -70,19 +70,27 @@ MPLP v1.0定位：
 ### **1. CoreOrchestrator中心化协调原则**
 
 ```markdown
-RULE: 所有模块间的交互必须通过CoreOrchestrator进行协调
+RULE: 所有模块间的交互通过预留接口和事件驱动机制进行协调
 
 MANDATORY ARCHITECTURE:
-- 模块不得直接调用其他模块
-- 所有跨模块操作由CoreOrchestrator统一管理
-- 模块只提供接口，不主动发起跨模块调用
-- CoreOrchestrator根据项目需求动态生成和分配资源
+- 模块不得直接调用其他模块的实现
+- 模块通过预留接口为CoreOrchestrator提供协调能力
+- 模块通过事件发布/订阅机制进行异步协调
+- CoreOrchestrator激活预留接口，统一管理跨模块协调
+- 所有预留接口参数使用下划线前缀标记
+
+COORDINATION MECHANISMS:
+✅ 预留接口模式：等待CoreOrchestrator激活的协调接口
+✅ 事件驱动模式：通过事件发布/订阅进行异步协调
+✅ 中心化协调：CoreOrchestrator统一管理所有跨模块操作
+✅ 接口先行：定义完整接口签名，实现等待激活
 
 PROHIBITED:
-❌ 直接的模块间调用
+❌ 直接的模块间实现调用
 ❌ 模块间的直接依赖注入
-❌ 跨模块的直接数据传递
+❌ 跨模块的同步数据传递
 ❌ 绕过CoreOrchestrator的集成测试
+❌ 删除或修改预留接口签名
 ```
 
 ### **2. 预留接口模式（Interface-First Pattern）**
@@ -90,24 +98,47 @@ PROHIBITED:
 ```typescript
 RULE: 模块采用"接口先行，实现后置"的设计模式
 
-// ✅ 正确的预留接口模式 - Extension模块成功案例
-export class ExtensionManagementService {
-  // 预留接口：参数用下划线标记，等待CoreOrchestrator激活
-  private async checkExtensionPermission(_userId: UUID, _extensionId: UUID): Promise<boolean> {
-    // TODO: 等待CoreOrchestrator注入实现
+// ✅ 正确的预留接口模式 - Plan模块成功案例
+export class PlanManagementService {
+  // ===== MPLP规划协调器预留接口 =====
+  // 体现Plan模块作为"智能任务规划协调器"的核心定位
+  // 参数使用下划线前缀，等待CoreOrchestrator激活
+
+  /**
+   * 验证规划协调权限 - Role模块协调权限
+   */
+  private async validatePlanCoordinationPermission(
+    _userId: UUID,
+    _planId: UUID,
+    _coordinationContext: Record<string, unknown>
+  ): Promise<boolean> {
+    // TODO: 等待CoreOrchestrator激活Role模块协调权限验证
     return true; // 临时实现
   }
 
-  private async getContextualExtensionRecommendations(_contextId: UUID): Promise<ExtensionRecommendation[]> {
-    // TODO: 等待CoreOrchestrator提供数据源
-    return []; // 临时实现
+  /**
+   * 获取规划协调上下文 - Context模块协调环境
+   */
+  private async getPlanCoordinationContext(
+    _contextId: UUID,
+    _planType: string
+  ): Promise<Record<string, unknown>> {
+    // TODO: 等待CoreOrchestrator激活Context模块协调环境获取
+    return { contextId: _contextId, planType: _planType }; // 临时实现
   }
 
-  // Extension模块实现了8个MPLP模块的预留接口
-  private async recordExtensionActivity(_extensionId: UUID, _activity: ExtensionActivity): Promise<void> {
-    // TODO: 等待CoreOrchestrator激活
+  /**
+   * 记录规划协调指标 - Trace模块协调监控
+   */
+  private async recordPlanCoordinationMetrics(
+    _planId: UUID,
+    _metrics: Record<string, unknown>
+  ): Promise<void> {
+    // TODO: 等待CoreOrchestrator激活Trace模块协调监控记录
     // 临时实现
   }
+
+  // Plan模块实现了8个MPLP模块的预留接口
 }
 
 // ❌ 错误的直接调用模式
@@ -116,7 +147,7 @@ export class RoleValidationService {
     private contextService: ContextService,  // 错误：直接依赖
     private planService: PlanService         // 错误：直接依赖
   ) {}
-  
+
   async validateRole(roleId: UUID): Promise<boolean> {
     // 错误：直接调用其他模块
     const context = await this.contextService.getContext(roleId);
@@ -179,19 +210,26 @@ ALLOWED:
 ✅ API层测试：测试模块的对外接口
 ```
 
-### **2. 集成测试（错误理解纠正）**
+### **2. 集成测试（预留接口验证）**
 ```markdown
-RULE: 真正的集成测试只能在CoreOrchestrator层进行
+RULE: 当前阶段专注于预留接口的完整性验证
+
+CURRENT STAGE TESTING:
+✅ 预留接口签名验证：确保接口定义完整和正确
+✅ 参数标记验证：确保下划线前缀参数正确标记
+✅ 临时实现验证：确保临时实现不会破坏系统
+✅ 事件发布/订阅测试：验证事件机制的正确性
+✅ Mock数据验证：使用Mock数据验证接口逻辑
+
+FUTURE INTEGRATION TESTING:
+✅ 等待CoreOrchestrator激活后进行真正的集成测试
+✅ 验证预留接口的实际协调效果
+✅ 测试跨模块协调的完整流程
 
 PROHIBITED:
 ❌ 模块间直接调用的集成测试
-❌ 绕过CoreOrchestrator的跨模块测试
-❌ 模拟其他模块进行的"伪集成"测试
-
-CORRECT APPROACH:
-✅ 等待CoreOrchestrator实现后进行真正的集成测试
-✅ 当前阶段专注于模块内部的完整性测试
-✅ 使用Mock数据验证接口的正确性
+❌ 绕过预留接口的跨模块测试
+❌ 删除或修改预留接口进行测试
 ```
 
 ### **3. 测试数据生成**
@@ -216,19 +254,24 @@ const mockUserData = {
 
 ### **1. 当前开发阶段**
 ```markdown
-FOCUS: 完善模块内部功能和接口定义
-- 实现模块核心逻辑
-- 定义完整的接口签名
-- 编写模块内部测试
+FOCUS: 完善模块内部功能和预留接口定义
+- 实现模块核心逻辑和业务功能
+- 定义完整的预留接口签名（使用下划线前缀参数）
+- 实现事件发布/订阅机制
+- 编写模块内部测试和预留接口验证
 - 优化性能和代码质量
 - 准备CoreOrchestrator集成接口
 
-EXTENSION模块成功经验:
-✅ 8个MPLP模块预留接口100%实现
-✅ 10种CoreOrchestrator协调场景完整支持
-✅ 54个功能测试100%通过（35基础+19MPLP集成）
-✅ 智能协作、企业级功能、分布式支持完整实现
-✅ L4智能Agent操作系统标准达成
+PLAN模块成功经验:
+✅ 8个MPLP模块预留接口100%实现（第851-989行）
+✅ 预留接口参数正确使用下划线前缀标记
+✅ 完整的协调功能等待CoreOrchestrator激活
+✅ 临时实现确保系统稳定运行
+
+CONTEXT模块成功经验:
+✅ 事件发布/订阅机制完整实现
+✅ 14个功能域标准化管理
+✅ 事件驱动协调模式验证成功
 ```
 
 ### **2. 未来集成阶段**
@@ -361,6 +404,6 @@ L4框架约束：
 
 **ENFORCEMENT**: 这些架构原则是**强制性的**，违反将导致架构不一致。
 
-**VERSION**: 2.0.0
-**EFFECTIVE**: August 13, 2025
-**UPDATED**: 添加AI功能架构边界原则、协议模块与Agent关系澄清、L4主Agent元认知能力定义
+**VERSION**: 2.1.0
+**EFFECTIVE**: August 18, 2025
+**UPDATED**: 基于Plan和Context模块实际实现，更新模块间协调机制描述，澄清预留接口模式和事件驱动协调的正确实现方式

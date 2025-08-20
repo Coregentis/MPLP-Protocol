@@ -171,7 +171,7 @@ describe('Confirm模块功能场景测试 - 基于实际源代码', () => {
 
         // 验证结果
         expect(result.success).toBe(true);
-        expect(result.data?.expiresAt).toBe(request.expiresAt);
+        expect(result.data?.expiresAt?.toISOString()).toBe(request.expiresAt);
       });
 
       it('应该成功创建带元数据的确认请求', async () => {
