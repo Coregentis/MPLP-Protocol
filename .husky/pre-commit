@@ -45,7 +45,22 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 // 获取暂存区中的所有.ts和.js文件
-const stagedFiles = execSync('git diff --cached --name-only --diff-filter=ACMR | grep -E \"\\.ts$|\\.js$\"', { encoding: 'utf-8' }).trim().split('\n').filter(Boolean);
+let stagedFiles = [];
+try {
+  const output = execSync('git diff --cached --name-only --diff-filter=ACMR', { encoding: 'utf-8' }).trim();
+  if (!output) {
+    console.log('✅ 没有需要检查的文件');
+    process.exit(0);
+  }
+  stagedFiles = output.split('\n').filter(f => f && (f.endsWith('.ts') || f.endsWith('.js')));
+  if (stagedFiles.length === 0) {
+    console.log('✅ 没有需要检查的TypeScript/JavaScript文件');
+    process.exit(0);
+  }
+} catch (error) {
+  console.log('✅ 没有需要检查的文件');
+  process.exit(0);
+}
 
 // 检查文件是否符合命名规范
 const CORE_MODULES = ['context', 'plan', 'confirm', 'trace', 'role', 'extension'];
