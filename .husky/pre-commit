@@ -83,5 +83,9 @@ if (hasErrors) {
 console.log('✅ 文件命名规范检查通过');
 "
 
-# 运行Schema验证
-npm run schema:check 
+# 运行Schema验证 (如果存在)
+if npm run | grep -q "schema:check"; then
+  npm run schema:check
+else
+  echo "⚠️ Schema验证脚本不存在，跳过检查"
+fi

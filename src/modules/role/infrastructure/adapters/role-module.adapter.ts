@@ -1,518 +1,538 @@
 /**
  * Role模块适配器
  * 
- * 实现Core模块的ModuleInterface接口，提供生命周期管理功能
- * 
- * @version 2.0.0
- * @created 2025-08-04
- * @updated 2025-08-04 22:19
+ * @description 基于Context、Plan、Confirm模块的企业级标准，提供Role模块的统一访问接口和外部系统集成 - 企业级RBAC安全中心
+ * @version 1.0.0
+ * @layer 基础设施层 - 适配器
+ * @integration 统一L3管理器注入模式，与Context/Plan/Confirm模块IDENTICAL架构
  */
 
-import { v4 as uuidv4 } from 'uuid';
+import { RoleController } from '../../api/controllers/role.controller';
+import { RoleManagementService } from '../../application/services/role-management.service';
+import { IRoleRepository } from '../../domain/repositories/role-repository.interface';
+import { MemoryRoleRepository } from '../repositories/role.repository';
+import { RoleProtocol } from '../protocols/role.protocol';
+import { RoleEntity } from '../../domain/entities/role.entity';
+import { createRoleLogger, LogLevel, RoleLoggerService } from '../services/role-logger.service';
+import { createRoleCacheService, RoleCacheService, CacheMetrics } from '../services/role-cache.service';
 import {
-  ModuleInterface,
-  ModuleStatus,
-  LifecycleCoordinationRequest,
-  LifecycleResult,
-  WorkflowExecutionContext,
-  StageExecutionResult,
-  WorkflowStage,
-  ExecutionStatus,
-  ValidationResult,
-  BusinessError,
-  BusinessContext,
-  ErrorHandlingResult,
-  BusinessCoordinationRequest,
-  BusinessCoordinationResult
-} from '../../../../public/modules/core/types/core.types';
-import { RoleManagementService, CreateRoleRequest } from '../../application/services/role-management.service';
-import { Logger } from '../../../../public/utils/logger';
+  createRolePerformanceService,
+  RolePerformanceService,
+  PerformanceAlert,
+  PerformanceBenchmark
+} from '../services/role-performance.service';
+
+// ===== L3横切关注点管理器导入 =====
 import {
-  RoleType,
-  Permission,
-  PermissionAction,
-  ResourceType,
-  GrantType
-} from '../../types';
-// UUID import removed - not used in this file
+  MLPPSecurityManager,
+  MLPPPerformanceMonitor,
+  MLPPEventBusManager,
+  MLPPErrorHandler,
+  MLPPCoordinationManager,
+  MLPPOrchestrationManager,
+  MLPPStateSyncManager,
+  MLPPTransactionManager,
+  MLPPProtocolVersionManager
+} from '../../../../core/protocols/cross-cutting-concerns';
 
 /**
- * Role模块适配器类
- * 实现Core模块的ModuleInterface接口
+ * Role模块适配器配置
  */
-export class RoleModuleAdapter implements ModuleInterface {
-  public readonly module_name = 'role';
-  private logger = new Logger('RoleModuleAdapter');
-  private moduleStatus: ModuleStatus = {
-    module_name: 'role',
-    status: 'idle',
-    error_count: 0
-  };
+export interface RoleModuleAdapterConfig {
+  enableLogging?: boolean;
+  enableCaching?: boolean;
+  enableMetrics?: boolean;
+  enableSecurity?: boolean;
+  repositoryType?: 'memory' | 'database' | 'file';
+  maxCacheSize?: number;
+  cacheTimeout?: number;
+  securityLevel?: 'basic' | 'standard' | 'enterprise';
+  auditLevel?: 'basic' | 'detailed' | 'comprehensive';
+}
 
-  constructor(private roleManagementService: RoleManagementService) {}
+/**
+ * Role模块适配器
+ * 
+ * @description 基于Context、Plan、Confirm模块的企业级标准，提供Role模块的统一访问接口和外部系统集成
+ * @pattern 企业级RBAC安全中心，统一L3管理器注入模式
+ */
+export class RoleModuleAdapter {
+  private config: Required<RoleModuleAdapterConfig>;
+  private initialized = false;
+  private logger: RoleLoggerService;
+  private cacheService: RoleCacheService;
+  private performanceService: RolePerformanceService;
 
-  /**
-   * 初始化模块
-   */
-  async initialize(): Promise<void> {
-    try {
-      this.logger.info('Initializing Role module adapter');
-      
-      // 检查RoleManagementService是否可用
-      if (!this.roleManagementService) {
-        throw new Error('RoleManagementService not available');
-      }
+  // ===== 核心组件 =====
+  private repository!: IRoleRepository;
+  private service!: RoleManagementService;
+  private controller!: RoleController;
+  private protocol!: RoleProtocol;
 
-      this.moduleStatus.status = 'initialized';
-      this.logger.info('Role module adapter initialized successfully');
-    } catch (error) {
-      this.moduleStatus.status = 'error';
-      this.moduleStatus.error_count++;
-      this.logger.error('Failed to initialize Role module adapter', error);
-      throw error;
-    }
-  }
+  // ===== 9个L3横切关注点管理器 (与Context/Plan/Confirm模块IDENTICAL模式) =====
+  private securityManager!: MLPPSecurityManager;
+  private performanceMonitor!: MLPPPerformanceMonitor;
+  private eventBusManager!: MLPPEventBusManager;
+  private errorHandler!: MLPPErrorHandler;
+  private coordinationManager!: MLPPCoordinationManager;
+  private orchestrationManager!: MLPPOrchestrationManager;
+  private stateSyncManager!: MLPPStateSyncManager;
+  private transactionManager!: MLPPTransactionManager;
+  private protocolVersionManager!: MLPPProtocolVersionManager;
 
-  /**
-   * 执行生命周期管理
-   */
-  async execute(request: LifecycleCoordinationRequest): Promise<LifecycleResult> {
-    this.logger.info('Executing lifecycle coordination', { 
-      contextId: request.contextId,
-      strategy: request.creation_strategy 
+  constructor(config: RoleModuleAdapterConfig = {}) {
+    this.config = {
+      enableLogging: true,
+      enableCaching: false,
+      enableMetrics: true,
+      enableSecurity: true,
+      repositoryType: 'memory',
+      maxCacheSize: 1000,
+      cacheTimeout: 300000, // 5分钟
+      securityLevel: 'enterprise',
+      auditLevel: 'comprehensive',
+      ...config
+    };
+
+    // 初始化统一日志服务
+    this.logger = createRoleLogger({
+      level: LogLevel.INFO,
+      enableConsole: this.config.enableLogging,
+      enableStructured: true,
+      module: 'RoleAdapter',
+      environment: process.env.NODE_ENV as 'development' | 'production' | 'test' || 'development'
     });
 
-    this.moduleStatus.status = 'running';
-    this.moduleStatus.last_execution = new Date().toISOString();
+    // 初始化缓存服务
+    this.cacheService = createRoleCacheService({
+      maxSize: this.config.maxCacheSize,
+      defaultTTL: Math.floor(this.config.cacheTimeout / 1000), // 转换为秒
+      enableMetrics: this.config.enableMetrics,
+      enablePrewarming: this.config.enableCaching,
+      evictionPolicy: 'lru',
+      compressionEnabled: false,
+      persistenceEnabled: false,
+      cleanupInterval: 60000 // 1分钟
+    }, {
+      enabled: this.config.enableCaching,
+      strategies: ['popular_roles', 'permission_cache'],
+      batchSize: 50,
+      intervalMs: 300000 // 5分钟
+    });
 
-    try {
-      // 验证请求参数
-      this.validateLifecycleRequest(request);
-
-      // 根据策略执行生命周期管理
-      const result = await this.executeLifecycleStrategy(request);
-
-      this.moduleStatus.status = 'idle';
-      
-      this.logger.info('Lifecycle coordination completed', {
-        contextId: request.contextId,
-        role_id: result.role_id
-      });
-
-      return result;
-    } catch (error) {
-      this.moduleStatus.status = 'error';
-      this.moduleStatus.error_count++;
-      
-      this.logger.error('Lifecycle coordination failed', {
-        contextId: request.contextId,
-        error: error instanceof Error ? error.message : String(error)
-      });
-      throw error;
-    }
-  }
-
-  /**
-   * 清理资源
-   */
-  async cleanup(): Promise<void> {
-    try {
-      this.logger.info('Cleaning up Role module adapter');
-      this.moduleStatus.status = 'idle';
-      this.logger.info('Role module adapter cleanup completed');
-    } catch (error) {
-      this.logger.error('Failed to cleanup Role module adapter', error);
-      throw error;
-    }
-  }
-
-  /**
-   * 获取模块状态
-   */
-  getStatus(): ModuleStatus {
-    return this.moduleStatus;
-  }
-
-  // ===== 私有方法 =====
-
-  /**
-   * 验证生命周期请求
-   */
-  private validateLifecycleRequest(request: LifecycleCoordinationRequest): void {
-    if (!request.contextId) {
-      throw new Error('Context ID is required');
-    }
-
-    if (!['static', 'dynamic', 'template_based', 'ai_generated'].includes(request.creation_strategy)) {
-      throw new Error(`Unsupported creation strategy: ${request.creation_strategy}`);
-    }
-
-    // 验证模板策略的模板源
-    if (request.creation_strategy === 'template_based') {
-      if (!request.parameters.template_source) {
-        throw new Error('Template source is required for template_based strategy');
-      }
-    }
-
-    // 验证AI生成策略的生成条件
-    if (request.creation_strategy === 'ai_generated') {
-      if (!request.parameters.generation_criteria) {
-        throw new Error('Generation criteria is required for ai_generated strategy');
-      }
-    }
-
-    // 验证能力管理配置
-    if (request.capability_management) {
-      const { skills, expertise_level } = request.capability_management;
-      
-      if (!skills || skills.length === 0) {
-        throw new Error('At least one skill is required for capability management');
-      }
-
-      if (expertise_level < 1 || expertise_level > 10) {
-        throw new Error('Expertise level must be between 1 and 10');
-      }
-    }
-  }
-
-  /**
-   * 执行生命周期策略
-   */
-  private async executeLifecycleStrategy(request: LifecycleCoordinationRequest): Promise<LifecycleResult> {
-    const role_id = uuidv4();
-    const timestamp = new Date().toISOString();
-
-    // 根据策略生成角色数据
-    const roleData = await this.generateRoleData(request, role_id);
-
-    // 创建角色
-    const createRoleRequest: CreateRoleRequest = {
-      context_id: request.contextId,
-      name: roleData.name,
-      role_type: roleData.role_type,
-      display_name: roleData.display_name,
-      description: roleData.description,
-      permissions: roleData.permissions
-    };
-
-    const createResult = await this.roleManagementService.createRole(createRoleRequest);
-    if (!createResult.success || !createResult.data) {
-      throw new Error(`Failed to create role: ${createResult.error}`);
-    }
-
-    // 处理能力管理
-    const capabilities = this.processCapabilityManagement(request);
-
-    return {
-      role_id: role_id,
-      role_data: createResult.data,
-      capabilities,
-      timestamp
-    };
-  }
-
-  /**
-   * 根据策略生成角色数据
-   */
-  private async generateRoleData(request: LifecycleCoordinationRequest, role_id: string): Promise<{
-    name: string;
-    role_type: RoleType;
-    display_name?: string;
-    description?: string;
-    permissions: Permission[];
-  }> {
-    switch (request.creation_strategy) {
-      case 'static':
-        return this.generateStaticRole(request, role_id);
-      
-      case 'dynamic':
-        return this.generateDynamicRole(request, role_id);
-      
-      case 'template_based':
-        return this.generateTemplateBasedRole(request, role_id);
-      
-      case 'ai_generated':
-        return this.generateAIRole(request, role_id);
-      
-      default:
-        throw new Error(`Unsupported creation strategy: ${request.creation_strategy}`);
-    }
-  }
-
-  /**
-   * 生成静态角色
-   */
-  private generateStaticRole(_request: LifecycleCoordinationRequest, role_id: string): {
-    name: string;
-    role_type: RoleType;
-    display_name?: string;
-    description?: string;
-    permissions: Permission[];
-  } {
-    return {
-      name: `static_role_${role_id.substring(0, 8)}`,
-      role_type: 'functional',
-      display_name: 'Static Role',
-      description: 'A statically defined role with predefined permissions',
-      permissions: this.getDefaultPermissions()
-    };
-  }
-
-  /**
-   * 生成动态角色
-   */
-  private generateDynamicRole(request: LifecycleCoordinationRequest, role_id: string): {
-    name: string;
-    role_type: RoleType;
-    display_name?: string;
-    description?: string;
-    permissions: Permission[];
-  } {
-    const rules = request.parameters.creation_rules || [];
-    const permissions = this.generateDynamicPermissions(rules);
-
-    return {
-      name: `dynamic_role_${role_id.substring(0, 8)}`,
-      role_type: 'project',
-      display_name: 'Dynamic Role',
-      description: `Dynamically created role based on rules: ${rules.join(', ')}`,
-      permissions
-    };
-  }
-
-  /**
-   * 生成基于模板的角色
-   */
-  private generateTemplateBasedRole(request: LifecycleCoordinationRequest, role_id: string): {
-    name: string;
-    role_type: RoleType;
-    display_name?: string;
-    description?: string;
-    permissions: Permission[];
-  } {
-    const templateSource = request.parameters.template_source!;
-    
-    return {
-      name: `template_role_${role_id.substring(0, 8)}`,
-      role_type: 'organizational',
-      display_name: 'Template-based Role',
-      description: `Role created from template: ${templateSource}`,
-      permissions: this.getTemplatePermissions(templateSource)
-    };
-  }
-
-  /**
-   * 生成AI生成的角色
-   */
-  private generateAIRole(request: LifecycleCoordinationRequest, role_id: string): {
-    name: string;
-    role_type: RoleType;
-    display_name?: string;
-    description?: string;
-    permissions: Permission[];
-  } {
-    const criteria = request.parameters.generation_criteria as Record<string, string | number | boolean> || {};
-
-    return {
-      name: `ai_role_${role_id.substring(0, 8)}`,
-      role_type: 'temporary',
-      display_name: 'AI-generated Role',
-      description: `AI-generated role based on criteria: ${JSON.stringify(criteria)}`,
-      permissions: this.generateAIPermissions(criteria)
-    };
-  }
-
-  /**
-   * 处理能力管理
-   */
-  private processCapabilityManagement(request: LifecycleCoordinationRequest): string[] {
-    if (!request.capability_management) {
-      return ['basic_operations'];
-    }
-
-    const { skills, expertise_level, learning_enabled } = request.capability_management;
-    const capabilities = [...skills];
-
-    // 根据专业水平添加额外能力
-    if (expertise_level >= 7) {
-      capabilities.push('advanced_operations');
-    }
-    if (expertise_level >= 9) {
-      capabilities.push('expert_operations');
-    }
-
-    // 如果启用学习，添加学习能力
-    if (learning_enabled) {
-      capabilities.push('adaptive_learning');
-    }
-
-    return capabilities;
-  }
-
-  /**
-   * 获取默认权限
-   */
-  private getDefaultPermissions(): Permission[] {
-    return [
-      {
-        permission_id: uuidv4(),
-        resource_type: 'context' as ResourceType,
-        resource_id: '*',
-        actions: ['read'] as PermissionAction[],
-        grant_type: 'direct' as GrantType
+    // 初始化性能监控服务
+    this.performanceService = createRolePerformanceService({
+      enabled: this.config.enableMetrics,
+      collectionInterval: 30000, // 30秒
+      retentionPeriod: 24 * 60 * 60 * 1000, // 24小时
+      alertThresholds: {
+        'permission_check_latency_ms': 10,
+        'role_operation_latency_ms': 100,
+        'memory_usage_mb': 256,
+        'error_rate_percent': 5,
+        'cache_hit_rate_percent': 80
       },
-      {
-        permission_id: uuidv4(),
-        resource_type: 'plan' as ResourceType,
-        resource_id: '*',
-        actions: ['read'] as PermissionAction[],
-        grant_type: 'direct' as GrantType
-      }
-    ];
+      benchmarkEnabled: true,
+      realTimeAlertsEnabled: this.config.enableMetrics,
+      detailedTracing: this.config.enableLogging,
+      optimizationEnabled: true
+    });
   }
 
   /**
-   * 生成动态权限
+   * 初始化Role模块适配器
+   * @description 基于Context/Plan/Confirm模块的企业级标准初始化流程
    */
-  private generateDynamicPermissions(rules: string[]): Permission[] {
-    const permissions = this.getDefaultPermissions();
-
-    // 根据规则添加额外权限
-    if (rules.includes('admin_access')) {
-      permissions.push({
-        permission_id: uuidv4(),
-        resource_type: 'system' as ResourceType,
-        resource_id: '*',
-        actions: ['admin'] as PermissionAction[],
-        grant_type: 'direct' as GrantType
-      });
+  async initialize(): Promise<void> {
+    if (this.initialized) {
+      return;
     }
-
-    return permissions;
-  }
-
-  /**
-   * 获取模板权限
-   */
-  private getTemplatePermissions(templateSource: string): Permission[] {
-    // 简化实现：根据模板源返回不同权限
-    if (templateSource.includes('admin')) {
-      return [
-        {
-          permission_id: uuidv4(),
-          resource_type: 'system' as ResourceType,
-          resource_id: '*',
-          actions: ['admin', 'manage'] as PermissionAction[],
-          grant_type: 'inherited' as GrantType
-        }
-      ];
-    }
-
-    return this.getDefaultPermissions();
-  }
-
-  /**
-   * 生成AI权限
-   */
-  private generateAIPermissions(criteria: Record<string, string | number | boolean>): Permission[] {
-    // 简化实现：根据AI条件生成权限
-    const permissions = this.getDefaultPermissions();
-
-    if (criteria.access_level === 'high') {
-      permissions.push({
-        permission_id: uuidv4(),
-        resource_type: 'system' as ResourceType,
-        resource_id: '*',
-        actions: ['execute', 'manage'] as PermissionAction[],
-        grant_type: 'temporary' as GrantType
-      });
-    }
-
-    return permissions;
-  }
-
-  /**
-   * P0修复：执行工作流阶段
-   */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  async executeStage(_context: WorkflowExecutionContext): Promise<StageExecutionResult> {
-    const startTime = new Date().toISOString();
 
     try {
-      // 简化的角色阶段执行逻辑
-      const result = {
-        stage: 'role' as WorkflowStage,
-        status: 'completed' as ExecutionStatus,
-        result: { role_stage_completed: true },
-        duration_ms: 100,
-        startedAt: startTime,
-        completedAt: new Date().toISOString()
-      };
+      // ===== 步骤1: 初始化9个L3横切关注点管理器 =====
+      await this.initializeCrossCuttingConcerns();
 
-      return result;
+      // ===== 步骤2: 初始化仓库层 =====
+      await this.initializeRepository();
+
+      // ===== 步骤3: 初始化应用服务层 =====
+      await this.initializeService();
+
+      // ===== 步骤4: 初始化协议层 =====
+      await this.initializeProtocol();
+
+      // ===== 步骤5: 初始化API控制器层 =====
+      await this.initializeController();
+
+      // ===== 步骤6: 执行健康检查 =====
+      await this.performHealthCheck();
+
+      this.initialized = true;
+
+      if (this.config.enableLogging) {
+        this.logger.info('Role模块适配器初始化完成 - 企业级RBAC安全中心', {
+          securityLevel: this.config.securityLevel,
+          auditLevel: this.config.auditLevel,
+          repositoryType: this.config.repositoryType,
+          enableCaching: this.config.enableCaching,
+          enableMetrics: this.config.enableMetrics
+        });
+      }
+
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      this.logger.error('Role模块适配器初始化失败', error instanceof Error ? error : undefined, {
+        errorMessage
+      });
+      throw new Error(`Role module adapter initialization failed: ${errorMessage}`);
+    }
+  }
+
+  /**
+   * 初始化9个L3横切关注点管理器
+   * @description 与Context/Plan/Confirm模块使用IDENTICAL的初始化模式
+   */
+  private async initializeCrossCuttingConcerns(): Promise<void> {
+    // 创建所有9个L3管理器实例的简化版本
+    this.securityManager = new MLPPSecurityManager();
+    this.performanceMonitor = new MLPPPerformanceMonitor();
+    this.eventBusManager = new MLPPEventBusManager();
+    this.errorHandler = new MLPPErrorHandler();
+    this.coordinationManager = new MLPPCoordinationManager();
+    this.orchestrationManager = new MLPPOrchestrationManager();
+    this.stateSyncManager = new MLPPStateSyncManager();
+    this.transactionManager = new MLPPTransactionManager();
+    this.protocolVersionManager = new MLPPProtocolVersionManager();
+  }
+
+  /**
+   * 初始化仓库层
+   */
+  private async initializeRepository(): Promise<void> {
+    switch (this.config.repositoryType) {
+      case 'memory':
+        this.repository = new MemoryRoleRepository();
+        break;
+      case 'database':
+        // TODO: 实现数据库仓库
+        throw new Error('Database repository not implemented yet');
+      case 'file':
+        // TODO: 实现文件仓库
+        throw new Error('File repository not implemented yet');
+      default:
+        throw new Error(`Unsupported repository type: ${this.config.repositoryType}`);
+    }
+  }
+
+  /**
+   * 初始化应用服务层
+   */
+  private async initializeService(): Promise<void> {
+    this.service = new RoleManagementService(this.repository);
+  }
+
+  /**
+   * 初始化协议层
+   */
+  private async initializeProtocol(): Promise<void> {
+    this.protocol = new RoleProtocol(
+      this.service,
+      // 注入所有9个L3横切关注点管理器
+      this.securityManager,
+      this.performanceMonitor,
+      this.eventBusManager,
+      this.errorHandler,
+      this.coordinationManager,
+      this.orchestrationManager,
+      this.stateSyncManager,
+      this.transactionManager,
+      this.protocolVersionManager
+    );
+  }
+
+  /**
+   * 初始化API控制器层
+   */
+  private async initializeController(): Promise<void> {
+    this.controller = new RoleController(this.service);
+  }
+
+  /**
+   * 执行健康检查
+   */
+  private async performHealthCheck(): Promise<void> {
+    const healthStatus = await this.protocol.healthCheck();
+    
+    if (healthStatus.status !== 'healthy') {
+      throw new Error(`Role module health check failed: ${JSON.stringify(healthStatus)}`);
+    }
+  }
+
+  /**
+   * 获取Role控制器
+   */
+  getRoleController(): RoleController {
+    this.ensureInitialized();
+    return this.controller;
+  }
+
+  /**
+   * 获取Role服务
+   */
+  getRoleService(): RoleManagementService {
+    this.ensureInitialized();
+    return this.service;
+  }
+
+  /**
+   * 获取Role协议
+   */
+  getRoleProtocol(): RoleProtocol {
+    this.ensureInitialized();
+    return this.protocol;
+  }
+
+  /**
+   * 获取Role仓库
+   */
+  getRoleRepository(): IRoleRepository {
+    this.ensureInitialized();
+    return this.repository;
+  }
+
+  /**
+   * 获取安全管理器
+   */
+  getSecurityManager(): MLPPSecurityManager {
+    this.ensureInitialized();
+    return this.securityManager;
+  }
+
+  /**
+   * 获取性能监控器
+   */
+  getPerformanceMonitor(): MLPPPerformanceMonitor {
+    this.ensureInitialized();
+    return this.performanceMonitor;
+  }
+
+  /**
+   * 获取事件总线管理器
+   */
+  getEventBusManager(): MLPPEventBusManager {
+    this.ensureInitialized();
+    return this.eventBusManager;
+  }
+
+  /**
+   * 获取协调管理器
+   */
+  getCoordinationManager(): MLPPCoordinationManager {
+    this.ensureInitialized();
+    return this.coordinationManager;
+  }
+
+  /**
+   * 获取模块健康状态
+   */
+  async getHealthStatus(): Promise<{
+    status: 'healthy' | 'unhealthy';
+    timestamp: string;
+    details: Record<string, unknown>;
+  }> {
+    try {
+      this.ensureInitialized();
+      const protocolHealth = await this.protocol.healthCheck();
+      
+      return {
+        status: protocolHealth.status === 'healthy' ? 'healthy' : 'unhealthy',
+        timestamp: new Date().toISOString(),
+        details: {
+          initialized: this.initialized,
+          config: this.config,
+          protocolHealth: protocolHealth,
+          module: 'role',
+          type: 'enterprise_rbac_security_center'
+        }
+      };
     } catch (error) {
       return {
-        stage: 'role' as WorkflowStage,
-        status: 'failed' as ExecutionStatus,
-        error: error instanceof Error ? error : new Error('Unknown error'),
-        duration_ms: 50,
-        startedAt: startTime,
-        completedAt: new Date().toISOString()
+        status: 'unhealthy',
+        timestamp: new Date().toISOString(),
+        details: {
+          error: error instanceof Error ? error.message : 'Unknown error',
+          initialized: this.initialized,
+          module: 'role'
+        }
       };
     }
   }
 
-  async executeBusinessCoordination(request: BusinessCoordinationRequest): Promise<BusinessCoordinationResult> {
-    const startTime = Date.now();
-    const lifecycleRequest: LifecycleCoordinationRequest = {
-      contextId: request.contextId,
-      creation_strategy: 'dynamic',
-      parameters: {}
-    };
-    const result = await this.execute(lifecycleRequest);
-    const endTime = Date.now();
+  /**
+   * 销毁适配器
+   */
+  async destroy(): Promise<void> {
+    if (!this.initialized) {
+      return;
+    }
 
-    return {
-      coordination_id: request.coordination_id,
-      module: 'role',
-      status: 'completed',
-      output_data: {
-        data_type: 'role_data',
-        data_version: '1.0.0',
-        payload: result as unknown as Record<string, unknown>,
-        metadata: {
-          source_module: 'role',
-          target_modules: [],
-          data_schema_version: '1.0.0',
-          validation_status: 'valid',
-          security_level: 'internal'
-        },
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      },
-      execution_metrics: {
-        start_time: new Date(startTime).toISOString(),
-        end_time: new Date(endTime).toISOString(),
-        duration_ms: endTime - startTime
-      },
-      timestamp: new Date().toISOString()
-    };
+    try {
+      // 清理资源
+      // 横切关注点管理器的清理将在未来实现
+
+      this.initialized = false;
+
+      // 销毁缓存服务
+      await this.cacheService.destroy();
+
+      // 销毁性能监控服务
+      await this.performanceService.destroy();
+
+      if (this.config.enableLogging) {
+        this.logger.info('Role模块适配器已销毁');
+      }
+    } catch (error) {
+      this.logger.error('Role模块适配器销毁失败', error instanceof Error ? error : undefined, {
+        errorMessage: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  async validateInput(_input: unknown): Promise<ValidationResult> {
-    return {
-      is_valid: true,
-      errors: [],
-      warnings: []
-    };
+  /**
+   * 获取缓存统计信息
+   */
+  getCacheMetrics(): CacheMetrics {
+    this.ensureInitialized();
+    return this.cacheService.getMetrics();
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  async handleError(_error: BusinessError, _context: BusinessContext): Promise<ErrorHandlingResult> {
-    return {
-      handled: true,
-      recovery_action: 'retry'
-    };
+  /**
+   * 获取缓存健康状态
+   */
+  getCacheHealth(): {
+    status: 'healthy' | 'degraded' | 'unhealthy';
+    metrics: CacheMetrics;
+    details: Record<string, unknown>;
+  } {
+    this.ensureInitialized();
+    return this.cacheService.getHealthStatus();
   }
+
+  /**
+   * 执行缓存预热
+   */
+  async warmupCache(data: { roles?: RoleEntity[]; permissions?: unknown[]; statistics?: unknown[] }): Promise<void> {
+    this.ensureInitialized();
+    await this.cacheService.warmup(data);
+
+    this.logger.info('Cache warmup initiated', {
+      rolesCount: data.roles?.length || 0,
+      permissionsCount: data.permissions?.length || 0,
+      statisticsCount: data.statistics?.length || 0
+    });
+  }
+
+  /**
+   * 清空缓存
+   */
+  async clearCache(): Promise<void> {
+    this.ensureInitialized();
+    await this.cacheService.clear();
+
+    this.logger.info('Cache cleared manually');
+  }
+
+  /**
+   * 按标签删除缓存
+   */
+  async clearCacheByTags(tags: string[]): Promise<number> {
+    this.ensureInitialized();
+    const deletedCount = await this.cacheService.deleteByTags(tags);
+
+    this.logger.info('Cache cleared by tags', { tags, deletedCount });
+    return deletedCount;
+  }
+
+  /**
+   * 获取性能统计信息
+   */
+  getPerformanceStats(): {
+    totalMetrics: number;
+    activeTraces: number;
+    totalAlerts: number;
+    unresolvedAlerts: number;
+    benchmarks: Record<string, PerformanceBenchmark>;
+    recentMetrics: unknown[];
+  } {
+    this.ensureInitialized();
+    return this.performanceService.getPerformanceStats();
+  }
+
+  /**
+   * 获取性能健康状态
+   */
+  getPerformanceHealth(): {
+    status: 'healthy' | 'degraded' | 'unhealthy';
+    score: number;
+    issues: string[];
+    recommendations: string[];
+  } {
+    this.ensureInitialized();
+    return this.performanceService.getHealthStatus();
+  }
+
+  /**
+   * 获取未解决的性能告警
+   */
+  getPerformanceAlerts(): PerformanceAlert[] {
+    this.ensureInitialized();
+    return this.performanceService.getUnresolvedAlerts();
+  }
+
+  /**
+   * 解决性能告警
+   */
+  async resolvePerformanceAlert(alertId: string): Promise<boolean> {
+    this.ensureInitialized();
+    const resolved = await this.performanceService.resolveAlert(alertId);
+
+    if (resolved) {
+      this.logger.info('Performance alert resolved', { alertId });
+    } else {
+      this.logger.warn('Failed to resolve performance alert', { alertId });
+    }
+
+    return resolved;
+  }
+
+  /**
+   * 重置性能基准
+   */
+  resetPerformanceBenchmarks(): void {
+    this.ensureInitialized();
+    this.performanceService.resetBenchmarks();
+    this.logger.info('Performance benchmarks reset');
+  }
+
+  /**
+   * 优化权限检查操作
+   */
+  async optimizePermissionCheck<T>(
+    operation: () => Promise<T>,
+    context: { roleId?: string; permission?: string; resourceId?: string }
+  ): Promise<T> {
+    this.ensureInitialized();
+    return this.performanceService.optimizePermissionCheck(operation, context);
+  }
+
+  /**
+   * 确保适配器已初始化
+   */
+  private ensureInitialized(): void {
+    if (!this.initialized) {
+      throw new Error('Role module adapter not initialized. Call initialize() first.');
+    }
+  }
+
+
 }

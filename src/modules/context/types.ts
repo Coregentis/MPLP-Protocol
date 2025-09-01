@@ -1,457 +1,468 @@
 /**
- * Context模块类型定义
- *
- * 基于MPLP Context Schema的TypeScript类型定义
- * Schema层使用snake_case，Application层使用camelCase
- *
- * 功能：上下文和全局状态管理
- * - 多会话共享状态管理
- * - 上下文生命周期控制
- * - 状态持久化和恢复
- * - 会话关联和隔离
- *
+ * Context模块TypeScript类型定义
+ * 
+ * @description 基于实际Schema的完整TypeScript接口定义
  * @version 1.0.0
- * @created 2025-08-06
+ * @schema src/schemas/core-modules/mplp-context.json
+ * @naming_convention camelCase (TypeScript层)
  */
 
-import { UUID, Timestamp, Version } from '../../public/shared/types';
-
-// 重新导出UUID类型供模块内部使用
-export { UUID, Timestamp, Version };
+import { UUID, Timestamp, Priority } from '../../shared/types';
 
 // ===== 基础枚举类型 =====
 
 /**
- * 上下文生命周期阶段
- * 对应Schema: lifecycle_stage
- * 必须与mplp-context.json Schema保持一致
+ * 上下文状态枚举
  */
-export enum ContextLifecycleStage {
-  PLANNING = 'planning',
-  EXECUTING = 'executing',
-  MONITORING = 'monitoring',
-  COMPLETED = 'completed'
+export type ContextStatus = 'active' | 'suspended' | 'completed' | 'terminated';
+
+/**
+ * 生命周期阶段枚举
+ */
+export type LifecycleStage = 'planning' | 'executing' | 'monitoring' | 'completed';
+
+/**
+ * 资源状态枚举
+ */
+export type ResourceStatus = 'available' | 'allocated' | 'exhausted';
+
+/**
+ * 依赖类型枚举
+ */
+export type DependencyType = 'context' | 'plan' | 'external';
+
+/**
+ * 依赖状态枚举
+ */
+export type DependencyStatus = 'pending' | 'resolved' | 'failed';
+
+/**
+ * 目标状态枚举
+ */
+export type GoalStatus = 'defined' | 'active' | 'achieved' | 'abandoned';
+
+/**
+ * 操作符枚举
+ */
+export type Operator = 'eq' | 'ne' | 'gt' | 'gte' | 'lt' | 'lte';
+
+/**
+ * 主体类型枚举
+ */
+export type PrincipalType = 'user' | 'role' | 'group';
+
+/**
+ * 权限枚举
+ */
+export type Permission = 'read' | 'write' | 'execute' | 'delete' | 'admin';
+
+/**
+ * 策略类型枚举
+ */
+export type PolicyType = 'security' | 'compliance' | 'operational';
+
+/**
+ * 策略执行枚举
+ */
+export type PolicyEnforcement = 'strict' | 'advisory' | 'disabled';
+
+// ===== 复杂对象接口 =====
+
+/**
+ * 资源分配接口
+ */
+export interface ResourceAllocation {
+  type: string;
+  amount: number;
+  unit: string;
+  status: ResourceStatus;
 }
 
 /**
- * 上下文状态
- * 对应Schema: status
- * 必须与mplp-context.json Schema保持一致
+ * 资源需求接口
  */
-export enum ContextStatus {
-  ACTIVE = 'active',
-  SUSPENDED = 'suspended',
-  COMPLETED = 'completed',
-  TERMINATED = 'terminated'
+export interface ResourceRequirement {
+  minimum: number;
+  optimal?: number;
+  maximum?: number;
+  unit: string;
 }
 
-// 实体状态类型别名
-export type EntityStatus = ContextStatus;
-
 /**
- * 优先级枚举
- * 对应Schema: priority
+ * 资源管理接口
  */
-export enum Priority {
-  CRITICAL = 'critical',
-  HIGH = 'high',
-  MEDIUM = 'medium',
-  LOW = 'low'
+export interface ResourceManagement {
+  allocated: Record<string, ResourceAllocation>;
+  requirements: Record<string, ResourceRequirement>;
 }
 
-// ===== 核心协议接口 =====
-
 /**
- * MPLP Context协议接口
- * 对应Schema: mplp-context.json根对象
- *
- * 功能：定义完整的上下文结构，支持多会话状态管理
+ * 依赖关系接口
  */
-export interface ContextProtocol {
-  /**
-   * MPLP协议版本
-   * 对应Schema: protocol_version
-   */
-  protocolVersion: Version;
-
-  /**
-   * 协议消息时间戳
-   * 对应Schema: timestamp
-   */
-  timestamp: Timestamp;
-
-  /**
-   * 上下文唯一标识符
-   * 对应Schema: context_id
-   */
-  contextId: UUID;
-
-  /**
-   * 上下文名称
-   * 对应Schema: name
-   */
+export interface Dependency {
+  id: UUID;
+  type: DependencyType;
   name: string;
+  version?: string;
+  status: DependencyStatus;
+}
 
-  /**
-   * 上下文描述
-   * 对应Schema: description
-   */
+/**
+ * 成功标准接口
+ */
+export interface SuccessCriteria {
+  metric: string;
+  operator: Operator;
+  value: string | number | boolean;
+  unit?: string;
+}
+
+/**
+ * 目标定义接口
+ */
+export interface Goal {
+  id: UUID;
+  name: string;
   description?: string;
-
-  /**
-   * 生命周期阶段
-   * 对应Schema: lifecycle_stage
-   */
-  lifecycleStage: ContextLifecycleStage;
-
-  /**
-   * 上下文状态
-   * 对应Schema: status
-   */
-  status: ContextStatus;
-
-  /**
-   * 优先级
-   * 对应Schema: priority
-   */
   priority: Priority;
-
-  /**
-   * 创建时间
-   * 对应Schema: created_at
-   */
-  createdAt: Timestamp;
-
-  /**
-   * 更新时间
-   * 对应Schema: updated_at
-   */
-  updatedAt: Timestamp;
-
-  /**
-   * 过期时间
-   * 对应Schema: expires_at
-   */
-  expiresAt?: Timestamp;
-
-  /**
-   * 关联的会话ID列表
-   * 对应Schema: session_ids
-   */
-  sessionIds?: UUID[];
-
-  /**
-   * 共享状态数据
-   * 对应Schema: shared_state
-   *
-   * 功能：存储多会话间共享的状态信息
-   */
-  sharedState?: Record<string, unknown>;
-
-  /**
-   * 上下文配置
-   * 对应Schema: configuration
-   */
-  configuration?: ContextConfiguration;
-
-  /**
-   * 扩展元数据
-   * 对应Schema: metadata
-   */
-  metadata?: Record<string, unknown>;
+  status: GoalStatus;
+  successCriteria?: SuccessCriteria[];
 }
 
-// ===== 配置和子类型 =====
-
 /**
- * 上下文配置接口（Application层 - camelCase）
- * 对应Schema: configuration对象
- * 严格按照mplp-context.json Schema定义
+ * 共享状态接口
  */
-export interface ContextConfiguration {
-  /**
-   * 超时设置
-   * 对应Schema: configuration.timeout_settings
-   */
-  timeoutSettings: {
-    /** 默认超时时间（秒） */
-    defaultTimeout: number;
-    /** 最大超时时间（秒） */
-    maxTimeout: number;
-    /** 清理超时时间（秒） */
-    cleanupTimeout?: number;
+export interface SharedState {
+  variables?: Record<string, string | number | boolean | object>;
+  resources?: {
+    allocated?: Record<string, {
+      type: string;
+      amount: number;
+      unit: string;
+      status: 'available' | 'allocated' | 'exhausted';
+    }>;
+    limits?: Record<string, {
+      max_amount: number;
+      unit: string;
+      enforcement_policy: string;
+    }>;
   };
-
-  /**
-   * 通知设置
-   * 对应Schema: configuration.notification_settings
-   */
-  notificationSettings?: {
-    /** 是否启用通知 */
-    enabled: boolean;
-    /** 通知渠道 */
-    channels?: Array<'email' | 'webhook' | 'sms' | 'push'>;
-    /** 通知事件 */
-    events?: Array<'created' | 'updated' | 'completed' | 'failed' | 'timeout'>;
-  };
-
-  /**
-   * 持久化设置
-   * 对应Schema: configuration.persistence
-   */
-  persistence: {
-    /** 是否启用持久化 */
-    enabled: boolean;
-    /** 存储后端类型 */
-    storageBackend: 'memory' | 'database' | 'file' | 'redis';
-    /** 保留策略 */
-    retentionPolicy?: {
-      /** 保留时长 */
-      duration: string;
-      /** 最大版本数 */
-      maxVersions?: number;
-    };
-  };
+  dependencies?: string[];
+  goals?: string[];
 }
 
 /**
- * Schema层配置接口（snake_case）
- * 用于与JSON Schema直接交互
+ * 所有者信息接口
  */
-export interface ContextConfigurationSchema {
-  timeout_settings: {
-    default_timeout: number;
-    max_timeout: number;
-    cleanup_timeout?: number;
-  };
-  notification_settings?: {
-    enabled: boolean;
-    channels?: Array<'email' | 'webhook' | 'sms' | 'push'>;
-    events?: Array<'created' | 'updated' | 'completed' | 'failed' | 'timeout'>;
-  };
-  persistence: {
-    enabled: boolean;
-    storage_backend: 'memory' | 'database' | 'file' | 'redis';
-    retention_policy?: {
-      duration: string;
-      max_versions?: number;
-    };
+export interface Owner {
+  userId: string;
+  role: string;
+}
+
+/**
+ * 权限配置接口
+ */
+export interface PermissionConfig {
+  principal: string;
+  principalType: PrincipalType;
+  resource: string;
+  actions: Permission[];
+  conditions?: Record<string, unknown>;
+}
+
+/**
+ * 策略配置接口
+ */
+export interface PolicyConfig {
+  id: UUID;
+  name: string;
+  type: PolicyType;
+  rules: Record<string, unknown>[];
+  enforcement: PolicyEnforcement;
+}
+
+/**
+ * 访问控制接口
+ */
+export interface AccessControl {
+  owner: Owner;
+  permissions: PermissionConfig[];
+  policies?: PolicyConfig[];
+}
+
+/**
+ * 超时设置接口
+ */
+export interface TimeoutSettings {
+  defaultTimeout: number;
+  maxTimeout: number;
+  cleanupTimeout?: number;
+}
+
+/**
+ * 通知设置接口
+ */
+export interface NotificationSettings {
+  enabled: boolean;
+  channels?: ('email' | 'webhook' | 'sms' | 'push')[];
+  events?: ('created' | 'updated' | 'completed' | 'failed' | 'timeout')[];
+}
+
+/**
+ * 持久化配置接口
+ */
+export interface PersistenceConfig {
+  enabled: boolean;
+  storageBackend: 'memory' | 'database' | 'file' | 'redis';
+  retentionPolicy?: {
+    duration?: string;
+    maxVersions?: number;
   };
 }
 
-// ===== API数据传输对象 =====
+/**
+ * 配置设置接口
+ */
+export interface Configuration {
+  timeoutSettings: TimeoutSettings;
+  notificationSettings?: NotificationSettings;
+  persistence: PersistenceConfig;
+}
+
+// ===== 企业级功能接口 =====
 
 /**
- * 创建上下文请求
- * API层使用，对应Schema字段但使用camelCase
+ * 审计事件接口
+ */
+export interface AuditEvent {
+  eventId: UUID;
+  eventType: 'context_created' | 'context_updated' | 'context_deleted' | 'context_accessed' | 'context_shared' | 'permission_changed' | 'state_changed' | 'cache_updated' | 'sync_executed';
+  timestamp: Timestamp;
+  userId: string;
+  userRole?: string;
+  action: string;
+  resource: string;
+  contextOperation?: string;
+  contextId?: UUID;
+  contextName?: string;
+  lifecycleStage?: string;
+  sharedStateKeys?: string[];
+  accessLevel?: string;
+  contextDetails?: Record<string, unknown>;
+  oldValue?: Record<string, unknown>;
+  newValue?: Record<string, unknown>;
+  ipAddress?: string;
+  userAgent?: string;
+  sessionId?: string;
+  correlationId?: UUID;
+}
+
+/**
+ * 合规设置接口
+ */
+export interface ComplianceSettings {
+  gdprEnabled?: boolean;
+  hipaaEnabled?: boolean;
+  soxEnabled?: boolean;
+  contextAuditLevel?: 'basic' | 'detailed' | 'comprehensive';
+  contextDataLogging?: boolean;
+  customCompliance?: string[];
+}
+
+/**
+ * 审计追踪接口
+ */
+export interface AuditTrail {
+  enabled: boolean;
+  retentionDays: number;
+  auditEvents?: AuditEvent[];
+  complianceSettings?: ComplianceSettings;
+}
+
+// ===== 主要Context实体接口 =====
+
+/**
+ * Context实体数据接口 (TypeScript层 - camelCase)
+ */
+export interface ContextEntityData {
+  // 基础协议字段
+  protocolVersion: string;
+  timestamp: Timestamp;
+  contextId: UUID;
+  name: string;
+  description?: string;
+  status: ContextStatus;
+  lifecycleStage: LifecycleStage;
+
+  // 时间戳字段
+  createdAt?: Date;
+  updatedAt?: Date;
+
+  // 版本和标签字段
+  version?: string;
+  tags?: string[];
+
+  // 核心功能字段 (允许部分定义)
+  sharedState?: Partial<SharedState>;
+  accessControl?: Partial<AccessControl>;
+  configuration?: Partial<Configuration>;
+
+  // 企业级功能字段
+  auditTrail: AuditTrail;
+  monitoringIntegration: Record<string, unknown>; // 简化处理
+  performanceMetrics: Record<string, unknown>;    // 简化处理
+  versionHistory: Record<string, unknown>;        // 简化处理
+  searchMetadata: Record<string, unknown>;        // 简化处理
+  cachingPolicy: Record<string, unknown>;         // 简化处理
+  syncConfiguration: Record<string, unknown>;     // 简化处理
+  errorHandling: Record<string, unknown>;         // 简化处理
+  integrationEndpoints: Record<string, unknown>;  // 简化处理
+  eventIntegration: Record<string, unknown>;      // 简化处理
+}
+
+/**
+ * Context Schema接口 (Schema层 - snake_case)
+ */
+export interface ContextSchema {
+  // 基础协议字段
+  protocol_version: string;
+  timestamp: string;
+  context_id: string;
+  name: string;
+  description?: string;
+  status: ContextStatus;
+  lifecycle_stage: LifecycleStage;
+
+  // 核心功能字段
+  shared_state: Record<string, unknown>;
+  access_control: Record<string, unknown>;
+  configuration: Record<string, unknown>;
+
+  // 企业级功能字段
+  audit_trail: Record<string, unknown>;
+  monitoring_integration: Record<string, unknown>;
+  performance_metrics: Record<string, unknown>;
+  version_history: Record<string, unknown>;
+  search_metadata: Record<string, unknown>;
+  caching_policy: Record<string, unknown>;
+  sync_configuration: Record<string, unknown>;
+  error_handling: Record<string, unknown>;
+  integration_endpoints: Record<string, unknown>;
+  event_integration: Record<string, unknown>;
+}
+
+// ===== 操作相关接口 =====
+
+/**
+ * Context创建请求接口
  */
 export interface CreateContextRequest {
   name: string;
   description?: string;
-  type?: ContextType;
-  lifecycleStage?: ContextLifecycleStage;
-  priority?: Priority;
-  sessionIds?: UUID[];
-  sharedState?: Record<string, unknown>;
-  configuration?: ContextConfiguration;
-  metadata?: Record<string, unknown>;
-  capabilities?: {
-    storage?: {
-      persistence?: boolean;
-      encryption?: boolean;
-    };
-    knowledgeBase?: {
-      hierarchical?: boolean;
-      semantic?: boolean;
-    };
-    coordination?: {
-      multiAgent?: boolean;
-      conflictResolution?: boolean;
-    };
-  };
+  sharedState?: Partial<SharedState>;
+  accessControl?: Partial<AccessControl>;
+  configuration?: Partial<Configuration>;
 }
 
 /**
- * 更新上下文请求
- * API层使用，支持部分更新
+ * Context更新请求接口
  */
 export interface UpdateContextRequest {
   name?: string;
   description?: string;
-  lifecycleStage?: ContextLifecycleStage;
   status?: ContextStatus;
-  priority?: Priority;
-  sessionIds?: UUID[];
-  sharedState?: Record<string, unknown>;
-  configuration?: ContextConfiguration;
-  metadata?: Record<string, unknown>;
+  lifecycleStage?: LifecycleStage;
+  sharedState?: Partial<SharedState>;
+  accessControl?: Partial<AccessControl>;
+  configuration?: Partial<Configuration>;
 }
 
 /**
- * 上下文查询参数
- * API层使用，支持过滤和分页
- */
-export interface ContextQueryParams {
-  lifecycleStage?: ContextLifecycleStage;
-  status?: ContextStatus;
-  priority?: Priority;
-  sessionId?: UUID;
-  limit?: number;
-  offset?: number;
-  sortBy?: 'createdAt' | 'updatedAt' | 'name';
-  sortOrder?: 'asc' | 'desc';
-}
-
-/**
- * 上下文类型枚举
- */
-export enum ContextType {
-  BASIC = 'basic',
-  KNOWLEDGE_BASE = 'knowledge_base',
-  MULTI_AGENT = 'multi_agent',
-  DISTRIBUTED = 'distributed'
-}
-
-/**
- * 上下文同步请求
- */
-export interface ContextSyncRequest {
-  contextId: UUID;
-  targetContexts: UUID[];
-  syncMode: 'incremental' | 'full';
-  conflictResolution: 'merge' | 'overwrite' | 'manual';
-  options?: {
-    timeout?: number;
-    retryCount?: number;
-    validateAfterSync?: boolean;
-  };
-}
-
-/**
- * 上下文操作请求
- */
-export interface ContextOperationRequest {
-  contextId: UUID;
-  operation: {
-    type: 'read' | 'write' | 'delete';
-    target: string;
-    data?: unknown;
-    conditions?: Record<string, unknown>;
-  };
-  options?: {
-    enableAnalysis?: boolean;
-    syncMode?: 'immediate' | 'eventual';
-  };
-}
-
-/**
- * 上下文分析请求
- */
-export interface ContextAnalysisRequest {
-  contextId: UUID;
-  analysisType: 'quality' | 'performance' | 'insights' | 'comprehensive';
-  options?: {
-    includeRecommendations?: boolean;
-    depth?: 'shallow' | 'deep';
-    timeRange?: {
-      start: Timestamp;
-      end: Timestamp;
-    };
-  };
-}
-
-/**
- * 上下文查询过滤器
- * 用于应用层的Context查询操作
+ * Context查询过滤器接口
  */
 export interface ContextQueryFilter {
-  type?: ContextType;
-  status?: ContextStatus;
-  lifecycleStage?: ContextLifecycleStage;
-  priority?: Priority;
+  status?: ContextStatus | ContextStatus[];
+  lifecycleStage?: LifecycleStage | LifecycleStage[];
+  owner?: string;
   createdAfter?: Timestamp;
   createdBefore?: Timestamp;
+  namePattern?: string;
+}
+
+// ===== 缺失的类型定义 =====
+
+/**
+ * Context过滤器接口 (用于分析服务)
+ */
+export interface ContextFilter {
+  status?: ContextStatus | ContextStatus[];
+  lifecycleStage?: LifecycleStage | LifecycleStage[];
+  owner?: string;
+  createdAfter?: Timestamp;
+  createdBefore?: Timestamp;
+  namePattern?: string;
   tags?: string[];
+}
+
+/**
+ * 状态更新接口
+ */
+export interface StateUpdates {
+  variables?: Record<string, unknown>;
+  resources?: Partial<ResourceManagement>;
+  dependencies?: Dependency[];
+  goals?: Goal[];
+}
+
+/**
+ * 创建Context数据接口
+ */
+export interface CreateContextData {
+  name: string;
+  description?: string;
+  sharedState?: Partial<SharedState>;
+  accessControl?: Partial<AccessControl>;
+  configuration?: Partial<Configuration>;
+  tags?: string[];
+}
+
+/**
+ * 更新Context数据接口
+ */
+export interface UpdateContextData {
+  name?: string;
+  description?: string;
+  status?: ContextStatus;
+  lifecycleStage?: LifecycleStage;
+  sharedState?: Partial<SharedState>;
+  accessControl?: Partial<AccessControl>;
+  configuration?: Partial<Configuration>;
+  tags?: string[];
+}
+
+/**
+ * 使用指标接口 (扩展版本)
+ */
+export interface UsageMetrics {
+  totalAccess: number;
+  lastAccessTime: Timestamp;
+  avgSessionDuration: number;
+  uniqueUsers: number;
+  lastAccessed: Timestamp;
+  averageSessionDuration: number;
+}
+
+/**
+ * 搜索查询接口
+ */
+export interface SearchQuery {
+  query: string;
+  filters?: ContextFilter;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
   limit?: number;
   offset?: number;
 }
 
-/**
- * 状态选项
- */
-export interface StatusOptions {
-  includePerformance?: boolean;
-  includeMetrics?: boolean;
-  includeHistory?: boolean;
-}
-
-// ===== 操作结果类型 =====
-// 注意：ContextOperationResult在application/services中已定义
-// 这里不重复定义，避免类型冲突
-
-// ===== 配置转换函数 =====
-
-/**
- * 将Schema层配置转换为Application层配置
- */
-export function mapSchemaToApplicationConfig(
-  schemaConfig: ContextConfigurationSchema
-): ContextConfiguration {
-  return {
-    timeoutSettings: {
-      defaultTimeout: schemaConfig.timeout_settings.default_timeout,
-      maxTimeout: schemaConfig.timeout_settings.max_timeout,
-      cleanupTimeout: schemaConfig.timeout_settings.cleanup_timeout
-    },
-    notificationSettings: schemaConfig.notification_settings ? {
-      enabled: schemaConfig.notification_settings.enabled,
-      channels: schemaConfig.notification_settings.channels,
-      events: schemaConfig.notification_settings.events
-    } : undefined,
-    persistence: {
-      enabled: schemaConfig.persistence.enabled,
-      storageBackend: schemaConfig.persistence.storage_backend,
-      retentionPolicy: schemaConfig.persistence.retention_policy ? {
-        duration: schemaConfig.persistence.retention_policy.duration,
-        maxVersions: schemaConfig.persistence.retention_policy.max_versions
-      } : undefined
-    }
-  };
-}
-
-/**
- * 将Application层配置转换为Schema层配置
- */
-export function mapApplicationToSchemaConfig(
-  appConfig: ContextConfiguration
-): ContextConfigurationSchema {
-  return {
-    timeout_settings: {
-      default_timeout: appConfig.timeoutSettings.defaultTimeout,
-      max_timeout: appConfig.timeoutSettings.maxTimeout,
-      cleanup_timeout: appConfig.timeoutSettings.cleanupTimeout
-    },
-    notification_settings: appConfig.notificationSettings ? {
-      enabled: appConfig.notificationSettings.enabled,
-      channels: appConfig.notificationSettings.channels,
-      events: appConfig.notificationSettings.events
-    } : undefined,
-    persistence: {
-      enabled: appConfig.persistence.enabled,
-      storage_backend: appConfig.persistence.storageBackend,
-      retention_policy: appConfig.persistence.retentionPolicy ? {
-        duration: appConfig.persistence.retentionPolicy.duration,
-        max_versions: appConfig.persistence.retentionPolicy.maxVersions
-      } : undefined
-    }
-  };
-}
-
-// ===== 重新导出相关类型 =====
-
-// 重新导出Domain实体类型
-export * from './domain/entities/context.entity';
-
-// 重新导出API DTO类型
-export * from './api/dto/requests/create-context.request';
-export * from './api/dto/responses/context.response';
+// ===== 导出所有类型 =====
+// 注意：使用具名导出避免与共享类型冲突

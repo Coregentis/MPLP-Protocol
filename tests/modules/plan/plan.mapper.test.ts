@@ -1,314 +1,489 @@
-import { PlanMapper } from '../../../src/modules/plan/infrastructure/persistence/plan.mapper';
-import { PlanEntity } from '../../../src/modules/plan/infrastructure/persistence/plan.entity';
-import { Plan } from '../../../src/modules/plan/domain/entities/plan.entity';
-import { PlanFactoryService } from '../../../src/modules/plan/domain/services/plan-factory.service';
-import { PlanStatus, Priority, ExecutionStrategy } from '../../../src/modules/plan/types';
-import { v4 as uuidv4 } from 'uuid';
+/**
+ * Plan映射器单元测试
+ *
+ * @description 基于实际接口的PlanMapper测试
+ * @version 1.0.0
+ * @layer 测试层 - 单元测试
+ * @coverage 目标覆盖率 95%+
+ * @pattern 与Context模块使用IDENTICAL的测试模式
+ */
 
-describe('PlanMapper', () => {
-  let planMapper: PlanMapper;
-  let mockPlanFactoryService: jest.Mocked<PlanFactoryService>;
+import { 
+  PlanMapper, 
+  PlanEntityData, 
+  PlanSchema,
+  PlanTaskData,
+  PlanTaskSchema
+} from '../../../src/modules/plan/api/mappers/plan.mapper';
 
-  beforeEach(() => {
-    mockPlanFactoryService = {
-      createPlan: jest.fn(),
-      validatePlanData: jest.fn(),
-      createPlanFromTemplate: jest.fn()
-    } as any;
+describe('PlanMapper测试', () => {
 
-    planMapper = new PlanMapper(mockPlanFactoryService);
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  // 创建测试用的Plan实体
-  const createTestPlan = (overrides: any = {}) => {
-    const planData = {
-      planId: uuidv4(),
-      contextId: uuidv4(),
-      name: 'Test Plan',
-      description: 'Test plan description',
-      status: PlanStatus.DRAFT,
-      version: '1.0.0',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      goals: ['Goal 1', 'Goal 2'],
-      tasks: [],
-      dependencies: [],
-      executionStrategy: ExecutionStrategy.SEQUENTIAL,
-      priority: Priority.MEDIUM,
-      estimatedDuration: { value: 3600, unit: 'seconds' },
-      progress: {
-        completedTasks: 0,
-        totalTasks: 5,
-        percentage: 0
-      },
-      timeline: {
-        start_date: '2025-01-01',
-        end_date: '2025-12-31',
-        milestones: [],
-        critical_path: []
-      },
-      configuration: {
-        allowParallelExecution: true,
-        maxRetries: 3
-      },
-      metadata: { source: 'test' },
-      riskAssessment: {
-        overall_risk_level: 'low',
-        risks: [],
-        last_assessed: new Date().toISOString()
-      },
-      ...overrides
-    };
-
-    // 创建mock Plan实例
-    const mockPlan = {
-      toObject: jest.fn().mockReturnValue(planData),
-      ...planData
-    } as any;
-
-    return mockPlan;
-  };
-
-  // 创建测试用的PlanEntity
-  const createTestPlanEntity = (overrides: any = {}) => {
-    const entity = new PlanEntity();
-    entity.plan_id = uuidv4();
-    entity.context_id = uuidv4();
-    entity.name = 'Test Plan';
-    entity.description = 'Test plan description';
-    entity.status = PlanStatus.DRAFT;
-    entity.version = '1.0.0';
-    entity.created_at = new Date();
-    entity.updated_at = new Date();
-    entity.goals = ['Goal 1', 'Goal 2'];
-    entity.tasks = [];
-    entity.dependencies = [];
-    entity.execution_strategy = ExecutionStrategy.SEQUENTIAL;
-    entity.priority = Priority.MEDIUM;
-    entity.estimated_duration = { value: 3600, unit: 'seconds' };
-    entity.progress = {
-      completed_tasks: 0,
-      total_tasks: 5,
-      percentage: 0
-    };
-    entity.timeline = {
-      start_date: '2025-01-01',
-      end_date: '2025-12-31',
-      milestones: [],
-      critical_path: []
-    };
-    entity.configuration = {
-      allowParallelExecution: true,
-      maxRetries: 3
-    };
-    entity.metadata = { source: 'test' };
-    entity.risk_assessment = {
-      overall_risk_level: 'low',
-      risks: [],
-      last_assessed: new Date().toISOString()
-    };
-
-    Object.assign(entity, overrides);
-    return entity;
-  };
-
-  describe('toPersistence', () => {
-    it('应该将领域实体正确转换为持久化实体', () => {
-      const plan = createTestPlan();
-      
-      const result = planMapper.toPersistence(plan);
-      
-      expect(result).toBeInstanceOf(PlanEntity);
-      expect(result.plan_id).toBe(plan.planId);
-      expect(result.context_id).toBe(plan.contextId);
-      expect(result.name).toBe(plan.name);
-      expect(result.description).toBe(plan.description);
-      expect(result.status).toBe(plan.status);
-      expect(result.version).toBe(plan.version);
-      expect(result.goals).toEqual(plan.goals);
-      expect(result.tasks).toEqual(plan.tasks);
-      expect(result.dependencies).toEqual(plan.dependencies);
-      expect(result.execution_strategy).toBe(plan.executionStrategy);
-      expect(result.priority).toBe(plan.priority);
-      expect(result.estimated_duration).toEqual(plan.estimatedDuration);
-    });
-
-    it('应该正确映射progress字段（驼峰转下划线）', () => {
-      const plan = createTestPlan({
-        progress: {
-          completedTasks: 3,
-          totalTasks: 10,
-          percentage: 30
+  describe('toSchema功能测试', () => {
+    it('应该正确将PlanEntityData转换为PlanSchema', () => {
+      // 📋 Arrange
+      const entityData: PlanEntityData = {
+        protocolVersion: '1.0.0',
+        timestamp: new Date('2024-01-01T00:00:00.000Z'),
+        planId: 'plan-test-123',
+        contextId: 'ctx-test-456',
+        name: 'Test Plan',
+        description: 'Test plan description',
+        status: 'active',
+        priority: 'high',
+        tasks: [
+          {
+            taskId: 'task-1',
+            name: 'Test Task',
+            description: 'Test task description',
+            type: 'atomic',
+            status: 'pending',
+            priority: 'medium'
+          }
+        ],
+        dependencies: ['dep-1', 'dep-2'],
+        milestones: [
+          {
+            id: 'milestone-1',
+            name: 'Test Milestone',
+            targetDate: new Date('2024-06-01T00:00:00.000Z'),
+            status: 'upcoming'
+          }
+        ],
+        timeline: {
+          startDate: new Date('2024-01-01T00:00:00.000Z'),
+          endDate: new Date('2024-12-31T00:00:00.000Z'),
+          estimatedDuration: 365
+        },
+        createdAt: new Date('2024-01-01T00:00:00.000Z'),
+        updatedAt: new Date('2024-01-01T12:00:00.000Z'),
+        createdBy: 'user-123',
+        updatedBy: 'user-456',
+        auditTrail: {
+          enabled: true,
+          retentionDays: 90
+        },
+        monitoringIntegration: {
+          enabled: true,
+          supportedProviders: ['prometheus', 'grafana']
+        },
+        performanceMetrics: {
+          enabled: true,
+          collectionIntervalSeconds: 60
+        },
+        versionHistory: {
+          enabled: true,
+          maxVersions: 10
+        },
+        searchMetadata: {
+          enabled: true,
+          indexingStrategy: 'full_text'
+        },
+        cachingPolicy: {
+          enabled: true,
+          cacheStrategy: 'lru'
+        },
+        eventIntegration: {
+          enabled: true
         }
-      });
-      
-      const result = planMapper.toPersistence(plan);
-      
-      expect(result.progress).toEqual({
-        completed_tasks: 3,
-        total_tasks: 10,
-        percentage: 30
-      });
-    });
-
-    it('应该正确映射timeline字段', () => {
-      const timeline = {
-        start_date: '2025-01-01',
-        end_date: '2025-12-31',
-        milestones: [{ id: '1', name: 'Milestone 1' }],
-        critical_path: ['task1', 'task2']
       };
+
+      // 🎬 Act
+      const schema = PlanMapper.toSchema(entityData);
+
+      // ✅ Assert - 验证snake_case字段名
+      expect(schema.protocol_version).toBe('1.0.0');
+      expect(schema.timestamp).toBe('2024-01-01T00:00:00.000Z');
+      expect(schema.plan_id).toBe('plan-test-123');
+      expect(schema.context_id).toBe('ctx-test-456');
+      expect(schema.name).toBe('Test Plan');
+      expect(schema.description).toBe('Test plan description');
+      expect(schema.status).toBe('active');
+      expect(schema.priority).toBe('high');
+      expect(schema.created_at).toBe('2024-01-01T00:00:00.000Z');
+      expect(schema.updated_at).toBe('2024-01-01T12:00:00.000Z');
+      expect(schema.created_by).toBe('user-123');
+      expect(schema.updated_by).toBe('user-456');
       
-      const plan = createTestPlan({ timeline });
+      // 验证任务转换
+      expect(schema.tasks).toHaveLength(1);
+      expect(schema.tasks[0].task_id).toBe('task-1');
+      expect(schema.tasks[0].name).toBe('Test Task');
+      expect(schema.tasks[0].type).toBe('atomic');
+      expect(schema.tasks[0].status).toBe('pending');
       
-      const result = planMapper.toPersistence(plan);
+      // 验证里程碑转换
+      expect(schema.milestones).toHaveLength(1);
+      expect(schema.milestones[0].id).toBe('milestone-1');
+      expect(schema.milestones[0].target_date).toBe('2024-06-01T00:00:00.000Z');
       
-      expect(result.timeline).toEqual(timeline);
+      // 验证时间线转换
+      expect(schema.timeline?.start_date).toBe('2024-01-01T00:00:00.000Z');
+      expect(schema.timeline?.end_date).toBe('2024-12-31T00:00:00.000Z');
+      expect(schema.timeline?.estimated_duration).toBe(365);
+      
+      // 验证横切关注点转换
+      expect(schema.audit_trail?.enabled).toBe(true);
+      expect(schema.audit_trail?.retention_days).toBe(90);
+      expect(schema.monitoring_integration?.enabled).toBe(true);
+      expect(schema.performance_metrics?.enabled).toBe(true);
+      expect(schema.version_history?.enabled).toBe(true);
+      expect(schema.search_metadata?.enabled).toBe(true);
+      expect(schema.caching_policy?.enabled).toBe(true);
+      expect(schema.event_integration?.enabled).toBe(true);
     });
 
-    it('应该正确映射risk_assessment字段', () => {
-      const riskAssessment = {
-        overall_risk_level: 'high',
-        risks: [{ id: '1', description: 'Risk 1' }],
-        last_assessed: '2025-01-01T00:00:00.000Z'
+    it('应该正确处理可选字段', () => {
+      // 📋 Arrange - 最小化数据
+      const minimalData: PlanEntityData = {
+        protocolVersion: '1.0.0',
+        timestamp: new Date('2024-01-01T00:00:00.000Z'),
+        planId: 'plan-minimal',
+        contextId: 'ctx-minimal',
+        name: 'Minimal Plan',
+        status: 'draft',
+        tasks: [],
+        auditTrail: { enabled: false },
+        monitoringIntegration: { enabled: false },
+        performanceMetrics: { enabled: false },
+        versionHistory: { enabled: false },
+        searchMetadata: { enabled: false },
+        cachingPolicy: { enabled: false },
+        eventIntegration: { enabled: false }
       };
-      
-      const plan = createTestPlan({ riskAssessment });
-      
-      const result = planMapper.toPersistence(plan);
-      
-      expect(result.risk_assessment).toEqual({
-        overall_risk_level: 'high',
-        risks: [{ id: '1', description: 'Risk 1' }],
-        last_assessed: '2025-01-01T00:00:00.000Z'
-      });
-    });
 
-    it('应该处理undefined的timeline和riskAssessment', () => {
-      const plan = createTestPlan({
-        timeline: undefined,
-        riskAssessment: undefined
-      });
-      
-      const result = planMapper.toPersistence(plan);
-      
-      expect(result.timeline).toBeUndefined();
-      expect(result.risk_assessment).toBeUndefined();
-    });
+      // 🎬 Act
+      const schema = PlanMapper.toSchema(minimalData);
 
-    it('应该正确转换日期字段', () => {
-      const createdAt = '2025-01-01T10:00:00.000Z';
-      const updatedAt = '2025-01-02T15:30:00.000Z';
-      
-      const plan = createTestPlan({ createdAt, updatedAt });
-      
-      const result = planMapper.toPersistence(plan);
-      
-      expect(result.created_at).toEqual(new Date(createdAt));
-      expect(result.updated_at).toEqual(new Date(updatedAt));
+      // ✅ Assert
+      expect(schema.plan_id).toBe('plan-minimal');
+      expect(schema.name).toBe('Minimal Plan');
+      expect(schema.description).toBeUndefined();
+      expect(schema.priority).toBeUndefined();
+      expect(schema.tasks).toHaveLength(0);
+      expect(schema.dependencies).toBeUndefined();
+      expect(schema.milestones).toBeUndefined();
+      expect(schema.timeline).toBeUndefined();
     });
   });
 
-  describe('toDomain', () => {
-    it('应该将持久化实体正确转换为领域实体', () => {
-      const planEntity = createTestPlanEntity();
-      const expectedPlan = createTestPlan();
-      
-      mockPlanFactoryService.createPlan.mockReturnValue(expectedPlan);
-      
-      const result = planMapper.toDomain(planEntity);
-      
-      expect(mockPlanFactoryService.createPlan).toHaveBeenCalledWith({
-        planId: planEntity.plan_id,
-        contextId: planEntity.context_id,
-        name: planEntity.name,
-        description: planEntity.description,
-        status: planEntity.status,
-        version: planEntity.version,
-        createdAt: planEntity.created_at.toISOString(),
-        updatedAt: planEntity.updated_at.toISOString(),
-        goals: planEntity.goals,
-        tasks: planEntity.tasks,
-        dependencies: planEntity.dependencies,
-        executionStrategy: planEntity.execution_strategy,
-        priority: planEntity.priority,
-        estimatedDuration: planEntity.estimated_duration,
-        timeline: planEntity.timeline,
-        configuration: planEntity.configuration,
-        metadata: planEntity.metadata,
-        riskAssessment: {
-          overall_risk_level: planEntity.risk_assessment?.overall_risk_level,
-          risks: planEntity.risk_assessment?.risks || [],
-          last_assessed: planEntity.risk_assessment?.last_assessed
+  describe('fromSchema功能测试', () => {
+    it('应该正确将PlanSchema转换为PlanEntityData', () => {
+      // 📋 Arrange
+      const schema: PlanSchema = {
+        protocol_version: '1.0.0',
+        timestamp: '2024-01-01T00:00:00.000Z',
+        plan_id: 'plan-schema-test',
+        context_id: 'ctx-schema-test',
+        name: 'Schema Test Plan',
+        description: 'Plan from schema conversion',
+        status: 'approved',
+        priority: 'critical',
+        tasks: [
+          {
+            task_id: 'task-schema-1',
+            name: 'Schema Task',
+            description: 'Task from schema',
+            type: 'composite',
+            status: 'running',
+            priority: 'high'
+          }
+        ],
+        dependencies: ['dep-schema-1'],
+        milestones: [
+          {
+            id: 'milestone-schema-1',
+            name: 'Schema Milestone',
+            target_date: '2024-07-01T00:00:00.000Z',
+            status: 'upcoming'
+          }
+        ],
+        timeline: {
+          start_date: '2024-02-01T00:00:00.000Z',
+          end_date: '2024-11-30T00:00:00.000Z',
+          estimated_duration: 300
+        },
+        created_at: '2024-01-01T00:00:00.000Z',
+        updated_at: '2024-01-01T18:00:00.000Z',
+        created_by: 'schema-user-123',
+        updated_by: 'schema-user-456',
+        audit_trail: {
+          enabled: true,
+          retention_days: 120
+        },
+        monitoring_integration: {
+          enabled: true,
+          supported_providers: ['datadog', 'newrelic']
+        },
+        performance_metrics: {
+          enabled: true,
+          collection_interval_seconds: 30
+        },
+        version_history: {
+          enabled: true,
+          max_versions: 20
+        },
+        search_metadata: {
+          enabled: true,
+          indexing_strategy: 'selective'
+        },
+        caching_policy: {
+          enabled: true,
+          cache_strategy: 'fifo'
+        },
+        event_integration: {
+          enabled: true
         }
-      });
+      };
+
+      // 🎬 Act
+      const entityData = PlanMapper.fromSchema(schema);
+
+      // ✅ Assert - 验证camelCase字段名
+      expect(entityData.protocolVersion).toBe('1.0.0');
+      expect(entityData.timestamp).toEqual(new Date('2024-01-01T00:00:00.000Z'));
+      expect(entityData.planId).toBe('plan-schema-test');
+      expect(entityData.contextId).toBe('ctx-schema-test');
+      expect(entityData.name).toBe('Schema Test Plan');
+      expect(entityData.description).toBe('Plan from schema conversion');
+      expect(entityData.status).toBe('approved');
+      expect(entityData.priority).toBe('critical');
+      expect(entityData.createdAt).toEqual(new Date('2024-01-01T00:00:00.000Z'));
+      expect(entityData.updatedAt).toEqual(new Date('2024-01-01T18:00:00.000Z'));
+      expect(entityData.createdBy).toBe('schema-user-123');
+      expect(entityData.updatedBy).toBe('schema-user-456');
       
-      expect(result).toBe(expectedPlan);
+      // 验证任务转换
+      expect(entityData.tasks).toHaveLength(1);
+      expect(entityData.tasks[0].taskId).toBe('task-schema-1');
+      expect(entityData.tasks[0].name).toBe('Schema Task');
+      expect(entityData.tasks[0].type).toBe('composite');
+      expect(entityData.tasks[0].status).toBe('running');
+      
+      // 验证里程碑转换
+      expect(entityData.milestones).toHaveLength(1);
+      expect(entityData.milestones![0].id).toBe('milestone-schema-1');
+      expect(entityData.milestones![0].targetDate).toEqual(new Date('2024-07-01T00:00:00.000Z'));
+      
+      // 验证时间线转换
+      expect(entityData.timeline?.startDate).toEqual(new Date('2024-02-01T00:00:00.000Z'));
+      expect(entityData.timeline?.endDate).toEqual(new Date('2024-11-30T00:00:00.000Z'));
+      expect(entityData.timeline?.estimatedDuration).toBe(300);
+      
+      // 验证横切关注点转换
+      expect(entityData.auditTrail.enabled).toBe(true);
+      expect(entityData.auditTrail.retentionDays).toBe(120);
+      expect(entityData.monitoringIntegration.enabled).toBe(true);
+      expect(entityData.performanceMetrics.enabled).toBe(true);
+      expect(entityData.versionHistory.enabled).toBe(true);
+      expect(entityData.searchMetadata.enabled).toBe(true);
+      expect(entityData.cachingPolicy.enabled).toBe(true);
+      expect(entityData.eventIntegration.enabled).toBe(true);
     });
 
-    it('应该处理没有risk_assessment的情况', () => {
-      const planEntity = createTestPlanEntity({ risk_assessment: undefined });
-      const expectedPlan = createTestPlan();
-      
-      mockPlanFactoryService.createPlan.mockReturnValue(expectedPlan);
-      
-      const result = planMapper.toDomain(planEntity);
-      
-      const createPlanCall = mockPlanFactoryService.createPlan.mock.calls[0][0];
-      expect(createPlanCall.riskAssessment).toBeUndefined();
+    it('应该正确处理空的可选字段', () => {
+      // 📋 Arrange - 最小化Schema
+      const minimalSchema: PlanSchema = {
+        protocol_version: '1.0.0',
+        timestamp: '2024-01-01T00:00:00.000Z',
+        plan_id: 'plan-minimal-schema',
+        context_id: 'ctx-minimal-schema',
+        name: 'Minimal Schema Plan',
+        status: 'draft',
+        tasks: [],
+        audit_trail: { enabled: false },
+        monitoring_integration: { enabled: false },
+        performance_metrics: { enabled: false },
+        version_history: { enabled: false },
+        search_metadata: { enabled: false },
+        caching_policy: { enabled: false },
+        event_integration: { enabled: false }
+      };
+
+      // 🎬 Act
+      const entityData = PlanMapper.fromSchema(minimalSchema);
+
+      // ✅ Assert
+      expect(entityData.planId).toBe('plan-minimal-schema');
+      expect(entityData.name).toBe('Minimal Schema Plan');
+      expect(entityData.description).toBeUndefined();
+      expect(entityData.priority).toBeUndefined();
+      expect(entityData.tasks).toHaveLength(0);
+      expect(entityData.dependencies).toBeUndefined();
+      expect(entityData.milestones).toBeUndefined();
+      expect(entityData.timeline).toBeUndefined();
     });
   });
 
-  describe('toDomainList', () => {
-    it('应该将持久化实体列表转换为领域实体列表', () => {
-      const planEntities = [
-        createTestPlanEntity(),
-        createTestPlanEntity(),
-        createTestPlanEntity()
-      ];
-      
-      const expectedPlans = [
-        createTestPlan(),
-        createTestPlan(),
-        createTestPlan()
-      ];
-      
-      mockPlanFactoryService.createPlan
-        .mockReturnValueOnce(expectedPlans[0])
-        .mockReturnValueOnce(expectedPlans[1])
-        .mockReturnValueOnce(expectedPlans[2]);
-      
-      const result = planMapper.toDomainList(planEntities);
-      
-      expect(result).toHaveLength(3);
-      expect(result).toEqual(expectedPlans);
-      expect(mockPlanFactoryService.createPlan).toHaveBeenCalledTimes(3);
+  describe('validateSchema功能测试', () => {
+    it('应该验证有效的Schema', () => {
+      // 📋 Arrange
+      const validSchema: PlanSchema = {
+        protocol_version: '1.0.0',
+        timestamp: '2024-01-01T00:00:00.000Z',
+        plan_id: 'plan-valid',
+        context_id: 'ctx-valid',
+        name: 'Valid Plan',
+        status: 'active',
+        tasks: [],
+        audit_trail: { enabled: true },
+        monitoring_integration: { enabled: true },
+        performance_metrics: { enabled: true },
+        version_history: { enabled: true },
+        search_metadata: { enabled: true },
+        caching_policy: { enabled: true },
+        event_integration: { enabled: true }
+      };
+
+      // 🎬 Act
+      const isValid = PlanMapper.validateSchema(validSchema);
+
+      // ✅ Assert
+      expect(isValid).toBe(true);
     });
 
-    it('应该处理空列表', () => {
-      const result = planMapper.toDomainList([]);
-      
-      expect(result).toEqual([]);
-      expect(mockPlanFactoryService.createPlan).not.toHaveBeenCalled();
+    it('应该拒绝无效的Schema', () => {
+      // 📋 Arrange - 缺少必需字段
+      const invalidSchema = {
+        protocol_version: '1.0.0',
+        timestamp: '2024-01-01T00:00:00.000Z',
+        // 缺少plan_id
+        context_id: 'ctx-invalid',
+        name: 'Invalid Plan',
+        status: 'active'
+      };
+
+      // 🎬 Act
+      const isValid = PlanMapper.validateSchema(invalidSchema);
+
+      // ✅ Assert
+      expect(isValid).toBe(false);
+    });
+
+    it('应该拒绝非对象类型', () => {
+      // 📋 Arrange
+      const nonObjectData = 'not an object';
+
+      // 🎬 Act
+      const isValid = PlanMapper.validateSchema(nonObjectData);
+
+      // ✅ Assert
+      expect(isValid).toBe(false);
+    });
+
+    it('应该拒绝null值', () => {
+      // 🎬 Act
+      const isValid = PlanMapper.validateSchema(null);
+
+      // ✅ Assert
+      expect(isValid).toBe(false);
     });
   });
 
-  describe('构造函数', () => {
-    it('应该使用提供的PlanFactoryService', () => {
-      const customFactory = new PlanFactoryService();
-      const mapper = new PlanMapper(customFactory);
-      
-      expect(mapper['planFactoryService']).toBe(customFactory);
+  describe('批量转换功能测试', () => {
+    it('应该正确批量转换为Schema', () => {
+      // 📋 Arrange
+      const entityDataArray: PlanEntityData[] = [
+        {
+          protocolVersion: '1.0.0',
+          timestamp: new Date('2024-01-01T00:00:00.000Z'),
+          planId: 'plan-batch-1',
+          contextId: 'ctx-batch-1',
+          name: 'Batch Plan 1',
+          status: 'active',
+          tasks: [],
+          auditTrail: { enabled: true },
+          monitoringIntegration: { enabled: true },
+          performanceMetrics: { enabled: true },
+          versionHistory: { enabled: true },
+          searchMetadata: { enabled: true },
+          cachingPolicy: { enabled: true },
+          eventIntegration: { enabled: true }
+        },
+        {
+          protocolVersion: '1.0.0',
+          timestamp: new Date('2024-01-02T00:00:00.000Z'),
+          planId: 'plan-batch-2',
+          contextId: 'ctx-batch-2',
+          name: 'Batch Plan 2',
+          status: 'draft',
+          tasks: [],
+          auditTrail: { enabled: true },
+          monitoringIntegration: { enabled: true },
+          performanceMetrics: { enabled: true },
+          versionHistory: { enabled: true },
+          searchMetadata: { enabled: true },
+          cachingPolicy: { enabled: true },
+          eventIntegration: { enabled: true }
+        }
+      ];
+
+      // 🎬 Act
+      const schemaArray = PlanMapper.toSchemaArray(entityDataArray);
+
+      // ✅ Assert
+      expect(schemaArray).toHaveLength(2);
+      expect(schemaArray[0].plan_id).toBe('plan-batch-1');
+      expect(schemaArray[0].name).toBe('Batch Plan 1');
+      expect(schemaArray[1].plan_id).toBe('plan-batch-2');
+      expect(schemaArray[1].name).toBe('Batch Plan 2');
     });
 
-    it('应该使用默认的PlanFactoryService', () => {
-      const mapper = new PlanMapper();
-      
-      expect(mapper['planFactoryService']).toBeInstanceOf(PlanFactoryService);
+    it('应该正确批量转换从Schema', () => {
+      // 📋 Arrange
+      const schemaArray: PlanSchema[] = [
+        {
+          protocol_version: '1.0.0',
+          timestamp: '2024-01-01T00:00:00.000Z',
+          plan_id: 'plan-from-batch-1',
+          context_id: 'ctx-from-batch-1',
+          name: 'From Batch Plan 1',
+          status: 'active',
+          tasks: [],
+          audit_trail: { enabled: true },
+          monitoring_integration: { enabled: true },
+          performance_metrics: { enabled: true },
+          version_history: { enabled: true },
+          search_metadata: { enabled: true },
+          caching_policy: { enabled: true },
+          event_integration: { enabled: true }
+        },
+        {
+          protocol_version: '1.0.0',
+          timestamp: '2024-01-02T00:00:00.000Z',
+          plan_id: 'plan-from-batch-2',
+          context_id: 'ctx-from-batch-2',
+          name: 'From Batch Plan 2',
+          status: 'completed',
+          tasks: [],
+          audit_trail: { enabled: true },
+          monitoring_integration: { enabled: true },
+          performance_metrics: { enabled: true },
+          version_history: { enabled: true },
+          search_metadata: { enabled: true },
+          caching_policy: { enabled: true },
+          event_integration: { enabled: true }
+        }
+      ];
+
+      // 🎬 Act
+      const entityDataArray = PlanMapper.fromSchemaArray(schemaArray);
+
+      // ✅ Assert
+      expect(entityDataArray).toHaveLength(2);
+      expect(entityDataArray[0].planId).toBe('plan-from-batch-1');
+      expect(entityDataArray[0].name).toBe('From Batch Plan 1');
+      expect(entityDataArray[1].planId).toBe('plan-from-batch-2');
+      expect(entityDataArray[1].name).toBe('From Batch Plan 2');
+    });
+
+    it('应该处理空数组', () => {
+      // 🎬 Act
+      const emptySchemaArray = PlanMapper.toSchemaArray([]);
+      const emptyEntityArray = PlanMapper.fromSchemaArray([]);
+
+      // ✅ Assert
+      expect(emptySchemaArray).toHaveLength(0);
+      expect(emptyEntityArray).toHaveLength(0);
     });
   });
 });

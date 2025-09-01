@@ -1,30 +1,29 @@
 /**
- * Extension模块API层数据传输对象 (DTO)
+ * Extension模块DTO定义
  * 
- * 严格遵循MPLP模块标准化规则和双重命名约定
- * - API层使用camelCase命名
- * - 与Schema层(snake_case)通过Mapper进行转换
- * 
+ * @description Extension模块的数据传输对象定义，用于API层数据验证和转换
  * @version 1.0.0
- * @created 2025-08-10
- * @compliance 模块标准化规则 - API层DTO (MANDATORY)
- * @compliance 双重命名约定 - camelCase (MANDATORY)
+ * @layer API层 - DTO
+ * @pattern DTO验证 + 类型安全 + Schema映射
  */
 
-import { UUID, Timestamp, Version, Priority } from '../../../../public/shared/types';
+import { UUID } from '../../../../shared/types';
+import { ExtensionType, ExtensionStatus } from '../../types';
 
-// ===== 基础DTO接口 =====
+// ============================================================================
+// 请求DTO定义
+// ============================================================================
 
 /**
- * Extension创建请求DTO (API层 - camelCase)
+ * 创建扩展请求DTO
  */
 export interface CreateExtensionRequestDto {
   contextId: UUID;
   name: string;
-  displayName?: string;
+  displayName: string;
   description?: string;
-  version: Version;
-  extensionType: ExtensionTypeDto;
+  version: string;
+  extensionType: ExtensionType;
   compatibility?: ExtensionCompatibilityDto;
   configuration?: ExtensionConfigurationDto;
   extensionPoints?: ExtensionPointDto[];
@@ -35,319 +34,534 @@ export interface CreateExtensionRequestDto {
 }
 
 /**
- * Extension更新请求DTO (API层 - camelCase)
+ * 更新扩展请求DTO
  */
 export interface UpdateExtensionRequestDto {
-  extensionId: UUID;
   displayName?: string;
   description?: string;
-  status?: ExtensionStatusDto;
-  configuration?: ExtensionConfigurationDto;
-  security?: ExtensionSecurityDto;
-  metadata?: ExtensionMetadataDto;
+  configuration?: Record<string, unknown>;
+  extensionPoints?: ExtensionPointDto[];
+  apiExtensions?: ApiExtensionDto[];
+  eventSubscriptions?: EventSubscriptionDto[];
+  metadata?: Partial<ExtensionMetadataDto>;
 }
 
 /**
- * Extension查询请求DTO (API层 - camelCase)
+ * 查询扩展请求DTO
  */
-export interface ExtensionQueryRequestDto {
+export interface QueryExtensionsRequestDto {
   contextId?: UUID;
-  extensionType?: ExtensionTypeDto;
-  status?: ExtensionStatusDto;
+  extensionType?: ExtensionType | ExtensionType[];
+  status?: ExtensionStatus | ExtensionStatus[];
   name?: string;
+  version?: string;
+  author?: string;
+  organization?: string;
+  category?: string;
+  keywords?: string[];
+  createdAfter?: string;
+  createdBefore?: string;
+  lastUpdateAfter?: string;
+  lastUpdateBefore?: string;
+  hasErrors?: boolean;
+  isActive?: boolean;
+  compatibleWithVersion?: string;
+  hasExtensionPointType?: string;
+  hasApiExtensions?: boolean;
+  hasEventSubscriptions?: boolean;
+  healthStatus?: 'healthy' | 'degraded' | 'unhealthy';
+  performanceThreshold?: {
+    errorRate?: number;
+    availability?: number;
+    responseTime?: number;
+  };
+  page?: number;
   limit?: number;
-  offset?: number;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
 }
 
 /**
- * Extension响应DTO (API层 - camelCase)
+ * 扩展激活请求DTO
+ */
+export interface ExtensionActivationRequestDto {
+  userId?: string;
+  force?: boolean;
+}
+
+/**
+ * 批量操作请求DTO
+ */
+export interface BatchOperationRequestDto {
+  extensionIds: UUID[];
+  operation: 'activate' | 'deactivate' | 'delete' | 'update';
+  parameters?: Record<string, unknown>;
+}
+
+// ============================================================================
+// 响应DTO定义
+// ============================================================================
+
+/**
+ * 扩展响应DTO
  */
 export interface ExtensionResponseDto {
   extensionId: UUID;
   contextId: UUID;
-  protocolVersion: Version;
   name: string;
-  displayName?: string;
+  displayName: string;
   description?: string;
-  version: Version;
-  extensionType: ExtensionTypeDto;
-  status: ExtensionStatusDto;
-  compatibility?: ExtensionCompatibilityDto;
-  configuration?: ExtensionConfigurationDto;
-  extensionPoints?: ExtensionPointDto[];
-  apiExtensions?: ApiExtensionDto[];
-  eventSubscriptions?: EventSubscriptionDto[];
-  lifecycle?: ExtensionLifecycleDto;
-  security?: ExtensionSecurityDto;
-  metadata?: ExtensionMetadataDto;
-  timestamp: Timestamp;
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
+  version: string;
+  extensionType: ExtensionType;
+  status: ExtensionStatus;
+  protocolVersion: string;
+  timestamp: string;
+  compatibility: ExtensionCompatibilityDto;
+  configuration: ExtensionConfigurationDto;
+  extensionPoints: ExtensionPointDto[];
+  apiExtensions: ApiExtensionDto[];
+  eventSubscriptions: EventSubscriptionDto[];
+  lifecycle: ExtensionLifecycleDto;
+  security: ExtensionSecurityDto;
+  metadata: ExtensionMetadataDto;
+  auditTrail: AuditTrailDto;
+  performanceMetrics: ExtensionPerformanceMetricsDto;
+  monitoringIntegration: MonitoringIntegrationDto;
+  versionHistory: VersionHistoryDto;
+  searchMetadata: SearchMetadataDto;
+  eventIntegration: EventIntegrationDto;
 }
 
-// ===== 枚举类型DTO =====
-
 /**
- * 扩展类型DTO (API层 - camelCase)
+ * 扩展列表响应DTO
  */
-export type ExtensionTypeDto = 
-  | 'plugin'
-  | 'adapter'
-  | 'connector'
-  | 'middleware'
-  | 'hook'
-  | 'transformer';
+export interface ExtensionListResponseDto {
+  extensions: ExtensionResponseDto[];
+  total: number;
+  page?: number;
+  limit?: number;
+  hasMore?: boolean;
+}
 
 /**
- * 扩展状态DTO (API层 - camelCase)
+ * 批量操作响应DTO
  */
-export type ExtensionStatusDto = 
-  | 'installed'
-  | 'active'
-  | 'inactive'
-  | 'disabled'
-  | 'error'
-  | 'updating'
-  | 'uninstalling';
-
-// ===== 复杂对象DTO =====
+export interface BatchOperationResponseDto {
+  successCount: number;
+  failureCount: number;
+  results: Array<{
+    id: UUID;
+    success: boolean;
+    error?: string;
+  }>;
+}
 
 /**
- * 扩展兼容性DTO (API层 - camelCase)
+ * 扩展统计响应DTO
+ */
+export interface ExtensionStatisticsResponseDto {
+  totalExtensions: number;
+  activeExtensions: number;
+  inactiveExtensions: number;
+  errorExtensions: number;
+  extensionsByType: Record<ExtensionType, number>;
+  extensionsByStatus: Record<ExtensionStatus, number>;
+  averagePerformanceMetrics: {
+    responseTime: number;
+    errorRate: number;
+    availability: number;
+    throughput: number;
+  };
+  topPerformingExtensions: Array<{
+    extensionId: UUID;
+    name: string;
+    performanceScore: number;
+  }>;
+  recentlyUpdated: Array<{
+    extensionId: UUID;
+    name: string;
+    lastUpdate: string;
+  }>;
+}
+
+/**
+ * 健康状态响应DTO
+ */
+export interface HealthStatusResponseDto {
+  status: 'healthy' | 'degraded' | 'unhealthy';
+  timestamp: string;
+  details?: {
+    service: string;
+    version: string;
+    repository: {
+      status: string;
+      extensionCount: number;
+      activeExtensions: number;
+      lastOperation: string;
+    };
+    performance: {
+      averageResponseTime: number;
+      totalExtensions: number;
+      errorRate: number;
+    };
+  };
+}
+
+// ============================================================================
+// 嵌套DTO定义
+// ============================================================================
+
+/**
+ * 扩展兼容性DTO
  */
 export interface ExtensionCompatibilityDto {
   mplpVersion: string;
-  requiredModules?: RequiredModuleDto[];
+  requiredModules?: string[];
   dependencies?: ExtensionDependencyDto[];
   conflicts?: ExtensionConflictDto[];
 }
 
 /**
- * 必需模块DTO (API层 - camelCase)
- */
-export interface RequiredModuleDto {
-  module: ModuleNameDto;
-  minVersion?: Version;
-  maxVersion?: Version;
-}
-
-/**
- * 模块名称DTO (API层 - camelCase)
- */
-export type ModuleNameDto = 
-  | 'context'
-  | 'plan'
-  | 'confirm'
-  | 'trace'
-  | 'role'
-  | 'extension';
-
-/**
- * 扩展依赖DTO (API层 - camelCase)
+ * 扩展依赖DTO
  */
 export interface ExtensionDependencyDto {
-  extensionId: UUID;
   name: string;
-  versionRange: string;
+  version: string;
   optional?: boolean;
+  reason?: string;
 }
 
 /**
- * 扩展冲突DTO (API层 - camelCase)
+ * 扩展冲突DTO
  */
 export interface ExtensionConflictDto {
-  extensionId: UUID;
   name: string;
+  version: string;
   reason: string;
 }
 
 /**
- * 扩展配置DTO (API层 - camelCase)
+ * 扩展配置DTO
  */
 export interface ExtensionConfigurationDto {
   schema: Record<string, unknown>;
   currentConfig: Record<string, unknown>;
-  defaultConfig?: Record<string, unknown>;
-  validationRules?: ValidationRuleDto[];
+  defaultConfig: Record<string, unknown>;
+  validationRules: ValidationRuleDto[];
 }
 
 /**
- * 验证规则DTO (API层 - camelCase)
+ * 验证规则DTO
  */
 export interface ValidationRuleDto {
-  rule: string;
-  level: ValidationLevelDto;
-  message: string;
+  field: string;
+  type: string;
+  required: boolean;
+  pattern?: string;
+  minLength?: number;
+  maxLength?: number;
+  minimum?: number;
+  maximum?: number;
+  enum?: string[];
 }
 
 /**
- * 验证级别DTO (API层 - camelCase)
- */
-export type ValidationLevelDto = 'error' | 'warning' | 'info';
-
-/**
- * 扩展点DTO (API层 - camelCase)
+ * 扩展点DTO
  */
 export interface ExtensionPointDto {
-  pointId: UUID;
+  id: string;
   name: string;
-  type: ExtensionPointTypeDto;
-  targetModule: ModuleNameDto;
-  eventName?: string;
+  type: 'hook' | 'filter' | 'action' | 'api_endpoint' | 'event_listener';
+  description?: string;
+  parameters: ExtensionPointParameterDto[];
+  returnType?: string;
+  async: boolean;
+  timeout?: number;
+  retryPolicy?: RetryPolicyDto;
+  conditionalExecution?: ConditionalExecutionDto;
   executionOrder: number;
-  enabled: boolean;
-  parameters?: Record<string, unknown>;
 }
 
 /**
- * 扩展点类型DTO (API层 - camelCase)
+ * 扩展点参数DTO
  */
-export type ExtensionPointTypeDto = 'hook' | 'filter' | 'action' | 'listener';
+export interface ExtensionPointParameterDto {
+  name: string;
+  type: string;
+  required: boolean;
+  description?: string;
+  defaultValue?: unknown;
+}
 
 /**
- * API扩展DTO (API层 - camelCase)
+ * 重试策略DTO
+ */
+export interface RetryPolicyDto {
+  maxAttempts: number;
+  backoffStrategy: 'fixed' | 'exponential' | 'linear';
+  initialDelay: number;
+  maxDelay: number;
+  retryableErrors: string[];
+}
+
+/**
+ * 条件执行DTO
+ */
+export interface ConditionalExecutionDto {
+  condition: string;
+  parameters: Record<string, unknown>;
+}
+
+/**
+ * API扩展DTO
  */
 export interface ApiExtensionDto {
-  endpointId: UUID;
-  path: string;
-  method: HttpMethodDto;
-  description: string;
+  endpoint: string;
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS';
   handler: string;
   middleware?: string[];
-  authenticationRequired: boolean;
-  rateLimit?: RateLimitDto;
+  authentication: AuthenticationConfigDto;
+  rateLimit: RateLimitConfigDto;
+  validation: ValidationConfigDto;
+  documentation: ApiDocumentationDto;
 }
 
 /**
- * HTTP方法DTO (API层 - camelCase)
+ * 认证配置DTO
  */
-export type HttpMethodDto = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+export interface AuthenticationConfigDto {
+  required: boolean;
+  schemes: string[];
+  permissions: string[];
+}
 
 /**
- * 速率限制DTO (API层 - camelCase)
+ * 速率限制配置DTO
  */
-export interface RateLimitDto {
+export interface RateLimitConfigDto {
+  enabled: boolean;
   requestsPerMinute: number;
-  burstLimit: number;
+  burstSize: number;
+  keyGenerator: string;
 }
 
 /**
- * 事件订阅DTO (API层 - camelCase)
+ * 验证配置DTO
+ */
+export interface ValidationConfigDto {
+  requestSchema?: Record<string, unknown>;
+  responseSchema?: Record<string, unknown>;
+  strictMode: boolean;
+}
+
+/**
+ * API文档DTO
+ */
+export interface ApiDocumentationDto {
+  summary: string;
+  description?: string;
+  tags: string[];
+  examples: ApiExampleDto[];
+}
+
+/**
+ * API示例DTO
+ */
+export interface ApiExampleDto {
+  name: string;
+  description?: string;
+  request: Record<string, unknown>;
+  response: Record<string, unknown>;
+}
+
+/**
+ * 事件订阅DTO
  */
 export interface EventSubscriptionDto {
-  subscriptionId: UUID;
   eventPattern: string;
-  sourceModule: ModuleNameDto;
   handler: string;
-  filterConditions?: Record<string, unknown>;
-  deliveryGuarantees: DeliveryGuaranteesDto;
-  deadLetterQueue?: boolean;
+  filterConditions: FilterConditionDto[];
+  deliveryGuarantee: 'at_least_once' | 'at_most_once' | 'exactly_once';
+  deadLetterQueue: DeadLetterQueueConfigDto;
+  retryPolicy: RetryPolicyDto;
+  batchProcessing: BatchProcessingConfigDto;
 }
 
 /**
- * 交付保证DTO (API层 - camelCase)
+ * 过滤条件DTO
  */
-export type DeliveryGuaranteesDto = 'at_most_once' | 'at_least_once' | 'exactly_once';
+export interface FilterConditionDto {
+  field: string;
+  operator: 'eq' | 'ne' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'nin' | 'regex';
+  value: unknown;
+}
 
 /**
- * 扩展生命周期DTO (API层 - camelCase)
+ * 死信队列配置DTO
+ */
+export interface DeadLetterQueueConfigDto {
+  enabled: boolean;
+  maxRetries: number;
+  retentionPeriod: number;
+}
+
+/**
+ * 批处理配置DTO
+ */
+export interface BatchProcessingConfigDto {
+  enabled: boolean;
+  batchSize: number;
+  flushInterval: number;
+}
+
+// ============================================================================
+// 其他复杂DTO定义 (简化版本)
+// ============================================================================
+
+/**
+ * 扩展生命周期DTO
  */
 export interface ExtensionLifecycleDto {
-  installDate: Timestamp;
-  lastUpdate?: Timestamp;
+  installDate: string;
+  lastUpdate: string;
   activationCount: number;
   errorCount: number;
-  lastError?: string;
-  autoStart: boolean;
-  loadPriority: number;
-  hooks?: LifecycleHooksDto;
+  performanceMetrics: {
+    averageResponseTime: number;
+    throughput: number;
+    errorRate: number;
+    memoryUsage: number;
+    cpuUsage: number;
+    lastMeasurement: string;
+  };
+  healthCheck: {
+    enabled: boolean;
+    interval: number;
+    timeout: number;
+    endpoint?: string;
+    expectedStatus: number;
+    healthyThreshold: number;
+    unhealthyThreshold: number;
+  };
 }
 
 /**
- * 生命周期钩子DTO (API层 - camelCase)
- */
-export interface LifecycleHooksDto {
-  onInstall?: string;
-  onActivate?: string;
-  onDeactivate?: string;
-  onUninstall?: string;
-  onUpdate?: string;
-}
-
-/**
- * 扩展安全DTO (API层 - camelCase)
+ * 扩展安全DTO
  */
 export interface ExtensionSecurityDto {
   sandboxEnabled: boolean;
-  resourceLimits: ResourceLimitsDto;
-  permissions: PermissionDto[];
-  codeSignature?: CodeSignatureDto;
+  resourceLimits: {
+    maxMemory: number;
+    maxCpu: number;
+    maxFileSize: number;
+    maxNetworkConnections: number;
+    allowedDomains: string[];
+    blockedDomains: string[];
+  };
+  codeSigning: {
+    required: boolean;
+    trustedSigners: string[];
+    verificationEndpoint?: string;
+  };
+  permissions: {
+    fileSystem: {
+      read: string[];
+      write: string[];
+      execute: string[];
+    };
+    network: {
+      allowedHosts: string[];
+      allowedPorts: number[];
+      protocols: string[];
+    };
+    database: {
+      read: string[];
+      write: string[];
+      admin: string[];
+    };
+    api: {
+      endpoints: string[];
+      methods: string[];
+      rateLimit: number;
+    };
+  };
 }
 
 /**
- * 资源限制DTO (API层 - camelCase)
- */
-export interface ResourceLimitsDto {
-  maxMemoryMb?: number;
-  maxCpuPercent?: number;
-  maxFileSizeMb?: number;
-  maxNetworkConnections?: number;
-}
-
-/**
- * 权限DTO (API层 - camelCase)
- */
-export interface PermissionDto {
-  name: string;
-  description: string;
-  required: boolean;
-}
-
-/**
- * 代码签名DTO (API层 - camelCase)
- */
-export interface CodeSignatureDto {
-  algorithm: string;
-  signature: string;
-  certificate: string;
-  timestamp: Timestamp;
-}
-
-/**
- * 扩展元数据DTO (API层 - camelCase)
+ * 扩展元数据DTO
  */
 export interface ExtensionMetadataDto {
-  author?: string;
-  organization?: string;
-  license?: string;
+  author: {
+    name: string;
+    email?: string;
+    url?: string;
+  };
+  organization?: {
+    name: string;
+    url?: string;
+    email?: string;
+  };
+  license: {
+    type: string;
+    url?: string;
+  };
   homepage?: string;
-  repository?: string;
+  repository?: {
+    type: string;
+    url: string;
+    directory?: string;
+  };
   documentation?: string;
-  keywords?: string[];
-  category?: string;
+  support?: {
+    email?: string;
+    url?: string;
+    issues?: string;
+  };
+  keywords: string[];
+  category: string;
+  screenshots: string[];
 }
 
-// ===== 操作结果DTO =====
-
-/**
- * Extension操作结果DTO (API层 - camelCase)
- */
-export interface ExtensionOperationResultDto {
-  success: boolean;
-  extensionId?: UUID;
-  message?: string;
-  errors?: string[];
-  data?: ExtensionResponseDto;
+// 其他复杂DTO定义将根据需要添加...
+export interface AuditTrailDto {
+  events: unknown[];
+  complianceSettings: unknown;
 }
 
-/**
- * Extension列表结果DTO (API层 - camelCase)
- */
-export interface ExtensionListResultDto {
-  success: boolean;
-  extensions: ExtensionResponseDto[];
-  total: number;
-  limit: number;
-  offset: number;
-  message?: string;
+export interface ExtensionPerformanceMetricsDto {
+  activationLatency: number;
+  executionTime: number;
+  memoryFootprint: number;
+  cpuUtilization: number;
+  networkLatency: number;
+  errorRate: number;
+  throughput: number;
+  availability: number;
+  efficiencyScore: number;
+  healthStatus: 'healthy' | 'degraded' | 'unhealthy';
+  alerts: unknown[];
+}
+
+export interface MonitoringIntegrationDto {
+  providers: string[];
+  endpoints: unknown[];
+  dashboards: unknown[];
+  alerting: unknown;
+}
+
+export interface VersionHistoryDto {
+  versions: unknown[];
+  autoVersioning: unknown;
+}
+
+export interface SearchMetadataDto {
+  indexedFields: string[];
+  searchStrategies: unknown[];
+  facets: unknown[];
+}
+
+export interface EventIntegrationDto {
+  eventBus: unknown;
+  eventRouting: unknown;
+  eventTransformation: unknown;
 }

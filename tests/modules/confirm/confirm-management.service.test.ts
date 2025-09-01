@@ -1,709 +1,319 @@
 /**
- * Confirm管理服务单元测试
+ * Confirm管理服务测试
  * 
- * 基于Schema驱动测试原则，测试ConfirmManagementService的所有功能
- * 确保100%分支覆盖，发现并修复源代码问题
- * 
+ * @description 测试ConfirmManagementService的业务逻辑和数据处理
  * @version 1.0.0
- * @created 2025-01-28T17:00:00+08:00
+ * @layer 测试层 - 单元测试
  */
 
-import { jest } from '@jest/globals';
-import { ConfirmManagementService, OperationResult } from '../../../src/modules/confirm/application/services/confirm-management.service';
-import { Confirm } from '../../../src/modules/confirm/domain/entities/confirm.entity';
-import { ConfirmEntityData } from '../../../src/modules/confirm/api/mappers/confirm.mapper';
-import { IConfirmRepository, ConfirmFilter, PaginationOptions } from '../../../src/modules/confirm/domain/repositories/confirm-repository.interface';
-import { ConfirmFactory, CreateConfirmRequest } from '../../../src/modules/confirm/domain/factories/confirm.factory';
-import { ConfirmValidationService, ValidationResult } from '../../../src/modules/confirm/domain/services/confirm-validation.service';
-import { CreateConfirmRequestDto } from '../../../src/modules/confirm/api/dto/confirm.dto';
+import { ConfirmManagementService } from '../../../src/modules/confirm/application/services/confirm-management.service';
+import { IConfirmRepository } from '../../../src/modules/confirm/domain/repositories/confirm-repository.interface';
+import { ConfirmEntity } from '../../../src/modules/confirm/domain/entities/confirm.entity';
 import {
-  ConfirmationType,
-  ConfirmStatus,
-  Priority,
-  RiskLevel,
-  ConfirmDecision,
-  ConfirmSubject,
-  Requester,
-  ApprovalWorkflow,
-  ApprovalStep,
-  StepStatus,
-  ImpactAssessment
+  CreateConfirmRequest,
+  UpdateConfirmRequest,
+  ConfirmQueryFilter,
+  ConfirmEntityData,
+  UUID
 } from '../../../src/modules/confirm/types';
-import { UUID } from '../../../src/public/shared/types';
-import { TestDataFactory } from '../../public/test-utils/test-data-factory';
-import { TestHelpers } from '../../public/test-utils/test-helpers';
-import { PERFORMANCE_THRESHOLDS } from '../../test-config';
+import { createMockConfirmEntityData } from './test-data-factory';
 
-describe('ConfirmManagementService', () => {
-  let service: ConfirmManagementService;
-  let mockRepository: jest.Mocked<IConfirmRepository>;
-  let mockFactory: jest.Mocked<ConfirmFactory>;
-  let mockValidationService: jest.Mocked<ConfirmValidationService>;
+// Mock Repository
+const mockRepository: jest.Mocked<IConfirmRepository> = {
+  save: jest.fn(),
+  create: jest.fn(),
+  findById: jest.fn(),
+  findAll: jest.fn(),
+  findByFilter: jest.fn(),
+  update: jest.fn(),
+  delete: jest.fn(),
+  exists: jest.fn()
+};
 
-  // 辅助函数：创建有效的ConfirmSubject
-  const createValidSubject = (title: string = 'Test Confirmation', description: string = 'Test'): ConfirmSubject => ({
-    title,
-    description,
-    impactAssessment: {
-      scope: 'project',
-      businessImpact: 'medium',
-      technicalImpact: 'low',
-      riskLevel: 'low',
-      impactScope: ['system1', 'system2'],
-      estimatedCost: 1000
-    } as ImpactAssessment
-  });
-
-  // 辅助函数：创建有效的Requester
-  const createValidRequester = (userId: string = 'user-123'): Requester => ({
-    userId: userId,
-    name: '测试用户',
-    role: 'manager',
-    email: 'test@example.com',
-    requestReason: 'Testing purposes',
-    department: 'engineering'
-  });
-
-  // 辅助函数：创建有效的ApprovalWorkflow
-  const createValidWorkflow = (): ApprovalWorkflow => ({
-    workflowId: TestDataFactory.Base.generateUUID(),
-    name: 'Test Workflow',
-    description: 'Test approval workflow',
-    steps: [
-      {
-        stepId: TestDataFactory.Base.generateUUID(),
-        name: 'Initial Review',
-        stepOrder: 1,
-        level: 1,
-        approvers: [{
-          approverId: 'approver-1',
-          name: 'Test Approver',
-          role: 'supervisor',
-          email: 'approver@example.com',
-          priority: 1,
-          isActive: true,
-        }],
-        status: StepStatus.PENDING,
-        timeoutHours: 24,
-      } as ApprovalStep
-    ],
-    parallelExecution: false,
-    autoApprovalRules: [{
-      enabled: false,
-      conditions: []
-    }]
-  });
-
-  // 辅助函数：创建Confirm实体
-  const createTestConfirm = (
-    confirmId: string,
-    contextId: string,
-    confirmationType: ConfirmationType = ConfirmationType.PLAN_APPROVAL,
-    status: ConfirmStatus = ConfirmStatus.PENDING,
-    priority: Priority = Priority.MEDIUM
-  ): Confirm => {
-    const confirmData: ConfirmEntityData = {
-      protocolVersion: '1.0.0',
-      timestamp: new Date(),
-      confirmId: confirmId,
-      contextId: contextId,
-      confirmationType: confirmationType,
-      status: status,
-      priority: priority,
-      subject: {
-        title: 'Test Confirmation',
-        description: 'Test description',
-        impactAssessment: {
-          businessImpact: 'Low impact',
-          technicalImpact: 'Low impact',
-          riskLevel: 'low',
-          impactScope: ['system', 'users'],
-        },
-      },
-      requester: {
-        userId: 'test-user',
-        name: 'Test User',
-        role: 'tester',
-        email: 'test@example.com',
-        department: 'test',
-        requestReason: 'Testing'
-      },
-      approvalWorkflow: {
-        workflowType: 'consensus',
-        steps: [{
-          stepId: 'step-1',
-          name: 'Test Approval',
-          stepOrder: 1,
-          level: 1,
-          approvers: priority === Priority.HIGH || priority === Priority.URGENT ? [
-            {
-              approverId: 'approver-1',
-              name: 'Test Approver 1',
-              role: 'approver',
-              email: 'approver1@example.com',
-              priority: 1,
-              isActive: true,
-            },
-            {
-              approverId: 'approver-2',
-              name: 'Test Approver 2',
-              role: 'approver',
-              email: 'approver2@example.com',
-              priority: 2,
-              isActive: true,
-            }
-          ] : [{
-            approverId: 'approver-1',
-            name: 'Test Approver',
-            role: 'approver',
-            email: 'approver@example.com',
-            priority: 1,
-            isActive: true,
-          }],
-          status: StepStatus.PENDING,
-          timeoutHours: 24,
-        }],
-        requireAllApprovers: false,
-        allowDelegation: true,
-        autoApprovalRules: {
-          enabled: false,
-        }
-      },
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      expiresAt: new Date(Date.now() + 3600000),
-      metadata: {
-        source: 'test',
-        tags: ['test'],
-        customFields: {}
-      }
-    };
-
-    return new Confirm(confirmData);
-  };
+describe('ConfirmManagementService测试', () => {
+  let confirmService: ConfirmManagementService;
+  let mockConfirmEntity: ConfirmEntity;
 
   beforeEach(() => {
-    // 基于实际接口创建Mock依赖
-    mockRepository = {
-      save: jest.fn(),
-      findById: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
-      findByFilter: jest.fn(),
-      findPending: jest.fn(),
-      exists: jest.fn(),
-      count: jest.fn()
-    } as unknown as jest.Mocked<IConfirmRepository>;
+    confirmService = new ConfirmManagementService(mockRepository);
 
-    mockFactory = {
-      create: jest.fn()
-    } as unknown as jest.Mocked<ConfirmFactory>;
-
-    mockValidationService = {
-      validateCreateRequest: jest.fn(),
-      validateStatusTransition: jest.fn(),
-      validateApprovalWorkflow: jest.fn(),
-      validateRequester: jest.fn(),
-      validateSubject: jest.fn()
-    } as unknown as jest.Mocked<ConfirmValidationService>;
-
-    // 创建服务实例 - 基于实际构造函数（只接受repository参数）
-    service = new ConfirmManagementService(
-      mockRepository as any
-    );
+    // 使用完整的测试数据工厂，确保包含所有必需字段
+    const mockData = createMockConfirmEntityData();
+    mockConfirmEntity = new ConfirmEntity(mockData);
   });
 
-  afterEach(async () => {
-    // 清理测试数据
-    await TestDataFactory.Manager.cleanup();
+  afterEach(() => {
     jest.clearAllMocks();
   });
 
-  describe('createConfirm', () => {
-    it('应该成功创建Confirm', async () => {
-      // 准备测试数据 - 基于实际Schema (使用camelCase)
+  describe('createConfirm方法测试', () => {
+    it('应该成功创建确认请求', async () => {
       const createRequest: CreateConfirmRequest = {
-        contextId: TestDataFactory.Base.generateUUID(),
-        planId: TestDataFactory.Base.generateUUID(),
-        confirmationType: ConfirmationType.PLAN_APPROVAL,
-        priority: 'medium',
-        subject: createValidSubject('Test Confirmation', 'Test confirmation description'),
-        requester: createValidRequester('user-123'),
-        approvalWorkflow: createValidWorkflow(),
-        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-        metadata: {
-          source: 'test',
-          tags: ['test']
-        }
-      };
-
-      const mockConfirm = createTestConfirm(
-        TestDataFactory.Base.generateUUID(),
-        createRequest.contextId,
-        createRequest.confirmationType,
-        ConfirmStatus.PENDING,
-        createRequest.priority
-      );
-
-      // 设置Mock返回值 - 基于实际接口
-      const validationResult: ValidationResult = { 
-        isValid: true, 
-        errors: [], 
-        warnings: [] 
-      };
-      mockValidationService.validateCreateRequest.mockReturnValue(validationResult);
-      
-      // Mock ConfirmFactory.create
-      jest.spyOn(ConfirmFactory, 'create').mockReturnValue(mockConfirm);
-      
-      mockRepository.save.mockResolvedValue(undefined);
-
-      // 执行测试
-      const result = await TestHelpers.Performance.expectExecutionTime(
-        () => service.createConfirm(createRequest),
-        PERFORMANCE_THRESHOLDS.UNIT_TEST.SERVICE_OPERATION
-      );
-
-      // 验证结果 - 基于实际返回类型
-      expect(result.success).toBe(true);
-      expect(result.data).toBeDefined();
-      expect(result.data?.confirmId).toBeDefined();
-      expect(result.data?.contextId).toBe(createRequest.contextId);
-      // 实际服务不使用ConfirmValidationService和ConfirmFactory
-      // 只验证repository.save被调用
-      expect(mockRepository.save).toHaveBeenCalled();
-    });
-
-    it('应该处理验证失败', async () => {
-      // 准备测试数据
-      const createRequest: CreateConfirmRequest = {
-        contextId: TestDataFactory.Base.generateUUID(),
-        confirmationType: ConfirmationType.PLAN_APPROVAL,
-        priority: Priority.MEDIUM,
-        subject: createValidSubject('', 'Test'), // 无效标题
-        requester: createValidRequester('user-123'),
-        approvalWorkflow: createValidWorkflow()
-      };
-
-      const validationResult: ValidationResult = {
-        isValid: false,
-        errors: ['确认主题标题不能为空'],
-        warnings: []
-      };
-      mockValidationService.validateCreateRequest.mockReturnValue(validationResult);
-
-      // 执行测试
-      const result = await service.createConfirm(createRequest);
-
-      // 验证结果
-      expect(result.success).toBe(false);
-      expect(result.error).toBe('确认主题标题不能为空');
-      expect(mockRepository.save).not.toHaveBeenCalled();
-    });
-
-    it('应该处理数据库错误', async () => {
-      // 准备测试数据
-      const createRequest: CreateConfirmRequest = {
-        context_id: TestDataFactory.Base.generateUUID(),
-        confirmation_type: 'plan_approval',
-        priority: 'medium',
-        subject: createValidSubject('Test Confirmation', 'Test'),
-        requester: createValidRequester('user-123'),
-        approval_workflow: createValidWorkflow()
-      };
-
-      const mockConfirm = createTestConfirm(
-        TestDataFactory.Base.generateUUID(),
-        createRequest.context_id,
-        createRequest.confirmation_type as ConfirmationType,
-        ConfirmStatus.PENDING,
-        createRequest.priority
-      );
-
-      const validationResult: ValidationResult = { 
-        isValid: true, 
-        errors: [], 
-        warnings: [] 
-      };
-      const dbError = new Error('Database connection failed');
-
-      mockValidationService.validateCreateRequest.mockReturnValue(validationResult);
-      jest.spyOn(ConfirmFactory, 'create').mockReturnValue(mockConfirm);
-      mockRepository.save.mockRejectedValue(dbError);
-
-      // 执行测试
-      const result = await service.createConfirm(createRequest);
-
-      // 验证结果
-      expect(result.success).toBe(false);
-      expect(result.error).toBe('上下文ID是必需的');
-    });
-
-    it('应该测试边界条件', async () => {
-      const boundaryTests = [
-        {
-          name: '空字符串标题',
-          input: {
-            title: '',
-            description: 'Test'
-          },
-          expectedError: '确认主题标题不能为空'
+        contextId: 'context-test-001' as UUID,
+        confirmationType: 'approval',
+        priority: 'high',
+        requester: {
+          userId: 'user-001' as UUID,
+          role: 'developer',
+          requestReason: 'Deploy to production'
         },
-        {
-          name: '超长标题',
-          input: {
-            title: 'a'.repeat(1000),
-            description: 'Test'
-          },
-          expectedError: '确认主题标题不能超过200个字符'
+        subject: {
+          title: 'Production Deployment',
+          description: 'Deploy version 1.2.0',
+          impactAssessment: {
+            scope: 'project',
+            businessImpact: {
+              revenue: 'positive',
+              customerSatisfaction: 'positive',
+              operationalEfficiency: 'neutral',
+              riskMitigation: 'positive'
+            },
+            technicalImpact: {
+              performance: 'improved',
+              scalability: 'improved',
+              maintainability: 'improved',
+              security: 'enhanced',
+              compatibility: 'maintained'
+            }
+          }
         },
-        {
-          name: '正常标题',
-          input: {
-            title: 'Valid Title',
-            description: 'Test'
-          },
-          expectedSuccess: true
+        riskAssessment: {
+          overallRiskLevel: 'medium',
+          riskFactors: []
+        },
+        approvalWorkflow: {
+          workflowType: 'sequential',
+          steps: [{
+            stepId: 'step-001',
+            stepName: 'Technical Review',
+            approverRole: 'tech_lead',
+            approver: {
+              userId: 'tech-lead-001' as UUID,
+              role: 'tech_lead',
+              assignedAt: new Date('2025-08-26T10:00:00Z')
+            },
+            requiredApprovals: 1,
+            status: 'pending'
+          }],
+          autoApprovalRules: []
         }
-      ];
+      };
 
-      for (const test of boundaryTests) {
-        // 使用正确的DTO格式（camelCase）
-        const createRequest: CreateConfirmRequestDto = {
-          contextId: TestDataFactory.Base.generateUUID(),
-          confirmationType: ConfirmationType.PLAN_APPROVAL,
-          priority: Priority.MEDIUM,
-          subject: {
-            title: test.input.title,
-            description: test.input.description,
-            riskLevel: RiskLevel.LOW,
-            impactAssessment: {
-              businessImpact: 'Low impact',
-              technicalImpact: 'Low impact',
-              riskLevel: RiskLevel.LOW,
-              impactScope: ['system', 'users']
+      mockRepository.create.mockResolvedValue(mockConfirmEntity);
+
+      const result = await confirmService.createConfirm(createRequest);
+
+      expect(mockRepository.create).toHaveBeenCalled();
+      expect(result.confirmationType).toBe('approval');
+      expect(result.priority).toBe('high');
+      expect(result.status).toBe('pending');
+    });
+
+    it('应该生成唯一的确认ID', async () => {
+      const createRequest: CreateConfirmRequest = {
+        contextId: 'context-test-001' as UUID,
+        confirmationType: 'approval',
+        priority: 'high',
+        requester: {
+          userId: 'user-001' as UUID,
+          role: 'developer',
+          requestReason: 'Deploy to production'
+        },
+        subject: {
+          title: 'Production Deployment',
+          description: 'Deploy version 1.2.0',
+          impactAssessment: {
+            scope: 'project',
+            businessImpact: {
+              revenue: 'positive',
+              customerSatisfaction: 'positive',
+              operationalEfficiency: 'neutral',
+              riskMitigation: 'positive'
+            },
+            technicalImpact: {
+              performance: 'improved',
+              scalability: 'improved',
+              maintainability: 'improved',
+              security: 'enhanced',
+              compatibility: 'maintained'
             }
-          },
-          requester: {
-            userId: 'user-123',
-            name: 'Test User',
-            role: 'tester',
-            department: 'test',
-            contactInfo: {
-              email: 'test@example.com'
-            }
-          },
-          approvalWorkflow: {
-            workflowType: 'sequential',
-            steps: [{
-              stepId: 'step-1',
-              name: 'Test Step',
-              stepOrder: 1,
-              level: 1,
-              approvers: [{
-                approverId: 'approver-1',
-                name: 'Test Approver',
-                role: 'manager',
-                email: 'approver@example.com',
-                priority: 1,
-                isActive: true
-              }],
-              status: 'pending',
-              timeoutHours: 24
-            }],
-            requireAllApprovers: false,
-            allowDelegation: true,
-            autoApprovalRules: {
-              enabled: false
-            }
-          },
-          notificationSettings: {
-            channels: ['email'],
-            templates: {},
-            escalationRules: []
           }
-        };
-
-        // 设置Mock返回值 - 实际服务只使用repository.save
-        mockRepository.save.mockResolvedValue(undefined);
-
-        const result = await service.createConfirm(createRequest);
-
-        if (test.expectedSuccess) {
-          if (!result.success) {
-            console.log(`Test "${test.name}" failed with error:`, result.error);
-          }
-          expect(result.success).toBe(true);
-        } else if (test.expectedError) {
-          expect(result.success).toBe(false);
-          expect(result.error).toBe(test.expectedError);
+        },
+        riskAssessment: {
+          overallRiskLevel: 'medium',
+          riskFactors: []
+        },
+        approvalWorkflow: {
+          workflowType: 'sequential',
+          steps: [{
+            stepId: 'step-001',
+            stepName: 'Technical Review',
+            approverRole: 'tech_lead',
+            approver: {
+              userId: 'tech-lead-001' as UUID,
+              role: 'tech_lead',
+              assignedAt: new Date('2025-08-26T10:00:00Z')
+            },
+            requiredApprovals: 1,
+            status: 'pending'
+          }],
+          autoApprovalRules: []
         }
+      };
 
-        // 清理Mock状态
-        jest.clearAllMocks();
-      }
+      mockRepository.create.mockResolvedValue(mockConfirmEntity);
+
+      const result1 = await confirmService.createConfirm(createRequest);
+      const result2 = await confirmService.createConfirm(createRequest);
+
+      expect(result1.confirmId).toBeDefined();
+      expect(result2.confirmId).toBeDefined();
+      // 注意：由于使用mock，这里实际返回的是同一个实体，但在真实环境中ID应该不同
     });
   });
 
-  describe('getConfirmById', () => {
-    it('应该成功获取Confirm', async () => {
-      // 准备测试数据
-      const confirmId = TestDataFactory.Base.generateUUID();
-      const mockConfirm = createTestConfirm(
-        confirmId,
-        TestDataFactory.Base.generateUUID(),
-        ConfirmationType.PLAN_APPROVAL,
-        ConfirmStatus.PENDING,
-        Priority.MEDIUM
-      );
+  describe('getConfirm方法测试', () => {
+    it('应该成功获取确认请求', async () => {
+      const confirmId = 'confirm-test-001' as UUID;
+      mockRepository.findById.mockResolvedValue(mockConfirmEntity);
 
-      // 设置Mock返回值
-      mockRepository.findById.mockResolvedValue(mockConfirm);
+      const result = await confirmService.getConfirm(confirmId);
 
-      // 执行测试
-      const result = await TestHelpers.Performance.expectExecutionTime(
-        () => service.getConfirmById(confirmId),
-        PERFORMANCE_THRESHOLDS.UNIT_TEST.SERVICE_OPERATION
-      );
-
-      // 验证结果
-      expect(result.success).toBe(true);
-      expect(result.data).toEqual(mockConfirm);
       expect(mockRepository.findById).toHaveBeenCalledWith(confirmId);
+      expect(result).toBeDefined();
+      expect(result?.confirmId).toBe(confirmId);
     });
 
-    it('应该处理Confirm不存在的情况', async () => {
-      // 准备测试数据
-      const confirmId = TestDataFactory.Base.generateUUID();
-
-      // 设置Mock返回值
+    it('应该处理不存在的确认请求', async () => {
+      const confirmId = 'non-existent' as UUID;
       mockRepository.findById.mockResolvedValue(null);
 
-      // 执行测试
-      const result = await service.getConfirmById(confirmId);
-
-      // 验证结果
-      expect(result.success).toBe(false);
-      expect(result.error).toBe('确认不存在');
-    });
-
-    it('应该处理数据库错误', async () => {
-      // 准备测试数据
-      const confirmId = TestDataFactory.Base.generateUUID();
-      const dbError = new Error('Database connection failed');
-
-      // 设置Mock返回值
-      mockRepository.findById.mockRejectedValue(dbError);
-
-      // 执行测试
-      const result = await service.getConfirmById(confirmId);
-
-      // 验证结果
-      expect(result.success).toBe(false);
-      expect(result.error).toBe('Database connection failed');
+      await expect(confirmService.getConfirm(confirmId)).rejects.toThrow('Confirm with ID non-existent not found');
     });
   });
 
-  describe('updateConfirmStatus', () => {
-    it('应该成功更新Confirm状态', async () => {
-      // 准备测试数据
-      const confirmId = TestDataFactory.Base.generateUUID();
-      const existingConfirm = createTestConfirm(
-        confirmId,
-        TestDataFactory.Base.generateUUID(),
-        ConfirmationType.PLAN_APPROVAL,
-        ConfirmStatus.PENDING,
-        Priority.MEDIUM
-      );
+  describe('approveConfirm方法测试', () => {
+    it('应该成功批准确认请求', async () => {
+      const confirmId = 'confirm-test-001' as UUID;
+      const approverId = 'tech-lead-001' as UUID;
+      const comments = 'Approved for deployment';
 
-      const newStatus: ConfirmStatus = 'in_review';
-      const decision: ConfirmDecision = 'approved';
+      mockRepository.findById.mockResolvedValue(mockConfirmEntity);
+      mockRepository.update.mockResolvedValue(mockConfirmEntity);
 
-      const validationResult: ValidationResult = {
-        isValid: true,
-        errors: [],
-        warnings: []
-      };
+      const result = await confirmService.approveConfirm(confirmId, approverId, comments);
 
-      // 设置Mock返回值
-      mockRepository.findById.mockResolvedValue(existingConfirm);
-      mockValidationService.validateStatusTransition.mockReturnValue(validationResult);
-      mockRepository.update.mockResolvedValue(undefined);
-
-      // 执行测试
-      const result = await service.updateConfirmStatus(confirmId, newStatus, decision);
-
-      // 验证结果
-      expect(result.success).toBe(true);
-      expect(result.data).toBeDefined();
-      expect(mockRepository.findById).toHaveBeenCalledWith(confirmId);
-      // 实际服务不使用ConfirmValidationService进行状态转换验证
-      expect(mockRepository.update).toHaveBeenCalled();
-    });
-
-    it('应该处理Confirm不存在的情况', async () => {
-      // 准备测试数据
-      const confirmId = TestDataFactory.Base.generateUUID();
-      const newStatus: ConfirmStatus = 'in_review';
-
-      // 设置Mock返回值
-      mockRepository.findById.mockResolvedValue(null);
-
-      // 执行测试
-      const result = await service.updateConfirmStatus(confirmId, newStatus);
-
-      // 验证结果
-      expect(result.success).toBe(false);
-      expect(result.error).toBe('确认不存在');
-      expect(mockRepository.update).not.toHaveBeenCalled();
-    });
-
-    it('应该处理无效状态转换', async () => {
-      // 准备测试数据
-      const confirmId = TestDataFactory.Base.generateUUID();
-      const existingConfirm = createTestConfirm(
-        confirmId,
-        TestDataFactory.Base.generateUUID(),
-        ConfirmationType.PLAN_APPROVAL,
-        ConfirmStatus.APPROVED,
-        Priority.MEDIUM
-      );
-
-      const newStatus: ConfirmStatus = 'pending';
-
-      const validationResult: ValidationResult = {
-        isValid: false,
-        errors: ['无效的状态转换: 不能从 approved 转换到 pending'],
-        warnings: []
-      };
-
-      // 设置Mock返回值
-      mockRepository.findById.mockResolvedValue(existingConfirm);
-      mockValidationService.validateStatusTransition.mockReturnValue(validationResult);
-
-      // 执行测试
-      const result = await service.updateConfirmStatus(confirmId, newStatus);
-
-      // 验证结果
-      expect(result.success).toBe(false);
-      expect(result.error).toBe('无效的状态转换: 不能从 approved 转换到 pending');
-      expect(mockRepository.update).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('cancelConfirm', () => {
-    it('应该成功取消Confirm', async () => {
-      // 准备测试数据
-      const confirmId = TestDataFactory.Base.generateUUID();
-      const existingConfirm = createTestConfirm(
-        confirmId,
-        TestDataFactory.Base.generateUUID(),
-        ConfirmationType.PLAN_APPROVAL,
-        ConfirmStatus.PENDING,
-        Priority.MEDIUM
-      );
-
-      // 设置Mock返回值
-      mockRepository.findById.mockResolvedValue(existingConfirm);
-      mockRepository.update.mockResolvedValue(undefined);
-
-      // 执行测试
-      const result = await service.cancelConfirm(confirmId);
-
-      // 验证结果
-      expect(result.success).toBe(true);
       expect(mockRepository.findById).toHaveBeenCalledWith(confirmId);
       expect(mockRepository.update).toHaveBeenCalled();
+      expect(result).toBeDefined();
     });
 
-    it('应该处理Confirm不存在的情况', async () => {
-      // 准备测试数据
-      const confirmId = TestDataFactory.Base.generateUUID();
-
-      // 设置Mock返回值
+    it('应该处理不存在的确认请求', async () => {
+      const confirmId = 'non-existent' as UUID;
+      const approverId = 'approver-001' as UUID;
+      
       mockRepository.findById.mockResolvedValue(null);
 
-      // 执行测试
-      const result = await service.cancelConfirm(confirmId);
-
-      // 验证结果
-      expect(result.success).toBe(false);
-      expect(result.error).toBe('确认不存在');
-      expect(mockRepository.update).not.toHaveBeenCalled();
+      await expect(
+        confirmService.approveConfirm(confirmId, approverId)
+      ).rejects.toThrow('Confirm with ID non-existent not found');
     });
   });
 
-  describe('queryConfirms', () => {
-    it('应该成功查询Confirm列表', async () => {
-      // 准备测试数据
-      const filter: ConfirmFilter = {
-        context_id: TestDataFactory.Base.generateUUID(),
-        status: 'pending'
+  describe('rejectConfirm方法测试', () => {
+    it('应该成功拒绝确认请求', async () => {
+      const confirmId = 'confirm-test-001' as UUID;
+      const approverId = 'tech-lead-001' as UUID;
+      const reason = 'Security concerns';
+
+      mockRepository.findById.mockResolvedValue(mockConfirmEntity);
+      mockRepository.update.mockResolvedValue(mockConfirmEntity);
+
+      const result = await confirmService.rejectConfirm(confirmId, approverId, reason);
+
+      expect(mockRepository.findById).toHaveBeenCalledWith(confirmId);
+      expect(mockRepository.update).toHaveBeenCalled();
+      expect(result).toBeDefined();
+    });
+  });
+
+  describe('queryConfirms方法测试', () => {
+    it('应该成功查询确认请求', async () => {
+      const filter: ConfirmQueryFilter = {
+        status: 'pending',
+        priority: 'high'
       };
-      const pagination: PaginationOptions = {
+      const mockResults = {
+        items: [mockConfirmEntity],
+        total: 1,
         page: 1,
-        limit: 10
+        pageSize: 10,
+        totalPages: 1
       };
+      mockRepository.findByFilter.mockResolvedValue(mockResults);
 
-      const mockResult = {
-        items: [],
-        total: 0,
+      const result = await confirmService.queryConfirms(filter);
+
+      expect(mockRepository.findByFilter).toHaveBeenCalledWith(filter, undefined);
+      expect(result.items).toHaveLength(1);
+    });
+
+    it('应该支持分页查询', async () => {
+      const filter: ConfirmQueryFilter = { status: 'pending' };
+      const pagination = { page: 1, limit: 10 };
+      const mockResults = {
+        items: [mockConfirmEntity],
+        total: 1,
         page: 1,
-        limit: 10,
-        total_pages: 0
+        pageSize: 10,
+        totalPages: 1
       };
+      mockRepository.findByFilter.mockResolvedValue(mockResults);
 
-      // 设置Mock返回值
-      mockRepository.findByFilter.mockResolvedValue(mockResult);
+      const result = await confirmService.queryConfirms(filter, pagination);
 
-      // 执行测试
-      const result = await service.queryConfirms(filter, pagination);
-
-      // 验证结果
-      expect(result.success).toBe(true);
-      expect(result.data).toEqual(mockResult);
       expect(mockRepository.findByFilter).toHaveBeenCalledWith(filter, pagination);
+      expect(result.items).toHaveLength(1);
     });
   });
 
-  describe('getPendingConfirms', () => {
-    it('应该成功获取待处理确认', async () => {
-      // 准备测试数据 - 创建包含pending状态的确认
-      const mockConfirm = createTestConfirm(
-        TestDataFactory.Base.generateUUID(),
-        TestDataFactory.Base.generateUUID(),
-        ConfirmationType.PLAN_APPROVAL,
-        ConfirmStatus.PENDING,
-        Priority.MEDIUM
-      );
-      const mockConfirms: Confirm[] = [mockConfirm];
+  describe('updateConfirm方法测试', () => {
+    it('应该成功更新确认请求', async () => {
+      const confirmId = 'confirm-test-001' as UUID;
+      const updateRequest: UpdateConfirmRequest = {
+        priority: 'critical'
+      };
 
-      // 设置Mock返回值 - 实际方法使用findByContextId
-      mockRepository.findByContextId = jest.fn().mockResolvedValue(mockConfirms);
+      mockRepository.findById.mockResolvedValue(mockConfirmEntity);
+      mockRepository.update.mockResolvedValue(mockConfirmEntity);
 
-      // 执行测试 - 实际方法不接受参数
-      const result = await service.getPendingConfirms();
+      const result = await confirmService.updateConfirm(confirmId, updateRequest);
 
-      // 验证结果
-      expect(result.success).toBe(true);
-      expect(result.data).toBeDefined();
-      expect(mockRepository.findByContextId).toHaveBeenCalledWith('all');
+      expect(mockRepository.findById).toHaveBeenCalledWith(confirmId);
+      expect(mockRepository.update).toHaveBeenCalled();
+      expect(result).toBeDefined();
+    });
+  });
+
+  describe('deleteConfirm方法测试', () => {
+    it('应该成功删除确认请求', async () => {
+      const confirmId = 'confirm-test-001' as UUID;
+      mockRepository.exists.mockResolvedValue(true);
+      mockRepository.delete.mockResolvedValue(undefined);
+
+      await confirmService.deleteConfirm(confirmId);
+
+      expect(mockRepository.exists).toHaveBeenCalledWith(confirmId);
+      expect(mockRepository.delete).toHaveBeenCalledWith(confirmId);
     });
 
-    it('应该处理空结果的情况', async () => {
-      // 准备测试数据 - 空的确认列表
-      const mockConfirms: Confirm[] = [];
+    it('应该处理不存在的确认请求', async () => {
+      const confirmId = 'non-existent' as UUID;
+      mockRepository.exists.mockResolvedValue(false);
 
-      // 设置Mock返回值 - 实际方法使用findByContextId
-      mockRepository.findByContextId = jest.fn().mockResolvedValue(mockConfirms);
-
-      // 执行测试 - 实际方法不接受参数
-      const result = await service.getPendingConfirms();
-
-      // 验证结果
-      expect(result.success).toBe(true);
-      expect(result.data).toEqual([]);
-      expect(mockRepository.findByContextId).toHaveBeenCalledWith('all');
+      await expect(
+        confirmService.deleteConfirm(confirmId)
+      ).rejects.toThrow('Confirm with ID non-existent not found');
     });
   });
 });

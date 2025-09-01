@@ -1,86 +1,317 @@
 /**
- * MPLP Collab Repository Interface - Domain Repository
- *
- * @version v1.0.0
- * @created 2025-08-02T01:10:00+08:00
- * @description 协作仓储接口，定义数据访问抽象
+ * Collab Repository Interface - Domain Layer
+ * @description Repository interface for Collab entity persistence
+ * @version 1.0.0
+ * @author MPLP Development Team
  */
 
-import { Collab } from '../entities/collab.entity';
-import { CollabQueryParams } from '../../types';
+import { UUID } from '../../../../shared/types';
+import { CollabEntity } from '../entities/collab.entity';
+
+// ===== QUERY INTERFACES =====
+
+export interface CollabListQuery {
+  page?: number;
+  limit?: number;
+  status?: string;
+  mode?: 'sequential' | 'parallel' | 'hybrid' | 'pipeline' | 'mesh';
+  contextId?: UUID;
+  planId?: UUID;
+  participantId?: UUID;
+  sortBy?: 'name' | 'createdAt' | 'updatedAt' | 'status';
+  sortOrder?: 'asc' | 'desc';
+}
+
+export interface CollabSearchQuery {
+  query: string;
+  fields?: string[];
+  filters?: {
+    status?: string[];
+    mode?: string[];
+    dateRange?: {
+      from: Date;
+      to: Date;
+    };
+  };
+  page?: number;
+  limit?: number;
+}
+
+export interface CollabListResult {
+  items: CollabEntity[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
+export interface CollabSearchResult {
+  items: CollabEntity[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+  searchMetadata: {
+    query: string;
+    executionTimeMs: number;
+    totalMatches: number;
+  };
+}
+
+// ===== STATISTICS INTERFACES =====
+
+export interface CollabStatistics {
+  totalCollaborations: number;
+  activeCollaborations: number;
+  completedCollaborations: number;
+  failedCollaborations: number;
+  averageParticipants: number;
+  averageDurationMinutes: number;
+  successRate: number;
+  modeDistribution: {
+    sequential: number;
+    parallel: number;
+    hybrid: number;
+    pipeline: number;
+    mesh: number;
+  };
+  coordinationStrategyDistribution: {
+    centralized: number;
+    distributed: number;
+    hierarchical: number;
+    peer_to_peer: number;
+  };
+}
+
+// ===== MAIN REPOSITORY INTERFACE =====
 
 /**
- * 协作仓储接口
+ * Collab Repository Interface
+ * Defines persistence operations for Collab entities
  */
-export interface CollabRepository {
+export interface ICollabRepository {
+  // ===== BASIC CRUD OPERATIONS =====
+  
   /**
-   * 保存协作
+   * Find collaboration by ID
    */
-  save(collab: Collab): Promise<void>;
+  findById(id: UUID): Promise<CollabEntity | null>;
 
   /**
-   * 根据ID查找协作
+   * Find multiple collaborations by IDs
    */
-  findById(collaboration_id: string): Promise<Collab | null>;
+  findByIds(ids: UUID[]): Promise<CollabEntity[]>;
 
   /**
-   * 根据上下文ID查找协作列表
+   * Save collaboration entity
    */
-  findByContextId(context_id: string): Promise<Collab[]>;
+  save(entity: CollabEntity): Promise<CollabEntity>;
 
   /**
-   * 根据计划ID查找协作列表
+   * Update collaboration entity
    */
-  findByPlanId(plan_id: string): Promise<Collab[]>;
+  update(entity: CollabEntity): Promise<CollabEntity>;
 
   /**
-   * 根据创建者查找协作列表
+   * Delete collaboration by ID
    */
-  findByCreatedBy(created_by: string): Promise<Collab[]>;
+  delete(id: UUID): Promise<void>;
 
   /**
-   * 根据查询参数查找协作列表
+   * Check if collaboration exists
    */
-  findByQuery(params: CollabQueryParams): Promise<{
-    collaborations: Collab[];
-    total: number;
+  exists(id: UUID): Promise<boolean>;
+
+  // ===== QUERY OPERATIONS =====
+
+  /**
+   * List collaborations with pagination and filtering
+   */
+  list(query: CollabListQuery): Promise<CollabListResult>;
+
+  /**
+   * Search collaborations with full-text search
+   */
+  search(query: CollabSearchQuery): Promise<CollabSearchResult>;
+
+  /**
+   * Count collaborations matching criteria
+   */
+  count(filters?: Partial<CollabListQuery>): Promise<number>;
+
+  // ===== RELATIONSHIP QUERIES =====
+
+  /**
+   * Find collaborations by context ID
+   */
+  findByContextId(contextId: UUID): Promise<CollabEntity[]>;
+
+  /**
+   * Find collaborations by plan ID
+   */
+  findByPlanId(planId: UUID): Promise<CollabEntity[]>;
+
+  /**
+   * Find collaborations by participant ID
+   */
+  findByParticipantId(participantId: UUID): Promise<CollabEntity[]>;
+
+  /**
+   * Find collaborations by agent ID
+   */
+  findByAgentId(agentId: UUID): Promise<CollabEntity[]>;
+
+  /**
+   * Find collaborations by role ID
+   */
+  findByRoleId(roleId: UUID): Promise<CollabEntity[]>;
+
+  /**
+   * Find collaborations by coordinator ID
+   */
+  findByCoordinatorId(coordinatorId: UUID): Promise<CollabEntity[]>;
+
+  // ===== STATUS AND MODE QUERIES =====
+
+  /**
+   * Find collaborations by status
+   */
+  findByStatus(status: string): Promise<CollabEntity[]>;
+
+  /**
+   * Find collaborations by mode
+   */
+  findByMode(mode: 'sequential' | 'parallel' | 'hybrid' | 'pipeline' | 'mesh'): Promise<CollabEntity[]>;
+
+  /**
+   * Find active collaborations
+   */
+  findActive(): Promise<CollabEntity[]>;
+
+  /**
+   * Find completed collaborations
+   */
+  findCompleted(): Promise<CollabEntity[]>;
+
+  /**
+   * Find failed collaborations
+   */
+  findFailed(): Promise<CollabEntity[]>;
+
+  // ===== TIME-BASED QUERIES =====
+
+  /**
+   * Find collaborations created within date range
+   */
+  findByDateRange(from: Date, to: Date): Promise<CollabEntity[]>;
+
+  /**
+   * Find collaborations created by user
+   */
+  findByCreatedBy(userId: string): Promise<CollabEntity[]>;
+
+  /**
+   * Find collaborations updated by user
+   */
+  findByUpdatedBy(userId: string): Promise<CollabEntity[]>;
+
+  /**
+   * Find recently created collaborations
+   */
+  findRecent(limit?: number): Promise<CollabEntity[]>;
+
+  /**
+   * Find stale collaborations (not updated for specified duration)
+   */
+  findStale(olderThanHours: number): Promise<CollabEntity[]>;
+
+  // ===== STATISTICS AND ANALYTICS =====
+
+  /**
+   * Get collaboration statistics
+   */
+  getStatistics(): Promise<CollabStatistics>;
+
+  /**
+   * Get statistics for specific time period
+   */
+  getStatisticsForPeriod(from: Date, to: Date): Promise<CollabStatistics>;
+
+  /**
+   * Get participant statistics
+   */
+  getParticipantStatistics(): Promise<{
+    totalParticipants: number;
+    activeParticipants: number;
+    averageParticipantsPerCollaboration: number;
+    topAgents: Array<{ agentId: UUID; collaborationCount: number }>;
+    topRoles: Array<{ roleId: UUID; collaborationCount: number }>;
   }>;
 
   /**
-   * 检查协作是否存在
+   * Get performance metrics
    */
-  exists(collaboration_id: string): Promise<boolean>;
+  getPerformanceMetrics(): Promise<{
+    averageCreationTime: number;
+    averageCompletionTime: number;
+    successRate: number;
+    errorRate: number;
+    throughput: number;
+  }>;
+
+  // ===== BATCH OPERATIONS =====
 
   /**
-   * 删除协作
+   * Batch save multiple collaborations
    */
-  delete(collaboration_id: string): Promise<void>;
+  batchSave(entities: CollabEntity[]): Promise<CollabEntity[]>;
 
   /**
-   * 批量删除协作
+   * Batch update multiple collaborations
    */
-  deleteBatch(collaboration_ids: string[]): Promise<void>;
+  batchUpdate(entities: CollabEntity[]): Promise<CollabEntity[]>;
 
   /**
-   * 更新协作状态
+   * Batch delete multiple collaborations
    */
-  updateStatus(collaboration_id: string, status: string): Promise<void>;
+  batchDelete(ids: UUID[]): Promise<void>;
+
+  // ===== TRANSACTION SUPPORT =====
 
   /**
-   * 获取协作统计信息
+   * Execute operations within a transaction
    */
-  getStatistics(): Promise<CollabStatistics>;
-}
+  withTransaction<T>(operation: (repository: ICollabRepository) => Promise<T>): Promise<T>;
 
-/**
- * 协作统计信息
- */
-export interface CollabStatistics {
-  total_collaborations: number;
-  active_collaborations: number;
-  completed_collaborations: number;
-  failed_collaborations: number;
-  average_participants: number;
-  most_used_mode: string;
-  most_used_coordination_type: string;
+  // ===== HEALTH AND MAINTENANCE =====
+
+  /**
+   * Check repository health
+   */
+  healthCheck(): Promise<{
+    status: 'healthy' | 'degraded' | 'unhealthy';
+    responseTime: number;
+    connectionStatus: 'connected' | 'disconnected';
+    lastError?: string;
+  }>;
+
+  /**
+   * Clean up old data
+   */
+  cleanup(olderThanDays: number): Promise<{
+    deletedCount: number;
+    cleanupDuration: number;
+  }>;
+
+  /**
+   * Optimize repository performance
+   */
+  optimize(): Promise<{
+    optimizationDuration: number;
+    improvements: string[];
+  }>;
 }

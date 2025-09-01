@@ -2,133 +2,148 @@
 
 ## 📋 **重构概述**
 
-**模块**: Trace (监控分析协调)  
-**重构类型**: BDD (Behavior-Driven Development)  
-**前置条件**: TDD重构阶段100%完成  
-**目标**: 验证L4智能体操作系统行为完整性  
+**模块**: Trace (监控追踪和可观测性中枢)
+**重构类型**: BDD (Behavior-Driven Development)
+**前置条件**: TDD重构阶段100%完成
+**目标**: 验证生产就绪质量标准行为完整性
 **基于规则**: `.augment/rules/testing-strategy-new.mdc`, `.augment/rules/critical-thinking-methodology.mdc`
+**方法论**: SCTM+GLFB+ITCM标准开发方法论
 
-## 🎯 **基于监控协调器特色的BDD场景分析**
+## 🎯 **基于监控追踪和可观测性中枢的BDD场景分析**
 
-### **Trace模块监控协调器行为验证**
-基于`trace-MPLP-positioning-analysis.md`系统性批判性思维修正和监控协调器核心特色：
+### **Trace模块监控追踪行为验证**
+基于`trace-MPLP-positioning-analysis.md`系统性批判性思维分析和mplp-trace.json Schema：
 
-**验证目标**: 确保Trace模块作为MPLP协议簇"监控分析协调器"的完整行为  
-**验证重点**: 监控协调专业化、性能监控协调、错误追踪协调、决策分析协调、可观测性协调
+**验证目标**: 确保Trace模块作为MPLP协议簇"监控追踪和可观测性中枢"的完整行为
+**验证重点**: 追踪记录管理、性能监控系统、错误追踪管理、审计追踪系统、可观测性管理、横切关注点集成
 
-#### **1. 性能监控协调引擎场景**
-- [ ] 10000+并发监控指标协调验证
-- [ ] 性能指标智能收集验证
-- [ ] 性能阈值自适应调整验证
-- [ ] 性能分析协调引擎验证
-- [ ] 性能优化策略生成验证
+#### **1. 追踪记录管理器场景 (mplp-trace.json核心实现)**
+- [ ] 6种追踪类型管理验证 (execution, monitoring, audit, performance, error, decision)
+- [ ] 5种严重程度管理验证 (debug, info, warn, error, critical)
+- [ ] 7种事件类型管理验证 (start, progress, checkpoint, completion, failure, timeout, interrupt)
+- [ ] 上下文快照管理验证 (变量快照、环境信息、调用栈)
+- [ ] 追踪生命周期管理验证 (创建、记录、分析、导出、归档)
 
-#### **2. 错误追踪协调系统场景**
-- [ ] 多种错误类型协调验证 (system/business/network/security)
-- [ ] 错误检测协调系统验证 (≥98%准确率)
-- [ ] 错误根因分析算法验证 (≥95%成功率)
-- [ ] 错误恢复策略生成验证 (<100ms响应)
-- [ ] 错误预防协调引擎验证
+#### **2. 性能监控系统场景 (mplp-trace.json性能域实现)**
+- [ ] 性能指标管理验证 (CPU使用率、内存使用、磁盘IO、网络IO)
+- [ ] 监控集成管理验证 (monitoring_enabled, alert_thresholds, dashboard_config)
+- [ ] 性能阈值管理验证 (cpu_threshold, memory_threshold, response_time_threshold)
+- [ ] 性能告警管理验证 (性能告警、阈值通知、性能优化建议)
+- [ ] 性能分析管理验证 (performance_analysis, bottleneck_detection, optimization_suggestions)
 
-#### **3. 决策分析协调系统场景**
-- [ ] 决策路径追踪协调验证 (≥99%完整性)
-- [ ] 决策效果评估协调验证 (≥92%准确率)
-- [ ] 决策优化建议协调验证 (≥85%采纳率)
-- [ ] 决策模式识别协调验证
-- [ ] 决策追踪协调引擎验证
+#### **3. 错误追踪管理器场景 (mplp-trace.json错误域实现)**
+- [ ] 错误详情管理验证 (error_code, error_message, stack_trace, recovery_action)
+- [ ] 错误严重程度管理验证 (debug, info, warn, error, critical)
+- [ ] 错误类型追踪验证 (execution, monitoring, audit, performance, error, decision)
+- [ ] 错误恢复策略验证 (错误检测、根因分析、恢复策略、预防机制)
+- [ ] 错误关联分析验证 (错误关联关系、影响链分析、错误模式识别)
 
-#### **4. 关联分析协调管理场景**
-- [ ] 多维度关联分析协调验证 (≥90%准确率)
-- [ ] 因果关系识别协调验证 (≥88%成功率)
-- [ ] 影响链分析协调验证 (<200ms响应)
-- [ ] 关联模式发现协调验证
-- [ ] 关联分析协调引擎验证
+#### **4. 审计追踪系统场景 (mplp-trace.json审计域实现)**
+- [ ] 审计事件管理验证 (event_id, event_type, timestamp, user_id)
+- [ ] 审计操作追踪验证 (trace_operation: start, record, analyze, export, archive)
+- [ ] 审计合规管理验证 (audit_trail合规性记录、操作审计、数据完整性验证)
+- [ ] 审计数据保护验证 (审计数据加密存储、访问控制、数据保留策略)
+- [ ] 审计报告生成验证 (审计报告、合规检查、风险评估)
 
-#### **5. 可观测性协调系统场景**
-- [ ] 全链路追踪协调验证 (≥95%覆盖率)
-- [ ] 指标聚合分析协调验证 (≥93%准确率)
-- [ ] 日志关联协调验证 (<500ms响应)
-- [ ] 可观测性仪表板协调验证
-- [ ] 全链路追踪协调引擎验证
+#### **5. 可观测性管理器场景 (mplp-trace.json可观测性域实现)**
+- [ ] 上下文快照管理验证 (context_snapshot变量快照、环境信息、调用栈)
+- [ ] 全链路追踪管理验证 (trace_id, span_id, parent_span_id分布式追踪)
+- [ ] 系统健康监控验证 (系统状态、服务可用性、资源使用情况)
+- [ ] 可观测性集成验证 (外部监控系统集成、数据导出、仪表板展示)
+- [ ] 搜索元数据管理验证 (search_metadata索引构建、查询优化、数据检索)
 
-#### **6. MPLP监控协调器集成场景**
-- [ ] 监控协调器特色接口验证
-- [ ] CoreOrchestrator指令-响应协作验证
-- [ ] 监控协调能力提供验证
-- [ ] 跨模块监控协调验证
-- [ ] 监控协调事件总线通信验证
+#### **6. 横切关注点集成场景 (9个横切Schema应用)**
+- [ ] 安全集成验证 (mplp-security.json: 身份认证、权限传递、安全上下文)
+- [ ] 性能集成验证 (mplp-performance.json: 性能监控、SLA管理、告警机制)
+- [ ] 错误处理集成验证 (mplp-error-handling.json: 错误分类、异常传播、自动恢复)
+- [ ] 协调集成验证 (mplp-coordination.json: 跨模块协调通信)
+- [ ] 编排集成验证 (mplp-orchestration.json: CoreOrchestrator编排协议)
+- [ ] 事务集成验证 (mplp-transaction.json: 跨模块事务管理)
+- [ ] 事件总线集成验证 (mplp-event-bus.json: 事件发布订阅)
+- [ ] 状态同步集成验证 (mplp-state-sync.json: 状态一致性保证)
+- [ ] 协议版本集成验证 (mplp-protocol-version.json: 版本管理和兼容性)
+
+#### **7. MPLP追踪协调接口集成场景**
+- [ ] 追踪记录验证接口验证 (validateTraceRecord)
+- [ ] 追踪性能监控接口验证 (monitorTracePerformance)
+- [ ] 追踪错误管理接口验证 (manageTraceError)
+- [ ] 追踪审计管理接口验证 (manageTraceAudit)
+- [ ] 跨模块追踪协调接口验证 (Context/Plan/Role/Confirm集成)
+- [ ] 横切关注点集成接口验证 (安全集成、版本管理)
 
 ## 📋 **BDD场景任务清单**
 
-### **阶段1: 性能监控协调引擎场景验证 (Day 3 Morning)**
+### **阶段1: 追踪记录管理器场景验证 (Day 3 Morning)**
 
-#### **1.1 性能监控协调引擎场景**
+#### **1.1 追踪记录管理器场景**
 ```gherkin
-Feature: 性能监控协调引擎
-  作为MPLP协议簇的监控协调器
-  我希望能够专业化协调10000+监控指标的收集分析
-  以便实现系统性能的专业化管理和优化
+Feature: 追踪记录管理器 (mplp-trace.json核心实现)
+  作为MPLP协议簇的监控追踪和可观测性中枢
+  我希望能够管理6种追踪类型的完整生命周期
+  以便实现系统追踪记录的专业化管理和分析
 
-  Scenario: 大规模性能监控协调
-    Given 我有10000个并发的监控指标需要协调
-    And 每个指标具有不同的收集频率和阈值
-    When 我启动大规模性能监控协调
-    Then 系统应该在50ms内完成监控指标协调分配
-    And 应该根据指标类型优化收集策略
-    And 监控协调效率应该达到90%以上
-    And 所有指标应该在协调下正确收集
+  Scenario: 多类型追踪记录管理
+    Given 我有6种追踪类型需要管理 (execution, monitoring, audit, performance, error, decision)
+    And 每种类型具有不同的严重程度和事件类型
+    When 我启动追踪记录管理
+    Then 系统应该在50ms内完成追踪记录创建
+    And 应该正确管理5种严重程度 (debug, info, warn, error, critical)
+    And 应该正确管理7种事件类型 (start, progress, checkpoint, completion, failure, timeout, interrupt)
+    And 上下文快照应该正确记录 (变量快照、环境信息、调用栈)
 
-  Scenario: 性能阈值智能协调调整
-    Given 监控正在固定阈值协调运行
-    And 协调器检测到需要动态阈值的性能场景
-    When 触发性能阈值协调优化
-    Then 协调器应该智能调整到自适应阈值
-    And 应该重新协调分配监控处理资源
-    And 监控协调效率应该提升至少40%
+  Scenario: 追踪生命周期管理
+    Given 追踪记录已创建并正在运行
+    And 追踪记录包含完整的上下文信息
+    When 触发追踪生命周期管理
+    Then 应该正确执行创建、记录、分析、导出、归档流程
+    And 每个阶段应该保持数据完整性
+    And 追踪记录管理效率应该达到95%以上
 ```
 
-- [ ] **任务**: 实现性能监控协调BDD测试
-  - [ ] 10000+指标并发协调测试
-  - [ ] 性能指标智能收集验证
-  - [ ] 性能阈值自适应调整验证
-  - [ ] 性能分析协调引擎验证
-  - [ ] **验证**: 监控协调引擎性能测试
-  - [ ] **标准**: 协调效率提升≥40%
+- [ ] **任务**: 实现追踪记录管理器BDD测试
+  - [ ] 6种追踪类型管理验证
+  - [ ] 5种严重程度管理验证
+  - [ ] 7种事件类型管理验证
+  - [ ] 上下文快照管理验证
+  - [ ] 追踪生命周期管理验证
+  - [ ] **验证**: 追踪记录管理完整性测试
+  - [ ] **标准**: 追踪记录管理效率≥95%
 
-#### **1.2 错误追踪协调系统场景**
+#### **1.2 性能监控系统场景**
 ```gherkin
-Feature: 错误追踪协调系统
-  作为监控协调器的错误管理中枢
-  我希望能够专业化协调错误追踪管理流程
-  以便支持复杂的错误协调和恢复
+Feature: 性能监控系统 (mplp-trace.json性能域实现)
+  作为监控追踪和可观测性中枢的性能管理组件
+  我希望能够管理完整的性能监控和告警流程
+  以便支持企业级性能监控和优化
 
-  Scenario: 多种错误类型协调
-    Given 我有一个需要多错误类型协调的监控场景
-    And 错误包含system、business、network、security类型
-    When 我使用错误追踪协调进行管理
-    Then 协调器应该在100ms内完成错误恢复协调
-    And 应该协调处理不同类型的错误需求
-    And 错误检测准确率应该≥98%
+  Scenario: 性能指标管理
+    Given 我有CPU、内存、磁盘IO、网络IO等性能指标需要监控
+    And 每个指标具有不同的阈值和告警配置
+    When 我启动性能监控系统
+    Then 系统应该在100ms内完成性能指标收集
+    And 应该正确管理性能阈值 (cpu_threshold, memory_threshold, response_time_threshold)
+    And 性能告警应该及时触发和通知
+    And 性能监控准确率应该≥95%
 
-  Scenario: 错误根因分析协调
-    Given 系统中有复杂错误发生
-    And 需要进行根因分析协调
-    When 触发错误根因分析协调
-    Then 协调器应该在100ms内开始根因分析
-    And 应该协调执行根因分析策略
-    And 根因分析成功率应该≥95%
-    And 应该记录完整的根因分析协调审计日志
+  Scenario: 性能分析和优化建议
+    Given 性能监控系统正在运行
+    And 检测到性能瓶颈和优化机会
+    When 触发性能分析管理
+    Then 应该生成performance_analysis、bottleneck_detection、optimization_suggestions
+    And 应该提供具体的性能优化建议
+    And 性能分析准确率应该≥90%
 ```
 
-- [ ] **任务**: 实现错误追踪协调BDD测试
-  - [ ] 多种错误类型协调验证
-  - [ ] 错误检测协调测试 (≥98%)
-  - [ ] 错误根因分析协调验证 (≥95%)
-  - [ ] 错误恢复策略协调测试 (<100ms)
-  - [ ] **验证**: 错误追踪协调系统可靠性测试
-  - [ ] **标准**: 错误追踪协调准确率≥98%
+- [ ] **任务**: 实现性能监控系统BDD测试
+  - [ ] 性能指标管理验证 (CPU、内存、磁盘IO、网络IO)
+  - [ ] 监控集成管理验证 (monitoring_enabled, alert_thresholds, dashboard_config)
+  - [ ] 性能阈值管理验证 (cpu_threshold, memory_threshold, response_time_threshold)
+  - [ ] 性能告警管理验证 (性能告警、阈值通知、性能优化建议)
+  - [ ] 性能分析管理验证 (performance_analysis, bottleneck_detection, optimization_suggestions)
+  - [ ] **验证**: 性能监控系统准确率测试
+  - [ ] **标准**: 性能监控准确率≥95%
 
-### **阶段2: 决策分析协调和关联分析场景验证 (Day 3 Afternoon)**
+### **阶段2: 错误追踪和审计追踪场景验证 (Day 3 Afternoon)**
 
 #### **2.1 决策分析协调系统场景**
 ```gherkin
@@ -349,7 +364,10 @@ npm run test:security:trace
 
 ---
 
-**文档版本**: v1.0.0  
-**创建时间**: 2025-08-12  
-**前置条件**: `trace-TDD-refactor-plan.md` 100%完成  
-**最终目标**: Trace模块达到Extension模块L4智能体操作系统标准
+**文档版本**: v2.0.0
+**创建时间**: 2025-08-12
+**更新时间**: 2025-08-22
+**方法论**: SCTM+GLFB+ITCM标准开发方法论
+**特色**: 包含横切关注点集成的完整BDD计划
+**前置条件**: `trace-TDD-refactor-plan.md` 100%完成
+**最终目标**: Trace模块达到Context、Plan、Confirm、Role模块生产就绪质量标准

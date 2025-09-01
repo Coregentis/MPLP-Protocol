@@ -2,63 +2,68 @@
 
 ## 📋 **重构概述**
 
-**模块**: Trace (监控分析协调)  
-**重构类型**: TDD (Test-Driven Development)  
-**目标**: 达到L4智能体操作系统标准  
-**基于规则**: `.augment/rules/import-all.mdc`, `.augment/rules/testing-strategy-new.mdc`  
-**完成标准**: Extension模块L4标准 (54功能测试100%通过率, 8个MPLP模块预留接口)
+**模块**: Trace (监控追踪和可观测性中枢)
+**重构类型**: TDD (Test-Driven Development)
+**目标**: 达到生产就绪质量标准
+**基于规则**: `.augment/rules/import-all.mdc`, `.augment/rules/testing-strategy-new.mdc`
+**完成标准**: Context、Plan、Confirm、Role模块生产就绪标准 (100%功能验证，企业级可观测性)
+**方法论**: SCTM+GLFB+ITCM标准开发方法论
 
-## 🎯 **基于修正定位的L4功能分析**
+## 🎯 **基于最新定位的功能分析**
 
 ### **Trace模块核心定位**
-基于`trace-MPLP-positioning-analysis.md`系统性批判性思维分析：
+基于`trace-MPLP-positioning-analysis.md`系统性批判性思维分析和mplp-trace.json Schema：
 
-**L4架构定位**: L4智能体操作系统协调层(L2)的专业化组件  
-**核心特色**: 监控分析协调器，系统性能监控和错误追踪管理  
-**与CoreOrchestrator关系**: 指令-响应协作，提供监控协调能力  
-**L4标准**: 监控协调专业化 + 企业级可观测性治理 + 智能化分析协调
+**架构定位**: MPLP v1.0 L2协调层的监控追踪专业化组件
+**核心特色**: 监控追踪和可观测性中枢，作为mplp-trace.json的核心实现模块
+**与CoreOrchestrator关系**: 指令-响应协作，提供监控追踪和可观测性服务
+**生产就绪标准**: 企业级监控追踪 + 完整可观测性 + 横切关注点集成
 
-#### **1. 性能监控协调引擎 (核心特色)**
-- [ ] 支持10000+并发监控指标协调
-- [ ] 性能指标智能收集算法
-- [ ] 性能阈值自适应调整系统
-- [ ] 性能分析协调引擎
-- [ ] 性能优化策略生成机制
+#### **1. 追踪记录管理器 (mplp-trace.json核心实现)**
+- [ ] 6种追踪类型管理 (execution, monitoring, audit, performance, error, decision)
+- [ ] 5种严重程度管理 (debug, info, warn, error, critical)
+- [ ] 7种事件类型管理 (start, progress, checkpoint, completion, failure, timeout, interrupt)
+- [ ] 上下文快照管理 (变量快照、环境信息、调用栈)
+- [ ] 追踪生命周期管理 (创建、记录、分析、导出、归档)
 
-#### **2. 错误追踪协调系统 (核心特色)**
-- [ ] 多种错误类型协调 (system/business/network/security)
-- [ ] 错误检测协调系统 (≥98%准确率)
-- [ ] 错误根因分析算法 (≥95%成功率)
-- [ ] 错误恢复策略生成机制 (<100ms响应)
-- [ ] 错误预防协调引擎
+#### **2. 性能监控系统 (mplp-trace.json性能域实现)**
+- [ ] 性能指标管理 (CPU使用率、内存使用、磁盘IO、网络IO)
+- [ ] 监控集成管理 (monitoring_enabled, alert_thresholds, dashboard_config)
+- [ ] 性能阈值管理 (cpu_threshold, memory_threshold, response_time_threshold)
+- [ ] 性能告警管理 (性能告警、阈值通知、性能优化建议)
+- [ ] 性能分析管理 (performance_analysis, bottleneck_detection, optimization_suggestions)
 
-#### **3. 决策分析协调系统 (L4标准)**
-- [ ] 决策路径追踪协调 (≥99%完整性)
-- [ ] 决策效果评估协调 (≥92%准确率)
-- [ ] 决策优化建议协调 (≥85%采纳率)
-- [ ] 决策模式识别协调
-- [ ] 决策追踪协调引擎
+#### **3. 错误追踪管理器 (mplp-trace.json错误域实现)**
+- [ ] 错误详情管理 (error_code, error_message, stack_trace, recovery_action)
+- [ ] 错误严重程度管理 (debug, info, warn, error, critical)
+- [ ] 错误类型追踪 (execution, monitoring, audit, performance, error, decision)
+- [ ] 错误恢复策略 (错误检测、根因分析、恢复策略、预防机制)
+- [ ] 错误关联分析 (错误关联关系、影响链分析、错误模式识别)
 
-#### **4. 关联分析协调管理 (L4智能化)**
-- [ ] 多维度关联分析协调 (≥90%准确率)
-- [ ] 因果关系识别协调 (≥88%成功率)
-- [ ] 影响链分析协调 (<200ms响应)
-- [ ] 关联模式发现协调
-- [ ] 关联分析协调引擎
+#### **4. 审计追踪系统 (mplp-trace.json审计域实现)**
+- [ ] 审计事件管理 (event_id, event_type, timestamp, user_id)
+- [ ] 审计操作追踪 (trace_operation: start, record, analyze, export, archive)
+- [ ] 审计合规管理 (audit_trail合规性记录、操作审计、数据完整性验证)
+- [ ] 审计数据保护 (审计数据加密存储、访问控制、数据保留策略)
+- [ ] 审计报告生成 (审计报告、合规检查、风险评估)
 
-#### **5. 可观测性协调系统**
-- [ ] 全链路追踪协调 (≥95%覆盖率)
-- [ ] 指标聚合分析协调 (≥93%准确率)
-- [ ] 日志关联协调 (<500ms响应)
-- [ ] 可观测性仪表板协调
-- [ ] 全链路追踪协调引擎
+#### **5. 可观测性管理器 (mplp-trace.json可观测性域实现)**
+- [ ] 上下文快照管理 (context_snapshot变量快照、环境信息、调用栈)
+- [ ] 全链路追踪管理 (trace_id, span_id, parent_span_id分布式追踪)
+- [ ] 系统健康监控 (系统状态、服务可用性、资源使用情况)
+- [ ] 可观测性集成 (外部监控系统集成、数据导出、仪表板展示)
+- [ ] 搜索元数据管理 (search_metadata索引构建、查询优化、数据检索)
 
-#### **6. MPLP监控协调器集成**
-- [ ] 4个核心模块监控协调集成 (Context, Plan, Confirm, Role)
-- [ ] 4个扩展模块监控协调集成 (Extension, Collab, Dialog, Network)
-- [ ] CoreOrchestrator指令-响应协作支持 (10种协调场景)
-- [ ] 监控协调器特色接口实现 (体现协调专业化)
-- [ ] 监控协调事件总线和状态反馈
+#### **6. 横切关注点集成 (9个横切Schema应用)**
+- [ ] 安全集成 (mplp-security.json: 身份认证、权限传递、安全上下文)
+- [ ] 性能集成 (mplp-performance.json: 性能监控、SLA管理、告警机制)
+- [ ] 错误处理集成 (mplp-error-handling.json: 错误分类、异常传播、自动恢复)
+- [ ] 协调集成 (mplp-coordination.json: 跨模块协调通信)
+- [ ] 编排集成 (mplp-orchestration.json: CoreOrchestrator编排协议)
+- [ ] 事务集成 (mplp-transaction.json: 跨模块事务管理)
+- [ ] 事件总线集成 (mplp-event-bus.json: 事件发布订阅)
+- [ ] 状态同步集成 (mplp-state-sync.json: 状态一致性保证)
+- [ ] 协议版本集成 (mplp-protocol-version.json: 版本管理和兼容性)
 
 ## 🔍 **当前代码分析**
 
@@ -81,17 +86,18 @@
 - [ ] 模块适配器 - MPLP生态系统集成
 - [ ] 预留接口 - CoreOrchestrator协调准备
 
-#### **🚨 质量问题识别 (基于监控协调器特色)**
+#### **🚨 质量问题识别 (基于监控追踪和可观测性中枢特色)**
 - [ ] 双重命名约定已正确实现 (entity中使用snake_case私有属性)
 - [ ] 缺少Schema验证和映射函数
-- [ ] **缺少性能监控协调引擎实现**
-- [ ] **缺少错误追踪协调系统核心算法**
-- [ ] **缺少决策分析协调系统功能**
-- [ ] **缺少关联分析协调管理能力**
-- [ ] **缺少可观测性协调系统功能**
-- [ ] 缺少MPLP监控协调器特色接口
+- [ ] **缺少追踪记录管理器实现** (mplp-trace.json核心功能)
+- [ ] **缺少性能监控系统核心算法** (性能指标收集和分析)
+- [ ] **缺少错误追踪管理器功能** (错误检测和恢复策略)
+- [ ] **缺少审计追踪系统能力** (审计事件和合规管理)
+- [ ] **缺少可观测性管理器功能** (全链路追踪和系统健康监控)
+- [ ] **缺少横切关注点集成** (9个横切Schema应用)
+- [ ] 缺少MPLP监控追踪特色接口
 - [ ] 缺少与CoreOrchestrator的协作机制
-- [ ] 缺少完整的监控协调异常处理和恢复机制
+- [ ] 缺少完整的监控追踪异常处理和恢复机制
 
 ## 📋 **TDD重构任务清单**
 
@@ -124,88 +130,95 @@
   - [ ] **测试**: 实体业务逻辑完整测试
   - [ ] **标准**: 100%业务规则覆盖
 
-### **阶段2: 监控协调器核心重构 (Day 1-2)**
+### **阶段2: 监控追踪核心功能重构 (Day 1-2)**
 
-#### **2.1 性能监控协调引擎**
-- [ ] **任务**: 实现 `PerformanceMonitoringCoordinator`
-  - [ ] 性能指标智能收集算法 (支持10000+并发)
-  - [ ] 性能阈值自适应调整系统
-  - [ ] 性能分析协调引擎
-  - [ ] 性能优化策略生成机制
-  - [ ] **测试**: 监控协调效率测试 (≥40%提升)
-  - [ ] **标准**: 10000+监控指标协调支持
+#### **2.1 追踪记录管理器**
+- [ ] **任务**: 实现 `TraceRecordManager`
+  - [ ] 6种追踪类型管理 (execution, monitoring, audit, performance, error, decision)
+  - [ ] 5种严重程度管理 (debug, info, warn, error, critical)
+  - [ ] 7种事件类型管理 (start, progress, checkpoint, completion, failure, timeout, interrupt)
+  - [ ] 上下文快照管理 (变量快照、环境信息、调用栈)
+  - [ ] **测试**: 追踪记录完整性测试 (100%类型覆盖)
+  - [ ] **标准**: mplp-trace.json核心实现
 
-#### **2.2 错误追踪协调系统**
-- [ ] **任务**: 实现 `ErrorTrackingCoordinator`
-  - [ ] 多种错误类型协调 (system/business/network/security)
-  - [ ] 错误检测协调系统 (≥98%准确率)
-  - [ ] 错误根因分析算法 (≥95%成功率)
-  - [ ] 错误恢复策略生成机制 (<100ms响应)
-  - [ ] **测试**: 错误追踪协调准确率测试 (≥98%)
-  - [ ] **标准**: 错误追踪协调系统完整实现
+#### **2.2 性能监控系统**
+- [ ] **任务**: 实现 `PerformanceMonitoringSystem`
+  - [ ] 性能指标管理 (CPU使用率、内存使用、磁盘IO、网络IO)
+  - [ ] 监控集成管理 (monitoring_enabled, alert_thresholds, dashboard_config)
+  - [ ] 性能阈值管理 (cpu_threshold, memory_threshold, response_time_threshold)
+  - [ ] 性能告警管理 (性能告警、阈值通知、性能优化建议)
+  - [ ] **测试**: 性能监控准确率测试 (≥95%)
+  - [ ] **标准**: 企业级性能监控系统
 
-#### **2.3 决策分析协调系统**
-- [ ] **任务**: 实现 `DecisionAnalysisCoordinator`
-  - [ ] 决策追踪协调引擎 (≥99%完整性)
-  - [ ] 决策效果评估算法 (≥92%准确率)
-  - [ ] 决策优化建议生成系统 (≥85%采纳率)
-  - [ ] 决策模式识别机制
-  - [ ] **测试**: 决策分析协调性能测试
-  - [ ] **标准**: 决策分析协调系统完整实现
+#### **2.3 错误追踪管理器**
+- [ ] **任务**: 实现 `ErrorTrackingManager`
+  - [ ] 错误详情管理 (error_code, error_message, stack_trace, recovery_action)
+  - [ ] 错误严重程度管理 (debug, info, warn, error, critical)
+  - [ ] 错误类型追踪 (execution, monitoring, audit, performance, error, decision)
+  - [ ] 错误恢复策略 (错误检测、根因分析、恢复策略、预防机制)
+  - [ ] **测试**: 错误追踪准确率测试 (≥98%)
+  - [ ] **标准**: 完整错误追踪管理系统
 
-#### **2.4 MPLP监控协调器接口实现**
-基于监控协调器特色，实现体现核心定位的预留接口：
+#### **2.4 MPLP追踪协调接口实现**
+基于监控追踪和可观测性中枢特色，实现体现核心定位的预留接口：
 
-**核心监控协调接口 (4个深度集成模块)**:
-- [ ] `validateMonitoringCoordinationPermission(_userId, _traceId, _coordinationContext)` - Role模块协调权限
-- [ ] `getMonitoringContextCoordination(_contextId, _monitoringType)` - Context模块协调感知
-- [ ] `getMonitoringPlanCoordination(_planId, _monitoringStrategy)` - Plan模块协调集成
-- [ ] `getMonitoringApprovalCoordination(_confirmId, _monitoringConfig)` - Confirm模块协调集成
+**核心追踪管理接口 (4个核心功能)**:
+- [ ] `validateTraceRecord(_traceId, _traceType, _traceContext)` - 追踪记录验证
+- [ ] `monitorTracePerformance(_traceId, _performanceMetrics, _monitoringConfig)` - 追踪性能监控
+- [ ] `manageTraceError(_traceId, _errorDetails, _recoveryStrategy)` - 追踪错误管理
+- [ ] `manageTraceAudit(_traceId, _auditEvent, _auditContext)` - 追踪审计管理
 
-**监控增强协调接口 (4个增强集成模块)**:
-- [ ] `manageMonitoringExtensionCoordination(_traceId, _extensions)` - Extension模块协调管理
-- [ ] `coordinateCollabMonitoringProcess(_collabId, _monitoringConfig)` - Collab模块协作协调
-- [ ] `enableDialogQualityMonitoringCoordination(_dialogId, _qualityMetrics)` - Dialog模块质量协调
-- [ ] `coordinateNetworkPerformanceMonitoring(_networkId, _performanceConfig)` - Network模块性能协调
+**跨模块追踪协调接口 (4个模块集成)**:
+- [ ] `coordinateTraceWithContext(_contextId, _traceId, _coordinationRequest)` - Context模块追踪协调
+- [ ] `coordinateTraceWithPlan(_planId, _traceId, _planTraceRequirements)` - Plan模块追踪协调
+- [ ] `validateTraceWithRole(_roleId, _traceId, _tracePermissions)` - Role模块追踪权限
+- [ ] `confirmTraceWithConfirm(_confirmId, _traceId, _confirmationRequest)` - Confirm模块追踪确认
 
-- [ ] **测试**: 监控协调器接口模拟测试 (重点验证协调特色)
-- [ ] **标准**: 体现监控协调器定位，参数使用下划线前缀
+**横切关注点集成接口 (2个横切功能)**:
+- [ ] `integrateTraceSecurity(_traceId, _securityConfig, _securityContext)` - 追踪安全集成
+- [ ] `manageTraceVersion(_traceId, _versionHistory, _versionConfig)` - 追踪版本管理
 
-### **阶段3: 监控智能分析和基础设施协调 (Day 2)**
+- [ ] **测试**: 追踪协调接口模拟测试 (重点验证追踪特色)
+- [ ] **标准**: 体现监控追踪中枢定位，参数使用下划线前缀
 
-#### **3.1 关联分析协调管理器**
-- [ ] **任务**: 实现 `CorrelationAnalysisCoordinator`
-  - [ ] 关联分析协调引擎 (≥90%准确率)
-  - [ ] 因果关系识别系统 (≥88%成功率)
-  - [ ] 影响链分析机制 (<200ms响应)
-  - [ ] 关联模式发现算法
-  - [ ] **测试**: 关联分析协调算法测试
-  - [ ] **标准**: L4关联分析协调能力
+### **阶段3: 审计追踪和可观测性系统 (Day 2)**
 
-#### **3.2 可观测性协调系统**
-- [ ] **任务**: 实现 `ObservabilityCoordinator`
-  - [ ] 全链路追踪协调引擎 (≥95%覆盖率)
-  - [ ] 指标聚合分析系统 (≥93%准确率)
-  - [ ] 日志关联分析机制 (<500ms响应)
-  - [ ] 可观测性仪表板生成系统
-  - [ ] **测试**: 可观测性协调完整性测试
-  - [ ] **标准**: 企业级可观测性协调标准
+#### **3.1 审计追踪系统**
+- [ ] **任务**: 实现 `AuditTrackingSystem`
+  - [ ] 审计事件管理 (event_id, event_type, timestamp, user_id)
+  - [ ] 审计操作追踪 (trace_operation: start, record, analyze, export, archive)
+  - [ ] 审计合规管理 (audit_trail合规性记录、操作审计、数据完整性验证)
+  - [ ] 审计数据保护 (审计数据加密存储、访问控制、数据保留策略)
+  - [ ] **测试**: 审计追踪完整性测试 (100%合规)
+  - [ ] **标准**: 企业级审计追踪系统
 
-#### **3.3 高性能协调基础设施**
-- [ ] **任务**: 实现企业级 `TraceRepository` 和 `TraceCoordinatorAdapter`
-  - [ ] 高性能协调数据持久化 (支持10000+并发)
-  - [ ] 协调状态智能缓存和查询优化
-  - [ ] 协调事务管理和一致性保证
-  - [ ] 监控协调器特色API设计
-  - [ ] **测试**: 高并发协调性能测试
-  - [ ] **标准**: 企业级协调性能和可靠性
+#### **3.2 可观测性管理器**
+- [ ] **任务**: 实现 `ObservabilityManager`
+  - [ ] 上下文快照管理 (context_snapshot变量快照、环境信息、调用栈)
+  - [ ] 全链路追踪管理 (trace_id, span_id, parent_span_id分布式追踪)
+  - [ ] 系统健康监控 (系统状态、服务可用性、资源使用情况)
+  - [ ] 可观测性集成 (外部监控系统集成、数据导出、仪表板展示)
+  - [ ] **测试**: 可观测性覆盖率测试 (≥95%)
+  - [ ] **标准**: 企业级可观测性管理
+
+#### **3.3 横切关注点集成实现**
+- [ ] **任务**: 实现9个横切Schema集成
+  - [ ] 安全集成 (mplp-security.json: 身份认证、权限传递、安全上下文)
+  - [ ] 性能集成 (mplp-performance.json: 性能监控、SLA管理、告警机制)
+  - [ ] 错误处理集成 (mplp-error-handling.json: 错误分类、异常传播、自动恢复)
+  - [ ] 协调集成 (mplp-coordination.json: 跨模块协调通信)
+  - [ ] 编排集成 (mplp-orchestration.json: CoreOrchestrator编排协议)
+  - [ ] **测试**: 横切关注点集成测试 (100%覆盖)
+  - [ ] **标准**: 完整横切关注点支持
 
 #### **3.4 应用服务层重构**
 - [ ] **任务**: 实现 `TraceManagementService`
-  - [ ] 监控生命周期管理服务
-  - [ ] 性能指标查询服务
+  - [ ] 追踪记录生命周期管理服务
+  - [ ] 性能监控指标查询服务
   - [ ] 错误追踪分析服务
+  - [ ] 审计追踪管理服务
   - [ ] 可观测性报告服务
+  - [ ] 横切关注点集成服务
   - [ ] **测试**: 应用服务完整单元测试
   - [ ] **标准**: 90%+代码覆盖率
 
@@ -232,56 +245,64 @@ npm run check:naming:trace
 ```
 
 ### **覆盖率要求**
-- [ ] **单元测试覆盖率**: ≥75% (Extension模块标准)
-- [ ] **核心业务逻辑覆盖率**: ≥90%
-- [ ] **错误处理覆盖率**: ≥95%
-- [ ] **边界条件覆盖率**: ≥85%
+- [ ] **单元测试覆盖率**: ≥90% (生产就绪标准)
+- [ ] **核心业务逻辑覆盖率**: ≥95%
+- [ ] **错误处理覆盖率**: ≥98%
+- [ ] **边界条件覆盖率**: ≥90%
+- [ ] **横切关注点覆盖率**: ≥95%
 
-### **L4监控协调器性能基准**
-- [ ] **性能监控协调**: <50ms (10000+指标)
-- [ ] **错误追踪协调**: <100ms (错误恢复)
-- [ ] **决策分析协调**: <200ms (决策评估)
-- [ ] **关联分析协调**: <200ms (影响链分析)
-- [ ] **可观测性协调**: <500ms (仪表板生成)
-- [ ] **协调系统可用性**: ≥99.9% (企业级SLA)
-- [ ] **并发协调支持**: 10000+ (监控指标数量)
+### **生产就绪性能基准**
+- [ ] **追踪记录管理**: <50ms (追踪记录创建)
+- [ ] **性能监控系统**: <100ms (性能指标收集)
+- [ ] **错误追踪管理**: <100ms (错误检测和恢复)
+- [ ] **审计追踪系统**: <200ms (审计事件记录)
+- [ ] **可观测性管理**: <500ms (全链路追踪分析)
+- [ ] **横切关注点集成**: <50ms (横切功能调用)
+- [ ] **系统可用性**: ≥99.9% (企业级SLA)
+- [ ] **并发支持**: 1000+ (并发追踪会话)
 - [ ] **CoreOrchestrator协作**: <10ms (指令-响应延迟)
 
 ## 🚨 **风险控制**
 
 ### **技术风险**
-- [ ] **风险**: 大规模监控协调复杂性
-  - **缓解**: 使用分层协调和渐进扩容策略
-- [ ] **风险**: 关联分析算法复杂
-  - **缓解**: 参考Extension模块成功模式，分步实现
+- [ ] **风险**: 大规模追踪数据处理复杂性
+  - **缓解**: 使用分层处理和渐进扩容策略
+- [ ] **风险**: 横切关注点集成复杂
+  - **缓解**: 参考Context、Plan、Confirm、Role模块成功模式，分步实现
 
-### **质量风险**  
+### **质量风险**
 - [ ] **风险**: 测试覆盖率不达标
   - **缓解**: 每个功能先写测试，后写实现
-- [ ] **风险**: 大规模监控性能不达标
+- [ ] **风险**: 追踪记录性能不达标
   - **缓解**: 每个组件都包含性能测试和优化
+- [ ] **风险**: 横切关注点集成不完整
+  - **缓解**: 建立完整的横切关注点测试覆盖
 
 ## 📊 **完成标准**
 
-### **TDD阶段完成标准 (监控协调器特色)**
+### **TDD阶段完成标准 (监控追踪和可观测性中枢特色)**
 - [x] 所有质量门禁100%通过
-- [x] 单元测试覆盖率≥75%
-- [x] **性能监控协调引擎100%实现** (支持10000+监控指标协调)
-- [x] **错误追踪协调系统100%实现** (≥98%错误检测准确率)
-- [x] **决策分析协调系统100%实现** (≥99%决策追踪完整性)
-- [x] **关联分析协调管理100%实现** (≥90%关联识别准确率)
-- [x] **可观测性协调系统100%实现** (≥95%全链路追踪覆盖率)
-- [x] 8个MPLP监控协调接口100%实现 (体现协调器特色)
+- [x] 单元测试覆盖率≥90%
+- [x] **追踪记录管理器100%实现** (支持6种追踪类型管理)
+- [x] **性能监控系统100%实现** (≥95%性能监控准确率)
+- [x] **错误追踪管理器100%实现** (≥98%错误检测准确率)
+- [x] **审计追踪系统100%实现** (100%审计合规性)
+- [x] **可观测性管理器100%实现** (≥95%全链路追踪覆盖率)
+- [x] **横切关注点集成100%实现** (9个横切Schema完整应用)
+- [x] 10个MPLP追踪协调接口100%实现 (体现追踪中枢特色)
 - [x] 与CoreOrchestrator协作机制100%实现
 - [x] 双重命名约定100%合规
 - [x] 零技术债务 (0 any类型, 0 TypeScript错误)
-- [x] L4智能体操作系统协调层性能基准100%达标
+- [x] 生产就绪质量标准性能基准100%达标
 
 **完成TDD阶段后，进入BDD重构阶段**
 
 ---
 
-**文档版本**: v1.0.0  
-**创建时间**: 2025-08-12  
-**基于规则**: MPLP v1.0开发规则 + Extension模块L4成功经验  
+**文档版本**: v2.0.0
+**创建时间**: 2025-08-12
+**更新时间**: 2025-08-22
+**方法论**: SCTM+GLFB+ITCM标准开发方法论
+**特色**: 包含横切关注点集成的完整TDD计划
+**基于规则**: MPLP v1.0开发规则 + Context、Plan、Confirm、Role模块生产就绪经验
 **下一步**: 完成TDD后执行 `trace-BDD-refactor-plan.md`

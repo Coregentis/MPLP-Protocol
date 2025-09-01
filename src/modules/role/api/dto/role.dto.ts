@@ -1,299 +1,380 @@
 /**
- * Role模块DTO定义
+ * Role数据传输对象
  * 
- * 数据传输对象，用于API层的数据交换
- * 符合MPLP模块标准化规范
- * 
+ * @description Role模块的API层数据传输对象定义 - 企业级RBAC安全中心
  * @version 1.0.0
- * @created 2025-08-09
- * @compliance MPLP模块标准化规范 - 统一DTO标准
+ * @layer API层 - DTO
  */
 
-import { 
-  RoleType, 
-  RoleStatus, 
-  Permission,
-  RoleScope,
-  RoleInheritance,
-  RoleDelegation,
-  RoleAttributes,
-  ValidationRules,
-  AuditSettings
+import {
+  UUID,
+  RoleType,
+  RoleStatus,
+  GrantType,
+  InheritanceType,
+  MergeStrategy,
+  ConflictResolution,
+  SecurityClearance,
+  SeniorityLevel,
+  AgentType,
+  AgentStatus,
+  ExpertiseLevel,
+  CommunicationStyle,
+  ConflictResolutionStrategy
 } from '../../types';
-
-// ===== 请求DTO (Schema格式 - snake_case) =====
 
 /**
  * 创建角色请求DTO
- * 使用snake_case命名，符合Schema层约定
  */
-export interface CreateRoleDto {
-  context_id: string;
+export interface CreateRoleRequestDTO {
+  contextId: UUID;
   name: string;
-  role_type: RoleType;
-  display_name?: string;
+  displayName?: string;
   description?: string;
-  permissions?: Permission[];
-  scope?: RoleScope;
-  inheritance?: RoleInheritance;
-  delegation?: RoleDelegation;
-  attributes?: RoleAttributes;
-  validation_rules?: ValidationRules;
-  audit_settings?: AuditSettings;
+  roleType: RoleType;
+  permissions: Array<{
+    permissionId: UUID;
+    resourceType: 'context' | 'plan' | 'task' | 'confirmation' | 'trace' | 'role' | 'extension' | 'system';
+    resourceId: UUID | '*';
+    actions: Array<'create' | 'read' | 'update' | 'delete' | 'execute' | 'approve' | 'monitor' | 'admin'>;
+    conditions?: {
+      timeBased?: {
+        startTime?: string;
+        endTime?: string;
+        timezone?: string;
+        daysOfWeek?: number[];
+      };
+      locationBased?: {
+        allowedIpRanges?: string[];
+        geoRestrictions?: string[];
+      };
+      contextBased?: {
+        requiredAttributes?: Record<string, unknown>;
+        forbiddenAttributes?: Record<string, unknown>;
+      };
+      approvalRequired?: {
+        forActions?: string[];
+        approvalThreshold?: number;
+        approverRoles?: string[];
+      };
+    };
+    grantType: GrantType;
+    expiry?: string;
+  }>;
+  scope?: {
+    level: 'global' | 'organization' | 'project' | 'team' | 'individual';
+    contextIds?: UUID[];
+    planIds?: UUID[];
+    resourceConstraints?: {
+      maxContexts?: number;
+      maxPlans?: number;
+      allowedResourceTypes?: string[];
+    };
+  };
+  attributes?: {
+    securityClearance?: SecurityClearance;
+    department?: string;
+    seniorityLevel?: SeniorityLevel;
+    certificationRequirements?: Array<{
+      certification: string;
+      level: string;
+      expiry?: string;
+      issuer?: string;
+    }>;
+    customAttributes?: Record<string, string | number | boolean>;
+  };
 }
 
 /**
  * 更新角色请求DTO
  */
-export interface UpdateRoleDto {
-  name?: string;
-  display_name?: string;
+export interface UpdateRoleRequestDTO {
+  displayName?: string;
   description?: string;
   status?: RoleStatus;
-  permissions?: Permission[];
-  scope?: RoleScope;
-  inheritance?: RoleInheritance;
-  delegation?: RoleDelegation;
-  attributes?: RoleAttributes;
-  validation_rules?: ValidationRules;
-  audit_settings?: AuditSettings;
+  permissions?: CreateRoleRequestDTO['permissions'];
+  attributes?: CreateRoleRequestDTO['attributes'];
 }
-
-/**
- * 角色查询请求DTO
- */
-export interface QueryRolesDto {
-  context_id?: string;
-  role_type?: RoleType;
-  status?: RoleStatus;
-  name_pattern?: string;
-  page?: number;
-  limit?: number;
-  sort_by?: string;
-  sort_order?: 'asc' | 'desc';
-}
-
-/**
- * 角色分配请求DTO
- */
-export interface AssignRoleDto {
-  user_id: string;
-  role_id: string;
-  assignment_type: 'direct' | 'inherited' | 'delegated' | 'temporary';
-  valid_from?: string;
-  valid_to?: string;
-  conditions?: Record<string, unknown>;
-}
-
-/**
- * 权限检查请求DTO
- */
-export interface CheckPermissionDto {
-  user_id: string;
-  resource_type: string;
-  resource_id: string;
-  action: string;
-  context?: Record<string, unknown>;
-}
-
-// ===== 响应DTO (Schema格式 - snake_case) =====
 
 /**
  * 角色响应DTO
- * 完整的角色信息，用于API响应
  */
-export interface RoleResponseDto {
-  protocol_version: string;
+export interface RoleResponseDTO {
+  protocolVersion: string;
   timestamp: string;
-  role_id: string;
-  context_id: string;
+  roleId: UUID;
+  contextId: UUID;
   name: string;
-  role_type: RoleType;
-  status: RoleStatus;
-  permissions: Permission[];
-  display_name?: string;
+  displayName?: string;
   description?: string;
-  scope?: RoleScope;
-  inheritance?: RoleInheritance;
-  delegation?: RoleDelegation;
-  attributes?: RoleAttributes;
-  validation_rules?: ValidationRules;
-  audit_settings?: AuditSettings;
-  agents?: unknown[];
-  agent_management?: Record<string, unknown>;
-  team_configuration?: Record<string, unknown>;
-  created_at: string;
-  updated_at: string;
+  roleType: RoleType;
+  status: RoleStatus;
+  scope?: CreateRoleRequestDTO['scope'];
+  permissions: CreateRoleRequestDTO['permissions'];
+  inheritance?: {
+    parentRoles?: Array<{
+      roleId: UUID;
+      inheritanceType: InheritanceType;
+      excludedPermissions?: UUID[];
+      conditions?: Record<string, unknown>;
+    }>;
+    childRoles?: Array<{
+      roleId: UUID;
+      delegationLevel: number;
+      canFurtherDelegate: boolean;
+    }>;
+    inheritanceRules?: {
+      mergeStrategy: MergeStrategy;
+      conflictResolution: ConflictResolution;
+      maxInheritanceDepth?: number;
+    };
+  };
+  delegation?: {
+    canDelegate: boolean;
+    delegatablePermissions?: UUID[];
+    delegationConstraints?: {
+      maxDelegationDepth?: number;
+      timeLimit?: number;
+      requireApproval?: boolean;
+      revocable?: boolean;
+    };
+    activeDelegations?: Array<{
+      delegationId: UUID;
+      delegatedTo: string;
+      permissions: UUID[];
+      startTime: string;
+      endTime?: string;
+      status: 'active' | 'suspended' | 'revoked' | 'expired';
+    }>;
+  };
+  attributes?: CreateRoleRequestDTO['attributes'];
+  agents?: Array<{
+    agentId: UUID;
+    name: string;
+    type: AgentType;
+    domain: string;
+    status: AgentStatus;
+    capabilities: {
+      core: {
+        criticalThinking: boolean;
+        scenarioValidation: boolean;
+        ddscDialog: boolean;
+        mplpProtocols: string[];
+      };
+      specialist: {
+        domain: string;
+        expertiseLevel: ExpertiseLevel;
+        knowledgeAreas: string[];
+        tools?: string[];
+      };
+      collaboration: {
+        communicationStyle: CommunicationStyle;
+        conflictResolution: ConflictResolutionStrategy;
+        decisionWeight: number;
+        trustLevel: number;
+      };
+      learning: {
+        experienceAccumulation: boolean;
+        patternRecognition: boolean;
+        adaptationMechanism: boolean;
+        performanceOptimization: boolean;
+      };
+    };
+    createdAt: string;
+    updatedAt?: string;
+    createdBy: string;
+  }>;
+  performanceMetrics: {
+    enabled: boolean;
+    collectionIntervalSeconds: number;
+    metrics?: {
+      roleAssignmentLatencyMs?: number;
+      permissionCheckLatencyMs?: number;
+      roleSecurityScore?: number;
+      permissionAccuracyPercent?: number;
+      roleManagementEfficiencyScore?: number;
+      activeRolesCount?: number;
+      roleOperationsPerSecond?: number;
+      roleMemoryUsageMb?: number;
+      averageRoleComplexityScore?: number;
+    };
+    healthStatus?: {
+      status: 'healthy' | 'degraded' | 'unhealthy' | 'unauthorized';
+      lastCheck?: string;
+      checks?: Array<{
+        checkName: string;
+        status: 'pass' | 'fail' | 'warn';
+        message?: string;
+        durationMs?: number;
+      }>;
+    };
+  };
+  monitoringIntegration: {
+    enabled: boolean;
+    supportedProviders: Array<'prometheus' | 'grafana' | 'datadog' | 'new_relic' | 'elastic_apm' | 'custom'>;
+    integrationEndpoints?: {
+      metricsApi?: string;
+      roleAccessApi?: string;
+      permissionMetricsApi?: string;
+      securityEventsApi?: string;
+    };
+    roleMetrics?: {
+      trackRoleUsage?: boolean;
+      trackPermissionChecks?: boolean;
+      trackAccessPatterns?: boolean;
+      trackSecurityEvents?: boolean;
+    };
+    exportFormats?: Array<'prometheus' | 'opentelemetry' | 'custom'>;
+  };
+  versionHistory: {
+    enabled: boolean;
+    maxVersions: number;
+    versions?: Array<{
+      versionId: UUID;
+      versionNumber: number;
+      createdAt: string;
+      createdBy: string;
+      changeSummary?: string;
+      changeType: 'created' | 'updated' | 'permission_changed' | 'status_changed' | 'deleted';
+    }>;
+  };
+  searchMetadata: {
+    enabled: boolean;
+    indexingStrategy: 'full_text' | 'keyword' | 'semantic' | 'hybrid';
+    searchableFields?: Array<'role_id' | 'name' | 'role_type' | 'permissions' | 'agents' | 'metadata' | 'description'>;
+  };
+  roleOperation: 'create' | 'assign' | 'revoke' | 'update' | 'delete';
+  eventIntegration: {
+    enabled: boolean;
+    eventBusConnection?: {
+      busType?: 'kafka' | 'rabbitmq' | 'redis' | 'nats' | 'custom';
+      connectionString?: string;
+      topicPrefix?: string;
+      consumerGroup?: string;
+    };
+    publishedEvents?: Array<'role_created' | 'role_updated' | 'role_deleted' | 'permission_granted' | 'permission_revoked' | 'access_granted' | 'access_denied'>;
+    subscribedEvents?: Array<'context_updated' | 'plan_executed' | 'confirm_approved' | 'security_alert'>;
+  };
+  auditTrail: {
+    enabled: boolean;
+    retentionDays: number;
+    auditEvents?: Array<{
+      eventId: UUID;
+      eventType: 'role_created' | 'role_updated' | 'role_assigned' | 'role_revoked' | 'permission_granted' | 'permission_revoked' | 'role_activated' | 'role_deactivated';
+      timestamp: string;
+      userId: string;
+      userRole?: string;
+      action: string;
+      resource: string;
+      roleOperation?: string;
+      roleId?: UUID;
+      roleName?: string;
+      roleType?: string;
+      permissionIds?: string[];
+      roleStatus?: string;
+      roleDetails?: Record<string, unknown>;
+      ipAddress?: string;
+      userAgent?: string;
+      sessionId?: string;
+      correlationId?: UUID;
+    }>;
+    complianceSettings?: {
+      gdprEnabled?: boolean;
+      hipaaEnabled?: boolean;
+      soxEnabled?: boolean;
+      roleAuditLevel?: 'basic' | 'detailed' | 'comprehensive';
+      roleDataLogging?: boolean;
+      customCompliance?: string[];
+    };
+  };
 }
 
 /**
- * 角色列表响应DTO
+ * 角色查询过滤器DTO
  */
-export interface RoleListResponseDto {
-  roles: RoleResponseDto[];
-  total: number;
-  page: number;
-  limit: number;
-  total_pages: number;
-}
-
-/**
- * 权限检查响应DTO
- */
-export interface PermissionCheckResponseDto {
-  user_id: string;
-  resource_type: string;
-  resource_id: string;
-  action: string;
-  allowed: boolean;
-  reason?: string;
-  conditions_met?: boolean;
-  effective_permissions?: Permission[];
-  checked_at: string;
-}
-
-/**
- * 角色分配响应DTO
- */
-export interface RoleAssignmentResponseDto {
-  assignment_id: string;
-  user_id: string;
-  role_id: string;
-  assignment_type: string;
-  status: 'active' | 'inactive' | 'expired' | 'revoked';
-  assigned_at: string;
-  assigned_by: string;
-  valid_from?: string;
-  valid_to?: string;
-  conditions?: Record<string, unknown>;
-}
-
-// ===== 通用响应DTO =====
-
-/**
- * 操作结果DTO
- */
-export interface OperationResultDto {
-  success: boolean;
-  data?: RoleResponseDto;
-  error?: string;
-  warnings?: string[];
-  timestamp: string;
-  request_id?: string;
-}
-
-/**
- * 权限检查结果DTO
- */
-export interface PermissionCheckResultDto {
-  has_permission: boolean;
-  reason?: string;
-  checked_at: string;
+export interface RoleQueryFilterDTO {
+  roleType?: RoleType[];
+  status?: RoleStatus[];
+  name?: string;
+  displayName?: string;
+  contextId?: UUID;
+  securityClearance?: SecurityClearance[];
+  department?: string;
+  hasPermission?: {
+    resourceType: string;
+    resourceId: string;
+    action: string;
+  };
+  createdAfter?: string;
+  createdBefore?: string;
+  updatedAfter?: string;
+  updatedBefore?: string;
+  agentCount?: {
+    min?: number;
+    max?: number;
+  };
+  complexityScore?: {
+    min?: number;
+    max?: number;
+  };
 }
 
 /**
  * 分页参数DTO
  */
-export interface PaginationDto {
-  page: number;
-  limit: number;
-  sort_by?: string;
-  sort_order?: 'asc' | 'desc';
-}
-
-/**
- * 分页响应DTO
- */
-export interface PaginatedResponseDto<T> {
-  items: T[];
-  total: number;
-  page: number;
-  limit: number;
-  total_pages: number;
-  has_next: boolean;
-  has_previous: boolean;
-}
-
-// ===== Agent管理相关DTO =====
-
-/**
- * Agent创建请求DTO
- */
-export interface CreateAgentDto {
-  role_id: string;
-  agent_name: string;
-  agent_type: 'core' | 'specialist' | 'stakeholder' | 'coordinator' | 'custom';
-  domain: string;
-  capabilities: Record<string, unknown>;
-  configuration?: Record<string, unknown>;
-}
-
-/**
- * Agent响应DTO
- */
-export interface AgentResponseDto {
-  agent_id: string;
-  role_id: string;
-  name: string;
-  type: string;
-  domain: string;
-  status: string;
-  capabilities: Record<string, unknown>;
-  configuration?: Record<string, unknown>;
-  performance_metrics?: Record<string, unknown>;
-  created_at: string;
-  updated_at: string;
-  created_by: string;
-}
-
-/**
- * 团队配置DTO
- */
-export interface TeamConfigurationDto {
-  role_id: string;
-  max_team_size: number;
-  collaboration_rules: Array<{
-    rule_name: string;
-    rule_type: 'communication' | 'decision' | 'conflict_resolution' | 'resource_sharing';
-    rule_config: Record<string, unknown>;
-  }>;
-  decision_mechanism: {
-    type: 'consensus' | 'majority' | 'weighted' | 'authority';
-    threshold?: number;
-    timeout_ms?: number;
-  };
-}
-
-// ===== 审计相关DTO =====
-
-/**
- * 审计日志查询DTO
- */
-export interface AuditLogQueryDto {
-  user_id?: string;
-  role_id?: string;
-  action_types?: string[];
-  resource_types?: string[];
-  start_date?: string;
-  end_date?: string;
+export interface PaginationParamsDTO {
   page?: number;
   limit?: number;
+  offset?: number;
 }
 
 /**
- * 审计日志响应DTO
+ * 角色排序选项DTO
  */
-export interface AuditLogResponseDto {
-  log_id: string;
-  user_id: string;
-  role_id?: string;
-  action_type: string;
-  resource_type: string;
-  resource_id: string;
-  action_details: Record<string, unknown>;
-  result: 'success' | 'failure' | 'partial';
-  error_message?: string;
-  ip_address?: string;
-  user_agent?: string;
-  timestamp: string;
+export interface RoleSortOptionsDTO {
+  field: 'name' | 'roleType' | 'status' | 'createdAt' | 'updatedAt' | 'complexityScore';
+  direction: 'asc' | 'desc';
+}
+
+/**
+ * 权限检查请求DTO
+ */
+export interface CheckPermissionRequestDTO {
+  resourceType: string;
+  resourceId: string;
+  action: string;
+}
+
+/**
+ * 批量操作结果DTO
+ */
+export interface BulkOperationResultDTO {
+  success: number;
+  failed: number;
+  errors: Array<{
+    roleId: UUID;
+    error: string;
+  }>;
+}
+
+/**
+ * 角色统计信息DTO
+ */
+export interface RoleStatisticsDTO {
+  totalRoles: number;
+  activeRoles: number;
+  inactiveRoles: number;
+  rolesByType: Record<RoleType, number>;
+  averageComplexityScore: number;
+  totalPermissions: number;
+  totalAgents: number;
+}
+
+/**
+ * 角色复杂度分布DTO
+ */
+export interface RoleComplexityDistributionDTO {
+  range: string;
+  count: number;
+  percentage: number;
 }

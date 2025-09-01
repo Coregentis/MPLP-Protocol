@@ -1,839 +1,550 @@
 /**
- * MPLP Dialog Module - Unified Interface Type Definitions
- *
- * @version v1.0.0
- * @updated 2025-08-03T15:30:00+08:00
- * @description Dialog协议统一标准接口的TypeScript类型定义
+ * Dialog Module Type Definitions
+ * @description TypeScript类型定义 - 基于mplp-dialog.json Schema
+ * @version 1.0.0
  */
 
-// ==================== 统一标准接口类型 ====================
+// ===== 基础类型定义 =====
+export type UUID = string;
+export type Timestamp = string;
 
-/**
- * Dialog协议统一标准接口
- * 通过配置参数支持所有类型的对话需求
- */
-export interface DialogProtocol {
-  /**
-   * 创建对话会话
-   * 支持从简单到复杂的所有对话类型
-   */
-  createDialog(request: CreateDialogRequest): Promise<DialogResponse>;
+// ===== 对话操作类型 =====
+export type DialogOperation = 'start' | 'continue' | 'pause' | 'resume' | 'end';
 
-  /**
-   * 更新对话配置
-   * 支持动态调整对话策略和能力
-   */
-  updateDialog(request: UpdateDialogRequest): Promise<DialogResponse>;
+// ===== 对话类型 =====
+export type DialogType = 'interactive' | 'batch' | 'streaming';
+export type TurnManagement = 'strict' | 'flexible' | 'free_form';
+export type ContextRetention = 'none' | 'session' | 'persistent';
 
-  /**
-   * 对话交互
-   * 统一的交互接口，根据配置提供不同能力
-   */
-  interactWithDialog(request: DialogInteractionRequest): Promise<DialogInteractionResponse>;
+// ===== 对话策略类型 =====
+export type DialogStrategyType = 'fixed' | 'adaptive' | 'goal_driven' | 'exploratory';
 
-  /**
-   * 查询对话状态
-   * 获取对话进度、分析结果、知识状态等
-   */
-  getDialogStatus(dialogId: string, options?: StatusOptions): Promise<DialogStatusResponse>;
+// ===== 分析深度类型 =====
+export type AnalysisDepth = 'surface' | 'moderate' | 'deep';
 
-  /**
-   * 删除对话
-   * 标准的对话删除接口
-   */
-  deleteDialog(dialogId: string): Promise<DeleteResponse>;
+// ===== 多模态类型 =====
+export type Modality = 'text' | 'audio' | 'image' | 'video' | 'file';
 
-  /**
-   * 查询对话列表
-   * 支持多种过滤和排序条件
-   */
-  queryDialogs(filter: DialogFilter): Promise<QueryDialogResponse>;
-}
+// ===== 内容类型 =====
+export type ContentType = 'message' | 'question' | 'command' | 'feedback';
+export type ContentPriority = 'low' | 'normal' | 'high' | 'urgent';
 
-// ==================== 核心数据类型 ====================
+// ===== 健康状态类型 =====
+export type HealthStatus = 'healthy' | 'degraded' | 'unhealthy' | 'interrupted';
+export type CheckStatus = 'pass' | 'fail' | 'warn';
 
-/**
- * 对话创建请求
- * 通过capabilities配置控制对话能力
- */
-export interface CreateDialogRequest {
+// ===== 事件类型 =====
+export type AuditEventType = 
+  | 'dialog_started' 
+  | 'dialog_ended' 
+  | 'message_sent' 
+  | 'message_received' 
+  | 'participant_joined' 
+  | 'participant_left' 
+  | 'content_moderated' 
+  | 'privacy_violation' 
+  | 'dialog_updated';
+
+export type PublishedEventType = 
+  | 'dialog_started' 
+  | 'dialog_ended' 
+  | 'message_sent' 
+  | 'message_received' 
+  | 'participant_joined' 
+  | 'participant_left' 
+  | 'quality_degraded' 
+  | 'satisfaction_low';
+
+export type SubscribedEventType = 
+  | 'context_updated' 
+  | 'plan_executed' 
+  | 'confirm_approved' 
+  | 'user_authenticated' 
+  | 'system_maintenance';
+
+// ===== 版本变更类型 =====
+export type ChangeType = 'created' | 'updated' | 'configured' | 'participants_changed' | 'capabilities_updated';
+
+// ===== 监控提供商类型 =====
+export type MonitoringProvider = 'prometheus' | 'grafana' | 'datadog' | 'new_relic' | 'elastic_apm' | 'custom';
+
+// ===== 导出格式类型 =====
+export type ExportFormat = 'prometheus' | 'opentelemetry' | 'custom';
+
+// ===== 通知渠道类型 =====
+export type NotificationChannel = 'email' | 'slack' | 'webhook' | 'sms' | 'pagerduty';
+
+// ===== 事件总线类型 =====
+export type EventBusType = 'kafka' | 'rabbitmq' | 'redis' | 'nats' | 'custom';
+
+// ===== 索引策略类型 =====
+export type IndexingStrategy = 'full_text' | 'keyword' | 'semantic' | 'hybrid';
+
+// ===== 可搜索字段类型 =====
+export type SearchableField = 'dialog_id' | 'name' | 'participants' | 'messages' | 'capabilities' | 'metadata' | 'tags';
+
+// ===== 索引类型 =====
+export type IndexType = 'btree' | 'hash' | 'gin' | 'gist' | 'full_text';
+
+// ===== 审计级别类型 =====
+export type AuditLevel = 'basic' | 'detailed' | 'comprehensive';
+
+// ===== Schema接口定义 =====
+export interface DialogSchema {
+  protocol_version: string;
+  timestamp: Timestamp;
+  dialog_id: UUID;
   name: string;
   description?: string;
   participants: string[];
-
-  // 对话能力配置 - 核心参数化设计
-  capabilities: DialogCapabilities;
-
-  // 对话策略配置
-  strategy?: DialogStrategy;
-
-  // 上下文配置
-  context?: DialogContext;
-
+  capabilities: DialogCapabilitiesSchema;
+  strategy?: DialogStrategySchema;
+  context?: DialogContextSchema;
+  configuration?: DialogConfigurationSchema;
   metadata?: Record<string, unknown>;
+  audit_trail: AuditTrailSchema;
+  monitoring_integration: MonitoringIntegrationSchema;
+  performance_metrics: PerformanceMetricsSchema;
+  version_history: VersionHistorySchema;
+  search_metadata: SearchMetadataSchema;
+  dialog_operation: DialogOperation;
+  dialog_details?: DialogDetailsSchema;
+  event_integration: EventIntegrationSchema;
 }
 
-/**
- * 对话能力配置
- * 通过布尔值和配置对象控制不同能力的启用
- */
-export interface DialogCapabilities {
-  // 基础对话能力（默认启用）
+export interface DialogCapabilitiesSchema {
   basic: {
     enabled: true;
-    messageHistory: boolean;
-    participantManagement: boolean;
+    message_history: boolean;
+    participant_management: boolean;
   };
-
-  // 智能对话控制（可选）
-  intelligentControl?: {
+  intelligent_control?: {
     enabled: boolean;
-    adaptiveRounds: boolean;
-    dynamicStrategy: boolean;
-    completenessEvaluation: boolean;
+    adaptive_rounds?: boolean;
+    dynamic_strategy?: boolean;
+    completeness_evaluation?: boolean;
   };
-
-  // 批判性思维分析（可选）
-  criticalThinking?: {
+  critical_thinking?: {
     enabled: boolean;
-    analysisDepth: 'surface' | 'moderate' | 'deep';
-    questionGeneration: boolean;
-    logicValidation: boolean;
+    analysis_depth?: AnalysisDepth;
+    question_generation?: boolean;
+    logic_validation?: boolean;
   };
-
-  // 知识搜索集成（可选）
-  knowledgeSearch?: {
+  knowledge_search?: {
     enabled: boolean;
-    realTimeSearch: boolean;
-    knowledgeValidation: boolean;
-    sourceVerification: boolean;
+    real_time_search?: boolean;
+    knowledge_validation?: boolean;
+    source_verification?: boolean;
   };
-
-  // 多模态交互（可选）
   multimodal?: {
     enabled: boolean;
-    supportedModalities: ('text' | 'audio' | 'image' | 'video' | 'file')[];
-    crossModalTranslation: boolean;
+    supported_modalities?: Modality[];
+    cross_modal_translation?: boolean;
   };
 }
 
-/**
- * 对话策略配置
- */
-export interface DialogStrategy {
-  type: 'fixed' | 'adaptive' | 'goal_driven' | 'exploratory';
-
-  // 轮次控制
+export interface DialogStrategySchema {
+  type: DialogStrategyType;
   rounds?: {
     min?: number;
     max?: number;
     target?: number;
   };
-
-  // 退出条件
-  exitCriteria?: {
-    completenessThreshold?: number;
-    userSatisfactionThreshold?: number;
-    timeLimit?: number;
+  exit_criteria?: {
+    completeness_threshold?: number;
+    user_satisfaction_threshold?: number;
+    time_limit?: number;
   };
-
-  // 适应规则
-  adaptationRules?: AdaptationRule[];
 }
 
-/**
- * 对话交互请求
- * 统一的交互接口，根据能力配置提供不同功能
- */
-export interface DialogInteractionRequest {
-  dialogId: string;
+export interface DialogContextSchema {
+  session_id?: string;
+  context_id?: string;
+  knowledge_base?: string;
+  previous_dialogs?: string[];
+}
 
-  // 交互内容
-  content: DialogContent;
-
-  // 交互选项
-  options?: {
-    // 是否需要批判性思维分析
-    applyCriticalThinking?: boolean;
-
-    // 是否需要知识搜索
-    performKnowledgeSearch?: boolean;
-
-    // 分析深度
-    analysisDepth?: 'surface' | 'moderate' | 'deep';
-
-    // 响应格式
-    responseFormat?: 'text' | 'structured' | 'multimodal';
+export interface DialogConfigurationSchema {
+  timeout?: number;
+  max_participants?: number;
+  retry_policy?: {
+    max_retries?: number;
+    backoff_ms?: number;
   };
-
-  metadata?: Record<string, unknown>;
-}
-
-/**
- * 对话内容定义
- * 支持多模态内容
- */
-export interface DialogContent {
-  // 文本内容
-  text?: string;
-
-  // 多模态内容（如果启用）
-  multimodal?: {
-    audio?: AudioData;
-    image?: ImageData;
-    video?: VideoData;
-    file?: FileData;
+  security?: {
+    encryption?: boolean;
+    authentication?: boolean;
+    audit_logging?: boolean;
   };
-
-  // 内容类型
-  type: 'message' | 'question' | 'command' | 'feedback';
-
-  // 优先级
-  priority?: 'low' | 'normal' | 'high' | 'urgent';
 }
 
-// ==================== 响应类型 ====================
-
-/**
- * 对话响应
- */
-export interface DialogResponse {
-  success: boolean;
-  data?: {
-    dialogId: string;
-    name: string;
-    status: DialogStatus;
-    capabilities: DialogCapabilities;
-    participants: string[];
-    createdAt: string;
-    updatedAt: string;
+export interface AuditTrailSchema {
+  enabled: boolean;
+  retention_days: number;
+  audit_events?: AuditEventSchema[];
+  compliance_settings?: {
+    gdpr_enabled?: boolean;
+    hipaa_enabled?: boolean;
+    sox_enabled?: boolean;
+    dialog_audit_level?: AuditLevel;
+    dialog_data_logging?: boolean;
+    content_retention_policy?: string;
+    privacy_protection?: boolean;
+    custom_compliance?: string[];
   };
-  error?: string;
 }
 
-/**
- * 对话交互响应
- * 根据启用的能力返回相应的分析结果
- */
-export interface DialogInteractionResponse {
-  success: boolean;
+export interface AuditEventSchema {
+  event_id: UUID;
+  event_type: AuditEventType;
+  timestamp: Timestamp;
+  user_id: string;
+  user_role?: string;
+  action: string;
+  resource: string;
+  dialog_operation?: string;
+  dialog_id?: UUID;
+  dialog_name?: string;
+  dialog_type?: string;
+  participant_ids?: string[];
+  dialog_status?: string;
+  content_hash?: string;
+  dialog_details?: Record<string, unknown>;
+  ip_address?: string;
+  user_agent?: string;
+  session_id?: string;
+  correlation_id?: UUID;
+}
 
-  // 基础响应内容
-  content: DialogContent;
-
-  // 智能分析结果（如果启用）
-  analysis?: {
-    // 批判性思维分析
-    criticalThinking?: CriticalAnalysisResult;
-
-    // 知识搜索结果
-    knowledgeSearch?: KnowledgeSearchResult;
-
-    // 对话完成度评估
-    completeness?: CompletenessEvaluation;
+export interface MonitoringIntegrationSchema {
+  enabled: boolean;
+  supported_providers: MonitoringProvider[];
+  integration_endpoints?: {
+    metrics_api?: string;
+    dialog_quality_api?: string;
+    response_time_api?: string;
+    satisfaction_api?: string;
   };
-
-  // 对话状态更新
-  dialogState?: {
-    currentRound: number;
-    completenessScore: number;
-    nextSuggestions: string[];
+  dialog_metrics?: {
+    track_response_times?: boolean;
+    track_dialog_quality?: boolean;
+    track_user_satisfaction?: boolean;
+    track_content_moderation?: boolean;
   };
+  export_formats?: ExportFormat[];
+}
 
-  // 元数据
-  metadata: {
-    processingTime: number;
-    capabilitiesUsed: string[];
-    confidence: number;
+export interface PerformanceMetricsSchema {
+  enabled: boolean;
+  collection_interval_seconds: number;
+  metrics?: {
+    dialog_response_latency_ms?: number;
+    dialog_completion_rate_percent?: number;
+    dialog_quality_score?: number;
+    user_experience_satisfaction_percent?: number;
+    dialog_interaction_efficiency_score?: number;
+    active_dialogs_count?: number;
+    dialog_operations_per_second?: number;
+    dialog_memory_usage_mb?: number;
+    average_dialog_complexity_score?: number;
   };
-
-  error?: string;
-}
-
-/**
- * 对话状态响应
- */
-export interface DialogStatusResponse {
-  success: boolean;
-  data?: {
-    dialogId: string;
-    status: DialogStatus;
-    progress: DialogProgress;
-    participants: ParticipantStatus[];
-    analysis?: DialogAnalysisStatus;
-    performance: DialogPerformanceMetrics;
+  health_status?: {
+    status: HealthStatus;
+    last_check?: Timestamp;
+    checks?: HealthCheckSchema[];
   };
-  error?: string;
-}
-
-// ==================== 支持类型 ====================
-
-/**
- * 批判性分析结果
- */
-export interface CriticalAnalysisResult {
-  assumptions: string[];
-  logicalGaps: string[];
-  alternatives: string[];
-  deepQuestions: string[];
-  confidence: number;
-}
-
-/**
- * 知识搜索结果
- */
-export interface KnowledgeSearchResult {
-  results: KnowledgeItem[];
-  sources: string[];
-  validation: {
-    timeliness: number;
-    accuracy: number;
-    relevance: number;
+  alerting?: {
+    enabled?: boolean;
+    thresholds?: {
+      max_dialog_response_latency_ms?: number;
+      min_dialog_completion_rate_percent?: number;
+      min_dialog_quality_score?: number;
+      min_user_experience_satisfaction_percent?: number;
+      min_dialog_interaction_efficiency_score?: number;
+    };
+    notification_channels?: NotificationChannel[];
   };
-  recommendations: string[];
 }
 
-/**
- * 对话完成度评估
- */
-export interface CompletenessEvaluation {
-  overallScore: number; // 0-1
-  dimensions: {
-    informationGathering: number;
-    goalClarity: number;
-    stakeholderAlignment: number;
-    riskAssessment: number;
+export interface HealthCheckSchema {
+  check_name: string;
+  status: CheckStatus;
+  message?: string;
+  duration_ms?: number;
+}
+
+export interface VersionHistorySchema {
+  enabled: boolean;
+  max_versions: number;
+  versions?: VersionSchema[];
+  auto_versioning?: {
+    enabled?: boolean;
+    version_on_config_change?: boolean;
+    version_on_participant_change?: boolean;
   };
-  recommendations: string[];
-  shouldContinue: boolean;
 }
 
-/**
- * 对话进度信息
- */
-export interface DialogProgress {
-  currentRound: number;
-  totalRounds?: number;
-  completenessScore: number;
-  milestones: DialogMilestone[];
+export interface VersionSchema {
+  version_id: UUID;
+  version_number: number;
+  created_at: Timestamp;
+  created_by: string;
+  change_summary?: string;
+  dialog_snapshot?: Record<string, unknown>;
+  change_type: ChangeType;
 }
 
-/**
- * 对话分析状态
- */
-export interface DialogAnalysisStatus {
-  criticalThinkingActive: boolean;
-  knowledgeSearchActive: boolean;
-  lastAnalysisTime?: string;
-  analysisResults: AnalysisResult[];
-}
-
-/**
- * 对话性能指标
- */
-export interface DialogPerformanceMetrics {
-  responseTime: number;
-  throughput: number;
-  participantSatisfaction: number;
-  goalAchievement: number;
-}
-
-// ==================== 枚举类型 ====================
-
-/**
- * 对话状态
- */
-export type DialogStatus =
-  | 'active'
-  | 'inactive'
-  | 'pending'
-  | 'completed'
-  | 'failed'
-  | 'cancelled';
-
-/**
- * 参与者状态
- */
-export type ParticipantStatus =
-  | 'active'
-  | 'inactive'
-  | 'pending'
-  | 'completed'
-  | 'failed'
-  | 'cancelled';
-
-// ==================== 辅助类型 ====================
-
-/**
- * 对话上下文
- */
-export interface DialogContext {
-  sessionId?: string;
-  contextId?: string;
-  knowledgeBase?: string;
-  previousDialogs?: string[];
-}
-
-/**
- * 状态选项
- */
-export interface StatusOptions {
-  includeAnalysis?: boolean;
-  includePerformance?: boolean;
-  includeParticipants?: boolean;
-}
-
-/**
- * 对话过滤器
- */
-export interface DialogFilter {
-  status?: DialogStatus[];
-  participants?: string[];
-  capabilities?: string[];
-  dateRange?: {
-    start: string;
-    end: string;
+export interface SearchMetadataSchema {
+  enabled: boolean;
+  indexing_strategy: IndexingStrategy;
+  searchable_fields?: SearchableField[];
+  search_indexes?: SearchIndexSchema[];
+  content_indexing?: {
+    enabled?: boolean;
+    index_message_content?: boolean;
+    privacy_filtering?: boolean;
+    sensitive_data_masking?: boolean;
   };
-  limit?: number;
-  offset?: number;
-}
-
-/**
- * 查询对话响应
- */
-export interface QueryDialogResponse {
-  success: boolean;
-  data?: {
-    dialogs: DialogSummary[];
-    total: number;
-    hasMore: boolean;
+  auto_indexing?: {
+    enabled?: boolean;
+    index_new_dialogs?: boolean;
+    reindex_interval_hours?: number;
   };
-  error?: string;
+}
+
+export interface SearchIndexSchema {
+  index_id: string;
+  index_name: string;
+  fields: string[];
+  index_type: IndexType;
+  created_at?: Timestamp;
+  last_updated?: Timestamp;
+}
+
+export interface DialogDetailsSchema {
+  dialog_type?: DialogType;
+  turn_management?: TurnManagement;
+  context_retention?: ContextRetention;
+}
+
+export interface EventIntegrationSchema {
+  enabled: boolean;
+  event_bus_connection?: {
+    bus_type?: EventBusType;
+    connection_string?: string;
+    topic_prefix?: string;
+    consumer_group?: string;
+  };
+  published_events?: PublishedEventType[];
+  subscribed_events?: SubscribedEventType[];
+  event_routing?: {
+    routing_rules?: EventRoutingRuleSchema[];
+  };
+}
+
+export interface EventRoutingRuleSchema {
+  rule_id: string;
+  condition: string;
+  target_topic: string;
+  enabled?: boolean;
+}
+
+// ===== 核心架构组件接口（按指南要求） =====
+
+/**
+ * 对话流程引擎接口 - 指南第75行要求
+ */
+export interface IDialogFlowEngine {
+  initializeFlow(dialogId: UUID, flowTemplate?: string): Promise<DialogFlow>;
+  executeStep(flowId: string, currentStep: string, message: DialogMessage): Promise<FlowExecutionResult>;
+  getFlowStatus(flowId: string): Promise<FlowStatus>;
+  updateFlowStep(flowId: string, newStep: string): Promise<void>;
 }
 
 /**
- * 对话摘要
+ * 对话状态管理器接口 - 指南第80行要求
  */
-export interface DialogSummary {
-  dialogId: string;
-  name: string;
-  status: DialogStatus;
-  participantCount: number;
+export interface IDialogStateManager {
+  initializeState(dialogId: UUID, initialState?: Record<string, unknown>): Promise<void>;
+  updateState(dialogId: UUID, message: DialogMessage, currentState: Record<string, unknown>): Promise<Record<string, unknown>>;
+  getState(dialogId: UUID): Promise<Record<string, unknown>>;
+  validateStateTransition(currentState: Record<string, unknown>, newState: Record<string, unknown>): Promise<boolean>;
+}
+
+/**
+ * NLP处理器接口 - 指南第534行要求
+ */
+export interface INLPProcessor {
+  extractTopics(content: string): Promise<string[]>;
+  analyzeSentiment(content: string): Promise<SentimentResult>;
+  extractKeyPhrases(content: string): Promise<string[]>;
+  analyzeComplexity(content: string): Promise<LanguageComplexity>;
+  detectLanguage(content: string): Promise<LanguageDetectionResult>;
+}
+
+/**
+ * 分析引擎接口 - 指南第430行要求
+ */
+export interface IAnalyticsEngine {
+  predict(features: Record<string, unknown>, modelType: string): Promise<PredictionResult>;
+  analyzePatterns(data: unknown[]): Promise<PatternAnalysisResult>;
+  generateInsights(data: unknown[]): Promise<AnalyticsInsight[]>;
+  calculateMetrics(data: unknown[]): Promise<MetricsResult>;
+}
+
+/**
+ * 内容审核器接口 - 指南第842行要求
+ */
+export interface IContentModerator {
+  moderate(content: string): Promise<ModerationResult>;
+  detectInappropriateContent(content: string): Promise<ContentViolation[]>;
+  sanitizeContent(content: string): Promise<string>;
+  checkContentPolicy(content: string, policy: string): Promise<PolicyCheckResult>;
+}
+
+/**
+ * 隐私保护器接口 - 指南第867行要求
+ */
+export interface IPrivacyProtector {
+  protectContent(content: string): Promise<string>;
+  detectSensitiveData(content: string): Promise<boolean>;
+  anonymizeData(data: Record<string, unknown>): Promise<Record<string, unknown>>;
+  checkPrivacyCompliance(data: Record<string, unknown>, standard: string): Promise<ComplianceResult>;
+}
+
+// ===== 支持类型定义 =====
+
+export interface DialogFlow {
+  flowId: string;
+  dialogId: UUID;
+  template: string;
+  currentStep: string;
+  steps: FlowStep[];
+  status: 'active' | 'paused' | 'completed' | 'failed';
   createdAt: string;
+  updatedAt: string;
+}
+
+export interface FlowStep {
+  stepId: string;
+  name: string;
+  type: 'input' | 'process' | 'decision' | 'output';
+  conditions?: Record<string, unknown>;
+  actions?: string[];
+  nextSteps?: string[];
+}
+
+export interface FlowExecutionResult {
+  success: boolean;
+  nextStep: string;
+  suggestions?: string[];
+  metadata?: Record<string, unknown>;
+  errors?: string[];
+}
+
+export interface FlowStatus {
+  flowId: string;
+  status: 'active' | 'paused' | 'completed' | 'failed';
+  currentStep: string;
+  progress: number;
+  startTime: string;
   lastActivity: string;
 }
 
-/**
- * 更新对话请求
- */
-export interface UpdateDialogRequest {
-  dialogId: string;
-  name?: string;
-  description?: string;
-  capabilities?: Partial<DialogCapabilities>;
-  strategy?: DialogStrategy;
-  metadata?: Record<string, unknown>;
-}
-
-/**
- * 删除响应
- */
-export interface DeleteResponse {
-  success: boolean;
-  error?: string;
-}
-
-// ==================== 多模态数据类型 ====================
-
-/**
- * 音频数据
- */
-export interface AudioData {
-  format: string;
-  duration?: number;
-  data: string | Buffer;
-}
-
-/**
- * 图像数据
- */
-export interface ImageData {
-  format: string;
-  width?: number;
-  height?: number;
-  data: string | Buffer;
-}
-
-/**
- * 视频数据
- */
-export interface VideoData {
-  format: string;
-  duration?: number;
-  width?: number;
-  height?: number;
-  data: string | Buffer;
-}
-
-/**
- * 文件数据
- */
-export interface FileData {
-  filename: string;
-  mimeType: string;
-  size: number;
-  data: string | Buffer;
-}
-
-// ==================== 分析相关类型 ====================
-
-/**
- * 知识项
- */
-export interface KnowledgeItem {
-  id: string;
-  title: string;
-  content: string;
-  source: string;
-  relevance: number;
-  timestamp: string;
-}
-
-/**
- * 对话里程碑
- */
-export interface DialogMilestone {
-  id: string;
-  name: string;
-  achieved: boolean;
-  timestamp?: string;
-}
-
-/**
- * 分析结果
- */
-export interface AnalysisResult {
-  type: string;
-  result: unknown;
-  confidence: number;
-  timestamp: string;
-}
-
-/**
- * 适应规则
- */
-export interface AdaptationRule {
-  condition: string;
-  action: string;
-  priority: number;
-}
-// ==================== 统一接口类型定义 ====================
-
-/**
- * 对话实体数据结构
- * 统一的对话实体定义，支持所有对话管理需求
- */
-export interface DialogEntity {
-  dialogId: string;
-  version: string;
-  timestamp: string;
-  sessionId: string;
-  contextId: string;
-  name: string;
-  description?: string;
-  participants: DialogParticipant[];
-  message_format: MessageFormat;
-  conversation_context?: ConversationContext;
-  security_policy?: SecurityPolicy;
-  status: DialogStatus;
-  createdAt: string;
-  updatedAt: string;
-  createdBy: string;
-  metadata?: Record<string, unknown>;
-}
-
-/**
- * 对话参与者数据结构
- * 统一的参与者定义，支持所有参与者管理需求
- */
-export interface DialogParticipant {
-  participant_id: string;
-  agentId: string;
-  roleId: string;
-  status: ParticipantStatus;
-  permissions: Permission[];
-  joined_at: string;
-}
-
-/**
- * 权限类型
- */
-export type Permission = 'read' | 'write' | 'moderate' | 'admin';
-
-/**
- * 消息格式配置
- */
-export interface MessageFormat {
-  type: MessageFormatType;
-  encoding: MessageEncoding;
-  max_length?: number;
-  allowed_mime_types?: string[];
-}
-
-/**
- * 对话上下文配置
- */
-export interface ConversationContext {
-  shared_variables?: Record<string, unknown>;
-  history_config?: HistoryConfig;
-}
-
-/**
- * 历史记录配置
- */
-export interface HistoryConfig {
-  max_messages?: number;
-  retention_policy?: RetentionPolicy;
-}
-
-/**
- * 安全策略配置
- */
-export interface SecurityPolicy {
-  encryption?: boolean;
-  authentication?: boolean;
-  message_validation?: boolean;
-  audit_logging?: boolean;
-}
-
-// ==================== 向后兼容枚举类型 ====================
-
-export type MessageFormatType = 'text' | 'structured' | 'multimedia' | 'binary';
-export type MessageEncoding = 'utf-8' | 'base64' | 'json' | 'xml';
-export type RetentionPolicy = 'session' | 'persistent' | 'temporary';
-export type MessageType = 'text' | 'data' | 'command' | 'notification' | 'system' | 'file';
-export type MessagePriority = 'low' | 'normal' | 'high' | 'urgent';
-export type MessageStatus = 'pending' | 'sent' | 'delivered' | 'read' | 'failed';
-
-// ==================== 向后兼容的旧版接口类型 ====================
-
-/**
- * 创建对话请求（兼容接口）
- */
-export interface LegacyCreateDialogRequest {
-  sessionId: string;
-  contextId: string;
-  name: string;
-  description?: string;
-  participants: Omit<DialogParticipant, 'participant_id' | 'joined_at'>[];
-  message_format: MessageFormat;
-  conversation_context?: ConversationContext;
-  security_policy?: SecurityPolicy;
-  metadata?: Record<string, unknown>;
-}
-
-/**
- * 对话消息数据结构
- * 统一的消息定义，支持所有消息类型和格式
- */
 export interface DialogMessage {
-  message_id: string;
-  dialogId: string;
-  sender_id: string;
-  recipient_ids: string[];
-  type: MessageType;
-  content: MessageContent;
-  format: string;
-  priority: MessagePriority;
-  status: MessageStatus;
-  timestamp: string;
+  messageId: string;
+  senderId: string;
+  content: string;
+  type: ContentType;
+  timestamp: Date;
+  metadata?: Record<string, unknown>;
+  processed?: boolean;
+}
+
+export interface SentimentResult {
+  score: number;
+  label: 'positive' | 'neutral' | 'negative';
+  confidence: number;
+}
+
+export interface LanguageComplexity {
+  readabilityScore: number;
+  vocabularyLevel: 'basic' | 'intermediate' | 'advanced';
+  sentenceComplexity: number;
+  technicalTerms: string[];
+}
+
+export interface LanguageDetectionResult {
+  language: string;
+  confidence: number;
+  alternativeLanguages?: Array<{ language: string; confidence: number }>;
+}
+
+export interface PredictionResult {
+  outcome: string;
+  confidence: number;
+  factors: string[];
   metadata?: Record<string, unknown>;
 }
 
-/**
- * 消息内容
- */
-export interface MessageContent {
-  text?: string;
-  data?: unknown;
-  attachments?: MessageAttachment[];
-  references?: MessageReference[];
+export interface PatternAnalysisResult {
+  patterns: Array<{
+    patternId: string;
+    name: string;
+    frequency: number;
+    confidence: number;
+    examples: unknown[];
+  }>;
+  insights: string[];
 }
 
-/**
- * 消息附件
- */
-export interface MessageAttachment {
-  attachment_id: string;
-  name: string;
-  type: string;
-  size: number;
-  url?: string;
-  data?: string; // base64 encoded
+export interface AnalyticsInsight {
+  type: 'trend' | 'anomaly' | 'pattern' | 'recommendation';
+  title: string;
+  description: string;
+  confidence: number;
+  impact: 'low' | 'medium' | 'high';
+  actionable: boolean;
 }
 
-/**
- * 消息引用
- */
-export interface MessageReference {
-  reference_id: string;
-  type: 'reply' | 'forward' | 'quote';
-  message_id: string;
-  content_excerpt?: string;
-}
-
-/**
- * 旧版对话事件类型（向后兼容）
- * @deprecated 使用新的统一接口类型
- */
-export type DialogEventType =
-  | 'dialog_created'
-  | 'dialog_updated'
-  | 'dialog_started'
-  | 'dialog_paused'
-  | 'dialog_completed'
-  | 'dialog_failed'
-  | 'participant_added'
-  | 'participant_removed'
-  | 'participant_updated'
-  | 'message_sent'
-  | 'message_received'
-  | 'message_read'
-  | 'message_failed';
-
-/**
- * 旧版对话模块配置（向后兼容）
- * @deprecated 使用新的统一接口类型
- */
-export interface DialogModuleConfig {
-  max_participants: number;
-  max_message_length: number;
-  message_retention_days: number;
-  enable_encryption: boolean;
-  enable_audit_logging: boolean;
-  cache_ttl: number;
-  connection_timeout: number;
-}
-
-// ==================== 向后兼容的请求/响应类型 ====================
-
-/**
- * 旧版发送消息请求（向后兼容）
- * @deprecated 使用新的统一接口类型
- */
-export interface SendMessageRequest {
-  dialogId: string;
-  sender_id: string;
-  recipient_ids: string[];
-  type: MessageType;
-  content: MessageContent;
-  priority?: MessagePriority;
-  metadata?: Record<string, unknown>;
-}
-
-/**
- * 旧版对话查询参数（向后兼容）
- * @deprecated 使用新的统一接口类型
- */
-export interface DialogQueryParams {
-  sessionId?: string;
-  contextId?: string;
-  status?: DialogStatus;
-  participant_id?: string;
-  createdBy?: string;
-  limit?: number;
-  offset?: number;
-  sort_by?: 'created_at' | 'updated_at' | 'name';
-  sort_order?: 'asc' | 'desc';
-}
-
-/**
- * 旧版消息查询参数（向后兼容）
- * @deprecated 使用新的统一接口类型
- */
-export interface MessageQueryParams {
-  dialogId: string;
-  sender_id?: string;
-  recipient_id?: string;
-  type?: MessageType;
-  status?: MessageStatus;
-  from_timestamp?: string;
-  to_timestamp?: string;
-  limit?: number;
-  offset?: number;
-}
-
-/**
- * 旧版添加参与者请求（向后兼容）
- * @deprecated 使用新的统一接口类型
- */
-export interface AddParticipantRequest {
-  dialogId: string;
-  agentId: string;
-  roleId: string;
-  permissions: Permission[];
-}
-
-/**
- * 旧版移除参与者请求（向后兼容）
- * @deprecated 使用新的统一接口类型
- */
-export interface RemoveParticipantRequest {
-  dialogId: string;
-  participant_id: string;
-  reason?: string;
-}
-
-/**
- * 旧版更新参与者请求（向后兼容）
- * @deprecated 使用新的统一接口类型
- */
-export interface UpdateParticipantRequest {
-  dialogId: string;
-  participant_id: string;
-  permissions?: Permission[];
-  status?: ParticipantStatus;
-}
-
-/**
- * 旧版对话列表响应（向后兼容）
- * @deprecated 使用新的统一接口类型
- */
-export interface DialogListResponse {
-  success: boolean;
-  data?: {
-    dialogs: DialogEntity[];
-    total: number;
-    limit: number;
-    offset: number;
+export interface MetricsResult {
+  metrics: Record<string, number>;
+  aggregations: Record<string, unknown>;
+  timeRange: {
+    start: string;
+    end: string;
   };
-  error?: string;
-  timestamp: string;
 }
 
-/**
- * 旧版消息响应（向后兼容）
- * @deprecated 使用新的统一接口类型
- */
-export interface MessageResponse {
-  success: boolean;
-  data?: DialogMessage;
-  error?: string;
-  timestamp: string;
+export interface ModerationResult {
+  approved: boolean;
+  confidence: number;
+  violations: ContentViolation[];
+  sanitizedContent?: string;
 }
 
-/**
- * 旧版消息列表响应（向后兼容）
- * @deprecated 使用新的统一接口类型
- */
-export interface MessageListResponse {
-  success: boolean;
-  data?: {
-    messages: DialogMessage[];
-    total: number;
-    limit: number;
-    offset: number;
+export interface ContentViolation {
+  type: 'profanity' | 'hate_speech' | 'spam' | 'inappropriate' | 'personal_info';
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  description: string;
+  location?: {
+    start: number;
+    end: number;
   };
-  error?: string;
-  timestamp: string;
+  suggestion?: string;
+}
+
+export interface PolicyCheckResult {
+  compliant: boolean;
+  policy: string;
+  violations: string[];
+  score: number;
+}
+
+export interface ComplianceResult {
+  standard: string;
+  compliant: boolean;
+  score: number;
+  violations: string[];
+  recommendations: string[];
 }

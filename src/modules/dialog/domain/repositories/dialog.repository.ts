@@ -1,152 +1,160 @@
 /**
- * MPLP Dialog Repository Interface - Domain Repository
- *
- * @version v1.0.0
- * @created 2025-08-02T01:22:00+08:00
- * @description 对话仓储接口，定义数据访问抽象
+ * Dialog Repository Interface
+ * @description Dialog模块仓库接口 - 领域层数据访问抽象
+ * @version 1.0.0
  */
 
-import { Dialog } from '../entities/dialog.entity';
-import {
-  DialogMessage,
-  DialogQueryParams,
-  MessageQueryParams,
-} from '../../types';
+import { DialogEntity } from '../entities/dialog.entity';
+import { type UUID } from '../../types';
 
 /**
- * 对话仓储接口
+ * Dialog仓库接口
+ * 定义Dialog实体的数据访问操作
  */
 export interface DialogRepository {
   /**
-   * 保存对话
+   * 保存对话实体
+   * @param dialog 对话实体
+   * @returns 保存后的对话实体
    */
-  save(dialog: Dialog): Promise<void>;
+  save(dialog: DialogEntity): Promise<DialogEntity>;
 
   /**
    * 根据ID查找对话
+   * @param id 对话ID
+   * @returns 对话实体或null
    */
-  findById(dialog_id: string): Promise<Dialog | null>;
+  findById(id: UUID): Promise<DialogEntity | null>;
 
   /**
-   * 根据会话ID查找对话列表
+   * 根据名称查找对话
+   * @param name 对话名称
+   * @returns 对话实体数组
    */
-  findBySessionId(session_id: string): Promise<Dialog[]>;
+  findByName(name: string): Promise<DialogEntity[]>;
 
   /**
-   * 根据上下文ID查找对话列表
+   * 根据参与者查找对话
+   * @param participantId 参与者ID
+   * @returns 对话实体数组
    */
-  findByContextId(context_id: string): Promise<Dialog[]>;
+  findByParticipant(participantId: string): Promise<DialogEntity[]>;
 
   /**
-   * 根据参与者ID查找对话列表
+   * 获取所有对话
+   * @param limit 限制数量
+   * @param offset 偏移量
+   * @returns 对话实体数组
    */
-  findByParticipantId(participant_id: string): Promise<Dialog[]>;
+  findAll(limit?: number, offset?: number): Promise<DialogEntity[]>;
 
   /**
-   * 根据创建者查找对话列表
+   * 更新对话实体
+   * @param id 对话ID
+   * @param dialog 更新的对话实体
+   * @returns 更新后的对话实体
    */
-  findByCreatedBy(created_by: string): Promise<Dialog[]>;
-
-  /**
-   * 根据查询参数查找对话列表
-   */
-  findByQuery(params: DialogQueryParams): Promise<{
-    dialogs: Dialog[];
-    total: number;
-  }>;
-
-  /**
-   * 检查对话是否存在
-   */
-  exists(dialog_id: string): Promise<boolean>;
+  update(id: UUID, dialog: DialogEntity): Promise<DialogEntity>;
 
   /**
    * 删除对话
+   * @param id 对话ID
    */
-  delete(dialog_id: string): Promise<void>;
+  delete(id: UUID): Promise<void>;
 
   /**
-   * 批量删除对话
+   * 检查对话是否存在
+   * @param id 对话ID
+   * @returns 是否存在
    */
-  deleteBatch(dialog_ids: string[]): Promise<void>;
+  exists(id: UUID): Promise<boolean>;
 
   /**
-   * 更新对话状态
+   * 获取对话总数
+   * @returns 对话总数
    */
-  updateStatus(dialog_id: string, status: string): Promise<void>;
+  count(): Promise<number>;
 
   /**
-   * 获取对话统计信息
+   * 根据条件搜索对话
+   * @param criteria 搜索条件
+   * @returns 对话实体数组
    */
-  getStatistics(): Promise<DialogStatistics>;
+  search(criteria: DialogSearchCriteria): Promise<DialogEntity[]>;
+
+  /**
+   * 获取活跃对话
+   * @returns 活跃对话实体数组
+   */
+  findActiveDialogs(): Promise<DialogEntity[]>;
+
+  /**
+   * 根据能力类型查找对话
+   * @param capabilityType 能力类型
+   * @returns 对话实体数组
+   */
+  findByCapability(capabilityType: string): Promise<DialogEntity[]>;
 }
 
 /**
- * 消息仓储接口
+ * 对话搜索条件接口
  */
-export interface MessageRepository {
+export interface DialogSearchCriteria {
   /**
-   * 保存消息
+   * 对话名称（模糊匹配）
    */
-  saveMessage(message: DialogMessage): Promise<void>;
+  name?: string;
 
   /**
-   * 根据ID查找消息
+   * 参与者ID列表
    */
-  findMessageById(message_id: string): Promise<DialogMessage | null>;
+  participantIds?: string[];
 
   /**
-   * 根据对话ID查找消息列表
+   * 对话类型
    */
-  findMessagesByDialogId(dialog_id: string): Promise<DialogMessage[]>;
+  dialogType?: string;
 
   /**
-   * 根据查询参数查找消息列表
+   * 创建时间范围
    */
-  findMessagesByQuery(params: MessageQueryParams): Promise<{
-    messages: DialogMessage[];
-    total: number;
-  }>;
+  createdAfter?: Date;
+  createdBefore?: Date;
 
   /**
-   * 删除消息
+   * 是否启用智能控制
    */
-  deleteMessage(message_id: string): Promise<void>;
+  hasIntelligentControl?: boolean;
 
   /**
-   * 批量删除对话的所有消息
+   * 是否启用批判性思维
    */
-  deleteMessagesByDialogId(dialog_id: string): Promise<void>;
+  hasCriticalThinking?: boolean;
 
   /**
-   * 更新消息状态
+   * 是否启用知识搜索
    */
-  updateMessageStatus(message_id: string, status: string): Promise<void>;
+  hasKnowledgeSearch?: boolean;
 
   /**
-   * 标记消息为已读
+   * 是否启用多模态
    */
-  markMessageAsRead(message_id: string, reader_id: string): Promise<void>;
+  hasMultimodal?: boolean;
 
   /**
-   * 获取未读消息数量
+   * 健康状态
    */
-  getUnreadMessageCount(
-    dialog_id: string,
-    participant_id: string
-  ): Promise<number>;
-}
+  healthStatus?: string;
 
-/**
- * 对话统计信息
- */
-export interface DialogStatistics {
-  total_dialogs: number;
-  active_dialogs: number;
-  completed_dialogs: number;
-  failed_dialogs: number;
-  total_messages: number;
-  average_participants: number;
-  most_used_message_type: string;
-  average_message_length: number;
+  /**
+   * 分页参数
+   */
+  limit?: number;
+  offset?: number;
+
+  /**
+   * 排序参数
+   */
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
 }

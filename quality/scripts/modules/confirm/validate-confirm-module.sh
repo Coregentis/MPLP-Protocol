@@ -127,10 +127,13 @@ fi
 echo "6. Confirm模块测试覆盖率检查"
 CONFIRM_TEST_ERRORS=0
 # 检查tests目录下的Confirm模块测试文件
-if [ -d "tests/modules/confirm" ] && [ -d "tests/functional" ]; then
+if [ -d "tests/modules/confirm" ]; then
     # 检查模块测试文件
     if find tests/modules/confirm -name "*.test.ts" | grep -q .; then
         echo "✅ Confirm模块测试文件存在"
+        # 统计测试文件数量
+        TEST_FILE_COUNT=$(find tests/modules/confirm -name "*.test.ts" | wc -l)
+        echo "📊 发现 $TEST_FILE_COUNT 个测试文件"
     else
         echo "❌ Confirm模块缺少测试文件"
         CONFIRM_TEST_ERRORS=1

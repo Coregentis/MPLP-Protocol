@@ -1,33 +1,27 @@
 /**
- * MPLP Dialog Module - Main Entry Point
- *
- * @version v1.0.0
- * @created 2025-08-02T01:26:00+08:00
- * @description 对话模块主入口，导出所有公共接口
+ * Dialog Module Index
+ * @description Dialog模块统一导出入口
+ * @version 1.0.0
  */
 
-// ==================== 类型导出 ====================
+// ===== 类型定义导出 =====
 export * from './types';
 
-// ==================== 领域层导出 ====================
-export { Dialog } from './domain/entities/dialog.entity';
-export {
-  DialogRepository,
-  MessageRepository,
-  DialogStatistics,
-} from './domain/repositories/dialog.repository';
+// ===== 领域实体导出 =====
+export * from './domain/entities/dialog.entity';
 
-// ==================== 应用层导出 ====================
-export { DialogService } from './application/services/dialog.service';
+// ===== API层导出 =====
+export * from './api/mappers/dialog.mapper';
 
-// ==================== 基础设施层导出 ====================
-export {
-  MemoryDialogRepository,
-  MemoryMessageRepository,
-} from './infrastructure/repositories/memory-dialog.repository';
+// ===== 应用层导出 =====
+export * from './application/services/dialog-management.service';
+export * from './application/services/dialog-analytics.service';
+export { DialogSecurityService } from './application/services/dialog-security.service';
 
-// ==================== API层导出 ====================
-export { DialogController } from './api/controllers/dialog.controller';
+// ===== 基础设施层导出 =====
+export * from './infrastructure/adapters/dialog.adapter';
+// export * from './infrastructure/repositories/dialog.repository';
+// export * from './infrastructure/protocols/dialog.protocol';
 
-// ==================== 模块配置导出 ====================
-export { DialogModule } from './module';
+// ===== 模块配置导出 =====
+export * from './module';

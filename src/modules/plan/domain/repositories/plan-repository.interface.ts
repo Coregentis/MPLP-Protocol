@@ -1,111 +1,260 @@
 /**
  * Plan仓库接口
  * 
- * 定义对Plan实体的持久化操作
- * 
- * @version v1.0.0
- * @created 2025-07-26T18:55:00+08:00
- * @compliance 100% Schema合规性 - 完全匹配plan-protocol.json
+ * @description Plan模块的仓库接口定义，遵循DDD仓库模式
+ * @version 1.0.0
+ * @layer 领域层 - 仓库接口
+ * @pattern 与Context模块使用IDENTICAL的仓库接口模式
  */
 
-import { Plan } from '../entities/plan.entity';
-import { UUID, PlanStatus, Priority } from '../../../../public/shared/types/plan-types';
+import { PlanEntity } from '../entities/plan.entity';
+import { UUID } from '../../../../shared/types';
+import { PaginatedResult, PaginationParams } from '../../../../shared/types';
 
 /**
- * 计划过滤器接口
+ * Plan查询过滤器
  */
-export interface PlanFilter {
-  plan_ids?: UUID[];
-  context_ids?: UUID[];
-  names?: string[];
-  statuses?: PlanStatus[];
-  priorities?: Priority[];
-  date_range?: {
-    start?: string;
-    end?: string;
-  };
-  limit?: number;
-  offset?: number;
+export interface PlanQueryFilter {
+  contextId?: UUID;
+  status?: 'draft' | 'approved' | 'active' | 'paused' | 'completed' | 'cancelled' | 'failed' | Array<'draft' | 'approved' | 'active' | 'paused' | 'completed' | 'cancelled' | 'failed'>;
+  priority?: 'critical' | 'high' | 'medium' | 'low' | Array<'critical' | 'high' | 'medium' | 'low'>;
+  createdBy?: string;
+  updatedBy?: string;
+  createdAfter?: Date;
+  createdBefore?: Date;
+  updatedAfter?: Date;
+  updatedBefore?: Date;
+  namePattern?: string;
+  descriptionPattern?: string;
+  hasActiveTasks?: boolean;
+  progressMin?: number;
+  progressMax?: number;
+  metadata?: Record<string, unknown>;
 }
 
 /**
- * 计划仓库接口
+ * Plan仓库接口
+ * 
+ * @description 定义Plan实体的持久化操作接口，支持智能任务规划的数据访问
+ * @pattern 与Context模块使用IDENTICAL的仓库接口模式
  */
 export interface IPlanRepository {
-  /**
-   * 创建计划
-   * @param plan 计划实体
-   * @returns 创建的计划
-   */
-  create(plan: Plan): Promise<Plan>;
   
+  // ===== 基础CRUD操作 =====
+
   /**
-   * 通过ID查找计划
-   * @param planId 计划ID
-   * @returns 找到的计划或undefined
+   * 根据ID查找Plan
    */
-  findById(planId: UUID): Promise<Plan | undefined>;
-  
+  findById(planId: UUID): Promise<PlanEntity | null>;
+
   /**
-   * 通过上下文ID查找计划
-   * @param contextId 上下文ID
-   * @returns 找到的计划列表
+   * 根据名称查找Plan
    */
-  findByContextId(contextId: UUID): Promise<Plan[]>;
-  
+  findByName(name: string): Promise<PlanEntity | null>;
+
   /**
-   * 通过过滤条件查找计划
-   * @param filter 过滤条件
-   * @returns 找到的计划列表
+   * 保存Plan实体
    */
-  findByFilter(filter: PlanFilter): Promise<Plan[]>;
-  
+  save(plan: PlanEntity): Promise<PlanEntity>;
+
   /**
-   * 更新计划
-   * @param plan 计划实体
-   * @returns 更新后的计划
+   * 更新Plan实体
    */
-  update(plan: Plan): Promise<Plan>;
-  
+  update(plan: PlanEntity): Promise<PlanEntity>;
+
   /**
-   * 删除计划
-   * @param planId 计划ID
-   * @returns 是否成功删除
+   * 删除Plan实体
    */
   delete(planId: UUID): Promise<boolean>;
-  
+
   /**
-   * 检查计划是否存在
-   * @param planId 计划ID
-   * @returns 是否存在
+   * 检查Plan是否存在
    */
   exists(planId: UUID): Promise<boolean>;
-  
+
+  // ===== 查询操作 =====
+
   /**
-   * 统计计划数量
-   * @param filter 过滤条件
-   * @returns 计划数量
+   * 查找所有Plan
    */
-  count(filter?: PlanFilter): Promise<number>;
-  
+  findAll(pagination?: PaginationParams): Promise<PaginatedResult<PlanEntity>>;
+
   /**
-   * 批量创建计划
-   * @param plans 计划实体列表
-   * @returns 创建的计划列表
+   * 根据过滤条件查找Plan
    */
-  bulkCreate(plans: Plan[]): Promise<Plan[]>;
-  
+  findByFilter(
+    filter: PlanQueryFilter, 
+    pagination?: PaginationParams
+  ): Promise<PaginatedResult<PlanEntity>>;
+
   /**
-   * 批量更新计划
-   * @param plans 计划实体列表
-   * @returns 更新后的计划列表
+   * 根据状态查找Plan
    */
-  bulkUpdate(plans: Plan[]): Promise<Plan[]>;
-  
+  findByStatus(
+    status: 'draft' | 'approved' | 'active' | 'paused' | 'completed' | 'cancelled' | 'failed' | Array<'draft' | 'approved' | 'active' | 'paused' | 'completed' | 'cancelled' | 'failed'>, 
+    pagination?: PaginationParams
+  ): Promise<PaginatedResult<PlanEntity>>;
+
   /**
-   * 批量删除计划
-   * @param planIds 计划ID列表
-   * @returns 成功删除的计划ID列表
+   * 根据优先级查找Plan
    */
-  bulkDelete(planIds: UUID[]): Promise<UUID[]>;
-} 
+  findByPriority(
+    priority: 'critical' | 'high' | 'medium' | 'low' | Array<'critical' | 'high' | 'medium' | 'low'>, 
+    pagination?: PaginationParams
+  ): Promise<PaginatedResult<PlanEntity>>;
+
+  /**
+   * 根据Context ID查找Plan
+   */
+  findByContextId(
+    contextId: UUID, 
+    pagination?: PaginationParams
+  ): Promise<PaginatedResult<PlanEntity>>;
+
+  /**
+   * 根据创建者查找Plan
+   */
+  findByCreatedBy(
+    createdBy: string, 
+    pagination?: PaginationParams
+  ): Promise<PaginatedResult<PlanEntity>>;
+
+  /**
+   * 搜索Plan（按名称模式）
+   */
+  searchByName(
+    namePattern: string, 
+    pagination?: PaginationParams
+  ): Promise<PaginatedResult<PlanEntity>>;
+
+  /**
+   * 搜索Plan（按描述模式）
+   */
+  searchByDescription(
+    descriptionPattern: string, 
+    pagination?: PaginationParams
+  ): Promise<PaginatedResult<PlanEntity>>;
+
+  // ===== 统计操作 =====
+
+  /**
+   * 统计Plan总数
+   */
+  count(): Promise<number>;
+
+  /**
+   * 根据状态统计Plan数量
+   */
+  countByStatus(status: 'draft' | 'approved' | 'active' | 'paused' | 'completed' | 'cancelled' | 'failed'): Promise<number>;
+
+  /**
+   * 根据优先级统计Plan数量
+   */
+  countByPriority(priority: 'critical' | 'high' | 'medium' | 'low'): Promise<number>;
+
+  /**
+   * 根据Context ID统计Plan数量
+   */
+  countByContextId(contextId: UUID): Promise<number>;
+
+  /**
+   * 根据创建者统计Plan数量
+   */
+  countByCreatedBy(createdBy: string): Promise<number>;
+
+  // ===== 业务特定操作 =====
+
+  /**
+   * 查找活跃的Plan（状态为active）
+   */
+  findActivePlans(pagination?: PaginationParams): Promise<PaginatedResult<PlanEntity>>;
+
+  /**
+   * 查找待执行的Plan（状态为approved或active）
+   */
+  findExecutablePlans(pagination?: PaginationParams): Promise<PaginatedResult<PlanEntity>>;
+
+  /**
+   * 查找已完成的Plan（状态为completed）
+   */
+  findCompletedPlans(pagination?: PaginationParams): Promise<PaginatedResult<PlanEntity>>;
+
+  /**
+   * 查找高优先级Plan（优先级为critical或high）
+   */
+  findHighPriorityPlans(pagination?: PaginationParams): Promise<PaginatedResult<PlanEntity>>;
+
+  /**
+   * 查找过期的Plan（基于时间线）
+   */
+  findOverduePlans(pagination?: PaginationParams): Promise<PaginatedResult<PlanEntity>>;
+
+  /**
+   * 查找即将到期的Plan（基于时间线）
+   */
+  findUpcomingDeadlinePlans(
+    daysAhead: number, 
+    pagination?: PaginationParams
+  ): Promise<PaginatedResult<PlanEntity>>;
+
+  /**
+   * 查找具有特定进度范围的Plan
+   */
+  findByProgressRange(
+    minProgress: number, 
+    maxProgress: number, 
+    pagination?: PaginationParams
+  ): Promise<PaginatedResult<PlanEntity>>;
+
+  /**
+   * 查找包含特定任务状态的Plan
+   */
+  findByTaskStatus(
+    taskStatus: 'pending' | 'ready' | 'running' | 'blocked' | 'completed' | 'failed' | 'skipped',
+    pagination?: PaginationParams
+  ): Promise<PaginatedResult<PlanEntity>>;
+
+  // ===== 批量操作 =====
+
+  /**
+   * 批量保存Plan实体
+   */
+  saveMany(plans: PlanEntity[]): Promise<PlanEntity[]>;
+
+  /**
+   * 批量更新Plan实体
+   */
+  updateMany(plans: PlanEntity[]): Promise<PlanEntity[]>;
+
+  /**
+   * 批量删除Plan实体
+   */
+  deleteMany(planIds: UUID[]): Promise<number>;
+
+  /**
+   * 批量更新Plan状态
+   */
+  updateStatusMany(planIds: UUID[], status: 'draft' | 'approved' | 'active' | 'paused' | 'completed' | 'cancelled' | 'failed'): Promise<number>;
+
+  // ===== 事务操作 =====
+
+  /**
+   * 在事务中执行操作
+   */
+  transaction<T>(operation: (repository: IPlanRepository) => Promise<T>): Promise<T>;
+
+  /**
+   * 开始事务
+   */
+  beginTransaction(): Promise<void>;
+
+  /**
+   * 提交事务
+   */
+  commitTransaction(): Promise<void>;
+
+  /**
+   * 回滚事务
+   */
+  rollbackTransaction(): Promise<void>;
+}

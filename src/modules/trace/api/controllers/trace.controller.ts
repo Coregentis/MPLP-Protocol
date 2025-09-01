@@ -1,552 +1,385 @@
 /**
  * Trace控制器
- *
- * API层控制器，处理HTTP请求
- *
+ * 
+ * @description Trace模块的API控制器，严格基于Schema驱动开发和双重命名约定
  * @version 1.0.0
- * @created 2025-09-16
+ * @layer API层 - 控制器
+ * @pattern 基于Context模块的IDENTICAL企业级模式
+ * @schema 基于src/schemas/core-modules/mplp-trace.json
+ * @naming Schema(snake_case) ↔ TypeScript(camelCase)
  */
 
 import { TraceManagementService } from '../../application/services/trace-management.service';
-import { TraceFilter } from '../../domain/repositories/trace-repository.interface';
-import { CreateTraceRequest } from '../../domain/factories/trace.factory';
 import {
-  TraceType,
-  TraceSeverity,
-  EventType,
-  Correlation,
-  PerformanceMetrics,
-  ErrorInformation
-} from '../../types';
-import { TraceMapper } from '../mappers/trace.mapper';
-
-
-/**
- * HTTP请求接口
- */
-export interface HttpRequest {
-  params: Record<string, unknown>;
-  body: Record<string, unknown>;
-  query: Record<string, unknown>;
-  user?: {
-    id: string;
-    role: string;
-  };
-}
+  CreateTraceDto,
+  UpdateTraceDto,
+  TraceQueryDto,
+  TraceResponseDto,
+  TraceQueryResultDto,
+  TraceOperationResultDto,
+  BatchOperationResultDto,
+  HealthStatusDto
+} from '../dto/trace.dto';
+import { UUID, PaginationParams } from '../../../../shared/types';
+import { TraceEntityData, TraceType, Severity, TraceOperation } from '../../types';
 
 /**
- * HTTP响应接口
- */
-export interface HttpResponse {
-  status: number;
-  data?: unknown;
-  error?: string;
-  message?: string;
-}
-
-/**
- * Trace控制器
+ * Trace API控制器
+ * 
+ * @description 提供Trace的RESTful API接口，严格遵循MPLP v1.0协议标准
  */
 export class TraceController {
+  
   constructor(
     private readonly traceManagementService: TraceManagementService
   ) {}
 
+  // ===== RESTful API方法 =====
+
   /**
-   * 创建追踪
-   * POST /api/v1/traces
+   * 创建新Trace
+   * POST /traces
    */
-  async createTrace(req: HttpRequest): Promise<HttpResponse> {
+  async createTrace(dto: CreateTraceDto): Promise<TraceOperationResultDto> {
     try {
-      // 使用TraceMapper将Schema负载转换为内部请求格式
-      const internalRequest = TraceMapper.fromSchema(req.body);
+      // 验证DTO
+      this.validateCreateDto(dto);
 
-      // 转换为工厂期望的snake_case格式
-      const createRequest: CreateTraceRequest = {
-        context_id: internalRequest.contextId,
-        plan_id: internalRequest.planId,
-        trace_type: internalRequest.traceType,
-        severity: internalRequest.severity,
-        event: internalRequest.event,
-        timestamp: internalRequest.timestamp,
-        performance_metrics: internalRequest.performanceMetrics,
-        error_information: internalRequest.errorInformation,
-        correlations: internalRequest.correlations,
-        metadata: internalRequest.metadata
-      };
-
-      const result = await this.traceManagementService.createTrace(createRequest);
-
-      if (!result.success) {
-        return {
-          status: 400,
-          error: result.error
-        };
-      }
+      // 调用应用服务
+      const trace = await this.traceManagementService.createTrace(dto);
 
       return {
-        status: 201,
-        data: result.data ? TraceMapper.toSchema(result.data) : undefined,
-        message: '追踪创建成功'
+        success: true,
+        traceId: trace.traceId,
+        message: 'Trace created successfully',
+        data: this.mapToResponseDto(trace)
       };
     } catch (error) {
       return {
-        status: 500,
-        error: error instanceof Error ? error.message : '服务器内部错误'
+        success: false,
+        message: 'Failed to create trace',
+        error: error instanceof Error ? error.message : 'Unknown error'
       };
     }
   }
 
   /**
-   * 获取追踪详情
-   * GET /api/v1/traces/:id
+   * 获取Trace详情
+   * GET /traces/:id
    */
-  async getTraceById(req: HttpRequest): Promise<HttpResponse> {
+  async getTrace(traceId: UUID): Promise<TraceOperationResultDto> {
     try {
-      const traceId = req.params.id as string;
-      const result = await this.traceManagementService.getTraceById(traceId);
-
-      if (!result.success) {
+      const trace = await this.traceManagementService.getTraceById(traceId);
+      
+      if (!trace) {
         return {
-          status: 404,
-          error: result.error
+          success: false,
+          message: 'Trace not found'
         };
       }
 
       return {
-        status: 200,
-        data: result.data ? TraceMapper.toSchema(result.data) : undefined
+        success: true,
+        traceId: trace.traceId,
+        message: 'Trace retrieved successfully',
+        data: this.mapToResponseDto(trace)
       };
     } catch (error) {
       return {
-        status: 500,
-        error: error instanceof Error ? error.message : '服务器内部错误'
+        success: false,
+        message: 'Failed to retrieve trace',
+        error: error instanceof Error ? error.message : 'Unknown error'
       };
     }
   }
 
   /**
-   * 查询追踪列表
-   * GET /api/v1/traces
+   * 更新Trace
+   * PUT /traces/:id
    */
-  async queryTraces(req: HttpRequest): Promise<HttpResponse> {
+  async updateTrace(traceId: UUID, dto: UpdateTraceDto): Promise<TraceOperationResultDto> {
     try {
-      const filter: TraceFilter = {
-        context_id: req.query.contextId as string | undefined,
-        plan_id: req.query.planId as string | undefined,
-        task_id: req.query.taskId as string | undefined,
-        trace_type: req.query.traceType as TraceType | undefined,
-        severity: req.query.severity as TraceSeverity | undefined,
-        event_type: req.query.event_type as EventType | undefined,
-        event_category: req.query.event_category as string | undefined,
-        source_component: req.query.source_component as string | undefined,
-        timestamp_after: req.query.timestamp_after as string | undefined,
-        timestamp_before: req.query.timestamp_before as string | undefined,
-        has_errors: req.query.has_errors === 'true',
-        has_performance_metrics: req.query.has_performance_metrics === 'true',
-        correlation_trace_id: req.query.correlation_trace_id as string | undefined
-      };
+      // 设置traceId
+      dto.traceId = traceId;
+      
+      // 验证DTO
+      this.validateUpdateDto(dto);
 
-      const pagination = {
-        page: parseInt(req.query.page as string) || 1,
-        limit: parseInt(req.query.limit as string) || 10,
-        sort_by: req.query.sort_by as string | undefined,
-        sort_order: (req.query.sort_order as 'asc' | 'desc') || 'desc'
-      };
-
-      const result = await this.traceManagementService.queryTraces(filter, pagination);
-
-      if (!result.success) {
-        return {
-          status: 400,
-          error: result.error
-        };
-      }
+      // 调用应用服务
+      const trace = await this.traceManagementService.updateTrace(dto);
 
       return {
-        status: 200,
-        data: {
-          ...result.data,
-          items: result.data?.items.map(trace => TraceMapper.toSchema(trace))
+        success: true,
+        traceId: trace.traceId,
+        message: 'Trace updated successfully',
+        data: this.mapToResponseDto(trace)
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: 'Failed to update trace',
+        error: error instanceof Error ? error.message : 'Unknown error'
+      };
+    }
+  }
+
+  /**
+   * 删除Trace
+   * DELETE /traces/:id
+   */
+  async deleteTrace(traceId: UUID): Promise<TraceOperationResultDto> {
+    try {
+      const deleted = await this.traceManagementService.deleteTrace(traceId);
+
+      if (deleted) {
+        return {
+          success: true,
+          traceId,
+          message: 'Trace deleted successfully'
+        };
+      } else {
+        return {
+          success: false,
+          traceId,
+          message: 'Trace not found or already deleted'
+        };
+      }
+    } catch (error) {
+      return {
+        success: false,
+        message: 'Failed to delete trace',
+        error: error instanceof Error ? error.message : 'Unknown error'
+      };
+    }
+  }
+
+  /**
+   * 查询Traces
+   * GET /traces
+   */
+  async queryTraces(
+    queryDto: TraceQueryDto,
+    pagination?: PaginationParams
+  ): Promise<TraceQueryResultDto> {
+    try {
+      const result = await this.traceManagementService.queryTraces(queryDto, pagination);
+
+      // 确保result是正确的分页查询结果类型
+      const queryResult = result as { traces: TraceEntityData[]; total: number };
+
+      return {
+        traces: queryResult.traces.map((trace: TraceEntityData) => this.mapToResponseDto(trace)),
+        total: queryResult.total,
+        page: pagination?.page,
+        limit: pagination?.limit
+      };
+    } catch (error) {
+      throw new Error(`Failed to query traces: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+
+  /**
+   * 获取Trace数量
+   * GET /traces/count
+   */
+  async getTraceCount(queryDto?: TraceQueryDto): Promise<{ count: number }> {
+    try {
+      const count = await this.traceManagementService.getTraceCount(queryDto);
+      return { count };
+    } catch (error) {
+      throw new Error(`Failed to get trace count: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+
+  /**
+   * 检查Trace是否存在
+   * HEAD /traces/:id
+   */
+  async traceExists(traceId: UUID): Promise<{ exists: boolean }> {
+    try {
+      const exists = await this.traceManagementService.traceExists(traceId);
+      return { exists };
+    } catch (error) {
+      throw new Error(`Failed to check trace existence: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+
+  /**
+   * 批量创建Traces
+   * POST /traces/batch
+   */
+  async createTraceBatch(dtos: CreateTraceDto[]): Promise<BatchOperationResultDto> {
+    try {
+      // 验证所有DTOs
+      dtos.forEach(dto => this.validateCreateDto(dto));
+
+      const traces = await this.traceManagementService.createTraceBatch(dtos);
+      
+      return {
+        successCount: traces.length,
+        failureCount: 0,
+        results: traces.map(trace => ({
+          id: trace.traceId,
+          success: true
+        }))
+      };
+    } catch (error) {
+      return {
+        successCount: 0,
+        failureCount: dtos.length,
+        results: dtos.map((_, index) => ({
+          id: `batch-${index}` as UUID,
+          success: false,
+          error: error instanceof Error ? error.message : 'Unknown error'
+        }))
+      };
+    }
+  }
+
+  /**
+   * 批量删除Traces
+   * DELETE /traces/batch
+   */
+  async deleteTraceBatch(traceIds: UUID[]): Promise<BatchOperationResultDto> {
+    try {
+      const deletedCount = await this.traceManagementService.deleteTraceBatch(traceIds);
+      
+      return {
+        successCount: deletedCount,
+        failureCount: traceIds.length - deletedCount,
+        results: traceIds.map(id => ({
+          id,
+          success: true
+        }))
+      };
+    } catch (error) {
+      return {
+        successCount: 0,
+        failureCount: traceIds.length,
+        results: traceIds.map(id => ({
+          id,
+          success: false,
+          error: error instanceof Error ? error.message : 'Unknown error'
+        }))
+      };
+    }
+  }
+
+  /**
+   * 获取健康状态
+   * GET /traces/health
+   */
+  async getHealthStatus(): Promise<HealthStatusDto> {
+    try {
+      const health = await this.traceManagementService.getHealthStatus();
+
+      // 构建符合HealthStatusDto格式的响应
+      return {
+        status: health.status as 'healthy' | 'degraded' | 'unhealthy',
+        timestamp: new Date().toISOString(),
+        details: {
+          service: 'TraceManagementService',
+          version: '1.0.0',
+          repository: {
+            status: 'healthy',
+            recordCount: 0,
+            lastOperation: 'health-check'
+          }
         }
       };
     } catch (error) {
       return {
-        status: 500,
-        error: error instanceof Error ? error.message : '服务器内部错误'
-      };
-    }
-  }
-
-  /**
-   * 获取错误追踪
-   * GET /api/v1/traces/errors
-   */
-  async getErrorTraces(req: HttpRequest): Promise<HttpResponse> {
-    try {
-      const contextId = req.query.contextId as string | undefined;
-      const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
-
-      const result = await this.traceManagementService.getErrorTraces(contextId, limit);
-
-      if (!result.success) {
-        return {
-          status: 400,
-          error: result.error
-        };
-      }
-
-      return {
-        status: 200,
-        data: {
-          traces: result.data?.map(trace => TraceMapper.toSchema(trace)) || []
+        status: 'unhealthy',
+        timestamp: new Date().toISOString(),
+        details: {
+          service: 'TraceManagementService',
+          version: '1.0.0',
+          repository: {
+            status: 'error',
+            recordCount: 0,
+            lastOperation: 'health-check'
+          }
         }
       };
-    } catch (error) {
-      return {
-        status: 500,
-        error: error instanceof Error ? error.message : '服务器内部错误'
-      };
+    }
+  }
+
+  // ===== 私有辅助方法 =====
+
+  /**
+   * 验证创建DTO
+   */
+  private validateCreateDto(dto: CreateTraceDto): void {
+    if (!dto.contextId) {
+      throw new Error('Context ID is required');
+    }
+    if (!dto.traceType) {
+      throw new Error('Trace type is required');
+    }
+    if (!dto.severity) {
+      throw new Error('Severity is required');
+    }
+    if (!dto.event?.name) {
+      throw new Error('Event name is required');
+    }
+    if (!dto.traceOperation) {
+      throw new Error('Trace operation is required');
     }
   }
 
   /**
-   * 获取性能追踪
-   * GET /api/v1/traces/performance
+   * 验证更新DTO
    */
-  async getPerformanceTraces(req: HttpRequest): Promise<HttpResponse> {
-    try {
-      const contextId = req.query.contextId as string | undefined;
-      const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
-
-      const result = await this.traceManagementService.getPerformanceTraces(contextId, limit);
-
-      if (!result.success) {
-        return {
-          status: 400,
-          error: result.error
-        };
-      }
-
-      return {
-        status: 200,
-        data: {
-          traces: result.data?.map(trace => TraceMapper.toSchema(trace)) || []
-        }
-      };
-    } catch (error) {
-      return {
-        status: 500,
-        error: error instanceof Error ? error.message : '服务器内部错误'
-      };
+  private validateUpdateDto(dto: UpdateTraceDto): void {
+    if (!dto.traceId) {
+      throw new Error('Trace ID is required for update');
     }
   }
 
   /**
-   * 添加关联
-   * POST /api/v1/traces/:id/correlations
+   * 映射到响应DTO
+   * 确保使用camelCase命名，符合MPLP v1.0协议标准
    */
-  async addCorrelation(req: HttpRequest): Promise<HttpResponse> {
-    try {
-      const traceId = req.params.id as string;
-      const correlation = req.body as unknown as Correlation;
-
-      const result = await this.traceManagementService.addCorrelation(traceId, correlation);
-
-      if (!result.success) {
-        return {
-          status: 400,
-          error: result.error
-        };
-      }
-
-      return {
-        status: 200,
-        data: result.data ? TraceMapper.toSchema(result.data) : undefined,
-        message: '关联添加成功'
-      };
-    } catch (error) {
-      return {
-        status: 500,
-        error: error instanceof Error ? error.message : '服务器内部错误'
-      };
-    }
-  }
-
-  /**
-   * 更新性能指标
-   * PUT /api/v1/traces/:id/performance
-   */
-  async updatePerformanceMetrics(req: HttpRequest): Promise<HttpResponse> {
-    try {
-      const traceId = req.params.id as string;
-      const metrics = req.body as unknown as PerformanceMetrics;
-
-      const result = await this.traceManagementService.updatePerformanceMetrics(traceId, metrics);
-
-      if (!result.success) {
-        return {
-          status: 400,
-          error: result.error
-        };
-      }
-
-      return {
-        status: 200,
-        data: result.data ? TraceMapper.toSchema(result.data) : undefined,
-        message: '性能指标更新成功'
-      };
-    } catch (error) {
-      return {
-        status: 500,
-        error: error instanceof Error ? error.message : '服务器内部错误'
-      };
-    }
-  }
-
-  /**
-   * 设置错误信息
-   * PUT /api/v1/traces/:id/error
-   */
-  async setErrorInformation(req: HttpRequest): Promise<HttpResponse> {
-    try {
-      const traceId = req.params.id as string;
-      const errorInfo = req.body as unknown as ErrorInformation;
-
-      const result = await this.traceManagementService.setErrorInformation(traceId, errorInfo);
-
-      if (!result.success) {
-        return {
-          status: 400,
-          error: result.error
-        };
-      }
-
-      return {
-        status: 200,
-        data: result.data ? TraceMapper.toSchema(result.data) : undefined,
-        message: '错误信息设置成功'
-      };
-    } catch (error) {
-      return {
-        status: 500,
-        error: error instanceof Error ? error.message : '服务器内部错误'
-      };
-    }
-  }
-
-  /**
-   * 分析追踪
-   * GET /api/v1/traces/analysis
-   */
-  async analyzeTraces(req: HttpRequest): Promise<HttpResponse> {
-    try {
-      const contextId = req.query.contextId as string | undefined;
-      const result = await this.traceManagementService.analyzeTraces(contextId);
-
-      if (!result.success) {
-        return {
-          status: 400,
-          error: result.error
-        };
-      }
-
-      return {
-        status: 200,
-        data: result.data
-      };
-    } catch (error) {
-      return {
-        status: 500,
-        error: error instanceof Error ? error.message : '服务器内部错误'
-      };
-    }
-  }
-
-  /**
-   * 性能分析
-   * GET /api/v1/traces/performance-analysis
-   */
-  async analyzePerformance(req: HttpRequest): Promise<HttpResponse> {
-    try {
-      const contextId = req.query.contextId as string | undefined;
-      const result = await this.traceManagementService.analyzePerformance(contextId);
-
-      if (!result.success) {
-        return {
-          status: 400,
-          error: result.error
-        };
-      }
-
-      return {
-        status: 200,
-        data: result.data
-      };
-    } catch (error) {
-      return {
-        status: 500,
-        error: error instanceof Error ? error.message : '服务器内部错误'
-      };
-    }
-  }
-
-  /**
-   * 获取追踪链
-   * GET /api/v1/traces/:id/chain
-   */
-  async getTraceChain(req: HttpRequest): Promise<HttpResponse> {
-    try {
-      const traceId = req.params.id as string;
-      const result = await this.traceManagementService.getTraceChain(traceId);
-
-      if (!result.success) {
-        return {
-          status: 400,
-          error: result.error
-        };
-      }
-
-      return {
-        status: 200,
-        data: result.data?.map(trace => trace.toProtocol())
-      };
-    } catch (error) {
-      return {
-        status: 500,
-        error: error instanceof Error ? error.message : '服务器内部错误'
-      };
-    }
-  }
-
-  /**
-   * 获取统计信息
-   * GET /api/v1/traces/statistics
-   */
-  async getStatistics(req: HttpRequest): Promise<HttpResponse> {
-    try {
-      const contextId = req.query.contextId as string | undefined;
-      const timeRange = req.query.start && req.query.end ? {
-        start: req.query.start as string,
-        end: req.query.end as string
-      } : undefined;
-
-      const result = await this.traceManagementService.getStatistics(contextId, timeRange);
-
-      if (!result.success) {
-        return {
-          status: 400,
-          error: result.error
-        };
-      }
-
-      return {
-        status: 200,
-        data: result.data
-      };
-    } catch (error) {
-      return {
-        status: 500,
-        error: error instanceof Error ? error.message : '服务器内部错误'
-      };
-    }
-  }
-
-  /**
-   * 搜索追踪
-   * GET /api/v1/traces/search
-   */
-  async searchTraces(req: HttpRequest): Promise<HttpResponse> {
-    try {
-      const query = req.query.q as string;
-      if (!query) {
-        return {
-          status: 400,
-          error: '搜索查询不能为空'
-        };
-      }
-
-      const filter: TraceFilter = {
-        context_id: req.query.contextId as string | undefined,
-        trace_type: req.query.traceType as TraceType | undefined,
-        severity: req.query.severity as TraceSeverity | undefined
-      };
-
-      const result = await this.traceManagementService.searchTraces(query, filter);
-
-      if (!result.success) {
-        return {
-          status: 400,
-          error: result.error
-        };
-      }
-
-      return {
-        status: 200,
-        data: result.data?.map(trace => trace.toProtocol())
-      };
-    } catch (error) {
-      return {
-        status: 500,
-        error: error instanceof Error ? error.message : '服务器内部错误'
-      };
-    }
-  }
-
-  /**
-   * 删除追踪
-   * DELETE /api/v1/traces/:id
-   */
-  async deleteTrace(req: HttpRequest): Promise<HttpResponse> {
-    try {
-      const traceId = req.params.id as string;
-      const result = await this.traceManagementService.deleteTrace(traceId);
-
-      if (!result.success) {
-        return {
-          status: 400,
-          error: result.error
-        };
-      }
-
-      return {
-        status: 200,
-        message: '追踪删除成功'
-      };
-    } catch (error) {
-      return {
-        status: 500,
-        error: error instanceof Error ? error.message : '服务器内部错误'
-      };
-    }
-  }
-
-  /**
-   * 清理过期追踪
-   * POST /api/v1/traces/cleanup
-   */
-  async cleanupExpiredTraces(req: HttpRequest): Promise<HttpResponse> {
-    try {
-      const olderThanDays = parseInt(req.body.older_than_days as string) || 30;
-      const result = await this.traceManagementService.cleanupExpiredTraces(olderThanDays);
-
-      if (!result.success) {
-        return {
-          status: 400,
-          error: result.error
-        };
-      }
-
-      return {
-        status: 200,
-        data: { deleted_count: result.data },
-        message: '过期追踪清理完成'
-      };
-    } catch (error) {
-      return {
-        status: 500,
-        error: error instanceof Error ? error.message : '服务器内部错误'
-      };
-    }
+  private mapToResponseDto(trace: TraceEntityData): TraceResponseDto {
+    return {
+      traceId: trace.traceId as UUID,
+      contextId: trace.contextId as UUID,
+      planId: trace.planId as UUID | undefined,
+      taskId: trace.taskId as UUID | undefined,
+      traceType: trace.traceType as TraceType,
+      severity: trace.severity as Severity,
+      event: trace.event,
+      timestamp: trace.timestamp,
+      traceOperation: trace.traceOperation as TraceOperation,
+      contextSnapshot: trace.contextSnapshot ? {
+        variables: trace.contextSnapshot.variables,
+        callStack: trace.contextSnapshot.callStack?.map(frame => ({
+          function: frame.function,
+          file: frame.file || '',
+          line: frame.line || 0,
+          arguments: frame.arguments
+        })),
+        environment: trace.contextSnapshot.environment ? {
+          os: trace.contextSnapshot.environment.os || '',
+          platform: trace.contextSnapshot.environment.platform || '',
+          runtimeVersion: trace.contextSnapshot.environment.runtimeVersion || '',
+          environmentVariables: trace.contextSnapshot.environment.environmentVariables
+        } : undefined
+      } : undefined,
+      errorInformation: trace.errorInformation,
+      decisionLog: trace.decisionLog ? {
+        decisionPoint: trace.decisionLog.decisionPoint,
+        optionsConsidered: trace.decisionLog.optionsConsidered,
+        selectedOption: trace.decisionLog.selectedOption,
+        decisionCriteria: trace.decisionLog.decisionCriteria?.map(criterion => ({
+          criterion: criterion.criterion,
+          weight: criterion.weight,
+          evaluation: criterion.evaluation || ''
+        })),
+        confidenceLevel: trace.decisionLog.confidenceLevel
+      } : undefined,
+      traceDetails: trace.traceDetails,
+      protocolVersion: trace.protocolVersion || '1.0.0'
+    };
   }
 }

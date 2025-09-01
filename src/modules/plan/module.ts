@@ -1,150 +1,245 @@
 /**
- * Plan模块集成
+ * Plan模块初始化
  * 
- * DDD架构的模块集成和依赖注入配置
- * 
+ * @description Plan模块的统一初始化和配置管理
  * @version 1.0.0
- * @created 2025-09-16
+ * @layer 模块层 - 初始化
+ * @pattern 与Context模块使用IDENTICAL的模块初始化模式
  */
 
-import { Logger } from '../../public/utils/logger';
-import { DataSource } from 'typeorm/data-source/DataSource';
-
-// Infrastructure层
-import { PlanRepositoryImpl } from './infrastructure/repositories/plan-repository.impl';
-
-// Application层
+import {
+  PlanModuleAdapter,
+  PlanModuleAdapterConfig,
+  createPlanModuleAdapter
+} from './infrastructure/adapters/plan-module.adapter';
+import { PlanEntity } from './domain/entities/plan.entity';
 import { PlanManagementService } from './application/services/plan-management.service';
-import { PlanValidationService } from './domain/services/plan-validation.service';
-import { PlanFactoryService } from './domain/services/plan-factory.service';
-
-// API层
-import { PlanController } from './api/controllers/plan.controller';
-import { CreatePlanCommandHandler } from './application/commands/create-plan.command';
-import { UpdatePlanCommandHandler } from './application/commands/update-plan.command';
-import { DeletePlanCommandHandler } from './application/commands/delete-plan.command';
-import { GetPlanQueryHandler } from './application/queries/get-plan.query';
-import { GetPlanByIdQueryHandler } from './application/queries/get-plan-by-id.query';
-import { GetPlansQueryHandler } from './application/queries/get-plans.query';
-import { PlanExecutionService } from './application/services/plan-execution.service';
-import { PlanModuleAdapter } from './infrastructure/adapters/plan-module.adapter';
+import { PlanProtocol } from './infrastructure/protocols/plan.protocol';
+import { IPlanRepository } from './domain/repositories/plan-repository.interface';
+import { PlanEntityData } from './api/mappers/plan.mapper';
 
 /**
- * 模块配置选项
+ * Plan模块选项
  */
 export interface PlanModuleOptions {
   enableLogging?: boolean;
-  enableTaskValidation?: boolean;
-  enableProgressTracking?: boolean;
-  dataSource?: unknown; // 数据源配置，生产环境中应该是真实的数据库连接
+  enableCaching?: boolean;
+  enableMetrics?: boolean;
+  repositoryType?: 'memory' | 'database' | 'file';
+  maxCacheSize?: number;
+  cacheTimeout?: number;
+  enableOptimization?: boolean;
+  enableRiskAssessment?: boolean;
+  enableFailureRecovery?: boolean;
+  dataSource?: unknown;
 }
 
 /**
- * 模块导出接口
+ * Plan模块结果
  */
-export interface PlanModuleExports {
-  planController: PlanController;
-  planManagementService: PlanManagementService;
+export interface PlanModuleResult {
+  // 核心组件
+  planEntity: typeof PlanEntity;
+  planRepository: IPlanRepository;
+  planService: PlanManagementService;
+  planProtocol: PlanProtocol;
+  planAdapter: PlanModuleAdapter;
+  
+  // 便捷方法
+  createPlan: (data: Partial<PlanEntityData>) => Promise<PlanEntity>;
+  getPlan: (planId: string) => Promise<PlanEntity | null>;
+  updatePlan: (planId: string, updates: Partial<PlanEntityData>) => Promise<PlanEntity>;
+  deletePlan: (planId: string) => Promise<boolean>;
+  
+  // 模块信息
+  moduleInfo: {
+    name: string;
+    version: string;
+    description: string;
+    layer: string;
+    status: string;
+    features: string[];
+    dependencies: string[];
+  };
 }
 
 /**
  * 初始化Plan模块
+ * 
+ * @description 创建并配置Plan模块的所有组件
+ * @param options 模块配置选项
+ * @returns 初始化完成的模块结果
  */
 export async function initializePlanModule(
   options: PlanModuleOptions = {}
-): Promise<PlanModuleExports> {
-  const logger = new Logger('PlanModule');
+): Promise<PlanModuleResult> {
+  // 转换选项为适配器配置
+  const adapterConfig: PlanModuleAdapterConfig = {
+    enableLogging: options.enableLogging,
+    enableCaching: options.enableCaching,
+    enableMetrics: options.enableMetrics,
+    repositoryType: options.repositoryType,
+    maxCacheSize: options.maxCacheSize,
+    cacheTimeout: options.cacheTimeout,
+    enableOptimization: options.enableOptimization,
+    enableRiskAssessment: options.enableRiskAssessment,
+    enableFailureRecovery: options.enableFailureRecovery
+  };
+
+  // 创建适配器和组件
+  const adapterResult = await createPlanModuleAdapter(adapterConfig);
   
-  try {
-    // 创建基础设施层组件
-    const mockDataSource = options.dataSource || {
-      getRepository: () => ({
-        save: async (entity: unknown) => entity,
-        findOne: async () => null,
-        find: async () => [],
-        remove: async (entity: unknown) => entity,
-        createQueryBuilder: () => ({
-          where: () => ({ getMany: async () => [] }),
-          orderBy: () => ({ getMany: async () => [] })
-        })
-      })
-    };
+  // 创建便捷方法
+  const createPlan = async (data: Partial<PlanEntityData>): Promise<PlanEntity> => {
+    return await adapterResult.adapter.createPlan(data);
+  };
 
-    const planRepository = new PlanRepositoryImpl(mockDataSource as DataSource);
-    const planValidationService = new PlanValidationService();
-    const planFactoryService = new PlanFactoryService();
+  const getPlan = async (planId: string): Promise<PlanEntity | null> => {
+    return await adapterResult.adapter.getPlan(planId);
+  };
 
-    // 创建应用层组件
-    const planManagementService = new PlanManagementService(
-      planRepository,
-      planValidationService,
-      planFactoryService
-    );
+  const updatePlan = async (planId: string, updates: Partial<PlanEntityData>): Promise<PlanEntity> => {
+    return await adapterResult.adapter.updatePlan(planId, updates);
+  };
 
-    // 创建API层组件 - 使用mock对象
-    const mockCreatePlanCommandHandler = {
-      planManagementService,
-      execute: async () => ({ success: true, data: null })
-    } as unknown as CreatePlanCommandHandler;
+  const deletePlan = async (planId: string): Promise<boolean> => {
+    return await adapterResult.adapter.deletePlan(planId);
+  };
 
-    const mockGetPlanQueryHandler = {
-      execute: async () => ({ success: true, data: null })
-    } as unknown as GetPlanQueryHandler;
+  // 获取模块信息
+  const moduleInfo = adapterResult.adapter.getModuleInfo();
 
-    const mockPlanExecutionService = {
-      executePlan: async () => ({ success: true })
-    } as unknown as PlanExecutionService;
-
-    // 创建必需的mock handlers
-    const mockUpdatePlanCommandHandler = {
-      execute: async () => ({ success: true })
-    } as unknown as UpdatePlanCommandHandler;
-
-    const mockDeletePlanCommandHandler = {
-      execute: async () => ({ success: true })
-    } as unknown as DeletePlanCommandHandler;
-
-    const mockGetPlanByIdQueryHandler = {
-      execute: async () => ({ success: true })
-    } as unknown as GetPlanByIdQueryHandler;
-
-    const mockGetPlansQueryHandler = {
-      execute: async () => ({ success: true })
-    } as unknown as GetPlansQueryHandler;
-
-    const mockPlanModuleAdapter = {
-      coordinatePlanning: async () => ({ success: true })
-    } as unknown as PlanModuleAdapter;
-
-    const planController = new PlanController(
-      mockCreatePlanCommandHandler,
-      mockUpdatePlanCommandHandler,
-      mockDeletePlanCommandHandler,
-      mockGetPlanByIdQueryHandler,
-      mockGetPlansQueryHandler,
-      planManagementService,
-      mockPlanModuleAdapter,
-      mockGetPlanQueryHandler,
-      mockPlanExecutionService
-    );
+  return {
+    // 核心组件
+    planEntity: PlanEntity,
+    planRepository: adapterResult.repository,
+    planService: adapterResult.service,
+    planProtocol: adapterResult.protocol,
+    planAdapter: adapterResult.adapter,
     
-    // 配置选项
-    if (options.enableTaskValidation) {
-      logger.info('Task validation enabled for plan module');
+    // 便捷方法
+    createPlan,
+    getPlan,
+    updatePlan,
+    deletePlan,
+    
+    // 模块信息
+    moduleInfo
+  };
+}
+
+/**
+ * Plan模块单例管理器
+ * 
+ * @description 提供Plan模块的单例访问和管理
+ */
+export class PlanModuleManager {
+  private static instance: PlanModuleResult | null = null;
+  private static options: PlanModuleOptions = {};
+
+  /**
+   * 获取模块实例
+   */
+  static async getInstance(options: PlanModuleOptions = {}): Promise<PlanModuleResult> {
+    if (!this.instance) {
+      this.options = { ...this.options, ...options };
+      this.instance = await initializePlanModule(this.options);
+    }
+    return this.instance;
+  }
+
+  /**
+   * 重置模块实例
+   */
+  static reset(): void {
+    this.instance = null;
+    this.options = {};
+  }
+
+  /**
+   * 检查模块是否已初始化
+   */
+  static isInitialized(): boolean {
+    return this.instance !== null;
+  }
+
+  /**
+   * 获取模块健康状态
+   */
+  static async getHealthStatus(): Promise<{
+    status: 'healthy' | 'degraded' | 'unhealthy';
+    components: Record<string, boolean>;
+    timestamp: string;
+  }> {
+    if (!this.instance) {
+      return {
+        status: 'unhealthy',
+        components: {},
+        timestamp: new Date().toISOString()
+      };
     }
 
-    if (options.enableProgressTracking) {
-      logger.info('Progress tracking enabled for plan module');
-    }
-    
-    logger.info('Plan module initialized successfully');
-    
-    return {
-      planController,
-      planManagementService
-    };
-  } catch (error) {
-    logger.error('Failed to initialize Plan module', error);
-    throw error;
+    return await this.instance.planAdapter.healthCheck();
   }
 }
+
+/**
+ * Plan模块工厂函数
+ * 
+ * @description 快速创建Plan模块实例的工厂函数
+ * @param options 模块选项
+ * @returns 模块实例
+ */
+export const createPlanModule = initializePlanModule;
+
+/**
+ * Plan模块默认配置
+ */
+export const DEFAULT_PLAN_MODULE_OPTIONS: PlanModuleOptions = {
+  enableLogging: true,
+  enableCaching: false,
+  enableMetrics: false,
+  repositoryType: 'memory',
+  maxCacheSize: 1000,
+  cacheTimeout: 300000, // 5分钟
+  enableOptimization: true,
+  enableRiskAssessment: true,
+  enableFailureRecovery: true
+};
+
+/**
+ * Plan模块信息常量
+ */
+export const PLAN_MODULE_INFO = {
+  name: 'plan',
+  version: '1.0.0',
+  description: 'MPLP智能任务规划协调模块',
+  layer: 'L2',
+  status: 'implementing',
+  features: [
+    '智能任务规划',
+    '计划执行管理',
+    '任务协调',
+    '依赖管理',
+    '计划优化',
+    '风险评估',
+    '故障恢复',
+    '性能监控',
+    '审计追踪',
+    '版本历史',
+    '搜索索引',
+    '缓存策略',
+    '事件集成'
+  ],
+  dependencies: [
+    'security',
+    'performance',
+    'eventBus',
+    'errorHandler',
+    'coordination',
+    'orchestration',
+    'stateSync',
+    'transaction',
+    'protocolVersion'
+  ]
+} as const;

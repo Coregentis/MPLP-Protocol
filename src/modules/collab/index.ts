@@ -1,33 +1,66 @@
 /**
- * MPLP Collab Module - Main Entry Point
- *
- * @version v2.0.0
- * @created 2025-08-02T01:14:00+08:00
- * @updated 2025-08-04 22:19
- * @description 协作模块主入口，导出所有公共接口
+ * Collab模块导出
+ * 
+ * @description Collab模块的统一导出入口，与其他6个已完成模块保持IDENTICAL架构
+ * @version 1.0.0
+ * @author MPLP Development Team
  */
 
-// ==================== 类型导出 ====================
+// ===== 模块核心 =====
+export { default as CollabModule } from './module';
 export * from './types';
 
-// ==================== 领域层导出 ====================
-export { Collab } from './domain/entities/collab.entity';
-export {
-  CollabRepository,
-  CollabStatistics,
-} from './domain/repositories/collab.repository';
-
-// ==================== 应用层导出 ====================
-export { CollabService } from './application/services/collab.service';
-
-// ==================== 基础设施层导出 ====================
-export { MemoryCollabRepository } from './infrastructure/repositories/memory-collab.repository';
-
-// ==================== API层导出 ====================
+// ===== API层 =====
 export { CollabController } from './api/controllers/collab.controller';
+export { CollabMapper } from './api/mappers/collab.mapper';
+export * from './api/dto/collab.dto';
 
-// ==================== 模块配置导出 ====================
-export { CollabModule } from './module';
+// ===== 应用层 =====
+export { CollabManagementService } from './application/services/collab-management.service';
 
-// ==================== 适配器导出 ====================
+// ===== 领域层 =====
+export { 
+  CollabEntity, 
+  CollabParticipant, 
+  CollabCoordinationStrategy 
+} from './domain/entities/collab.entity';
+export { CollabCoordinationService } from './domain/services/collab-coordination.service';
+export { ICollabRepository } from './domain/repositories/collab.repository';
+
+// ===== 基础设施层 =====
+export { CollabRepositoryImpl } from './infrastructure/repositories/collab.repository.impl';
 export { CollabModuleAdapter } from './infrastructure/adapters/collab-module.adapter';
+export { CollabProtocol } from './infrastructure/protocols/collab.protocol';
+export { CollabProtocolFactory } from './infrastructure/factories/collab-protocol.factory';
+
+// ===== 类型导出 =====
+export type {
+  UUID,
+  CollabMode,
+  CollabStatus,
+  ParticipantStatus,
+  CoordinationType,
+  DecisionMaking,
+  CollabParticipantData,
+  CollabCoordinationStrategyData,
+  CollabEntityData,
+  CreateCollabRequest,
+  UpdateCollabRequest,
+  CollabQueryFilter,
+  CollabSortOptions,
+  PaginationParams,
+  PaginatedResult,
+  CollabListResult,
+  CollabSearchResult,
+  CollabStatistics,
+  CollabHealthMetrics,
+  CollabCoordinationRecommendations,
+  CollabOperationResult,
+  CollabDomainEventData,
+  CollabAuditEntry,
+  CollabPerformanceMetrics,
+  CollabModuleConfig
+} from './types';
+
+// ===== 默认导出 =====
+export { default } from './module';

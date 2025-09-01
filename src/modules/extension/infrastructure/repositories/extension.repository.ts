@@ -1,399 +1,277 @@
 /**
- * Extension仓库实现 - TDD Green阶段
- *
- * 企业级基础设施层数据访问实现
- * 支持完整的CRUD操作、复杂查询、事务性操作和性能优化
- *
- * @version 2.0.0
- * @created 2025-09-16
- * @updated 2025-08-10 (TDD Green阶段重构)
- * @compliance 100% Schema合规性 - 完全匹配mplp-extension.json Schema定义
- * @naming_convention 双重命名约定 - Schema层(snake_case) ↔ Application层(camelCase)
- * @zero_any_policy 严格遵循 - 0个any类型，完全类型安全
+ * Extension仓储实现
+ * 
+ * @description Extension模块的内存仓储实现，提供完整的数据访问功能
+ * @version 1.0.0
+ * @layer Infrastructure层 - 仓储实现
+ * @pattern Repository Pattern + 内存存储
  */
 
-import { UUID } from '../../../../public/shared/types';
-import { Extension } from '../../domain/entities/extension.entity';
-import { ExtensionMapper } from '../../api/mappers/extension.mapper';
-import { ExtensionResponseDto } from '../../api/dto/extension.dto';
-import {
+import { UUID } from '../../../../shared/types';
+import { 
   IExtensionRepository,
-  ExtensionFilter,
-  PaginationOptions,
-  PaginatedResult,
-} from '../../domain/repositories/extension-repository.interface';
-import { ExtensionType, ExtensionStatus } from '../../types';
+  ExtensionQueryFilter,
+  PaginationParams,
+  SortParams,
+  ExtensionQueryResult,
+  BatchOperationResult,
+  ExtensionStatistics
+} from '../../domain/repositories/extension.repository.interface';
+import { ExtensionEntityData, ExtensionType, ExtensionStatus } from '../../types';
 
 /**
- * Extension仓库实现 - 企业级版本
- *
- * 注意：这是增强的内存实现，包含企业级功能
- * 生产环境中应该使用真实的数据库实现
+ * Extension内存仓储实现
+ * 使用内存存储提供快速的数据访问
  */
 export class ExtensionRepository implements IExtensionRepository {
-  private extensions: Map<UUID, Extension> = new Map();
-  private nameIndex: Map<string, Set<UUID>> = new Map(); // 名称索引
-  private contextIndex: Map<UUID, Set<UUID>> = new Map(); // 上下文索引
-  private typeIndex: Map<ExtensionType, Set<UUID>> = new Map(); // 类型索引
-  private statusIndex: Map<ExtensionStatus, Set<UUID>> = new Map(); // 状态索引
+  
+  // 内存存储
+  private extensions: Map<UUID, ExtensionEntityData> = new Map();
+  private nameIndex: Map<string, UUID> = new Map();
+  private contextIndex: Map<UUID, UUID[]> = new Map();
+  private typeIndex: Map<ExtensionType, UUID[]> = new Map();
+  private statusIndex: Map<ExtensionStatus, UUID[]> = new Map();
+
+  // ============================================================================
+  // 基本CRUD操作
+  // ============================================================================
 
   /**
-   * 创建新扩展 - TDD Green阶段实现
+   * 创建扩展记录
    */
-  async create(extension: Extension): Promise<Extension> {
-    // 验证扩展不存在
+  async create(extension: ExtensionEntityData): Promise<ExtensionEntityData> {
+    // 检查ID是否已存在
     if (this.extensions.has(extension.extensionId)) {
-      throw new Error(
-        `Extension with ID ${extension.extensionId} already exists`
-      );
+      throw new Error(`Extension with ID '${extension.extensionId}' already exists`);
     }
 
-    // 检查名称唯一性
-    const isUnique = await this.isNameUnique(
-      extension.name,
-      extension.contextId
-    );
-    if (!isUnique) {
-      throw new Error(
-        `Extension with name '${extension.name}' already exists in context ${extension.contextId}`
-      );
+    // 检查名称是否已存在
+    if (this.nameIndex.has(extension.name)) {
+      throw new Error(`Extension with name '${extension.name}' already exists`);
     }
 
-    // 保存扩展
-    await this.save(extension);
-
-    // 返回创建的扩展
-    return extension;
-  }
-
-  /**
-   * 保存扩展 - 增强版本，包含索引管理
-   */
-  async save(extension: Extension): Promise<void> {
-    // 如果是更新现有扩展，先清理旧索引
-    if (this.extensions.has(extension.extensionId)) {
-      await this.removeFromIndexes(extension.extensionId);
-    }
-
-    // 保存扩展
-    this.extensions.set(extension.extensionId, extension);
-
+    // 存储扩展
+    this.extensions.set(extension.extensionId, { ...extension });
+    
     // 更新索引
-    await this.addToIndexes(extension);
+    this.updateIndexes(extension, 'create');
+    
+    return { ...extension };
   }
 
   /**
    * 根据ID查找扩展
    */
-  async findById(extensionId: UUID): Promise<Extension | null> {
-    return this.extensions.get(extensionId) || null;
+  async findById(extensionId: UUID): Promise<ExtensionEntityData | null> {
+    const extension = this.extensions.get(extensionId);
+    return extension ? { ...extension } : null;
+  }
+
+  /**
+   * 更新扩展记录
+   */
+  async update(extensionId: UUID, updates: Partial<ExtensionEntityData>): Promise<ExtensionEntityData> {
+    const existingExtension = this.extensions.get(extensionId);
+    if (!existingExtension) {
+      throw new Error(`Extension with ID '${extensionId}' not found`);
+    }
+
+    // 如果更新名称，检查新名称是否已存在
+    if (updates.name && updates.name !== existingExtension.name) {
+      if (this.nameIndex.has(updates.name)) {
+        throw new Error(`Extension with name '${updates.name}' already exists`);
+      }
+    }
+
+    // 合并更新
+    const updatedExtension: ExtensionEntityData = {
+      ...existingExtension,
+      ...updates,
+      timestamp: new Date().toISOString() // 更新时间戳
+    };
+
+    // 更新存储
+    this.extensions.set(extensionId, updatedExtension);
+    
+    // 更新索引
+    this.updateIndexes(existingExtension, 'delete');
+    this.updateIndexes(updatedExtension, 'create');
+    
+    return { ...updatedExtension };
+  }
+
+  /**
+   * 删除扩展记录
+   */
+  async delete(extensionId: UUID): Promise<boolean> {
+    const extension = this.extensions.get(extensionId);
+    if (!extension) {
+      return false;
+    }
+
+    // 删除扩展
+    this.extensions.delete(extensionId);
+    
+    // 更新索引
+    this.updateIndexes(extension, 'delete');
+    
+    return true;
+  }
+
+  // ============================================================================
+  // 查询操作
+  // ============================================================================
+
+  /**
+   * 根据过滤条件查找扩展
+   */
+  async findByFilter(
+    filter: ExtensionQueryFilter,
+    pagination?: PaginationParams,
+    sort?: SortParams[]
+  ): Promise<ExtensionQueryResult> {
+    let results = Array.from(this.extensions.values());
+
+    // 应用过滤器
+    results = this.applyFilters(results, filter);
+
+    // 应用排序
+    if (sort && sort.length > 0) {
+      results = this.applySorting(results, sort);
+    }
+
+    // 计算总数
+    const total = results.length;
+
+    // 应用分页
+    if (pagination) {
+      const { page = 1, limit = 10, offset } = pagination;
+      const startIndex = offset !== undefined ? offset : (page - 1) * limit;
+      const endIndex = startIndex + limit;
+      results = results.slice(startIndex, endIndex);
+    }
+
+    return {
+      extensions: results.map(ext => ({ ...ext })),
+      total,
+      page: pagination?.page,
+      limit: pagination?.limit,
+      hasMore: pagination ? (pagination.page || 1) * (pagination.limit || 10) < total : false
+    };
+  }
+
+  /**
+   * 根据上下文ID查找扩展
+   */
+  async findByContextId(contextId: UUID): Promise<ExtensionEntityData[]> {
+    const extensionIds = this.contextIndex.get(contextId) || [];
+    return extensionIds
+      .map(id => this.extensions.get(id))
+      .filter((ext): ext is ExtensionEntityData => ext !== undefined)
+      .map(ext => ({ ...ext }));
+  }
+
+  /**
+   * 根据扩展类型查找扩展
+   */
+  async findByType(extensionType: ExtensionType, status?: ExtensionStatus): Promise<ExtensionEntityData[]> {
+    const extensionIds = this.typeIndex.get(extensionType) || [];
+    let results = extensionIds
+      .map(id => this.extensions.get(id))
+      .filter((ext): ext is ExtensionEntityData => ext !== undefined);
+
+    if (status) {
+      results = results.filter(ext => ext.status === status);
+    }
+
+    return results.map(ext => ({ ...ext }));
+  }
+
+  /**
+   * 根据状态查找扩展
+   */
+  async findByStatus(status: ExtensionStatus): Promise<ExtensionEntityData[]> {
+    const extensionIds = this.statusIndex.get(status) || [];
+    return extensionIds
+      .map(id => this.extensions.get(id))
+      .filter((ext): ext is ExtensionEntityData => ext !== undefined)
+      .map(ext => ({ ...ext }));
+  }
+
+  /**
+   * 查找所有扩展
+   */
+  async findAll(): Promise<ExtensionEntityData[]> {
+    return Array.from(this.extensions.values()).map(ext => ({ ...ext }));
   }
 
   /**
    * 根据名称查找扩展
    */
-  async findByName(name: string, contextId?: UUID): Promise<Extension | null> {
-    const nameKey = contextId ? `${name}:${contextId}` : name;
-    const extensionIds = this.nameIndex.get(nameKey);
-
-    if (!extensionIds || extensionIds.size === 0) {
-      return null;
+  async findByName(name: string, exactMatch = true): Promise<ExtensionEntityData[]> {
+    if (exactMatch) {
+      const extensionId = this.nameIndex.get(name);
+      if (extensionId) {
+        const extension = this.extensions.get(extensionId);
+        return extension ? [{ ...extension }] : [];
+      }
+      return [];
+    } else {
+      const results = Array.from(this.extensions.values())
+        .filter(ext => ext.name.toLowerCase().includes(name.toLowerCase()));
+      return results.map(ext => ({ ...ext }));
     }
-
-    // 返回第一个匹配的扩展
-    const firstId = extensionIds.values().next().value;
-    return firstId ? this.extensions.get(firstId) || null : null;
   }
 
   /**
-   * 根据上下文ID查找扩展列表
+   * 搜索扩展
    */
-  async findByContextId(contextId: UUID): Promise<Extension[]> {
-    const extensionIds = this.contextIndex.get(contextId) || new Set();
-    const extensions: Extension[] = [];
-
-    for (const id of Array.from(extensionIds)) {
-      const extension = this.extensions.get(id);
-      if (extension) {
-        extensions.push(extension);
-      }
-    }
-
-    return extensions;
-  }
-
-  /**
-   * 根据过滤器查找扩展列表 - 企业级实现
-   */
-  async findByFilter(
-    filter: ExtensionFilter,
-    pagination?: PaginationOptions
-  ): Promise<PaginatedResult<Extension>> {
-    let candidateIds = new Set<UUID>();
-    let isFirstFilter = true;
-
-    // 应用各种过滤器
-    if (filter.context_id) {
-      candidateIds = this.intersectSets(
-        candidateIds,
-        this.contextIndex.get(filter.context_id) || new Set(),
-        isFirstFilter
-      );
-      isFirstFilter = false;
-    }
-
-    if (filter.type) {
-      candidateIds = this.intersectSets(
-        candidateIds,
-        this.typeIndex.get(filter.type) || new Set(),
-        isFirstFilter
-      );
-      isFirstFilter = false;
-    }
-
-    if (filter.status) {
-      candidateIds = this.intersectSets(
-        candidateIds,
-        this.statusIndex.get(filter.status) || new Set(),
-        isFirstFilter
-      );
-      isFirstFilter = false;
-    }
-
-    // 如果没有应用任何过滤器，使用所有扩展
-    if (isFirstFilter) {
-      candidateIds = new Set(this.extensions.keys());
-    }
-
-    // 获取候选扩展
-    let candidateExtensions: Extension[] = [];
-    for (const id of Array.from(candidateIds)) {
-      const extension = this.extensions.get(id);
-      if (extension) {
-        candidateExtensions.push(extension);
-      }
-    }
-
-    // 应用额外过滤条件
-    candidateExtensions = candidateExtensions.filter(ext => {
-      if (filter.name_pattern && !ext.name.includes(filter.name_pattern)) {
-        return false;
-      }
-      if (filter.version && ext.version !== filter.version) {
-        return false;
-      }
-      if (
-        filter.is_active !== undefined &&
-        (ext.status === 'active') !== filter.is_active
-      ) {
-        return false;
-      }
-      if (filter.has_api_extensions !== undefined) {
-        const hasApiExtensions =
-          ext.apiExtensions && ext.apiExtensions.length > 0;
-        if (hasApiExtensions !== filter.has_api_extensions) {
-          return false;
-        }
-      }
-      if (filter.has_extension_points !== undefined) {
-        const hasExtensionPoints =
-          ext.extensionPoints && ext.extensionPoints.length > 0;
-        if (hasExtensionPoints !== filter.has_extension_points) {
-          return false;
-        }
-      }
-      if (filter.created_after && ext.createdAt < filter.created_after) {
-        return false;
-      }
-      if (filter.created_before && ext.createdAt > filter.created_before) {
-        return false;
-      }
-      return true;
+  async search(
+    searchTerm: string,
+    searchFields: string[] = ['name', 'displayName', 'description'],
+    pagination?: PaginationParams
+  ): Promise<ExtensionQueryResult> {
+    const lowerSearchTerm = searchTerm.toLowerCase();
+    let results = Array.from(this.extensions.values()).filter(ext => {
+      return searchFields.some(field => {
+        const value = this.getFieldValue(ext, field);
+        return value && value.toString().toLowerCase().includes(lowerSearchTerm);
+      });
     });
 
-    // 排序
-    if (pagination?.sort_by) {
-      candidateExtensions.sort((a, b) => {
-        const sortBy = pagination.sort_by!;
-        let aValue: any, bValue: any;
+    const total = results.length;
 
-        switch (sortBy) {
-          case 'name':
-            aValue = a.name;
-            bValue = b.name;
-            break;
-          case 'created_at':
-            aValue = a.createdAt;
-            bValue = b.createdAt;
-            break;
-          case 'updated_at':
-            aValue = a.updatedAt;
-            bValue = b.updatedAt;
-            break;
-          default:
-            aValue = a.name;
-            bValue = b.name;
-        }
-
-        if (pagination.sort_order === 'desc') {
-          return bValue > aValue ? 1 : bValue < aValue ? -1 : 0;
-        } else {
-          return aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
-        }
-      });
+    // 应用分页
+    if (pagination) {
+      const { page = 1, limit = 10, offset } = pagination;
+      const startIndex = offset !== undefined ? offset : (page - 1) * limit;
+      const endIndex = startIndex + limit;
+      results = results.slice(startIndex, endIndex);
     }
-
-    // 分页处理
-    const total = candidateExtensions.length;
-    let page = pagination?.page || 1;
-    let limit = pagination?.limit || 10;
-
-    // 处理无效分页参数
-    if (page < 1) page = 1;
-    if (limit < 1) limit = 10;
-
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-    const items = candidateExtensions.slice(startIndex, endIndex);
-    const totalPages = Math.ceil(total / limit);
 
     return {
-      items,
+      extensions: results.map(ext => ({ ...ext })),
       total,
-      page,
-      limit,
-      total_pages: totalPages,
+      page: pagination?.page,
+      limit: pagination?.limit,
+      hasMore: pagination ? (pagination.page || 1) * (pagination.limit || 10) < total : false
     };
   }
 
-  /**
-   * 查找活跃扩展
-   */
-  async findActiveExtensions(contextId?: UUID): Promise<Extension[]> {
-    const filter: ExtensionFilter = {
-      status: 'active' as ExtensionStatus,
-      ...(contextId && { context_id: contextId }),
-    };
-
-    const result = await this.findByFilter(filter);
-    return result.items;
-  }
+  // ============================================================================
+  // 统计和聚合操作
+  // ============================================================================
 
   /**
-   * 根据类型查找扩展
+   * 获取扩展总数
    */
-  async findByType(
-    type: ExtensionType,
-    contextId?: UUID
-  ): Promise<Extension[]> {
-    const filter: ExtensionFilter = {
-      type,
-      ...(contextId && { context_id: contextId }),
-    };
-
-    const result = await this.findByFilter(filter);
-    return result.items;
-  }
-
-  /**
-   * 查找具有特定扩展点的扩展
-   */
-  async findByExtensionPoint(pointName: string): Promise<Extension[]> {
-    const extensions: Extension[] = [];
-
-    for (const extension of Array.from(this.extensions.values())) {
-      if (extension.extensionPoints) {
-        const hasPoint = extension.extensionPoints.some(
-          point =>
-            typeof point === 'object' &&
-            point !== null &&
-            'name' in point &&
-            point.name === pointName
-        );
-        if (hasPoint) {
-          extensions.push(extension);
-        }
-      }
+  async count(filter?: ExtensionQueryFilter): Promise<number> {
+    if (!filter) {
+      return this.extensions.size;
     }
 
-    return extensions;
-  }
-
-  /**
-   * 查找具有API扩展的扩展
-   */
-  async findWithApiExtensions(contextId?: UUID): Promise<Extension[]> {
-    const filter: ExtensionFilter = {
-      has_api_extensions: true,
-      ...(contextId && { context_id: contextId }),
-    };
-
-    const result = await this.findByFilter(filter);
-    return result.items;
-  }
-
-  /**
-   * 更新扩展 - 增强版本 (Refactor阶段增强)
-   *
-   * 自动更新updatedAt时间戳，确保企业级审计要求
-   */
-  async update(extension: Extension): Promise<void> {
-    if (!this.extensions.has(extension.extensionId)) {
-      throw new Error(`Extension with ID ${extension.extensionId} not found`);
-    }
-
-    // 🕒 确保时间戳更新 - 企业级审计要求
-    // 添加1毫秒延迟确保时间戳不同
-    await new Promise(resolve => setTimeout(resolve, 1));
-
-    const schemaData = extension.toProtocol();
-    const updatedSchemaData = {
-      ...schemaData,
-      timestamp: new Date().toISOString(), // 更新时间戳
-    };
-
-    // 创建带有更新时间戳的Extension实例
-    const updatedExtension = new Extension(updatedSchemaData);
-
-    // 保存更新（save方法会处理索引更新）
-    await this.save(updatedExtension);
-  }
-
-  /**
-   * 删除扩展 - 增强版本，包含索引清理
-   */
-  async delete(extensionId: UUID): Promise<void> {
-    if (!this.extensions.has(extensionId)) {
-      throw new Error(`Extension with ID ${extensionId} not found`);
-    }
-
-    // 清理索引
-    await this.removeFromIndexes(extensionId);
-
-    // 删除扩展
-    this.extensions.delete(extensionId);
-  }
-
-  /**
-   * 批量更新状态 - 企业级实现
-   */
-  async batchUpdateStatus(
-    extensionIds: UUID[],
-    status: ExtensionStatus
-  ): Promise<void> {
-    const updatePromises = extensionIds.map(async id => {
-      const extension = await this.findById(id);
-      if (extension) {
-        // 创建更新后的扩展对象（模拟status更新）
-        const updatedExtension = this.cloneExtensionWithStatus(
-          extension,
-          status
-        );
-        await this.save(updatedExtension);
-      }
-    });
-
-    await Promise.all(updatePromises);
+    const results = this.applyFilters(Array.from(this.extensions.values()), filter);
+    return results.length;
   }
 
   /**
@@ -404,252 +282,731 @@ export class ExtensionRepository implements IExtensionRepository {
   }
 
   /**
-   * 检查扩展名称是否唯一
+   * 检查扩展名称是否已存在
    */
-  async isNameUnique(
-    name: string,
-    contextId: UUID,
-    excludeExtensionId?: UUID
-  ): Promise<boolean> {
-    for (const extension of Array.from(this.extensions.values())) {
-      if (
-        extension.name === name &&
-        extension.contextId === contextId &&
-        extension.extensionId !== excludeExtensionId
-      ) {
-        return false;
-      }
+  async nameExists(name: string, excludeId?: UUID): Promise<boolean> {
+    const existingId = this.nameIndex.get(name);
+    if (!existingId) {
+      return false;
     }
-    return true;
+    return excludeId ? existingId !== excludeId : true;
   }
 
   /**
-   * 获取扩展统计信息 - 企业级实现
+   * 获取扩展统计信息
    */
-  async getStatistics(contextId?: UUID): Promise<{
-    total: number;
-    by_type: Record<ExtensionType, number>;
-    by_status: Record<ExtensionStatus, number>;
-    active_count: number;
-  }> {
-    let targetExtensions = Array.from(this.extensions.values());
-
-    if (contextId) {
-      targetExtensions = targetExtensions.filter(
-        ext => ext.contextId === contextId
-      );
+  async getStatistics(filter?: ExtensionQueryFilter): Promise<ExtensionStatistics> {
+    let extensions = Array.from(this.extensions.values());
+    
+    if (filter) {
+      extensions = this.applyFilters(extensions, filter);
     }
 
-    const byType: Record<ExtensionType, number> = {} as Record<
-      ExtensionType,
-      number
-    >;
-    const byStatus: Record<ExtensionStatus, number> = {} as Record<
-      ExtensionStatus,
-      number
-    >;
+    const totalExtensions = extensions.length;
+    const activeExtensions = extensions.filter(ext => ext.status === 'active').length;
+    const inactiveExtensions = extensions.filter(ext => ext.status === 'inactive').length;
+    const errorExtensions = extensions.filter(ext => ext.status === 'error').length;
 
-    // 初始化计数器
-    const allTypes: ExtensionType[] = [
-      'plugin',
-      'adapter',
-      'connector',
-      'middleware',
-      'hook',
-      'transformer',
-    ];
-    const allStatuses: ExtensionStatus[] = [
-      'installed',
-      'active',
-      'inactive',
-      'disabled',
-      'error',
-      'updating',
-      'uninstalling',
-    ];
+    // 按类型统计
+    const extensionsByType: Record<ExtensionType, number> = {
+      plugin: 0,
+      adapter: 0,
+      connector: 0,
+      middleware: 0,
+      hook: 0,
+      transformer: 0
+    };
 
-    allTypes.forEach(type => {
-      byType[type] = 0;
-    });
-    allStatuses.forEach(status => {
-      byStatus[status] = 0;
+    // 按状态统计
+    const extensionsByStatus: Record<ExtensionStatus, number> = {
+      installed: 0,
+      active: 0,
+      inactive: 0,
+      disabled: 0,
+      error: 0,
+      updating: 0,
+      uninstalling: 0
+    };
+
+    extensions.forEach(ext => {
+      extensionsByType[ext.extensionType]++;
+      extensionsByStatus[ext.status]++;
     });
 
-    let activeCount = 0;
+    // 计算平均性能指标
+    const performanceMetrics = extensions.map(ext => ext.performanceMetrics);
+    const averagePerformanceMetrics = {
+      responseTime: this.calculateAverage(performanceMetrics.map(m => m.executionTime)),
+      errorRate: this.calculateAverage(performanceMetrics.map(m => m.errorRate)),
+      availability: this.calculateAverage(performanceMetrics.map(m => m.availability)),
+      throughput: this.calculateAverage(performanceMetrics.map(m => m.throughput))
+    };
 
-    // 统计
-    targetExtensions.forEach(ext => {
-      if (ext.type) {
-        byType[ext.type] = (byType[ext.type] || 0) + 1;
-      }
-      if (ext.status) {
-        byStatus[ext.status] = (byStatus[ext.status] || 0) + 1;
-      }
-      if (ext.status === 'active') {
-        activeCount++;
-      }
-    });
+    // 获取性能最佳的扩展
+    const topPerformingExtensions = extensions
+      .sort((a, b) => b.performanceMetrics.efficiencyScore - a.performanceMetrics.efficiencyScore)
+      .slice(0, 5)
+      .map(ext => ({
+        extensionId: ext.extensionId,
+        name: ext.name,
+        performanceScore: ext.performanceMetrics.efficiencyScore
+      }));
+
+    // 获取最近更新的扩展
+    const recentlyUpdated = extensions
+      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+      .slice(0, 5)
+      .map(ext => ({
+        extensionId: ext.extensionId,
+        name: ext.name,
+        lastUpdate: ext.timestamp
+      }));
 
     return {
-      total: targetExtensions.length,
-      by_type: byType,
-      by_status: byStatus,
-      active_count: activeCount,
+      totalExtensions,
+      activeExtensions,
+      inactiveExtensions,
+      errorExtensions,
+      extensionsByType,
+      extensionsByStatus,
+      averagePerformanceMetrics,
+      topPerformingExtensions,
+      recentlyUpdated
     };
   }
 
-  /**
-   * 查找依赖特定扩展的扩展
-   */
-  async findDependents(extensionId: UUID): Promise<Extension[]> {
-    const dependents: Extension[] = [];
+  // ============================================================================
+  // 批量操作
+  // ============================================================================
 
-    for (const extension of Array.from(this.extensions.values())) {
-      if (
-        extension.compatibility?.dependencies &&
-        extension.compatibility.dependencies.some(dep => dep.extensionId === extensionId)
-      ) {
-        dependents.push(extension);
+  /**
+   * 批量创建扩展
+   */
+  async createBatch(extensions: ExtensionEntityData[]): Promise<BatchOperationResult> {
+    const results: BatchOperationResult['results'] = [];
+    let successCount = 0;
+    let failureCount = 0;
+
+    for (const extension of extensions) {
+      try {
+        await this.create(extension);
+        results.push({ id: extension.extensionId, success: true });
+        successCount++;
+      } catch (error) {
+        results.push({ 
+          id: extension.extensionId, 
+          success: false, 
+          error: (error as Error).message 
+        });
+        failureCount++;
       }
     }
 
-    return dependents;
+    return { successCount, failureCount, results };
   }
 
   /**
-   * 检查扩展依赖 - 企业级实现
+   * 批量更新扩展
    */
-  async checkDependencies(extension: Extension): Promise<{
-    satisfied: boolean;
-    missing: string[];
-    conflicts: string[];
-  }> {
-    const missing: string[] = [];
-    const conflicts: string[] = [];
+  async updateBatch(updates: Array<{
+    extensionId: UUID;
+    updates: Partial<ExtensionEntityData>;
+  }>): Promise<BatchOperationResult> {
+    const results: BatchOperationResult['results'] = [];
+    let successCount = 0;
+    let failureCount = 0;
 
-    if (extension.compatibility?.dependencies) {
-      for (const dep of extension.compatibility.dependencies) {
-        const depId = dep.extensionId;
-        const dependency = await this.findById(depId);
-        if (!dependency) {
-          missing.push(depId);
-        } else if (dependency.status !== 'active') {
-          conflicts.push(
-            `Dependency ${depId} is not active (status: ${dependency.status})`
+    for (const { extensionId, updates: updateData } of updates) {
+      try {
+        await this.update(extensionId, updateData);
+        results.push({ id: extensionId, success: true });
+        successCount++;
+      } catch (error) {
+        results.push({ 
+          id: extensionId, 
+          success: false, 
+          error: (error as Error).message 
+        });
+        failureCount++;
+      }
+    }
+
+    return { successCount, failureCount, results };
+  }
+
+  /**
+   * 批量删除扩展
+   */
+  async deleteBatch(extensionIds: UUID[]): Promise<BatchOperationResult> {
+    const results: BatchOperationResult['results'] = [];
+    let successCount = 0;
+    let failureCount = 0;
+
+    for (const extensionId of extensionIds) {
+      try {
+        const deleted = await this.delete(extensionId);
+        if (deleted) {
+          results.push({ id: extensionId, success: true });
+          successCount++;
+        } else {
+          results.push({ 
+            id: extensionId, 
+            success: false, 
+            error: 'Extension not found' 
+          });
+          failureCount++;
+        }
+      } catch (error) {
+        results.push({ 
+          id: extensionId, 
+          success: false, 
+          error: (error as Error).message 
+        });
+        failureCount++;
+      }
+    }
+
+    return { successCount, failureCount, results };
+  }
+
+  /**
+   * 批量更新状态
+   */
+  async updateStatusBatch(extensionIds: UUID[], status: ExtensionStatus): Promise<BatchOperationResult> {
+    const updates = extensionIds.map(id => ({
+      extensionId: id,
+      updates: { status, timestamp: new Date().toISOString() }
+    }));
+
+    return await this.updateBatch(updates);
+  }
+
+  // ============================================================================
+  // 高级查询操作
+  // ============================================================================
+
+  /**
+   * 查找活动的扩展
+   */
+  async findActiveExtensions(contextId?: UUID): Promise<ExtensionEntityData[]> {
+    let results = await this.findByStatus('active');
+    
+    if (contextId) {
+      results = results.filter(ext => ext.contextId === contextId);
+    }
+    
+    return results;
+  }
+
+  /**
+   * 查找有错误的扩展
+   */
+  async findExtensionsWithErrors(contextId?: UUID): Promise<ExtensionEntityData[]> {
+    let results = Array.from(this.extensions.values())
+      .filter(ext => ext.status === 'error' || ext.lifecycle.errorCount > 0);
+    
+    if (contextId) {
+      results = results.filter(ext => ext.contextId === contextId);
+    }
+    
+    return results.map(ext => ({ ...ext }));
+  }
+
+  /**
+   * 查找需要更新的扩展
+   */
+  async findExtensionsNeedingUpdate(currentVersion: string): Promise<ExtensionEntityData[]> {
+    // 简单的版本比较逻辑
+    return Array.from(this.extensions.values())
+      .filter(ext => this.isVersionOlder(ext.version, currentVersion))
+      .map(ext => ({ ...ext }));
+  }
+
+  /**
+   * 查找兼容的扩展
+   */
+  async findCompatibleExtensions(
+    mplpVersion: string,
+    requiredModules?: string[]
+  ): Promise<ExtensionEntityData[]> {
+    return Array.from(this.extensions.values())
+      .filter(ext => {
+        // 检查MPLP版本兼容性
+        if (!this.isVersionCompatible(ext.compatibility.mplpVersion, mplpVersion)) {
+          return false;
+        }
+        
+        // 检查必需模块
+        if (requiredModules && requiredModules.length > 0) {
+          const hasAllModules = requiredModules.every(module => 
+            ext.compatibility.requiredModules.includes(module)
           );
+          if (!hasAllModules) {
+            return false;
+          }
+        }
+        
+        return true;
+      })
+      .map(ext => ({ ...ext }));
+  }
+
+  /**
+   * 查找具有特定扩展点的扩展
+   */
+  async findExtensionsWithExtensionPoint(extensionPointType: string): Promise<ExtensionEntityData[]> {
+    return Array.from(this.extensions.values())
+      .filter(ext => ext.extensionPoints.some(ep => ep.type === extensionPointType))
+      .map(ext => ({ ...ext }));
+  }
+
+  /**
+   * 查找具有API扩展的扩展
+   */
+  async findExtensionsWithApiExtensions(
+    endpoint?: string,
+    method?: string
+  ): Promise<ExtensionEntityData[]> {
+    return Array.from(this.extensions.values())
+      .filter(ext => {
+        if (ext.apiExtensions.length === 0) {
+          return false;
+        }
+        
+        if (endpoint || method) {
+          return ext.apiExtensions.some(api => {
+            const endpointMatch = !endpoint || api.endpoint === endpoint;
+            const methodMatch = !method || api.method.toLowerCase() === method.toLowerCase();
+            return endpointMatch && methodMatch;
+          });
+        }
+        
+        return true;
+      })
+      .map(ext => ({ ...ext }));
+  }
+
+  /**
+   * 查找订阅特定事件的扩展
+   */
+  async findExtensionsSubscribedToEvent(eventPattern: string): Promise<ExtensionEntityData[]> {
+    return Array.from(this.extensions.values())
+      .filter(ext => ext.eventSubscriptions.some(sub => sub.eventPattern === eventPattern))
+      .map(ext => ({ ...ext }));
+  }
+
+  // ============================================================================
+  // 性能和监控操作
+  // ============================================================================
+
+  /**
+   * 更新扩展性能指标
+   */
+  async updatePerformanceMetrics(
+    extensionId: UUID,
+    metrics: Partial<ExtensionEntityData['performanceMetrics']>
+  ): Promise<void> {
+    const extension = this.extensions.get(extensionId);
+    if (!extension) {
+      throw new Error(`Extension with ID '${extensionId}' not found`);
+    }
+
+    extension.performanceMetrics = {
+      ...extension.performanceMetrics,
+      ...metrics
+    };
+    
+    extension.timestamp = new Date().toISOString();
+  }
+
+  /**
+   * 获取性能最佳的扩展
+   */
+  async findTopPerformingExtensions(
+    limit = 10,
+    metric: 'responseTime' | 'throughput' | 'availability' | 'efficiencyScore' = 'efficiencyScore'
+  ): Promise<ExtensionEntityData[]> {
+    const extensions = Array.from(this.extensions.values());
+    
+    extensions.sort((a, b) => {
+      const aValue = this.getMetricValue(a.performanceMetrics, metric);
+      const bValue = this.getMetricValue(b.performanceMetrics, metric);
+      
+      // 对于responseTime，值越小越好；对于其他指标，值越大越好
+      return metric === 'responseTime' ? aValue - bValue : bValue - aValue;
+    });
+    
+    return extensions.slice(0, limit).map(ext => ({ ...ext }));
+  }
+
+  /**
+   * 获取最近更新的扩展
+   */
+  async findRecentlyUpdatedExtensions(limit = 10, days = 7): Promise<ExtensionEntityData[]> {
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - days);
+    
+    return Array.from(this.extensions.values())
+      .filter(ext => new Date(ext.timestamp) >= cutoffDate)
+      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+      .slice(0, limit)
+      .map(ext => ({ ...ext }));
+  }
+
+  // ============================================================================
+  // 清理和维护操作
+  // ============================================================================
+
+  /**
+   * 清理所有扩展数据
+   */
+  async clear(): Promise<void> {
+    this.extensions.clear();
+    this.nameIndex.clear();
+    this.contextIndex.clear();
+    this.typeIndex.clear();
+    this.statusIndex.clear();
+  }
+
+  /**
+   * 清理过期的审计记录
+   */
+  async cleanupExpiredAuditRecords(retentionDays: number): Promise<number> {
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - retentionDays);
+    
+    let cleanedCount = 0;
+    
+    for (const extension of this.extensions.values()) {
+      const originalCount = extension.auditTrail.events.length;
+      extension.auditTrail.events = extension.auditTrail.events.filter(
+        event => new Date(event.timestamp) >= cutoffDate
+      );
+      cleanedCount += originalCount - extension.auditTrail.events.length;
+    }
+    
+    return cleanedCount;
+  }
+
+  /**
+   * 优化存储性能
+   */
+  async optimize(): Promise<void> {
+    // 对于内存存储，这里可以进行一些优化操作
+    // 例如重建索引、压缩数据等
+    // Storage optimization completed
+  }
+
+  // ============================================================================
+  // 私有辅助方法
+  // ============================================================================
+
+  /**
+   * 更新索引
+   */
+  private updateIndexes(extension: ExtensionEntityData, operation: 'create' | 'delete'): void {
+    if (operation === 'create') {
+      // 更新名称索引
+      this.nameIndex.set(extension.name, extension.extensionId);
+      
+      // 更新上下文索引
+      const contextExtensions = this.contextIndex.get(extension.contextId) || [];
+      contextExtensions.push(extension.extensionId);
+      this.contextIndex.set(extension.contextId, contextExtensions);
+      
+      // 更新类型索引
+      const typeExtensions = this.typeIndex.get(extension.extensionType) || [];
+      typeExtensions.push(extension.extensionId);
+      this.typeIndex.set(extension.extensionType, typeExtensions);
+      
+      // 更新状态索引
+      const statusExtensions = this.statusIndex.get(extension.status) || [];
+      statusExtensions.push(extension.extensionId);
+      this.statusIndex.set(extension.status, statusExtensions);
+      
+    } else if (operation === 'delete') {
+      // 删除名称索引
+      this.nameIndex.delete(extension.name);
+      
+      // 删除上下文索引
+      const contextExtensions = this.contextIndex.get(extension.contextId) || [];
+      const contextIndex = contextExtensions.indexOf(extension.extensionId);
+      if (contextIndex > -1) {
+        contextExtensions.splice(contextIndex, 1);
+        if (contextExtensions.length === 0) {
+          this.contextIndex.delete(extension.contextId);
+        } else {
+          this.contextIndex.set(extension.contextId, contextExtensions);
+        }
+      }
+      
+      // 删除类型索引
+      const typeExtensions = this.typeIndex.get(extension.extensionType) || [];
+      const typeIndex = typeExtensions.indexOf(extension.extensionId);
+      if (typeIndex > -1) {
+        typeExtensions.splice(typeIndex, 1);
+        if (typeExtensions.length === 0) {
+          this.typeIndex.delete(extension.extensionType);
+        } else {
+          this.typeIndex.set(extension.extensionType, typeExtensions);
+        }
+      }
+      
+      // 删除状态索引
+      const statusExtensions = this.statusIndex.get(extension.status) || [];
+      const statusIndex = statusExtensions.indexOf(extension.extensionId);
+      if (statusIndex > -1) {
+        statusExtensions.splice(statusIndex, 1);
+        if (statusExtensions.length === 0) {
+          this.statusIndex.delete(extension.status);
+        } else {
+          this.statusIndex.set(extension.status, statusExtensions);
         }
       }
     }
-
-    return {
-      satisfied: missing.length === 0 && conflicts.length === 0,
-      missing,
-      conflicts,
-    };
   }
 
-  // === 私有辅助方法 ===
-
   /**
-   * 添加到索引
+   * 应用过滤器
    */
-  private async addToIndexes(extension: Extension): Promise<void> {
-    // 名称索引
-    const nameKey = `${extension.name}:${extension.contextId}`;
-    if (!this.nameIndex.has(nameKey)) {
-      this.nameIndex.set(nameKey, new Set());
-    }
-    this.nameIndex.get(nameKey)!.add(extension.extensionId);
-
-    // 上下文索引
-    if (!this.contextIndex.has(extension.contextId)) {
-      this.contextIndex.set(extension.contextId, new Set());
-    }
-    this.contextIndex.get(extension.contextId)!.add(extension.extensionId);
-
-    // 类型索引
-    if (extension.type) {
-      if (!this.typeIndex.has(extension.type)) {
-        this.typeIndex.set(extension.type, new Set());
+  private applyFilters(extensions: ExtensionEntityData[], filter: ExtensionQueryFilter): ExtensionEntityData[] {
+    return extensions.filter(ext => {
+      // 上下文ID过滤
+      if (filter.contextId && ext.contextId !== filter.contextId) {
+        return false;
       }
-      this.typeIndex.get(extension.type)!.add(extension.extensionId);
-    }
-
-    // 状态索引
-    if (extension.status) {
-      if (!this.statusIndex.has(extension.status)) {
-        this.statusIndex.set(extension.status, new Set());
+      
+      // 扩展类型过滤
+      if (filter.extensionType) {
+        const types = Array.isArray(filter.extensionType) ? filter.extensionType : [filter.extensionType];
+        if (!types.includes(ext.extensionType)) {
+          return false;
+        }
       }
-      this.statusIndex.get(extension.status)!.add(extension.extensionId);
-    }
+      
+      // 状态过滤
+      if (filter.status) {
+        const statuses = Array.isArray(filter.status) ? filter.status : [filter.status];
+        if (!statuses.includes(ext.status)) {
+          return false;
+        }
+      }
+      
+      // 名称过滤
+      if (filter.name && !ext.name.toLowerCase().includes(filter.name.toLowerCase())) {
+        return false;
+      }
+      
+      // 版本过滤
+      if (filter.version && ext.version !== filter.version) {
+        return false;
+      }
+      
+      // 作者过滤
+      if (filter.author && ext.metadata.author.name !== filter.author) {
+        return false;
+      }
+      
+      // 组织过滤
+      if (filter.organization && ext.metadata.organization?.name !== filter.organization) {
+        return false;
+      }
+      
+      // 分类过滤
+      if (filter.category && ext.metadata.category !== filter.category) {
+        return false;
+      }
+      
+      // 关键词过滤
+      if (filter.keywords && filter.keywords.length > 0) {
+        const hasKeywords = filter.keywords.some(keyword => 
+          ext.metadata.keywords.includes(keyword)
+        );
+        if (!hasKeywords) {
+          return false;
+        }
+      }
+      
+      // 时间范围过滤
+      if (filter.createdAfter && new Date(ext.lifecycle.installDate) < new Date(filter.createdAfter)) {
+        return false;
+      }
+      
+      if (filter.createdBefore && new Date(ext.lifecycle.installDate) > new Date(filter.createdBefore)) {
+        return false;
+      }
+      
+      if (filter.lastUpdateAfter && new Date(ext.timestamp) < new Date(filter.lastUpdateAfter)) {
+        return false;
+      }
+      
+      if (filter.lastUpdateBefore && new Date(ext.timestamp) > new Date(filter.lastUpdateBefore)) {
+        return false;
+      }
+      
+      // 错误状态过滤
+      if (filter.hasErrors !== undefined) {
+        const hasErrors = ext.status === 'error' || ext.lifecycle.errorCount > 0;
+        if (filter.hasErrors !== hasErrors) {
+          return false;
+        }
+      }
+      
+      // 活动状态过滤
+      if (filter.isActive !== undefined) {
+        const isActive = ext.status === 'active';
+        if (filter.isActive !== isActive) {
+          return false;
+        }
+      }
+      
+      // 健康状态过滤
+      if (filter.healthStatus && ext.performanceMetrics.healthStatus !== filter.healthStatus) {
+        return false;
+      }
+      
+      // 性能阈值过滤
+      if (filter.performanceThreshold) {
+        const { errorRate, availability, responseTime } = filter.performanceThreshold;
+        
+        if (errorRate !== undefined && ext.performanceMetrics.errorRate > errorRate) {
+          return false;
+        }
+        
+        if (availability !== undefined && ext.performanceMetrics.availability < availability) {
+          return false;
+        }
+        
+        if (responseTime !== undefined && ext.performanceMetrics.executionTime > responseTime) {
+          return false;
+        }
+      }
+      
+      // 扩展点类型过滤
+      if (filter.hasExtensionPointType) {
+        const hasType = ext.extensionPoints.some(ep => ep.type === filter.hasExtensionPointType);
+        if (!hasType) {
+          return false;
+        }
+      }
+      
+      // API扩展过滤
+      if (filter.hasApiExtensions !== undefined) {
+        const hasApiExtensions = ext.apiExtensions.length > 0;
+        if (filter.hasApiExtensions !== hasApiExtensions) {
+          return false;
+        }
+      }
+      
+      // 事件订阅过滤
+      if (filter.hasEventSubscriptions !== undefined) {
+        const hasEventSubscriptions = ext.eventSubscriptions.length > 0;
+        if (filter.hasEventSubscriptions !== hasEventSubscriptions) {
+          return false;
+        }
+      }
+      
+      return true;
+    });
   }
 
   /**
-   * 从索引中移除
+   * 应用排序
    */
-  private async removeFromIndexes(extensionId: UUID): Promise<void> {
-    const extension = this.extensions.get(extensionId);
-    if (!extension) return;
-
-    // 名称索引
-    const nameKey = `${extension.name}:${extension.contextId}`;
-    this.nameIndex.get(nameKey)?.delete(extensionId);
-
-    // 上下文索引
-    this.contextIndex.get(extension.contextId)?.delete(extensionId);
-
-    // 类型索引
-    if (extension.type) {
-      this.typeIndex.get(extension.type)?.delete(extensionId);
-    }
-
-    // 状态索引
-    if (extension.status) {
-      this.statusIndex.get(extension.status)?.delete(extensionId);
-    }
+  private applySorting(extensions: ExtensionEntityData[], sort: SortParams[]): ExtensionEntityData[] {
+    return extensions.sort((a, b) => {
+      for (const sortParam of sort) {
+        const aValue = this.getFieldValue(a, sortParam.field);
+        const bValue = this.getFieldValue(b, sortParam.field);
+        
+        let comparison = 0;
+        const aStr = String(aValue || '');
+        const bStr = String(bValue || '');
+        if (aStr < bStr) {
+          comparison = -1;
+        } else if (aStr > bStr) {
+          comparison = 1;
+        }
+        
+        if (comparison !== 0) {
+          return sortParam.direction === 'desc' ? -comparison : comparison;
+        }
+      }
+      return 0;
+    });
   }
 
   /**
-   * 集合交集操作
+   * 获取字段值
    */
-  private intersectSets(
-    setA: Set<UUID>,
-    setB: Set<UUID>,
-    isFirst: boolean
-  ): Set<UUID> {
-    if (isFirst) {
-      return new Set(setB);
-    }
-
-    const intersection = new Set<UUID>();
-    for (const item of Array.from(setA)) {
-      if (setB.has(item)) {
-        intersection.add(item);
+  private getFieldValue(extension: ExtensionEntityData, field: string): unknown {
+    const parts = field.split('.');
+    let value: unknown = extension;
+    
+    for (const part of parts) {
+      if (value && typeof value === 'object' && part in value) {
+        value = (value as Record<string, unknown>)[part];
+      } else {
+        value = undefined;
+        break;
       }
     }
-    return intersection;
+    
+    return value;
   }
 
   /**
-   * 克隆扩展并更新状态
-   * 注意：这是一个简化实现，实际应该通过Extension实体的方法来更新
+   * 计算平均值
    */
-  private cloneExtensionWithStatus(
-    extension: Extension,
-    newStatus: ExtensionStatus
-  ): Extension {
-    // 创建一个新的Extension实例，状态已更新
-    // 获取当前Extension的Schema数据
-    const currentSchema = extension.toSchema();
+  private calculateAverage(values: number[]): number {
+    if (values.length === 0) return 0;
+    const sum = values.reduce((acc, val) => acc + val, 0);
+    return sum / values.length;
+  }
 
-    // 更新状态
-    const updatedSchema = {
-      ...currentSchema,
-      status: newStatus,
-      updated_at: new Date().toISOString()
-    };
+  /**
+   * 获取性能指标值
+   */
+  private getMetricValue(metrics: ExtensionEntityData['performanceMetrics'], metric: string): number {
+    switch (metric) {
+      case 'responseTime':
+        return metrics.executionTime;
+      case 'throughput':
+        return metrics.throughput;
+      case 'availability':
+        return metrics.availability;
+      case 'efficiencyScore':
+        return metrics.efficiencyScore;
+      default:
+        return 0;
+    }
+  }
 
-    // 创建新的Extension实体
-    return new Extension(updatedSchema);
+  /**
+   * 检查版本是否较旧
+   */
+  private isVersionOlder(version1: string, version2: string): boolean {
+    // 简单的版本比较逻辑
+    const v1Parts = version1.split('.').map(Number);
+    const v2Parts = version2.split('.').map(Number);
+    
+    for (let i = 0; i < Math.max(v1Parts.length, v2Parts.length); i++) {
+      const v1Part = v1Parts[i] || 0;
+      const v2Part = v2Parts[i] || 0;
+      
+      if (v1Part < v2Part) return true;
+      if (v1Part > v2Part) return false;
+    }
+    
+    return false;
+  }
+
+  /**
+   * 检查版本兼容性
+   */
+  private isVersionCompatible(requiredVersion: string, currentVersion: string): boolean {
+    // 简单的兼容性检查逻辑
+    // 这里可以实现更复杂的语义版本兼容性检查
+    return !this.isVersionOlder(currentVersion, requiredVersion);
   }
 }

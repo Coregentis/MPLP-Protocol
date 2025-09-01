@@ -1,364 +1,910 @@
 /**
- * Collab模块适配器
- * 
- * 实现Core模块的ModuleInterface接口，提供决策协调功能
- * 
- * @version 2.0.0
- * @created 2025-08-04
- * @updated 2025-08-04 22:19
+ * Collab Module Adapter - Infrastructure Layer
+ * @description Adapter for integrating Collab module with other MPLP modules
+ * @version 1.0.0
+ * @author MPLP Development Team
  */
 
-import { v4 as uuidv4 } from 'uuid';
-import { 
-  ModuleInterface, 
-  ModuleStatus, 
-  DecisionCoordinationRequest,
-  DecisionResult
-} from '../../../../public/modules/core/types/core.types';
-import { CollabService } from '../../application/services/collab.service';
-import { Logger } from '../../../../public/utils/logger';
-import {
-  CreateCollabRequest,
-  CollabEntity,
-  CoordinationRequest,
-  CoordinationResult,
-  DecisionMaking
-} from '../../types';
+import { UUID } from '../../../../shared/types';
+import { generateUUID } from '../../../../shared/utils';
+import { CollabEntity } from '../../domain/entities/collab.entity';
+import { CollabManagementService } from '../../application/services/collab-management.service';
+
+// Type definitions for adapter interfaces
+interface _ContextData {
+  planId?: UUID;
+  name?: string;
+  description?: string;
+  mode?: 'sequential' | 'parallel' | 'hybrid' | 'pipeline' | 'mesh';
+  participants?: ParticipantData[];
+}
+
+interface ContextUpdates {
+  name?: string;
+  description?: string;
+  mode?: 'sequential' | 'parallel' | 'hybrid' | 'pipeline' | 'mesh';
+}
+
+interface _PlanData {
+  contextId?: UUID;
+  name?: string;
+  description?: string;
+  complexity?: 'simple' | 'medium' | 'high' | 'distributed';
+}
+
+interface PlanUpdates {
+  name?: string;
+  description?: string;
+  complexity?: 'simple' | 'medium' | 'high' | 'distributed';
+}
+
+interface ParticipantData {
+  agentId: UUID;
+  roleId: UUID;
+  capabilities?: string[];
+}
+
+interface _ParticipantRole {
+  agentId: UUID;
+  roleId: UUID;
+}
+
+interface _ValidationResult {
+  valid: boolean;
+  violations: string[];
+  recommendations: string[];
+}
+
+interface _CoordinationRequest {
+  action: string;
+  participants: ParticipantData[];
+  metadata?: Record<string, unknown>;
+}
+
+interface _CoordinationResult {
+  success: boolean;
+  message: string;
+  data?: Record<string, unknown>;
+}
+
+interface UpdateData {
+  name?: string;
+  description?: string;
+  mode?: 'sequential' | 'parallel' | 'hybrid' | 'pipeline' | 'mesh';
+  updatedBy?: string;
+}
 
 /**
- * Collab模块适配器类
- * 实现Core模块的ModuleInterface接口
+ * Collab Module Adapter
+ * Provides standardized interface for other MPLP modules to interact with Collab module
+ * 
+ * Reserved Interfaces for CoreOrchestrator Integration:
+ * - Context Module Integration
+ * - Plan Module Integration  
+ * - Role Module Integration
+ * - Confirm Module Integration
+ * - Trace Module Integration
+ * - Extension Module Integration
+ * - Core Module Integration
+ * - Dialog Module Integration
+ * - Network Module Integration
  */
-export class CollabModuleAdapter implements ModuleInterface {
-  public readonly module_name = 'collab';
-  private logger = new Logger('CollabModuleAdapter');
-  private moduleStatus: ModuleStatus = {
-    module_name: 'collab',
-    status: 'idle',
-    error_count: 0
-  };
+export class CollabModuleAdapter {
+  constructor(
+    private readonly collabManagementService: CollabManagementService
+  ) {}
 
-  constructor(private collabService: CollabService) {}
+  // ===== CONTEXT MODULE INTEGRATION =====
 
   /**
-   * 初始化模块
+   * Create collaboration from context
+   * Reserved interface for Context module integration
    */
-  async initialize(): Promise<void> {
-    try {
-      this.logger.info('Initializing Collab module adapter');
-      
-      // 检查CollabService是否可用
-      if (!this.collabService) {
-        throw new Error('CollabService not available');
-      }
+  async createCollaborationFromContext(
+    contextId: UUID,         // Reserved for CoreOrchestrator activation
+    contextData: Record<string, unknown>, // Reserved for CoreOrchestrator activation
+    userId: string           // Reserved for CoreOrchestrator activation
+  ): Promise<CollabEntity> {
+    // TODO: Implement actual Context module integration when CoreOrchestrator is activated
+    // This will extract collaboration requirements from context data
 
-      this.moduleStatus.status = 'initialized';
-      this.logger.info('Collab module adapter initialized successfully');
-    } catch (error) {
-      this.moduleStatus.status = 'error';
-      this.moduleStatus.error_count++;
-      this.logger.error('Failed to initialize Collab module adapter', error);
-      throw error;
-    }
-  }
-
-  /**
-   * 执行决策协调
-   */
-  async execute(request: DecisionCoordinationRequest): Promise<DecisionResult> {
-    this.logger.info('Executing decision coordination', {
-      contextId: request.contextId,
-      strategy: request.strategy
-    });
-
-    this.moduleStatus.status = 'running';
-    this.moduleStatus.last_execution = new Date().toISOString();
-
-    try {
-      // 验证请求参数
-      this.validateDecisionRequest(request);
-
-      // 根据策略执行决策协调
-      const result = await this.executeDecisionStrategy(request);
-
-      this.moduleStatus.status = 'idle';
-
-      this.logger.info('Decision coordination completed', {
-        contextId: request.contextId,
-        decision_id: result.decision_id,
-        consensus_reached: result.consensusReached
-      });
-
-      return result;
-    } catch (error) {
-      this.moduleStatus.status = 'error';
-      this.moduleStatus.error_count++;
-      this.logger.error('Decision coordination failed', {
-        contextId: request.contextId,
-        error: error instanceof Error ? error.message : String(error)
-      });
-      throw error;
-    }
-  }
-
-  /**
-   * 清理资源
-   */
-  async cleanup(): Promise<void> {
-    try {
-      this.logger.info('Cleaning up Collab module adapter');
-      this.moduleStatus.status = 'idle';
-      this.logger.info('Collab module adapter cleanup completed');
-    } catch (error) {
-      this.logger.error('Failed to cleanup Collab module adapter', error);
-      throw error;
-    }
-  }
-
-  /**
-   * 获取模块状态
-   */
-  getStatus(): ModuleStatus {
-    return this.moduleStatus;
-  }
-
-  // ===== 私有方法 =====
-
-  /**
-   * 验证决策请求
-   */
-  private validateDecisionRequest(request: DecisionCoordinationRequest): void {
-    if (!request.contextId) {
-      throw new Error('Context ID is required');
-    }
-
-    if (!request.participants || request.participants.length < 2) {
-      throw new Error('At least 2 participants are required for decision coordination');
-    }
-
-    if (!['simple_voting', 'weighted_voting', 'consensus', 'delegation'].includes(request.strategy)) {
-      throw new Error(`Unsupported decision strategy: ${request.strategy}`);
-    }
-
-    // 验证加权投票的权重
-    if (request.strategy === 'weighted_voting') {
-      if (!request.parameters.weights) {
-        throw new Error('Weights are required for weighted voting strategy');
-      }
-      
-      const participantIds = request.participants;
-      const weightKeys = Object.keys(request.parameters.weights);
-      
-      if (!participantIds.every(id => weightKeys.includes(id))) {
-        throw new Error('All participants must have weights defined');
-      }
-    }
-
-    // 验证共识决策的阈值
-    if (request.strategy === 'consensus') {
-      const threshold = request.parameters.threshold || 1.0;
-      if (threshold < 0.5 || threshold > 1.0) {
-        throw new Error('Consensus threshold must be between 0.5 and 1.0');
-      }
-    }
-  }
-
-  /**
-   * 执行决策策略
-   */
-  private async executeDecisionStrategy(request: DecisionCoordinationRequest): Promise<DecisionResult> {
-    const decision_id = uuidv4();
-    const timestamp = new Date().toISOString();
-
-    // 创建协作实体来管理决策过程
-    const collabRequest: CreateCollabRequest = {
-      context_id: request.contextId,
-      plan_id: uuidv4(), // 临时生成，实际应该从context获取
-      name: `Decision Coordination - ${request.strategy}`,
-      description: `Decision coordination using ${request.strategy} strategy`,
-      mode: 'parallel',
-      participants: request.participants.map(id => ({
-        agent_id: id,
-        role_id: 'decision_maker',
-        status: 'active',
-        capabilities: ['decision_making'],
-        priority: 1,
-        weight: request.parameters.weights?.[id] || 1
+    // Placeholder implementation with basic context-driven collaboration creation
+    const collaborationData = {
+      contextId,
+      planId: (contextData.planId as UUID) || generateUUID(),
+      name: (contextData.name as string) || `Collaboration for Context ${contextId}`,
+      description: (contextData.description as string) || 'Auto-generated collaboration from context',
+      mode: (contextData.mode as 'sequential' | 'parallel' | 'hybrid' | 'pipeline' | 'mesh') || 'distributed',
+      coordinationStrategy: {
+        type: 'distributed' as const,
+        decisionMaking: 'consensus' as const,
+        coordinatorId: undefined
+      },
+      participants: ((contextData.participants as ParticipantData[]) || []).map((p: ParticipantData) => ({
+        participantId: generateUUID(),
+        agentId: p.agentId,
+        roleId: p.roleId,
+        status: 'pending' as const,
+        capabilities: p.capabilities || [],
+        joinedAt: new Date(),
+        lastActivity: undefined
       })),
-      coordination_strategy: {
-        type: 'distributed',
-        decision_making: this.mapStrategyToDecisionMaking(request.strategy)
-      },
-      decision_making: {
-        enabled: true,
-        algorithm: this.mapStrategyToAlgorithm(request.strategy),
-        voting: {
-          anonymity: false,
-          transparency: true,
-          revision_allowed: false,
-          time_limit_ms: request.parameters.timeoutMs || 30000
+      createdBy: userId
+    };
+
+    return await this.collabManagementService.createCollaboration(collaborationData);
+  }
+
+  /**
+   * Update collaboration context
+   * Reserved interface for Context module integration
+   */
+  async updateCollaborationContext(
+    collaborationId: UUID,   // Reserved for CoreOrchestrator activation
+    contextUpdates: Record<string, unknown> // Reserved for CoreOrchestrator activation
+  ): Promise<void> {
+    // TODO: Implement actual Context module integration when CoreOrchestrator is activated
+
+    // Placeholder implementation with basic context update
+    const updateData: UpdateData = {};
+
+    if ((contextUpdates as ContextUpdates).name) {
+      updateData.name = (contextUpdates as ContextUpdates).name;
+    }
+
+    if ((contextUpdates as ContextUpdates).description) {
+      updateData.description = (contextUpdates as ContextUpdates).description;
+    }
+
+    if ((contextUpdates as ContextUpdates).mode) {
+      updateData.mode = (contextUpdates as ContextUpdates).mode;
+    }
+
+    if (Object.keys(updateData).length > 0) {
+      updateData.updatedBy = 'context-module';
+      await this.collabManagementService.updateCollaboration(collaborationId, updateData);
+    }
+  }
+
+  // ===== PLAN MODULE INTEGRATION =====
+
+  /**
+   * Create collaboration from plan
+   * Reserved interface for Plan module integration
+   */
+  async createCollaborationFromPlan(
+    planId: UUID,            // Reserved for CoreOrchestrator activation
+    planData: Record<string, unknown>, // Reserved for CoreOrchestrator activation
+    userId: string           // Reserved for CoreOrchestrator activation
+  ): Promise<CollabEntity> {
+    // TODO: Implement actual Plan module integration when CoreOrchestrator is activated
+    // This will extract collaboration structure from plan data
+
+    // Placeholder implementation with plan-driven collaboration creation
+    const collaborationData = {
+      contextId: (planData.contextId as UUID) || generateUUID(),
+      planId,
+      name: (planData.name as string) || `Collaboration for Plan ${planId}`,
+      description: (planData.description as string) || 'Auto-generated collaboration from plan',
+      mode: this.determineModeFromPlan(planData),
+      coordinationStrategy: this.determineCoordinationFromPlan(planData),
+      participants: this.extractParticipantsFromPlan(planData).map(p => ({
+        participantId: generateUUID(),
+        agentId: p.agentId,
+        roleId: p.roleId,
+        status: 'pending' as const,
+        capabilities: p.capabilities || [],
+        joinedAt: new Date(),
+        lastActivity: undefined
+      })),
+      createdBy: userId
+    };
+
+    return await this.collabManagementService.createCollaboration(collaborationData);
+  }
+
+  /**
+   * Synchronize collaboration with plan updates
+   * Reserved interface for Plan module integration
+   */
+  async synchronizeWithPlanUpdates(
+    collaborationId: UUID,   // Reserved for CoreOrchestrator activation
+    planUpdates: Record<string, unknown> // Reserved for CoreOrchestrator activation
+  ): Promise<void> {
+    // TODO: Implement actual Plan module integration when CoreOrchestrator is activated
+
+    // Placeholder implementation with plan synchronization
+    const updateData: UpdateData = {};
+
+    if ((planUpdates as PlanUpdates).name) {
+      updateData.name = (planUpdates as PlanUpdates).name;
+    }
+
+    if ((planUpdates as PlanUpdates).description) {
+      updateData.description = (planUpdates as PlanUpdates).description;
+    }
+
+    if (planUpdates.participants) {
+      // Update participants based on plan changes
+      const newParticipants = this.extractParticipantsFromPlan(planUpdates);
+      if (newParticipants.length > 0) {
+        // This would require more complex participant management
+        // For now, just update the collaboration metadata
+        updateData.description = `${updateData.description || ''} [Updated from plan]`;
+      }
+    }
+
+    if (Object.keys(updateData).length > 0) {
+      updateData.updatedBy = 'plan-module';
+      await this.collabManagementService.updateCollaboration(collaborationId, updateData);
+    }
+  }
+
+  // ===== ROLE MODULE INTEGRATION =====
+
+  /**
+   * Validate participant roles
+   * Reserved interface for Role module integration
+   */
+  async validateParticipantRoles(
+    collaborationId: UUID,   // Reserved for CoreOrchestrator activation
+    participantRoles: Array<{ agentId: UUID; roleId: UUID }> // Reserved for CoreOrchestrator activation
+  ): Promise<{
+    valid: boolean;
+    violations: string[];
+    recommendations: string[];
+  }> {
+    // TODO: Implement actual Role module integration when CoreOrchestrator is activated
+    // This will validate role assignments and permissions
+
+    // Placeholder implementation with basic role validation
+    const violations: string[] = [];
+    const recommendations: string[] = [];
+
+    // Get collaboration to check current participants
+    const collaboration = await this.collabManagementService.getCollaboration(collaborationId);
+    if (!collaboration) {
+      violations.push('Collaboration not found');
+      return { valid: false, violations, recommendations };
+    }
+
+    // Basic validation rules
+    for (const roleAssignment of participantRoles) {
+      const participant = collaboration.participants.find(p => p.agentId === roleAssignment.agentId);
+
+      if (!participant) {
+        violations.push(`Agent ${roleAssignment.agentId} is not a participant in this collaboration`);
+        continue;
+      }
+
+      // Check if role change is valid (placeholder logic)
+      if (participant.roleId !== roleAssignment.roleId) {
+        // In real implementation, this would check role compatibility
+        recommendations.push(`Consider role transition training for agent ${roleAssignment.agentId}`);
+      }
+    }
+
+    // Check for role conflicts (placeholder)
+    const coordinatorRoles = participantRoles.filter(r => r.roleId.includes('coordinator'));
+    if (coordinatorRoles.length > 1) {
+      violations.push('Multiple coordinator roles detected - only one coordinator allowed');
+    }
+
+    return {
+      valid: violations.length === 0,
+      violations,
+      recommendations
+    };
+  }
+
+  /**
+   * Update participant role assignments
+   * Reserved interface for Role module integration
+   */
+  async updateParticipantRoles(
+    collaborationId: UUID,   // Reserved for CoreOrchestrator activation
+    roleUpdates: Array<{ participantId: UUID; newRoleId: UUID }> // Reserved for CoreOrchestrator activation
+  ): Promise<void> {
+    // TODO: Implement actual Role module integration when CoreOrchestrator is activated
+
+    // Placeholder implementation with role updates
+    const collaboration = await this.collabManagementService.getCollaboration(collaborationId);
+    if (!collaboration) {
+      throw new Error('Collaboration not found');
+    }
+
+    // Update participant roles (this would be more complex in real implementation)
+    for (const roleUpdate of roleUpdates) {
+      const participant = collaboration.participants.find(p => p.participantId === roleUpdate.participantId);
+      if (participant) {
+        // In real implementation, this would update the participant's role
+        // TODO: Implement actual role update when CoreOrchestrator is activated
+        // Role update: Participant ${roleUpdate.participantId} role changed to ${roleUpdate.newRoleId}
+      }
+    }
+
+    // Update collaboration metadata to reflect role changes
+    await this.collabManagementService.updateCollaboration(collaborationId, {
+      description: `${collaboration.description || ''} [Roles updated]`,
+      updatedBy: 'role-module'
+    });
+  }
+
+  // ===== CONFIRM MODULE INTEGRATION =====
+
+  /**
+   * Request collaboration approval
+   * Reserved interface for Confirm module integration
+   */
+  async requestCollaborationApproval(
+    collaborationId: UUID,   // Reserved for CoreOrchestrator activation
+    approvalRequest: Record<string, unknown> // Reserved for CoreOrchestrator activation
+  ): Promise<{
+    approvalId: UUID;
+    status: string;
+    requiredApprovers: UUID[];
+  }> {
+    // TODO: Implement actual Confirm module integration when CoreOrchestrator is activated
+    // This will create approval workflows for collaboration changes
+
+    // Placeholder implementation with approval workflow
+    const collaboration = await this.collabManagementService.getCollaboration(collaborationId);
+    if (!collaboration) {
+      throw new Error('Collaboration not found');
+    }
+
+    const approvalType = approvalRequest.type as string;
+    const requiredApprovers: UUID[] = [];
+
+    // Determine required approvers based on approval type
+    switch (approvalType) {
+      case 'start_collaboration':
+        // Require approval from all participants
+        requiredApprovers.push(...collaboration.participants.map(p => p.agentId));
+        break;
+      case 'add_participant':
+        // Require approval from coordinator or majority
+        if (collaboration.coordinationStrategy.coordinatorId) {
+          requiredApprovers.push(collaboration.coordinationStrategy.coordinatorId);
+        } else {
+          // Add majority of current participants
+          const majorityCount = Math.ceil(collaboration.participants.length / 2);
+          requiredApprovers.push(...collaboration.participants.slice(0, majorityCount).map(p => p.agentId));
         }
+        break;
+      case 'change_strategy':
+        // Require approval from all participants for strategy changes
+        requiredApprovers.push(...collaboration.participants.map(p => p.agentId));
+        break;
+      default:
+        // Default: require coordinator approval
+        if (collaboration.coordinationStrategy.coordinatorId) {
+          requiredApprovers.push(collaboration.coordinationStrategy.coordinatorId);
+        }
+    }
+
+    return {
+      approvalId: generateUUID(),
+      status: 'pending',
+      requiredApprovers
+    };
+  }
+
+  /**
+   * Process collaboration approval response
+   * Reserved interface for Confirm module integration
+   */
+  async processCollaborationApproval(
+    collaborationId: UUID,   // Reserved for CoreOrchestrator activation
+    approvalResponse: Record<string, unknown> // Reserved for CoreOrchestrator activation
+  ): Promise<void> {
+    // TODO: Implement actual Confirm module integration when CoreOrchestrator is activated
+
+    // Placeholder implementation with approval processing
+    const approvalId = approvalResponse.approvalId as UUID;
+    const decision = approvalResponse.decision as string;
+    const approverId = approvalResponse.approverId as UUID;
+
+    // TODO: Implement actual approval processing when CoreOrchestrator is activated
+    // Processing approval ${approvalId} for collaboration ${collaborationId}: ${decision} by ${approverId}
+
+    if (decision === 'approved') {
+      // Handle approval
+      const actionType = approvalResponse.actionType as string;
+
+      switch (actionType) {
+        case 'start_collaboration':
+          await this.collabManagementService.startCollaboration(collaborationId, approverId);
+          break;
+        case 'add_participant': {
+          const participantData = approvalResponse.participantData as ParticipantData;
+          if (participantData) {
+            await this.collabManagementService.addParticipant(
+              collaborationId,
+              participantData,
+              approverId
+            );
+          }
+          break;
+        }
+        case 'change_strategy': {
+          const newStrategy = approvalResponse.newStrategy as {
+            type: 'centralized' | 'distributed' | 'hierarchical' | 'peer_to_peer';
+            decisionMaking: 'consensus' | 'majority' | 'weighted' | 'coordinator';
+            coordinatorId?: UUID;
+          };
+          if (newStrategy) {
+            await this.collabManagementService.updateCollaboration(collaborationId, {
+              coordinationStrategy: newStrategy,
+              updatedBy: approverId
+            });
+          }
+          break;
+        }
+      }
+    } else if (decision === 'rejected') {
+      // Handle rejection - update collaboration metadata
+      await this.collabManagementService.updateCollaboration(collaborationId, {
+        description: `Approval ${approvalId} rejected by ${approverId}`,
+        updatedBy: 'confirm-module'
+      });
+    }
+  }
+
+  // ===== TRACE MODULE INTEGRATION =====
+
+  /**
+   * Start collaboration tracing
+   * Reserved interface for Trace module integration
+   */
+  async startCollaborationTracing(
+    collaborationId: UUID,   // Reserved for CoreOrchestrator activation
+    tracingConfig: Record<string, unknown> // Reserved for CoreOrchestrator activation
+  ): Promise<{
+    traceId: UUID;
+    tracingEnabled: boolean;
+  }> {
+    // TODO: Implement actual Trace module integration when CoreOrchestrator is activated
+    // This will enable distributed tracing for collaboration operations
+
+    // Placeholder implementation with tracing setup
+    const collaboration = await this.collabManagementService.getCollaboration(collaborationId);
+    if (!collaboration) {
+      throw new Error('Collaboration not found');
+    }
+
+    const _traceId = generateUUID();
+    const _tracingLevel = tracingConfig.level as string || 'info';
+    const _includeParticipants = tracingConfig.includeParticipants as boolean || true;
+
+    // TODO: Implement actual tracing when CoreOrchestrator is activated
+    // Starting tracing for collaboration ${collaborationId}: traceId=${traceId}, level=${tracingLevel}
+
+    // In real implementation, this would:
+    // 1. Register tracing hooks for collaboration events
+    // 2. Set up distributed tracing context
+    // 3. Configure trace sampling and retention
+
+    return {
+      traceId: _traceId,
+      tracingEnabled: true
+    };
+  }
+
+  /**
+   * Record collaboration trace event
+   * Reserved interface for Trace module integration
+   */
+  async recordCollaborationTraceEvent(
+    collaborationId: UUID,   // Reserved for CoreOrchestrator activation
+    traceEvent: Record<string, unknown> // Reserved for CoreOrchestrator activation
+  ): Promise<void> {
+    // TODO: Implement actual Trace module integration when CoreOrchestrator is activated
+
+    // Placeholder implementation with event recording
+    const eventType = traceEvent.type as string;
+    const eventData = traceEvent.data as Record<string, unknown>;
+    const timestamp = traceEvent.timestamp as string || new Date().toISOString();
+    const traceId = traceEvent.traceId as UUID;
+
+    // TODO: Implement actual trace event recording when CoreOrchestrator is activated
+    // Recording trace event for collaboration ${collaborationId}: traceId=${traceId}, eventType=${eventType}
+
+    // In real implementation, this would:
+    // 1. Validate trace event format
+    // 2. Enrich event with collaboration context
+    // 3. Store event in distributed tracing system
+    // 4. Update trace spans and metrics
+
+    // For now, just log the event structure
+    const _enrichedEvent = {
+      collaborationId,
+      traceId,
+      eventType,
+      timestamp,
+      data: {
+        ...eventData,
+        collaborationName: 'Unknown', // Would be fetched from collaboration
+        participantCount: 0 // Would be fetched from collaboration
       }
     };
 
-    // 创建协作
-    const collabResponse = await this.collabService.createCollab(collabRequest);
-    if (!collabResponse.success || !collabResponse.data) {
-      throw new Error(`Failed to create collaboration: ${collabResponse.error}`);
+    // TODO: Implement actual enriched trace event processing when CoreOrchestrator is activated
+    // Enriched trace event processed
+  }
+
+  // ===== EXTENSION MODULE INTEGRATION =====
+
+  /**
+   * Load collaboration extensions
+   * Reserved interface for Extension module integration
+   */
+  async loadCollaborationExtensions(
+    collaborationId: UUID,   // Reserved for CoreOrchestrator activation
+    extensionRequirements: string[] // Reserved for CoreOrchestrator activation
+  ): Promise<{
+    loadedExtensions: string[];
+    failedExtensions: string[];
+  }> {
+    // TODO: Implement actual Extension module integration when CoreOrchestrator is activated
+    // This will load and configure collaboration-specific extensions
+
+    // Placeholder implementation with extension loading
+    const collaboration = await this.collabManagementService.getCollaboration(collaborationId);
+    if (!collaboration) {
+      throw new Error('Collaboration not found');
     }
 
-    const collaboration = collabResponse.data;
+    const loadedExtensions: string[] = [];
+    const failedExtensions: string[] = [];
 
-    // 启动协作决策过程
-    const coordinationRequest: CoordinationRequest = {
-      collaboration_id: collaboration.collaborationId,
-      operation: 'initiate',
-      parameters: {
-        decision_strategy: request.strategy,
-        participants: request.participants,
-        weights: request.parameters.weights
-      },
-      initiated_by: 'core_orchestrator'
+    for (const extensionName of extensionRequirements) {
+      try {
+        // Simulate extension loading logic
+        const isCompatible = this.checkExtensionCompatibility(extensionName, collaboration);
+
+        if (isCompatible) {
+          // TODO: Implement actual extension loading when CoreOrchestrator is activated
+          // Loading extension ${extensionName} for collaboration ${collaborationId}
+          loadedExtensions.push(extensionName);
+        } else {
+          // TODO: Implement actual compatibility warning when CoreOrchestrator is activated
+          // Extension ${extensionName} is not compatible with collaboration ${collaborationId}
+          failedExtensions.push(extensionName);
+        }
+      } catch (error) {
+        // TODO: Implement actual error handling when CoreOrchestrator is activated
+        // Failed to load extension ${extensionName}: ${error}
+        failedExtensions.push(extensionName);
+      }
+    }
+
+    return {
+      loadedExtensions,
+      failedExtensions
     };
-
-    const coordinationResult = await this.collabService.coordinate(coordinationRequest);
-    if (!coordinationResult.success) {
-      throw new Error(`Decision coordination failed: ${coordinationResult.error}`);
-    }
-
-    // 模拟决策过程和结果
-    const result = await this.simulateDecisionProcess(request, decision_id, timestamp);
-
-    return result;
   }
 
   /**
-   * 模拟决策过程
-   * 注意：这是一个简化的实现，实际应该包含真实的决策逻辑
+   * Execute collaboration extension
+   * Reserved interface for Extension module integration
    */
-  private async simulateDecisionProcess(
-    request: DecisionCoordinationRequest, 
-    decision_id: string, 
-    timestamp: string
-  ): Promise<DecisionResult> {
-    // 模拟参与者投票
-    const participants_votes: Record<string, any> = {};
-    let consensus_reached = false;
+  async executeCollaborationExtension(
+    collaborationId: UUID,   // Reserved for CoreOrchestrator activation
+    extensionId: string,     // Reserved for CoreOrchestrator activation
+    _extensionData: Record<string, unknown> // Reserved for CoreOrchestrator activation
+  ): Promise<Record<string, unknown>> {
+    // TODO: Implement actual Extension module integration when CoreOrchestrator is activated
 
-    switch (request.strategy) {
-      case 'simple_voting':
-        // 简单投票：多数决定
-        for (const participant of request.participants) {
-          participants_votes[participant] = Math.random() > 0.3 ? 'yes' : 'no';
-        }
-        const yesVotes = Object.values(participants_votes).filter(vote => vote === 'yes').length;
-        consensus_reached = yesVotes > request.participants.length / 2;
-        break;
+    // Placeholder implementation with extension execution
+    const collaboration = await this.collabManagementService.getCollaboration(collaborationId);
+    if (!collaboration) {
+      throw new Error('Collaboration not found');
+    }
 
-      case 'weighted_voting':
-        // 加权投票：根据权重计算
-        let totalWeight = 0;
-        let yesWeight = 0;
-        
-        for (const participant of request.participants) {
-          const weight = request.parameters.weights?.[participant] || 1;
-          const vote = Math.random() > 0.3 ? 'yes' : 'no';
-          participants_votes[participant] = vote;
-          totalWeight += weight;
-          if (vote === 'yes') {
-            yesWeight += weight;
+    // TODO: Implement actual extension execution when CoreOrchestrator is activated
+    // Executing extension ${extensionId} for collaboration ${collaborationId}
+
+    // Simulate extension execution based on extension type
+    switch (extensionId) {
+      case 'collaboration-analytics':
+        return {
+          analytics: {
+            participantCount: collaboration.participants.length,
+            activeParticipants: collaboration.getActiveParticipants().length,
+            coordinationType: collaboration.coordinationStrategy.type,
+            healthScore: 85, // Placeholder
+            recommendations: ['Consider adding more participants', 'Optimize coordination strategy']
           }
-        }
-        consensus_reached = yesWeight / totalWeight > 0.5;
-        break;
+        };
 
-      case 'consensus':
-        // 共识决策：需要达到阈值
-        for (const participant of request.participants) {
-          participants_votes[participant] = Math.random() > 0.2 ? 'yes' : 'no';
-        }
-        const threshold = request.parameters.threshold || 0.8;
-        const consensusVotes = Object.values(participants_votes).filter(vote => vote === 'yes').length;
-        consensus_reached = consensusVotes / request.participants.length >= threshold;
-        break;
+      case 'participant-monitoring':
+        return {
+          monitoring: {
+            participantStatus: collaboration.participants.map(p => ({
+              participantId: p.participantId,
+              status: p.status,
+              lastActivity: p.lastActivity,
+              responseTime: Math.random() * 1000 // Placeholder
+            })),
+            overallHealth: 'good'
+          }
+        };
 
-      case 'delegation':
-        // 委托决策：委托给特定参与者
-        const delegate = request.participants[0]; // 简化：选择第一个参与者作为委托人
-        participants_votes[delegate] = Math.random() > 0.2 ? 'yes' : 'no';
-        consensus_reached = participants_votes[delegate] === 'yes';
-        break;
+      case 'coordination-optimizer':
+        return {
+          optimization: {
+            currentStrategy: collaboration.coordinationStrategy,
+            suggestedStrategy: {
+              type: 'hierarchical',
+              decisionMaking: 'majority',
+              reason: 'Better for current participant count'
+            },
+            expectedImprovement: '15% efficiency gain'
+          }
+        };
+
+      case 'decision-tracker':
+        return {
+          decisions: {
+            totalDecisions: 5, // Placeholder
+            consensusRate: 0.8,
+            averageDecisionTime: 300, // seconds
+            pendingDecisions: 1
+          }
+        };
+
+      case 'performance-enhancer':
+        return {
+          performance: {
+            currentMetrics: {
+              throughput: 10, // operations per minute
+              latency: 200, // ms
+              errorRate: 0.02
+            },
+            optimizations: ['Enable caching', 'Optimize participant routing'],
+            expectedGains: '20% throughput improvement'
+          }
+        };
+
+      default:
+        return {
+          result: 'Extension executed successfully',
+          extensionId,
+          collaborationId,
+          timestamp: new Date().toISOString()
+        };
     }
+  }
 
+  // ===== CORE MODULE INTEGRATION =====
+
+  /**
+   * Register collaboration workflow
+   * Reserved interface for Core module integration
+   */
+  async registerCollaborationWorkflow(
+    _collaborationId: UUID,  // Reserved for CoreOrchestrator activation
+    _workflowDefinition: Record<string, unknown> // Reserved for CoreOrchestrator activation
+  ): Promise<{
+    workflowId: UUID;
+    registered: boolean;
+  }> {
+    // TODO: Implement actual Core module integration when CoreOrchestrator is activated
+    // This will register collaboration workflows with the Core orchestration engine
     return {
-      decision_id,
-      result: consensus_reached ? 'approved' : 'rejected',
-      consensus_reached,
-      participants_votes,
-      timestamp
+      workflowId: generateUUID(),
+      registered: true
+    };
+  }
+
+  // ===== DIALOG MODULE INTEGRATION =====
+
+  /**
+   * Create collaboration dialog session
+   * Reserved interface for Dialog module integration
+   */
+  async createCollaborationDialogSession(
+    _collaborationId: UUID,  // Reserved for CoreOrchestrator activation
+    _dialogConfig: Record<string, unknown> // Reserved for CoreOrchestrator activation
+  ): Promise<{
+    dialogSessionId: UUID;
+    participants: UUID[];
+  }> {
+    // TODO: Implement actual Dialog module integration when CoreOrchestrator is activated
+    // This will create dialog sessions for collaboration communication
+    return {
+      dialogSessionId: generateUUID(),
+      participants: []
+    };
+  }
+
+  // ===== NETWORK MODULE INTEGRATION =====
+
+  /**
+   * Establish collaboration network connections
+   * Reserved interface for Network module integration
+   */
+  async establishCollaborationNetworkConnections(
+    _collaborationId: UUID,  // Reserved for CoreOrchestrator activation
+    _networkConfig: Record<string, unknown> // Reserved for CoreOrchestrator activation
+  ): Promise<{
+    connectionId: UUID;
+    connectedParticipants: UUID[];
+    networkTopology: string;
+  }> {
+    // TODO: Implement actual Network module integration when CoreOrchestrator is activated
+    // This will establish network connections for distributed collaboration
+    return {
+      connectionId: generateUUID(),
+      connectedParticipants: [],
+      networkTopology: 'mesh'
+    };
+  }
+
+  // ===== UNIFIED MODULE COORDINATION =====
+
+  /**
+   * Coordinate collaboration across all MPLP modules
+   * This method orchestrates interactions with all other modules
+   */
+  async coordinateCollaborationAcrossModules(
+    _collaborationId: UUID,  // Reserved for CoreOrchestrator activation
+    _coordinationRequest: {  // Reserved for CoreOrchestrator activation
+      requiredModules: string[];
+      coordinationData: Record<string, unknown>;
+      priority: 'low' | 'medium' | 'high' | 'critical';
+    }
+  ): Promise<{
+    coordinationId: UUID;
+    moduleResponses: Record<string, unknown>;
+    success: boolean;
+    errors: string[];
+  }> {
+    // TODO: Implement actual cross-module coordination when CoreOrchestrator is activated
+    // This will be the main coordination point for all MPLP module interactions
+    return {
+      coordinationId: generateUUID(),
+      moduleResponses: {},
+      success: true,
+      errors: []
     };
   }
 
   /**
-   * 映射决策策略到DecisionMaking类型
+   * Get collaboration integration status
+   * Returns the current status of all module integrations
    */
-  private mapStrategyToDecisionMaking(strategy: string): DecisionMaking {
-    switch (strategy) {
-      case 'simple_voting':
-      case 'weighted_voting':
-        return 'majority';
-      case 'consensus':
-        return 'consensus';
-      case 'delegation':
-        return 'coordinator';
-      default:
-        return 'majority';
-    }
-  }
-
-  /**
-   * 映射决策策略到DecisionAlgorithm类型
-   */
-  private mapStrategyToAlgorithm(strategy: string): 'majority_vote' | 'consensus' | 'weighted_vote' | 'custom' {
-    switch (strategy) {
-      case 'simple_voting':
-        return 'majority_vote';
-      case 'weighted_voting':
-        return 'weighted_vote';
-      case 'consensus':
-        return 'consensus';
-      case 'delegation':
-        return 'custom';
-      default:
-        return 'majority_vote';
-    }
-  }
-
-  /**
-   * P0修复：临时实现新方法
-   */
-  async executeStage(context: any): Promise<any> {
-    return { stage: 'collab', status: 'completed', result: {}, duration_ms: 100, started_at: new Date().toISOString(), completed_at: new Date().toISOString() };
-  }
-
-  async executeBusinessCoordination(request: any): Promise<any> {
-    const result = await this.execute({ contextId: request.contextId, strategy: 'consensus', participants: ['agent1', 'agent2'], parameters: {} });
+  async getCollaborationIntegrationStatus(
+    _collaborationId: UUID   // Reserved for CoreOrchestrator activation
+  ): Promise<{
+    integrationStatus: Record<string, {
+      connected: boolean;
+      lastSync: string;
+      health: 'healthy' | 'degraded' | 'unhealthy';
+    }>;
+    overallHealth: 'healthy' | 'degraded' | 'unhealthy';
+  }> {
+    // TODO: Implement actual integration status checking when CoreOrchestrator is activated
     return {
-      coordination_id: request.coordination_id,
-      module: 'collab',
-      status: 'completed',
-      output_data: { data_type: 'collaboration_data', data_version: '1.0.0', payload: result, metadata: { source_module: 'collab', target_modules: [], data_schema_version: '1.0.0', validation_status: 'valid', security_level: 'internal' }, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
-      execution_metrics: { start_time: new Date().toISOString(), end_time: new Date().toISOString(), duration_ms: 100 },
-      timestamp: new Date().toISOString()
+      integrationStatus: {
+        context: { connected: false, lastSync: 'never', health: 'unhealthy' },
+        plan: { connected: false, lastSync: 'never', health: 'unhealthy' },
+        role: { connected: false, lastSync: 'never', health: 'unhealthy' },
+        confirm: { connected: false, lastSync: 'never', health: 'unhealthy' },
+        trace: { connected: false, lastSync: 'never', health: 'unhealthy' },
+        extension: { connected: false, lastSync: 'never', health: 'unhealthy' },
+        core: { connected: false, lastSync: 'never', health: 'unhealthy' },
+        dialog: { connected: false, lastSync: 'never', health: 'unhealthy' },
+        network: { connected: false, lastSync: 'never', health: 'unhealthy' }
+      },
+      overallHealth: 'unhealthy' // Will be 'healthy' when CoreOrchestrator is activated
     };
   }
 
-  async validateInput(input: any): Promise<any> {
-    return { is_valid: true, errors: [], warnings: [] };
+  // ===== PRIVATE HELPER METHODS =====
+
+  /**
+   * Determine collaboration mode from plan data
+   */
+  private determineModeFromPlan(planData: Record<string, unknown>): 'sequential' | 'parallel' | 'hybrid' | 'pipeline' | 'mesh' {
+    const planType = planData.type as string;
+    const complexity = planData.complexity as string;
+
+    if (planType === 'sequential' || complexity === 'simple') {
+      return 'sequential';
+    } else if (planType === 'parallel' || complexity === 'high') {
+      return 'parallel';
+    } else if (planType === 'pipeline') {
+      return 'pipeline';
+    } else if (planType === 'mesh' || complexity === 'distributed') {
+      return 'mesh';
+    } else {
+      return 'hybrid';
+    }
   }
 
-  async handleError(error: any, context: any): Promise<any> {
-    return { handled: true, recovery_action: 'retry' };
+  /**
+   * Determine coordination strategy from plan data
+   */
+  private determineCoordinationFromPlan(planData: Record<string, unknown>): {
+    type: 'centralized' | 'distributed' | 'hierarchical' | 'peer_to_peer';
+    decisionMaking: 'consensus' | 'majority' | 'weighted' | 'coordinator';
+    coordinatorId?: UUID;
+  } {
+    const planComplexity = planData.complexity as string;
+    const participantCount = (planData.participants as ParticipantData[])?.length || 2;
+
+    if (planComplexity === 'simple' || participantCount <= 3) {
+      return {
+        type: 'centralized',
+        decisionMaking: 'coordinator',
+        coordinatorId: (planData.coordinatorId as UUID) || undefined
+      };
+    } else if (participantCount > 10) {
+      return {
+        type: 'hierarchical',
+        decisionMaking: 'majority',
+        coordinatorId: (planData.coordinatorId as UUID) || undefined
+      };
+    } else {
+      return {
+        type: 'distributed',
+        decisionMaking: 'consensus',
+        coordinatorId: undefined
+      };
+    }
   }
 
+  /**
+   * Extract participants from plan data
+   */
+  private extractParticipantsFromPlan(planData: Record<string, unknown>): ParticipantData[] {
+    const planParticipants = planData.participants as ParticipantData[];
+
+    if (!planParticipants || !Array.isArray(planParticipants)) {
+      return [];
+    }
+
+    return planParticipants.map(p => ({
+      agentId: p.agentId || generateUUID(),
+      roleId: p.roleId || generateUUID(),
+      capabilities: p.capabilities || [],
+      status: 'pending'
+    }));
+  }
+
+  /**
+   * Check extension compatibility with collaboration
+   */
+  private checkExtensionCompatibility(extensionName: string, collaboration: CollabEntity): boolean {
+    // Placeholder compatibility logic
+    const supportedExtensions = [
+      'collaboration-analytics',
+      'participant-monitoring',
+      'coordination-optimizer',
+      'decision-tracker',
+      'performance-enhancer'
+    ];
+
+    if (!supportedExtensions.includes(extensionName)) {
+      return false;
+    }
+
+    // Check collaboration-specific compatibility
+    switch (extensionName) {
+      case 'collaboration-analytics':
+        return collaboration.participants.length >= 2;
+      case 'participant-monitoring':
+        return collaboration.status === 'active';
+      case 'coordination-optimizer':
+        return collaboration.coordinationStrategy.type === 'distributed';
+      case 'decision-tracker':
+        return collaboration.coordinationStrategy.decisionMaking === 'consensus';
+      case 'performance-enhancer':
+        return collaboration.participants.length > 5;
+      default:
+        return true;
+    }
+  }
 }

@@ -1,269 +1,184 @@
 /**
- * Context Repository接口 - MPLP v1.0 支持14个功能域
- *
- * 定义Context领域对象的仓库操作接口
- * 基于完整的mplp-context.json Schema
- *
+ * Context仓库接口
+ * 
+ * @description Context模块的仓库接口定义，遵循DDD仓库模式
  * @version 1.0.0
- * @updated 2025-08-14
+ * @layer 领域层 - 仓库接口
  */
 
-import { UUID } from '../../../../public/shared/types';
-import { Context } from '../entities/context.entity';
+import { ContextEntity } from '../entities/context.entity';
+import { ContextQueryFilter } from '../../types';
+import { UUID } from '../../../../shared/types';
+import { PaginatedResult, PaginationParams } from '../../../../shared/types';
 
 /**
- * Context过滤条件 - MPLP v1.0
- */
-export interface ContextFilter {
-  // 基础字段过滤
-  name?: string;
-  status?: string;
-  lifecycleStage?: string;
-  protocolVersion?: string;
-  
-  // 时间范围过滤
-  timestampAfter?: Date;
-  timestampBefore?: Date;
-  
-  // 共享状态过滤
-  hasVariables?: Record<string, unknown>;
-  hasDependencies?: string[];
-  hasGoals?: string[];
-  
-  // 访问控制过滤
-  ownerId?: string;
-  hasPermissions?: string[];
-  
-  // 配置过滤
-  timeoutRange?: { min?: number; max?: number };
-  storageBackend?: string;
-  
-  // 审计过滤
-  auditEnabled?: boolean;
-  retentionDaysRange?: { min?: number; max?: number };
-  
-  // 监控过滤
-  monitoringEnabled?: boolean;
-  supportedProviders?: string[];
-  
-  // 性能过滤
-  performanceEnabled?: boolean;
-  collectionIntervalRange?: { min?: number; max?: number };
-  
-  // 版本过滤
-  versioningEnabled?: boolean;
-  maxVersionsRange?: { min?: number; max?: number };
-  
-  // 搜索过滤
-  searchEnabled?: boolean;
-  indexingStrategy?: string;
-  
-  // 缓存过滤
-  cachingEnabled?: boolean;
-  cacheStrategy?: string;
-  
-  // 同步过滤
-  syncEnabled?: boolean;
-  syncStrategy?: string;
-  
-  // 错误处理过滤
-  errorHandlingEnabled?: boolean;
-  
-  // 集成过滤
-  integrationEnabled?: boolean;
-  hasWebhooks?: boolean;
-  
-  // 事件过滤
-  eventIntegrationEnabled?: boolean;
-  publishedEvents?: string[];
-  subscribedEvents?: string[];
-}
-
-/**
- * Context排序选项 - MPLP v1.0
- */
-export type ContextSortField =
-  | 'name'
-  | 'status'
-  | 'lifecycleStage'
-  | 'timestamp'
-  | 'protocolVersion'
-  | 'auditTrail.retentionDays'
-  | 'performanceMetrics.collectionIntervalSeconds'
-  | 'versionHistory.maxVersions';
-
-/**
- * 分页参数
- */
-export interface PaginationParams {
-  page: number;
-  limit: number;
-  sortField?: ContextSortField;
-  sortOrder?: 'asc' | 'desc';
-}
-
-/**
- * 分页结果
- */
-export interface PaginatedResult<T> {
-  items: T[];
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-}
-
-/**
- * Context仓库接口 - MPLP v1.0
+ * Context仓库接口
+ * 
+ * @description 定义Context实体的持久化操作接口
  */
 export interface IContextRepository {
-  /**
-   * 通过ID查找Context
-   */
-  findById(id: UUID): Promise<Context | null>;
+  
+  // ===== 基础CRUD操作 =====
 
   /**
-   * 保存Context
+   * 根据ID查找Context
    */
-  save(context: Context): Promise<void>;
+  findById(contextId: UUID): Promise<ContextEntity | null>;
 
   /**
-   * 删除Context
+   * 根据名称查找Context
    */
-  delete(id: UUID): Promise<void>;
+  findByName(name: string): Promise<ContextEntity | null>;
+
+  /**
+   * 保存Context实体
+   */
+  save(context: ContextEntity): Promise<ContextEntity>;
+
+  /**
+   * 更新Context实体
+   */
+  update(context: ContextEntity): Promise<ContextEntity>;
+
+  /**
+   * 删除Context实体
+   */
+  delete(contextId: UUID): Promise<boolean>;
 
   /**
    * 检查Context是否存在
    */
-  exists(id: UUID): Promise<boolean>;
+  exists(contextId: UUID): Promise<boolean>;
+
+  // ===== 查询操作 =====
 
   /**
-   * 通过名称查找Context
+   * 查找所有Context
    */
-  findByName(name: string): Promise<Context | null>;
+  findAll(pagination?: PaginationParams): Promise<PaginatedResult<ContextEntity>>;
 
   /**
-   * 查找多个Context
+   * 根据过滤条件查找Context
    */
-  findMany(filter?: ContextFilter, pagination?: PaginationParams): Promise<PaginatedResult<Context>>;
+  findByFilter(
+    filter: ContextQueryFilter, 
+    pagination?: PaginationParams
+  ): Promise<PaginatedResult<ContextEntity>>;
 
   /**
-   * 统计Context数量
+   * 根据状态查找Context
    */
-  count(filter?: ContextFilter): Promise<number>;
+  findByStatus(
+    status: string | string[], 
+    pagination?: PaginationParams
+  ): Promise<PaginatedResult<ContextEntity>>;
+
+  /**
+   * 根据生命周期阶段查找Context
+   */
+  findByLifecycleStage(
+    stage: string | string[], 
+    pagination?: PaginationParams
+  ): Promise<PaginatedResult<ContextEntity>>;
+
+  /**
+   * 根据所有者查找Context
+   */
+  findByOwner(
+    ownerId: string, 
+    pagination?: PaginationParams
+  ): Promise<PaginatedResult<ContextEntity>>;
+
+  /**
+   * 搜索Context（按名称模式）
+   */
+  searchByName(
+    namePattern: string, 
+    pagination?: PaginationParams
+  ): Promise<PaginatedResult<ContextEntity>>;
+
+  // ===== 统计操作 =====
+
+  /**
+   * 获取Context总数
+   */
+  count(): Promise<number>;
+
+  /**
+   * 根据过滤条件获取Context数量
+   */
+  countByFilter(filter: ContextQueryFilter): Promise<number>;
+
+  /**
+   * 根据状态获取Context数量
+   */
+  countByStatus(status: string | string[]): Promise<number>;
+
+  /**
+   * 根据生命周期阶段获取Context数量
+   */
+  countByLifecycleStage(stage: string | string[]): Promise<number>;
+
+  // ===== 批量操作 =====
 
   /**
    * 批量保存Context
    */
-  saveMany(contexts: Context[]): Promise<void>;
+  saveMany(contexts: ContextEntity[]): Promise<ContextEntity[]>;
+
+  /**
+   * 批量更新Context
+   */
+  updateMany(contexts: ContextEntity[]): Promise<ContextEntity[]>;
 
   /**
    * 批量删除Context
    */
-  deleteMany(ids: UUID[]): Promise<void>;
-  
-  // ===== 功能域特定查询 =====
-  
-  /**
-   * 查找具有特定共享状态的Context
-   */
-  findBySharedState(variables: Record<string, unknown>): Promise<Context[]>;
+  deleteMany(contextIds: UUID[]): Promise<number>;
 
   /**
-   * 查找具有特定访问控制的Context
+   * 根据过滤条件批量删除Context
    */
-  findByOwner(userId: string): Promise<Context[]>;
+  deleteByFilter(filter: ContextQueryFilter): Promise<number>;
+
+  // ===== 事务操作 =====
 
   /**
-   * 查找具有特定配置的Context
+   * 在事务中执行操作
    */
-  findByConfiguration(storageBackend: string): Promise<Context[]>;
+  executeInTransaction<T>(
+    operation: (repository: IContextRepository) => Promise<T>
+  ): Promise<T>;
+
+  // ===== 缓存操作 =====
 
   /**
-   * 查找启用审计的Context
+   * 清除缓存
    */
-  findWithAuditEnabled(): Promise<Context[]>;
+  clearCache(): Promise<void>;
 
   /**
-   * 查找启用监控的Context
+   * 清除特定Context的缓存
    */
-  findWithMonitoringEnabled(): Promise<Context[]>;
+  clearCacheForContext(contextId: UUID): Promise<void>;
+
+  // ===== 健康检查 =====
 
   /**
-   * 查找具有特定性能配置的Context
+   * 仓库健康检查
    */
-  findByPerformanceConfig(collectionInterval: number): Promise<Context[]>;
+  healthCheck(): Promise<boolean>;
 
   /**
-   * 查找启用版本控制的Context
+   * 获取仓库统计信息
    */
-  findWithVersioningEnabled(): Promise<Context[]>;
-
-  /**
-   * 查找具有特定搜索配置的Context
-   */
-  findBySearchConfig(indexingStrategy: string): Promise<Context[]>;
-
-  /**
-   * 查找具有特定缓存策略的Context
-   */
-  findByCacheStrategy(strategy: string): Promise<Context[]>;
-
-  /**
-   * 查找具有特定同步配置的Context
-   */
-  findBySyncStrategy(strategy: string): Promise<Context[]>;
-
-  /**
-   * 查找启用错误处理的Context
-   */
-  findWithErrorHandlingEnabled(): Promise<Context[]>;
-
-  /**
-   * 查找具有集成端点的Context
-   */
-  findWithIntegrationEndpoints(): Promise<Context[]>;
-
-  /**
-   * 查找具有事件集成的Context
-   */
-  findWithEventIntegration(): Promise<Context[]>;
-  
-  // ===== 聚合查询 =====
-  
-  /**
-   * 获取状态统计
-   */
-  getStatusStatistics(): Promise<Record<string, number>>;
-  
-  /**
-   * 获取生命周期阶段统计
-   */
-  getLifecycleStageStatistics(): Promise<Record<string, number>>;
-  
-  /**
-   * 获取功能域启用统计
-   */
-  getFeatureDomainStatistics(): Promise<{
-    auditEnabled: number;
-    monitoringEnabled: number;
-    performanceEnabled: number;
-    versioningEnabled: number;
-    searchEnabled: number;
-    cachingEnabled: number;
-    syncEnabled: number;
-    errorHandlingEnabled: number;
-    integrationEnabled: number;
-    eventIntegrationEnabled: number;
-  }>;
-  
-  /**
-   * 获取配置分布统计
-   */
-  getConfigurationStatistics(): Promise<{
-    storageBackends: Record<string, number>;
-    cacheStrategies: Record<string, number>;
-    syncStrategies: Record<string, number>;
-    indexingStrategies: Record<string, number>;
+  getStatistics(): Promise<{
+    totalContexts: number;
+    activeContexts: number;
+    suspendedContexts: number;
+    completedContexts: number;
+    terminatedContexts: number;
+    cacheHitRate?: number;
+    averageResponseTime?: number;
   }>;
 }

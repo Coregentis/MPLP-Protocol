@@ -1,389 +1,523 @@
 /**
- * Plan DTO测试
- * 
- * 测试src/modules/plan/api/dto/plan.dto.ts
- * 验证DTO类型定义的正确性和一致性
- * 
+ * Plan DTO单元测试
+ *
+ * @description 验证Plan模块的数据传输对象结构和验证
  * @version 1.0.0
- * @created 2025-08-17
+ * @layer 测试层 - 单元测试
+ * @coverage 目标覆盖率 95%+
+ * @pattern 与Context模块使用IDENTICAL的DTO测试模式
  */
 
 import {
-  CreatePlanRequestDto,
-  UpdatePlanRequestDto,
+  CreatePlanDto,
+  UpdatePlanDto,
+  PlanQueryDto,
   PlanResponseDto,
-  PlanTaskDto,
-  PlanDependencyDto,
-  DurationDto,
-  PlanConfigurationDto,
-  RiskAssessmentDto,
-  PlanExecutionRequestDto,
-  PlanExecutionResultDto,
-  PlanStatusDto
+  PaginatedPlanResponseDto,
+  PlanOperationResultDto,
+  PlanExecutionDto,
+  PlanOptimizationDto,
+  PlanValidationDto,
+  CreateTaskDto,
+  UpdateTaskDto,
+  CreateMilestoneDto,
+  UpdateMilestoneDto,
+  ResourceAllocationDto,
+  RiskItemDto
 } from '../../../src/modules/plan/api/dto/plan.dto';
-import { PlanStatus, ExecutionStrategy, Priority } from '../../../src/modules/plan/types';
-import { v4 as uuidv4 } from 'uuid';
 
-describe('Plan DTO Types', () => {
-  describe('CreatePlanRequestDto', () => {
-    it('should accept valid create plan request data', () => {
-      const createRequest: CreatePlanRequestDto = {
-        context_id: uuidv4(),
-        name: 'Test Plan',
-        description: 'Test description',
-        goals: ['Goal 1', 'Goal 2'],
-        execution_strategy: ExecutionStrategy.SEQUENTIAL,
-        priority: Priority.MEDIUM
-      };
+describe('Plan DTO单元测试', () => {
 
-      expect(createRequest.context_id).toBeDefined();
-      expect(createRequest.name).toBe('Test Plan');
-      expect(createRequest.description).toBe('Test description');
-      expect(createRequest.goals).toEqual(['Goal 1', 'Goal 2']);
-      expect(createRequest.execution_strategy).toBe(ExecutionStrategy.SEQUENTIAL);
-      expect(createRequest.priority).toBe(Priority.MEDIUM);
-    });
-
-    it('should accept minimal create plan request data', () => {
-      const minimalRequest: CreatePlanRequestDto = {
-        context_id: uuidv4(),
-        name: 'Minimal Plan',
-        description: 'Minimal description'
-      };
-
-      expect(minimalRequest.context_id).toBeDefined();
-      expect(minimalRequest.name).toBe('Minimal Plan');
-      expect(minimalRequest.description).toBe('Minimal description');
-    });
-
-    it('should accept optional fields', () => {
-      const requestWithOptionals: CreatePlanRequestDto = {
-        plan_id: uuidv4(),
-        context_id: uuidv4(),
-        name: 'Plan with Optionals',
-        description: 'Description with optionals',
-        goals: ['Goal 1'],
-        tasks: [],
-        dependencies: [],
-        estimated_duration: {
-          value: 3600,
-          unit: 'seconds'
-        },
-        metadata: {
-          customField: 'customValue'
+  describe('CreatePlanDto测试', () => {
+    it('应该创建有效的CreatePlanDto实例', () => {
+      // 📋 Arrange & Act
+      const dto = new CreatePlanDto();
+      dto.contextId = 'ctx-test-001';
+      dto.name = 'Test Plan';
+      dto.description = 'Test plan description';
+      dto.priority = 'high';
+      dto.tasks = [
+        {
+          name: 'Test Task',
+          type: 'atomic',
+          priority: 'medium'
         }
-      };
-
-      expect(requestWithOptionals.plan_id).toBeDefined();
-      expect(requestWithOptionals.tasks).toEqual([]);
-      expect(requestWithOptionals.dependencies).toEqual([]);
-      expect(requestWithOptionals.estimated_duration).toEqual({
-        value: 3600,
-        unit: 'seconds'
-      });
-      expect(requestWithOptionals.metadata).toEqual({
-        customField: 'customValue'
-      });
-    });
-  });
-
-  describe('UpdatePlanRequestDto', () => {
-    it('should accept valid update plan request data', () => {
-      const updateRequest: UpdatePlanRequestDto = {
-        name: 'Updated Plan',
-        description: 'Updated description',
-        status: PlanStatus.ACTIVE,
-        goals: ['Updated Goal'],
-        execution_strategy: ExecutionStrategy.PARALLEL,
-        priority: Priority.HIGH
-      };
-
-      expect(updateRequest.name).toBe('Updated Plan');
-      expect(updateRequest.description).toBe('Updated description');
-      expect(updateRequest.status).toBe(PlanStatus.ACTIVE);
-      expect(updateRequest.goals).toEqual(['Updated Goal']);
-      expect(updateRequest.execution_strategy).toBe(ExecutionStrategy.PARALLEL);
-      expect(updateRequest.priority).toBe(Priority.HIGH);
-    });
-
-    it('should accept partial update data', () => {
-      const partialUpdate: UpdatePlanRequestDto = {
-        name: 'Only Name Updated'
-      };
-
-      expect(partialUpdate.name).toBe('Only Name Updated');
-      expect(partialUpdate.description).toBeUndefined();
-      expect(partialUpdate.status).toBeUndefined();
-    });
-  });
-
-  describe('PlanResponseDto', () => {
-    it('should represent complete plan response data', () => {
-      const planResponse: PlanResponseDto = {
-        plan_id: uuidv4(),
-        context_id: uuidv4(),
-        name: 'Response Plan',
-        description: 'Response description',
-        status: PlanStatus.ACTIVE,
-        version: '1.0.0',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        goals: ['Response Goal'],
-        tasks: [],
-        dependencies: [],
-        execution_strategy: ExecutionStrategy.SEQUENTIAL,
-        priority: Priority.MEDIUM,
-        progress: {
-          completed_tasks: 5,
-          total_tasks: 10,
-          percentage: 50
-        },
-        configuration: {
-          execution_settings: {
-            strategy: ExecutionStrategy.SEQUENTIAL,
-            default_timeout_ms: 30000,
-            retry_policy: {
-              max_retries: 3,
-              retry_delay_ms: 1000,
-              backoff_factor: 2
-            }
-          },
-          notification_settings: {
-            enabled: true,
-            channels: ['email'],
-            events: ['completion']
-          },
-          optimization_settings: {
-            enabled: true,
-            strategies: ['time'],
-            auto_adjust: false
-          }
-        }
-      };
-
-      expect(planResponse.plan_id).toBeDefined();
-      expect(planResponse.context_id).toBeDefined();
-      expect(planResponse.name).toBe('Response Plan');
-      expect(planResponse.status).toBe(PlanStatus.ACTIVE);
-      expect(planResponse.progress.percentage).toBe(50);
-      expect(planResponse.configuration.execution_settings.strategy).toBe(ExecutionStrategy.SEQUENTIAL);
-    });
-  });
-
-  describe('PlanTaskDto', () => {
-    it('should represent task data correctly', () => {
-      const task: PlanTaskDto = {
-        task_id: uuidv4(),
-        name: 'Test Task',
-        description: 'Test task description',
-        status: 'pending',
-        priority: 'medium',
-        type: 'development'
-      };
-
-      expect(task.task_id).toBeDefined();
-      expect(task.name).toBe('Test Task');
-      expect(task.description).toBe('Test task description');
-      expect(task.status).toBe('pending');
-      expect(task.priority).toBe('medium');
-      expect(task.type).toBe('development');
-    });
-  });
-
-  describe('DurationDto', () => {
-    it('should represent duration correctly', () => {
-      const duration: DurationDto = {
-        value: 3600,
-        unit: 'seconds'
-      };
-
-      expect(duration.value).toBe(3600);
-      expect(duration.unit).toBe('seconds');
-    });
-
-    it('should support different time units', () => {
-      const durations: DurationDto[] = [
-        { value: 60, unit: 'seconds' },
-        { value: 30, unit: 'minutes' },
-        { value: 8, unit: 'hours' },
-        { value: 5, unit: 'days' }
       ];
 
-      durations.forEach(duration => {
-        expect(duration.value).toBeGreaterThan(0);
-        expect(duration.unit).toBeDefined();
-      });
+      // ✅ Assert
+      expect(dto.contextId).toBe('ctx-test-001');
+      expect(dto.name).toBe('Test Plan');
+      expect(dto.description).toBe('Test plan description');
+      expect(dto.priority).toBe('high');
+      expect(dto.tasks).toHaveLength(1);
+      expect(dto.tasks![0].name).toBe('Test Task');
+      expect(dto.tasks![0].type).toBe('atomic');
+    });
+
+    it('应该支持最小必需字段', () => {
+      // 📋 Arrange & Act
+      const dto = new CreatePlanDto();
+      dto.contextId = 'ctx-minimal-001';
+      dto.name = 'Minimal Plan';
+
+      // ✅ Assert
+      expect(dto.contextId).toBe('ctx-minimal-001');
+      expect(dto.name).toBe('Minimal Plan');
+      expect(dto.description).toBeUndefined();
+      expect(dto.priority).toBeUndefined();
+      expect(dto.tasks).toBeUndefined();
+    });
+
+    it('应该支持复杂的任务配置', () => {
+      // 📋 Arrange & Act
+      const dto = new CreatePlanDto();
+      dto.contextId = 'ctx-complex-001';
+      dto.name = 'Complex Plan';
+      dto.tasks = [
+        {
+          name: 'Complex Task 1',
+          type: 'composite',
+          priority: 'critical'
+        },
+        {
+          name: 'Complex Task 2',
+          type: 'milestone',
+          priority: 'high'
+        }
+      ];
+      dto.milestones = [
+        {
+          name: 'First Milestone',
+          targetDate: new Date('2024-06-01'),
+          criteria: ['Task 1 completed', 'Quality check passed']
+        }
+      ];
+
+      // ✅ Assert
+      expect(dto.tasks).toHaveLength(2);
+      expect(dto.tasks![0].type).toBe('composite');
+      expect(dto.tasks![1].type).toBe('milestone');
+      expect(dto.milestones).toHaveLength(1);
+      expect(dto.milestones![0].name).toBe('First Milestone');
+      expect(dto.milestones![0].criteria).toContain('Task 1 completed');
     });
   });
 
-  describe('PlanExecutionRequestDto', () => {
-    it('should represent execution request correctly', () => {
-      const executionRequest: PlanExecutionRequestDto = {
-        execution_context: {
-          environment: 'production'
-        },
-        execution_options: {
-          parallel_limit: 5,
-          timeout_ms: 60000,
-          retry_failed_tasks: true,
-          failure_strategy: 'continue'
-        },
-        execution_variables: {
-          variable1: 'value1'
-        },
-        conditions: {
-          condition1: true
-        }
-      };
+  describe('UpdatePlanDto测试', () => {
+    it('应该创建有效的UpdatePlanDto实例', () => {
+      // 📋 Arrange & Act
+      const dto = new UpdatePlanDto();
+      dto.planId = 'plan-test-001';
+      dto.name = 'Updated Plan Name';
+      dto.description = 'Updated description';
+      dto.status = 'active';
+      dto.priority = 'critical';
 
-      expect(executionRequest.execution_context).toEqual({
-        environment: 'production'
-      });
-      expect(executionRequest.execution_options?.parallel_limit).toBe(5);
-      expect(executionRequest.execution_options?.timeout_ms).toBe(60000);
-      expect(executionRequest.execution_options?.retry_failed_tasks).toBe(true);
+      // ✅ Assert
+      expect(dto.planId).toBe('plan-test-001');
+      expect(dto.name).toBe('Updated Plan Name');
+      expect(dto.description).toBe('Updated description');
+      expect(dto.status).toBe('active');
+      expect(dto.priority).toBe('critical');
+    });
+
+    it('应该支持部分更新', () => {
+      // 📋 Arrange & Act
+      const dto = new UpdatePlanDto();
+      dto.planId = 'plan-partial-001';
+      dto.status = 'paused';
+
+      // ✅ Assert
+      expect(dto.planId).toBe('plan-partial-001');
+      expect(dto.status).toBe('paused');
+      expect(dto.name).toBeUndefined();
+      expect(dto.description).toBeUndefined();
+      expect(dto.priority).toBeUndefined();
     });
   });
 
-  describe('PlanExecutionResultDto', () => {
-    it('should represent execution result correctly', () => {
-      const executionResult: PlanExecutionResultDto = {
-        success: true,
-        plan_id: uuidv4(),
-        status: 'completed',
-        execution_id: uuidv4(),
-        started_at: new Date().toISOString(),
-        completed_at: new Date().toISOString(),
-        execution_time_ms: 5000,
-        tasks_status: {
-          pending: 0,
-          in_progress: 0,
-          completed: 10,
-          failed: 0,
-          cancelled: 0,
-          skipped: 0
-        }
-      };
+  describe('PlanQueryDto测试', () => {
+    it('应该创建有效的PlanQueryDto实例', () => {
+      // 📋 Arrange & Act
+      const dto = new PlanQueryDto();
+      dto.status = ['active', 'paused'];
+      dto.priority = 'high';
+      dto.contextId = 'ctx-query-001';
+      dto.namePattern = 'Test*';
+      dto.assignedTo = 'user-001';
 
-      expect(executionResult.success).toBe(true);
-      expect(executionResult.plan_id).toBeDefined();
-      expect(executionResult.status).toBe('completed');
-      expect(executionResult.execution_time_ms).toBe(5000);
-      expect(executionResult.tasks_status.completed).toBe(10);
+      // ✅ Assert
+      expect(dto.status).toEqual(['active', 'paused']);
+      expect(dto.priority).toBe('high');
+      expect(dto.contextId).toBe('ctx-query-001');
+      expect(dto.namePattern).toBe('Test*');
+      expect(dto.assignedTo).toBe('user-001');
     });
 
-    it('should handle failed execution result', () => {
-      const failedResult: PlanExecutionResultDto = {
-        success: false,
-        plan_id: uuidv4(),
-        status: 'failed',
-        execution_time_ms: 2000,
-        tasks_status: {
-          pending: 5,
-          in_progress: 0,
-          completed: 3,
-          failed: 2,
-          cancelled: 0,
-          skipped: 0
-        },
-        error: 'Task execution failed'
-      };
+    it('应该支持日期范围查询', () => {
+      // 📋 Arrange & Act
+      const dto = new PlanQueryDto();
+      dto.createdAfter = '2024-01-01T00:00:00.000Z';
+      dto.createdBefore = '2024-12-31T23:59:59.999Z';
 
-      expect(failedResult.success).toBe(false);
-      expect(failedResult.status).toBe('failed');
-      expect(failedResult.error).toBe('Task execution failed');
-      expect(failedResult.tasks_status.failed).toBe(2);
+      // ✅ Assert
+      expect(dto.createdAfter).toBe('2024-01-01T00:00:00.000Z');
+      expect(dto.createdBefore).toBe('2024-12-31T23:59:59.999Z');
     });
   });
 
-  describe('PlanStatusDto', () => {
-    it('should represent plan status correctly', () => {
-      const planStatus: PlanStatusDto = {
-        plan_id: uuidv4(),
-        status: PlanStatus.ACTIVE,
-        progress: {
-          completed_tasks: 7,
-          total_tasks: 10,
-          percentage: 70
-        },
-        updated_at: new Date().toISOString()
+  describe('PlanResponseDto测试', () => {
+    it('应该创建有效的PlanResponseDto实例', () => {
+      // 📋 Arrange & Act
+      const dto = new PlanResponseDto();
+      dto.planId = 'plan-response-001';
+      dto.contextId = 'ctx-response-001';
+      dto.name = 'Response Plan';
+      dto.status = 'active';
+      dto.priority = 'high';
+      dto.protocolVersion = '1.0.0';
+      dto.timestamp = '2024-01-01T12:00:00.000Z';
+      dto.tasks = [
+        {
+          taskId: 'task-001',
+          name: 'Response Task',
+          type: 'atomic',
+          status: 'pending',
+          priority: 'medium'
+        }
+      ];
+      dto.auditTrail = {
+        enabled: true,
+        retentionDays: 90
       };
+      dto.monitoringIntegration = { enabled: true };
+      dto.performanceMetrics = { responseTime: 100 };
 
-      expect(planStatus.plan_id).toBeDefined();
-      expect(planStatus.status).toBe(PlanStatus.ACTIVE);
-      expect(planStatus.progress.percentage).toBe(70);
-      expect(planStatus.updated_at).toBeDefined();
+      // ✅ Assert
+      expect(dto.planId).toBe('plan-response-001');
+      expect(dto.contextId).toBe('ctx-response-001');
+      expect(dto.name).toBe('Response Plan');
+      expect(dto.status).toBe('active');
+      expect(dto.priority).toBe('high');
+      expect(dto.protocolVersion).toBe('1.0.0');
+      expect(dto.timestamp).toBe('2024-01-01T12:00:00.000Z');
+      expect(dto.tasks).toHaveLength(1);
+      expect(dto.tasks[0].taskId).toBe('task-001');
+      expect(dto.auditTrail.enabled).toBe(true);
+      expect(dto.monitoringIntegration.enabled).toBe(true);
     });
   });
 
-  describe('DTO Consistency', () => {
-    it('should maintain consistent field naming (snake_case)', () => {
-      const createRequest: CreatePlanRequestDto = {
-        context_id: uuidv4(),
-        name: 'Consistency Test',
-        description: 'Testing naming consistency',
-        execution_strategy: ExecutionStrategy.SEQUENTIAL,
-        estimated_duration: {
-          value: 3600,
-          unit: 'seconds'
-        }
+  describe('PaginatedPlanResponseDto测试', () => {
+    it('应该创建有效的PaginatedPlanResponseDto实例', () => {
+      // 📋 Arrange & Act
+      const dto = new PaginatedPlanResponseDto();
+      dto.success = true;
+      dto.data = [
+        {
+          planId: 'plan-001',
+          contextId: 'ctx-001',
+          name: 'Plan 1',
+          status: 'active',
+          priority: 'high',
+          protocolVersion: '1.0.0',
+          timestamp: '2024-01-01T12:00:00.000Z',
+          tasks: [],
+          auditTrail: { enabled: true, retentionDays: 90 },
+          monitoringIntegration: {},
+          performanceMetrics: {}
+        } as any
+      ];
+      dto.pagination = {
+        page: 1,
+        limit: 10,
+        total: 1,
+        totalPages: 1
       };
 
-      // 验证所有字段都使用snake_case
-      expect(createRequest.context_id).toBeDefined();
-      expect(createRequest.execution_strategy).toBeDefined();
-      expect(createRequest.estimated_duration).toBeDefined();
+      // ✅ Assert
+      expect(dto.success).toBe(true);
+      expect(dto.data).toHaveLength(1);
+      expect(dto.data[0].planId).toBe('plan-001');
+      expect(dto.pagination.page).toBe(1);
+      expect(dto.pagination.limit).toBe(10);
+      expect(dto.pagination.total).toBe(1);
+      expect(dto.pagination.totalPages).toBe(1);
     });
 
-    it('should support nested object consistency', () => {
-      const planResponse: PlanResponseDto = {
-        plan_id: uuidv4(),
-        context_id: uuidv4(),
-        name: 'Nested Test',
-        description: 'Testing nested consistency',
-        status: PlanStatus.DRAFT,
-        version: '1.0.0',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        goals: ['Test Goal'],
-        tasks: [],
-        dependencies: [],
-        execution_strategy: ExecutionStrategy.SEQUENTIAL,
-        priority: Priority.MEDIUM,
-        progress: {
-          completed_tasks: 0,
-          total_tasks: 0,
-          percentage: 0
-        },
-        configuration: {
-          execution_settings: {
-            strategy: ExecutionStrategy.SEQUENTIAL,
-            default_timeout_ms: 30000,
-            retry_policy: {
-              max_retries: 3,
-              retry_delay_ms: 1000,
-              backoff_factor: 2
-            }
-          },
-          notification_settings: {
-            enabled: false,
-            channels: [],
-            events: []
-          },
-          optimization_settings: {
-            enabled: false,
-            strategies: [],
-            auto_adjust: false
-          }
+    it('应该支持错误状态', () => {
+      // 📋 Arrange & Act
+      const dto = new PaginatedPlanResponseDto();
+      dto.success = false;
+      dto.data = [];
+      dto.pagination = {
+        page: 1,
+        limit: 10,
+        total: 0,
+        totalPages: 0
+      };
+      dto.error = {
+        code: 'QUERY_FAILED',
+        message: 'Database connection failed',
+        details: { query: 'SELECT * FROM plans' }
+      };
+
+      // ✅ Assert
+      expect(dto.success).toBe(false);
+      expect(dto.data).toHaveLength(0);
+      expect(dto.error).toBeDefined();
+      expect(dto.error!.code).toBe('QUERY_FAILED');
+      expect(dto.error!.message).toBe('Database connection failed');
+    });
+  });
+
+  describe('PlanOperationResultDto测试', () => {
+    it('应该创建成功的操作结果', () => {
+      // 📋 Arrange & Act
+      const dto = new PlanOperationResultDto();
+      dto.success = true;
+      dto.planId = 'plan-success-001';
+      dto.message = 'Operation completed successfully';
+      dto.metadata = {
+        operationType: 'create',
+        executionTime: 150,
+        affectedTasks: 5
+      };
+
+      // ✅ Assert
+      expect(dto.success).toBe(true);
+      expect(dto.planId).toBe('plan-success-001');
+      expect(dto.message).toBe('Operation completed successfully');
+      expect(dto.metadata?.operationType).toBe('create');
+      expect(dto.metadata?.executionTime).toBe(150);
+    });
+
+    it('应该创建失败的操作结果', () => {
+      // 📋 Arrange & Act
+      const dto = new PlanOperationResultDto();
+      dto.success = false;
+      dto.error = {
+        code: 'OPERATION_FAILED',
+        message: 'Validation failed',
+        details: {
+          field: 'name',
+          reason: 'Name cannot be empty'
         }
       };
 
-      // 验证嵌套对象的字段命名一致性
-      expect(planResponse.progress.completed_tasks).toBeDefined();
-      expect(planResponse.progress.total_tasks).toBeDefined();
-      expect(planResponse.configuration.execution_settings.default_timeout_ms).toBeDefined();
-      expect(planResponse.configuration.execution_settings.retry_policy.max_retries).toBeDefined();
-      expect(planResponse.configuration.optimization_settings.auto_adjust).toBeDefined();
+      // ✅ Assert
+      expect(dto.success).toBe(false);
+      expect(dto.planId).toBeUndefined();
+      expect(dto.error).toBeDefined();
+      expect(dto.error!.code).toBe('OPERATION_FAILED');
+      expect(dto.error!.message).toBe('Validation failed');
+      expect(dto.error!.details?.field).toBe('name');
+    });
+  });
+
+  describe('执行相关DTO测试', () => {
+    it('应该创建有效的PlanExecutionDto', () => {
+      // 📋 Arrange & Act
+      const dto = new PlanExecutionDto();
+      dto.executionMode = 'parallel';
+      dto.dryRun = true;
+      dto.skipValidation = false;
+      dto.notifyOnCompletion = true;
+      dto.customConfig = {
+        maxParallelTasks: 5,
+        timeout: 3600
+      };
+
+      // ✅ Assert
+      expect(dto.executionMode).toBe('parallel');
+      expect(dto.dryRun).toBe(true);
+      expect(dto.skipValidation).toBe(false);
+      expect(dto.notifyOnCompletion).toBe(true);
+      expect(dto.customConfig?.maxParallelTasks).toBe(5);
+    });
+
+    it('应该创建有效的PlanOptimizationDto', () => {
+      // 📋 Arrange & Act
+      const dto = new PlanOptimizationDto();
+      dto.targets = ['time', 'cost', 'quality'];
+      dto.constraints = {
+        maxDuration: 30,
+        maxCost: 10000,
+        minQuality: 0.9
+      };
+      dto.algorithm = 'genetic';
+      dto.iterations = 100;
+
+      // ✅ Assert
+      expect(dto.targets).toEqual(['time', 'cost', 'quality']);
+      expect(dto.constraints?.maxDuration).toBe(30);
+      expect(dto.constraints?.maxCost).toBe(10000);
+      expect(dto.algorithm).toBe('genetic');
+      expect(dto.iterations).toBe(100);
+    });
+
+    it('应该创建有效的PlanValidationDto', () => {
+      // 📋 Arrange & Act
+      const dto = new PlanValidationDto();
+      dto.validationLevel = 'comprehensive';
+      dto.includeWarnings = true;
+      dto.customRules = [
+        {
+          ruleId: 'rule-001',
+          name: 'Custom Rule',
+          description: 'Custom validation rule',
+          type: 'business',
+          severity: 'error',
+          condition: 'tasks.length > 0',
+          message: 'Plan must have at least one task',
+          enabled: true
+        }
+      ];
+      dto.skipRuleIds = ['rule-002', 'rule-003'];
+
+      // ✅ Assert
+      expect(dto.validationLevel).toBe('comprehensive');
+      expect(dto.includeWarnings).toBe(true);
+      expect(dto.customRules).toHaveLength(1);
+      expect(dto.customRules![0].name).toBe('Custom Rule');
+      expect(dto.skipRuleIds).toEqual(['rule-002', 'rule-003']);
+    });
+  });
+
+  describe('任务相关DTO测试', () => {
+    it('应该创建有效的CreateTaskDto', () => {
+      // 📋 Arrange & Act
+      const dto = new CreateTaskDto();
+      dto.name = 'New Task';
+      dto.description = 'Task description';
+      dto.type = 'atomic';
+      dto.priority = 'high';
+      dto.estimatedDuration = 8;
+      dto.durationUnit = 'hours';
+      dto.assignedTo = ['user-001', 'user-002'];
+      dto.dependencies = [
+        {
+          taskId: 'task-dep-001',
+          type: 'finish_to_start',
+          lag: 1,
+          lagUnit: 'days'
+        }
+      ];
+      dto.tags = ['urgent', 'frontend'];
+      dto.metadata = { component: 'ui', complexity: 'medium' };
+
+      // ✅ Assert
+      expect(dto.name).toBe('New Task');
+      expect(dto.type).toBe('atomic');
+      expect(dto.priority).toBe('high');
+      expect(dto.estimatedDuration).toBe(8);
+      expect(dto.durationUnit).toBe('hours');
+      expect(dto.assignedTo).toEqual(['user-001', 'user-002']);
+      expect(dto.dependencies).toHaveLength(1);
+      expect(dto.dependencies![0].type).toBe('finish_to_start');
+      expect(dto.tags).toContain('urgent');
+    });
+
+    it('应该创建有效的UpdateTaskDto', () => {
+      // 📋 Arrange & Act
+      const dto = new UpdateTaskDto();
+      dto.taskId = 'task-update-001';
+      dto.status = 'running';
+      dto.completionPercentage = 75;
+      dto.actualDuration = 6;
+      dto.startDate = '2024-01-01T09:00:00.000Z';
+      dto.endDate = '2024-01-01T15:00:00.000Z';
+
+      // ✅ Assert
+      expect(dto.taskId).toBe('task-update-001');
+      expect(dto.status).toBe('running');
+      expect(dto.completionPercentage).toBe(75);
+      expect(dto.actualDuration).toBe(6);
+      expect(dto.startDate).toBe('2024-01-01T09:00:00.000Z');
+      expect(dto.endDate).toBe('2024-01-01T15:00:00.000Z');
+    });
+  });
+
+  describe('里程碑相关DTO测试', () => {
+    it('应该创建有效的CreateMilestoneDto', () => {
+      // 📋 Arrange & Act
+      const dto = new CreateMilestoneDto();
+      dto.name = 'Project Milestone';
+      dto.description = 'Important project milestone';
+      dto.targetDate = new Date('2024-06-01');
+      dto.criteria = ['All tasks completed', 'Quality review passed'];
+      dto.dependencies = ['milestone-001', 'milestone-002'];
+      dto.deliverables = ['Documentation', 'Test Results'];
+
+      // ✅ Assert
+      expect(dto.name).toBe('Project Milestone');
+      expect(dto.description).toBe('Important project milestone');
+      expect(dto.targetDate).toEqual(new Date('2024-06-01'));
+      expect(dto.criteria).toEqual(['All tasks completed', 'Quality review passed']);
+      expect(dto.dependencies).toEqual(['milestone-001', 'milestone-002']);
+      expect(dto.deliverables).toEqual(['Documentation', 'Test Results']);
+    });
+
+    it('应该创建有效的UpdateMilestoneDto', () => {
+      // 📋 Arrange & Act
+      const dto = new UpdateMilestoneDto();
+      dto.id = 'milestone-update-001';
+      dto.status = 'completed';
+      dto.actualDate = new Date('2024-05-30');
+
+      // ✅ Assert
+      expect(dto.id).toBe('milestone-update-001');
+      expect(dto.status).toBe('completed');
+      expect(dto.actualDate).toEqual(new Date('2024-05-30'));
+    });
+  });
+
+  describe('资源和风险DTO测试', () => {
+    it('应该创建有效的ResourceAllocationDto', () => {
+      // 📋 Arrange & Act
+      const dto = new ResourceAllocationDto();
+      dto.resourceId = 'resource-001';
+      dto.resourceName = 'Senior Developer';
+      dto.type = 'human';
+      dto.allocatedAmount = 0.8;
+      dto.totalCapacity = 1.0;
+      dto.unit = 'FTE';
+      dto.allocationPeriod = {
+        startDate: '2024-01-01T00:00:00.000Z',
+        endDate: '2024-03-31T23:59:59.999Z'
+      };
+
+      // ✅ Assert
+      expect(dto.resourceId).toBe('resource-001');
+      expect(dto.resourceName).toBe('Senior Developer');
+      expect(dto.type).toBe('human');
+      expect(dto.allocatedAmount).toBe(0.8);
+      expect(dto.totalCapacity).toBe(1.0);
+      expect(dto.unit).toBe('FTE');
+      expect(dto.allocationPeriod?.startDate).toBe('2024-01-01T00:00:00.000Z');
+    });
+
+    it('应该创建有效的RiskItemDto', () => {
+      // 📋 Arrange & Act
+      const dto = new RiskItemDto();
+      dto.name = 'Technical Risk';
+      dto.description = 'Risk of technical implementation issues';
+      dto.category = 'Technical';
+      dto.level = 'high';
+      dto.probability = 0.7;
+      dto.impact = 0.8;
+      dto.mitigationPlan = 'Conduct proof of concept';
+      dto.owner = 'tech-lead-001';
+
+      // ✅ Assert
+      expect(dto.name).toBe('Technical Risk');
+      expect(dto.description).toBe('Risk of technical implementation issues');
+      expect(dto.category).toBe('Technical');
+      expect(dto.level).toBe('high');
+      expect(dto.probability).toBe(0.7);
+      expect(dto.impact).toBe(0.8);
+      expect(dto.mitigationPlan).toBe('Conduct proof of concept');
+      expect(dto.owner).toBe('tech-lead-001');
     });
   });
 });

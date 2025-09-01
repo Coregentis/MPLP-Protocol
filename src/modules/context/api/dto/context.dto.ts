@@ -1,296 +1,103 @@
 /**
- * Context模块数据传输对象(DTO)定义
- * 基于MPLP v1.0智能体构建框架协议标准
+ * Context模块DTO定义
  * 
+ * @description API层数据传输对象，用于请求和响应的数据结构定义
  * @version 1.0.0
- * @created 2025-08-15
+ * @layer API层 - 数据传输对象
  */
 
-// 重新导出所有DTO类型
-export * from './requests/create-context.request';
-export * from './requests/update-shared-state.request';
-export * from './requests/update-access-control.request';
+import { 
+  ContextStatus, 
+  LifecycleStage,
+  CreateContextRequest,
+  UpdateContextRequest,
+  ContextQueryFilter
+} from '../../types';
 
-export * from './responses/context.response';
-export * from './responses/shared-state.response';
-export * from './responses/access-control.response';
-
-// 基础DTO接口
-export interface BaseContextDto {
-  contextId: string;
-  name: string;
+/**
+ * 创建Context请求DTO
+ */
+export class CreateContextDto implements CreateContextRequest {
+  name!: string;
   description?: string;
-  status: string;
-  lifecycleStage: string;
-  timestamp: string;
-  protocolVersion: string;
+  sharedState?: Record<string, unknown>;
+  accessControl?: Record<string, unknown>;
+  configuration?: Record<string, unknown>;
 }
 
-// Context创建DTO
-export interface CreateContextDto {
-  name: string;
-  description?: string;
-  sharedState?: {
-    variables?: Record<string, unknown>;
-    resources?: {
-      allocated?: Record<string, unknown>;
-      requirements?: Record<string, unknown>;
-    };
-    dependencies?: string[];
-    goals?: Array<{
-      goalId: string;
-      description: string;
-      priority: number;
-      status: string;
-      successCriteria: Array<{
-        criteriaId: string;
-        description: string;
-        type: string;
-        value: unknown;
-        operator: string;
-      }>;
-    }>;
-  };
-  accessControl?: {
-    owner: {
-      userId: string;
-      role: string;
-    };
-    permissions?: Array<{
-      permissionId: string;
-      userId: string;
-      role: string;
-      actions: string[];
-      resources: string[];
-      conditions?: Record<string, unknown>;
-    }>;
-  };
-  configuration?: {
-    timeoutSettings?: {
-      defaultTimeout: number;
-      maxTimeout: number;
-      cleanupTimeout: number;
-    };
-    notificationSettings?: {
-      enabled: boolean;
-      channels: string[];
-      events: string[];
-    };
-    persistence?: {
-      enabled: boolean;
-      storageBackend: string;
-      retentionPolicy: {
-        duration: string;
-        maxVersions: number;
-      };
-    };
-  };
-}
-
-// Context更新DTO
-export interface UpdateContextDto {
+/**
+ * 更新Context请求DTO
+ */
+export class UpdateContextDto implements UpdateContextRequest {
   name?: string;
   description?: string;
-  status?: string;
-  lifecycleStage?: string;
-  sharedState?: {
-    variables?: Record<string, unknown>;
-    resources?: {
-      allocated?: Record<string, unknown>;
-      requirements?: Record<string, unknown>;
-    };
-    dependencies?: string[];
-    goals?: Array<{
-      goalId: string;
-      description: string;
-      priority: number;
-      status: string;
-      successCriteria: Array<{
-        criteriaId: string;
-        description: string;
-        type: string;
-        value: unknown;
-        operator: string;
-      }>;
-    }>;
-  };
+  status?: ContextStatus;
+  lifecycleStage?: LifecycleStage;
+  sharedState?: Record<string, unknown>;
+  accessControl?: Record<string, unknown>;
+  configuration?: Record<string, unknown>;
 }
 
-// Context查询DTO
-export interface ContextQueryDto {
-  name?: string;
-  status?: string;
-  lifecycleStage?: string;
-  ownerId?: string;
-  variables?: Record<string, unknown>;
-  limit?: number;
-  offset?: number;
-  sortBy?: string;
-  sortOrder?: 'asc' | 'desc';
+/**
+ * Context查询DTO
+ */
+export class ContextQueryDto implements ContextQueryFilter {
+  status?: ContextStatus | ContextStatus[];
+  lifecycleStage?: LifecycleStage | LifecycleStage[];
+  owner?: string;
+  createdAfter?: string;
+  createdBefore?: string;
+  namePattern?: string;
 }
 
-// Context响应DTO
-export interface ContextResponseDto extends BaseContextDto {
-  sharedState: {
-    variables: Record<string, unknown>;
-    resources: {
-      allocated: Record<string, unknown>;
-      requirements: Record<string, unknown>;
-    };
-    dependencies: string[];
-    goals: Array<{
-      goalId: string;
-      description: string;
-      priority: number;
-      status: string;
-      successCriteria: Array<{
-        criteriaId: string;
-        description: string;
-        type: string;
-        value: unknown;
-        operator: string;
-      }>;
-    }>;
-  };
-  accessControl: {
-    owner: {
-      userId: string;
-      role: string;
-    };
-    permissions: Array<{
-      permissionId: string;
-      userId: string;
-      role: string;
-      actions: string[];
-      resources: string[];
-      conditions?: Record<string, unknown>;
-    }>;
-  };
-  configuration: {
-    timeoutSettings: {
-      defaultTimeout: number;
-      maxTimeout: number;
-      cleanupTimeout: number;
-    };
-    notificationSettings: {
-      enabled: boolean;
-      channels: string[];
-      events: string[];
-    };
-    persistence: {
-      enabled: boolean;
-      storageBackend: string;
-      retentionPolicy: {
-        duration: string;
-        maxVersions: number;
-      };
-    };
-  };
-  auditTrail: {
-    enabled: boolean;
-    retentionDays: number;
-    auditEvents: Array<{
-      eventId: string;
-      eventType: string;
-      timestamp: string;
-      userId: string;
-      userRole: string;
-      action: string;
-      resource: string;
-      contextOperation: string;
-      contextId: string;
-      contextName: string;
-      lifecycleStage: string;
-      sharedStateKeys: string[];
-      accessLevel: string;
-      contextDetails: Record<string, unknown>;
-      ipAddress: string;
-      userAgent: string;
-      sessionId: string;
-      correlationId: string;
-    }>;
-    complianceSettings: {
-      gdprEnabled: boolean;
-      hipaaEnabled: boolean;
-      soxEnabled: boolean;
-      contextAuditLevel: string;
-      contextDataLogging: boolean;
-    };
-  };
-  monitoringIntegration: {
-    enabled: boolean;
-    supportedProviders: string[];
-    integrationEndpoints: Record<string, string>;
-    contextMetrics: {
-      trackStateChanges: boolean;
-      trackCachePerformance: boolean;
-      trackSyncOperations: boolean;
-      trackAccessPatterns: boolean;
-    };
-    exportFormats: string[];
-  };
-  performanceMetrics: {
-    enabled: boolean;
-    collectionIntervalSeconds: number;
-    metrics: {
-      contextAccessLatencyMs: number;
-      contextUpdateLatencyMs: number;
-      cacheHitRatePercent: number;
-      contextSyncSuccessRatePercent: number;
-      contextStateConsistencyScore: number;
-      activeContextsCount: number;
-      contextOperationsPerSecond: number;
-      contextMemoryUsageMb: number;
-      averageContextSizeBytes: number;
-    };
-    healthStatus: {
-      status: string;
-      lastCheck: string;
-      checks: Array<{
-        checkName: string;
-        status: string;
-        message: string;
-        durationMs: number;
-      }>;
-    };
-    alerting: {
-      enabled: boolean;
-      thresholds: {
-        maxContextAccessLatencyMs: number;
-        minCacheHitRatePercent: number;
-      };
-      notificationChannels: string[];
-    };
-  };
+/**
+ * Context响应DTO
+ */
+export class ContextResponseDto {
+  contextId!: string;
+  name!: string;
+  description?: string;
+  status!: ContextStatus;
+  lifecycleStage!: LifecycleStage;
+  protocolVersion!: string;
+  timestamp!: string;
+  sharedState!: Record<string, unknown>;
+  accessControl!: Record<string, unknown>;
+  configuration!: Record<string, unknown>;
+  auditTrail!: Record<string, unknown>;
+  monitoringIntegration!: Record<string, unknown>;
+  performanceMetrics!: Record<string, unknown>;
+  versionHistory!: Record<string, unknown>;
+  searchMetadata!: Record<string, unknown>;
+  cachingPolicy!: Record<string, unknown>;
+  syncConfiguration!: Record<string, unknown>;
+  errorHandling!: Record<string, unknown>;
+  integrationEndpoints!: Record<string, unknown>;
+  eventIntegration!: Record<string, unknown>;
 }
 
-// 批量操作DTO
-export interface BulkContextOperationDto {
-  operation: 'create' | 'update' | 'delete';
-  contexts: Array<CreateContextDto | UpdateContextDto | { contextId: string }>;
+/**
+ * 分页Context响应DTO
+ */
+export class PaginatedContextResponseDto {
+  data!: ContextResponseDto[];
+  total!: number;
+  page!: number;
+  limit!: number;
+  totalPages!: number;
 }
 
-// Context统计DTO
-export interface ContextStatisticsDto {
-  totalContexts: number;
-  statusStatistics: Record<string, number>;
-  lifecycleStageStatistics: Record<string, number>;
-  featureStatistics: {
-    auditEnabled: number;
-    monitoringEnabled: number;
-    performanceEnabled: number;
-    versioningEnabled: number;
-    searchEnabled: number;
-    cachingEnabled: number;
-    syncEnabled: number;
-    errorHandlingEnabled: number;
-    integrationEnabled: number;
-    eventIntegrationEnabled: number;
+/**
+ * Context操作结果DTO
+ */
+export class ContextOperationResultDto {
+  success!: boolean;
+  contextId?: string;
+  message?: string;
+  error?: {
+    code: string;
+    message: string;
+    details?: Record<string, unknown>;
   };
-  configurationStatistics: {
-    storageBackends: Record<string, number>;
-    cacheStrategies: Record<string, number>;
-    syncStrategies: Record<string, number>;
-    indexingStrategies: Record<string, number>;
-  };
+  metadata?: Record<string, unknown>;
 }

@@ -1,154 +1,101 @@
 /**
  * Trace仓库接口
  * 
- * 定义追踪数据访问的领域接口
- * 
+ * @description Trace模块的数据访问层接口定义
  * @version 1.0.0
- * @created 2025-09-16
+ * @layer 领域层 - 仓库接口
+ * @pattern 仓库模式，定义数据访问抽象
  */
 
-import { UUID } from '../../../../public/shared/types';
-import { Trace } from '../entities/trace.entity';
-import { TraceType, TraceSeverity, EventType } from '../../types';
-
-/**
- * 追踪查询过滤器
- */
-export interface TraceFilter {
-  context_id?: UUID;
-  plan_id?: UUID;
-  task_id?: UUID;
-  trace_type?: TraceType;
-  severity?: TraceSeverity;
-  event_type?: EventType;
-  event_category?: string;
-  source_component?: string;
-  timestamp_after?: string;
-  timestamp_before?: string;
-  has_errors?: boolean;
-  has_performance_metrics?: boolean;
-  correlation_trace_id?: UUID;
-}
-
-/**
- * 分页参数
- */
-export interface PaginationOptions {
-  page: number;
-  limit: number;
-  sort_by?: string;
-  sort_order?: 'asc' | 'desc';
-}
-
-/**
- * 分页结果
- */
-export interface PaginatedResult<T> {
-  items: T[];
-  total: number;
-  page: number;
-  limit: number;
-  total_pages: number;
-}
-
-/**
- * 追踪统计信息
- */
-export interface TraceStatistics {
-  total: number;
-  by_type: Record<TraceType, number>;
-  by_severity: Record<TraceSeverity, number>;
-  error_count: number;
-  performance_traces_count: number;
-  average_duration_ms?: number;
-}
+import {
+  TraceEntityData,
+  TraceQueryFilter,
+  CreateTraceRequest,
+  UpdateTraceRequest,
+  TimeRange,
+  TraceFilters
+} from '../../types';
+import { UUID, PaginationParams } from '../../../../shared/types';
+import { TraceEntity } from '../entities/trace.entity';
 
 /**
  * Trace仓库接口
+ * 
+ * @description 定义Trace数据访问的标准接口
  */
 export interface ITraceRepository {
+  
   /**
-   * 保存追踪
+   * 创建追踪记录
    */
-  save(trace: Trace): Promise<void>;
-
+  create(request: CreateTraceRequest): Promise<TraceEntityData>;
+  
   /**
-   * 根据ID查找追踪
+   * 根据ID获取追踪记录
    */
-  findById(traceId: UUID): Promise<Trace | null>;
-
+  findById(traceId: UUID): Promise<TraceEntityData | null>;
+  
   /**
-   * 根据上下文ID查找追踪列表
+   * 更新追踪记录
    */
-  findByContextId(contextId: UUID): Promise<Trace[]>;
-
+  update(request: UpdateTraceRequest): Promise<TraceEntityData>;
+  
   /**
-   * 根据计划ID查找追踪列表
+   * 删除追踪记录
    */
-  findByPlanId(planId: UUID): Promise<Trace[]>;
-
+  delete(traceId: UUID): Promise<boolean>;
+  
   /**
-   * 根据过滤器查找追踪列表
+   * 查询追踪记录
    */
-  findByFilter(filter: TraceFilter, pagination?: PaginationOptions): Promise<PaginatedResult<Trace>>;
-
+  query(
+    filter: TraceQueryFilter,
+    pagination?: PaginationParams
+  ): Promise<{ traces: TraceEntityData[]; total: number }>;
+  
   /**
-   * 查找错误追踪
-   */
-  findErrors(contextId?: UUID, limit?: number): Promise<Trace[]>;
-
-  /**
-   * 查找性能追踪
-   */
-  findPerformanceTraces(contextId?: UUID, limit?: number): Promise<Trace[]>;
-
-  /**
-   * 根据关联查找追踪
-   */
-  findByCorrelation(traceId: UUID): Promise<Trace[]>;
-
-  /**
-   * 查找时间范围内的追踪
-   */
-  findByTimeRange(startTime: string, endTime: string, contextId?: UUID): Promise<Trace[]>;
-
-  /**
-   * 更新追踪
-   */
-  update(trace: Trace): Promise<void>;
-
-  /**
-   * 删除追踪
-   */
-  delete(traceId: UUID): Promise<void>;
-
-  /**
-   * 批量删除追踪
-   */
-  batchDelete(traceIds: UUID[]): Promise<void>;
-
-  /**
-   * 检查追踪是否存在
+   * 检查追踪记录是否存在
    */
   exists(traceId: UUID): Promise<boolean>;
+  
+  /**
+   * 获取追踪记录数量
+   */
+  count(filter?: Partial<TraceQueryFilter>): Promise<number>;
+  
+  /**
+   * 批量创建追踪记录
+   */
+  createBatch(requests: CreateTraceRequest[]): Promise<TraceEntityData[]>;
+  
+  /**
+   * 批量删除追踪记录
+   */
+  deleteBatch(traceIds: UUID[]): Promise<number>;
+
+  // ===== 新增重构方法 =====
 
   /**
-   * 获取统计信息
+   * 保存追踪实体
    */
-  getStatistics(contextId?: UUID, timeRange?: { start: string; end: string }): Promise<TraceStatistics>;
+  save(trace: TraceEntity): Promise<TraceEntity>;
 
   /**
-   * 清理过期追踪
+   * 更新追踪实体
    */
-  cleanupExpiredTraces(olderThanDays: number): Promise<number>;
+  update(trace: TraceEntity): Promise<TraceEntity>;
 
   /**
-   * 获取追踪链
+   * 按时间范围查询
    */
-  getTraceChain(traceId: UUID): Promise<Trace[]>;
-
+  queryByTimeRange(timeRange: TimeRange, filters?: TraceFilters): Promise<TraceEntity[]>;
+  
   /**
-   * 搜索追踪
+   * 获取健康状态
    */
-  search(query: string, filter?: TraceFilter): Promise<Trace[]>;
+  getHealthStatus(): Promise<{
+    status: 'healthy' | 'degraded' | 'unhealthy';
+    timestamp: string;
+    details?: Record<string, unknown>;
+  }>;
 }

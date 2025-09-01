@@ -1,312 +1,665 @@
 /**
- * Extension模块 - Extension Entity单元测试
- * 
- * 测试Extension Entity的核心功能，确保符合Schema定义和厂商中立原则
- * 基于TDD (测试驱动开发) 模式编写
- * 
- * @version v1.0.0
- * @created 2025-08-10T14:50:00+08:00
- * @compliance 100% Schema合规性 - 完全匹配mplp-extension.json Schema定义
- * @naming_convention 双重命名约定 - Schema层(snake_case) ↔ TypeScript层(camelCase)
- * @zero_any_policy 严格遵循 - 0个any类型，完全类型安全
- * 
- * @强制检查确认
- * - [x] 已完成源代码分析 - Extension.entity.ts存在类型不一致问题
- * - [x] 已完成接口检查 - 发现Entity与Schema字段不匹配
- * - [x] 已完成Schema验证 - mplp-extension.json 722行企业级定义
- * - [x] 已完成测试数据准备 - 基于Schema创建测试工厂
- * - [x] 已完成模拟对象创建 - 类型安全的模拟工厂函数
- * - [x] 已完成测试覆盖验证 - TDD失败测试优先编写
- * - [x] 已完成编译和类型检查 - 将在TDD Green阶段修复
- * - [x] 已完成测试执行验证 - 预期失败，符合TDD Red阶段
+ * Extension实体单元测试
+ *
+ * @description 基于实际接口的ExtensionEntity测试
+ * @version 1.0.0
+ * @layer 测试层 - 单元测试
+ * @coverage 目标覆盖率 95%+
+ * @pattern 与Context、Plan、Role、Confirm模块使用IDENTICAL的测试模式
  */
 
-// 从@jest/globals导入Jest函数 (符合.cursor/rules/testing-standards-new.mdc)
-import { describe, expect, it, jest, beforeEach } from '@jest/globals';
+import { ExtensionEntity } from '../../../src/modules/extension/domain/entities/extension.entity';
+import { ExtensionEntityData, ExtensionStatus, ExtensionType } from '../../../src/modules/extension/types';
+import { UUID } from '../../../src/shared/types';
 
-// 导入基于Schema的测试数据工厂 (严格类型安全)
-import { 
-  createTestExtensionSchemaData,
-  createMinimalTestExtensionSchemaData,
-  createInvalidExtensionSchemaData,
-  type ExtensionProtocolSchema 
-} from '../../test-utils/extension-test-factory';
+describe('ExtensionEntity测试', () => {
 
-// 导入被测组件 (将在Green阶段修复)
-// import { Extension } from '../../../src/modules/extension/domain/entities/extension.entity';
+  describe('构造函数和基本属性测试', () => {
+    it('应该正确创建Extension实体并设置所有属性', () => {
+      // 📋 Arrange - 基于实际ExtensionEntity构造函数
+      const extensionData: ExtensionEntityData = {
+        extensionId: 'ext-test-001' as UUID,
+        contextId: 'ctx-test-001' as UUID,
+        name: 'test-extension',
+        displayName: 'Test Extension',
+        description: 'Test extension for unit testing',
+        version: '1.0.0',
+        extensionType: 'plugin' as ExtensionType,
+        status: 'active' as ExtensionStatus,
+        protocolVersion: '1.0.0',
+        timestamp: new Date().toISOString(),
+        compatibility: {
+          mplpVersion: '1.0.0',
+          requiredModules: ['context', 'plan'],
+          dependencies: [
+            {
+              name: 'test-dependency',
+              version: '1.0.0',
+              optional: false,
+              reason: 'Required for testing'
+            }
+          ],
+          conflicts: []
+        },
+        configuration: {
+          schema: { type: 'object', properties: {} },
+          currentConfig: { enabled: true },
+          defaultConfig: { enabled: false },
+          validationRules: []
+        },
+        extensionPoints: [
+          {
+            id: 'test-hook',
+            name: 'Test Hook',
+            type: 'hook',
+            description: 'Test extension point',
+            parameters: [
+              {
+                name: 'data',
+                type: 'object',
+                required: true,
+                description: 'Test data parameter'
+              }
+            ],
+            returnType: 'boolean',
+            async: false,
+            executionOrder: 1
+          }
+        ],
+        apiExtensions: [
+          {
+            endpoint: '/api/test',
+            method: 'GET',
+            handler: 'testHandler',
+            middleware: [],
+            authentication: {
+              required: false,
+              schemes: [],
+              permissions: []
+            },
+            rateLimit: {
+              enabled: false,
+              requestsPerMinute: 100,
+              burstSize: 10,
+              keyGenerator: 'ip'
+            },
+            validation: {
+              strictMode: false
+            },
+            documentation: {
+              summary: 'Test API endpoint',
+              tags: ['test'],
+              examples: []
+            }
+          }
+        ],
+        eventSubscriptions: [
+          {
+            eventPattern: 'test.*',
+            handler: 'testEventHandler',
+            filterConditions: [],
+            deliveryGuarantee: 'at_least_once',
+            deadLetterQueue: {
+              enabled: false,
+              maxRetries: 3,
+              retentionPeriod: 86400
+            },
+            retryPolicy: {
+              maxAttempts: 3,
+              backoffStrategy: 'exponential',
+              initialDelay: 1000,
+              maxDelay: 30000,
+              retryableErrors: ['TIMEOUT', 'CONNECTION_ERROR']
+            },
+            batchProcessing: {
+              enabled: false,
+              batchSize: 10,
+              flushInterval: 5000
+            }
+          }
+        ],
+        lifecycle: {
+          installDate: new Date().toISOString(),
+          lastUpdate: new Date().toISOString(),
+          activationCount: 1,
+          errorCount: 0,
+          performanceMetrics: {
+            averageResponseTime: 50,
+            throughput: 100,
+            errorRate: 0,
+            memoryUsage: 1024,
+            cpuUsage: 5,
+            lastMeasurement: new Date().toISOString()
+          },
+          healthCheck: {
+            enabled: true,
+            interval: 30000,
+            timeout: 5000,
+            healthyThreshold: 2,
+            unhealthyThreshold: 3
+          }
+        },
+        security: {
+          sandboxEnabled: true,
+          resourceLimits: {
+            maxMemory: 100 * 1024 * 1024,
+            maxCpu: 50,
+            maxFileSize: 10 * 1024 * 1024,
+            maxNetworkConnections: 10,
+            allowedDomains: [],
+            blockedDomains: []
+          },
+          codeSigning: {
+            required: false,
+            trustedSigners: []
+          },
+          permissions: {
+            fileSystem: { read: [], write: [], execute: [] },
+            network: { allowedHosts: [], allowedPorts: [], protocols: [] },
+            database: { read: [], write: [], admin: [] },
+            api: { endpoints: [], methods: [], rateLimit: 100 }
+          }
+        },
+        metadata: {
+          author: {
+            name: 'Test Author'
+          },
+          license: {
+            type: 'MIT'
+          },
+          keywords: ['test', 'extension'],
+          category: 'testing',
+          screenshots: []
+        },
+        auditTrail: {
+          events: [],
+          complianceSettings: {
+            retentionPeriod: 365,
+            encryptionRequired: false,
+            auditLevel: 'standard'
+          }
+        },
+        performanceMetrics: {
+          activationLatency: 100,
+          executionTime: 50,
+          memoryFootprint: 1024,
+          cpuUtilization: 5,
+          networkLatency: 10,
+          errorRate: 0,
+          throughput: 100,
+          availability: 99.9,
+          efficiencyScore: 95,
+          healthStatus: 'healthy',
+          alerts: []
+        },
+        monitoringIntegration: {
+          providers: ['prometheus'],
+          endpoints: [],
+          dashboards: [],
+          alerting: {
+            enabled: true,
+            channels: ['email'],
+            thresholds: {
+              errorRate: 5,
+              responseTime: 1000,
+              availability: 95
+            }
+          }
+        },
+        versionHistory: {
+          versions: [],
+          autoVersioning: {
+            enabled: false,
+            strategy: 'semantic',
+            triggers: ['api_change', 'breaking_change']
+          }
+        },
+        searchMetadata: {
+          indexedFields: ['name', 'description', 'keywords'],
+          searchStrategies: [],
+          facets: []
+        },
+        eventIntegration: {
+          eventBus: {
+            provider: 'internal',
+            connectionString: '',
+            topics: []
+          },
+          eventRouting: {
+            rules: [],
+            defaultRoute: 'default'
+          },
+          eventTransformation: {
+            enabled: false,
+            rules: []
+          }
+        }
+      };
 
-// Application层类型定义 (camelCase - 将在Green阶段基于Schema创建)
-interface ExtensionProtocolApplication {
-  protocolVersion: string;
-  timestamp: string;
-  extensionId: string;
-  contextId: string;
-  name: string;
-  displayName: string;
-  description: string;
-  version: string;
-  extensionType: 'plugin' | 'adapter' | 'connector' | 'middleware' | 'hook' | 'transformer';
-  status: 'installed' | 'active' | 'inactive' | 'disabled' | 'error' | 'updating' | 'uninstalling';
-  // 简化版本，完整版本将在Green阶段实现
-}
+      // 🎬 Act - 创建Extension实体
+      const extension = new ExtensionEntity(extensionData);
 
-// 模拟工厂函数 - 类型安全的Extension实例创建
-function createMockExtension(data: Partial<ExtensionProtocolSchema> = {}): ExtensionProtocolApplication {
-  const schemaData = { ...createTestExtensionSchemaData(), ...data };
-  
-  // Schema层(snake_case) → Application层(camelCase)的映射转换
-  return {
-    protocolVersion: schemaData.protocol_version,
-    timestamp: schemaData.timestamp,
-    extensionId: schemaData.extension_id,
-    contextId: schemaData.context_id,
-    name: schemaData.name,
-    displayName: schemaData.display_name,
-    description: schemaData.description,
-    version: schemaData.version,
-    extensionType: schemaData.extension_type,
-    status: schemaData.status
-  };
-}
+      // ✅ Assert - 验证所有属性正确设置
+      expect(extension.extensionId).toBe(extensionData.extensionId);
+      expect(extension.contextId).toBe(extensionData.contextId);
+      expect(extension.name).toBe(extensionData.name);
+      expect(extension.displayName).toBe(extensionData.displayName);
+      expect(extension.description).toBe(extensionData.description);
+      expect(extension.version).toBe(extensionData.version);
+      expect(extension.extensionType).toBe(extensionData.extensionType);
+      expect(extension.status).toBe(extensionData.status);
+      expect(extension.protocolVersion).toBe(extensionData.protocolVersion);
+      expect(extension.compatibility).toEqual(extensionData.compatibility);
+      expect(extension.configuration).toEqual(extensionData.configuration);
+      expect(extension.extensionPoints).toEqual(extensionData.extensionPoints);
+      expect(extension.apiExtensions).toEqual(extensionData.apiExtensions);
+      expect(extension.eventSubscriptions).toEqual(extensionData.eventSubscriptions);
+      expect(extension.lifecycle).toEqual(extensionData.lifecycle);
+      expect(extension.security).toEqual(extensionData.security);
+      expect(extension.metadata).toEqual(extensionData.metadata);
+    });
 
-describe('Extension Entity - TDD Red阶段', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
+    it('应该正确处理最小化的Extension数据', () => {
+      // 📋 Arrange - 最小化的Extension数据
+      const minimalData: ExtensionEntityData = {
+        extensionId: 'ext-minimal-001' as UUID,
+        contextId: 'ctx-minimal-001' as UUID,
+        name: 'minimal-extension',
+        displayName: 'Minimal Extension',
+        version: '1.0.0',
+        extensionType: 'adapter' as ExtensionType,
+        status: 'inactive' as ExtensionStatus,
+        protocolVersion: '1.0.0',
+        timestamp: new Date().toISOString(),
+        compatibility: {
+          mplpVersion: '1.0.0',
+          requiredModules: [],
+          dependencies: [],
+          conflicts: []
+        },
+        configuration: {
+          schema: {},
+          currentConfig: {},
+          defaultConfig: {},
+          validationRules: []
+        },
+        extensionPoints: [],
+        apiExtensions: [],
+        eventSubscriptions: [],
+        lifecycle: {
+          installDate: new Date().toISOString(),
+          lastUpdate: new Date().toISOString(),
+          activationCount: 0,
+          errorCount: 0,
+          performanceMetrics: {
+            averageResponseTime: 0,
+            throughput: 0,
+            errorRate: 0,
+            memoryUsage: 0,
+            cpuUsage: 0,
+            lastMeasurement: new Date().toISOString()
+          },
+          healthCheck: {
+            enabled: false,
+            interval: 30000,
+            timeout: 5000,
+            healthyThreshold: 2,
+            unhealthyThreshold: 3
+          }
+        },
+        security: {
+          sandboxEnabled: false,
+          resourceLimits: {
+            maxMemory: 0,
+            maxCpu: 0,
+            maxFileSize: 0,
+            maxNetworkConnections: 0,
+            allowedDomains: [],
+            blockedDomains: []
+          },
+          codeSigning: {
+            required: false,
+            trustedSigners: []
+          },
+          permissions: {
+            fileSystem: { read: [], write: [], execute: [] },
+            network: { allowedHosts: [], allowedPorts: [], protocols: [] },
+            database: { read: [], write: [], admin: [] },
+            api: { endpoints: [], methods: [], rateLimit: 0 }
+          }
+        },
+        metadata: {
+          author: { name: '' },
+          license: { type: '' },
+          keywords: [],
+          category: '',
+          screenshots: []
+        },
+        auditTrail: {
+          events: [],
+          complianceSettings: {
+            retentionPeriod: 0,
+            encryptionRequired: false,
+            auditLevel: 'none'
+          }
+        },
+        performanceMetrics: {
+          activationLatency: 0,
+          executionTime: 0,
+          memoryFootprint: 0,
+          cpuUtilization: 0,
+          networkLatency: 0,
+          errorRate: 0,
+          throughput: 0,
+          availability: 0,
+          efficiencyScore: 0,
+          healthStatus: 'unhealthy',
+          alerts: []
+        },
+        monitoringIntegration: {
+          providers: [],
+          endpoints: [],
+          dashboards: [],
+          alerting: {
+            enabled: false,
+            channels: [],
+            thresholds: {
+              errorRate: 0,
+              responseTime: 0,
+              availability: 0
+            }
+          }
+        },
+        versionHistory: {
+          versions: [],
+          autoVersioning: {
+            enabled: false,
+            strategy: 'manual',
+            triggers: []
+          }
+        },
+        searchMetadata: {
+          indexedFields: [],
+          searchStrategies: [],
+          facets: []
+        },
+        eventIntegration: {
+          eventBus: {
+            provider: 'none',
+            connectionString: '',
+            topics: []
+          },
+          eventRouting: {
+            rules: [],
+            defaultRoute: ''
+          },
+          eventTransformation: {
+            enabled: false,
+            rules: []
+          }
+        }
+      };
+
+      // 🎬 Act - 创建最小化Extension实体
+      const extension = new ExtensionEntity(minimalData);
+
+      // ✅ Assert - 验证基本属性正确设置
+      expect(extension.extensionId).toBe(minimalData.extensionId);
+      expect(extension.name).toBe(minimalData.name);
+      expect(extension.extensionType).toBe('adapter');
+      expect(extension.status).toBe('inactive');
+      expect(extension.extensionPoints).toHaveLength(0);
+      expect(extension.apiExtensions).toHaveLength(0);
+      expect(extension.eventSubscriptions).toHaveLength(0);
+    });
   });
 
-  describe('Extension实体创建测试', () => {
-    it('应该基于完整Schema数据创建Extension实体', () => {
-      // 📋 Arrange - 准备测试数据
-      const validSchemaData = createTestExtensionSchemaData();
-      
-      // 🎬 Act - 执行操作 (预期失败 - TDD Red阶段)
-      expect(() => {
-        // const extension = new Extension(validSchemaData); // 将在Green阶段实现
-        createMockExtension(validSchemaData);
-      }).not.toThrow();
-      
-      // ✅ Assert - 验证结果
-      const mockExtension = createMockExtension(validSchemaData);
-      expect(mockExtension.extensionId).toBe(validSchemaData.extension_id);
-      expect(mockExtension.name).toBe(validSchemaData.name);
-      expect(mockExtension.extensionType).toBe(validSchemaData.extension_type);
-      expect(mockExtension.status).toBe(validSchemaData.status);
+  describe('状态管理测试', () => {
+    let extension: ExtensionEntity;
+
+    beforeEach(() => {
+      const extensionData: ExtensionEntityData = {
+        extensionId: 'ext-status-001' as UUID,
+        contextId: 'ctx-status-001' as UUID,
+        name: 'status-test-extension',
+        displayName: 'Status Test Extension',
+        version: '1.0.0',
+        extensionType: 'plugin' as ExtensionType,
+        status: 'inactive' as ExtensionStatus,
+        protocolVersion: '1.0.0',
+        timestamp: new Date().toISOString(),
+        // ... 其他必需属性的最小化版本
+        compatibility: { mplpVersion: '1.0.0', requiredModules: [], dependencies: [], conflicts: [] },
+        configuration: { schema: {}, currentConfig: {}, defaultConfig: {}, validationRules: [] },
+        extensionPoints: [],
+        apiExtensions: [],
+        eventSubscriptions: [],
+        lifecycle: {
+          installDate: new Date().toISOString(),
+          lastUpdate: new Date().toISOString(),
+          activationCount: 0,
+          errorCount: 0,
+          performanceMetrics: {
+            averageResponseTime: 0, throughput: 0, errorRate: 0, memoryUsage: 0, cpuUsage: 0, lastMeasurement: new Date().toISOString()
+          },
+          healthCheck: { enabled: false, interval: 30000, timeout: 5000, healthyThreshold: 2, unhealthyThreshold: 3 }
+        },
+        security: {
+          sandboxEnabled: false,
+          resourceLimits: { maxMemory: 0, maxCpu: 0, maxFileSize: 0, maxNetworkConnections: 0, allowedDomains: [], blockedDomains: [] },
+          codeSigning: { required: false, trustedSigners: [] },
+          permissions: {
+            fileSystem: { read: [], write: [], execute: [] },
+            network: { allowedHosts: [], allowedPorts: [], protocols: [] },
+            database: { read: [], write: [], admin: [] },
+            api: { endpoints: [], methods: [], rateLimit: 0 }
+          }
+        },
+        metadata: { author: { name: '' }, license: { type: '' }, keywords: [], category: '', screenshots: [] },
+        auditTrail: { events: [], complianceSettings: { retentionPeriod: 0, encryptionRequired: false, auditLevel: 'none' } },
+        performanceMetrics: {
+          activationLatency: 0, executionTime: 0, memoryFootprint: 0, cpuUtilization: 0, networkLatency: 0,
+          errorRate: 0, throughput: 0, availability: 0, efficiencyScore: 0, healthStatus: 'unhealthy', alerts: []
+        },
+        monitoringIntegration: {
+          providers: [], endpoints: [], dashboards: [],
+          alerting: { enabled: false, channels: [], thresholds: { errorRate: 0, responseTime: 0, availability: 0 } }
+        },
+        versionHistory: { versions: [], autoVersioning: { enabled: false, strategy: 'manual', triggers: [] } },
+        searchMetadata: { indexedFields: [], searchStrategies: [], facets: [] },
+        eventIntegration: {
+          eventBus: { provider: 'none', connectionString: '', topics: [] },
+          eventRouting: { rules: [], defaultRoute: '' },
+          eventTransformation: { enabled: false, rules: [] }
+        }
+      };
+
+      extension = new ExtensionEntity(extensionData);
     });
 
-    it('应该正确处理双重命名约定的字段映射', () => {
-      // 📋 Arrange - Schema层数据 (snake_case)
-      const schemaData = createTestExtensionSchemaData();
-      
-      // 🎬 Act - Application层转换 (camelCase)
-      const applicationData = createMockExtension(schemaData);
-      
-      // ✅ Assert - 验证双重命名约定映射
-      expect(applicationData.protocolVersion).toBe(schemaData.protocol_version);
-      expect(applicationData.extensionId).toBe(schemaData.extension_id);
-      expect(applicationData.contextId).toBe(schemaData.context_id);
-      expect(applicationData.displayName).toBe(schemaData.display_name);
-      expect(applicationData.extensionType).toBe(schemaData.extension_type);
+    it('应该能够激活扩展', () => {
+      // 📋 Arrange - 扩展初始状态为INACTIVE
+      expect(extension.status).toBe('inactive');
+
+      // 🎬 Act - 激活扩展
+      extension.activate();
+
+      // ✅ Assert - 验证状态变为ACTIVE
+      expect(extension.status).toBe('active');
     });
 
-    it('应该验证必需字段的存在性', () => {
-      // 📋 Arrange - 最小化数据
-      const minimalData = createMinimalTestExtensionSchemaData();
-      
-      // 🎬 Act & Assert - 验证必需字段
-      expect(minimalData.protocol_version).toBeDefined();
-      expect(minimalData.timestamp).toBeDefined();
-      expect(minimalData.extension_id).toBeDefined();
-      expect(minimalData.context_id).toBeDefined();
-      expect(minimalData.name).toBeDefined();
-      expect(minimalData.extension_type).toBeDefined();
-      expect(minimalData.status).toBeDefined();
-      expect(minimalData.version).toBeDefined();
-    });
-  });
+    it('应该能够停用扩展', () => {
+      // 📋 Arrange - 先激活扩展
+      extension.activate();
+      expect(extension.status).toBe('active');
 
-  describe('Extension字段验证测试', () => {
-    it('应该验证extensionType枚举值的有效性', () => {
-      // 📋 Arrange - 有效的扩展类型
-      const validTypes: Array<ExtensionProtocolSchema['extension_type']> = [
-        'plugin', 'adapter', 'connector', 'middleware', 'hook', 'transformer'
-      ];
-      
-      // 🎬 Act & Assert - 验证每个有效类型
-      validTypes.forEach(type => {
-        const data = createTestExtensionSchemaData();
-        data.extension_type = type;
-        const extension = createMockExtension(data);
-        expect(extension.extensionType).toBe(type);
-      });
+      // 🎬 Act - 停用扩展
+      extension.deactivate();
+
+      // ✅ Assert - 验证状态变为INACTIVE
+      expect(extension.status).toBe('inactive');
     });
 
-    it('应该验证status枚举值的有效性', () => {
-      // 📋 Arrange - 有效的状态值
-      const validStatuses: Array<ExtensionProtocolSchema['status']> = [
-        'installed', 'active', 'inactive', 'disabled', 'error', 'updating', 'uninstalling'
-      ];
-      
-      // 🎬 Act & Assert - 验证每个有效状态
-      validStatuses.forEach(status => {
-        const data = createTestExtensionSchemaData();
-        data.status = status;
-        const extension = createMockExtension(data);
-        expect(extension.status).toBe(status);
-    });
-  });
+    it('应该能够标记扩展为错误状态', () => {
+      // 📋 Arrange - 扩展初始状态
+      const initialStatus = extension.status;
 
-    it('应该验证UUID格式的字段', () => {
-      // 📋 Arrange - UUID格式验证
-      const data = createTestExtensionSchemaData();
-      
-      // ✅ Assert - 验证UUID格式 (基本格式检查)
-      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
-      expect(data.extension_id).toMatch(uuidRegex);
-      expect(data.context_id).toMatch(uuidRegex);
-    });
+      // 🎬 Act - 标记为错误状态
+      extension.markAsError();
 
-    it('应该验证version字段的SemVer格式', () => {
-      // 📋 Arrange - 版本号验证
-      const data = createTestExtensionSchemaData();
-      
-      // ✅ Assert - 验证SemVer格式
-      const semverRegex = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/;
-      expect(data.version).toMatch(semverRegex);
-      expect(data.protocol_version).toMatch(semverRegex);
+      // ✅ Assert - 验证状态变为ERROR
+      expect(extension.status).toBe('error');
+      expect(extension.status).not.toBe(initialStatus);
     });
   });
 
-  describe('Extension复杂对象字段测试', () => {
-    it('应该验证compatibility配置的完整性', () => {
-      // 📋 Arrange - 兼容性配置
-      const data = createTestExtensionSchemaData();
-      const compatibility = data.compatibility;
-      
-      // ✅ Assert - 验证兼容性配置结构
-      expect(compatibility.mplp_version).toBeDefined();
-      expect(Array.isArray(compatibility.required_modules)).toBe(true);
-      expect(Array.isArray(compatibility.dependencies)).toBe(true);
-      expect(Array.isArray(compatibility.conflicts)).toBe(true);
-    });
+  describe('验证方法测试', () => {
+    it('应该验证扩展配置的有效性', () => {
+      // 📋 Arrange - 创建有效配置的扩展
+      const validExtensionData: ExtensionEntityData = {
+        extensionId: 'ext-valid-001' as UUID,
+        contextId: 'ctx-valid-001' as UUID,
+        name: 'valid-extension',
+        displayName: 'Valid Extension',
+        version: '1.0.0',
+        extensionType: 'plugin' as ExtensionType,
+        status: 'active' as ExtensionStatus,
+        protocolVersion: '1.0.0',
+        timestamp: new Date().toISOString(),
+        // ... 其他必需属性
+        compatibility: { mplpVersion: '1.0.0', requiredModules: [], dependencies: [], conflicts: [] },
+        configuration: { schema: {}, currentConfig: {}, defaultConfig: {}, validationRules: [] },
+        extensionPoints: [],
+        apiExtensions: [],
+        eventSubscriptions: [],
+        lifecycle: {
+          installDate: new Date().toISOString(),
+          lastUpdate: new Date().toISOString(),
+          activationCount: 0,
+          errorCount: 0,
+          performanceMetrics: {
+            averageResponseTime: 0, throughput: 0, errorRate: 0, memoryUsage: 0, cpuUsage: 0, lastMeasurement: new Date().toISOString()
+          },
+          healthCheck: { enabled: false, interval: 30000, timeout: 5000, healthyThreshold: 2, unhealthyThreshold: 3 }
+        },
+        security: {
+          sandboxEnabled: false,
+          resourceLimits: { maxMemory: 0, maxCpu: 0, maxFileSize: 0, maxNetworkConnections: 0, allowedDomains: [], blockedDomains: [] },
+          codeSigning: { required: false, trustedSigners: [] },
+          permissions: {
+            fileSystem: { read: [], write: [], execute: [] },
+            network: { allowedHosts: [], allowedPorts: [], protocols: [] },
+            database: { read: [], write: [], admin: [] },
+            api: { endpoints: [], methods: [], rateLimit: 0 }
+          }
+        },
+        metadata: { author: { name: '' }, license: { type: '' }, keywords: [], category: '', screenshots: [] },
+        auditTrail: { events: [], complianceSettings: { retentionPeriod: 0, encryptionRequired: false, auditLevel: 'none' } },
+        performanceMetrics: {
+          activationLatency: 0, executionTime: 0, memoryFootprint: 0, cpuUtilization: 0, networkLatency: 0,
+          errorRate: 0, throughput: 0, availability: 0, efficiencyScore: 0, healthStatus: 'healthy', alerts: []
+        },
+        monitoringIntegration: {
+          providers: [], endpoints: [], dashboards: [],
+          alerting: { enabled: false, channels: [], thresholds: { errorRate: 0, responseTime: 0, availability: 0 } }
+        },
+        versionHistory: { versions: [], autoVersioning: { enabled: false, strategy: 'manual', triggers: [] } },
+        searchMetadata: { indexedFields: [], searchStrategies: [], facets: [] },
+        eventIntegration: {
+          eventBus: { provider: 'none', connectionString: '', topics: [] },
+          eventRouting: { rules: [], defaultRoute: '' },
+          eventTransformation: { enabled: false, rules: [] }
+        }
+      };
 
-    it('应该验证configuration配置的Schema结构', () => {
-      // 📋 Arrange - 配置信息
-      const data = createTestExtensionSchemaData();
-      const configuration = data.configuration;
-      
-      // ✅ Assert - 验证配置结构
-      expect(configuration.schema).toBeDefined();
-      expect(configuration.current_config).toBeDefined();
-      expect(typeof configuration.schema).toBe('object');
-      expect(typeof configuration.current_config).toBe('object');
-    });
+      const extension = new ExtensionEntity(validExtensionData);
 
-    it('应该验证lifecycle信息的完整性', () => {
-      // 📋 Arrange - 生命周期信息
-      const data = createTestExtensionSchemaData();
-      const lifecycle = data.lifecycle;
-      
-      // ✅ Assert - 验证生命周期必需字段
-      expect(lifecycle.install_date).toBeDefined();
-      expect(lifecycle.activation_count).toBeDefined();
-      expect(lifecycle.error_count).toBeDefined();
-      expect(typeof lifecycle.activation_count).toBe('number');
-      expect(typeof lifecycle.error_count).toBe('number');
-      expect(lifecycle.activation_count).toBeGreaterThanOrEqual(0);
-      expect(lifecycle.error_count).toBeGreaterThanOrEqual(0);
-    });
+      // 🎬 Act - 验证扩展
+      const isValid = extension.validate();
 
-    it('应该验证security配置的安全性要求', () => {
-      // 📋 Arrange - 安全配置
-      const data = createTestExtensionSchemaData();
-      const security = data.security;
-      
-      // ✅ Assert - 验证安全配置必需字段
-      expect(typeof security.sandbox_enabled).toBe('boolean');
-      expect(security.resource_limits).toBeDefined();
-      expect(typeof security.resource_limits).toBe('object');
-    });
-  });
-
-  describe('Extension错误处理测试', () => {
-    it('应该处理无效的Schema数据', () => {
-      // 📋 Arrange - 无效数据
-      const invalidData = createInvalidExtensionSchemaData();
-      
-      // 🎬 Act & Assert - 预期验证失败
-      expect(() => {
-        // 在Green阶段，这里应该抛出验证错误
-        // const extension = new Extension(invalidData);
-        createMockExtension(invalidData as ExtensionProtocolSchema);
-      }).not.toThrow(); // 目前使用mock，Green阶段将实现真实验证
-    });
-
-    it('应该处理缺失必需字段的情况', () => {
-      // 📋 Arrange - 缺失必需字段
-      const incompleteData = {
-        extension_id: 'ext-test',
-        // 缺失其他必需字段
-      } as Partial<ExtensionProtocolSchema>;
-      
-      // 🎬 Act & Assert - 预期验证失败 (Green阶段实现)
-      expect(() => {
-        createMockExtension(incompleteData as ExtensionProtocolSchema);
-      }).not.toThrow(); // Mock阶段暂不抛出错误
+      // ✅ Assert - 验证结果为true
+      expect(isValid).toBe(true);
     });
   });
 
-  describe('Extension方法测试', () => {
-    it('应该支持toSchema()方法进行Schema层转换', () => {
-      // 📋 Arrange - Application层数据
-      const applicationData = createMockExtension();
-      
-      // 🎬 Act - 转换为Schema层 (将在Green阶段实现)
-      // const schemaData = applicationData.toSchema(); // 待实现
-      
-      // ✅ Assert - 验证转换结果 (预期实现)
-      expect(applicationData.extensionId).toBeDefined();
-      expect(applicationData.protocolVersion).toBe('1.0.1');
-    });
+  describe('性能指标测试', () => {
+    it('应该正确更新性能指标', () => {
+      // 📋 Arrange - 创建扩展实体
+      const extensionData: ExtensionEntityData = {
+        extensionId: 'ext-perf-001' as UUID,
+        contextId: 'ctx-perf-001' as UUID,
+        name: 'performance-extension',
+        displayName: 'Performance Extension',
+        version: '1.0.0',
+        extensionType: 'plugin' as ExtensionType,
+        status: 'active' as ExtensionStatus,
+        protocolVersion: '1.0.0',
+        timestamp: new Date().toISOString(),
+        // ... 其他必需属性的最小化版本
+        compatibility: { mplpVersion: '1.0.0', requiredModules: [], dependencies: [], conflicts: [] },
+        configuration: { schema: {}, currentConfig: {}, defaultConfig: {}, validationRules: [] },
+        extensionPoints: [],
+        apiExtensions: [],
+        eventSubscriptions: [],
+        lifecycle: {
+          installDate: new Date().toISOString(),
+          lastUpdate: new Date().toISOString(),
+          activationCount: 0,
+          errorCount: 0,
+          performanceMetrics: {
+            averageResponseTime: 100, throughput: 50, errorRate: 0, memoryUsage: 1024, cpuUsage: 10, lastMeasurement: new Date().toISOString()
+          },
+          healthCheck: { enabled: true, interval: 30000, timeout: 5000, healthyThreshold: 2, unhealthyThreshold: 3 }
+        },
+        security: {
+          sandboxEnabled: true,
+          resourceLimits: { maxMemory: 1024, maxCpu: 50, maxFileSize: 1024, maxNetworkConnections: 10, allowedDomains: [], blockedDomains: [] },
+          codeSigning: { required: false, trustedSigners: [] },
+          permissions: {
+            fileSystem: { read: [], write: [], execute: [] },
+            network: { allowedHosts: [], allowedPorts: [], protocols: [] },
+            database: { read: [], write: [], admin: [] },
+            api: { endpoints: [], methods: [], rateLimit: 100 }
+          }
+        },
+        metadata: { author: { name: 'Test' }, license: { type: 'MIT' }, keywords: ['test'], category: 'test', screenshots: [] },
+        auditTrail: { events: [], complianceSettings: { retentionPeriod: 365, encryptionRequired: false, auditLevel: 'standard' } },
+        performanceMetrics: {
+          activationLatency: 100, executionTime: 50, memoryFootprint: 1024, cpuUtilization: 10, networkLatency: 20,
+          errorRate: 0, throughput: 50, availability: 99.9, efficiencyScore: 95, healthStatus: 'healthy', alerts: []
+        },
+        monitoringIntegration: {
+          providers: ['prometheus'], endpoints: [], dashboards: [],
+          alerting: { enabled: true, channels: ['email'], thresholds: { errorRate: 5, responseTime: 1000, availability: 95 } }
+        },
+        versionHistory: { versions: [], autoVersioning: { enabled: false, strategy: 'semantic', triggers: [] } },
+        searchMetadata: { indexedFields: ['name'], searchStrategies: [], facets: [] },
+        eventIntegration: {
+          eventBus: { provider: 'internal', connectionString: '', topics: [] },
+          eventRouting: { rules: [], defaultRoute: 'default' },
+          eventTransformation: { enabled: false, rules: [] }
+        }
+      };
 
-    it('应该支持fromSchema()静态方法进行Application层转换', () => {
-      // 📋 Arrange - Schema层数据
-      const schemaData = createTestExtensionSchemaData();
-      
-      // 🎬 Act - 从Schema创建Application实例 (将在Green阶段实现)
-      // const extension = Extension.fromSchema(schemaData); // 待实现
-      const mockExtension = createMockExtension(schemaData);
-      
-      // ✅ Assert - 验证转换结果
-      expect(mockExtension.extensionId).toBe(schemaData.extension_id);
-      expect(mockExtension.extensionType).toBe(schemaData.extension_type);
-    });
+      const extension = new ExtensionEntity(extensionData);
 
-    it('应该支持validateSchema()方法进行Schema验证', () => {
-      // 📋 Arrange - 测试数据
-      const validData = createTestExtensionSchemaData();
-      const invalidData = createInvalidExtensionSchemaData();
-      
-      // 🎬 Act & Assert - 验证Schema (将在Green阶段实现)
-      // expect(Extension.validateSchema(validData)).toBe(true);
-      // expect(Extension.validateSchema(invalidData)).toBe(false);
-      
-      // 临时验证 - 数据结构存在性
-      expect(validData.extension_id).toBeDefined();
-      expect(invalidData.extension_id).toBeDefined();
+      // 🎬 Act - 更新性能指标
+      const newMetrics = {
+        averageResponseTime: 80,
+        throughput: 75,
+        errorRate: 0.1,
+        memoryUsage: 1200,
+        cpuUsage: 15,
+        lastMeasurement: new Date().toISOString()
+      };
+      extension.updatePerformanceMetrics(newMetrics);
+
+      // ✅ Assert - 验证性能指标已更新
+      expect(extension.lifecycle.performanceMetrics.averageResponseTime).toBe(80);
+      expect(extension.lifecycle.performanceMetrics.throughput).toBe(75);
+      expect(extension.lifecycle.performanceMetrics.errorRate).toBe(0.1);
+      expect(extension.lifecycle.performanceMetrics.memoryUsage).toBe(1200);
+      expect(extension.lifecycle.performanceMetrics.cpuUsage).toBe(15);
     });
   });
 });
-
-// TDD Red阶段总结:
-// 1. ✅ 创建了基于mplp-extension.json Schema的完整类型定义
-// 2. ✅ 严格遵循双重命名约定 (snake_case ↔ camelCase)
-// 3. ✅ 100%消除any类型，实现完全类型安全
-// 4. ✅ 编写了企业级Extension Entity的失败测试
-// 5. ✅ 覆盖了Schema验证、字段映射、错误处理等核心场景
-// 6. ✅ 为Green阶段的实现提供了明确的功能需求定义
-//
-// Green阶段目标:
-// 1. 实现Extension Entity类，通过所有测试
-// 2. 实现Schema ↔ Application双向映射
-// 3. 实现企业级验证和错误处理
-// 4. 确保0个TypeScript错误，0个ESLint错误

@@ -1,516 +1,361 @@
 /**
- * Context Repository实现 - MPLP v1.0 内存存储
- *
- * 基于内存的Context仓库实现
- * 支持完整的14个功能域
- *
+ * Context仓库实现
+ * 
+ * @description Context模块的仓库实现，提供数据持久化功能
  * @version 1.0.0
- * @updated 2025-08-14
+ * @layer 基础设施层 - 仓库实现
  */
 
-import { UUID } from '../../../../public/shared/types';
-import { Context } from '../../domain/entities/context.entity';
-import {
-  IContextRepository,
-  ContextFilter,
-  ContextSortField,
-  PaginationParams,
-  PaginatedResult
-} from '../../domain/repositories/context-repository.interface';
+import { ContextEntity } from '../../domain/entities/context.entity';
+import { IContextRepository } from '../../domain/repositories/context-repository.interface';
+import { ContextQueryFilter } from '../../types';
+import { UUID } from '../../../../shared/types';
+import { PaginatedResult, PaginationParams } from '../../../../shared/types';
 
 /**
- * 内存Context仓库实现 - MPLP v1.0
+ * 内存Context仓库实现
+ * 
+ * @description 基于内存的Context仓库实现，用于开发和测试
+ * @note 生产环境应替换为数据库实现
  */
-export class ContextRepository implements IContextRepository {
-  private contexts: Map<UUID, Context> = new Map();
+export class MemoryContextRepository implements IContextRepository {
+  
+  private contexts = new Map<UUID, ContextEntity>();
+  private nameIndex = new Map<string, UUID>();
 
-  /**
-   * 通过ID查找Context
-   */
-  async findById(id: UUID): Promise<Context | null> {
-    const context = this.contexts.get(id);
-    return context ? context.clone() : null;
+  // ===== 基础CRUD操作 =====
+
+  async findById(contextId: UUID): Promise<ContextEntity | null> {
+    return this.contexts.get(contextId) || null;
   }
 
-  /**
-   * 保存Context
-   */
-  async save(context: Context): Promise<void> {
-    this.contexts.set(context.contextId, context.clone());
+  async findByName(name: string): Promise<ContextEntity | null> {
+    const contextId = this.nameIndex.get(name);
+    if (!contextId) return null;
+    return this.contexts.get(contextId) || null;
   }
 
-  /**
-   * 删除Context
-   */
-  async delete(id: UUID): Promise<void> {
-    this.contexts.delete(id);
-  }
-
-  /**
-   * 检查Context是否存在
-   */
-  async exists(id: UUID): Promise<boolean> {
-    return this.contexts.has(id);
-  }
-
-  /**
-   * 通过名称查找Context
-   */
-  async findByName(name: string): Promise<Context | null> {
-    for (const context of Array.from(this.contexts.values())) {
-      if (context.name === name) {
-        return context.clone();
-      }
-    }
-    return null;
-  }
-
-  /**
-   * 查找多个Context
-   */
-  async findMany(filter?: ContextFilter, pagination?: PaginationParams): Promise<PaginatedResult<Context>> {
-    let filteredContexts = Array.from(this.contexts.values());
-
-    // 应用过滤器
-    if (filter) {
-      filteredContexts = this.applyFilter(filteredContexts, filter);
-    }
-
-    // 应用排序
-    if (pagination?.sortField) {
-      filteredContexts = this.applySorting(filteredContexts, pagination.sortField, pagination.sortOrder || 'asc');
-    }
-
-    // 应用分页
-    const total = filteredContexts.length;
-    const page = pagination?.page || 1;
-    const limit = pagination?.limit || 10;
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
+  async save(context: ContextEntity): Promise<ContextEntity> {
+    const contextId = context.contextId;
     
-    const items = filteredContexts
-      .slice(startIndex, endIndex)
-      .map(context => context.clone());
+    // 更新主索引
+    this.contexts.set(contextId, context);
+    
+    // 更新名称索引
+    this.nameIndex.set(context.name, contextId);
+    
+    return context;
+  }
+
+  async update(context: ContextEntity): Promise<ContextEntity> {
+    const contextId = context.contextId;
+    
+    // 检查是否存在
+    if (!this.contexts.has(contextId)) {
+      throw new Error(`Context with ID '${contextId}' not found`);
+    }
+
+    // 更新主索引
+    this.contexts.set(contextId, context);
+    
+    // 更新名称索引
+    this.nameIndex.set(context.name, contextId);
+    
+    return context;
+  }
+
+  async delete(contextId: UUID): Promise<boolean> {
+    const context = this.contexts.get(contextId);
+    if (!context) return false;
+
+    // 从主索引删除
+    this.contexts.delete(contextId);
+    
+    // 从名称索引删除
+    this.nameIndex.delete(context.name);
+    
+    return true;
+  }
+
+  async exists(contextId: UUID): Promise<boolean> {
+    return this.contexts.has(contextId);
+  }
+
+  // ===== 查询操作 =====
+
+  async findAll(pagination?: PaginationParams): Promise<PaginatedResult<ContextEntity>> {
+    const allContexts = Array.from(this.contexts.values());
+    return this.applyPagination(allContexts, pagination);
+  }
+
+  async findByFilter(
+    filter: ContextQueryFilter, 
+    pagination?: PaginationParams
+  ): Promise<PaginatedResult<ContextEntity>> {
+    let contexts = Array.from(this.contexts.values());
+
+    // 应用过滤条件
+    contexts = contexts.filter(context => this.matchesFilter(context, filter));
+
+    return this.applyPagination(contexts, pagination);
+  }
+
+  async findByStatus(
+    status: string | string[], 
+    pagination?: PaginationParams
+  ): Promise<PaginatedResult<ContextEntity>> {
+    const statusArray = Array.isArray(status) ? status : [status];
+    const contexts = Array.from(this.contexts.values())
+      .filter(context => statusArray.includes(context.status));
+
+    return this.applyPagination(contexts, pagination);
+  }
+
+  async findByLifecycleStage(
+    stage: string | string[], 
+    pagination?: PaginationParams
+  ): Promise<PaginatedResult<ContextEntity>> {
+    const stageArray = Array.isArray(stage) ? stage : [stage];
+    const contexts = Array.from(this.contexts.values())
+      .filter(context => stageArray.includes(context.lifecycleStage));
+
+    return this.applyPagination(contexts, pagination);
+  }
+
+  async findByOwner(
+    ownerId: string, 
+    pagination?: PaginationParams
+  ): Promise<PaginatedResult<ContextEntity>> {
+    const contexts = Array.from(this.contexts.values())
+      .filter(context => context.accessControl.owner.userId === ownerId);
+
+    return this.applyPagination(contexts, pagination);
+  }
+
+  async searchByName(
+    namePattern: string, 
+    pagination?: PaginationParams
+  ): Promise<PaginatedResult<ContextEntity>> {
+    const pattern = namePattern.toLowerCase();
+    const contexts = Array.from(this.contexts.values())
+      .filter(context => context.name.toLowerCase().includes(pattern));
+
+    return this.applyPagination(contexts, pagination);
+  }
+
+  // ===== 统计操作 =====
+
+  async count(): Promise<number> {
+    return this.contexts.size;
+  }
+
+  async countByFilter(filter: ContextQueryFilter): Promise<number> {
+    const contexts = Array.from(this.contexts.values())
+      .filter(context => this.matchesFilter(context, filter));
+    return contexts.length;
+  }
+
+  async countByStatus(status: string | string[]): Promise<number> {
+    const statusArray = Array.isArray(status) ? status : [status];
+    const contexts = Array.from(this.contexts.values())
+      .filter(context => statusArray.includes(context.status));
+    return contexts.length;
+  }
+
+  async countByLifecycleStage(stage: string | string[]): Promise<number> {
+    const stageArray = Array.isArray(stage) ? stage : [stage];
+    const contexts = Array.from(this.contexts.values())
+      .filter(context => stageArray.includes(context.lifecycleStage));
+    return contexts.length;
+  }
+
+  // ===== 批量操作 =====
+
+  async saveMany(contexts: ContextEntity[]): Promise<ContextEntity[]> {
+    const results: ContextEntity[] = [];
+    
+    for (const context of contexts) {
+      const saved = await this.save(context);
+      results.push(saved);
+    }
+    
+    return results;
+  }
+
+  async updateMany(contexts: ContextEntity[]): Promise<ContextEntity[]> {
+    const results: ContextEntity[] = [];
+    
+    for (const context of contexts) {
+      const updated = await this.update(context);
+      results.push(updated);
+    }
+    
+    return results;
+  }
+
+  async deleteMany(contextIds: UUID[]): Promise<number> {
+    let deletedCount = 0;
+    
+    for (const contextId of contextIds) {
+      const deleted = await this.delete(contextId);
+      if (deleted) deletedCount++;
+    }
+    
+    return deletedCount;
+  }
+
+  async deleteByFilter(filter: ContextQueryFilter): Promise<number> {
+    const contextsToDelete = Array.from(this.contexts.values())
+      .filter(context => this.matchesFilter(context, filter));
+    
+    const contextIds = contextsToDelete.map(context => context.contextId);
+    return await this.deleteMany(contextIds);
+  }
+
+  // ===== 事务操作 =====
+
+  async executeInTransaction<T>(
+    operation: (repository: IContextRepository) => Promise<T>
+  ): Promise<T> {
+    // 内存实现不需要真正的事务，直接执行操作
+    return await operation(this);
+  }
+
+  // ===== 缓存操作 =====
+
+  async clearCache(): Promise<void> {
+    // 内存实现清空所有数据
+    this.contexts.clear();
+    this.nameIndex.clear();
+  }
+
+  async clearCacheForContext(contextId: UUID): Promise<void> {
+    // 内存实现删除特定Context
+    await this.delete(contextId);
+  }
+
+  // ===== 健康检查 =====
+
+  async healthCheck(): Promise<boolean> {
+    try {
+      // 简单的健康检查：验证数据结构完整性
+      const contextCount = this.contexts.size;
+      const nameIndexCount = this.nameIndex.size;
+      
+      // 验证索引一致性
+      return contextCount === nameIndexCount;
+    } catch {
+      return false;
+    }
+  }
+
+  async getStatistics(): Promise<{
+    totalContexts: number;
+    activeContexts: number;
+    suspendedContexts: number;
+    completedContexts: number;
+    terminatedContexts: number;
+    cacheHitRate?: number;
+    averageResponseTime?: number;
+  }> {
+    const [
+      totalContexts,
+      activeContexts,
+      suspendedContexts,
+      completedContexts,
+      terminatedContexts
+    ] = await Promise.all([
+      this.count(),
+      this.countByStatus('active'),
+      this.countByStatus('suspended'),
+      this.countByStatus('completed'),
+      this.countByStatus('terminated')
+    ]);
 
     return {
-      items,
-      total,
-      page,
-      limit,
-      totalPages: Math.ceil(total / limit)
+      totalContexts,
+      activeContexts,
+      suspendedContexts,
+      completedContexts,
+      terminatedContexts,
+      cacheHitRate: 100, // 内存实现始终命中
+      averageResponseTime: 1 // 内存实现响应时间很快
     };
-  }
-
-  /**
-   * 统计Context数量
-   */
-  async count(filter?: ContextFilter): Promise<number> {
-    if (!filter) {
-      return this.contexts.size;
-    }
-
-    const filteredContexts = this.applyFilter(Array.from(this.contexts.values()), filter);
-    return filteredContexts.length;
-  }
-
-  /**
-   * 批量保存Context
-   */
-  async saveMany(contexts: Context[]): Promise<void> {
-    for (const context of contexts) {
-      await this.save(context);
-    }
-  }
-
-  /**
-   * 批量删除Context
-   */
-  async deleteMany(ids: UUID[]): Promise<void> {
-    for (const id of ids) {
-      await this.delete(id);
-    }
-  }
-
-  // ===== 功能域特定查询 =====
-
-  /**
-   * 查找具有特定共享状态的Context
-   */
-  async findBySharedState(variables: Record<string, unknown>): Promise<Context[]> {
-    const results: Context[] = [];
-    
-    for (const context of Array.from(this.contexts.values())) {
-      const contextVariables = context.sharedState?.variables || {};
-      let matches = true;
-      
-      for (const [key, value] of Object.entries(variables)) {
-        if (contextVariables[key] !== value) {
-          matches = false;
-          break;
-        }
-      }
-      
-      if (matches) {
-        results.push(context.clone());
-      }
-    }
-    
-    return results;
-  }
-
-  /**
-   * 查找具有特定访问控制的Context
-   */
-  async findByOwner(userId: string): Promise<Context[]> {
-    const results: Context[] = [];
-    
-    for (const context of Array.from(this.contexts.values())) {
-      if (context.accessControl?.owner?.userId === userId) {
-        results.push(context.clone());
-      }
-    }
-    
-    return results;
-  }
-
-  /**
-   * 查找具有特定配置的Context
-   */
-  async findByConfiguration(storageBackend: string): Promise<Context[]> {
-    const results: Context[] = [];
-    
-    for (const context of Array.from(this.contexts.values())) {
-      if ((context.configuration.persistence as { storageBackend?: string })?.storageBackend === storageBackend) {
-        results.push(context.clone());
-      }
-    }
-    
-    return results;
-  }
-
-  /**
-   * 查找启用审计的Context
-   */
-  async findWithAuditEnabled(): Promise<Context[]> {
-    const results: Context[] = [];
-    
-    for (const context of Array.from(this.contexts.values())) {
-      if (context.auditTrail.enabled) {
-        results.push(context.clone());
-      }
-    }
-    
-    return results;
-  }
-
-  /**
-   * 查找启用监控的Context
-   */
-  async findWithMonitoringEnabled(): Promise<Context[]> {
-    const results: Context[] = [];
-    
-    for (const context of Array.from(this.contexts.values())) {
-      if (context.monitoringIntegration.enabled) {
-        results.push(context.clone());
-      }
-    }
-    
-    return results;
-  }
-
-  /**
-   * 查找具有特定性能配置的Context
-   */
-  async findByPerformanceConfig(collectionInterval: number): Promise<Context[]> {
-    const results: Context[] = [];
-    
-    for (const context of Array.from(this.contexts.values())) {
-      if (context.performanceMetrics.collectionIntervalSeconds === collectionInterval) {
-        results.push(context.clone());
-      }
-    }
-    
-    return results;
-  }
-
-  /**
-   * 查找启用版本控制的Context
-   */
-  async findWithVersioningEnabled(): Promise<Context[]> {
-    const results: Context[] = [];
-    
-    for (const context of Array.from(this.contexts.values())) {
-      if (context.versionHistory.enabled) {
-        results.push(context.clone());
-      }
-    }
-    
-    return results;
-  }
-
-  /**
-   * 查找具有特定搜索配置的Context
-   */
-  async findBySearchConfig(indexingStrategy: string): Promise<Context[]> {
-    const results: Context[] = [];
-    
-    for (const context of Array.from(this.contexts.values())) {
-      if (context.searchMetadata.indexingStrategy === indexingStrategy) {
-        results.push(context.clone());
-      }
-    }
-    
-    return results;
-  }
-
-  /**
-   * 查找具有特定缓存策略的Context
-   */
-  async findByCacheStrategy(strategy: string): Promise<Context[]> {
-    const results: Context[] = [];
-    
-    for (const context of Array.from(this.contexts.values())) {
-      if (context.cachingPolicy.cacheStrategy === strategy) {
-        results.push(context.clone());
-      }
-    }
-    
-    return results;
-  }
-
-  /**
-   * 查找具有特定同步配置的Context
-   */
-  async findBySyncStrategy(strategy: string): Promise<Context[]> {
-    const results: Context[] = [];
-    
-    for (const context of Array.from(this.contexts.values())) {
-      if (context.syncConfiguration.syncStrategy === strategy) {
-        results.push(context.clone());
-      }
-    }
-    
-    return results;
-  }
-
-  /**
-   * 查找启用错误处理的Context
-   */
-  async findWithErrorHandlingEnabled(): Promise<Context[]> {
-    const results: Context[] = [];
-    
-    for (const context of Array.from(this.contexts.values())) {
-      if (context.errorHandling.enabled) {
-        results.push(context.clone());
-      }
-    }
-    
-    return results;
-  }
-
-  /**
-   * 查找具有集成端点的Context
-   */
-  async findWithIntegrationEndpoints(): Promise<Context[]> {
-    const results: Context[] = [];
-    
-    for (const context of Array.from(this.contexts.values())) {
-      if (context.integrationEndpoints.enabled) {
-        results.push(context.clone());
-      }
-    }
-    
-    return results;
-  }
-
-  /**
-   * 查找具有事件集成的Context
-   */
-  async findWithEventIntegration(): Promise<Context[]> {
-    const results: Context[] = [];
-    
-    for (const context of Array.from(this.contexts.values())) {
-      if (context.eventIntegration.enabled) {
-        results.push(context.clone());
-      }
-    }
-    
-    return results;
   }
 
   // ===== 私有辅助方法 =====
 
   /**
-   * 应用过滤器
+   * 检查Context是否匹配过滤条件
    */
-  private applyFilter(contexts: Context[], filter: ContextFilter): Context[] {
-    return contexts.filter(context => {
-      // 基础字段过滤
-      if (filter.name && !context.name.includes(filter.name)) return false;
-      if (filter.status && context.status !== filter.status) return false;
-      if (filter.lifecycleStage && context.lifecycleStage !== filter.lifecycleStage) return false;
-      if (filter.protocolVersion && context.protocolVersion !== filter.protocolVersion) return false;
-      
-      // 时间范围过滤
-      if (filter.timestampAfter && context.timestamp < filter.timestampAfter) return false;
-      if (filter.timestampBefore && context.timestamp > filter.timestampBefore) return false;
-      
-      // 审计过滤
-      if (filter.auditEnabled !== undefined && context.auditTrail.enabled !== filter.auditEnabled) return false;
-      
-      // 监控过滤
-      if (filter.monitoringEnabled !== undefined && context.monitoringIntegration.enabled !== filter.monitoringEnabled) return false;
-      
-      // 其他过滤条件...
-      
-      return true;
-    });
-  }
-
-  /**
-   * 应用排序
-   */
-  private applySorting(contexts: Context[], sortField: ContextSortField, sortOrder: 'asc' | 'desc'): Context[] {
-    return contexts.sort((a, b) => {
-      let aValue: string | Date;
-      let bValue: string | Date;
-      
-      switch (sortField) {
-        case 'name':
-          aValue = a.name;
-          bValue = b.name;
-          break;
-        case 'status':
-          aValue = a.status;
-          bValue = b.status;
-          break;
-        case 'timestamp':
-          aValue = a.timestamp;
-          bValue = b.timestamp;
-          break;
-        default:
-          aValue = a.name;
-          bValue = b.name;
-      }
-      
-      if (sortOrder === 'desc') {
-        [aValue, bValue] = [bValue, aValue];
-      }
-      
-      if (aValue < bValue) return -1;
-      if (aValue > bValue) return 1;
-      return 0;
-    });
-  }
-
-  // ===== 聚合查询 =====
-
-  /**
-   * 获取状态统计
-   */
-  async getStatusStatistics(): Promise<Record<string, number>> {
-    const stats: Record<string, number> = {};
-
-    for (const context of Array.from(this.contexts.values())) {
-      const status = context.status;
-      stats[status] = (stats[status] || 0) + 1;
+  private matchesFilter(context: ContextEntity, filter: ContextQueryFilter): boolean {
+    // 状态过滤
+    if (filter.status) {
+      const statusArray = Array.isArray(filter.status) ? filter.status : [filter.status];
+      if (!statusArray.includes(context.status)) return false;
     }
 
-    return stats;
-  }
-
-  /**
-   * 获取生命周期阶段统计
-   */
-  async getLifecycleStageStatistics(): Promise<Record<string, number>> {
-    const stats: Record<string, number> = {};
-
-    for (const context of Array.from(this.contexts.values())) {
-      const stage = context.lifecycleStage || 'planning';
-      stats[stage] = (stats[stage] || 0) + 1;
+    // 生命周期阶段过滤
+    if (filter.lifecycleStage) {
+      const stageArray = Array.isArray(filter.lifecycleStage) ? filter.lifecycleStage : [filter.lifecycleStage];
+      if (!stageArray.includes(context.lifecycleStage)) return false;
     }
 
-    return stats;
+    // 所有者过滤
+    if (filter.owner) {
+      // 处理不同的owner结构
+      const ownerValue = typeof context.accessControl.owner === 'string'
+        ? context.accessControl.owner
+        : context.accessControl.owner?.userId;
+      if (ownerValue !== filter.owner) return false;
+    }
+
+    // 时间范围过滤
+    if (filter.createdAfter) {
+      if (new Date(context.timestamp) < new Date(filter.createdAfter)) return false;
+    }
+
+    if (filter.createdBefore) {
+      if (new Date(context.timestamp) > new Date(filter.createdBefore)) return false;
+    }
+
+    // 名称模式过滤
+    if (filter.namePattern) {
+      const pattern = filter.namePattern.toLowerCase();
+      if (!context.name.toLowerCase().includes(pattern)) return false;
+    }
+
+    return true;
   }
 
   /**
-   * 获取功能域启用统计
+   * 应用分页
    */
-  async getFeatureDomainStatistics(): Promise<{
-    auditEnabled: number;
-    monitoringEnabled: number;
-    performanceEnabled: number;
-    versioningEnabled: number;
-    searchEnabled: number;
-    cachingEnabled: number;
-    syncEnabled: number;
-    errorHandlingEnabled: number;
-    integrationEnabled: number;
-    eventIntegrationEnabled: number;
-  }> {
-    const stats = {
-      auditEnabled: 0,
-      monitoringEnabled: 0,
-      performanceEnabled: 0,
-      versioningEnabled: 0,
-      searchEnabled: 0,
-      cachingEnabled: 0,
-      syncEnabled: 0,
-      errorHandlingEnabled: 0,
-      integrationEnabled: 0,
-      eventIntegrationEnabled: 0
+  private applyPagination<T>(
+    items: T[], 
+    pagination?: PaginationParams
+  ): PaginatedResult<T> {
+    if (!pagination) {
+      return {
+        data: items,
+        total: items.length,
+        page: 1,
+        limit: items.length,
+        totalPages: 1
+      };
+    }
+
+    const { page, limit } = pagination;
+    const offset = (page - 1) * limit;
+    const paginatedItems = items.slice(offset, offset + limit);
+    const totalPages = Math.ceil(items.length / limit);
+
+    return {
+      data: paginatedItems,
+      total: items.length,
+      page,
+      limit,
+      totalPages
     };
-
-    for (const context of Array.from(this.contexts.values())) {
-      if (context.auditTrail.enabled) stats.auditEnabled++;
-      if (context.monitoringIntegration.enabled) stats.monitoringEnabled++;
-      if (context.performanceMetrics.enabled) stats.performanceEnabled++;
-      if (context.versionHistory.enabled) stats.versioningEnabled++;
-      if (context.searchMetadata.enabled) stats.searchEnabled++;
-      if (context.cachingPolicy.enabled) stats.cachingEnabled++;
-      if (context.syncConfiguration.enabled) stats.syncEnabled++;
-      if (context.errorHandling.enabled) stats.errorHandlingEnabled++;
-      if (context.integrationEndpoints.enabled) stats.integrationEnabled++;
-      if (context.eventIntegration.enabled) stats.eventIntegrationEnabled++;
-    }
-
-    return stats;
-  }
-
-  /**
-   * 获取配置分布统计
-   */
-  async getConfigurationStatistics(): Promise<{
-    storageBackends: Record<string, number>;
-    cacheStrategies: Record<string, number>;
-    syncStrategies: Record<string, number>;
-    indexingStrategies: Record<string, number>;
-  }> {
-    const stats = {
-      storageBackends: {} as Record<string, number>,
-      cacheStrategies: {} as Record<string, number>,
-      syncStrategies: {} as Record<string, number>,
-      indexingStrategies: {} as Record<string, number>
-    };
-
-    for (const context of Array.from(this.contexts.values())) {
-      // 存储后端统计
-      const storageBackend = (context.configuration.persistence as { storageBackend?: string })?.storageBackend || 'unknown';
-      stats.storageBackends[storageBackend] = (stats.storageBackends[storageBackend] || 0) + 1;
-
-      // 缓存策略统计
-      const cacheStrategy = context.cachingPolicy.cacheStrategy;
-      stats.cacheStrategies[cacheStrategy] = (stats.cacheStrategies[cacheStrategy] || 0) + 1;
-
-      // 同步策略统计
-      const syncStrategy = context.syncConfiguration.syncStrategy;
-      stats.syncStrategies[syncStrategy] = (stats.syncStrategies[syncStrategy] || 0) + 1;
-
-      // 索引策略统计
-      const indexingStrategy = context.searchMetadata.indexingStrategy;
-      stats.indexingStrategies[indexingStrategy] = (stats.indexingStrategies[indexingStrategy] || 0) + 1;
-    }
-
-    return stats;
   }
 }

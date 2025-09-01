@@ -1,35 +1,72 @@
 /**
- * MPLP Network Module - Main Entry Point
- *
- * @version v1.0.0
- * @created 2025-08-02T01:36:00+08:00
- * @description 网络模块主入口，导出所有公共接口
+ * Network模块主入口
+ * 
+ * @description Network模块的公共API导出
+ * @version 1.0.0
+ * @layer 模块层 - 导出
  */
 
-// ==================== 类型导出 ====================
+// ===== DDD架构层导出 =====
+
+// API层
+export * from './api/controllers/network.controller';
+export * from './api/dto/network.dto';
+export * from './api/mappers/network.mapper';
+
+// 应用层
+export * from './application/services/network-management.service';
+
+// 领域层
+export * from './domain/entities/network.entity';
+export * from './domain/repositories/network-repository.interface';
+
+// 基础设施层
+export * from './infrastructure/repositories/network.repository';
+export * from './infrastructure/protocols/network.protocol';
+export * from './infrastructure/factories/network-protocol.factory';
+
+// ===== 适配器导出 =====
+export { NetworkModuleAdapter } from './infrastructure/adapters/network-module.adapter';
+
+// ===== 模块集成 =====
+export * from './module';
+
+// ===== 类型定义导出 =====
 export * from './types';
 
-// ==================== 领域层导出 ====================
-export { Network } from './domain/entities/network.entity';
-export {
-  NetworkRepository,
-  NodeDiscoveryRepository,
-  RoutingRepository,
-  NetworkStatistics,
-} from './domain/repositories/network.repository';
-
-// ==================== 应用层导出 ====================
-export { NetworkService } from './application/services/network.service';
-
-// ==================== 基础设施层导出 ====================
-export {
-  MemoryNetworkRepository,
-  MemoryNodeDiscoveryRepository,
-  MemoryRoutingRepository,
-} from './infrastructure/repositories/memory-network.repository';
-
-// ==================== API层导出 ====================
-export { NetworkController } from './api/controllers/network.controller';
-
-// ==================== 模块配置导出 ====================
-export { NetworkModule } from './module';
+/**
+ * Network模块信息
+ */
+export const NETWORK_MODULE_INFO = {
+  name: 'network',
+  version: '1.0.0',
+  description: 'MPLP网络通信和分布式协作模块',
+  layer: 'L2',
+  status: 'implementing',
+  features: [
+    '网络拓扑管理',
+    '节点发现和注册',
+    '路由策略优化',
+    '连接状态监控',
+    '负载均衡',
+    '故障恢复',
+    '性能监控',
+    '安全通信',
+    '分布式协调',
+    '事件广播',
+    '消息路由',
+    '网络诊断',
+    '拓扑可视化'
+  ],
+  dependencies: [
+    'security',
+    'performance',
+    'eventBus',
+    'errorHandler',
+    'coordination',
+    'orchestration',
+    'stateSync',
+    'transaction',
+    'protocolVersion'
+  ]
+} as const;

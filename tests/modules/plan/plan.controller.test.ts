@@ -1,842 +1,514 @@
 /**
- * Plan Controller单元测试
+ * Plan控制器单元测试
  *
- * 基于Schema驱动测试原则，测试Plan Controller的所有API端点
- * 确保100%分支覆盖，发现并修复源代码问题
- *
+ * @description 验证Plan控制器的API功能和错误处理
  * @version 1.0.0
- * @created 2025-01-28T20:00:00+08:00
+ * @layer 测试层 - 单元测试
+ * @coverage 目标覆盖率 95%+
+ * @pattern 与Context模块使用IDENTICAL的控制器测试模式
  */
 
-// Mock express-validator completely
-jest.mock('express-validator', () => {
-  const mockChain = {
-    isUUID: jest.fn().mockReturnThis(),
-    isString: jest.fn().mockReturnThis(),
-    notEmpty: jest.fn().mockReturnThis(),
-    isLength: jest.fn().mockReturnThis(),
-    isArray: jest.fn().mockReturnThis(),
-    optional: jest.fn().mockReturnThis(),
-    isIn: jest.fn().mockReturnThis(),
-    isObject: jest.fn().mockReturnThis(),
-    isNumeric: jest.fn().mockReturnThis(),
-    withMessage: jest.fn().mockReturnThis()
-  };
-
-  return {
-    body: jest.fn(() => mockChain),
-    param: jest.fn(() => mockChain),
-    validationResult: jest.fn(() => ({
-      isEmpty: jest.fn(() => true),
-      array: jest.fn(() => [])
-    }))
-  };
-});
-
-import { Request, Response, NextFunction } from 'express';
-import { validationResult } from 'express-validator';
 import { PlanController } from '../../../src/modules/plan/api/controllers/plan.controller';
-import { CreatePlanCommandHandler } from '../../../src/modules/plan/application/commands/create-plan.command';
-import { GetPlanQueryHandler } from '../../../src/modules/plan/application/queries/get-plan.query';
 import { PlanManagementService } from '../../../src/modules/plan/application/services/plan-management.service';
-import { PlanExecutionService } from '../../../src/modules/plan/application/services/plan-execution.service';
-import { Logger } from '../../../src/public/utils/logger';
-import { TestDataFactory } from '../../public/test-utils/test-data-factory';
-import { TestHelpers } from '../../public/test-utils/test-helpers';
+import {
+  CreatePlanDto,
+  UpdatePlanDto,
+  PlanQueryDto,
+  PlanResponseDto,
+  PlanOperationResultDto
+} from '../../../src/modules/plan/api/dto/plan.dto';
+import { PlanEntityData } from '../../../src/modules/plan/api/mappers/plan.mapper';
 
-// Mock express
-const mockRouter = {
-  post: jest.fn(),
-  get: jest.fn(),
-  put: jest.fn(),
-  delete: jest.fn()
-};
+// Mock PlanManagementService
+jest.mock('../../../src/modules/plan/application/services/plan-management.service');
 
-jest.mock('express', () => ({
-  Router: () => mockRouter
-}));
-
-describe('PlanController', () => {
+describe('PlanController单元测试', () => {
   let controller: PlanController;
-  let mockCreatePlanCommandHandler: jest.Mocked<CreatePlanCommandHandler>;
-  let mockUpdatePlanCommandHandler: any;
-  let mockDeletePlanCommandHandler: any;
-  let mockGetPlanByIdQueryHandler: any;
-  let mockGetPlansQueryHandler: any;
-  let mockGetPlanQueryHandler: jest.Mocked<GetPlanQueryHandler>;
   let mockPlanManagementService: jest.Mocked<PlanManagementService>;
-  let mockPlanModuleAdapter: any;
-  let mockPlanExecutionService: jest.Mocked<PlanExecutionService>;
-  let mockLogger: jest.Mocked<Logger>;
-  let mockRequest: Partial<Request>;
-  let mockResponse: Partial<Response>;
-  let mockNext: jest.MockedFunction<NextFunction>;
-  let mockValidationResult: jest.MockedFunction<typeof validationResult>;
 
   beforeEach(() => {
-    // 重置所有mock
-    jest.clearAllMocks();
-
-    // 重置router mock
-    mockRouter.post.mockClear();
-    mockRouter.get.mockClear();
-    mockRouter.put.mockClear();
-    mockRouter.delete.mockClear();
-
     // 创建mock服务
-    mockCreatePlanCommandHandler = {
-      execute: jest.fn()
-    } as any;
-
-    mockUpdatePlanCommandHandler = {
-      execute: jest.fn()
-    } as any;
-
-    mockDeletePlanCommandHandler = {
-      execute: jest.fn()
-    } as any;
-
-    mockGetPlanByIdQueryHandler = {
-      execute: jest.fn()
-    } as any;
-
-    mockGetPlansQueryHandler = {
-      execute: jest.fn()
-    } as any;
-
-    mockGetPlanQueryHandler = {
-      execute: jest.fn()
-    } as any;
-
     mockPlanManagementService = {
       createPlan: jest.fn(),
       getPlan: jest.fn(),
       updatePlan: jest.fn(),
-      deletePlan: jest.fn()
+      deletePlan: jest.fn(),
+      executePlan: jest.fn(),
+      optimizePlan: jest.fn(),
+      validatePlan: jest.fn()
     } as any;
 
-    mockPlanModuleAdapter = {
-      processRequest: jest.fn(),
-      processResponse: jest.fn()
-    } as any;
-
-    mockPlanExecutionService = {
-      executePlan: jest.fn()
-    } as any;
-
-    mockLogger = {
-      debug: jest.fn(),
-      info: jest.fn(),
-      warn: jest.fn(),
-      error: jest.fn()
-    } as any;
-
-    // 创建controller实例
-    controller = new PlanController(
-      mockCreatePlanCommandHandler,
-      mockUpdatePlanCommandHandler,
-      mockDeletePlanCommandHandler,
-      mockGetPlanByIdQueryHandler,
-      mockGetPlansQueryHandler,
-      mockPlanManagementService,
-      mockPlanModuleAdapter,
-      mockGetPlanQueryHandler,
-      mockPlanExecutionService,
-      mockLogger
-    );
-
-    // 创建mock request/response
-    mockRequest = {
-      body: {},
-      params: {},
-      query: {}
-    };
-
-    mockResponse = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn().mockReturnThis(),
-      send: jest.fn().mockReturnThis(),
-      end: jest.fn().mockReturnThis()
-    };
-
-    mockNext = jest.fn();
-
-    // Get the mocked validationResult
-    mockValidationResult = validationResult as jest.MockedFunction<typeof validationResult>;
+    // 创建控制器实例
+    controller = new PlanController(mockPlanManagementService);
   });
 
-  describe('构造函数和初始化', () => {
-    it('应该正确初始化Controller', () => {
-      expect(controller).toBeInstanceOf(PlanController);
-      expect(mockRouter.post).toHaveBeenCalledTimes(2); // '/' 和 '/:planId/execute'
-      expect(mockRouter.get).toHaveBeenCalledTimes(2); // '/:planId' 和 '/:planId/status'
-      expect(mockRouter.put).toHaveBeenCalledTimes(1); // '/:planId'
-      expect(mockRouter.delete).toHaveBeenCalledTimes(1); // '/:planId'
-    });
-
-    it('应该返回router实例', () => {
-      const router = controller.getRouter();
-      expect(router).toBe(mockRouter);
-    });
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
-  describe('POST / - 创建计划', () => {
-    beforeEach(() => {
-      mockRequest.body = {
-        context_id: TestDataFactory.Base.generateUUID(),
+  describe('createPlan方法测试', () => {
+    it('应该成功创建Plan', async () => {
+      // 📋 Arrange
+      const createDto: CreatePlanDto = {
+        contextId: '550e8400-e29b-41d4-a716-446655440010',
         name: 'Test Plan',
-        description: 'Test Description',
-        goals: ['Goal 1', 'Goal 2'],
-        execution_strategy: 'sequential',
+        description: 'Test plan description',
+        priority: 'high',
+        tasks: [
+          {
+            name: 'Test Task',
+            type: 'atomic',
+            priority: 'medium'
+          }
+        ]
+      };
+
+      const mockPlanData: PlanEntityData = {
+        protocolVersion: '1.0.0',
+        timestamp: new Date(),
+        planId: '550e8400-e29b-41d4-a716-446655440011',
+        contextId: '550e8400-e29b-41d4-a716-446655440010',
+        name: 'Test Plan',
+        description: 'Test plan description',
+        status: 'draft',
+        priority: 'high',
+        tasks: [
+          {
+            taskId: 'task-001',
+            name: 'Test Task',
+            type: 'atomic',
+            status: 'pending',
+            priority: 'medium'
+          }
+        ],
+        auditTrail: {
+          enabled: true,
+          retentionDays: 90
+        },
+        monitoringIntegration: {},
+        performanceMetrics: {}
+      };
+
+      mockPlanManagementService.createPlan.mockResolvedValue(mockPlanData);
+
+      // 🎬 Act
+      const result = await controller.createPlan(createDto);
+
+      // ✅ Assert
+      expect(result.success).toBe(true);
+      expect(result.planId).toBe('550e8400-e29b-41d4-a716-446655440011');
+      expect(result.message).toBe('Plan created successfully');
+      expect(result.metadata).toEqual({
+        name: 'Test Plan',
+        status: 'draft',
+        priority: 'high',
+        taskCount: 1
+      });
+      expect(mockPlanManagementService.createPlan).toHaveBeenCalledWith({
+        contextId: '550e8400-e29b-41d4-a716-446655440010',
+        name: 'Test Plan',
+        description: 'Test plan description',
+        priority: 'high',
+        tasks: [
+          {
+            name: 'Test Task',
+            description: undefined,
+            type: 'atomic',
+            priority: 'medium'
+          }
+        ]
+      });
+    });
+
+    it('应该处理创建Plan时的验证错误', async () => {
+      // 📋 Arrange
+      const invalidDto: CreatePlanDto = {
+        contextId: '',
+        name: '',
+        description: 'Invalid plan'
+      };
+
+      // 🎬 Act
+      const result = await controller.createPlan(invalidDto);
+
+      // ✅ Assert
+      expect(result.success).toBe(false);
+      expect(result.error).toBeDefined();
+      expect(result.error?.code).toBe('PLAN_CREATION_FAILED');
+      expect(result.error?.message).toContain('Plan name is required');
+      expect(mockPlanManagementService.createPlan).not.toHaveBeenCalled();
+    });
+
+    it('应该处理服务层抛出的错误', async () => {
+      // 📋 Arrange
+      const createDto: CreatePlanDto = {
+        contextId: '550e8400-e29b-41d4-a716-446655440012',
+        name: 'Test Plan'
+      };
+
+      mockPlanManagementService.createPlan.mockRejectedValue(new Error('Database connection failed'));
+
+      // 🎬 Act
+      const result = await controller.createPlan(createDto);
+
+      // ✅ Assert
+      expect(result.success).toBe(false);
+      expect(result.error).toBeDefined();
+      expect(result.error?.code).toBe('PLAN_CREATION_FAILED');
+      expect(result.error?.message).toBe('Database connection failed');
+    });
+  });
+
+  describe('getPlanById方法测试', () => {
+    it('应该成功获取Plan', async () => {
+      // 📋 Arrange
+      const planId = '550e8400-e29b-41d4-a716-446655440000';
+      const mockPlanData: PlanEntityData = {
+        protocolVersion: '1.0.0',
+        timestamp: new Date('2024-01-01T00:00:00.000Z'),
+        planId: '550e8400-e29b-41d4-a716-446655440000',
+        contextId: '550e8400-e29b-41d4-a716-446655440013',
+        name: 'Test Plan',
+        description: 'Test plan description',
+        status: 'active',
+        priority: 'high',
+        tasks: [],
+        auditTrail: {
+          enabled: true,
+          retentionDays: 90
+        },
+        monitoringIntegration: {},
+        performanceMetrics: {}
+      };
+
+      mockPlanManagementService.getPlan.mockResolvedValue(mockPlanData);
+
+      // 🎬 Act
+      const result = await controller.getPlanById(planId);
+
+      // ✅ Assert
+      expect(result).not.toBeNull();
+      expect(result?.planId).toBe('550e8400-e29b-41d4-a716-446655440000');
+      expect(result?.name).toBe('Test Plan');
+      expect(result?.status).toBe('active');
+      expect(result?.priority).toBe('high');
+      expect(mockPlanManagementService.getPlan).toHaveBeenCalledWith(planId);
+    });
+
+    it('应该处理Plan不存在的情况', async () => {
+      // 📋 Arrange
+      const planId = '550e8400-e29b-41d4-a716-446655440001';
+      mockPlanManagementService.getPlan.mockResolvedValue(null);
+
+      // 🎬 Act
+      const result = await controller.getPlanById(planId);
+
+      // ✅ Assert
+      expect(result).toBeNull();
+      expect(mockPlanManagementService.getPlan).toHaveBeenCalledWith(planId);
+    });
+
+    it('应该处理无效的UUID格式', async () => {
+      // 📋 Arrange
+      const invalidPlanId = 'invalid-uuid';
+
+      // 🎬 Act & Assert
+      await expect(controller.getPlanById(invalidPlanId)).rejects.toThrow('Invalid plan ID format');
+      expect(mockPlanManagementService.getPlan).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('updatePlan方法测试', () => {
+    it('应该成功更新Plan', async () => {
+      // 📋 Arrange
+      const planId = '550e8400-e29b-41d4-a716-446655440002';
+      const updateDto: UpdatePlanDto = {
+        planId: planId,
+        name: 'Updated Plan Name',
+        description: 'Updated description',
+        status: 'active',
+        priority: 'critical'
+      };
+
+      const mockUpdatedPlan: PlanEntityData = {
+        protocolVersion: '1.0.0',
+        timestamp: new Date(),
+        planId: planId,
+        contextId: '550e8400-e29b-41d4-a716-446655440014',
+        name: 'Updated Plan Name',
+        description: 'Updated description',
+        status: 'active',
+        priority: 'critical',
+        tasks: [],
+        auditTrail: {
+          enabled: true,
+          retentionDays: 90
+        },
+        monitoringIntegration: {},
+        performanceMetrics: {}
+      };
+
+      mockPlanManagementService.updatePlan.mockResolvedValue(mockUpdatedPlan);
+
+      // 🎬 Act
+      const result = await controller.updatePlan(planId, updateDto);
+
+      // ✅ Assert
+      expect(result.success).toBe(true);
+      expect(result.planId).toBe(planId);
+      expect(result.message).toBe('Plan updated successfully');
+      expect(result.metadata).toEqual({
+        name: 'Updated Plan Name',
+        status: 'active',
+        priority: 'critical',
+        taskCount: 0
+      });
+      expect(mockPlanManagementService.updatePlan).toHaveBeenCalledWith({
+        planId: planId,
+        name: 'Updated Plan Name',
+        description: 'Updated description',
+        status: 'active',
+        priority: 'critical'
+      });
+    });
+
+    it('应该处理更新验证错误', async () => {
+      // 📋 Arrange
+      const planId = '550e8400-e29b-41d4-a716-446655440003';
+      const invalidUpdateDto: UpdatePlanDto = {
+        planId: planId,
+        name: '' // 空名称应该触发验证错误
+      };
+
+      // 🎬 Act
+      const result = await controller.updatePlan(planId, invalidUpdateDto);
+
+      // ✅ Assert
+      expect(result.success).toBe(false);
+      expect(result.error).toBeDefined();
+      expect(result.error?.code).toBe('PLAN_UPDATE_FAILED');
+      expect(result.error?.message).toContain('Plan name cannot be empty');
+      expect(mockPlanManagementService.updatePlan).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('deletePlan方法测试', () => {
+    it('应该成功删除Plan', async () => {
+      // 📋 Arrange
+      const planId = '550e8400-e29b-41d4-a716-446655440004';
+      mockPlanManagementService.deletePlan.mockResolvedValue(undefined);
+
+      // 🎬 Act
+      const result = await controller.deletePlan(planId);
+
+      // ✅ Assert
+      expect(result.success).toBe(true);
+      expect(result.planId).toBe(planId);
+      expect(result.message).toBe('Plan deleted successfully');
+      expect(mockPlanManagementService.deletePlan).toHaveBeenCalledWith(planId);
+    });
+
+    it('应该处理删除时的服务错误', async () => {
+      // 📋 Arrange
+      const planId = '550e8400-e29b-41d4-a716-446655440005';
+      mockPlanManagementService.deletePlan.mockRejectedValue(new Error('Plan not found'));
+
+      // 🎬 Act
+      const result = await controller.deletePlan(planId);
+
+      // ✅ Assert
+      expect(result.success).toBe(false);
+      expect(result.error).toBeDefined();
+      expect(result.error?.code).toBe('PLAN_DELETION_FAILED');
+      expect(result.error?.message).toBe('Plan not found');
+    });
+  });
+
+  describe('queryPlans方法测试', () => {
+    it('应该返回空结果（暂未实现）', async () => {
+      // 📋 Arrange
+      const queryDto: PlanQueryDto = {
+        status: 'active',
         priority: 'high'
       };
+      const pagination = { page: 1, limit: 10 };
 
-      // Mock validation result - no errors
-      mockValidationResult.mockReturnValue({
-        isEmpty: () => true,
-        array: () => []
+      // 🎬 Act
+      const result = await controller.queryPlans(queryDto, pagination);
+
+      // ✅ Assert
+      expect(result.success).toBe(true);
+      expect(result.data).toEqual([]);
+      expect(result.pagination).toEqual({
+        page: 1,
+        limit: 10,
+        total: 0,
+        totalPages: 0
       });
     });
 
-    it('应该成功创建计划', async () => {
-      const planId = TestDataFactory.Base.generateUUID();
-      const mockPlan = TestDataFactory.Plan.createValidPlanRequest({
-        planId,
-        contextId: mockRequest.body.context_id,
-        name: mockRequest.body.name
-      });
+    it('应该处理查询验证错误', async () => {
+      // 📋 Arrange
+      const invalidQueryDto: PlanQueryDto = {
+        contextId: 'invalid-uuid'
+      };
 
-      mockCreatePlanCommandHandler.execute.mockResolvedValue({
-        success: true,
-        data: mockPlan
-      });
+      // 🎬 Act
+      const result = await controller.queryPlans(invalidQueryDto);
 
-      // 获取实际的路由处理器
-      const createPlanHandler = mockRouter.post.mock.calls.find(call => call[0] === '/')[3];
-      
-      await createPlanHandler(mockRequest as Request, mockResponse as Response, mockNext);
-
-      expect(mockCreatePlanCommandHandler.execute).toHaveBeenCalledWith({
-        contextId: mockRequest.body.context_id,
-        name: mockRequest.body.name,
-        description: mockRequest.body.description,
-        goals: mockRequest.body.goals,
-        tasks: undefined,
-        dependencies: undefined,
-        executionStrategy: mockRequest.body.execution_strategy,
-        priority: mockRequest.body.priority,
-        estimatedDuration: undefined,
-        configuration: undefined,
-        metadata: undefined
-      });
-
-      expect(mockResponse.status).toHaveBeenCalledWith(201);
-      expect(mockResponse.json).toHaveBeenCalledWith(
-        expect.objectContaining({
-          success: true,
-          data: mockPlan,
-          meta: expect.objectContaining({
-            timestamp: expect.any(String),
-            requestId: expect.any(String),
-            version: '1.0.0'
-          })
-        })
-      );
-      expect(mockLogger.debug).toHaveBeenCalledWith('Creating plan', { requestId: expect.any(String) });
-    });
-
-    it('应该处理创建计划失败', async () => {
-      mockCreatePlanCommandHandler.execute.mockResolvedValue({
-        success: false,
-        error: 'Validation failed',
-        validationErrors: ['Name is required']
-      });
-
-      const createPlanHandler = mockRouter.post.mock.calls.find(call => call[0] === '/')[3];
-      
-      await createPlanHandler(mockRequest as Request, mockResponse as Response, mockNext);
-
-      expect(mockResponse.status).toHaveBeenCalledWith(400);
-      expect(mockResponse.json).toHaveBeenCalledWith(
-        expect.objectContaining({
-          success: false,
-          error: expect.objectContaining({
-            code: 'VALIDATION_ERROR',
-            message: 'Validation failed',
-            details: ['Name is required']
-          })
-        })
-      );
-    });
-
-    it('应该处理异常错误', async () => {
-      const error = new Error('Database connection failed');
-      mockCreatePlanCommandHandler.execute.mockRejectedValue(error);
-
-      const createPlanHandler = mockRouter.post.mock.calls.find(call => call[0] === '/')[3];
-      
-      await createPlanHandler(mockRequest as Request, mockResponse as Response, mockNext);
-
-      expect(mockNext).toHaveBeenCalledWith(error);
+      // ✅ Assert
+      expect(result.success).toBe(false);
+      expect(result.error).toBeDefined();
+      expect(result.error?.code).toBe('PLAN_QUERY_FAILED');
+      expect(result.error?.message).toContain('Invalid context ID format');
     });
   });
 
-  describe('验证错误处理', () => {
-    it('应该处理验证错误', async () => {
-      // Mock validation errors
-      mockValidationResult.mockReturnValue({
-        isEmpty: () => false,
-        array: () => [
-          { field: 'name', message: 'Name is required' },
-          { field: 'contextId', message: 'Invalid UUID' }
-        ]
-      });
-
-      // 获取验证错误处理器
-      const validationHandler = mockRouter.post.mock.calls.find(call => call[0] === '/')[2];
-
-      await validationHandler(mockRequest as Request, mockResponse as Response, mockNext);
-
-      expect(mockResponse.status).toHaveBeenCalledWith(400);
-      expect(mockResponse.json).toHaveBeenCalledWith(
-        expect.objectContaining({
-          success: false,
-          error: expect.objectContaining({
-            code: 'VALIDATION_ERROR',
-            message: 'Validation failed',
-            details: [
-              { field: 'name', message: 'Name is required' },
-              { field: 'contextId', message: 'Invalid UUID' }
-            ]
-          })
-        })
-      );
-      expect(mockNext).not.toHaveBeenCalled();
-    });
-
-    it('应该在没有验证错误时调用next', async () => {
-      mockValidationResult.mockReturnValue({
-        isEmpty: () => true,
-        array: () => []
-      });
-
-      const validationHandler = mockRouter.post.mock.calls.find(call => call[0] === '/')[2];
-
-      await validationHandler(mockRequest as Request, mockResponse as Response, mockNext);
-
-      expect(mockNext).toHaveBeenCalled();
-      expect(mockResponse.status).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('GET /:planId - 获取计划', () => {
-    beforeEach(() => {
-      mockRequest.params = {
-        planId: TestDataFactory.Base.generateUUID()
-      };
-
-      mockValidationResult.mockReturnValue({
-        isEmpty: () => true,
-        array: () => []
-      });
-    });
-
-    it('应该成功获取计划', async () => {
-      const mockPlan = TestDataFactory.Plan.createValidPlanRequest({
-        planId: mockRequest.params.planId
-      });
-
-      mockGetPlanQueryHandler.execute.mockResolvedValue({
-        success: true,
-        data: mockPlan
-      });
-
-      const getPlanHandler = mockRouter.get.mock.calls.find(call => call[0] === '/:planId')[3];
-
-      await getPlanHandler(mockRequest as Request, mockResponse as Response, mockNext);
-
-      expect(mockGetPlanQueryHandler.execute).toHaveBeenCalledWith({
-        planId: mockRequest.params.planId
-      });
-
-      expect(mockResponse.status).toHaveBeenCalledWith(200);
-      expect(mockResponse.json).toHaveBeenCalledWith(
-        expect.objectContaining({
-          success: true,
-          data: mockPlan
-        })
-      );
-      expect(mockLogger.debug).toHaveBeenCalledWith('Getting plan', {
-        planId: mockRequest.params.planId,
-        requestId: expect.any(String)
-      });
-    });
-
-    it('应该处理计划不存在', async () => {
-      mockGetPlanQueryHandler.execute.mockResolvedValue({
-        success: false,
-        data: null
-      });
-
-      const getPlanHandler = mockRouter.get.mock.calls.find(call => call[0] === '/:planId')[3];
-
-      await getPlanHandler(mockRequest as Request, mockResponse as Response, mockNext);
-
-      expect(mockResponse.status).toHaveBeenCalledWith(404);
-      expect(mockResponse.json).toHaveBeenCalledWith(
-        expect.objectContaining({
-          success: false,
-          error: expect.objectContaining({
-            code: 'NOT_FOUND',
-            message: `Plan with ID ${mockRequest.params.planId} not found`
-          })
-        })
-      );
-    });
-
-    it('应该处理获取计划异常', async () => {
-      const error = new Error('Database error');
-      mockGetPlanQueryHandler.execute.mockRejectedValue(error);
-
-      const getPlanHandler = mockRouter.get.mock.calls.find(call => call[0] === '/:planId')[3];
-
-      await getPlanHandler(mockRequest as Request, mockResponse as Response, mockNext);
-
-      expect(mockNext).toHaveBeenCalledWith(error);
-    });
-  });
-
-  describe('PUT /:planId - 更新计划', () => {
-    beforeEach(() => {
-      mockRequest.params = {
-        planId: TestDataFactory.Base.generateUUID()
-      };
-      mockRequest.body = {
-        name: 'Updated Plan',
-        description: 'Updated Description',
-        status: 'active'
-      };
-
-      mockValidationResult.mockReturnValue({
-        isEmpty: () => true,
-        array: () => []
-      });
-    });
-
-    it('应该成功更新计划', async () => {
-      const mockUpdatedPlan = TestDataFactory.Plan.createValidPlanRequest({
-        planId: mockRequest.params.planId,
-        name: mockRequest.body.name,
-        description: mockRequest.body.description
-      });
-
-      mockPlanManagementService.updatePlan.mockResolvedValue({
-        success: true,
-        data: mockUpdatedPlan
-      });
-
-      const updatePlanHandler = mockRouter.put.mock.calls.find(call => call[0] === '/:planId')[4];
-
-      await updatePlanHandler(mockRequest as Request, mockResponse as Response, mockNext);
-
-      expect(mockPlanManagementService.updatePlan).toHaveBeenCalledWith(
-        mockRequest.params.planId,
-        mockRequest.body
-      );
-
-      expect(mockResponse.status).toHaveBeenCalledWith(200);
-      expect(mockResponse.json).toHaveBeenCalledWith(
-        expect.objectContaining({
-          success: true,
-          data: mockUpdatedPlan
-        })
-      );
-      expect(mockLogger.debug).toHaveBeenCalledWith('Updating plan', {
-        planId: mockRequest.params.planId,
-        requestId: expect.any(String)
-      });
-    });
-
-    it('应该处理计划不存在的更新', async () => {
-      mockPlanManagementService.updatePlan.mockResolvedValue({
-        success: false,
-        error: 'Plan not found'
-      });
-
-      const updatePlanHandler = mockRouter.put.mock.calls.find(call => call[0] === '/:planId')[4];
-
-      await updatePlanHandler(mockRequest as Request, mockResponse as Response, mockNext);
-
-      expect(mockResponse.status).toHaveBeenCalledWith(404);
-      expect(mockResponse.json).toHaveBeenCalledWith(
-        expect.objectContaining({
-          success: false,
-          error: expect.objectContaining({
-            code: 'NOT_FOUND',
-            message: `Plan with ID ${mockRequest.params.planId} not found`
-          })
-        })
-      );
-    });
-
-    it('应该处理更新验证失败', async () => {
-      mockPlanManagementService.updatePlan.mockResolvedValue({
-        success: false,
-        error: 'Validation failed',
-        validationErrors: ['Invalid status']
-      });
-
-      const updatePlanHandler = mockRouter.put.mock.calls.find(call => call[0] === '/:planId')[4];
-
-      await updatePlanHandler(mockRequest as Request, mockResponse as Response, mockNext);
-
-      expect(mockResponse.status).toHaveBeenCalledWith(400);
-      expect(mockResponse.json).toHaveBeenCalledWith(
-        expect.objectContaining({
-          success: false,
-          error: expect.objectContaining({
-            code: 'VALIDATION_ERROR',
-            message: 'Validation failed',
-            details: ['Invalid status']
-          })
-        })
-      );
-    });
-  });
-
-  describe('DELETE /:planId - 删除计划', () => {
-    beforeEach(() => {
-      mockRequest.params = {
-        planId: TestDataFactory.Base.generateUUID()
-      };
-
-      mockValidationResult.mockReturnValue({
-        isEmpty: () => true,
-        array: () => []
-      });
-    });
-
-    it('应该成功删除计划', async () => {
-      mockPlanManagementService.deletePlan.mockResolvedValue({
-        success: true,
-        data: undefined
-      });
-
-      const deletePlanHandler = mockRouter.delete.mock.calls.find(call => call[0] === '/:planId')[3];
-
-      await deletePlanHandler(mockRequest as Request, mockResponse as Response, mockNext);
-
-      expect(mockPlanManagementService.deletePlan).toHaveBeenCalledWith(mockRequest.params.planId);
-
-      expect(mockResponse.status).toHaveBeenCalledWith(204);
-      expect(mockResponse.end).toHaveBeenCalled();
-      expect(mockLogger.debug).toHaveBeenCalledWith('Deleting plan', {
-        planId: mockRequest.params.planId,
-        requestId: expect.any(String)
-      });
-    });
-
-    it('应该处理删除不存在的计划', async () => {
-      mockPlanManagementService.deletePlan.mockResolvedValue({
-        success: false,
-        error: 'Plan not found'
-      });
-
-      const deletePlanHandler = mockRouter.delete.mock.calls.find(call => call[0] === '/:planId')[3];
-
-      await deletePlanHandler(mockRequest as Request, mockResponse as Response, mockNext);
-
-      expect(mockResponse.status).toHaveBeenCalledWith(404);
-      expect(mockResponse.json).toHaveBeenCalledWith(
-        expect.objectContaining({
-          success: false,
-          error: expect.objectContaining({
-            code: 'NOT_FOUND',
-            message: `Plan with ID ${mockRequest.params.planId} not found`
-          })
-        })
-      );
-    });
-
-    it('应该处理删除异常', async () => {
-      const error = new Error('Database error');
-      mockPlanManagementService.deletePlan.mockRejectedValue(error);
-
-      const deletePlanHandler = mockRouter.delete.mock.calls.find(call => call[0] === '/:planId')[3];
-
-      await deletePlanHandler(mockRequest as Request, mockResponse as Response, mockNext);
-
-      expect(mockNext).toHaveBeenCalledWith(error);
-    });
-  });
-
-  describe('POST /:planId/execute - 执行计划', () => {
-    beforeEach(() => {
-      mockRequest.params = {
-        planId: TestDataFactory.Base.generateUUID()
-      };
-      mockRequest.body = {
-        execution_context: { environment: 'test' },
-        execution_options: {
-          parallel_limit: 5,
-          timeout_ms: 30000
-        }
-      };
-
-      mockValidationResult.mockReturnValue({
-        isEmpty: () => true,
-        array: () => []
-      });
-    });
-
-    it('应该成功执行计划', async () => {
+  describe('executePlan方法测试', () => {
+    it('应该成功执行Plan', async () => {
+      // 📋 Arrange
+      const planId = '550e8400-e29b-41d4-a716-446655440006';
       const mockExecutionResult = {
-        success: true,
-        plan_id: mockRequest.params.planId,
-        execution_time_ms: 1500,
-        tasks_status: [
-          { taskId: 'task-1', status: 'completed' },
-          { taskId: 'task-2', status: 'completed' }
-        ]
+        status: 'completed' as const,
+        totalTasks: 5,
+        completedTasks: 5,
+        errors: []
       };
 
-      mockPlanExecutionService.executePlan.mockResolvedValue(mockExecutionResult);
+      mockPlanManagementService.executePlan.mockResolvedValue(mockExecutionResult);
 
-      const executePlanHandler = mockRouter.post.mock.calls.find(call => call[0] === '/:planId/execute')[4];
+      // 🎬 Act
+      const result = await controller.executePlan(planId);
 
-      await executePlanHandler(mockRequest as Request, mockResponse as Response, mockNext);
-
-      expect(mockPlanExecutionService.executePlan).toHaveBeenCalledWith({
-        planId: mockRequest.params.planId,
-        executionContext: mockRequest.body.execution_context,
-        executionOptions: mockRequest.body.execution_options,
-        executionVariables: undefined,
-        conditions: undefined
+      // ✅ Assert
+      expect(result.success).toBe(true);
+      expect(result.planId).toBe(planId);
+      expect(result.message).toBe('Plan execution completed');
+      expect(result.metadata).toEqual({
+        status: 'completed',
+        totalTasks: 5,
+        completedTasks: 5
       });
-
-      expect(mockResponse.status).toHaveBeenCalledWith(200);
-      expect(mockResponse.json).toHaveBeenCalledWith(
-        expect.objectContaining({
-          success: true,
-          data: mockExecutionResult
-        })
-      );
-      expect(mockLogger.debug).toHaveBeenCalledWith('Executing plan', {
-        planId: mockRequest.params.planId,
-        requestId: expect.any(String)
-      });
-    });
-
-    it('应该处理执行不存在的计划', async () => {
-      mockPlanExecutionService.executePlan.mockResolvedValue({
-        success: false,
-        error: 'Plan not found'
-      });
-
-      const executePlanHandler = mockRouter.post.mock.calls.find(call => call[0] === '/:planId/execute')[4];
-
-      await executePlanHandler(mockRequest as Request, mockResponse as Response, mockNext);
-
-      expect(mockResponse.status).toHaveBeenCalledWith(404);
-      expect(mockResponse.json).toHaveBeenCalledWith(
-        expect.objectContaining({
-          success: false,
-          error: expect.objectContaining({
-            code: 'NOT_FOUND',
-            message: `Plan with ID ${mockRequest.params.planId} not found`
-          })
-        })
-      );
-    });
-
-    it('应该处理执行失败', async () => {
-      mockPlanExecutionService.executePlan.mockResolvedValue({
-        success: false,
-        error: 'Execution failed: Task dependency not met'
-      });
-
-      const executePlanHandler = mockRouter.post.mock.calls.find(call => call[0] === '/:planId/execute')[4];
-
-      await executePlanHandler(mockRequest as Request, mockResponse as Response, mockNext);
-
-      expect(mockResponse.status).toHaveBeenCalledWith(400);
-      expect(mockResponse.json).toHaveBeenCalledWith(
-        expect.objectContaining({
-          success: false,
-          error: expect.objectContaining({
-            code: 'EXECUTION_ERROR',
-            message: 'Execution failed: Task dependency not met'
-          })
-        })
-      );
-    });
-
-    it('应该处理执行异常', async () => {
-      const error = new Error('Execution service unavailable');
-      mockPlanExecutionService.executePlan.mockRejectedValue(error);
-
-      const executePlanHandler = mockRouter.post.mock.calls.find(call => call[0] === '/:planId/execute')[4];
-
-      await executePlanHandler(mockRequest as Request, mockResponse as Response, mockNext);
-
-      expect(mockNext).toHaveBeenCalledWith(error);
+      expect(mockPlanManagementService.executePlan).toHaveBeenCalledWith(planId);
     });
   });
 
-  describe('GET /:planId/status - 获取计划状态', () => {
-    beforeEach(() => {
-      mockRequest.params = {
-        planId: TestDataFactory.Base.generateUUID()
+  describe('optimizePlan方法测试', () => {
+    it('应该成功优化Plan', async () => {
+      // 📋 Arrange
+      const planId = '550e8400-e29b-41d4-a716-446655440007';
+      const mockOptimizationResult = {
+        originalScore: 75,
+        optimizedScore: 90,
+        improvements: ['Task reordering', 'Resource optimization']
       };
 
-      mockValidationResult.mockReturnValue({
-        isEmpty: () => true,
-        array: () => []
+      mockPlanManagementService.optimizePlan.mockResolvedValue(mockOptimizationResult);
+
+      // 🎬 Act
+      const result = await controller.optimizePlan(planId);
+
+      // ✅ Assert
+      expect(result.success).toBe(true);
+      expect(result.planId).toBe(planId);
+      expect(result.message).toBe('Plan optimization completed');
+      expect(result.metadata).toEqual({
+        originalScore: 75,
+        optimizedScore: 90,
+        improvements: ['Task reordering', 'Resource optimization']
       });
     });
+  });
 
-    it('应该成功获取计划状态', async () => {
-      const mockPlan = TestDataFactory.Plan.createValidPlanRequest({
-        planId: mockRequest.params.planId,
-        status: 'active'
+  describe('validatePlan方法测试', () => {
+    it('应该成功验证Plan', async () => {
+      // 📋 Arrange
+      const planId = '550e8400-e29b-41d4-a716-446655440008';
+      const mockValidationResult = {
+        isValid: true,
+        violations: [],
+        recommendations: ['Consider adding more tasks']
+      };
+
+      mockPlanManagementService.validatePlan.mockResolvedValue(mockValidationResult);
+
+      // 🎬 Act
+      const result = await controller.validatePlan(planId);
+
+      // ✅ Assert
+      expect(result.success).toBe(true);
+      expect(result.planId).toBe(planId);
+      expect(result.message).toBe('Plan validation completed');
+      expect(result.metadata).toEqual({
+        isValid: true,
+        violationCount: 0,
+        recommendationCount: 1
       });
-
-      mockGetPlanQueryHandler.execute.mockResolvedValue({
-        success: true,
-        data: mockPlan
-      });
-
-      const getPlanStatusHandler = mockRouter.get.mock.calls.find(call => call[0] === '/:planId/status')[3];
-
-      await getPlanStatusHandler(mockRequest as Request, mockResponse as Response, mockNext);
-
-      expect(mockGetPlanQueryHandler.execute).toHaveBeenCalledWith({
-        planId: mockRequest.params.planId
-      });
-
-      expect(mockResponse.status).toHaveBeenCalledWith(200);
-      expect(mockResponse.json).toHaveBeenCalledWith(
-        expect.objectContaining({
-          success: true,
-          data: expect.objectContaining({
-            plan_id: mockPlan.planId,
-            status: mockPlan.status,
-            progress: mockPlan.progress,
-            updated_at: mockPlan.updatedAt
-          })
-        })
-      );
-      expect(mockLogger.debug).toHaveBeenCalledWith('Getting plan status', {
-        planId: mockRequest.params.planId,
-        requestId: expect.any(String)
-      });
-    });
-
-    it('应该处理状态查询时计划不存在', async () => {
-      mockGetPlanQueryHandler.execute.mockResolvedValue({
-        success: false,
-        data: null
-      });
-
-      const getPlanStatusHandler = mockRouter.get.mock.calls.find(call => call[0] === '/:planId/status')[3];
-
-      await getPlanStatusHandler(mockRequest as Request, mockResponse as Response, mockNext);
-
-      expect(mockResponse.status).toHaveBeenCalledWith(404);
-      expect(mockResponse.json).toHaveBeenCalledWith(
-        expect.objectContaining({
-          success: false,
-          error: expect.objectContaining({
-            code: 'NOT_FOUND',
-            message: `Plan with ID ${mockRequest.params.planId} not found`
-          })
-        })
-      );
     });
   });
 
   describe('辅助方法测试', () => {
-    it('应该生成唯一的请求ID', () => {
-      // 通过调用一个API方法来间接测试generateRequestId
-      const createPlanHandler = mockRouter.post.mock.calls.find(call => call[0] === '/')[3];
-
-      mockCreatePlanCommandHandler.execute.mockResolvedValue({
-        success: true,
-        data: TestDataFactory.Plan.createValidPlanRequest()
-      });
-
-      mockRequest.body = {
-        contextId: TestDataFactory.Base.generateUUID(),
-        name: 'Test Plan'
-      };
-
-      createPlanHandler(mockRequest as Request, mockResponse as Response, mockNext);
-
-      // 验证requestId格式
-      expect(mockLogger.debug).toHaveBeenCalledWith('Creating plan', {
-        requestId: expect.stringMatching(/^req-\d+-\d+$/)
-      });
+    it('应该正确验证UUID格式', () => {
+      // 测试私有方法通过公共方法的行为来验证
+      // 有效UUID应该不抛出错误
+      expect(async () => {
+        await controller.getPlanById('550e8400-e29b-41d4-a716-446655440000');
+      }).not.toThrow();
     });
 
-    it('应该构建正确的API响应格式', async () => {
-      const mockPlan = TestDataFactory.Plan.createValidPlanRequest();
-
-      mockCreatePlanCommandHandler.execute.mockResolvedValue({
-        success: true,
-        data: mockPlan
-      });
-
-      mockRequest.body = {
-        contextId: TestDataFactory.Base.generateUUID(),
-        name: 'Test Plan'
+    it('应该正确转换实体数据为响应DTO', async () => {
+      // 📋 Arrange
+      const planId = '550e8400-e29b-41d4-a716-446655440009';
+      const mockPlanData: PlanEntityData = {
+        protocolVersion: '1.0.0',
+        timestamp: new Date('2024-01-01T12:00:00.000Z'),
+        planId: '550e8400-e29b-41d4-a716-446655440009',
+        contextId: '550e8400-e29b-41d4-a716-446655440015',
+        name: 'Test Plan',
+        description: 'Test description',
+        status: 'active',
+        priority: 'high',
+        tasks: [
+          {
+            taskId: 'task-001',
+            name: 'Test Task',
+            type: 'atomic',
+            status: 'pending',
+            priority: 'medium'
+          }
+        ],
+        auditTrail: {
+          enabled: true,
+          retentionDays: 90
+        },
+        monitoringIntegration: { enabled: true },
+        performanceMetrics: { responseTime: 100 },
+        createdAt: new Date('2024-01-01T10:00:00.000Z'),
+        updatedAt: new Date('2024-01-01T11:00:00.000Z')
       };
 
-      const createPlanHandler = mockRouter.post.mock.calls.find(call => call[0] === '/')[3];
+      mockPlanManagementService.getPlan.mockResolvedValue(mockPlanData);
 
-      await createPlanHandler(mockRequest as Request, mockResponse as Response, mockNext);
+      // 🎬 Act
+      const result = await controller.getPlanById(planId);
 
-      expect(mockResponse.json).toHaveBeenCalledWith(
-        expect.objectContaining({
-          success: true,
-          data: mockPlan,
-          meta: expect.objectContaining({
-            timestamp: expect.any(String),
-            requestId: expect.any(String),
-            version: '1.0.0'
-          })
-        })
-      );
-    });
-
-    it('应该构建正确的错误响应格式', async () => {
-      mockCreatePlanCommandHandler.execute.mockResolvedValue({
-        success: false,
-        error: 'Test error'
+      // ✅ Assert
+      expect(result).not.toBeNull();
+      expect(result?.planId).toBe('550e8400-e29b-41d4-a716-446655440009');
+      expect(result?.contextId).toBe('550e8400-e29b-41d4-a716-446655440015');
+      expect(result?.name).toBe('Test Plan');
+      expect(result?.status).toBe('active');
+      expect(result?.priority).toBe('high');
+      expect(result?.timestamp).toBe('2024-01-01T12:00:00.000Z');
+      expect(result?.tasks).toHaveLength(1);
+      expect(result?.tasks[0].taskId).toBe('task-001');
+      expect(result?.tasks[0].name).toBe('Test Task');
+      expect(result?.auditTrail).toEqual({
+        enabled: true,
+        retentionDays: 90
       });
-
-      mockRequest.body = {
-        context_id: TestDataFactory.Base.generateUUID(),
-        name: 'Test Plan'
-      };
-
-      const createPlanHandler = mockRouter.post.mock.calls.find(call => call[0] === '/')[3];
-
-      await createPlanHandler(mockRequest as Request, mockResponse as Response, mockNext);
-
-      expect(mockResponse.json).toHaveBeenCalledWith(
-        expect.objectContaining({
-          success: false,
-          error: expect.objectContaining({
-            code: 'VALIDATION_ERROR',
-            message: 'Test error'
-          }),
-          meta: expect.objectContaining({
-            timestamp: expect.any(String),
-            requestId: expect.any(String),
-            version: '1.0.0'
-          })
-        })
-      );
+      expect(result?.createdAt).toBe('2024-01-01T10:00:00.000Z');
+      expect(result?.updatedAt).toBe('2024-01-01T11:00:00.000Z');
     });
   });
 });

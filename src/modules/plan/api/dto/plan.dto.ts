@@ -1,306 +1,277 @@
 /**
- * Plan DTO
+ * Plan模块DTO定义
  * 
- * 定义API请求和响应的数据结构
- * 
- * @version v1.0.0
- * @created 2025-07-26T19:50:00+08:00
- * @compliance 100% Schema合规性 - 完全匹配plan-protocol.json
+ * @description API层数据传输对象，用于请求和响应的数据结构定义
+ * @version 1.0.0
+ * @layer API层 - 数据传输对象
  */
 
 import { 
-  UUID, 
-  PlanStatus, 
-  TaskStatus, 
-  ExecutionStrategy, 
-  Priority, 
-  TaskPriority, 
-  TaskType, 
-  DependencyType, 
-  DependencyCriticality, 
-  MilestoneStatus, 
-  DurationUnit, 
-  RiskLevel, 
-  RiskCategory, 
-  RiskStatus 
-} from '../../../../public/shared/types/plan-types';
+  PlanStatus,
+  TaskType,
+  TaskStatus,
+  MilestoneStatus,
+  CreatePlanRequest,
+  UpdatePlanRequest,
+  PlanQueryFilter,
+  Task,
+  Milestone,
+  ResourceAllocation,
+  RiskItem,
+  ExecutionConfig,
+  OptimizationConfig,
+  ValidationRule,
+  CoordinationConfig,
+  AuditTrail
+} from '../../types';
+import { Priority, UUID, Timestamp } from '../../../../shared/types';
 
 /**
- * 创建计划请求DTO
+ * 创建Plan请求DTO
  */
-export interface CreatePlanRequestDto {
-  plan_id?: UUID;
-  context_id: UUID;
-  name: string;
-  description: string;
-  goals?: string[];
-  tasks?: PlanTaskDto[];
-  dependencies?: PlanDependencyDto[];
-  execution_strategy?: ExecutionStrategy;
+export class CreatePlanDto implements CreatePlanRequest {
+  contextId!: UUID;
+  name!: string;
+  description?: string;
   priority?: Priority;
-  estimated_duration?: DurationDto;
-  configuration?: PlanConfigurationDto;
-  metadata?: Record<string, unknown>;
+  tasks?: Partial<Task>[];
+  milestones?: Partial<Milestone>[];
+  executionConfig?: Partial<ExecutionConfig>;
+  optimizationConfig?: Partial<OptimizationConfig>;
 }
 
 /**
- * 更新计划请求DTO
+ * 更新Plan请求DTO
  */
-export interface UpdatePlanRequestDto {
+export class UpdatePlanDto implements UpdatePlanRequest {
+  planId!: UUID;
   name?: string;
   description?: string;
   status?: PlanStatus;
-  goals?: string[];
-  tasks?: PlanTaskDto[];
-  dependencies?: PlanDependencyDto[];
-  execution_strategy?: ExecutionStrategy;
   priority?: Priority;
-  estimated_duration?: DurationDto;
-  configuration?: PlanConfigurationDto;
-  metadata?: Record<string, unknown>;
-  risk_assessment?: RiskAssessmentDto;
+  tasks?: Partial<Task>[];
+  milestones?: Partial<Milestone>[];
+  executionConfig?: Partial<ExecutionConfig>;
+  optimizationConfig?: Partial<OptimizationConfig>;
 }
 
 /**
- * 计划执行请求DTO
+ * Plan查询DTO
  */
-export interface PlanExecutionRequestDto {
-  execution_context?: Record<string, unknown>;
-  execution_options?: {
-    parallel_limit?: number;
-    timeout_ms?: number;
-    retry_failed_tasks?: boolean;
-    failure_strategy?: string;
-  };
-  execution_variables?: Record<string, unknown>;
-  conditions?: Record<string, unknown>;
+export class PlanQueryDto implements PlanQueryFilter {
+  status?: PlanStatus | PlanStatus[];
+  priority?: Priority | Priority[];
+  contextId?: UUID;
+  createdAfter?: Timestamp;
+  createdBefore?: Timestamp;
+  namePattern?: string;
+  assignedTo?: string;
 }
 
 /**
- * 计划响应DTO
+ * Plan响应DTO
  */
-export interface PlanResponseDto {
-  plan_id: UUID;
-  context_id: UUID;
-  name: string;
-  description: string;
-  status: PlanStatus;
-  version: string;
-  created_at: string;
-  updated_at: string;
-  goals: string[];
-  tasks: PlanTaskDto[];
-  dependencies: PlanDependencyDto[];
-  execution_strategy: ExecutionStrategy;
-  priority: Priority;
-  estimated_duration?: DurationDto;
-  progress: {
-    completed_tasks: number;
-    total_tasks: number;
-    percentage: number;
-  };
-  timeline?: TimelineDto;
-  configuration: PlanConfigurationDto;
-  metadata?: Record<string, unknown>;
-  risk_assessment?: RiskAssessmentDto;
-}
-
-/**
- * 计划任务DTO
- */
-export interface PlanTaskDto {
-  task_id: UUID;
-  name: string;
-  description: string;
-  status: TaskStatus;
-  priority: TaskPriority;
-  type: TaskType;
-  parent_task_id?: UUID;
-  estimated_effort?: TaskEffortDto;
-  assignee?: TaskAssigneeDto;
-  resource_requirements?: ResourceRequirementDto[];
-  acceptance_criteria?: AcceptanceCriterionDto[];
-  start_time?: string;
-  end_time?: string;
-  metadata?: Record<string, unknown>;
-}
-
-/**
- * 计划依赖DTO
- */
-export interface PlanDependencyDto {
-  id: UUID;
-  source_task_id: UUID;
-  target_task_id: UUID;
-  dependency_type: DependencyType;
-  lag?: DurationDto;
-  criticality: DependencyCriticality;
-  condition?: string;
-}
-
-/**
- * 时间线DTO
- */
-export interface TimelineDto {
-  start_date: string;
-  end_date: string;
-  milestones: PlanMilestoneDto[];
-  critical_path: UUID[];
-}
-
-/**
- * 计划里程碑DTO
- */
-export interface PlanMilestoneDto {
-  milestone_id: UUID;
-  name: string;
+export class PlanResponseDto {
+  planId!: UUID;
+  contextId!: UUID;
+  name!: string;
   description?: string;
-  due_date: string;
-  status: MilestoneStatus;
-  related_tasks: UUID[];
+  status!: PlanStatus;
+  priority!: Priority;
+  protocolVersion!: string;
+  timestamp!: Timestamp;
+  
+  // 核心功能字段
+  tasks!: Task[];
+  milestones?: Milestone[];
+  resources?: ResourceAllocation[];
+  risks?: RiskItem[];
+  executionConfig?: ExecutionConfig;
+  optimizationConfig?: OptimizationConfig;
+  validationRules?: ValidationRule[];
+  coordinationConfig?: CoordinationConfig;
+
+  // 企业级功能字段
+  auditTrail!: AuditTrail;
+  monitoringIntegration!: Record<string, unknown>;
+  performanceMetrics!: Record<string, unknown>;
+  versionHistory?: Record<string, unknown>;
+  searchMetadata?: Record<string, unknown>;
+  cachingPolicy?: Record<string, unknown>;
+  eventIntegration?: Record<string, unknown>;
+
+  // 基础元数据字段
+  metadata?: Record<string, unknown>;
+  createdAt?: Timestamp;
+  updatedAt?: Timestamp;
+  createdBy?: string;
+  updatedBy?: string;
 }
 
 /**
- * 持续时间DTO
+ * 分页Plan响应DTO
  */
-export interface DurationDto {
-  value: number;
-  unit: DurationUnit;
-}
-
-/**
- * 任务工作量DTO
- */
-export interface TaskEffortDto {
-  value: number;
-  unit: DurationUnit;
-  confidence?: number; // 0-1之间的置信度
-}
-
-/**
- * 任务执行者DTO
- */
-export interface TaskAssigneeDto {
-  id: UUID;
-  name: string;
-  role?: string;
-  assignment_time?: string;
-}
-
-/**
- * 资源需求DTO
- */
-export interface ResourceRequirementDto {
-  resource_type: string;
-  amount: number;
-  unit?: string;
-  mandatory: boolean;
-}
-
-/**
- * 验收标准DTO
- */
-export interface AcceptanceCriterionDto {
-  id: UUID;
-  description: string;
-  verified: boolean;
-  verified_at?: string;
-  verified_by?: UUID;
-}
-
-/**
- * 计划配置DTO
- */
-export interface PlanConfigurationDto {
-  execution_settings: {
-    strategy: ExecutionStrategy;
-    parallel_limit?: number;
-    default_timeout_ms: number;
-    retry_policy: {
-      max_retries: number;
-      retry_delay_ms: number;
-      backoff_factor: number;
-    };
+export class PaginatedPlanResponseDto {
+  success!: boolean;
+  data!: PlanResponseDto[];
+  pagination!: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
   };
-  notification_settings: {
-    enabled: boolean;
-    channels: string[];
-    events: string[];
-    task_completion?: boolean;
-  };
-  optimization_settings: {
-    enabled: boolean;
-    strategies: string[];
-    auto_adjust: boolean;
-  };
-  monitoring_settings?: {
-    interval_ms: number;
-    metrics: string[];
-    alerts_enabled: boolean;
-    alert_thresholds?: Record<string, number>;
+  error?: {
+    code: string;
+    message: string;
+    details?: Record<string, unknown>;
   };
 }
 
 /**
- * 风险评估DTO
+ * Plan操作结果DTO
  */
-export interface RiskAssessmentDto {
-  overall_risk_level: RiskLevel;
-  risks: RiskDto[];
-  last_assessed: string;
-}
-
-/**
- * 风险DTO
- */
-export interface RiskDto {
-  risk_id: UUID;
-  name: string;
-  description: string;
-  category: RiskCategory;
-  likelihood: number; // 0-1
-  impact: number; // 0-1
-  risk_level: RiskLevel;
-  status: RiskStatus;
-  mitigation_strategy?: string;
-  related_tasks?: UUID[];
-}
-
-/**
- * 计划执行结果DTO
- */
-export interface PlanExecutionResultDto {
-  success: boolean;
-  plan_id: UUID;
-  status: string;
-  execution_id?: UUID;
-  started_at?: string;
-  completed_at?: string;
-  execution_time_ms: number;
-  estimated_completion_time?: string;
-  optimization_applied?: boolean;
-  execution_mode?: string;
-  tasks_status: {
-    pending: number;
-    in_progress: number;
-    completed: number;
-    failed: number;
-    cancelled: number;
-    skipped: number;
+export class PlanOperationResultDto {
+  success!: boolean;
+  planId?: UUID;
+  message?: string;
+  metadata?: Record<string, unknown>;
+  error?: {
+    code: string;
+    message: string;
+    details?: Record<string, unknown>;
   };
-  error?: string;
 }
 
 /**
- * 计划状态DTO
+ * Plan执行DTO
  */
-export interface PlanStatusDto {
-  plan_id: UUID;
-  status: PlanStatus;
-  progress: {
-    completed_tasks: number;
-    total_tasks: number;
-    percentage: number;
+export class PlanExecutionDto {
+  executionMode?: 'sequential' | 'parallel' | 'adaptive';
+  dryRun?: boolean;
+  skipValidation?: boolean;
+  notifyOnCompletion?: boolean;
+  customConfig?: Record<string, unknown>;
+}
+
+/**
+ * Plan优化DTO
+ */
+export class PlanOptimizationDto {
+  targets?: ('time' | 'cost' | 'quality' | 'resource' | 'risk')[];
+  constraints?: {
+    maxDuration?: number;
+    maxCost?: number;
+    minQuality?: number;
+    resourceLimits?: Record<string, number>;
   };
-  updated_at: string;
-} 
+  algorithm?: 'genetic' | 'simulated_annealing' | 'particle_swarm' | 'greedy';
+  iterations?: number;
+}
+
+/**
+ * Plan验证DTO
+ */
+export class PlanValidationDto {
+  validationLevel?: 'basic' | 'standard' | 'comprehensive';
+  includeWarnings?: boolean;
+  customRules?: ValidationRule[];
+  skipRuleIds?: UUID[];
+}
+
+/**
+ * 任务创建DTO
+ */
+export class CreateTaskDto {
+  name!: string;
+  description?: string;
+  type!: TaskType;
+  priority!: Priority;
+  estimatedDuration?: number;
+  durationUnit?: 'hours' | 'days' | 'weeks';
+  assignedTo?: string[];
+  dependencies?: {
+    taskId: UUID;
+    type: 'finish_to_start' | 'start_to_start' | 'finish_to_finish' | 'start_to_finish';
+    lag?: number;
+    lagUnit?: 'hours' | 'days' | 'weeks';
+  }[];
+  tags?: string[];
+  metadata?: Record<string, unknown>;
+}
+
+/**
+ * 任务更新DTO
+ */
+export class UpdateTaskDto {
+  taskId!: UUID;
+  name?: string;
+  description?: string;
+  status?: TaskStatus;
+  priority?: Priority;
+  estimatedDuration?: number;
+  actualDuration?: number;
+  durationUnit?: 'hours' | 'days' | 'weeks';
+  assignedTo?: string[];
+  completionPercentage?: number;
+  startDate?: Timestamp;
+  endDate?: Timestamp;
+  tags?: string[];
+  metadata?: Record<string, unknown>;
+}
+
+/**
+ * 里程碑创建DTO
+ */
+export class CreateMilestoneDto {
+  name!: string;
+  description?: string;
+  targetDate!: Timestamp;
+  criteria?: string[];
+  dependencies?: UUID[];
+  deliverables?: string[];
+}
+
+/**
+ * 里程碑更新DTO
+ */
+export class UpdateMilestoneDto {
+  id!: UUID;
+  name?: string;
+  description?: string;
+  targetDate?: Timestamp;
+  actualDate?: Timestamp;
+  status?: MilestoneStatus;
+  criteria?: string[];
+  dependencies?: UUID[];
+  deliverables?: string[];
+}
+
+/**
+ * 资源分配DTO
+ */
+export class ResourceAllocationDto {
+  resourceId!: UUID;
+  resourceName!: string;
+  type!: 'human' | 'material' | 'financial' | 'technical';
+  allocatedAmount!: number;
+  totalCapacity!: number;
+  unit!: string;
+  allocationPeriod?: {
+    startDate: Timestamp;
+    endDate: Timestamp;
+  };
+}
+
+/**
+ * 风险项DTO
+ */
+export class RiskItemDto {
+  name!: string;
+  description!: string;
+  category!: string;
+  level!: 'low' | 'medium' | 'high' | 'critical';
+  probability!: number;
+  impact!: number;
+  mitigationPlan?: string;
+  owner?: string;
+}

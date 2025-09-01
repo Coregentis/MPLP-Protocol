@@ -1,719 +1,537 @@
 /**
  * Plan模块适配器
  * 
- * 实现Core模块的ModuleInterface接口，提供任务规划和分解功能
- * 
- * @version 2.0.0
- * @created 2025-08-04
- * @updated 2025-08-04 23:09
+ * @description Plan模块的基础设施适配器，提供外部系统集成和统一访问接口
+ * @version 1.0.0
+ * @layer 基础设施层 - 适配器
+ * @pattern 与Context模块使用IDENTICAL的适配器模式
  */
 
-import { v4 as uuidv4 } from 'uuid';
-import {
-  ModuleInterface,
-  ModuleStatus,
-  PlanningCoordinationRequest,
-  PlanningResult,
-  BusinessCoordinationRequest,
-  BusinessCoordinationResult,
-  BusinessData,
-  BusinessError,
-  BusinessContext,
-  ValidationResult,
-  ErrorHandlingResult,
-  WorkflowExecutionContext,
-  StageExecutionResult
-} from '../../../../public/modules/core/types/core.types';
+import { PlanEntity } from '../../domain/entities/plan.entity';
 import { PlanManagementService } from '../../application/services/plan-management.service';
-import { PlanExecutionService } from '../../application/services/plan-execution.service';
-import { Logger } from '../../../../public/utils/logger';
+import { PlanRepository } from '../repositories/plan.repository';
+import { IPlanRepository } from '../../domain/repositories/plan-repository.interface';
+import { PlanProtocol } from '../protocols/plan.protocol';
+import { PlanEntityData } from '../../api/mappers/plan.mapper';
+import { UUID } from '../../../../shared/types';
+
+// ===== L3横切关注点管理器导入 =====
 import {
-  ExecutionStrategy,
-  Priority,
-  UUID
-} from '../../../../public/shared/types/plan-types';
-import { OperationResult } from '../../../../public/shared/types';
+  MLPPSecurityManager,
+  MLPPPerformanceMonitor,
+  MLPPEventBusManager,
+  MLPPErrorHandler,
+  MLPPCoordinationManager,
+  MLPPOrchestrationManager,
+  MLPPStateSyncManager,
+  MLPPTransactionManager,
+  MLPPProtocolVersionManager,
+  CrossCuttingConcernsFactory
+} from '../../../../core/protocols/cross-cutting-concerns';
 
 /**
- * 规划协调请求接口
+ * Plan模块适配器配置
  */
-interface CoordinationRequest {
-  context_id: string;
-  strategy?: string;
-  parameters?: {
-    max_parallel_tasks?: number;
-    timeout_ms?: number;
-  };
+export interface PlanModuleAdapterConfig {
+  enableLogging?: boolean;
+  enableCaching?: boolean;
+  enableMetrics?: boolean;
+  repositoryType?: 'memory' | 'database' | 'file';
+  maxCacheSize?: number;
+  cacheTimeout?: number;
+  enableOptimization?: boolean;
+  enableRiskAssessment?: boolean;
+  enableFailureRecovery?: boolean;
 }
 
 /**
- * 规划协调结果接口
+ * Plan模块适配器结果
  */
-interface CoordinationResult {
-  planId: string;
-  strategy: string;
-  tasks_allocated: number;
-  estimated_duration: number;
+export interface PlanModuleAdapterResult {
+  repository: IPlanRepository;
+  service: PlanManagementService;
+  protocol: PlanProtocol;
+  adapter: PlanModuleAdapter;
 }
 
 /**
- * Plan模块适配器类
- * 实现Core模块的ModuleInterface接口
+ * Plan模块适配器
+ * 
+ * @description 提供Plan模块的统一访问接口和外部系统集成，支持智能任务规划协调
+ * @pattern 与Context模块使用IDENTICAL的适配器实现模式
  */
-export class PlanModuleAdapter implements ModuleInterface {
-  public readonly module_name = 'plan';
-  private logger = new Logger('PlanModuleAdapter');
-  private moduleStatus: ModuleStatus = {
-    module_name: 'plan',
-    status: 'idle',
-    error_count: 0
-  };
+export class PlanModuleAdapter {
 
-  constructor(
-    private planManagementService: PlanManagementService,
-    private planExecutionService: PlanExecutionService
-  ) {}
+  private repository!: PlanRepository;
+  private service!: PlanManagementService;
+  private protocol!: PlanProtocol;
+  private config: PlanModuleAdapterConfig;
+  private isInitialized = false;
 
-  /**
-   * 初始化模块
-   */
-  async initialize(): Promise<void> {
-    try {
-      this.logger.info('Initializing Plan module adapter');
-      
-      // 检查服务是否可用
-      if (!this.planManagementService || !this.planExecutionService) {
-        throw new Error('Plan services not available');
-      }
+  // ===== L3横切关注点管理器 =====
+  private crossCuttingFactory: CrossCuttingConcernsFactory;
+  private securityManager: MLPPSecurityManager;
+  private performanceMonitor: MLPPPerformanceMonitor;
+  private eventBusManager: MLPPEventBusManager;
+  private errorHandler: MLPPErrorHandler;
+  private coordinationManager: MLPPCoordinationManager;
+  private orchestrationManager: MLPPOrchestrationManager;
+  private stateSyncManager: MLPPStateSyncManager;
+  private transactionManager: MLPPTransactionManager;
+  private protocolVersionManager: MLPPProtocolVersionManager;
 
-      this.moduleStatus.status = 'initialized';
-      this.logger.info('Plan module adapter initialized successfully');
-    } catch (error) {
-      this.moduleStatus.status = 'error';
-      this.moduleStatus.error_count++;
-      this.logger.error('Failed to initialize Plan module adapter', error);
-      throw error;
-    }
-  }
+  constructor(config: PlanModuleAdapterConfig = {}) {
+    this.config = {
+      enableLogging: true,
+      enableCaching: false,
+      enableMetrics: false,
+      repositoryType: 'memory',
+      maxCacheSize: 1000,
+      cacheTimeout: 300000, // 5分钟
+      enableOptimization: true,
+      enableRiskAssessment: true,
+      enableFailureRecovery: true,
+      ...config
+    };
 
-  /**
-   * 执行任务规划
-   */
-  async execute(request: PlanningCoordinationRequest): Promise<PlanningResult> {
-    this.logger.info('Executing planning coordination', { 
-      contextId: request.contextId,
-      strategy: request.planning_strategy 
+    // 初始化横切关注点管理器
+    this.crossCuttingFactory = CrossCuttingConcernsFactory.getInstance();
+    const managers = this.crossCuttingFactory.createManagers({
+      security: { enabled: true },
+      performance: { enabled: this.config.enableMetrics || false },
+      eventBus: { enabled: true },
+      errorHandler: { enabled: true },
+      coordination: { enabled: true },
+      orchestration: { enabled: true },
+      stateSync: { enabled: true },
+      transaction: { enabled: true },
+      protocolVersion: { enabled: true }
     });
 
-    this.moduleStatus.status = 'running';
-    this.moduleStatus.last_execution = new Date().toISOString();
+    this.securityManager = managers.security;
+    this.performanceMonitor = managers.performance;
+    this.eventBusManager = managers.eventBus;
+    this.errorHandler = managers.errorHandler;
+    this.coordinationManager = managers.coordination;
+    this.orchestrationManager = managers.orchestration;
+    this.stateSyncManager = managers.stateSync;
+    this.transactionManager = managers.transaction;
+    this.protocolVersionManager = managers.protocolVersion;
 
-    try {
-      // 验证请求参数
-      this.validatePlanningRequest(request);
-
-      // 根据策略执行任务规划
-      const result = await this.executePlanningStrategy(request);
-
-      this.moduleStatus.status = 'idle';
-      
-      this.logger.info('Planning coordination completed', {
-        contextId: request.contextId,
-        plan_id: result.plan_id
-      });
-
-      return result;
-    } catch (error) {
-      this.moduleStatus.status = 'error';
-      this.moduleStatus.error_count++;
-      
-      this.logger.error('Planning coordination failed', {
-        contextId: request.contextId,
-        error: error instanceof Error ? error.message : String(error)
-      });
-      throw error;
-    }
+    // 初始化核心组件
+    this.initializeComponents();
   }
 
   /**
-   * 清理资源
+   * 初始化模块组件
    */
-  async cleanup(): Promise<void> {
-    try {
-      this.logger.info('Cleaning up Plan module adapter');
-      this.moduleStatus.status = 'idle';
-      this.logger.info('Plan module adapter cleanup completed');
-    } catch (error) {
-      this.logger.error('Failed to cleanup Plan module adapter', error);
-      throw error;
-    }
-  }
+  private initializeComponents(): void {
+    // 创建仓库
+    this.repository = new PlanRepository();
 
-  /**
-   * 获取模块状态
-   */
-  getStatus(): ModuleStatus {
-    return this.moduleStatus;
-  }
+    // 创建服务
+    this.service = new PlanManagementService(
+      this.securityManager,
+      this.performanceMonitor,
+      this.eventBusManager,
+      this.errorHandler,
+      this.coordinationManager,
+      this.orchestrationManager,
+      this.stateSyncManager,
+      this.transactionManager,
+      this.protocolVersionManager
+    );
 
-  // ===== 私有方法 =====
-
-  /**
-   * 验证规划请求
-   */
-  private validatePlanningRequest(request: PlanningCoordinationRequest): void {
-    if (!request.contextId) {
-      throw new Error('Context ID is required');
-    }
-
-    if (!['sequential', 'parallel', 'adaptive', 'hierarchical'].includes(request.planning_strategy)) {
-      throw new Error(`Unsupported planning strategy: ${request.planning_strategy}`);
-    }
-
-    // 验证资源约束
-    if (request.parameters.resource_constraints) {
-      const { time_limit, resource_limit } = request.parameters.resource_constraints;
-      
-      if (time_limit && time_limit <= 0) {
-        throw new Error('Time limit must be positive');
-      }
-      
-      if (resource_limit && resource_limit <= 0) {
-        throw new Error('Resource limit must be positive');
-      }
-    }
-
-    // 验证任务管理配置
-    if (request.task_management) {
-      const { auto_decomposition, dependency_tracking, progress_monitoring } = request.task_management;
-      
-      if (typeof auto_decomposition !== 'boolean' ||
-          typeof dependency_tracking !== 'boolean' ||
-          typeof progress_monitoring !== 'boolean') {
-        throw new Error('Task management flags must be boolean values');
-      }
-    }
-  }
-
-  /**
-   * 执行规划策略
-   */
-  private async executePlanningStrategy(request: PlanningCoordinationRequest): Promise<PlanningResult> {
-    const plan_id = uuidv4();
-    const timestamp = new Date().toISOString();
-
-    // 根据策略生成计划数据
-    const planData = await this.generatePlanData(request, plan_id);
-
-    // 创建计划
-    const createResult = await this.planManagementService.createPlan(planData as unknown as Parameters<typeof this.planManagementService.createPlan>[0]);
-    if (!createResult.success || !createResult.data) {
-      throw new Error(`Failed to create plan: ${createResult.error}`);
-    }
-
-    const plan = createResult.data;
-
-    // 执行任务分解
-    const taskBreakdown = await this.executeTaskDecomposition(request, plan as unknown as Record<string, unknown>);
-
-    // 分配资源
-    const resourceAllocation = this.allocateResources(request, taskBreakdown);
-
-    return {
-      planId: plan_id as UUID,
-      plan_id: plan_id as UUID,
-      task_breakdown: taskBreakdown,
-      resource_allocation: resourceAllocation,
-      timestamp: timestamp as string
-    };
-  }
-
-  /**
-   * 生成计划数据
-   */
-  private async generatePlanData(request: PlanningCoordinationRequest, plan_id: string): Promise<Record<string, unknown>> {
-    const strategy = this.mapStrategyToExecutionStrategy(request.planning_strategy);
-    const priority = this.determinePriority(request);
-
-    return {
-      planId: plan_id,
-      contextId: request.contextId,
-      name: `Plan-${request.planning_strategy}-${plan_id.substring(0, 8)}`,
-      description: `Plan created using ${request.planning_strategy} strategy`,
-      goals: request.parameters.decomposition_rules || ['Complete project objectives'],
-      executionStrategy: strategy,
-      priority: priority,
-      estimatedDuration: request.parameters.resource_constraints?.time_limit
-        ? { value: request.parameters.resource_constraints.time_limit, unit: 'minutes' }
-        : undefined,
-      configuration: {
-        execution_settings: {
-          strategy: strategy,
-          parallel_limit: request.planning_strategy === 'parallel' ? 5 : 1,
-          default_timeout_ms: 30000,
-          retry_policy: {
-            max_retries: 3,
-            retry_delay_ms: 1000,
-            backoff_factor: 2
-          }
-        },
-        notification_settings: {
-          enabled: request.task_management?.progress_monitoring || false,
-          channels: ['system'],
-          events: ['task_completed', 'plan_completed']
-        },
-        optimization_settings: {
-          enabled: request.planning_strategy === 'adaptive',
-          strategies: ['resource_optimization', 'time_optimization'],
-          auto_adjust: true
+    // 创建简单的日志记录器
+    const logger = {
+      info: (message: string, meta?: Record<string, unknown>) => {
+        // 生产环境中应使用专业日志库
+        if (process.env.NODE_ENV !== 'test') {
+          // eslint-disable-next-line no-console
+          console.log(`[INFO] ${message}`, meta);
         }
       },
-      metadata: {
-        planning_strategy: request.planning_strategy,
-        auto_decomposition: request.task_management?.auto_decomposition || false,
-        dependency_tracking: request.task_management?.dependency_tracking || false,
-        progress_monitoring: request.task_management?.progress_monitoring || false
+      warn: (message: string, meta?: Record<string, unknown>) => {
+        if (process.env.NODE_ENV !== 'test') {
+          // eslint-disable-next-line no-console
+          console.warn(`[WARN] ${message}`, meta);
+        }
+      },
+      error: (message: string, error?: Error, meta?: Record<string, unknown>) => {
+        if (process.env.NODE_ENV !== 'test') {
+          // eslint-disable-next-line no-console
+          console.error(`[ERROR] ${message}`, error, meta);
+        }
+      },
+      debug: (message: string, meta?: Record<string, unknown>) => {
+        if (process.env.NODE_ENV !== 'test') {
+          // eslint-disable-next-line no-console
+          console.debug(`[DEBUG] ${message}`, meta);
+        }
       }
     };
+
+    // 创建AI服务适配器 (简化版本)
+    const aiServiceAdapter = {
+      executePlanning: async () => ({ requestId: '', planData: {}, confidence: 0.8, metadata: { processingTime: 100 }, status: 'completed' as const }),
+      optimizePlan: async () => ({ requestId: '', planData: {}, confidence: 0.8, metadata: { processingTime: 100 }, status: 'completed' as const }),
+      validatePlan: async () => ({ isValid: true, violations: [], recommendations: [] }),
+      getServiceInfo: () => ({ name: 'Mock AI Service', version: '1.0.0', capabilities: [], supportedAlgorithms: [], maxRequestSize: 1024, averageResponseTime: 100 }),
+      healthCheck: async () => true
+    };
+
+    // 创建Plan仓储 (简化版本)
+    const planRepository = {
+      savePlanRequest: async (request: Record<string, unknown>) => ({
+        ...request,
+        requestId: `plan-req-${Date.now()}`,
+        parameters: request.parameters || {},
+        constraints: request.constraints || {},
+        createdAt: new Date()
+      }),
+      findPlanRequest: async (requestId: string) => ({
+        requestId,
+        planType: 'task_planning' as const,
+        parameters: {},
+        constraints: {},
+        status: 'pending' as const,
+        createdAt: new Date()
+      }),
+      updatePlanRequestStatus: async () => undefined,
+      savePlanResult: async (result: Record<string, unknown>) => ({
+        ...result,
+        resultId: `plan-res-${Date.now()}`,
+        planData: result.planData || {},
+        confidence: result.confidence || 0.8,
+        metadata: result.metadata || { processingTime: 100 },
+        status: result.status || 'completed' as const,
+        createdAt: new Date()
+      }),
+      findPlanResult: async (requestId: string) => ({
+        requestId,
+        resultId: `plan-res-${Date.now()}`,
+        planData: {},
+        confidence: 0.8,
+        metadata: { processingTime: 100 },
+        status: 'completed' as const,
+        createdAt: new Date()
+      }),
+      findById: async () => null,
+      save: async (entity: Record<string, unknown>) => entity,
+      update: async (entity: Record<string, unknown>) => entity
+    };
+
+    // 创建3个企业级服务 (使用直接导入)
+    const planProtocolService = new (require('../../application/services/plan-protocol.service')).PlanProtocolService(planRepository, aiServiceAdapter, logger);
+    const planIntegrationService = new (require('../../application/services/plan-integration.service')).PlanIntegrationService(planRepository, { coordinateOperation: async () => ({}), healthCheck: async () => true }, logger);
+    const planValidationService = new (require('../../application/services/plan-validation.service')).PlanValidationService({ validatePlanType: () => true, validateParameters: () => ({ isValid: true, errors: [], warnings: [] }), validateConstraints: () => ({ isValid: true, errors: [], warnings: [] }) }, { checkPlanQuality: async () => ({ score: 0.85, issues: [] }), checkDataIntegrity: async () => ({ isValid: true, issues: [] }) }, logger);
+
+    // 创建协议 (集成3个企业级服务)
+    this.protocol = new PlanProtocol(
+      planProtocolService,
+      planIntegrationService,
+      planValidationService,
+      this.securityManager,
+      this.performanceMonitor,
+      this.eventBusManager,
+      this.errorHandler,
+      this.coordinationManager,
+      this.orchestrationManager,
+      this.stateSyncManager,
+      this.transactionManager,
+      this.protocolVersionManager
+    );
+
+    this.isInitialized = true;
   }
 
   /**
-   * 执行任务分解
+   * 获取模块组件
    */
-  private async executeTaskDecomposition(request: PlanningCoordinationRequest, plan: Record<string, unknown>): Promise<{
-    tasks: Array<{
-      taskId: UUID;
-      name: string;
-      dependencies: UUID[];
-      priority: number;
-      estimated_duration?: number;
-    }>;
-    execution_order: UUID[];
-  }> {
-    const tasks = [];
-    const taskIds = [];
-
-    // 根据分解规则生成任务
-    const decompositionRules = request.parameters.decomposition_rules || ['default_task'];
-    const planName = (plan.name as string) || 'Unknown Plan';
-
-    for (let i = 0; i < decompositionRules.length; i++) {
-      const taskId = uuidv4();
-      const rule = decompositionRules[i];
-
-      tasks.push({
-        taskId: taskId as UUID,
-        name: `${planName}-Task: ${rule}`,
-        dependencies: i > 0 && request.planning_strategy === 'sequential' ? [taskIds[i - 1]] : [],
-        priority: this.calculateTaskPriority(request, i),
-        estimated_duration: this.estimateTaskDuration(request, rule)
-      });
-      
-      taskIds.push(taskId as UUID);
+  getComponents(): PlanModuleAdapterResult {
+    if (!this.isInitialized) {
+      throw new Error('Plan module adapter not initialized');
     }
-
-    // 确定执行顺序
-    const execution_order = this.determineExecutionOrder(request.planning_strategy, taskIds);
 
     return {
-      tasks,
-      execution_order
+      repository: this.repository,
+      service: this.service,
+      protocol: this.protocol,
+      adapter: this
     };
   }
 
   /**
-   * 分配资源
+   * 获取仓库实例
    */
-  private allocateResources(request: PlanningCoordinationRequest, taskBreakdown: { tasks: unknown[] }): Record<string, unknown> {
-    const allocation: Record<string, unknown> = {
-      strategy: request.planning_strategy,
-      total_tasks: taskBreakdown.tasks.length,
-      resource_constraints: request.parameters.resource_constraints || {},
-      priority_weights: request.parameters.priority_weights || {}
+  getRepository(): IPlanRepository {
+    return this.repository;
+  }
+
+  /**
+   * 获取服务实例
+   */
+  getService(): PlanManagementService {
+    return this.service;
+  }
+
+  /**
+   * 获取协议实例
+   */
+  getProtocol(): PlanProtocol {
+    return this.protocol;
+  }
+
+  /**
+   * 获取配置
+   */
+  getConfig(): PlanModuleAdapterConfig {
+    return { ...this.config };
+  }
+
+  /**
+   * 检查模块健康状态
+   */
+  async healthCheck(): Promise<{
+    status: 'healthy' | 'degraded' | 'unhealthy';
+    components: {
+      repository: boolean;
+      service: boolean;
+      protocol: boolean;
+      crossCuttingConcerns: boolean;
     };
-
-    // 根据策略分配资源
-    switch (request.planning_strategy) {
-      case 'parallel':
-        allocation.parallel_slots = Math.min(taskBreakdown.tasks.length, 5);
-        allocation.resource_per_task = 1.0 / (allocation.parallel_slots as number);
-        break;
-      
-      case 'sequential':
-        allocation.parallel_slots = 1;
-        allocation.resource_per_task = 1.0;
-        break;
-      
-      case 'adaptive':
-        allocation.adaptive_threshold = 0.7;
-        allocation.resource_buffer = 0.2;
-        break;
-      
-      case 'hierarchical':
-        allocation.hierarchy_levels = Math.ceil(Math.log2(taskBreakdown.tasks.length));
-        allocation.level_resources = {};
-        break;
-    }
-
-    return allocation;
-  }
-
-  /**
-   * 映射策略到执行策略
-   */
-  private mapStrategyToExecutionStrategy(strategy: string): ExecutionStrategy {
-    switch (strategy) {
-      case 'sequential':
-        return 'sequential';
-      case 'parallel':
-        return 'parallel';
-      case 'adaptive':
-        return 'hybrid'; // 自适应映射到混合策略
-      case 'hierarchical':
-        return 'conditional'; // 层次化映射到条件策略
-      default:
-        return 'sequential';
-    }
-  }
-
-  /**
-   * 确定优先级
-   */
-  private determinePriority(request: PlanningCoordinationRequest): Priority {
-    const constraints = request.parameters.resource_constraints;
+    timestamp: string;
+  }> {
+    const timestamp = new Date().toISOString();
     
-    if (constraints?.time_limit && constraints.time_limit < 3600000) { // < 1 hour
-      return 'critical';
-    } else if (constraints?.time_limit && constraints.time_limit < 86400000) { // < 1 day
-      return 'high';
-    } else {
-      return 'medium';
-    }
-  }
-
-  /**
-   * 计算任务优先级
-   */
-  private calculateTaskPriority(request: PlanningCoordinationRequest, index: number): number {
-    const weights = request.parameters.priority_weights;
-    if (weights && weights[`task_${index}`]) {
-      return weights[`task_${index}`];
-    }
-    
-    // 默认优先级：越早的任务优先级越高
-    return Math.max(1, 10 - index);
-  }
-
-  /**
-   * 估算任务持续时间
-   */
-  private estimateTaskDuration(request: PlanningCoordinationRequest, rule: string): number | undefined {
-    const constraints = request.parameters.resource_constraints;
-    if (!constraints?.time_limit) {
-      return undefined;
-    }
-
-    // 简化估算：平均分配时间，根据规则复杂度调整
-    const decompositionRules = request.parameters.decomposition_rules || ['default_task'];
-    const baseTime = Math.floor(constraints.time_limit / decompositionRules.length);
-
-    // 根据规则复杂度调整时间（简单的启发式方法）
-    const complexityMultiplier = rule.length > 50 ? 1.5 : rule.length > 20 ? 1.2 : 1.0;
-
-    return Math.floor(baseTime * complexityMultiplier);
-  }
-
-  /**
-   * 确定执行顺序
-   */
-  private determineExecutionOrder(strategy: string, taskIds: UUID[]): UUID[] {
-    switch (strategy) {
-      case 'sequential':
-        return [...taskIds]; // 按创建顺序
-      
-      case 'parallel':
-        return [...taskIds]; // 并行执行，顺序不重要
-      
-      case 'adaptive':
-        return [...taskIds].sort(); // 按ID排序，模拟自适应调整
-      
-      case 'hierarchical':
-        // 简化的层次排序
-        return [...taskIds].reverse();
-      
-      default:
-        return [...taskIds];
-    }
-  }
-
-  /**
-   * P0修复：执行工作流阶段
-   */
-  async executeStage(context: WorkflowExecutionContext): Promise<StageExecutionResult> {
-    const startTime = Date.now();
-
     try {
-      this.logger.info('Executing Plan stage', {
-        executionId: context.execution_id,
-        contextId: context.contextId
-      });
-
-      // 从工作流上下文创建业务协调请求
-      const businessRequest: BusinessCoordinationRequest = {
-        coordination_id: uuidv4() as UUID,
-        contextId: context.contextId,
-        module: 'plan',
-        coordination_type: 'planning_coordination',
-        input_data: context.data_store.global_data.input || {
-          data_type: 'planning_data',
-          data_version: '1.0.0',
-          payload: { contextId: context.contextId },
-          metadata: {
-            source_module: 'plan',
-            target_modules: ['plan'],
-            data_schema_version: '1.0.0',
-            validation_status: 'valid',
-            security_level: 'internal'
-          },
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        },
-        previous_stage_results: [],
-        configuration: {
-          timeout_ms: 30000,
-          retryPolicy: { max_attempts: 3, delay_ms: 1000 },
-          validationRules: [],
-          output_format: 'planning_data'
-        }
+      // 检查仓库
+      const repositoryHealthy = await this.checkRepositoryHealth();
+      
+      // 检查服务
+      const serviceHealthy = await this.checkServiceHealth();
+      
+      // 检查协议
+      const protocolHealth = await this.protocol.healthCheck();
+      const protocolHealthy = protocolHealth.status === 'healthy';
+      
+      // 检查横切关注点
+      const crossCuttingHealthy = await this.checkCrossCuttingConcernsHealth();
+      
+      const components = {
+        repository: repositoryHealthy,
+        service: serviceHealthy,
+        protocol: protocolHealthy,
+        crossCuttingConcerns: crossCuttingHealthy
       };
-
-      // 执行业务协调
-      const businessResult = await this.executeBusinessCoordination(businessRequest);
-
-      return {
-        stage: 'plan',
-        status: businessResult.status === 'completed' ? 'completed' : 'failed',
-        result: businessResult.output_data,
-        duration_ms: Date.now() - startTime,
-        startedAt: new Date(startTime).toISOString(),
-        completedAt: new Date().toISOString()
-      };
-
-    } catch (error) {
-      return {
-        stage: 'plan',
-        status: 'failed',
-        error: error instanceof Error ? error : new Error(String(error)),
-        duration_ms: Date.now() - startTime,
-        startedAt: new Date(startTime).toISOString(),
-        completedAt: new Date().toISOString()
-      };
-    }
-  }
-
-  /**
-   * P0修复：执行业务协调
-   */
-  async executeBusinessCoordination(request: BusinessCoordinationRequest): Promise<BusinessCoordinationResult> {
-    const startTime = Date.now();
-
-    try {
-      this.logger.info('Executing Plan business coordination', {
-        coordinationId: request.coordination_id,
-        contextId: request.contextId
-      });
-
-      // 转换业务协调请求为Plan协调请求
-      const planRequest: PlanningCoordinationRequest = {
-        contextId: request.contextId,
-        planning_strategy: (request.input_data.payload.planning_strategy as 'sequential' | 'parallel' | 'adaptive' | 'hierarchical') || 'sequential',
-        parameters: (request.input_data.payload.parameters as { [key: string]: unknown }) || {
-          decomposition_rules: ['Complete project objectives'],
-          resource_constraints: {
-            time_limit: 3600000,
-            resource_limit: 100
-          },
-          priority_weights: {
-            'high': 3,
-            'medium': 2,
-            'low': 1
-          }
-        }
-      };
-
-      // 执行原有的Plan协调逻辑
-      const planResult = await this.execute(planRequest);
-
-      // 转换结果为业务协调结果
-      const outputData: BusinessData = {
-        data_type: 'planning_data',
-        data_version: '1.0.0',
-        payload: planResult as unknown as Record<string, unknown>,
-        metadata: {
-          source_module: 'plan',
-          target_modules: ['confirm'],
-          data_schema_version: '1.0.0',
-          validation_status: 'valid',
-          security_level: 'internal'
-        },
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      };
-
-      return {
-        coordination_id: request.coordination_id,
-        module: 'plan',
-        status: 'completed',
-        output_data: outputData,
-        execution_metrics: {
-          start_time: new Date(startTime).toISOString(),
-          end_time: new Date().toISOString(),
-          duration_ms: Date.now() - startTime
-        },
-        timestamp: new Date().toISOString()
-      };
-
-    } catch (error) {
-      const businessError: BusinessError = {
-        error_id: uuidv4() as UUID,
-        error_type: 'business_logic_error',
-        error_code: 'PLAN_COORDINATION_FAILED',
-        error_message: error instanceof Error ? error.message : String(error),
-        source_module: 'plan',
-        context_data: { coordinationId: request.coordination_id },
-        recovery_suggestions: [
-          {
-            suggestion_type: 'retry',
-            description: 'Retry the planning coordination',
-            automated: true
-          }
-        ],
-        timestamp: new Date().toISOString()
-      };
-
-      return {
-        coordination_id: request.coordination_id,
-        module: 'plan',
-        status: 'failed',
-        output_data: request.input_data,
-        execution_metrics: {
-          start_time: new Date(startTime).toISOString(),
-          end_time: new Date().toISOString(),
-          duration_ms: Date.now() - startTime
-        },
-        error: businessError,
-        timestamp: new Date().toISOString()
-      };
-    }
-  }
-
-  /**
-   * P0修复：验证输入数据
-   */
-  async validateInput(input: BusinessData | PlanningCoordinationRequest): Promise<ValidationResult> {
-    const errors: Array<{ field_path: string; error_code: string; error_message: string }> = [];
-    const warnings: Array<{ field_path: string; warning_code: string; warning_message: string }> = [];
-
-    try {
-      // 检查输入类型并验证
-      if ('data_type' in input) {
-        // BusinessData类型
-        const businessData = input as BusinessData;
-        if (!businessData.payload) {
-          errors.push({
-            field_path: 'payload',
-            error_code: 'MISSING_PAYLOAD',
-            error_message: 'Business data payload is required'
-          });
-        }
+      
+      const healthyCount = Object.values(components).filter(Boolean).length;
+      const totalCount = Object.keys(components).length;
+      
+      let status: 'healthy' | 'degraded' | 'unhealthy';
+      if (healthyCount === totalCount) {
+        status = 'healthy';
+      } else if (healthyCount > totalCount / 2) {
+        status = 'degraded';
       } else {
-        // PlanningCoordinationRequest类型
-        const planRequest = input as PlanningCoordinationRequest;
-        if (!planRequest.contextId) {
-          errors.push({
-            field_path: 'contextId',
-            error_code: 'MISSING_CONTEXT_ID',
-            error_message: 'Context ID is required'
-          });
-        }
+        status = 'unhealthy';
       }
-
+      
       return {
-        is_valid: errors.length === 0,
-        errors,
-        warnings
+        status,
+        components,
+        timestamp
       };
-
     } catch (error) {
       return {
-        is_valid: false,
-        errors: [{
-          field_path: 'input',
-          error_code: 'VALIDATION_ERROR',
-          error_message: error instanceof Error ? error.message : String(error)
-        }],
-        warnings: []
+        status: 'unhealthy',
+        components: {
+          repository: false,
+          service: false,
+          protocol: false,
+          crossCuttingConcerns: false
+        },
+        timestamp
       };
     }
   }
 
   /**
-   * P0修复：处理错误
+   * 创建Plan实体
    */
-  async handleError(error: BusinessError, context: BusinessContext): Promise<ErrorHandlingResult> {
-    this.logger.error('Handling Plan module error', {
-      errorId: error.error_id,
-      errorType: error.error_type,
-      contextId: context.contextId
-    });
-
-    // 根据错误类型决定恢复策略
-    switch (error.error_type) {
-      case 'validation_error':
-        return {
-          handled: true,
-          recovery_action: 'retry'
-        };
-
-      case 'timeout_error':
-        return {
-          handled: true,
-          recovery_action: 'retry'
-        };
-
-      default:
-        return {
-          handled: false,
-          recovery_action: 'escalate'
-        };
-    }
+  async createPlan(data: Partial<PlanEntityData>): Promise<PlanEntity> {
+    const entity = new PlanEntity(data);
+    return await this.repository.save(entity);
   }
 
   /**
-   * 规划协调功能
+   * 获取Plan实体
    */
-  async coordinatePlanning(coordinationRequest: CoordinationRequest): Promise<OperationResult<CoordinationResult>> {
+  async getPlan(planId: UUID): Promise<PlanEntity | null> {
+    return await this.repository.findById(planId);
+  }
+
+  /**
+   * 更新Plan实体
+   */
+  async updatePlan(planId: UUID, updates: Partial<PlanEntityData>): Promise<PlanEntity> {
+    const entity = await this.repository.findById(planId);
+    if (!entity) {
+      throw new Error(`Plan with ID ${planId} not found`);
+    }
+    
+    entity.update(updates);
+    return await this.repository.update(entity);
+  }
+
+  /**
+   * 删除Plan实体
+   */
+  async deletePlan(planId: UUID): Promise<boolean> {
+    return await this.repository.delete(planId);
+  }
+
+  /**
+   * 获取模块信息
+   */
+  getModuleInfo(): {
+    name: string;
+    version: string;
+    description: string;
+    layer: string;
+    status: string;
+    features: string[];
+    dependencies: string[];
+  } {
+    return {
+      name: 'plan',
+      version: '1.0.0',
+      description: 'MPLP智能任务规划协调模块',
+      layer: 'L2',
+      status: 'implementing',
+      features: [
+        '智能任务规划',
+        '计划执行管理',
+        '任务协调',
+        '依赖管理',
+        '计划优化',
+        '风险评估',
+        '故障恢复',
+        '性能监控',
+        '审计追踪',
+        '版本历史',
+        '搜索索引',
+        '缓存策略',
+        '事件集成'
+      ],
+      dependencies: [
+        'security',
+        'performance',
+        'eventBus',
+        'errorHandler',
+        'coordination',
+        'orchestration',
+        'stateSync',
+        'transaction',
+        'protocolVersion'
+      ]
+    };
+  }
+
+  // ===== 私有辅助方法 =====
+
+  /**
+   * 检查仓库健康状态
+   */
+  private async checkRepositoryHealth(): Promise<boolean> {
     try {
-      this.logger.debug('Coordinating planning', { coordinationRequest });
-
-      // 模拟规划协调功能
-      const result = {
-        planId: `plan-${Date.now()}`,
-        strategy: coordinationRequest.strategy || 'adaptive',
-        tasks_allocated: coordinationRequest.parameters?.max_parallel_tasks || 3,
-        estimated_duration: coordinationRequest.parameters?.timeout_ms || 30000
-      };
-
-      return {
-        success: true,
-        data: result
-      };
-    } catch (error: unknown) {
-      this.logger.error('Planning coordination failed', { error, coordinationRequest });
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : 'Planning coordination failed'
-      };
+      await this.repository.count();
+      return true;
+    } catch (error) {
+      return false;
     }
+  }
+
+  /**
+   * 检查服务健康状态
+   */
+  private async checkServiceHealth(): Promise<boolean> {
+    try {
+      // 尝试创建一个测试计划并立即删除
+      const testPlan = await this.service.createPlan({
+        contextId: 'health-check-context',
+        name: 'Health Check Plan'
+      });
+      await this.service.deletePlan(testPlan.planId);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  /**
+   * 检查横切关注点健康状态
+   */
+  private async checkCrossCuttingConcernsHealth(): Promise<boolean> {
+    try {
+      const securityHealth = await this.securityManager.healthCheck();
+      const performanceHealth = await this.performanceMonitor.healthCheck();
+      const eventBusHealth = await this.eventBusManager.healthCheck();
+      const errorHandlerHealth = await this.errorHandler.healthCheck();
+
+      return securityHealth && performanceHealth && eventBusHealth && errorHandlerHealth;
+    } catch (error) {
+      return false;
+    }
+  }
+}
+
+/**
+ * Plan模块适配器工厂函数
+ *
+ * @description 创建并初始化Plan模块适配器的便捷函数
+ * @param config 适配器配置
+ * @returns 初始化完成的适配器结果
+ */
+export async function createPlanModuleAdapter(
+  config: PlanModuleAdapterConfig = {}
+): Promise<PlanModuleAdapterResult> {
+  const adapter = new PlanModuleAdapter(config);
+  return adapter.getComponents();
+}
+
+/**
+ * Plan模块适配器单例
+ *
+ * @description 提供全局单例访问的Plan模块适配器
+ */
+export class PlanModuleAdapterSingleton {
+  private static instance: PlanModuleAdapter | null = null;
+  private static config: PlanModuleAdapterConfig = {};
+
+  /**
+   * 获取单例实例
+   */
+  static getInstance(config: PlanModuleAdapterConfig = {}): PlanModuleAdapter {
+    if (!this.instance) {
+      this.config = { ...this.config, ...config };
+      this.instance = new PlanModuleAdapter(this.config);
+    }
+    return this.instance;
+  }
+
+  /**
+   * 重置单例实例
+   */
+  static reset(): void {
+    this.instance = null;
+    this.config = {};
+  }
+
+  /**
+   * 检查单例是否已初始化
+   */
+  static isInitialized(): boolean {
+    return this.instance !== null;
   }
 }

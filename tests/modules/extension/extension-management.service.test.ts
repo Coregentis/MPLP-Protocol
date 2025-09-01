@@ -1,605 +1,1223 @@
 /**
  * Extension管理服务单元测试
- * 
- * 基于Schema驱动测试原则，测试ExtensionManagementService的所有功能
- * 确保100%分支覆盖，发现并修复源代码问题
- * 
+ *
+ * @description 基于实际接口的ExtensionManagementService测试
  * @version 1.0.0
- * @created 2025-01-28T19:00:00+08:00
+ * @layer 测试层 - 单元测试
+ * @coverage 目标覆盖率 95%+
+ * @pattern 与Context、Plan、Role、Confirm模块使用IDENTICAL的测试模式
  */
 
-import { jest } from '@jest/globals';
-import { ExtensionManagementService, CreateExtensionRequest } from '../../../src/modules/extension/application/services/extension-management.service';
-import { Extension } from '../../../src/modules/extension/domain/entities/extension.entity';
-import { IExtensionRepository, ExtensionFilter, PaginationOptions, PaginatedResult } from '../../../src/modules/extension/domain/repositories/extension-repository.interface';
-import { 
-  ExtensionType, 
-  ExtensionConfiguration,
-  ExtensionPoint,
-  ExtensionPointType,
-  TargetModule
-} from '../../../src/modules/extension/types';
-import { Version } from '../../../src/public/shared/types';
-import { TestDataFactory } from '../../public/test-utils/test-data-factory';
-import { TestHelpers } from '../../public/test-utils/test-helpers';
-import { PERFORMANCE_THRESHOLDS } from '../../test-config';
+import { ExtensionManagementService } from '../../../src/modules/extension/application/services/extension-management.service';
+import { IExtensionRepository } from '../../../src/modules/extension/domain/repositories/extension.repository.interface';
+import { ExtensionEntityData, ExtensionType, ExtensionStatus } from '../../../src/modules/extension/types';
+import { UUID } from '../../../src/shared/types';
 
-describe('ExtensionManagementService', () => {
+// Mock ExtensionRepository
+const mockExtensionRepository: jest.Mocked<IExtensionRepository> = {
+  create: jest.fn(),
+  findById: jest.fn(),
+  update: jest.fn(),
+  delete: jest.fn(),
+  findByFilter: jest.fn(),
+  findByContextId: jest.fn(),
+  findByName: jest.fn(),
+  search: jest.fn(),
+  count: jest.fn(),
+  exists: jest.fn(),
+  nameExists: jest.fn(),
+  getStatistics: jest.fn(),
+  findRecentlyUpdatedExtensions: jest.fn(),
+  createBatch: jest.fn(),
+  updateBatch: jest.fn(),
+  deleteBatch: jest.fn(),
+  optimize: jest.fn()
+};
+
+describe('ExtensionManagementService测试', () => {
   let service: ExtensionManagementService;
-  let mockRepository: jest.Mocked<IExtensionRepository>;
-
-  // 辅助函数：创建有效的ExtensionConfiguration
-  const createValidConfiguration = (): ExtensionConfiguration => ({
-    schema: {
-      type: 'object',
-      properties: {
-        enabled: { type: 'boolean' },
-        debug: { type: 'boolean' },
-        timeout: { type: 'number' }
-      }
-    },
-    current_config: {
-      enabled: true,
-      debug: false,
-      timeout: 5000
-    },
-    default_config: {
-      enabled: true,
-      debug: false,
-      timeout: 3000
-    }
-  });
-
-  // 辅助函数：创建标准的Extension Schema数据
-  const createExtensionSchemaData = (overrides: Partial<Record<string, unknown>> = {}): Record<string, unknown> => {
-    const now = new Date().toISOString();
-    return {
-      protocol_version: '1.0.1',
-      timestamp: now,
-      extension_id: TestDataFactory.Base.generateUUID(),
-      context_id: TestDataFactory.Base.generateUUID(),
-      name: 'test-extension',
-      display_name: 'Test Extension',
-      description: 'Test extension description',
-      version: '1.0.0',
-      extension_type: 'plugin',
-      status: 'installed',
-      compatibility: {
-        mplp_version: '1.0.0',
-        required_modules: [],
-        dependencies: [],
-        conflicts: []
-      },
-      configuration: createValidConfiguration(),
-      extension_points: [],
-      api_extensions: [],
-      event_subscriptions: [],
-      lifecycle: {
-        install_date: now,
-        activation_count: 0,
-        error_count: 0
-      },
-      security: {
-        sandbox_enabled: true,
-        resource_limits: {}
-      },
-      metadata: {
-        author: 'Test Author',
-        license: 'MIT'
-      },
-      ...overrides
-    };
-  };
-
-  // 辅助函数：创建有效的ExtensionPoint
-  const createValidExtensionPoint = (): ExtensionPoint => ({
-    point_id: TestDataFactory.Base.generateUUID(),
-    name: 'test_hook',
-    type: 'hook' as ExtensionPointType,
-    target_module: 'context' as TargetModule,
-    event_name: 'before_context_create',
-    execution_order: 10,
-    enabled: true,
-    handler: {
-      function_name: 'handleBeforeContextCreate',
-      timeoutMs: 5000
-    },
-    conditions: {
-      when: 'context.type === "project"',
-      required_permissions: ['read:context'],
-      context_filters: { type: 'project' }
-    }
-  });
 
   beforeEach(() => {
-    // 基于实际接口创建Mock依赖
-    mockRepository = {
-      save: jest.fn(),
-      findById: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
-      findByFilter: jest.fn(),
-      findByName: jest.fn(),
-      findActiveExtensions: jest.fn(),
-      isNameUnique: jest.fn(),
-      exists: jest.fn(),
-      count: jest.fn(),
-      checkDependencies: jest.fn(),
-      findDependents: jest.fn(),
-
-    } as unknown as jest.Mocked<IExtensionRepository>;
-
-    // 创建服务实例 - 基于实际构造函数
-    service = new ExtensionManagementService(mockRepository);
-  });
-
-  afterEach(async () => {
-    // 清理测试数据
-    await TestDataFactory.Manager.cleanup();
+    // 重置所有mock
     jest.clearAllMocks();
+    
+    // 创建服务实例
+    service = new ExtensionManagementService(mockExtensionRepository);
   });
 
-  describe('createExtension', () => {
-    it('应该成功创建Extension', async () => {
-      // 准备测试数据 - 基于实际Schema
-      const createRequest: CreateExtensionRequest = {
-        context_id: TestDataFactory.Base.generateUUID(),
+  describe('createExtension方法测试', () => {
+    it('应该成功创建扩展', async () => {
+      // 📋 Arrange - 准备创建请求数据
+      const createRequest = {
+        contextId: 'ctx-test-001' as UUID,
         name: 'test-extension',
+        displayName: 'Test Extension',
+        description: 'Test extension for unit testing',
         version: '1.0.0',
-        type: 'plugin',
-        display_name: 'Test Extension',
-        description: 'A test extension for MPLP',
-        configuration: createValidConfiguration()
+        extensionType: 'plugin' as ExtensionType,
+        compatibility: {
+          mplpVersion: '1.0.0',
+          requiredModules: ['context'],
+          dependencies: [
+            {
+              name: 'test-dependency',
+              version: '1.0.0',
+              optional: false,
+              reason: 'Required for testing'
+            }
+          ],
+          conflicts: []
+        },
+        configuration: {
+          schema: { type: 'object', properties: {} },
+          currentConfig: { enabled: true },
+          defaultConfig: { enabled: false },
+          validationRules: []
+        },
+        extensionPoints: [
+          {
+            id: 'test-hook',
+            name: 'Test Hook',
+            type: 'hook' as const,
+            description: 'Test extension point',
+            parameters: [
+              {
+                name: 'data',
+                type: 'object',
+                required: true,
+                description: 'Test data parameter'
+              }
+            ],
+            returnType: 'boolean',
+            async: false,
+            executionOrder: 1
+          }
+        ],
+        apiExtensions: [],
+        eventSubscriptions: [],
+        security: {
+          sandboxEnabled: true,
+          resourceLimits: {
+            maxMemory: 100 * 1024 * 1024,
+            maxCpu: 50,
+            maxFileSize: 10 * 1024 * 1024,
+            maxNetworkConnections: 10,
+            allowedDomains: [],
+            blockedDomains: [],
+            allowedHosts: [],
+            allowedPorts: [80, 443],
+            protocols: ['http', 'https']
+          },
+          codeSigning: {
+            required: false,
+            trustedSigners: []
+          },
+          permissions: {
+            fileSystem: { read: [], write: [], execute: [] },
+            network: { allowedHosts: [], allowedPorts: [], protocols: [] },
+            database: { read: [], write: [], admin: [] },
+            api: { endpoints: [], methods: [], rateLimit: 100 }
+          }
+        },
+        metadata: {
+          author: {
+            name: 'Test Author'
+          },
+          license: {
+            type: 'MIT'
+          },
+          keywords: ['test', 'extension'],
+          category: 'testing',
+          screenshots: []
+        }
       };
 
-      // 设置Mock返回值 - 基于实际接口
-      mockRepository.isNameUnique.mockResolvedValue(true);
-      mockRepository.save.mockResolvedValue(undefined);
-
-      // 执行测试
-      const result = await TestHelpers.Performance.expectExecutionTime(
-        () => service.createExtension(createRequest),
-        PERFORMANCE_THRESHOLDS.UNIT_TEST.SERVICE_OPERATION
-      );
-
-      // 验证结果 - 基于实际返回类型
-      expect(result.success).toBe(true);
-      expect(result.data).toBeDefined();
-      expect(result.data?.name).toBe(createRequest.name);
-      expect(result.data?.version).toBe(createRequest.version);
-      expect(result.data?.type).toBe(createRequest.type);
-      expect(result.data?.displayName).toBe(createRequest.display_name);
-      expect(result.data?.description).toBe(createRequest.description);
-      expect(result.data?.configuration).toEqual(createRequest.configuration);
-      expect(mockRepository.isNameUnique).toHaveBeenCalledWith(createRequest.name, createRequest.context_id);
-      expect(mockRepository.save).toHaveBeenCalled();
-    });
-
-    it('应该处理扩展名称重复', async () => {
-      // 准备测试数据
-      const createRequest: CreateExtensionRequest = {
-        context_id: TestDataFactory.Base.generateUUID(),
-        name: 'duplicate-extension',
-        version: '1.0.0',
-        type: 'plugin'
+      const expectedExtension: ExtensionEntityData = {
+        extensionId: 'ext-generated-id' as UUID,
+        contextId: createRequest.contextId,
+        name: createRequest.name,
+        displayName: createRequest.displayName,
+        description: createRequest.description,
+        version: createRequest.version,
+        extensionType: createRequest.extensionType,
+        status: 'inactive' as ExtensionStatus,
+        protocolVersion: '1.0.0',
+        timestamp: expect.any(String),
+        compatibility: createRequest.compatibility,
+        configuration: createRequest.configuration,
+        extensionPoints: createRequest.extensionPoints,
+        apiExtensions: createRequest.apiExtensions,
+        eventSubscriptions: createRequest.eventSubscriptions,
+        lifecycle: expect.any(Object),
+        security: createRequest.security,
+        metadata: createRequest.metadata,
+        auditTrail: expect.any(Object),
+        performanceMetrics: expect.any(Object),
+        monitoringIntegration: expect.any(Object),
+        versionHistory: expect.any(Object),
+        searchMetadata: expect.any(Object),
+        eventIntegration: expect.any(Object)
       };
 
-      // 设置Mock返回值
-      mockRepository.isNameUnique.mockResolvedValue(false);
+      // Mock repository方法
+      mockExtensionRepository.nameExists.mockResolvedValue(false);
+      mockExtensionRepository.create.mockResolvedValue(expectedExtension);
 
-      // 执行测试
+      // 🎬 Act - 执行创建扩展操作
       const result = await service.createExtension(createRequest);
 
-      // 验证结果
-      expect(result.success).toBe(false);
-      expect(result.error).toBe('扩展名称已存在');
-      expect(mockRepository.save).not.toHaveBeenCalled();
-    });
-
-    it('应该处理数据库错误', async () => {
-      // 准备测试数据
-      const createRequest: CreateExtensionRequest = {
-        context_id: TestDataFactory.Base.generateUUID(),
-        name: 'test-extension',
-        version: '1.0.0',
-        type: 'plugin'
-      };
-
-      const dbError = new Error('Database connection failed');
-
-      // 设置Mock返回值
-      mockRepository.isNameUnique.mockResolvedValue(true);
-      mockRepository.save.mockRejectedValue(dbError);
-
-      // 执行测试
-      const result = await service.createExtension(createRequest);
-
-      // 验证结果
-      expect(result.success).toBe(false);
-      expect(result.error).toBe('Database connection failed');
-    });
-
-    it('应该测试边界条件', async () => {
-      const boundaryTests = [
-        {
-          name: '最小必需参数',
-          input: { 
-            context_id: TestDataFactory.Base.generateUUID(),
-            name: 'minimal-extension',
-            version: '1.0.0' as Version,
-            type: 'plugin' as ExtensionType
-          },
-          expectedSuccess: true
-        },
-        {
-          name: '包含所有可选参数',
-          input: { 
-            context_id: TestDataFactory.Base.generateUUID(),
-            name: 'full-extension',
-            version: '2.0.0' as Version,
-            type: 'middleware' as ExtensionType,
-            display_name: 'Full Featured Extension',
-            description: 'Complete extension with all features',
-            configuration: createValidConfiguration()
-          },
-          expectedSuccess: true
-        },
-        {
-          name: '不同扩展类型',
-          input: { 
-            context_id: TestDataFactory.Base.generateUUID(),
-            name: 'adapter-extension',
-            version: '1.5.0' as Version,
-            type: 'adapter' as ExtensionType
-          },
-          expectedSuccess: true
-        }
-      ];
-
-      for (const test of boundaryTests) {
-        if (test.expectedSuccess) {
-          mockRepository.isNameUnique.mockResolvedValue(true);
-          mockRepository.save.mockResolvedValue(undefined);
-
-          const result = await service.createExtension(test.input);
-          expect(result.success).toBe(true);
-          expect(result.data?.name).toBe(test.input.name);
-          expect(result.data?.version).toBe(test.input.version);
-          expect(result.data?.type).toBe(test.input.type);
-        }
-        
-        // 清理Mock状态
-        jest.clearAllMocks();
-      }
-    });
-  });
-
-  describe('getExtensionById', () => {
-    it('应该成功获取Extension', async () => {
-      // 准备测试数据
-      const extensionId = TestDataFactory.Base.generateUUID();
-      const mockExtensionSchemaData = createExtensionSchemaData({
-        extension_id: extensionId,
-        status: 'installed'
-      });
-      const mockExtension = Extension.fromSchema(mockExtensionSchemaData);
-
-      // 设置Mock返回值
-      mockRepository.findById.mockResolvedValue(mockExtension);
-
-      // 执行测试
-      const result = await TestHelpers.Performance.expectExecutionTime(
-        () => service.getExtensionById(extensionId),
-        PERFORMANCE_THRESHOLDS.UNIT_TEST.SERVICE_OPERATION
+      // ✅ Assert - 验证结果
+      expect(result).toEqual(expectedExtension);
+      expect(mockExtensionRepository.create).toHaveBeenCalledTimes(1);
+      expect(mockExtensionRepository.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: createRequest.name,
+          displayName: createRequest.displayName,
+          extensionType: createRequest.extensionType,
+          status: 'installed', // 修正状态为installed
+          contextId: createRequest.contextId
+        })
       );
-
-      // 验证结果
-      expect(result.success).toBe(true);
-      expect(result.data).toEqual(mockExtension);
-      expect(mockRepository.findById).toHaveBeenCalledWith(extensionId);
     });
 
-    it('应该处理Extension不存在的情况', async () => {
-      // 准备测试数据
-      const extensionId = TestDataFactory.Base.generateUUID();
-
-      // 设置Mock返回值
-      mockRepository.findById.mockResolvedValue(null);
-
-      // 执行测试
-      const result = await service.getExtensionById(extensionId);
-
-      // 验证结果
-      expect(result.success).toBe(false);
-      expect(result.error).toBe('扩展不存在');
-    });
-
-    it('应该处理数据库错误', async () => {
-      // 准备测试数据
-      const extensionId = TestDataFactory.Base.generateUUID();
-      const dbError = new Error('Database connection failed');
-
-      // 设置Mock返回值
-      mockRepository.findById.mockRejectedValue(dbError);
-
-      // 执行测试
-      const result = await service.getExtensionById(extensionId);
-
-      // 验证结果
-      expect(result.success).toBe(false);
-      expect(result.error).toBe('Database connection failed');
-    });
-  });
-
-  describe('activateExtension', () => {
-    it('应该成功激活Extension', async () => {
-      // 准备测试数据
-      const extensionId = TestDataFactory.Base.generateUUID();
-      const existingExtensionSchemaData = createExtensionSchemaData({
-        extension_id: extensionId,
-        status: 'installed'
-      });
-      const existingExtension = Extension.fromSchema(existingExtensionSchemaData);
-
-      // 设置Mock返回值
-      mockRepository.findById.mockResolvedValue(existingExtension);
-      mockRepository.checkDependencies.mockResolvedValue({
-        satisfied: true,
-        missing: [],
-        conflicts: []
-      });
-      mockRepository.update.mockResolvedValue(undefined);
-
-      // 执行测试
-      const result = await service.activateExtension(extensionId);
-
-      // 验证结果
-      expect(result.success).toBe(true);
-      expect(result.data).toBeDefined();
-      expect(mockRepository.findById).toHaveBeenCalledWith(extensionId);
-      expect(mockRepository.checkDependencies).toHaveBeenCalledWith(existingExtension);
-      expect(mockRepository.update).toHaveBeenCalled();
-    });
-
-    it('应该处理Extension不存在的情况', async () => {
-      // 准备测试数据
-      const extensionId = TestDataFactory.Base.generateUUID();
-
-      // 设置Mock返回值
-      mockRepository.findById.mockResolvedValue(null);
-
-      // 执行测试
-      const result = await service.activateExtension(extensionId);
-
-      // 验证结果
-      expect(result.success).toBe(false);
-      expect(result.error).toBe('扩展不存在');
-      expect(mockRepository.update).not.toHaveBeenCalled();
-    });
-
-    it('应该处理依赖不满足的情况', async () => {
-      // 准备测试数据
-      const extensionId = TestDataFactory.Base.generateUUID();
-      const existingExtensionSchemaData = createExtensionSchemaData({
-        extension_id: extensionId,
-        status: 'installed'
-      });
-      const existingExtension = Extension.fromSchema(existingExtensionSchemaData);
-
-      // 设置Mock返回值
-      mockRepository.findById.mockResolvedValue(existingExtension);
-      mockRepository.checkDependencies.mockResolvedValue({
-        satisfied: false,
-        missing: ['dependency-1', 'dependency-2'],
-        conflicts: []
-      });
-
-      // 执行测试
-      const result = await service.activateExtension(extensionId);
-
-      // 验证结果
-      expect(result.success).toBe(false);
-      expect(result.error).toBe('依赖不满足: dependency-1, dependency-2');
-      expect(mockRepository.update).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('deactivateExtension', () => {
-    it('应该成功停用Extension', async () => {
-      // 准备测试数据
-      const extensionId = TestDataFactory.Base.generateUUID();
-      const existingExtensionSchemaData = createExtensionSchemaData({
-        extension_id: extensionId,
-        status: 'active'
-      });
-      const existingExtension = Extension.fromSchema(existingExtensionSchemaData);
-
-      // 设置Mock返回值
-      mockRepository.findById.mockResolvedValue(existingExtension);
-      mockRepository.findDependents.mockResolvedValue([]);
-      mockRepository.update.mockResolvedValue(undefined);
-
-      // 执行测试
-      const result = await service.deactivateExtension(extensionId);
-
-      // 验证结果
-      expect(result.success).toBe(true);
-      expect(result.data).toBeDefined();
-      expect(mockRepository.findById).toHaveBeenCalledWith(extensionId);
-      expect(mockRepository.update).toHaveBeenCalled();
-    });
-
-    it('应该处理Extension不存在的情况', async () => {
-      // 准备测试数据
-      const extensionId = TestDataFactory.Base.generateUUID();
-
-      // 设置Mock返回值
-      mockRepository.findById.mockResolvedValue(null);
-
-      // 执行测试
-      const result = await service.deactivateExtension(extensionId);
-
-      // 验证结果
-      expect(result.success).toBe(false);
-      expect(result.error).toBe('扩展不存在');
-      expect(mockRepository.update).not.toHaveBeenCalled();
-    });
-  });
-
-
-
-  describe('queryExtensions', () => {
-    it('应该成功查询Extension列表', async () => {
-      // 准备测试数据
-      const filter: ExtensionFilter = {
-        context_id: TestDataFactory.Base.generateUUID(),
-        type: 'plugin'
+    it('应该处理创建扩展时的错误', async () => {
+      // 📋 Arrange - 准备会导致错误的请求
+      const createRequest = {
+        contextId: 'ctx-error-001' as UUID,
+        name: 'error-extension',
+        displayName: 'Error Extension',
+        version: '1.0.0',
+        extensionType: 'plugin' as ExtensionType,
+        compatibility: {
+          mplpVersion: '1.0.0',
+          requiredModules: [],
+          dependencies: [],
+          conflicts: []
+        },
+        configuration: {
+          schema: {},
+          currentConfig: {},
+          defaultConfig: {},
+          validationRules: []
+        },
+        extensionPoints: [],
+        apiExtensions: [],
+        eventSubscriptions: [],
+        security: {
+          sandboxEnabled: false,
+          resourceLimits: {
+            maxMemory: 0,
+            maxCpu: 0,
+            maxFileSize: 0,
+            maxNetworkConnections: 0,
+            allowedDomains: [],
+            blockedDomains: [],
+            allowedHosts: [],
+            allowedPorts: [],
+            protocols: []
+          },
+          codeSigning: {
+            required: false,
+            trustedSigners: []
+          },
+          permissions: {
+            fileSystem: { read: [], write: [], execute: [] },
+            network: { allowedHosts: [], allowedPorts: [], protocols: [] },
+            database: { read: [], write: [], admin: [] },
+            api: { endpoints: [], methods: [], rateLimit: 0 }
+          }
+        },
+        metadata: {
+          author: { name: '' },
+          license: { type: '' },
+          keywords: [],
+          category: '',
+          screenshots: []
+        }
       };
-      const pagination: PaginationOptions = {
+
+      // Mock repository方法
+      mockExtensionRepository.nameExists.mockResolvedValue(false);
+      const errorMessage = 'Database connection failed';
+      mockExtensionRepository.create.mockRejectedValue(new Error(errorMessage));
+
+      // 🎬 Act & Assert - 执行操作并验证错误
+      await expect(service.createExtension(createRequest)).rejects.toThrow(errorMessage);
+      expect(mockExtensionRepository.create).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('getExtensionById方法测试', () => {
+    it('应该成功获取扩展', async () => {
+      // 📋 Arrange - 准备测试数据
+      const extensionId = 'ext-test-001' as UUID;
+      const expectedExtension: ExtensionEntityData = {
+        extensionId,
+        contextId: 'ctx-test-001' as UUID,
+        name: 'test-extension',
+        displayName: 'Test Extension',
+        description: 'Test extension',
+        version: '1.0.0',
+        extensionType: 'plugin' as ExtensionType,
+        status: 'active' as ExtensionStatus,
+        protocolVersion: '1.0.0',
+        timestamp: new Date().toISOString(),
+        compatibility: {
+          mplpVersion: '1.0.0',
+          requiredModules: [],
+          dependencies: [],
+          conflicts: []
+        },
+        configuration: {
+          schema: {},
+          currentConfig: {},
+          defaultConfig: {},
+          validationRules: []
+        },
+        extensionPoints: [],
+        apiExtensions: [],
+        eventSubscriptions: [],
+        lifecycle: {
+          installDate: new Date().toISOString(),
+          lastUpdate: new Date().toISOString(),
+          activationCount: 1,
+          errorCount: 0,
+          performanceMetrics: {
+            averageResponseTime: 50,
+            throughput: 100,
+            errorRate: 0,
+            memoryUsage: 1024,
+            cpuUsage: 5,
+            lastMeasurement: new Date().toISOString()
+          },
+          healthCheck: {
+            enabled: true,
+            interval: 30000,
+            timeout: 5000,
+            healthyThreshold: 2,
+            unhealthyThreshold: 3
+          }
+        },
+        security: {
+          sandboxEnabled: true,
+          resourceLimits: {
+            maxMemory: 100 * 1024 * 1024,
+            maxCpu: 50,
+            maxFileSize: 10 * 1024 * 1024,
+            maxNetworkConnections: 10,
+            allowedDomains: [],
+            blockedDomains: []
+          },
+          codeSigning: {
+            required: false,
+            trustedSigners: []
+          },
+          permissions: {
+            fileSystem: { read: [], write: [], execute: [] },
+            network: { allowedHosts: [], allowedPorts: [], protocols: [] },
+            database: { read: [], write: [], admin: [] },
+            api: { endpoints: [], methods: [], rateLimit: 100 }
+          }
+        },
+        metadata: {
+          author: { name: 'Test Author' },
+          license: { type: 'MIT' },
+          keywords: ['test'],
+          category: 'testing',
+          screenshots: []
+        },
+        auditTrail: {
+          events: [],
+          complianceSettings: {
+            retentionPeriod: 365,
+            encryptionRequired: false,
+            auditLevel: 'standard'
+          }
+        },
+        performanceMetrics: {
+          activationLatency: 100,
+          executionTime: 50,
+          memoryFootprint: 1024,
+          cpuUtilization: 5,
+          networkLatency: 10,
+          errorRate: 0,
+          throughput: 100,
+          availability: 99.9,
+          efficiencyScore: 95,
+          healthStatus: 'healthy',
+          alerts: []
+        },
+        monitoringIntegration: {
+          providers: ['prometheus'],
+          endpoints: [],
+          dashboards: [],
+          alerting: {
+            enabled: true,
+            channels: ['email'],
+            thresholds: {
+              errorRate: 5,
+              responseTime: 1000,
+              availability: 95
+            }
+          }
+        },
+        versionHistory: {
+          versions: [],
+          autoVersioning: {
+            enabled: false,
+            strategy: 'semantic',
+            triggers: ['api_change']
+          }
+        },
+        searchMetadata: {
+          indexedFields: ['name', 'description'],
+          searchStrategies: [],
+          facets: []
+        },
+        eventIntegration: {
+          eventBus: {
+            provider: 'internal',
+            connectionString: '',
+            topics: []
+          },
+          eventRouting: {
+            rules: [],
+            defaultRoute: 'default'
+          },
+          eventTransformation: {
+            enabled: false,
+            rules: []
+          }
+        }
+      };
+
+      // Mock repository findById方法
+      mockExtensionRepository.findById.mockResolvedValue(expectedExtension);
+
+      // 🎬 Act - 执行获取扩展操作
+      const result = await service.getExtensionById(extensionId);
+
+      // ✅ Assert - 验证结果
+      expect(result).toEqual(expectedExtension);
+      expect(mockExtensionRepository.findById).toHaveBeenCalledTimes(1);
+      expect(mockExtensionRepository.findById).toHaveBeenCalledWith(extensionId);
+    });
+
+    it('应该处理扩展不存在的情况', async () => {
+      // 📋 Arrange - 准备不存在的扩展ID
+      const extensionId = 'ext-nonexistent-001' as UUID;
+
+      // Mock repository findById方法返回null
+      mockExtensionRepository.findById.mockResolvedValue(null);
+
+      // 🎬 Act - 执行获取扩展操作
+      const result = await service.getExtensionById(extensionId);
+
+      // ✅ Assert - 验证结果为null
+      expect(result).toBeNull();
+      expect(mockExtensionRepository.findById).toHaveBeenCalledTimes(1);
+      expect(mockExtensionRepository.findById).toHaveBeenCalledWith(extensionId);
+    });
+  });
+
+  describe('updateExtension方法测试', () => {
+    it('应该成功更新扩展', async () => {
+      // 📋 Arrange - 准备更新请求
+      const updateRequest = {
+        extensionId: 'ext-update-001' as UUID,
+        displayName: 'Updated Extension',
+        description: 'Updated description',
+        configuration: {
+          enabled: false,
+          maxConnections: 50
+        },
+        metadata: {
+          author: 'Updated Author',
+          license: 'Apache-2.0',
+          keywords: ['updated', 'test'],
+          category: 'updated-category'
+        }
+      };
+
+      const existingExtension: ExtensionEntityData = {
+        extensionId: updateRequest.extensionId,
+        contextId: 'ctx-update-001' as UUID,
+        name: 'update-extension',
+        displayName: 'Original Extension',
+        description: 'Original description',
+        version: '1.0.0',
+        extensionType: 'plugin' as ExtensionType,
+        status: 'active' as ExtensionStatus,
+        protocolVersion: '1.0.0',
+        timestamp: new Date().toISOString(),
+        compatibility: {
+          mplpVersion: '1.0.0',
+          requiredModules: [],
+          dependencies: [],
+          conflicts: []
+        },
+        configuration: {
+          schema: {},
+          currentConfig: {},
+          defaultConfig: {},
+          validationRules: []
+        },
+        extensionPoints: [],
+        apiExtensions: [],
+        eventSubscriptions: [],
+        lifecycle: {
+          installDate: new Date().toISOString(),
+          lastUpdate: new Date().toISOString(),
+          activationCount: 1,
+          errorCount: 0,
+          performanceMetrics: {
+            averageResponseTime: 50,
+            throughput: 100,
+            errorRate: 0,
+            memoryUsage: 1024,
+            cpuUsage: 5,
+            lastMeasurement: new Date().toISOString()
+          },
+          healthCheck: {
+            enabled: true,
+            interval: 60000,
+            timeout: 5000,
+            healthyThreshold: 3,
+            unhealthyThreshold: 3,
+            expectedStatus: 200
+          }
+        },
+        security: {
+          sandboxEnabled: true,
+          resourceLimits: {
+            maxMemory: 100 * 1024 * 1024,
+            maxCpu: 50,
+            maxFileSize: 10 * 1024 * 1024,
+            maxNetworkConnections: 10,
+            allowedDomains: [],
+            blockedDomains: [],
+            allowedHosts: [],
+            allowedPorts: [80, 443],
+            protocols: ['http', 'https']
+          },
+          codeSigning: {
+            required: false,
+            trustedSigners: []
+          },
+          permissions: {
+            fileSystem: { read: [], write: [], execute: [] },
+            network: { allowedHosts: [], allowedPorts: [], protocols: [] },
+            database: { read: [], write: [], admin: [] },
+            api: { endpoints: [], methods: [], rateLimit: 100 }
+          }
+        },
+        metadata: {
+          author: { name: 'Original Author' },
+          license: { type: 'MIT' },
+          keywords: ['original', 'test'],
+          category: 'original-category',
+          screenshots: []
+        },
+        auditTrail: {
+          events: [],
+          complianceSettings: {
+            accessLogging: true,
+            dataClassification: 'internal',
+            retentionPeriod: 365,
+            encryptionEnabled: true
+          }
+        },
+        performanceMetrics: {
+          activationLatency: 50,
+          executionTime: 25,
+          memoryFootprint: 512,
+          cpuUtilization: 3,
+          networkLatency: 5,
+          errorRate: 0,
+          throughput: 200,
+          availability: 99.9,
+          efficiencyScore: 98,
+          healthStatus: 'healthy',
+          alerts: []
+        },
+        monitoringIntegration: {
+          providers: ['prometheus'],
+          endpoints: [],
+          dashboards: [],
+          alerting: {
+            enabled: true,
+            channels: ['email'],
+            rules: []
+          }
+        },
+        versionHistory: {
+          versions: [],
+          autoVersioning: {
+            enabled: false,
+            strategy: 'semantic',
+            prerelease: false,
+            buildMetadata: false
+          }
+        },
+        searchMetadata: {
+          indexedFields: ['name', 'description'],
+          searchStrategies: [],
+          facets: []
+        },
+        eventIntegration: {
+          eventBus: {
+            provider: 'internal',
+            connectionString: '',
+            topics: []
+          },
+          eventRouting: {
+            rules: [],
+            errorHandling: {
+              strategy: 'retry',
+              maxRetries: 3,
+              backoffStrategy: 'exponential'
+            }
+          },
+          eventTransformation: {
+            enabled: false,
+            transformers: []
+          }
+        }
+      };
+
+      const updatedExtension: ExtensionEntityData = {
+        extensionId: updateRequest.extensionId,
+        contextId: 'ctx-update-001' as UUID,
+        name: 'update-extension',
+        displayName: updateRequest.displayName!,
+        description: updateRequest.description,
+        version: '1.1.0',
+        extensionType: 'plugin' as ExtensionType,
+        status: 'active' as ExtensionStatus,
+        protocolVersion: '1.0.0',
+        timestamp: new Date().toISOString(),
+        compatibility: {
+          mplpVersion: '1.0.0',
+          requiredModules: [],
+          dependencies: [],
+          conflicts: []
+        },
+        configuration: {
+          schema: {},
+          currentConfig: updateRequest.configuration!,
+          defaultConfig: {},
+          validationRules: []
+        },
+        extensionPoints: [],
+        apiExtensions: [],
+        eventSubscriptions: [],
+        lifecycle: {
+          installDate: new Date().toISOString(),
+          lastUpdate: new Date().toISOString(),
+          activationCount: 1,
+          errorCount: 0,
+          performanceMetrics: {
+            averageResponseTime: 50,
+            throughput: 100,
+            errorRate: 0,
+            memoryUsage: 1024,
+            cpuUsage: 5,
+            lastMeasurement: new Date().toISOString()
+          },
+          healthCheck: {
+            enabled: true,
+            interval: 30000,
+            timeout: 5000,
+            healthyThreshold: 2,
+            unhealthyThreshold: 3
+          }
+        },
+        security: {
+          sandboxEnabled: true,
+          resourceLimits: {
+            maxMemory: 100 * 1024 * 1024,
+            maxCpu: 50,
+            maxFileSize: 10 * 1024 * 1024,
+            maxNetworkConnections: 10,
+            allowedDomains: [],
+            blockedDomains: []
+          },
+          codeSigning: {
+            required: false,
+            trustedSigners: []
+          },
+          permissions: {
+            fileSystem: { read: [], write: [], execute: [] },
+            network: { allowedHosts: [], allowedPorts: [], protocols: [] },
+            database: { read: [], write: [], admin: [] },
+            api: { endpoints: [], methods: [], rateLimit: 100 }
+          }
+        },
+        metadata: {
+          author: { name: updateRequest.metadata!.author! },
+          license: { type: updateRequest.metadata!.license! },
+          keywords: updateRequest.metadata!.keywords!,
+          category: updateRequest.metadata!.category!,
+          screenshots: []
+        },
+        auditTrail: {
+          events: [],
+          complianceSettings: {
+            retentionPeriod: 365,
+            encryptionRequired: false,
+            auditLevel: 'standard'
+          }
+        },
+        performanceMetrics: {
+          activationLatency: 100,
+          executionTime: 50,
+          memoryFootprint: 1024,
+          cpuUtilization: 5,
+          networkLatency: 10,
+          errorRate: 0,
+          throughput: 100,
+          availability: 99.9,
+          efficiencyScore: 95,
+          healthStatus: 'healthy',
+          alerts: []
+        },
+        monitoringIntegration: {
+          providers: ['prometheus'],
+          endpoints: [],
+          dashboards: [],
+          alerting: {
+            enabled: true,
+            channels: ['email'],
+            thresholds: {
+              errorRate: 5,
+              responseTime: 1000,
+              availability: 95
+            }
+          }
+        },
+        versionHistory: {
+          versions: [],
+          autoVersioning: {
+            enabled: false,
+            strategy: 'semantic',
+            triggers: ['api_change']
+          }
+        },
+        searchMetadata: {
+          indexedFields: ['name', 'description'],
+          searchStrategies: [],
+          facets: []
+        },
+        eventIntegration: {
+          eventBus: {
+            provider: 'internal',
+            connectionString: '',
+            topics: []
+          },
+          eventRouting: {
+            rules: [],
+            defaultRoute: 'default'
+          },
+          eventTransformation: {
+            enabled: false,
+            rules: []
+          }
+        }
+      };
+
+      // Mock repository方法
+      mockExtensionRepository.findById.mockResolvedValue(existingExtension);
+      mockExtensionRepository.update.mockResolvedValue(updatedExtension);
+
+      // 🎬 Act - 执行更新扩展操作
+      const result = await service.updateExtension(updateRequest);
+
+      // ✅ Assert - 验证结果
+      expect(result).toEqual(updatedExtension);
+      expect(mockExtensionRepository.update).toHaveBeenCalledTimes(1);
+      expect(mockExtensionRepository.update).toHaveBeenCalledWith(
+        updateRequest.extensionId,
+        expect.objectContaining({
+          extensionId: updateRequest.extensionId,
+          contextId: 'ctx-update-001',
+          name: 'update-extension'
+          // 注意：实际的更新数据包含完整的实体数据，不只是更新的字段
+        })
+      );
+    });
+  });
+
+  describe('deleteExtension方法测试', () => {
+    it('应该成功删除扩展', async () => {
+      // 📋 Arrange - 准备删除的扩展ID
+      const extensionId = 'ext-delete-001' as UUID;
+
+      // Mock repository方法
+      const mockExtension = {
+        extensionId,
+        status: 'inactive' as ExtensionStatus
+      } as ExtensionEntityData;
+      mockExtensionRepository.findById.mockResolvedValue(mockExtension);
+      mockExtensionRepository.delete.mockResolvedValue(true);
+
+      // 🎬 Act - 执行删除扩展操作
+      const result = await service.deleteExtension(extensionId);
+
+      // ✅ Assert - 验证结果
+      expect(result).toBe(true);
+      expect(mockExtensionRepository.delete).toHaveBeenCalledTimes(1);
+      expect(mockExtensionRepository.delete).toHaveBeenCalledWith(extensionId);
+    });
+
+    it('应该处理删除不存在扩展的情况', async () => {
+      // 📋 Arrange - 准备不存在的扩展ID
+      const extensionId = 'ext-nonexistent-delete-001' as UUID;
+
+      // Mock repository方法
+      mockExtensionRepository.findById.mockResolvedValue(null);
+
+      // 🎬 Act - 执行删除扩展操作
+      const result = await service.deleteExtension(extensionId);
+
+      // ✅ Assert - 验证返回false而不是抛出错误
+      expect(result).toBe(false);
+      // 注意：delete方法不应该被调用，因为扩展不存在，服务应该返回false
+      expect(mockExtensionRepository.delete).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('activateExtension方法测试', () => {
+    it('应该成功激活扩展', async () => {
+      // 📋 Arrange - 准备激活请求
+      const activationRequest = {
+        extensionId: 'ext-activate-001' as UUID,
+        userId: 'user-001' as UUID
+      };
+
+      // Mock repository方法
+      const mockExtension = {
+        extensionId: activationRequest.extensionId,
+        contextId: 'ctx-test-001' as UUID,
+        name: 'test-extension',
+        displayName: 'Test Extension',
+        description: 'Test extension',
+        version: '1.0.0',
+        extensionType: 'plugin' as ExtensionType,
+        status: 'inactive' as ExtensionStatus,
+        timestamp: new Date().toISOString(),
+        protocolVersion: '1.0.0',
+        compatibility: {
+          mplpVersion: '1.0.0',
+          requiredModules: [],
+          dependencies: [],
+          conflicts: []
+        },
+        configuration: {
+          schema: {},
+          currentConfig: {},
+          defaultConfig: {},
+          validationRules: []
+        },
+        extensionPoints: [],
+        apiExtensions: [],
+        eventSubscriptions: [],
+        lifecycle: {
+          installDate: new Date().toISOString(),
+          lastUpdate: new Date().toISOString(),
+          activationCount: 0,
+          errorCount: 0,
+          performanceMetrics: {
+            averageResponseTime: 0,
+            throughput: 0,
+            errorRate: 0,
+            memoryUsage: 0,
+            cpuUsage: 0,
+            lastMeasurement: new Date().toISOString()
+          },
+          healthCheck: {
+            enabled: true,
+            interval: 60000,
+            timeout: 5000,
+            healthyThreshold: 3,
+            unhealthyThreshold: 3,
+            expectedStatus: 200
+          }
+        },
+        security: {
+          sandboxEnabled: true,
+          resourceLimits: {
+            maxMemory: 100 * 1024 * 1024,
+            maxCpu: 50,
+            maxFileSize: 10 * 1024 * 1024,
+            maxNetworkConnections: 10,
+            allowedDomains: [],
+            blockedDomains: [],
+            allowedHosts: [],
+            allowedPorts: [80, 443],
+            protocols: ['http', 'https']
+          },
+          codeSigning: {
+            required: false,
+            trustedSigners: []
+          },
+          permissions: {
+            fileSystem: { read: [], write: [], execute: [] },
+            network: { allowedHosts: [], allowedPorts: [], protocols: [] },
+            database: { read: [], write: [], admin: [] },
+            api: { endpoints: [], methods: [], rateLimit: 100 }
+          }
+        },
+        metadata: {
+          author: { name: 'Test Author' },
+          license: { type: 'MIT' },
+          keywords: ['test'],
+          category: 'testing',
+          screenshots: []
+        },
+        auditTrail: {
+          events: [],
+          complianceSettings: {
+            accessLogging: true,
+            dataClassification: 'internal',
+            retentionPeriod: 365,
+            encryptionEnabled: true
+          }
+        },
+        performanceMetrics: {
+          activationLatency: 0,
+          executionTime: 0,
+          memoryFootprint: 0,
+          cpuUtilization: 0,
+          networkLatency: 0,
+          errorRate: 0,
+          throughput: 0,
+          availability: 1,
+          efficiencyScore: 1,
+          healthStatus: 'healthy',
+          alerts: []
+        },
+        monitoringIntegration: {
+          providers: [],
+          endpoints: [],
+          dashboards: [],
+          alerting: {
+            enabled: false,
+            channels: [],
+            rules: []
+          }
+        },
+        versionHistory: {
+          versions: [],
+          autoVersioning: {
+            enabled: false,
+            strategy: 'semantic',
+            prerelease: false,
+            buildMetadata: false
+          }
+        },
+        searchMetadata: {
+          indexedFields: ['name', 'description'],
+          searchStrategies: [],
+          facets: []
+        },
+        eventIntegration: {
+          eventBus: {
+            provider: 'custom',
+            connectionString: '',
+            topics: []
+          },
+          eventRouting: {
+            rules: [],
+            errorHandling: {
+              strategy: 'retry',
+              maxRetries: 3,
+              backoffStrategy: 'exponential'
+            }
+          },
+          eventTransformation: {
+            enabled: false,
+            transformers: []
+          }
+        }
+      } as ExtensionEntityData;
+      mockExtensionRepository.findById.mockResolvedValue(mockExtension);
+      mockExtensionRepository.update.mockResolvedValue({
+        ...mockExtension,
+        status: 'active' as ExtensionStatus
+      });
+
+      // 🎬 Act - 执行激活扩展操作
+      const result = await service.activateExtension(activationRequest);
+
+      // ✅ Assert - 验证结果
+      expect(result).toBe(true);
+    });
+  });
+
+  describe('deactivateExtension方法测试', () => {
+    it('应该成功停用扩展', async () => {
+      // 📋 Arrange - 准备停用的扩展ID和用户ID
+      const extensionId = 'ext-deactivate-001' as UUID;
+      const userId = 'user-001' as UUID;
+
+      // Mock repository方法 - 使用与激活测试相同的完整结构
+      const mockExtension = {
+        extensionId,
+        contextId: 'ctx-test-001' as UUID,
+        name: 'test-extension',
+        displayName: 'Test Extension',
+        description: 'Test extension',
+        version: '1.0.0',
+        extensionType: 'plugin' as ExtensionType,
+        status: 'active' as ExtensionStatus,
+        timestamp: new Date().toISOString(),
+        protocolVersion: '1.0.0',
+        compatibility: {
+          mplpVersion: '1.0.0',
+          requiredModules: [],
+          dependencies: [],
+          conflicts: []
+        },
+        configuration: {
+          schema: {},
+          currentConfig: {},
+          defaultConfig: {},
+          validationRules: []
+        },
+        extensionPoints: [],
+        apiExtensions: [],
+        eventSubscriptions: [],
+        lifecycle: {
+          installDate: new Date().toISOString(),
+          lastUpdate: new Date().toISOString(),
+          activationCount: 1,
+          errorCount: 0,
+          performanceMetrics: {
+            averageResponseTime: 50,
+            throughput: 100,
+            errorRate: 0,
+            memoryUsage: 1024,
+            cpuUsage: 5,
+            lastMeasurement: new Date().toISOString()
+          },
+          healthCheck: {
+            enabled: true,
+            interval: 60000,
+            timeout: 5000,
+            healthyThreshold: 3,
+            unhealthyThreshold: 3,
+            expectedStatus: 200
+          }
+        },
+        security: {
+          sandboxEnabled: true,
+          resourceLimits: {
+            maxMemory: 100 * 1024 * 1024,
+            maxCpu: 50,
+            maxFileSize: 10 * 1024 * 1024,
+            maxNetworkConnections: 10,
+            allowedDomains: [],
+            blockedDomains: [],
+            allowedHosts: [],
+            allowedPorts: [80, 443],
+            protocols: ['http', 'https']
+          },
+          codeSigning: {
+            required: false,
+            trustedSigners: []
+          },
+          permissions: {
+            fileSystem: { read: [], write: [], execute: [] },
+            network: { allowedHosts: [], allowedPorts: [], protocols: [] },
+            database: { read: [], write: [], admin: [] },
+            api: { endpoints: [], methods: [], rateLimit: 100 }
+          }
+        },
+        metadata: {
+          author: { name: 'Test Author' },
+          license: { type: 'MIT' },
+          keywords: ['test'],
+          category: 'testing',
+          screenshots: []
+        },
+        auditTrail: {
+          events: [],
+          complianceSettings: {
+            accessLogging: true,
+            dataClassification: 'internal',
+            retentionPeriod: 365,
+            encryptionEnabled: true
+          }
+        },
+        performanceMetrics: {
+          activationLatency: 50,
+          executionTime: 25,
+          memoryFootprint: 512,
+          cpuUtilization: 3,
+          networkLatency: 5,
+          errorRate: 0,
+          throughput: 200,
+          availability: 99.9,
+          efficiencyScore: 98,
+          healthStatus: 'healthy',
+          alerts: []
+        },
+        monitoringIntegration: {
+          providers: ['prometheus'],
+          endpoints: [],
+          dashboards: [],
+          alerting: {
+            enabled: true,
+            channels: ['email'],
+            rules: []
+          }
+        },
+        versionHistory: {
+          versions: [],
+          autoVersioning: {
+            enabled: false,
+            strategy: 'semantic',
+            prerelease: false,
+            buildMetadata: false
+          }
+        },
+        searchMetadata: {
+          indexedFields: ['name', 'description'],
+          searchStrategies: [],
+          facets: []
+        },
+        eventIntegration: {
+          eventBus: {
+            provider: 'custom',
+            connectionString: '',
+            topics: []
+          },
+          eventRouting: {
+            rules: [],
+            errorHandling: {
+              strategy: 'retry',
+              maxRetries: 3,
+              backoffStrategy: 'exponential'
+            }
+          },
+          eventTransformation: {
+            enabled: false,
+            transformers: []
+          }
+        }
+      } as ExtensionEntityData;
+      mockExtensionRepository.findById.mockResolvedValue(mockExtension);
+      mockExtensionRepository.update.mockResolvedValue({
+        ...mockExtension,
+        status: 'inactive' as ExtensionStatus
+      });
+
+      // 🎬 Act - 执行停用扩展操作
+      const result = await service.deactivateExtension(extensionId, userId);
+
+      // ✅ Assert - 验证结果
+      expect(result).toBe(true);
+    });
+  });
+
+  describe('queryExtensions方法测试', () => {
+    it('应该成功查询扩展列表', async () => {
+      // 📋 Arrange - 准备查询参数
+      const filter = {
+        contextId: 'ctx-query-001' as UUID,
+        extensionType: 'plugin' as ExtensionType,
+        status: 'active' as ExtensionStatus
+      };
+
+      const pagination = {
         page: 1,
         limit: 10
       };
 
-      const mockResult: PaginatedResult<Extension> = {
-        items: [],
-        total: 0,
+      const sort = [
+        {
+          field: 'name',
+          direction: 'asc' as const
+        }
+      ];
+
+      const expectedResult = {
+        extensions: [
+          {
+            extensionId: 'ext-query-001' as UUID,
+            name: 'query-extension-1',
+            displayName: 'Query Extension 1',
+            extensionType: 'plugin' as ExtensionType,
+            status: 'active' as ExtensionStatus
+          },
+          {
+            extensionId: 'ext-query-002' as UUID,
+            name: 'query-extension-2',
+            displayName: 'Query Extension 2',
+            extensionType: 'plugin' as ExtensionType,
+            status: 'active' as ExtensionStatus
+          }
+        ] as ExtensionEntityData[],
+        total: 2,
         page: 1,
         limit: 10,
-        total_pages: 0
+        hasMore: false
       };
 
-      // 设置Mock返回值
-      mockRepository.findByFilter.mockResolvedValue(mockResult);
+      // Mock repository findByFilter方法
+      mockExtensionRepository.findByFilter.mockResolvedValue(expectedResult);
 
-      // 执行测试
-      const result = await service.queryExtensions(filter, pagination);
+      // 🎬 Act - 执行查询扩展操作
+      const result = await service.queryExtensions(filter, pagination, sort);
 
-      // 验证结果
-      expect(result.success).toBe(true);
-      expect(result.data).toEqual(mockResult);
-      expect(mockRepository.findByFilter).toHaveBeenCalledWith(filter, pagination);
-    });
-
-    it('应该处理无分页参数的查询', async () => {
-      // 准备测试数据
-      const filter: ExtensionFilter = {
-        status: 'active'
-      };
-
-      const mockResult: PaginatedResult<Extension> = {
-        items: [],
-        total: 0,
-        page: 1,
-        limit: 50,
-        total_pages: 0
-      };
-
-      // 设置Mock返回值
-      mockRepository.findByFilter.mockResolvedValue(mockResult);
-
-      // 执行测试
-      const result = await service.queryExtensions(filter);
-
-      // 验证结果
-      expect(result.success).toBe(true);
-      expect(result.data).toEqual(mockResult);
-      expect(mockRepository.findByFilter).toHaveBeenCalledWith(filter, undefined);
+      // ✅ Assert - 验证结果
+      expect(result).toEqual(expectedResult);
+      expect(mockExtensionRepository.findByFilter).toHaveBeenCalledTimes(1);
+      expect(mockExtensionRepository.findByFilter).toHaveBeenCalledWith(filter, pagination, sort);
     });
   });
 
-  describe('getActiveExtensions', () => {
-    it('应该成功获取活跃扩展', async () => {
-      // 准备测试数据
-      const contextId = TestDataFactory.Base.generateUUID();
-      const mockExtensions: Extension[] = [];
+  describe('getHealthStatus方法测试', () => {
+    it('应该返回健康状态', async () => {
+      // 📋 Arrange - 准备Mock数据
+      const mockStats = {
+        totalExtensions: 10,
+        activeExtensions: 8,
+        inactiveExtensions: 2,
+        errorExtensions: 0,
+        averagePerformanceMetrics: {
+          responseTime: 50,
+          errorRate: 0,
+          throughput: 100
+        }
+      };
 
-      // 设置Mock返回值
-      mockRepository.findActiveExtensions.mockResolvedValue(mockExtensions);
+      const mockRecentExtensions = [
+        {
+          extensionId: 'ext-recent-001' as UUID,
+          timestamp: new Date().toISOString()
+        }
+      ];
 
-      // 执行测试
-      const result = await service.getActiveExtensions(contextId);
+      // Mock repository方法
+      mockExtensionRepository.getStatistics.mockResolvedValue(mockStats);
+      mockExtensionRepository.findRecentlyUpdatedExtensions.mockResolvedValue(mockRecentExtensions);
 
-      // 验证结果
-      expect(result.success).toBe(true);
-      expect(result.data).toEqual(mockExtensions);
-      expect(mockRepository.findActiveExtensions).toHaveBeenCalledWith(contextId);
-    });
+      // 🎬 Act - 执行获取健康状态操作
+      const result = await service.getHealthStatus();
 
-    it('应该处理无上下文ID的查询', async () => {
-      // 准备测试数据
-      const mockExtensions: Extension[] = [];
-
-      // 设置Mock返回值
-      mockRepository.findActiveExtensions.mockResolvedValue(mockExtensions);
-
-      // 执行测试
-      const result = await service.getActiveExtensions();
-
-      // 验证结果
-      expect(result.success).toBe(true);
-      expect(result.data).toEqual(mockExtensions);
-      expect(mockRepository.findActiveExtensions).toHaveBeenCalledWith(undefined);
-    });
-
-    it('应该处理数据库错误', async () => {
-      // 准备测试数据
-      const contextId = TestDataFactory.Base.generateUUID();
-      const dbError = new Error('Database connection failed');
-
-      // 设置Mock返回值
-      mockRepository.findActiveExtensions.mockRejectedValue(dbError);
-
-      // 执行测试
-      const result = await service.getActiveExtensions(contextId);
-
-      // 验证结果
-      expect(result.success).toBe(false);
-      expect(result.error).toBe('Database connection failed');
-    });
-  });
-
-  describe('addExtensionPoint', () => {
-    it('应该成功为扩展添加扩展点', async () => {
-      // 准备测试数据
-      const extensionId = TestDataFactory.Base.generateUUID();
-      const existingExtensionSchemaData = createExtensionSchemaData({
-        extension_id: extensionId,
-        status: 'installed'
+      // ✅ Assert - 验证结果
+      expect(result).toMatchObject({
+        status: 'healthy',
+        timestamp: expect.any(String),
+        details: expect.any(Object)
       });
-      const existingExtension = Extension.fromSchema(existingExtensionSchemaData);
-
-      const newExtensionPoint = createValidExtensionPoint();
-
-      // 设置Mock返回值
-      mockRepository.findById.mockResolvedValue(existingExtension);
-      mockRepository.update.mockResolvedValue(undefined);
-
-      // 执行测试
-      const result = await service.addExtensionPoint(extensionId, newExtensionPoint);
-
-      // 验证结果
-      expect(result.success).toBe(true);
-      expect(mockRepository.findById).toHaveBeenCalledWith(extensionId);
-      expect(mockRepository.update).toHaveBeenCalled();
-    });
-
-    it('应该处理扩展不存在的情况', async () => {
-      // 准备测试数据
-      const extensionId = TestDataFactory.Base.generateUUID();
-      const extensionPoint = createValidExtensionPoint();
-
-      // 设置Mock返回值
-      mockRepository.findById.mockResolvedValue(null);
-
-      // 执行测试
-      const result = await service.addExtensionPoint(extensionId, extensionPoint);
-
-      // 验证结果
-      expect(result.success).toBe(false);
-      expect(result.error).toBe('扩展不存在');
-      expect(mockRepository.update).not.toHaveBeenCalled();
+      expect(result.details.service).toBe('ExtensionManagementService');
+      expect(result.details.version).toBe('1.0.0');
+      expect(result.details.repository.extensionCount).toBe(10);
+      expect(result.details.repository.activeExtensions).toBe(8);
+      expect(result.details.performance.averageResponseTime).toBe(50);
+      expect(result.details.performance.errorRate).toBe(0);
     });
   });
-
-
 });

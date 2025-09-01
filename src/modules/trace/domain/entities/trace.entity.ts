@@ -1,300 +1,346 @@
 /**
  * Trace领域实体
  * 
- * 追踪记录的核心领域实体，封装追踪业务逻辑和不变性约束
- * 
+ * @description Trace模块的核心领域实体，包含业务逻辑和不变量
  * @version 1.0.0
- * @created 2025-09-16
+ * @layer 领域层 - 实体
+ * @pattern 基于Context模块的IDENTICAL企业级模式
  */
 
-import { UUID, Timestamp } from '../../../../public/shared/types';
 import {
+  TraceEntityData,
   TraceType,
-  TraceSeverity,
-  TraceEvent,
-  PerformanceMetrics,
-  ErrorInformation,
-  Correlation,
-  TraceMetadata,
+  Severity,
+  EventType,
+  EventCategory,
+  TraceOperation,
+  EventObject,
   ContextSnapshot,
-  DecisionLog
+  ErrorInformation,
+  DecisionLog,
+  TraceDetails,
+  SpanEntity,
+  TraceStatistics
 } from '../../types';
+import { UUID, Timestamp } from '../../../../shared/types';
 
 /**
  * Trace领域实体
+ * 
+ * @description 封装Trace的业务逻辑和不变量
  */
-export class Trace {
-  private _trace_id: UUID;
-  private _context_id: UUID;
-  private _plan_id?: UUID;
-  private _protocol_version: string;
-  private _trace_type: TraceType;
-  private _severity: TraceSeverity;
-  private _event: TraceEvent;
-  private _timestamp: Timestamp;
-  private _performance_metrics?: PerformanceMetrics;
-  private _error_information?: ErrorInformation;
-  private _correlations: Correlation[];
-  private _metadata?: TraceMetadata;
-  private _created_at: Timestamp;
-  private _updated_at: Timestamp;
+export class TraceEntity {
+  private data: TraceEntityData;
 
-    /**
-   * 任务ID
-   */
-  public taskId?: string;
-
-  /**
-   * 上下文快照
-   */
-  private _context_snapshot?: ContextSnapshot;
-
-  /**
-   * 决策日志
-   */
-  private _decision_log?: DecisionLog;
-
-constructor(
-    traceId: UUID,
-    contextId: UUID,
-    protocolVersion: string,
-    traceType: TraceType,
-    severity: TraceSeverity,
-    event: TraceEvent,
-    timestamp: Timestamp,
-    createdAt: Timestamp,
-    updatedAt: Timestamp,
-    planId?: UUID,
-    performanceMetrics?: PerformanceMetrics,
-    errorInformation?: ErrorInformation,
-    correlations: Correlation[] = [],
-    metadata?: TraceMetadata,
-    contextSnapshot?: ContextSnapshot,
-    decisionLog?: DecisionLog
-  ) {
-    this._trace_id = traceId;
-    this._context_id = contextId;
-    this._plan_id = planId;
-    this._protocol_version = protocolVersion;
-    this._trace_type = traceType;
-    this._severity = severity;
-    this._event = event;
-    this._timestamp = timestamp;
-    this._performance_metrics = performanceMetrics;
-    this._error_information = errorInformation;
-    this._correlations = correlations;
-    this._metadata = metadata;
-    this._created_at = createdAt;
-    this._updated_at = updatedAt;
-    this._context_snapshot = contextSnapshot;
-    this._decision_log = decisionLog;
-
+  constructor(data: Partial<TraceEntityData>) {
+    this.data = this.initializeData(data);
     this.validateInvariants();
   }
 
-  // Getters
-  get traceId(): UUID { return this._trace_id; }
-  get contextId(): UUID { return this._context_id; }
-  get planId(): UUID | undefined { return this._plan_id; }
-  get protocolVersion(): string { return this._protocol_version; }
-  get traceType(): TraceType { return this._trace_type; }
-  get severity(): TraceSeverity { return this._severity; }
-  get event(): TraceEvent { return this._event; }
-  get timestamp(): Timestamp { return this._timestamp; }
-  get performanceMetrics(): PerformanceMetrics | undefined { return this._performance_metrics; }
-  get errorInformation(): ErrorInformation | undefined { return this._error_information; }
-  get correlations(): Correlation[] { return [...this._correlations]; }
-  get metadata(): TraceMetadata | undefined { return this._metadata; }
-  get createdAt(): Timestamp { return this._created_at; }
-  get updatedAt(): Timestamp { return this._updated_at; }
-  get contextSnapshot(): ContextSnapshot | undefined { return this._context_snapshot; }
-  get decisionLog(): DecisionLog | undefined { return this._decision_log; }
+  // ===== 访问器方法 =====
+
+  get traceId(): UUID {
+    return this.data.traceId;
+  }
+
+  get contextId(): UUID {
+    return this.data.contextId;
+  }
+
+  get planId(): UUID | undefined {
+    return this.data.planId;
+  }
+
+  get taskId(): UUID | undefined {
+    return this.data.taskId;
+  }
+
+  get traceType(): TraceType {
+    return this.data.traceType;
+  }
+
+  get severity(): Severity {
+    return this.data.severity;
+  }
+
+  get event(): EventObject {
+    return this.data.event;
+  }
+
+  get timestamp(): Timestamp {
+    return this.data.timestamp;
+  }
+
+  get status(): string {
+    return this.data.traceOperation || 'active';
+  }
+
+  get duration(): number | undefined {
+    return this.data.performanceMetrics?.metrics?.traceProcessingLatencyMs;
+  }
+
+  get spans(): SpanEntity[] {
+    return this.data.spans || [];
+  }
+
+  get containsSensitiveData(): boolean {
+    return this.data.containsSensitiveData || false;
+  }
+
+  // ===== 新增业务方法 =====
 
   /**
-   * 添加关联
+   * 添加跨度
    */
-  addCorrelation(correlation: Correlation): void {
-    // 检查是否已存在相同的关联
-    const exists = this._correlations.some(c => 
-      c.related_trace_id === correlation.related_trace_id && 
-      c.type === correlation.type
-    );
-    
-    if (!exists) {
-      this._correlations.push(correlation);
-      this._updated_at = new Date().toISOString();
+  addSpan(span: SpanEntity): void {
+    if (!this.data.spans) {
+      this.data.spans = [];
+    }
+    this.data.spans.push(span);
+  }
+
+  /**
+   * 结束追踪
+   */
+  end(endTime: Date, finalStatus: string): void {
+    this.data.traceOperation = finalStatus as TraceOperation;
+    this.data.timestamp = endTime.toISOString();
+
+    // 计算持续时间
+    if (this.data.performanceMetrics) {
+      const startTime = new Date(this.data.timestamp);
+      // 更新traceProcessingLatencyMs指标
+      if (!this.data.performanceMetrics.metrics) {
+        this.data.performanceMetrics.metrics = {};
+      }
+      this.data.performanceMetrics.metrics.traceProcessingLatencyMs = endTime.getTime() - startTime.getTime();
     }
   }
 
   /**
-   * 移除关联
+   * 设置统计信息
    */
-  removeCorrelation(relatedTraceId: UUID, type: string): void {
-    const initialLength = this._correlations.length;
-    this._correlations = this._correlations.filter(c => 
-      !(c.related_trace_id === relatedTraceId && c.type === type)
-    );
-    
-    if (this._correlations.length !== initialLength) {
-      this._updated_at = new Date().toISOString();
-    }
+  setStatistics(statistics: TraceStatistics): void {
+    this.data.statistics = statistics;
   }
 
   /**
-   * 更新性能指标
+   * 标记为包含敏感数据
    */
-  updatePerformanceMetrics(metrics: PerformanceMetrics): void {
-    this._performance_metrics = metrics;
-    this._updated_at = new Date().toISOString();
+  markAsSensitive(): void {
+    this.data.containsSensitiveData = true;
+  }
+
+  get traceOperation(): TraceOperation {
+    return this.data.traceOperation;
+  }
+
+  get contextSnapshot(): ContextSnapshot | undefined {
+    return this.data.contextSnapshot;
+  }
+
+  get errorInformation(): ErrorInformation | undefined {
+    return this.data.errorInformation;
+  }
+
+  get decisionLog(): DecisionLog | undefined {
+    return this.data.decisionLog;
+  }
+
+  get traceDetails(): TraceDetails | undefined {
+    return this.data.traceDetails;
+  }
+
+  // ===== 业务方法 =====
+
+  /**
+   * 更新追踪严重程度
+   */
+  updateSeverity(newSeverity: Severity): void {
+    this.validateSeverity(newSeverity);
+    this.data.severity = newSeverity;
+    this.updateTimestamp();
   }
 
   /**
-   * 设置错误信息
+   * 添加错误信息
    */
-  setErrorInformation(errorInfo: ErrorInformation): void {
-    this._error_information = errorInfo;
-    this._severity = 'error'; // 有错误时自动设置为错误级别
-    this._updated_at = new Date().toISOString();
+  addErrorInformation(errorInfo: ErrorInformation): void {
+    this.validateErrorInformation(errorInfo);
+    this.data.errorInformation = errorInfo;
+    this.updateSeverity('error'); // 自动提升严重程度
+    this.updateTimestamp();
   }
 
   /**
-   * 设置上下文快照
+   * 添加决策日志
    */
-  setContextSnapshot(snapshot: ContextSnapshot): void {
-    this._context_snapshot = snapshot;
-    this._updated_at = new Date().toISOString();
+  addDecisionLog(decisionLog: DecisionLog): void {
+    this.validateDecisionLog(decisionLog);
+    this.data.decisionLog = decisionLog;
+    this.updateTimestamp();
   }
 
   /**
-   * 设置决策日志
+   * 更新上下文快照
    */
-  setDecisionLog(decisionLog: DecisionLog): void {
-    this._decision_log = decisionLog;
-    this._updated_at = new Date().toISOString();
-  }
-
-  /**
-   * 捕获当前上下文快照
-   */
-  captureContextSnapshot(variables?: Record<string, unknown>, callStack?: string[]): void {
-    const snapshot: ContextSnapshot = {
-      variables: variables || {},
-      environment: {
-        os: process.platform,
-        platform: process.arch,
-        runtime_version: process.version,
-        environment_variables: Object.fromEntries(
-          Object.entries(process.env).filter(([, value]) => value !== undefined)
-        ) as Record<string, string>
-      },
-      call_stack: callStack?.map((func, index) => ({
-        function: func,
-        file: 'unknown',
-        line: index + 1
-      }))
-    };
-    this.setContextSnapshot(snapshot);
-  }
-
-  /**
-   * 更新元数据
-   */
-  updateMetadata(metadata: TraceMetadata): void {
-    this._metadata = { ...this._metadata, ...metadata };
-    this._updated_at = new Date().toISOString();
+  updateContextSnapshot(snapshot: ContextSnapshot): void {
+    this.data.contextSnapshot = snapshot;
+    this.updateTimestamp();
   }
 
   /**
    * 检查是否为错误追踪
    */
   isError(): boolean {
-    return this._trace_type === 'error' || this._severity === 'error' || this._severity === 'critical';
+    return this.data.severity === 'error' || this.data.errorInformation !== undefined;
   }
 
   /**
-   * 检查是否为性能追踪
+   * 检查是否包含决策信息
    */
-  isPerformanceTrace(): boolean {
-    return this._trace_type === 'performance' || !!this._performance_metrics;
+  hasDecision(): boolean {
+    return this.data.decisionLog !== undefined;
   }
 
   /**
-   * 获取执行持续时间
+   * 获取追踪持续时间（如果有结束时间）
    */
-  getExecutionDuration(): number | undefined {
-    return this._performance_metrics?.execution_time?.duration_ms;
+  getDuration(): number | undefined {
+    if (this.data.traceDetails?.samplingRate) {
+      // 基于采样率计算估算持续时间
+      return Date.now() - new Date(this.data.timestamp).getTime();
+    }
+    return undefined;
   }
 
   /**
-   * 验证领域不变性
+   * 转换为数据对象
    */
-  private validateInvariants(): void {
-    if (!this._trace_id) {
-      throw new Error('追踪ID不能为空');
-    }
-    if (!this._context_id) {
-      throw new Error('上下文ID不能为空');
-    }
-    if (!this._event.name || this._event.name.trim().length === 0) {
-      throw new Error('事件名称不能为空');
-    }
-    if (!this._event.source.component) {
-      throw new Error('事件源组件不能为空');
-    }
-    // 错误类型的追踪可以没有详细错误信息，允许简单错误追踪
-    // if (this._trace_type === 'error' && !this._error_information) {
-    //   throw new Error('错误类型的追踪必须包含错误信息');
-    // }
+  toData(): TraceEntityData {
+    return { ...this.data };
   }
 
+  // ===== 私有方法 =====
+
   /**
-   * 转换为内部协议格式（camelCase）
-   * @deprecated 使用 TraceMapper.toSchema() 进行对外Schema输出
+   * 初始化数据
    */
-  toProtocol(): Record<string, unknown> {
+  private initializeData(data: Partial<TraceEntityData>): TraceEntityData {
+    const now = new Date().toISOString();
+    
     return {
-      traceId: this._trace_id,
-      contextId: this._context_id,
-      planId: this._plan_id,
-      protocolVersion: this._protocol_version,
-      traceType: this._trace_type,
-      severity: this._severity,
-      event: this._event,
-      timestamp: this._timestamp,
-      performanceMetrics: this._performance_metrics,
-      errorInformation: this._error_information,
-      correlations: this._correlations,
-      metadata: this._metadata,
-      contextSnapshot: this._context_snapshot,
-      decisionLog: this._decision_log,
-      createdAt: this._created_at,
-      updatedAt: this._updated_at
+      protocolVersion: '1.0.0',
+      timestamp: now,
+      traceId: data.traceId || this.generateTraceId(),
+      contextId: data.contextId!,
+      traceType: data.traceType || 'execution',
+      severity: data.severity || 'info',
+      event: data.event || this.createDefaultEvent(),
+      traceOperation: data.traceOperation || 'start',
+      
+      // 可选字段
+      planId: data.planId,
+      taskId: data.taskId,
+      contextSnapshot: data.contextSnapshot,
+      errorInformation: data.errorInformation,
+      decisionLog: data.decisionLog,
+      traceDetails: data.traceDetails,
+      
+      // 系统字段
+      auditTrail: data.auditTrail || { enabled: true, retentionDays: 30 },
+      performanceMetrics: data.performanceMetrics || { enabled: true, collectionIntervalSeconds: 60 },
+      monitoringIntegration: data.monitoringIntegration || { enabled: true, supportedProviders: ['prometheus'] },
+      versionHistory: data.versionHistory || { enabled: true, maxVersions: 10 },
+      searchMetadata: data.searchMetadata || { enabled: true, indexingStrategy: 'keyword' },
+      eventIntegration: data.eventIntegration || { enabled: true },
+      correlations: data.correlations || []
     };
   }
 
-
+  /**
+   * 验证不变量
+   */
+  private validateInvariants(): void {
+    if (!this.data.contextId) {
+      throw new Error('Context ID is required');
+    }
+    
+    if (!this.data.event?.name) {
+      throw new Error('Event name is required');
+    }
+    
+    this.validateSeverity(this.data.severity);
+    this.validateTraceType(this.data.traceType);
+  }
 
   /**
-   * 从协议格式创建实体
+   * 验证严重程度
    */
-  static fromProtocol(protocol: Record<string, unknown>): Trace {
-    return new Trace(
-      protocol.traceId as string,
-      protocol.contextId as string,
-      protocol.protocolVersion as string,
-      protocol.traceType as TraceType,
-      protocol.severity as TraceSeverity,
-      protocol.event as TraceEvent,
-      protocol.timestamp as string,
-      protocol.createdAt as string,
-      protocol.updatedAt as string,
-      protocol.planId as string | undefined,
-      protocol.performanceMetrics as PerformanceMetrics | undefined,
-      protocol.errorInformation as ErrorInformation | undefined,
-      (protocol.correlations as Correlation[]) || [],
-      protocol.metadata as TraceMetadata | undefined,
-      protocol.contextSnapshot as ContextSnapshot | undefined,
-      protocol.decisionLog as DecisionLog | undefined
-    );
+  private validateSeverity(severity: Severity): void {
+    const validSeverities: Severity[] = ['debug', 'info', 'warn', 'error', 'critical'];
+    if (!validSeverities.includes(severity)) {
+      throw new Error(`Invalid severity: ${severity}`);
+    }
   }
+
+  /**
+   * 验证追踪类型
+   */
+  private validateTraceType(traceType: TraceType): void {
+    const validTypes: TraceType[] = ['execution', 'monitoring', 'audit', 'performance', 'error', 'decision'];
+    if (!validTypes.includes(traceType)) {
+      throw new Error(`Invalid trace type: ${traceType}`);
+    }
+  }
+
+  /**
+   * 验证错误信息
+   */
+  private validateErrorInformation(errorInfo: ErrorInformation): void {
+    if (!errorInfo.errorCode || !errorInfo.errorMessage) {
+      throw new Error('Error code and message are required');
+    }
+  }
+
+  /**
+   * 验证决策日志
+   */
+  private validateDecisionLog(decisionLog: DecisionLog): void {
+    if (!decisionLog.decisionPoint || !decisionLog.selectedOption) {
+      throw new Error('Decision point and selected option are required');
+    }
+  }
+
+  /**
+   * 生成追踪ID
+   */
+  private generateTraceId(): UUID {
+    const timestamp = Date.now();
+    const random = Math.random().toString(36).substring(2, 11);
+    return `trace-${timestamp}-${random}` as UUID;
+  }
+
+  /**
+   * 创建默认事件
+   */
+  private createDefaultEvent(): EventObject {
+    return {
+      type: 'start' as EventType,
+      name: 'Default Trace Event',
+      category: 'system' as EventCategory,
+      source: {
+        component: 'trace-entity'
+      }
+    };
+  }
+
+  /**
+   * 更新时间戳
+   */
+  private updateTimestamp(): void {
+    this.data.timestamp = new Date().toISOString();
+  }
+
+  // toData方法已在上面定义，避免重复
 }

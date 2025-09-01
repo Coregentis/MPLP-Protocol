@@ -1,428 +1,367 @@
 /**
  * Role领域实体
  * 
- * 角色管理的核心领域实体，封装角色业务逻辑和不变性约束
- * 
+ * @description Role模块的核心领域实体，基于实际Schema定义 - 企业级RBAC安全中心
  * @version 1.0.0
- * @created 2025-09-16
+ * @layer 领域层 - 实体
  */
 
-import { UUID, Timestamp } from '../../../../public/shared/types';
-import { 
-  RoleType, 
-  RoleStatus, 
+import {
+  UUID,
+  RoleType,
+  RoleStatus,
+  SecurityClearance,
   Permission,
-  RoleScope,
   RoleInheritance,
   RoleDelegation,
   RoleAttributes,
   ValidationRules,
   AuditSettings,
-  PermissionAction,
-  ResourceType
+  Agent,
+  PerformanceMetrics,
+  MonitoringIntegration,
+  VersionHistory,
+  SearchMetadata,
+  EventIntegration,
+  AuditTrail
 } from '../../types';
 
 /**
  * Role领域实体
+ * 
+ * @description 企业级RBAC安全中心的核心领域实体，包含完整的角色管理、权限控制和安全审计功能
  */
-export class Role {
-  private _role_id: UUID;
-  private _context_id: UUID;
-  private _protocol_version: string;
-  private _name: string;
-  private _role_type: RoleType;
-  private _status: RoleStatus;
-  private _permissions: Permission[];
-  private _display_name?: string;
-  private _description?: string;
-  private _scope?: RoleScope;
-  private _inheritance?: RoleInheritance;
-  private _delegation?: RoleDelegation;
-  private _attributes?: RoleAttributes;
-  private _validation_rules?: ValidationRules;
-  private _audit_settings?: AuditSettings;
-  private _timestamp: Timestamp;
-  private _created_at: Timestamp;
-  private _updated_at: Timestamp;
-
-    /**
-   * 代理列表
-   */
-  public agents?: unknown[];
+export class RoleEntity {
+  // 基础协议字段
+  public readonly protocolVersion: string;
+  public readonly timestamp: Date;
+  public readonly roleId: UUID;
+  public readonly contextId: UUID;
+  
+  // 角色核心字段
+  public name: string;
+  public displayName?: string;
+  public description?: string;
+  public roleType: RoleType;
+  public status: RoleStatus;
+  
+  // 范围配置
+  public scope?: {
+    level: 'global' | 'organization' | 'project' | 'team' | 'individual';
+    contextIds?: UUID[];
+    planIds?: UUID[];
+    resourceConstraints?: {
+      maxContexts?: number;
+      maxPlans?: number;
+      allowedResourceTypes?: string[];
+    };
+  };
+  
+  // 权限管理
+  public permissions: Permission[];
+  
+  // 继承机制
+  public inheritance?: RoleInheritance;
+  
+  // 委托机制
+  public delegation?: RoleDelegation;
+  
+  // 属性管理
+  public attributes?: RoleAttributes;
+  
+  // 验证规则
+  public validationRules?: ValidationRules;
+  
+  // 审计设置
+  public auditSettings?: AuditSettings;
+  
+  // Agent管理
+  public agents?: Agent[];
+  
+  // Agent管理配置
+  public agentManagement?: {
+    maxAgents?: number;
+    autoScaling?: boolean;
+    loadBalancing?: boolean;
+    healthCheckIntervalMs?: number;
+    defaultAgentConfig?: Record<string, unknown>;
+  };
+  
+  // 团队配置
+  public teamConfiguration?: {
+    maxTeamSize?: number;
+    collaborationRules?: Array<{
+      ruleName: string;
+      ruleType: 'communication' | 'decision' | 'conflict_resolution' | 'resource_sharing';
+      ruleConfig?: Record<string, unknown>;
+    }>;
+    decisionMechanism?: {
+      type: 'consensus' | 'majority' | 'weighted' | 'authority';
+      threshold?: number;
+      timeoutMs?: number;
+    };
+  };
+  
+  // 性能监控
+  public performanceMetrics: PerformanceMetrics;
+  
+  // 监控集成
+  public monitoringIntegration: MonitoringIntegration;
+  
+  // 版本历史
+  public versionHistory: VersionHistory;
+  
+  // 搜索元数据
+  public searchMetadata: SearchMetadata;
+  
+  // 角色操作
+  public roleOperation: 'create' | 'assign' | 'revoke' | 'update' | 'delete';
+  
+  // 事件集成
+  public eventIntegration: EventIntegration;
+  
+  // 审计跟踪
+  public auditTrail: AuditTrail;
 
   /**
-   * 代理管理
+   * 构造函数
+   * @param data 角色实体数据
    */
-  public agentManagement?: Record<string, unknown>;
-
-  /**
-   * 团队配置
-   */
-  public teamConfiguration?: Record<string, unknown>;
-
-constructor(
-    roleId: UUID,
-    contextId: UUID,
-    protocolVersion: string,
-    name: string,
-    roleType: RoleType,
-    status: RoleStatus,
-    permissions: Permission[],
-    timestamp: Timestamp,
-    createdAt: Timestamp,
-    updatedAt: Timestamp,
-    displayName?: string,
-    description?: string,
-    scope?: RoleScope,
-    inheritance?: RoleInheritance,
-    delegation?: RoleDelegation,
-    attributes?: RoleAttributes,
-    validationRules?: ValidationRules,
-    auditSettings?: AuditSettings
-  ) {
-    this._role_id = roleId;
-    this._context_id = contextId;
-    this._protocol_version = protocolVersion;
-    this._name = name;
-    this._role_type = roleType;
-    this._status = status;
-    this._permissions = permissions;
-    this._timestamp = timestamp;
-    this._created_at = createdAt;
-    this._updated_at = updatedAt;
-    this._display_name = displayName;
-    this._description = description;
-    this._scope = scope;
-    this._inheritance = inheritance;
-    this._delegation = delegation;
-    this._attributes = attributes;
-    this._validation_rules = validationRules;
-    this._audit_settings = auditSettings;
-
-    this.validateInvariants();
+  constructor(data: {
+    protocolVersion: string;
+    timestamp: Date;
+    roleId: UUID;
+    contextId: UUID;
+    name: string;
+    roleType: RoleType;
+    status: RoleStatus;
+    permissions: Permission[];
+    performanceMetrics: PerformanceMetrics;
+    monitoringIntegration: MonitoringIntegration;
+    versionHistory: VersionHistory;
+    searchMetadata: SearchMetadata;
+    roleOperation: 'create' | 'assign' | 'revoke' | 'update' | 'delete';
+    eventIntegration: EventIntegration;
+    auditTrail: AuditTrail;
+    displayName?: string;
+    description?: string;
+    scope?: RoleEntity['scope'];
+    inheritance?: RoleInheritance;
+    delegation?: RoleDelegation;
+    attributes?: RoleAttributes;
+    validationRules?: ValidationRules;
+    auditSettings?: AuditSettings;
+    agents?: Agent[];
+    agentManagement?: RoleEntity['agentManagement'];
+    teamConfiguration?: RoleEntity['teamConfiguration'];
+  }) {
+    // 基础协议字段
+    this.protocolVersion = data.protocolVersion;
+    this.timestamp = data.timestamp;
+    this.roleId = data.roleId;
+    this.contextId = data.contextId;
+    
+    // 角色核心字段
+    this.name = data.name;
+    this.displayName = data.displayName;
+    this.description = data.description;
+    this.roleType = data.roleType;
+    this.status = data.status;
+    
+    // 可选字段
+    this.scope = data.scope;
+    this.permissions = data.permissions;
+    this.inheritance = data.inheritance;
+    this.delegation = data.delegation;
+    this.attributes = data.attributes;
+    this.validationRules = data.validationRules;
+    this.auditSettings = data.auditSettings;
+    this.agents = data.agents;
+    this.agentManagement = data.agentManagement;
+    this.teamConfiguration = data.teamConfiguration;
+    
+    // 必需字段
+    this.performanceMetrics = data.performanceMetrics;
+    this.monitoringIntegration = data.monitoringIntegration;
+    this.versionHistory = data.versionHistory;
+    this.searchMetadata = data.searchMetadata;
+    this.roleOperation = data.roleOperation;
+    this.eventIntegration = data.eventIntegration;
+    this.auditTrail = data.auditTrail;
+    
+    // 验证实体有效性
+    this.validate();
   }
 
-  // Getters
-  get roleId(): UUID { return this._role_id; }
-  get contextId(): UUID { return this._context_id; }
-  get protocolVersion(): string { return this._protocol_version; }
-  get name(): string { return this._name; }
-  get roleType(): RoleType { return this._role_type; }
-  get status(): RoleStatus { return this._status; }
-  get permissions(): Permission[] { return [...this._permissions]; }
-  get displayName(): string | undefined { return this._display_name; }
-  get description(): string | undefined { return this._description; }
-  get scope(): RoleScope | undefined { return this._scope; }
-  get inheritance(): RoleInheritance | undefined { return this._inheritance; }
-  get delegation(): RoleDelegation | undefined { return this._delegation; }
-  get attributes(): RoleAttributes | undefined { return this._attributes; }
-  get validationRules(): ValidationRules | undefined { return this._validation_rules; }
-  get auditSettings(): AuditSettings | undefined { return this._audit_settings; }
-  get timestamp(): Timestamp { return this._timestamp; }
-  get createdAt(): Timestamp { return this._created_at; }
-  get updatedAt(): Timestamp { return this._updated_at; }
-
-  // Schema-compatible getters (snake_case) for testing and serialization
-  get role_id(): UUID { return this._role_id; }
-  get context_id(): UUID { return this._context_id; }
-  get protocol_version(): string { return this._protocol_version; }
-  get role_type(): RoleType { return this._role_type; }
-  get display_name(): string | undefined { return this._display_name; }
-  get validation_rules(): ValidationRules | undefined { return this._validation_rules; }
-  get audit_settings(): AuditSettings | undefined { return this._audit_settings; }
-  get created_at(): Timestamp { return this._created_at; }
-  get updated_at(): Timestamp { return this._updated_at; }
+  /**
+   * 验证角色实体的有效性
+   * @throws Error 如果实体无效
+   */
+  private validate(): void {
+    if (!this.roleId || !this.contextId) {
+      throw new Error('Role ID and Context ID are required');
+    }
+    
+    if (!this.name || this.name.trim().length === 0) {
+      throw new Error('Role name is required');
+    }
+    
+    if (!this.roleType || !this.status) {
+      throw new Error('Role type and status are required');
+    }
+    
+    if (!Array.isArray(this.permissions)) {
+      throw new Error('Permissions must be an array');
+    }
+  }
 
   /**
-   * 更新角色状态
+   * 检查角色是否有特定权限
+   * @param resourceType 资源类型
+   * @param resourceId 资源ID
+   * @param action 操作类型
+   * @returns 是否有权限
    */
-  updateStatus(newStatus: RoleStatus): void {
-    this.validateStatusTransition(this._status, newStatus);
-    this._status = newStatus;
-    this._updated_at = new Date().toISOString();
+  public hasPermission(
+    resourceType: string,
+    resourceId: string,
+    action: string
+  ): boolean {
+    return this.permissions.some(permission =>
+      (permission.resourceType === resourceType || permission.resourceType === 'system') &&
+      (permission.resourceId === resourceId || permission.resourceId === '*') &&
+      permission.actions.includes(action as 'create' | 'read' | 'update' | 'delete' | 'execute' | 'approve' | 'monitor' | 'admin')
+    );
   }
 
   /**
    * 添加权限
+   * @param permission 权限对象
    */
-  addPermission(permission: Permission): void {
+  public addPermission(permission: Permission): void {
     // 检查权限是否已存在
-    const exists = this._permissions.some(p => 
-      p.permission_id === permission.permission_id ||
-      (p.resource_type === permission.resource_type && 
-       p.resource_id === permission.resource_id &&
-       JSON.stringify(p.actions.sort()) === JSON.stringify(permission.actions.sort()))
+    const exists = this.permissions.some(p => 
+      p.permissionId === permission.permissionId
     );
-
+    
     if (!exists) {
-      this._permissions.push(permission);
-      this._updated_at = new Date().toISOString();
+      this.permissions.push(permission);
     }
   }
 
   /**
    * 移除权限
+   * @param permissionId 权限ID
    */
-  removePermission(permissionId: UUID): void {
-    const initialLength = this._permissions.length;
-    this._permissions = this._permissions.filter(p => p.permission_id !== permissionId);
-    
-    if (this._permissions.length !== initialLength) {
-      this._updated_at = new Date().toISOString();
-    }
-  }
-
-  /**
-   * 检查是否有特定权限
-   */
-  hasPermission(resourceType: ResourceType, resourceId: UUID | '*', action: PermissionAction): boolean {
-    return this._permissions.some(permission => {
-      // 检查资源类型匹配
-      if (permission.resource_type !== resourceType) return false;
-      
-      // 检查资源ID匹配（通配符或精确匹配）
-      if (permission.resource_id !== '*' && permission.resource_id !== resourceId) return false;
-      
-      // 检查操作权限
-      if (!permission.actions.includes(action)) return false;
-      
-      // 检查权限是否过期
-      if (permission.expiry && new Date(permission.expiry) < new Date()) return false;
-      
-      // 检查条件限制（简化实现）
-      if (permission.conditions) {
-        // 这里可以添加更复杂的条件检查逻辑
-        return this.checkPermissionConditions(permission.conditions as Parameters<typeof this.checkPermissionConditions>[0]);
-      }
-      
-      return true;
-    });
-  }
-
-  /**
-   * 获取有效权限列表
-   */
-  getActivePermissions(): Permission[] {
-    const now = new Date();
-    return this._permissions.filter(permission => {
-      // 过滤过期权限
-      if (permission.expiry && new Date(permission.expiry) < now) return false;
-      
-      // 检查条件限制
-      if (permission.conditions) {
-        return this.checkPermissionConditions(permission.conditions as Parameters<typeof this.checkPermissionConditions>[0]);
-      }
-      
-      return true;
-    });
-  }
-
-  /**
-   * 更新角色属性
-   */
-  updateAttributes(attributes: RoleAttributes): void {
-    this._attributes = { ...this._attributes, ...attributes };
-    this._updated_at = new Date().toISOString();
-  }
-
-  /**
-   * 设置角色范围
-   */
-  setScope(scope: RoleScope): void {
-    this._scope = scope;
-    this._updated_at = new Date().toISOString();
-  }
-
-  /**
-   * 检查角色是否激活
-   */
-  isActive(): boolean {
-    return this._status === 'active';
-  }
-
-  /**
-   * 检查角色是否可以委托
-   */
-  canDelegate(): boolean {
-    return this.isActive() && !!this._delegation?.can_delegate;
-  }
-
-  /**
-   * 获取继承的权限
-   */
-  getInheritedPermissions(): Permission[] {
-    // 这里应该从父角色获取继承的权限
-    // 简化实现，返回空数组
-    return [];
-  }
-
-  /**
-   * 验证领域不变性
-   */
-  private validateInvariants(): void {
-    if (!this._role_id) {
-      throw new Error('角色ID不能为空');
-    }
-    if (!this._context_id) {
-      throw new Error('上下文ID不能为空');
-    }
-    if (!this._name || this._name.trim().length === 0) {
-      throw new Error('角色名称不能为空');
-    }
-    if (this._name.length > 100) {
-      throw new Error('角色名称不能超过100个字符');
-    }
-  }
-
-  /**
-   * 验证状态转换的有效性
-   */
-  private validateStatusTransition(from: RoleStatus, to: RoleStatus): void {
-    const validTransitions: Record<RoleStatus, RoleStatus[]> = {
-      'active': ['inactive', 'suspended', 'deprecated'],
-      'inactive': ['active', 'deprecated'],
-      'suspended': ['active', 'deprecated'],
-      'deprecated': []
-    };
-
-    if (!validTransitions[from].includes(to)) {
-      throw new Error(`无效的状态转换: ${from} -> ${to}`);
-    }
-  }
-
-  /**
-   * 检查权限条件
-   */
-  private checkPermissionConditions(conditions: {
-    time_based?: {
-      start_time?: string;
-      end_time?: string;
-      timezone?: string;
-      days_of_week?: number[];
-    };
-    location_based?: {
-      allowed_ip_ranges?: string[];
-      geo_restrictions?: string[];
-    };
-    context_based?: {
-      required_attributes?: Record<string, string | number | boolean>;
-      forbidden_attributes?: Record<string, string | number | boolean>;
-    };
-    approval_required?: {
-      for_actions?: string[];
-      approval_threshold?: number;
-      approver_roles?: string[];
-    };
-  }): boolean {
-    // 简化的条件检查实现
-    // 在实际应用中，这里应该包含更复杂的条件验证逻辑
-    
-    if (conditions.time_based) {
-      const now = new Date();
-      if (conditions.time_based.start_time && new Date(conditions.time_based.start_time) > now) {
-        return false;
-      }
-      if (conditions.time_based.end_time && new Date(conditions.time_based.end_time) < now) {
-        return false;
-      }
-    }
-    
-    return true;
-  }
-
-  /**
-   * 转换为协议格式
-   */
-  toProtocol(): {
-    protocolVersion: string;
-    timestamp: string;
-    roleId: string;
-    contextId: string;
-    name: string;
-    roleType: RoleType;
-    status: RoleStatus;
-    permissions: Permission[];
-    displayName?: string;
-    description?: string;
-    scope?: RoleScope;
-    inheritance?: RoleInheritance;
-    delegation?: RoleDelegation;
-    attributes?: RoleAttributes;
-    validationRules?: ValidationRules;
-    auditSettings?: AuditSettings;
-    agents?: string[];
-    agentManagement?: Record<string, string | number | boolean>;
-    teamConfiguration?: Record<string, string | number | boolean>;
-    createdAt: string;
-    updatedAt: string;
-  } {
-    return {
-      protocolVersion: this._protocol_version,
-      timestamp: this._timestamp,
-      roleId: this._role_id,
-      contextId: this._context_id,
-      name: this._name,
-      roleType: this._role_type,
-      status: this._status,
-      permissions: this._permissions,
-      displayName: this._display_name,
-      description: this._description,
-      scope: this._scope,
-      inheritance: this._inheritance,
-      delegation: this._delegation,
-      attributes: this._attributes,
-      validationRules: this._validation_rules,
-      auditSettings: this._audit_settings,
-      createdAt: this._created_at,
-      updatedAt: this._updated_at
-    };
-  }
-
-  /**
-   * 从协议格式创建实体
-   */
-  static fromProtocol(protocol: {
-    roleId: string;
-    contextId: string;
-    protocolVersion: string;
-    timestamp: string;
-    name: string;
-    roleType: RoleType;
-    status: RoleStatus;
-    permissions: Permission[];
-    displayName?: string;
-    description?: string;
-    scope?: RoleScope;
-    inheritance?: RoleInheritance;
-    delegation?: RoleDelegation;
-    attributes?: RoleAttributes;
-    validationRules?: ValidationRules;
-    auditSettings?: AuditSettings;
-    agents?: string[];
-    agentManagement?: Record<string, string | number | boolean>;
-    teamConfiguration?: Record<string, string | number | boolean>;
-    createdAt: string;
-    updatedAt: string;
-  }): Role {
-    return new Role(
-      protocol.roleId,
-      protocol.contextId,
-      protocol.protocolVersion,
-      protocol.name,
-      protocol.roleType,
-      protocol.status,
-      protocol.permissions || [],
-      protocol.timestamp,
-      protocol.createdAt,
-      protocol.updatedAt,
-      protocol.displayName,
-      protocol.description,
-      protocol.scope,
-      protocol.inheritance,
-      protocol.delegation,
-      protocol.attributes,
-      protocol.validationRules,
-      protocol.auditSettings
+  public removePermission(permissionId: UUID): void {
+    this.permissions = this.permissions.filter(p => 
+      p.permissionId !== permissionId
     );
+  }
+
+  /**
+   * 检查角色是否处于活跃状态
+   * @returns 是否活跃
+   */
+  public isActive(): boolean {
+    return this.status === 'active';
+  }
+
+  /**
+   * 激活角色
+   */
+  public activate(): void {
+    this.status = 'active';
+  }
+
+  /**
+   * 停用角色
+   */
+  public deactivate(): void {
+    this.status = 'inactive';
+  }
+
+  /**
+   * 获取角色的安全级别
+   * @returns 安全级别
+   */
+  public getSecurityClearance(): SecurityClearance | undefined {
+    return this.attributes?.securityClearance;
+  }
+
+  /**
+   * 检查角色是否可以委托权限
+   * @returns 是否可以委托
+   */
+  public canDelegate(): boolean {
+    return this.delegation?.canDelegate ?? false;
+  }
+
+  /**
+   * 获取角色的复杂度评分
+   * @returns 复杂度评分 (0-100)
+   */
+  public getComplexityScore(): number {
+    let score = 0;
+    
+    // 基于权限数量
+    score += Math.min(this.permissions.length * 2, 30);
+    
+    // 基于继承关系
+    if (this.inheritance?.parentRoles?.length) {
+      score += this.inheritance.parentRoles.length * 5;
+    }
+    
+    // 基于委托关系
+    if (this.delegation?.activeDelegations?.length) {
+      score += this.delegation.activeDelegations.length * 3;
+    }
+    
+    // 基于Agent数量
+    if (this.agents?.length) {
+      score += Math.min(this.agents.length * 2, 20);
+    }
+    
+    // 基于验证规则
+    if (this.validationRules?.assignmentRules?.length) {
+      score += this.validationRules.assignmentRules.length * 2;
+    }
+    
+    return Math.min(score, 100);
+  }
+
+  /**
+   * 转换为简单对象
+   * @returns 简单对象表示
+   */
+  public toPlainObject(): Record<string, unknown> {
+    return {
+      protocolVersion: this.protocolVersion,
+      timestamp: this.timestamp,
+      roleId: this.roleId,
+      contextId: this.contextId,
+      name: this.name,
+      displayName: this.displayName,
+      description: this.description,
+      roleType: this.roleType,
+      status: this.status,
+      scope: this.scope,
+      permissions: this.permissions,
+      inheritance: this.inheritance,
+      delegation: this.delegation,
+      attributes: this.attributes,
+      validationRules: this.validationRules,
+      auditSettings: this.auditSettings,
+      agents: this.agents,
+      agentManagement: this.agentManagement,
+      teamConfiguration: this.teamConfiguration,
+      performanceMetrics: this.performanceMetrics,
+      monitoringIntegration: this.monitoringIntegration,
+      versionHistory: this.versionHistory,
+      searchMetadata: this.searchMetadata,
+      roleOperation: this.roleOperation,
+      eventIntegration: this.eventIntegration,
+      auditTrail: this.auditTrail
+    };
   }
 }

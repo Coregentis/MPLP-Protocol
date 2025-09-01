@@ -1,177 +1,97 @@
 /**
- * Role仓库实现
+ * Role内存仓库实现
  * 
- * 基础设施层的数据访问实现
- * 
+ * @description Role模块的内存仓库实现，用于开发和测试 - 企业级RBAC安全中心
  * @version 1.0.0
- * @created 2025-09-16
+ * @layer 基础设施层 - 仓库实现
  */
 
-import { UUID } from '../../../../public/shared/types';
-import { Role } from '../../domain/entities/role.entity';
+import { RoleEntity } from '../../domain/entities/role.entity';
 import { 
   IRoleRepository, 
-  RoleFilter, 
-  PaginationOptions, 
-  PaginatedResult 
+  PaginationParams, 
+  PaginatedResult, 
+  RoleQueryFilter,
+  RoleSortOptions,
+  BulkOperationResult
 } from '../../domain/repositories/role-repository.interface';
-import { RoleType, RoleStatus, ResourceType, PermissionAction } from '../../types';
+import { UUID, RoleType, RoleStatus } from '../../types';
 
 /**
- * Role仓库实现
+ * 内存Role仓库实现
  * 
- * 注意：这是一个内存实现，生产环境中应该使用真实的数据库实现
+ * @description 基于内存存储的Role仓库实现，提供完整的CRUD操作和企业级RBAC功能
  */
-export class RoleRepository implements IRoleRepository {
-  private roles: Map<UUID, Role> = new Map();
+export class MemoryRoleRepository implements IRoleRepository {
+  private roles: Map<UUID, RoleEntity> = new Map();
+  private nameIndex: Map<string, UUID> = new Map();
+
+  // ===== 基础CRUD操作 =====
 
   /**
-   * 保存角色
+   * 创建角色
    */
-  async save(role: Role): Promise<void> {
+  async create(role: RoleEntity): Promise<RoleEntity> {
+    // 检查名称唯一性
+    if (this.nameIndex.has(role.name)) {
+      throw new Error(`Role with name '${role.name}' already exists`);
+    }
+
     this.roles.set(role.roleId, role);
+    this.nameIndex.set(role.name, role.roleId);
+    return role;
   }
 
   /**
    * 根据ID查找角色
    */
-  async findById(roleId: UUID): Promise<Role | null> {
+  async findById(roleId: UUID): Promise<RoleEntity | null> {
     return this.roles.get(roleId) || null;
   }
 
   /**
    * 根据名称查找角色
    */
-  async findByName(name: string, contextId?: UUID): Promise<Role | null> {
-    for (const role of this.roles.values()) {
-      if (role.name === name && (!contextId || role.contextId === contextId)) {
-        return role;
-      }
-    }
-    return null;
-  }
-
-  /**
-   * 根据上下文ID查找角色列表
-   */
-  async findByContextId(contextId: UUID): Promise<Role[]> {
-    return Array.from(this.roles.values())
-      .filter(role => role.contextId === contextId);
-  }
-
-  /**
-   * 根据过滤器查找角色列表
-   */
-  async findByFilter(
-    filter: RoleFilter, 
-    pagination?: PaginationOptions
-  ): Promise<PaginatedResult<Role>> {
-    let results = Array.from(this.roles.values());
-
-    // 应用过滤器
-    if (filter.context_id) {
-      results = results.filter(role => role.contextId === filter.context_id);
-    }
-
-    if (filter.role_type) {
-      results = results.filter(role => role.roleType === filter.role_type);
-    }
-
-    if (filter.status) {
-      results = results.filter(role => role.status === filter.status);
-    }
-
-    if (filter.name_pattern) {
-      const pattern = new RegExp(filter.name_pattern, 'i');
-      results = results.filter(role => 
-        pattern.test(role.name) || 
-        (role.displayName && pattern.test(role.displayName))
-      );
-    }
-
-    if (filter.has_permission) {
-      const { resource_type, resource_id, action } = filter.has_permission;
-      results = results.filter(role => 
-        role.hasPermission(resource_type, resource_id || '*', action)
-      );
-    }
-
-    if (filter.created_after) {
-      results = results.filter(role => role.createdAt >= filter.created_after!);
-    }
-
-    if (filter.created_before) {
-      results = results.filter(role => role.createdAt <= filter.created_before!);
-    }
-
-    // 排序
-    if (pagination?.sort_by) {
-      results.sort((a, b) => {
-        const aValue = this.getPropertyValue(a, pagination.sort_by!);
-        const bValue = this.getPropertyValue(b, pagination.sort_by!);
-        
-        if (pagination.sort_order === 'desc') {
-          return bValue.localeCompare(aValue);
-        }
-        return aValue.localeCompare(bValue);
-      });
-    }
-
-    // 分页
-    const total = results.length;
-    const page = pagination?.page || 1;
-    const limit = pagination?.limit || 10;
-    const offset = (page - 1) * limit;
-    
-    const paginatedResults = results.slice(offset, offset + limit);
-
-    return {
-      items: paginatedResults,
-      total,
-      page,
-      limit,
-      total_pages: Math.ceil(total / limit)
-    };
-  }
-
-  /**
-   * 查找具有特定权限的角色
-   */
-  async findByPermission(
-    resourceType: ResourceType, 
-    action: PermissionAction, 
-    resourceId?: UUID
-  ): Promise<Role[]> {
-    return Array.from(this.roles.values())
-      .filter(role => role.hasPermission(resourceType, resourceId || '*', action));
-  }
-
-  /**
-   * 查找活跃角色
-   */
-  async findActiveRoles(contextId?: UUID): Promise<Role[]> {
-    let results = Array.from(this.roles.values())
-      .filter(role => role.isActive());
-
-    if (contextId) {
-      results = results.filter(role => role.contextId === contextId);
-    }
-
-    return results;
+  async findByName(name: string): Promise<RoleEntity | null> {
+    const roleId = this.nameIndex.get(name);
+    if (!roleId) return null;
+    return this.roles.get(roleId) || null;
   }
 
   /**
    * 更新角色
    */
-  async update(role: Role): Promise<void> {
+  async update(role: RoleEntity): Promise<RoleEntity> {
+    const existing = this.roles.get(role.roleId);
+    if (!existing) {
+      throw new Error(`Role with ID ${role.roleId} not found`);
+    }
+
+    // 如果名称发生变化，更新名称索引
+    if (existing.name !== role.name) {
+      this.nameIndex.delete(existing.name);
+      if (this.nameIndex.has(role.name)) {
+        throw new Error(`Role with name '${role.name}' already exists`);
+      }
+      this.nameIndex.set(role.name, role.roleId);
+    }
+
     this.roles.set(role.roleId, role);
+    return role;
   }
 
   /**
    * 删除角色
    */
-  async delete(roleId: UUID): Promise<void> {
+  async delete(roleId: UUID): Promise<boolean> {
+    const role = this.roles.get(roleId);
+    if (!role) {
+      return false;
+    }
+
     this.roles.delete(roleId);
+    this.nameIndex.delete(role.name);
+    return true;
   }
 
   /**
@@ -181,73 +101,540 @@ export class RoleRepository implements IRoleRepository {
     return this.roles.has(roleId);
   }
 
+  // ===== 查询操作 =====
+
   /**
-   * 检查角色名称是否唯一
+   * 查找所有角色
    */
-  async isNameUnique(name: string, contextId: UUID, excludeRoleId?: UUID): Promise<boolean> {
-    for (const role of this.roles.values()) {
-      if (role.name === name && 
-          role.contextId === contextId && 
-          role.roleId !== excludeRoleId) {
-        return false;
+  async findAll(
+    pagination?: PaginationParams,
+    filter?: RoleQueryFilter,
+    sort?: RoleSortOptions
+  ): Promise<PaginatedResult<RoleEntity>> {
+    let roles = Array.from(this.roles.values());
+
+    // 应用过滤器
+    if (filter) {
+      roles = this.applyFilter(roles, filter);
+    }
+
+    // 应用排序
+    if (sort) {
+      roles = this.applySort(roles, sort);
+    }
+
+    // 应用分页
+    return this.applyPagination(roles, pagination);
+  }
+
+  /**
+   * 根据上下文ID查找角色
+   */
+  async findByContextId(
+    contextId: UUID,
+    pagination?: PaginationParams
+  ): Promise<PaginatedResult<RoleEntity>> {
+    const roles = Array.from(this.roles.values()).filter(
+      role => role.contextId === contextId
+    );
+    return this.applyPagination(roles, pagination);
+  }
+
+  /**
+   * 根据角色类型查找角色
+   */
+  async findByType(
+    roleType: RoleType,
+    pagination?: PaginationParams
+  ): Promise<PaginatedResult<RoleEntity>> {
+    const roles = Array.from(this.roles.values()).filter(
+      role => role.roleType === roleType
+    );
+    return this.applyPagination(roles, pagination);
+  }
+
+  /**
+   * 根据状态查找角色
+   */
+  async findByStatus(
+    status: RoleStatus,
+    pagination?: PaginationParams
+  ): Promise<PaginatedResult<RoleEntity>> {
+    const roles = Array.from(this.roles.values()).filter(
+      role => role.status === status
+    );
+    return this.applyPagination(roles, pagination);
+  }
+
+  /**
+   * 搜索角色
+   */
+  async search(
+    searchTerm: string,
+    pagination?: PaginationParams
+  ): Promise<PaginatedResult<RoleEntity>> {
+    const lowerSearchTerm = searchTerm.toLowerCase();
+    const roles = Array.from(this.roles.values()).filter(role =>
+      role.name.toLowerCase().includes(lowerSearchTerm) ||
+      role.displayName?.toLowerCase().includes(lowerSearchTerm) ||
+      role.description?.toLowerCase().includes(lowerSearchTerm)
+    );
+    return this.applyPagination(roles, pagination);
+  }
+
+  // ===== 权限相关操作 =====
+
+  /**
+   * 查找具有特定权限的角色
+   */
+  async findByPermission(
+    resourceType: string,
+    resourceId: string,
+    action: string,
+    pagination?: PaginationParams
+  ): Promise<PaginatedResult<RoleEntity>> {
+    const roles = Array.from(this.roles.values()).filter(role =>
+      role.hasPermission(resourceType, resourceId, action)
+    );
+    return this.applyPagination(roles, pagination);
+  }
+
+  /**
+   * 检查角色是否有特定权限
+   */
+  async hasPermission(
+    roleId: UUID,
+    resourceType: string,
+    resourceId: string,
+    action: string
+  ): Promise<boolean> {
+    const role = this.roles.get(roleId);
+    if (!role) return false;
+    return role.hasPermission(resourceType, resourceId, action);
+  }
+
+  // ===== 继承和委托操作 =====
+
+  /**
+   * 查找角色的父角色
+   */
+  async findParentRoles(roleId: UUID): Promise<RoleEntity[]> {
+    const role = this.roles.get(roleId);
+    if (!role || !role.inheritance?.parentRoles) return [];
+
+    const parentRoles: RoleEntity[] = [];
+    for (const parent of role.inheritance.parentRoles) {
+      const parentRole = this.roles.get(parent.roleId);
+      if (parentRole) {
+        parentRoles.push(parentRole);
       }
     }
-    return true;
+    return parentRoles;
   }
+
+  /**
+   * 查找角色的子角色
+   */
+  async findChildRoles(roleId: UUID): Promise<RoleEntity[]> {
+    const role = this.roles.get(roleId);
+    if (!role || !role.inheritance?.childRoles) return [];
+
+    const childRoles: RoleEntity[] = [];
+    for (const child of role.inheritance.childRoles) {
+      const childRole = this.roles.get(child.roleId);
+      if (childRole) {
+        childRoles.push(childRole);
+      }
+    }
+    return childRoles;
+  }
+
+  /**
+   * 查找角色的委托关系
+   */
+  async findDelegations(roleId: UUID): Promise<Array<{
+    delegationId: UUID;
+    delegatedTo: string;
+    permissions: UUID[];
+    startTime: Date;
+    endTime?: Date;
+    status: string;
+  }>> {
+    const role = this.roles.get(roleId);
+    if (!role || !role.delegation?.activeDelegations) return [];
+
+    return role.delegation.activeDelegations.map(delegation => ({
+      delegationId: delegation.delegationId,
+      delegatedTo: delegation.delegatedTo,
+      permissions: delegation.permissions,
+      startTime: delegation.startTime,
+      endTime: delegation.endTime,
+      status: delegation.status
+    }));
+  }
+
+  // ===== 批量操作 =====
+
+  /**
+   * 批量创建角色
+   */
+  async bulkCreate(roles: RoleEntity[]): Promise<BulkOperationResult> {
+    const result: BulkOperationResult = {
+      success: 0,
+      failed: 0,
+      errors: []
+    };
+
+    for (const role of roles) {
+      try {
+        await this.create(role);
+        result.success++;
+      } catch (error) {
+        result.failed++;
+        result.errors.push({
+          roleId: role.roleId,
+          error: error instanceof Error ? error.message : 'Unknown error'
+        });
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * 批量更新角色
+   */
+  async bulkUpdate(roles: RoleEntity[]): Promise<BulkOperationResult> {
+    const result: BulkOperationResult = {
+      success: 0,
+      failed: 0,
+      errors: []
+    };
+
+    for (const role of roles) {
+      try {
+        await this.update(role);
+        result.success++;
+      } catch (error) {
+        result.failed++;
+        result.errors.push({
+          roleId: role.roleId,
+          error: error instanceof Error ? error.message : 'Unknown error'
+        });
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * 批量删除角色
+   */
+  async bulkDelete(roleIds: UUID[]): Promise<BulkOperationResult> {
+    const result: BulkOperationResult = {
+      success: 0,
+      failed: 0,
+      errors: []
+    };
+
+    for (const roleId of roleIds) {
+      try {
+        const deleted = await this.delete(roleId);
+        if (deleted) {
+          result.success++;
+        } else {
+          result.failed++;
+          result.errors.push({
+            roleId,
+            error: 'Role not found'
+          });
+        }
+      } catch (error) {
+        result.failed++;
+        result.errors.push({
+          roleId,
+          error: error instanceof Error ? error.message : 'Unknown error'
+        });
+      }
+    }
+
+    return result;
+  }
+
+  // ===== 统计和分析操作 =====
 
   /**
    * 获取角色统计信息
    */
-  async getStatistics(contextId?: UUID): Promise<{
-    total: number;
-    by_type: Record<RoleType, number>;
-    by_status: Record<RoleStatus, number>;
-    active_count: number;
+  async getStatistics(): Promise<{
+    totalRoles: number;
+    activeRoles: number;
+    inactiveRoles: number;
+    rolesByType: Record<RoleType, number>;
+    averageComplexityScore: number;
+    totalPermissions: number;
+    totalAgents: number;
   }> {
-    let roles = Array.from(this.roles.values());
-    
-    if (contextId) {
-      roles = roles.filter(role => role.contextId === contextId);
+    const roles = Array.from(this.roles.values());
+    const rolesByType: Record<RoleType, number> = {
+      system: 0,
+      organizational: 0,
+      functional: 0,
+      project: 0,
+      temporary: 0
+    };
+
+    let totalComplexityScore = 0;
+    let totalPermissions = 0;
+    let totalAgents = 0;
+    let activeRoles = 0;
+    let inactiveRoles = 0;
+
+    for (const role of roles) {
+      rolesByType[role.roleType]++;
+      totalComplexityScore += role.getComplexityScore();
+      totalPermissions += role.permissions.length;
+      totalAgents += role.agents?.length || 0;
+
+      if (role.status === 'active') {
+        activeRoles++;
+      } else {
+        inactiveRoles++;
+      }
     }
 
-    const total = roles.length;
-    const active_count = roles.filter(role => role.isActive()).length;
-    
-    const by_type = roles.reduce((acc, role) => {
-      acc[role.roleType] = (acc[role.roleType] || 0) + 1;
-      return acc;
-    }, {} as Record<RoleType, number>);
-
-    const by_status = roles.reduce((acc, role) => {
-      acc[role.status] = (acc[role.status] || 0) + 1;
-      return acc;
-    }, {} as Record<RoleStatus, number>);
-
     return {
-      total,
-      by_type,
-      by_status,
-      active_count
+      totalRoles: roles.length,
+      activeRoles,
+      inactiveRoles,
+      rolesByType,
+      averageComplexityScore: roles.length > 0 ? totalComplexityScore / roles.length : 0,
+      totalPermissions,
+      totalAgents
     };
   }
 
   /**
-   * 获取属性值用于排序
+   * 获取角色复杂度分布
    */
-  private getPropertyValue(role: Role, property: string): string {
-    switch (property) {
-      case 'name':
-        return role.name;
-      case 'created_at':
-        return role.createdAt;
-      case 'updated_at':
-        return role.updatedAt;
-      case 'role_type':
-        return role.roleType;
-      case 'status':
-        return role.status;
-      default:
-        return role.createdAt;
+  async getComplexityDistribution(): Promise<Array<{
+    range: string;
+    count: number;
+    percentage: number;
+  }>> {
+    const roles = Array.from(this.roles.values());
+    const distribution = {
+      'Low (0-25)': 0,
+      'Medium (26-50)': 0,
+      'High (51-75)': 0,
+      'Very High (76-100)': 0
+    };
+
+    for (const role of roles) {
+      const score = role.getComplexityScore();
+      if (score <= 25) distribution['Low (0-25)']++;
+      else if (score <= 50) distribution['Medium (26-50)']++;
+      else if (score <= 75) distribution['High (51-75)']++;
+      else distribution['Very High (76-100)']++;
     }
+
+    const total = roles.length;
+    return Object.entries(distribution).map(([range, count]) => ({
+      range,
+      count,
+      percentage: total > 0 ? (count / total) * 100 : 0
+    }));
+  }
+
+  // ===== 审计和版本操作 =====
+
+  /**
+   * 获取角色的版本历史
+   */
+  async getVersionHistory(
+    roleId: UUID,
+    pagination?: PaginationParams
+  ): Promise<PaginatedResult<{
+    versionId: UUID;
+    versionNumber: number;
+    createdAt: Date;
+    createdBy: string;
+    changeSummary?: string;
+    changeType: string;
+  }>> {
+    const role = this.roles.get(roleId);
+    if (!role || !role.versionHistory.versions) {
+      return {
+        items: [],
+        total: 0,
+        page: 1,
+        limit: 10,
+        hasNext: false,
+        hasPrevious: false
+      };
+    }
+
+    const versions = role.versionHistory.versions.map(v => ({
+      versionId: v.versionId,
+      versionNumber: v.versionNumber,
+      createdAt: v.createdAt,
+      createdBy: v.createdBy,
+      changeSummary: v.changeSummary,
+      changeType: v.changeType
+    }));
+
+    return this.applyPagination(versions, pagination);
+  }
+
+  /**
+   * 获取角色的审计日志
+   */
+  async getAuditLog(
+    roleId: UUID,
+    pagination?: PaginationParams
+  ): Promise<PaginatedResult<{
+    eventId: UUID;
+    eventType: string;
+    timestamp: Date;
+    userId: string;
+    action: string;
+    details: Record<string, unknown>;
+  }>> {
+    const role = this.roles.get(roleId);
+    if (!role || !role.auditTrail.auditEvents) {
+      return {
+        items: [],
+        total: 0,
+        page: 1,
+        limit: 10,
+        hasNext: false,
+        hasPrevious: false
+      };
+    }
+
+    const auditEvents = role.auditTrail.auditEvents.map(event => ({
+      eventId: event.eventId,
+      eventType: event.eventType,
+      timestamp: event.timestamp,
+      userId: event.userId,
+      action: event.action,
+      details: event.roleDetails || {}
+    }));
+
+    return this.applyPagination(auditEvents, pagination);
+  }
+
+  // ===== 私有辅助方法 =====
+
+  /**
+   * 应用过滤器
+   */
+  private applyFilter(roles: RoleEntity[], filter: RoleQueryFilter): RoleEntity[] {
+    return roles.filter(role => {
+      if (filter.roleType && !filter.roleType.includes(role.roleType)) return false;
+      if (filter.status && !filter.status.includes(role.status)) return false;
+      if (filter.name && !role.name.toLowerCase().includes(filter.name.toLowerCase())) return false;
+      if (filter.contextId && role.contextId !== filter.contextId) return false;
+      if (filter.department && role.attributes?.department !== filter.department) return false;
+      if (filter.securityClearance && !filter.securityClearance.includes(role.attributes?.securityClearance!)) return false;
+      
+      if (filter.hasPermission) {
+        const { resourceType, resourceId, action } = filter.hasPermission;
+        if (!role.hasPermission(resourceType, resourceId, action)) return false;
+      }
+
+      if (filter.createdAfter && role.timestamp < filter.createdAfter) return false;
+      if (filter.createdBefore && role.timestamp > filter.createdBefore) return false;
+
+      if (filter.agentCount) {
+        const agentCount = role.agents?.length || 0;
+        if (filter.agentCount.min !== undefined && agentCount < filter.agentCount.min) return false;
+        if (filter.agentCount.max !== undefined && agentCount > filter.agentCount.max) return false;
+      }
+
+      if (filter.complexityScore) {
+        const complexityScore = role.getComplexityScore();
+        if (filter.complexityScore.min !== undefined && complexityScore < filter.complexityScore.min) return false;
+        if (filter.complexityScore.max !== undefined && complexityScore > filter.complexityScore.max) return false;
+      }
+
+      return true;
+    });
+  }
+
+  /**
+   * 应用排序
+   */
+  private applySort(roles: RoleEntity[], sort: RoleSortOptions): RoleEntity[] {
+    return roles.sort((a, b) => {
+      let aValue: string | number | Date;
+      let bValue: string | number | Date;
+
+      switch (sort.field) {
+        case 'name':
+          aValue = a.name;
+          bValue = b.name;
+          break;
+        case 'roleType':
+          aValue = a.roleType;
+          bValue = b.roleType;
+          break;
+        case 'status':
+          aValue = a.status;
+          bValue = b.status;
+          break;
+        case 'createdAt':
+        case 'updatedAt':
+          aValue = a.timestamp;
+          bValue = b.timestamp;
+          break;
+        case 'complexityScore':
+          aValue = a.getComplexityScore();
+          bValue = b.getComplexityScore();
+          break;
+        default:
+          return 0;
+      }
+
+      if (aValue < bValue) return sort.direction === 'asc' ? -1 : 1;
+      if (aValue > bValue) return sort.direction === 'asc' ? 1 : -1;
+      return 0;
+    });
+  }
+
+  /**
+   * 应用分页
+   */
+  private applyPagination<T>(items: T[], pagination?: PaginationParams): PaginatedResult<T> {
+    const page = pagination?.page || 1;
+    const limit = pagination?.limit || 10;
+    const offset = pagination?.offset || (page - 1) * limit;
+
+    const total = items.length;
+    const paginatedItems = items.slice(offset, offset + limit);
+
+    return {
+      items: paginatedItems,
+      total,
+      page,
+      limit,
+      hasNext: offset + limit < total,
+      hasPrevious: offset > 0
+    };
+  }
+
+  /**
+   * 清空所有角色数据 (用于测试)
+   */
+  async clear(): Promise<void> {
+    this.roles.clear();
+    this.nameIndex.clear();
+  }
+
+  /**
+   * 获取所有角色 (返回数组，用于测试)
+   */
+  async findAllAsArray(): Promise<RoleEntity[]> {
+    return Array.from(this.roles.values());
   }
 }

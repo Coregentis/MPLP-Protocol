@@ -1,535 +1,782 @@
-# Plan模块API参考文档 - 生产就绪版 🏆
+# Plan Module API Reference
 
-## 📋 概述
+## 🚀 **Overview**
 
-Plan模块提供完整的RESTful API和TypeScript接口，支持计划管理、任务协调和规划策略执行。所有API都支持snake_case和camelCase双格式。
+The Plan Module provides a comprehensive REST API for intelligent task planning, coordination, and execution management. All AI operations are handled by external AI services through pluggable adapters. All endpoints follow RESTful conventions and return JSON responses.
 
-### 🎉 **生产级质量保证**
+**Base URL**: `/api/v1/plans`  
+**Content-Type**: `application/json`  
+**Authentication**: Bearer Token (when security is enabled)
 
-Plan模块API已通过**双重历史性突破**验证，确保生产级质量：
+## 📋 **API Endpoints**
 
-**✅ 源代码质量保证**：
-- TypeScript编译：94个错误 → 0个错误 (100%类型安全)
-- ESLint检查：0错误，0警告 (完美代码质量)
-- 零any类型：完全类型安全覆盖
+### **Plan Management**
 
-**✅ 测试覆盖率保证**：
-- Domain Services：87.28%覆盖率突破 (plan-validation.service.ts)
-- 测试用例：126个测试100%通过 (+40%增长)
-- 源代码修复：4个源代码问题发现并修复
-- 方法论验证：系统性链式批判性思维方法论成功验证
-
-## 🏗️ 核心服务接口
-
-### PlanManagementService
-
-计划管理服务提供计划的CRUD操作和生命周期管理。
-
-#### createPlan()
-
-创建新的项目计划。
-
-```typescript
-async createPlan(params: CreatePlanParams): Promise<OperationResult<Plan>>
+#### **Create Plan**
+```http
+POST /api/v1/plans
 ```
 
-**参数：**
-
+**Request Body**:
 ```typescript
-interface CreatePlanParams {
-  // 支持双格式
-  contextId?: UUID;
-  context_id?: UUID;
-  
-  // 基础信息
+{
+  contextId: string;           // UUID of the associated context
+  name: string;               // Plan name (required)
+  description?: string;       // Optional plan description
+  priority?: 'critical' | 'high' | 'medium' | 'low';
+  tasks?: Array<{
+    name: string;
+    description?: string;
+    type: 'atomic' | 'composite' | 'milestone' | 'checkpoint';
+    priority?: 'critical' | 'high' | 'medium' | 'low';
+  }>;
+  milestones?: Array<{
+    name: string;
+    targetDate: Date;
+    criteria: string[];
+  }>;
+  resources?: Array<{
+    resourceId: string;
+    type: 'human' | 'material' | 'financial' | 'technical';
+    allocatedAmount: number;
+  }>;
+  risks?: Array<{
+    name: string;
+    level: 'low' | 'medium' | 'high' | 'critical';
+    probability: number;
+    impact: number;
+  }>;
+}
+```
+
+**Response**:
+```typescript
+{
+  success: boolean;
+  planId?: string;
+  message: string;
+  metadata?: {
+    name: string;
+    status: string;
+    priority: string;
+    taskCount: number;
+  };
+  error?: {
+    code: string;
+    message: string;
+    details?: any;
+  };
+}
+```
+
+**Example**:
+```bash
+curl -X POST /api/v1/plans \
+  -H "Content-Type: application/json" \
+  -d '{
+    "contextId": "550e8400-e29b-41d4-a716-446655440000",
+    "name": "Software Development Plan",
+    "description": "Complete development lifecycle plan",
+    "priority": "high",
+    "tasks": [
+      {
+        "name": "Requirements Analysis",
+        "type": "milestone",
+        "priority": "critical"
+      }
+    ]
+  }'
+```
+
+#### **Get Plan by ID**
+```http
+GET /api/v1/plans/{planId}
+```
+
+**Parameters**:
+- `planId` (path): UUID of the plan
+
+**Response**:
+```typescript
+{
+  planId: string;
+  contextId: string;
   name: string;
   description?: string;
-  goals?: string[];
+  status: 'draft' | 'approved' | 'active' | 'paused' | 'completed' | 'cancelled' | 'failed';
+  priority: 'critical' | 'high' | 'medium' | 'low';
+  protocolVersion: string;
+  timestamp: string;
   
-  // 执行配置
-  executionStrategy?: ExecutionStrategy;
-  execution_strategy?: ExecutionStrategy;
-  priority?: Priority;
+  // Core Components
+  tasks: Array<{
+    taskId: string;
+    name: string;
+    type: 'atomic' | 'composite' | 'milestone' | 'review';
+    status: 'pending' | 'running' | 'completed' | 'failed' | 'cancelled';
+    priority: 'critical' | 'high' | 'medium' | 'low';
+    estimatedDuration?: number;
+    actualDuration?: number;
+    dependencies?: Array<{
+      taskId: string;
+      type: 'finish_to_start' | 'start_to_start' | 'finish_to_finish' | 'start_to_finish';
+    }>;
+  }>;
   
-  // 时间配置
-  estimatedDuration?: Duration;
-  estimated_duration?: Duration;
+  milestones: Array<{
+    id: string;
+    name: string;
+    status: 'pending' | 'in_progress' | 'completed' | 'failed';
+    targetDate: string;
+    actualDate?: string;
+    criteria: string[];
+  }>;
   
-  // 任务和依赖
-  tasks?: PlanTask[];
-  dependencies?: PlanDependency[];
+  resources: Array<{
+    resourceId: string;
+    resourceName: string;
+    type: 'human' | 'material' | 'financial' | 'technical';
+    allocatedAmount: number;
+    totalCapacity: number;
+  }>;
   
-  // 其他配置
-  configuration?: PlanConfiguration;
-  metadata?: Record<string, unknown>;
-}
-
-interface Duration {
-  value: number;
-  unit: 'milliseconds' | 'seconds' | 'minutes' | 'hours' | 'days';
-}
-```
-
-**返回值：**
-
-```typescript
-interface OperationResult<T> {
-  success: boolean;
-  data?: T;
-  error?: string;
-  validationErrors?: string[];
-}
-```
-
-**示例：**
-
-```typescript
-// camelCase格式
-const result = await planService.createPlan({
-  contextId: 'ctx-123',
-  name: '项目开发计划',
-  description: '完整的项目开发计划',
-  goals: ['完成需求分析', '实现核心功能', '完成测试'],
-  executionStrategy: 'sequential',
-  priority: 'high',
-  estimatedDuration: { value: 30, unit: 'days' }
-});
-
-// snake_case格式
-const result2 = await planService.createPlan({
-  context_id: 'ctx-123',
-  name: '项目开发计划',
-  execution_strategy: 'parallel',
-  estimated_duration: { value: 20, unit: 'days' }
-});
-```
-
-#### getPlan()
-
-根据ID获取计划详情。
-
-```typescript
-async getPlan(planId: UUID): Promise<OperationResult<Plan>>
-```
-
-**参数：**
-- `planId`: 计划唯一标识符
-
-**示例：**
-
-```typescript
-const result = await planService.getPlan('plan-123');
-if (result.success) {
-  console.log('计划名称:', result.data.name);
-  console.log('计划状态:', result.data.status);
+  risks: Array<{
+    id: string;
+    name: string;
+    level: 'low' | 'medium' | 'high' | 'critical';
+    status: 'identified' | 'assessed' | 'mitigated' | 'accepted' | 'occurred';
+    probability: number;
+    impact: number;
+  }>;
+  
+  // Metadata
+  auditTrail: {
+    enabled: boolean;
+    retentionDays: number;
+  };
+  monitoringIntegration: object;
+  performanceMetrics: object;
+  createdAt?: string;
+  updatedAt?: string;
+  createdBy?: string;
+  updatedBy?: string;
 }
 ```
 
-#### updatePlan()
-
-更新现有计划。
-
-```typescript
-async updatePlan(planId: UUID, updates: UpdatePlanParams): Promise<OperationResult<Plan>>
+#### **Update Plan**
+```http
+PUT /api/v1/plans/{planId}
 ```
 
-**参数：**
+**Parameters**:
+- `planId` (path): UUID of the plan
 
+**Request Body**:
 ```typescript
-interface UpdatePlanParams {
+{
+  planId: string;
   name?: string;
   description?: string;
-  status?: PlanStatus;
-  goals?: string[];
-  executionStrategy?: ExecutionStrategy;
-  execution_strategy?: ExecutionStrategy;
-  priority?: Priority;
-  metadata?: Record<string, unknown>;
+  status?: 'draft' | 'approved' | 'active' | 'paused' | 'completed' | 'cancelled' | 'failed';
+  priority?: 'critical' | 'high' | 'medium' | 'low';
 }
 ```
 
-**示例：**
+**Response**: Same as Create Plan response
 
-```typescript
-const result = await planService.updatePlan('plan-123', {
-  status: 'active',
-  priority: 'urgent',
-  metadata: { updated_by: 'user-456' }
-});
+#### **Delete Plan**
+```http
+DELETE /api/v1/plans/{planId}
 ```
 
-#### deletePlan()
+**Parameters**:
+- `planId` (path): UUID of the plan
 
-删除计划。
-
+**Response**:
 ```typescript
-async deletePlan(planId: UUID): Promise<OperationResult<void>>
-```
-
-#### listPlans()
-
-查询计划列表。
-
-```typescript
-async listPlans(filter: PlanFilter): Promise<OperationResult<Plan[]>>
-```
-
-**参数：**
-
-```typescript
-interface PlanFilter {
-  contextId?: UUID;
-  context_id?: UUID;
-  status?: PlanStatus[];
-  priority?: Priority[];
-  createdAfter?: Timestamp;
-  created_after?: Timestamp;
-  createdBefore?: Timestamp;
-  created_before?: Timestamp;
-  limit?: number;
-  offset?: number;
-  sortBy?: 'name' | 'created_at' | 'updated_at' | 'priority';
-  sort_by?: 'name' | 'created_at' | 'updated_at' | 'priority';
-  sortOrder?: 'asc' | 'desc';
-  sort_order?: 'asc' | 'desc';
-}
-```
-
-### PlanModuleAdapter
-
-模块适配器提供规划协调和业务协调功能。
-
-#### execute()
-
-执行规划协调。
-
-```typescript
-async execute(request: PlanningCoordinationRequest): Promise<PlanningResult>
-```
-
-**参数：**
-
-```typescript
-interface PlanningCoordinationRequest {
-  contextId: UUID;
-  planning_strategy: 'sequential' | 'parallel' | 'adaptive' | 'hierarchical';
-  parameters: {
-    decomposition_rules?: string[];
-    priority_weights?: Record<string, number>;
-    resource_constraints?: {
-      time_limit?: number;
-      resource_limit?: number;
-    };
-    [key: string]: unknown;
-  };
-  task_management?: {
-    auto_decomposition: boolean;
-    dependency_tracking: boolean;
-    progress_monitoring: boolean;
-  };
-}
-```
-
-**返回值：**
-
-```typescript
-interface PlanningResult {
-  planId: UUID;
-  plan_id?: UUID;  // 兼容字段
-  task_breakdown: {
-    tasks: Array<{
-      taskId: UUID;
-      name: string;
-      dependencies: UUID[];
-      priority: number;
-      estimated_duration?: number;
-    }>;
-    execution_order: UUID[];
-  };
-  resource_allocation: Record<string, unknown>;
-  timestamp: Timestamp;
-}
-```
-
-**示例：**
-
-```typescript
-const planningResult = await planAdapter.execute({
-  contextId: 'ctx-123',
-  planning_strategy: 'adaptive',
-  parameters: {
-    decomposition_rules: ['需求分析', '系统设计', '编码实现', '测试验证'],
-    resource_constraints: {
-      time_limit: 2592000000, // 30天
-      resource_limit: 100
-    }
-  },
-  task_management: {
-    auto_decomposition: true,
-    dependency_tracking: true,
-    progress_monitoring: true
-  }
-});
-```
-
-#### executeBusinessCoordination()
-
-执行业务协调。
-
-```typescript
-async executeBusinessCoordination(request: BusinessCoordinationRequest): Promise<BusinessCoordinationResult>
-```
-
-## 📊 数据模型
-
-### Plan实体
-
-```typescript
-interface Plan {
-  // 基础字段
-  planId: UUID;
-  contextId: UUID;
-  name: string;
-  description?: string;
-  status: PlanStatus;
-  version: string;
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
-  
-  // 业务字段
-  goals: string[];
-  tasks: PlanTask[];
-  dependencies: PlanDependency[];
-  executionStrategy: ExecutionStrategy;
-  priority: Priority;
-  estimatedDuration?: Duration;
-  actualDuration?: Duration;
-  completionPercentage: number;
-  
-  // 配置字段
-  configuration: PlanConfiguration;
-  metadata: Record<string, unknown>;
-  tags: string[];
-  ownerId?: UUID;
-  teamId?: UUID;
-  
-  // 风险评估
-  riskAssessment?: RiskAssessment;
-}
-```
-
-### PlanTask
-
-```typescript
-interface PlanTask {
-  taskId: UUID;
-  planId: UUID;
-  name: string;
-  description?: string;
-  status: TaskStatus;
-  priority: number;
-  estimatedDuration?: number;
-  actualDuration?: number;
-  startTime?: Timestamp;
-  endTime?: Timestamp;
-  assignedTo?: UUID;
-  dependencies: UUID[];
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
-}
-```
-
-### PlanDependency
-
-```typescript
-interface PlanDependency {
-  dependencyId: UUID;
-  sourceTaskId: UUID;
-  targetTaskId: UUID;
-  dependencyType: DependencyType;
-  lagTime?: number;
-  createdAt: Timestamp;
-}
-```
-
-## 🔧 枚举类型
-
-### PlanStatus
-
-```typescript
-enum PlanStatus {
-  DRAFT = 'draft',
-  ACTIVE = 'active',
-  PAUSED = 'paused',
-  COMPLETED = 'completed',
-  CANCELLED = 'cancelled',
-  APPROVED = 'approved'
-}
-```
-
-### TaskStatus
-
-```typescript
-enum TaskStatus {
-  PENDING = 'pending',
-  IN_PROGRESS = 'in_progress',
-  COMPLETED = 'completed',
-  FAILED = 'failed',
-  CANCELLED = 'cancelled',
-  BLOCKED = 'blocked',
-  SKIPPED = 'skipped'
-}
-```
-
-### ExecutionStrategy
-
-```typescript
-enum ExecutionStrategy {
-  SEQUENTIAL = 'sequential',
-  PARALLEL = 'parallel',
-  ADAPTIVE = 'adaptive',
-  HIERARCHICAL = 'hierarchical'
-}
-```
-
-### Priority
-
-```typescript
-enum Priority {
-  LOW = 'low',
-  MEDIUM = 'medium',
-  HIGH = 'high',
-  URGENT = 'urgent'
-}
-```
-
-### DependencyType
-
-```typescript
-enum DependencyType {
-  FINISH_TO_START = 'finish_to_start',
-  START_TO_START = 'start_to_start',
-  FINISH_TO_FINISH = 'finish_to_finish',
-  START_TO_FINISH = 'start_to_finish'
-}
-```
-
-## 🚨 错误处理
-
-### 错误类型
-
-```typescript
-interface PlanError {
-  code: string;
+{
+  success: boolean;
+  planId: string;
   message: string;
-  details?: Record<string, unknown>;
-  timestamp: Timestamp;
-}
-
-// 常见错误代码
-const ERROR_CODES = {
-  PLAN_NOT_FOUND: 'PLAN_NOT_FOUND',
-  INVALID_STATUS_TRANSITION: 'INVALID_STATUS_TRANSITION',
-  CYCLIC_DEPENDENCY: 'CYCLIC_DEPENDENCY',
-  VALIDATION_FAILED: 'VALIDATION_FAILED',
-  RESOURCE_CONSTRAINT_VIOLATION: 'RESOURCE_CONSTRAINT_VIOLATION',
-  UNAUTHORIZED_ACCESS: 'UNAUTHORIZED_ACCESS'
-} as const;
-```
-
-### 错误示例
-
-```typescript
-// 状态转换错误
-{
-  code: 'INVALID_STATUS_TRANSITION',
-  message: 'Cannot transition from completed to active',
-  details: {
-    currentStatus: 'completed',
-    requestedStatus: 'active',
-    allowedTransitions: ['completed']
-  },
-  timestamp: '2025-08-07T10:30:00Z'
-}
-
-// 循环依赖错误
-{
-  code: 'CYCLIC_DEPENDENCY',
-  message: 'Cyclic dependency detected in task graph',
-  details: {
-    cycle: ['task-1', 'task-2', 'task-3', 'task-1'],
-    affectedTasks: ['task-1', 'task-2', 'task-3']
-  },
-  timestamp: '2025-08-07T10:30:00Z'
+  error?: {
+    code: string;
+    message: string;
+  };
 }
 ```
 
-## 📈 性能优化
+### **Plan Operations**
 
-### 分页查询
+#### **Execute Plan**
+```http
+POST /api/v1/plans/{planId}/execute
+```
 
+**Request Body**:
 ```typescript
-// 大量数据的分页查询
-const result = await planService.listPlans({
+{
+  executionMode?: 'sequential' | 'parallel' | 'hybrid';
+  dryRun?: boolean;
+  skipValidation?: boolean;
+  notifyOnCompletion?: boolean;
+  customConfig?: object;
+}
+```
+
+**Response**:
+```typescript
+{
+  success: boolean;
+  planId: string;
+  message: string;
+  metadata?: {
+    status: 'running' | 'completed' | 'failed' | 'cancelled';
+    totalTasks: number;
+    completedTasks: number;
+    failedTasks?: number;
+    executionTime?: number;
+  };
+  error?: {
+    code: string;
+    message: string;
+  };
+}
+```
+
+#### **Optimize Plan**
+```http
+POST /api/v1/plans/{planId}/optimize
+```
+
+**Request Body**:
+```typescript
+{
+  targets?: Array<'time' | 'cost' | 'quality' | 'risk'>;
+  constraints?: {
+    maxDuration?: number;
+    maxCost?: number;
+    minQuality?: number;
+    maxRisk?: number;
+  };
+  algorithm?: 'genetic' | 'simulated_annealing' | 'particle_swarm' | 'greedy';
+  iterations?: number;
+}
+```
+
+**Response**:
+```typescript
+{
+  success: boolean;
+  planId: string;
+  message: string;
+  metadata?: {
+    originalScore: number;
+    optimizedScore: number;
+    improvements: string[];
+    optimizationTime: number;
+  };
+  error?: {
+    code: string;
+    message: string;
+  };
+}
+```
+
+#### **Validate Plan**
+```http
+POST /api/v1/plans/{planId}/validate
+```
+
+**Request Body**:
+```typescript
+{
+  validationLevel?: 'basic' | 'standard' | 'comprehensive';
+  includeWarnings?: boolean;
+  customRules?: Array<{
+    ruleId: string;
+    name: string;
+    description: string;
+    type: 'structural' | 'business' | 'performance' | 'security';
+    severity: 'info' | 'warning' | 'error' | 'critical';
+    condition: string;
+    message: string;
+    enabled: boolean;
+  }>;
+  skipRuleIds?: string[];
+}
+```
+
+**Response**:
+```typescript
+{
+  success: boolean;
+  planId: string;
+  message: string;
+  metadata?: {
+    isValid: boolean;
+    violationCount: number;
+    warningCount?: number;
+    recommendationCount: number;
+    validationTime: number;
+  };
+  violations?: Array<{
+    ruleId: string;
+    severity: string;
+    message: string;
+    field?: string;
+  }>;
+  recommendations?: string[];
+  error?: {
+    code: string;
+    message: string;
+  };
+}
+```
+
+### **Plan Queries**
+
+#### **Query Plans**
+```http
+GET /api/v1/plans
+```
+
+**Query Parameters**:
+```typescript
+{
+  status?: string | string[];           // Filter by status
+  priority?: 'critical' | 'high' | 'medium' | 'low';
+  contextId?: string;                   // Filter by context
+  namePattern?: string;                 // Name pattern matching
+  assignedTo?: string;                  // Filter by assignee
+  createdAfter?: string;               // ISO date string
+  createdBefore?: string;              // ISO date string
+  page?: number;                       // Page number (default: 1)
+  limit?: number;                      // Items per page (default: 10)
+  sortBy?: 'name' | 'createdAt' | 'priority' | 'status';
+  sortOrder?: 'asc' | 'desc';
+}
+```
+
+**Response**:
+```typescript
+{
+  success: boolean;
+  data: PlanResponseDto[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+  error?: {
+    code: string;
+    message: string;
+  };
+}
+```
+
+## 🔧 **Task Management**
+
+### **Add Task to Plan**
+```http
+POST /api/v1/plans/{planId}/tasks
+```
+
+**Request Body**:
+```typescript
+{
+  name: string;
+  description?: string;
+  type: 'atomic' | 'composite' | 'milestone' | 'checkpoint';
+  priority?: 'critical' | 'high' | 'medium' | 'low';
+  estimatedDuration?: number;
+  durationUnit?: 'minutes' | 'hours' | 'days' | 'weeks';
+  assignedTo?: string[];
+  dependencies?: Array<{
+    taskId: string;
+    type: 'finish_to_start' | 'start_to_start' | 'finish_to_finish' | 'start_to_finish';
+    lag?: number;
+    lagUnit?: 'minutes' | 'hours' | 'days';
+  }>;
+  tags?: string[];
+  metadata?: object;
+}
+```
+
+### **Update Task**
+```http
+PUT /api/v1/plans/{planId}/tasks/{taskId}
+```
+
+**Request Body**:
+```typescript
+{
+  taskId: string;
+  name?: string;
+  description?: string;
+  status?: 'pending' | 'running' | 'completed' | 'failed' | 'cancelled';
+  priority?: 'critical' | 'high' | 'medium' | 'low';
+  completionPercentage?: number;
+  actualDuration?: number;
+  startDate?: string;
+  endDate?: string;
+}
+```
+
+## 🎯 **Milestone Management**
+
+### **Add Milestone**
+```http
+POST /api/v1/plans/{planId}/milestones
+```
+
+**Request Body**:
+```typescript
+{
+  name: string;
+  description?: string;
+  targetDate: Date;
+  criteria: string[];
+  dependencies?: string[];
+  deliverables?: string[];
+}
+```
+
+### **Update Milestone**
+```http
+PUT /api/v1/plans/{planId}/milestones/{milestoneId}
+```
+
+**Request Body**:
+```typescript
+{
+  id: string;
+  name?: string;
+  description?: string;
+  status?: 'pending' | 'in_progress' | 'completed' | 'failed';
+  targetDate?: Date;
+  actualDate?: Date;
+}
+```
+
+## 📊 **Error Codes**
+
+| Code | Description |
+|------|-------------|
+| `PLAN_CREATION_FAILED` | Plan creation failed due to validation or system error |
+| `PLAN_NOT_FOUND` | Plan with specified ID does not exist |
+| `PLAN_UPDATE_FAILED` | Plan update failed due to validation or system error |
+| `PLAN_DELETION_FAILED` | Plan deletion failed due to constraints or system error |
+| `PLAN_EXECUTION_FAILED` | Plan execution failed due to runtime error |
+| `PLAN_OPTIMIZATION_FAILED` | Plan optimization failed due to algorithm or data error |
+| `PLAN_VALIDATION_FAILED` | Plan validation failed due to rule violations |
+| `PLAN_QUERY_FAILED` | Plan query failed due to invalid parameters or system error |
+| `INVALID_PLAN_ID` | Invalid plan ID format |
+| `INVALID_CONTEXT_ID` | Invalid context ID format |
+| `UNAUTHORIZED_ACCESS` | Insufficient permissions for the requested operation |
+| `RATE_LIMIT_EXCEEDED` | API rate limit exceeded |
+
+## 🔒 **Authentication & Authorization**
+
+### **Bearer Token Authentication**
+```http
+Authorization: Bearer <your-jwt-token>
+```
+
+### **Required Permissions**
+- `plan:read` - View plans
+- `plan:write` - Create and update plans
+- `plan:delete` - Delete plans
+- `plan:execute` - Execute plans
+- `plan:optimize` - Optimize plans
+- `plan:validate` - Validate plans
+
+## 📈 **Rate Limits**
+
+| Endpoint | Rate Limit |
+|----------|------------|
+| GET endpoints | 1000 requests/hour |
+| POST/PUT endpoints | 500 requests/hour |
+| DELETE endpoints | 100 requests/hour |
+| Execute operations | 50 requests/hour |
+
+## 🔧 **SDK Examples**
+
+### **JavaScript/TypeScript**
+```typescript
+import { PlanClient } from '@mplp/plan-client';
+
+const client = new PlanClient({
+  baseUrl: 'https://api.mplp.dev',
+  apiKey: 'your-api-key'
+});
+
+// Create a plan
+const plan = await client.createPlan({
   contextId: 'ctx-123',
-  status: ['active', 'paused'],
-  limit: 50,
-  offset: 100,
-  sortBy: 'updated_at',
-  sortOrder: 'desc'
+  name: 'My Plan',
+  priority: 'high'
 });
+
+// Execute the plan
+const result = await client.executePlan(plan.planId);
 ```
 
-### 批量操作
+### **Python**
+```python
+from mplp_client import PlanClient
 
-```typescript
-// 批量更新任务状态
-const batchUpdate = await planService.updateTaskStatusBatch([
-  { taskId: 'task-1', status: 'completed' },
-  { taskId: 'task-2', status: 'in_progress' },
-  { taskId: 'task-3', status: 'pending' }
-]);
+client = PlanClient(
+    base_url='https://api.mplp.dev',
+    api_key='your-api-key'
+)
+
+# Create a plan
+plan = client.create_plan({
+    'contextId': 'ctx-123',
+    'name': 'My Plan',
+    'priority': 'high'
+})
+
+# Execute the plan
+result = client.execute_plan(plan['planId'])
 ```
 
-### 缓存策略
+## 🌐 **WebSocket API (Real-time)**
 
-```typescript
-// 启用缓存的查询
-const cachedResult = await planService.getPlan('plan-123', {
-  useCache: true,
-  cacheTimeout: 300000 // 5分钟
-});
+### **Connection**
+```javascript
+const ws = new WebSocket('wss://api.mplp.dev/ws/plans');
 ```
 
-## 🔐 安全性
-
-### 权限验证
-
-```typescript
-// 带权限检查的操作
-const result = await planService.updatePlan('plan-123', updates, {
-  userId: 'user-456',
-  requiredPermissions: ['plan:update']
-});
-```
-
-### 审计日志
-
-```typescript
-// 自动记录的审计信息
-interface AuditLog {
-  operation: string;
-  resourceId: UUID;
-  userId: UUID;
-  timestamp: Timestamp;
-  changes: Record<string, { old: unknown; new: unknown }>;
-  ipAddress?: string;
-  userAgent?: string;
+### **Subscribe to Plan Updates**
+```json
+{
+  "action": "subscribe",
+  "planId": "550e8400-e29b-41d4-a716-446655440000",
+  "events": ["status_change", "task_update", "milestone_reached"]
 }
 ```
+
+### **Real-time Events**
+```json
+{
+  "event": "plan_status_changed",
+  "planId": "550e8400-e29b-41d4-a716-446655440000",
+  "data": {
+    "oldStatus": "active",
+    "newStatus": "completed",
+    "timestamp": "2025-08-26T10:30:00Z"
+  }
+}
+```
+
+## 📝 **Request/Response Examples**
+
+### **Complete Plan Creation Example**
+```bash
+curl -X POST /api/v1/plans \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
+  -d '{
+    "contextId": "550e8400-e29b-41d4-a716-446655440000",
+    "name": "E-commerce Platform Development",
+    "description": "Complete development of e-commerce platform with microservices architecture",
+    "priority": "high",
+    "tasks": [
+      {
+        "name": "Requirements Gathering",
+        "description": "Collect and analyze business requirements",
+        "type": "milestone",
+        "priority": "critical"
+      },
+      {
+        "name": "System Architecture Design",
+        "description": "Design microservices architecture",
+        "type": "composite",
+        "priority": "high"
+      },
+      {
+        "name": "Database Schema Design",
+        "description": "Design database schema for all services",
+        "type": "atomic",
+        "priority": "high"
+      },
+      {
+        "name": "API Development",
+        "description": "Develop REST APIs for all services",
+        "type": "composite",
+        "priority": "medium"
+      }
+    ],
+    "milestones": [
+      {
+        "name": "Architecture Review",
+        "targetDate": "2025-09-15T00:00:00Z",
+        "criteria": [
+          "Architecture document approved",
+          "Technical review completed",
+          "Stakeholder sign-off received"
+        ]
+      },
+      {
+        "name": "MVP Release",
+        "targetDate": "2025-12-01T00:00:00Z",
+        "criteria": [
+          "Core features implemented",
+          "Testing completed",
+          "Performance benchmarks met"
+        ]
+      }
+    ],
+    "resources": [
+      {
+        "resourceId": "dev-team-001",
+        "type": "human",
+        "allocatedAmount": 5
+      },
+      {
+        "resourceId": "aws-infrastructure",
+        "type": "technical",
+        "allocatedAmount": 1000
+      }
+    ],
+    "risks": [
+      {
+        "name": "Third-party API Dependencies",
+        "level": "medium",
+        "probability": 0.3,
+        "impact": 0.7
+      },
+      {
+        "name": "Team Availability",
+        "level": "low",
+        "probability": 0.2,
+        "impact": 0.5
+      }
+    ]
+  }'
+```
+
+### **Response**
+```json
+{
+  "success": true,
+  "planId": "plan-550e8400-e29b-41d4-a716-446655440001",
+  "message": "Plan created successfully",
+  "metadata": {
+    "name": "E-commerce Platform Development",
+    "status": "draft",
+    "priority": "high",
+    "taskCount": 4,
+    "milestoneCount": 2,
+    "resourceCount": 2,
+    "riskCount": 2
+  }
+}
+```
+
+## 🔍 **Advanced Query Examples**
+
+### **Complex Plan Query**
+```bash
+curl -G /api/v1/plans \
+  -d "status=active,paused" \
+  -d "priority=high" \
+  -d "createdAfter=2025-08-01T00:00:00Z" \
+  -d "sortBy=priority" \
+  -d "sortOrder=desc" \
+  -d "page=1" \
+  -d "limit=20"
+```
+
+### **Plan Optimization with Custom Parameters**
+```bash
+curl -X POST /api/v1/plans/plan-123/optimize \
+  -H "Content-Type: application/json" \
+  -d '{
+    "targets": ["time", "cost", "quality"],
+    "constraints": {
+      "maxDuration": 90,
+      "maxCost": 100000,
+      "minQuality": 0.9
+    },
+    "algorithm": "genetic",
+    "iterations": 1000
+  }'
+```
+
+## 🚨 **Error Response Format**
+
+### **Standard Error Response**
+```json
+{
+  "success": false,
+  "error": {
+    "code": "PLAN_VALIDATION_FAILED",
+    "message": "Plan validation failed due to missing required fields",
+    "details": {
+      "field": "contextId",
+      "reason": "Context ID is required and must be a valid UUID",
+      "provided": "",
+      "expected": "UUID format (e.g., 550e8400-e29b-41d4-a716-446655440000)"
+    },
+    "timestamp": "2025-08-26T10:30:00Z",
+    "requestId": "req-123456789"
+  }
+}
+```
+
+### **Validation Error Response**
+```json
+{
+  "success": false,
+  "error": {
+    "code": "PLAN_VALIDATION_FAILED",
+    "message": "Multiple validation errors found",
+    "details": {
+      "errors": [
+        {
+          "field": "name",
+          "message": "Plan name is required and cannot be empty"
+        },
+        {
+          "field": "tasks[0].type",
+          "message": "Task type must be one of: atomic, composite, milestone, checkpoint"
+        },
+        {
+          "field": "priority",
+          "message": "Priority must be one of: critical, high, medium, low"
+        }
+      ]
+    }
+  }
+}
+```
+
+## 📊 **Performance Metrics**
+
+### **Response Time Benchmarks**
+| Operation | P50 | P95 | P99 |
+|-----------|-----|-----|-----|
+| Create Plan | 45ms | 85ms | 120ms |
+| Get Plan | 15ms | 35ms | 50ms |
+| Update Plan | 35ms | 65ms | 90ms |
+| Delete Plan | 25ms | 45ms | 70ms |
+| Execute Plan | 150ms | 300ms | 500ms |
+| Optimize Plan | 800ms | 1500ms | 2500ms |
+| Validate Plan | 100ms | 200ms | 350ms |
+| Query Plans | 50ms | 100ms | 150ms |
+
+### **Throughput Limits**
+- **Concurrent Requests**: 1,000 per second
+- **Plan Operations**: 500 per second
+- **Query Operations**: 2,000 per second
+- **WebSocket Connections**: 10,000 concurrent
 
 ---
 
-**版本**: v1.0.0  
-**最后更新**: 2025-08-07  
-**状态**: 生产就绪 ✅
+**API Version**: v1.0.0
+**Last Updated**: 2025-08-30
+**OpenAPI Specification**: [Available here](./openapi.yaml)
+**Postman Collection**: [Available here](./postman-collection.json)

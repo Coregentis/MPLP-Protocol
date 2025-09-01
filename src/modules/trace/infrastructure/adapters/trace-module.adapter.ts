@@ -1,516 +1,508 @@
 /**
  * Trace模块适配器
  * 
- * 实现Core模块的ModuleInterface接口，提供事件跟踪和监控功能
- * 
- * @version 2.0.0
- * @created 2025-08-04
- * @updated 2025-08-04 23:54
+ * @description 提供Trace模块的统一访问接口和外部系统集成，集成9个L3横切关注点管理器
+ * @version 1.0.0
+ * @pattern 与Context、Plan、Role、Confirm模块使用IDENTICAL架构模式
+ * @integration 统一L3管理器注入和初始化模式
  */
 
-import { v4 as uuidv4 } from 'uuid';
-import {
-  ModuleInterface,
-  ModuleStatus,
-  TracingCoordinationRequest,
-  TracingResult,
-  ValidationResult,
-  WorkflowExecutionContext,
-  StageExecutionResult,
-  BusinessCoordinationRequest,
-  BusinessCoordinationResult,
-  BusinessError,
-  BusinessContext,
-  ErrorHandlingResult,
-  ProtocolModule,
-  BusinessCoordinationType,
-  BusinessDataType
-} from '../../../../public/modules/core/types/core.types';
+import { TraceProtocol } from '../protocols/trace.protocol';
+import { TraceProtocolFactory, TraceProtocolFactoryConfig } from '../factories/trace-protocol.factory';
 import { TraceManagementService } from '../../application/services/trace-management.service';
-import { TraceFactory, CreateTraceRequest } from '../../domain/factories/trace.factory';
-import { Trace } from '../../domain/entities/trace.entity';
-import { TraceAnalysisService } from '../../domain/services/trace-analysis.service';
-import { Logger } from '../../../../public/utils/logger';
+import { TraceAnalyticsService } from '../../application/services/trace-analytics.service';
+import { TraceSecurityService } from '../../application/services/trace-security.service';
+import { ITraceRepository } from '../../domain/repositories/trace-repository.interface';
+import { TraceRepository } from '../repositories/trace.repository';
+
 import {
-  TraceType
+  TraceEntityData,
+  CreateTraceRequest,
+  UpdateTraceRequest,
+  TraceQueryFilter,
+  TraceExecutionResult,
+  TraceAnalysisResult,
+  TraceValidationResult,
+  TraceSchema
 } from '../../types';
-import { UUID, Timestamp } from '../../../../public/shared/types';
+import { UUID, PaginationParams } from '../../../../shared/types';
+
+// ===== 预留L3横切关注点管理器接口 =====
+// TODO: 等待完整的横切关注点管理器实现
+interface MockL3Manager {
+  getHealthStatus(): Promise<{ status: string; timestamp: string }>;
+}
+
+interface MockPerformanceMonitor extends MockL3Manager {
+  startOperation(operation: string): Promise<string>;
+  endOperation(operationId: string, success?: boolean): Promise<void>;
+  getOperationDuration(operationId: string): Promise<number>;
+}
+
+interface MockEventBusManager extends MockL3Manager {
+  publishEvent(eventType: string, data: Record<string, unknown>): Promise<void>;
+}
+
+interface MockErrorHandler extends MockL3Manager {
+  handleError(error: unknown, context: Record<string, unknown>): Promise<{ code: string; message: string; details?: unknown }>;
+}
+
+interface MockTransactionManager extends MockL3Manager {
+  beginTransaction(): Promise<string>;
+  commitTransaction(transactionId: string): Promise<void>;
+  rollbackTransaction(transactionId: string): Promise<void>;
+}
+
+interface MockCoordinationManager extends MockL3Manager {
+  registerIntegration(sourceModule: string, targetModule: string): Promise<void>;
+}
+
+// ===== Mock管理器实现 =====
+class MockL3ManagerImpl implements MockL3Manager {
+  async getHealthStatus() {
+    return {
+      status: 'healthy',
+      timestamp: new Date().toISOString()
+    };
+  }
+}
+
+class MockPerformanceMonitorImpl extends MockL3ManagerImpl implements MockPerformanceMonitor {
+  private operations = new Map<string, number>();
+
+  async startOperation(operation: string): Promise<string> {
+    const operationId = `${operation}-${Date.now()}`;
+    this.operations.set(operationId, Date.now());
+    return operationId;
+  }
+
+  async endOperation(_operationId: string, _success = true): Promise<void> {
+    // Mock implementation
+  }
+
+  async getOperationDuration(operationId: string): Promise<number> {
+    const startTime = this.operations.get(operationId);
+    return startTime ? Date.now() - startTime : 0;
+  }
+}
+
+class MockEventBusManagerImpl extends MockL3ManagerImpl implements MockEventBusManager {
+  async publishEvent(_eventType: string, _data: Record<string, unknown>): Promise<void> {
+    // Mock implementation
+  }
+}
+
+class MockErrorHandlerImpl extends MockL3ManagerImpl implements MockErrorHandler {
+  async handleError(error: unknown, _context: Record<string, unknown>) {
+    return {
+      code: 'MOCK_ERROR',
+      message: error instanceof Error ? error.message : 'Unknown error',
+      details: error as Record<string, unknown>
+    };
+  }
+}
+
+class MockTransactionManagerImpl extends MockL3ManagerImpl implements MockTransactionManager {
+  async beginTransaction(): Promise<string> {
+    return `transaction-${Date.now()}`;
+  }
+
+  async commitTransaction(_transactionId: string): Promise<void> {
+    // Mock implementation
+  }
+
+  async rollbackTransaction(_transactionId: string): Promise<void> {
+    // Mock implementation
+  }
+}
+
+class MockCoordinationManagerImpl extends MockL3ManagerImpl implements MockCoordinationManager {
+  async registerIntegration(_sourceModule: string, _targetModule: string): Promise<void> {
+    // Mock implementation
+  }
+}
+
+// ===== Mock横切关注点工厂 =====
+class MockCrossCuttingConcernsFactory {
+  private static instance: MockCrossCuttingConcernsFactory;
+
+  static getInstance(): MockCrossCuttingConcernsFactory {
+    if (!MockCrossCuttingConcernsFactory.instance) {
+      MockCrossCuttingConcernsFactory.instance = new MockCrossCuttingConcernsFactory();
+    }
+    return MockCrossCuttingConcernsFactory.instance;
+  }
+
+  createManagers(_config: Record<string, { enabled?: boolean }>) {
+    return {
+      security: new MockL3ManagerImpl(),
+      performance: new MockPerformanceMonitorImpl(),
+      eventBus: new MockEventBusManagerImpl(),
+      errorHandler: new MockErrorHandlerImpl(),
+      coordination: new MockCoordinationManagerImpl(),
+      orchestration: new MockL3ManagerImpl(),
+      stateSync: new MockL3ManagerImpl(),
+      transaction: new MockTransactionManagerImpl(),
+      protocolVersion: new MockL3ManagerImpl()
+    };
+  }
+}
 
 /**
- * Trace模块适配器类
- * 实现Core模块的ModuleInterface接口
+ * Trace模块适配器配置
  */
-export class TraceModuleAdapter implements ModuleInterface {
-  public readonly module_name = 'trace';
-  private logger = new Logger('TraceModuleAdapter');
-  private moduleStatus: ModuleStatus = {
-    module_name: 'trace',
-    status: 'idle',
-    error_count: 0
-  };
+export interface TraceModuleAdapterConfig {
+  enableLogging?: boolean;
+  enableCaching?: boolean;
+  enableMetrics?: boolean;
+  repositoryType?: 'memory' | 'database' | 'file';
+  maxCacheSize?: number;
+  cacheTimeout?: number;
+  enableRealTimeMonitoring?: boolean;
+  enableCorrelationAnalysis?: boolean;
+  enableDistributedTracing?: boolean;
+  maxTraceRetentionDays?: number;
+  enableAutoArchiving?: boolean;
+}
 
-  constructor(
-    private traceManagementService: TraceManagementService,
-    private traceFactory: TraceFactory,
-    private analysisService: TraceAnalysisService
-  ) {}
+/**
+ * Trace模块适配器
+ * 
+ * @description 提供Trace模块的统一访问接口和外部系统集成
+ */
+export class TraceModuleAdapter {
+  private config: Required<TraceModuleAdapterConfig>;
+  private initialized = false;
+
+  // 核心组件
+  private protocol!: TraceProtocol;
+  private service!: TraceManagementService;
+  private analyticsService!: TraceAnalyticsService;
+  private securityService!: TraceSecurityService;
+  private repository!: ITraceRepository;
+
+  // L3横切关注点管理器
+  private crossCuttingFactory!: MockCrossCuttingConcernsFactory;
+  private securityManager!: MockL3Manager;
+  private performanceMonitor!: MockPerformanceMonitor;
+  private eventBusManager!: MockEventBusManager;
+  private errorHandler!: MockErrorHandler;
+  private coordinationManager!: MockCoordinationManager;
+  private orchestrationManager!: MockL3Manager;
+  private stateSyncManager!: MockL3Manager;
+  private transactionManager!: MockTransactionManager;
+  private protocolVersionManager!: MockL3Manager;
+
+  constructor(config: TraceModuleAdapterConfig = {}) {
+    this.config = {
+      enableLogging: true,
+      enableCaching: false,
+      enableMetrics: false,
+      repositoryType: 'memory',
+      maxCacheSize: 1000,
+      cacheTimeout: 300000, // 5分钟
+      enableRealTimeMonitoring: true,
+      enableCorrelationAnalysis: true,
+      enableDistributedTracing: true,
+      maxTraceRetentionDays: 30,
+      enableAutoArchiving: false,
+      ...config
+    };
+
+    // 初始化横切关注点管理器
+    this.crossCuttingFactory = MockCrossCuttingConcernsFactory.getInstance();
+    const managers = this.crossCuttingFactory.createManagers({
+      security: { enabled: true },
+      performance: { enabled: this.config.enableMetrics || false },
+      eventBus: { enabled: true },
+      errorHandler: { enabled: true },
+      coordination: { enabled: true },
+      orchestration: { enabled: true },
+      stateSync: { enabled: true },
+      transaction: { enabled: true },
+      protocolVersion: { enabled: true }
+    });
+
+    // 分配管理器实例
+    this.securityManager = managers.security;
+    this.performanceMonitor = managers.performance;
+    this.eventBusManager = managers.eventBus;
+    this.errorHandler = managers.errorHandler;
+    this.coordinationManager = managers.coordination;
+    this.orchestrationManager = managers.orchestration;
+    this.stateSyncManager = managers.stateSync;
+    this.transactionManager = managers.transaction;
+    this.protocolVersionManager = managers.protocolVersion;
+  }
 
   /**
-   * 初始化模块
+   * 初始化适配器
    */
   async initialize(): Promise<void> {
-    try {
-      this.logger.info('Initializing Trace module adapter');
-      
-      // 检查服务是否可用
-      if (!this.traceManagementService || !this.traceFactory || !this.analysisService) {
-        throw new Error('Trace services not available');
-      }
-
-      this.moduleStatus.status = 'initialized';
-      this.logger.info('Trace module adapter initialized successfully');
-    } catch (error) {
-      this.moduleStatus.status = 'error';
-      this.moduleStatus.error_count++;
-      this.logger.error('Failed to initialize Trace module adapter', error);
-      throw error;
+    if (this.initialized) {
+      return;
     }
-  }
-
-  /**
-   * 执行跟踪协调
-   */
-  async execute(request: TracingCoordinationRequest): Promise<TracingResult> {
-    this.logger.info('Executing tracing coordination', { 
-      contextId: request.contextId,
-      strategy: request.tracing_strategy 
-    });
-
-    this.moduleStatus.status = 'running';
-    this.moduleStatus.last_execution = new Date().toISOString();
 
     try {
-      // 验证请求参数
-      this.validateTracingRequest(request);
-
-      // 根据策略执行跟踪流程
-      const result = await this.executeTracingStrategy(request);
-
-      this.moduleStatus.status = 'idle';
-      
-      this.logger.info('Tracing coordination completed', {
-        contextId: request.contextId,
-        traceId: result.traceId
-      });
-
-      return result;
-    } catch (error) {
-      this.moduleStatus.status = 'error';
-      this.moduleStatus.error_count++;
-      
-      this.logger.error('Tracing coordination failed', {
-        contextId: request.contextId,
-        error: error instanceof Error ? error.message : String(error)
-      });
-      throw error;
-    }
-  }
-
-  /**
-   * 清理资源
-   */
-  async cleanup(): Promise<void> {
-    try {
-      this.logger.info('Cleaning up Trace module adapter');
-      this.moduleStatus.status = 'idle';
-      this.logger.info('Trace module adapter cleanup completed');
-    } catch (error) {
-      this.logger.error('Failed to cleanup Trace module adapter', error);
-      throw error;
-    }
-  }
-
-  /**
-   * 获取模块状态
-   */
-  getStatus(): ModuleStatus {
-    return this.moduleStatus;
-  }
-
-  // ===== 私有方法 =====
-
-  /**
-   * 验证跟踪请求
-   */
-  private validateTracingRequest(request: TracingCoordinationRequest): void {
-    if (!request.contextId) {
-      throw new Error('Context ID is required');
-    }
-
-    if (!['real_time', 'batch', 'sampling', 'adaptive'].includes(request.tracing_strategy)) {
-      throw new Error(`Unsupported tracing strategy: ${request.tracing_strategy}`);
-    }
-
-    // 验证采样率
-    if (request.parameters.sampling_rate !== undefined) {
-      if (request.parameters.sampling_rate < 0 || request.parameters.sampling_rate > 1) {
-        throw new Error('Sampling rate must be between 0 and 1');
-      }
-    }
-
-    // 验证保留期
-    if (request.parameters.retention_period && request.parameters.retention_period <= 0) {
-      throw new Error('Retention period must be positive');
-    }
-
-    // 验证事件过滤器
-    if (request.parameters.event_filters) {
-      if (!Array.isArray(request.parameters.event_filters)) {
-        throw new Error('Event filters must be an array');
-      }
-    }
-
-    // 验证监控配置
-    if (request.monitoring_config) {
-      const { alert_thresholds } = request.monitoring_config;
-      
-      if (alert_thresholds) {
-        for (const [metric, threshold] of Object.entries(alert_thresholds)) {
-          if (typeof threshold !== 'number' || threshold < 0) {
-            throw new Error(`Alert threshold for ${metric} must be a positive number`);
-          }
-        }
-      }
-    }
-  }
-
-  /**
-   * 执行跟踪策略
-   */
-  private async executeTracingStrategy(request: TracingCoordinationRequest): Promise<TracingResult> {
-    const trace_id = uuidv4();
-    const timestamp = new Date().toISOString();
-
-    // 根据策略生成跟踪数据
-    const traceData = await this.generateTraceData(request, trace_id);
-
-    // 创建跟踪
-    const createResult = await this.traceManagementService.createTrace(traceData);
-    if (!createResult.success || !createResult.data) {
-      throw new Error(`Failed to create trace: ${createResult.error}`);
-    }
-
-    const trace = createResult.data;
-
-    // 启动监控会话
-    const monitoringSession = await this.startMonitoringSession(request, trace);
-
-    // 配置事件收集
-    const eventCollection = await this.configureEventCollection(request, trace);
-
-    return {
-      traceId: trace_id as UUID,
-      monitoring_session: monitoringSession,
-      event_collection: eventCollection,
-      timestamp: timestamp as Timestamp
-    };
-  }
-
-  /**
-   * 生成跟踪数据
-   */
-  private async generateTraceData(request: TracingCoordinationRequest, _trace_id: string): Promise<CreateTraceRequest> {
-    const traceType = this.mapStrategyToTraceType(request.tracing_strategy);
-
-    return {
-      context_id: request.contextId,
-      trace_type: traceType,
-      severity: 'info',
-      event: {
-        type: 'start',
-        name: 'coordination_trace',
-        description: `Trace created using ${request.tracing_strategy} strategy`,
-        category: 'system',
-        source: {
-          component: 'core-orchestrator',
-          module: 'trace-adapter',
-          function: 'generateTraceData'
-        },
-        data: {
-          strategy: request.tracing_strategy,
-          parameters: request.parameters
-        }
-      },
-      metadata: {
-        strategy: request.tracing_strategy,
-        sampling_rate: request.parameters.sampling_rate || 1.0,
-        retention_period: request.parameters.retention_period || 86400000,
-        event_filters: request.parameters.event_filters || [],
-        monitoring_enabled: request.monitoring_config?.metrics_collection || false,
-        dashboard_enabled: request.monitoring_config?.dashboard_enabled || false
-      }
-    };
-  }
-
-  /**
-   * 启动监控会话
-   */
-  private async startMonitoringSession(
-    request: TracingCoordinationRequest,
-    trace: Trace
-  ): Promise<{
-    sessionId: UUID;
-    start_time: Timestamp;
-    active_traces: number;
-  }> {
-    const session_id = uuidv4();
-    const start_time = new Date().toISOString();
-
-    // 记录监控会话开始事件
-    await this.traceManagementService.recordEvent({
-      trace_id: trace.traceId,
-      event_type: 'monitoring_session_started',
-      level: 'info',
-      timestamp: new Date(),
-      data: {
-        session_id,
-        strategy: request.tracing_strategy,
-        monitoring_config: request.monitoring_config
-      }
-    });
-
-    return {
-      sessionId: session_id as UUID,
-      start_time: start_time as Timestamp,
-      active_traces: 1 // 简化实现，实际应该查询活跃跟踪数量
-    };
-  }
-
-  /**
-   * 配置事件收集
-   */
-  private async configureEventCollection(
-    request: TracingCoordinationRequest,
-    trace: Trace
-  ): Promise<{
-    events_captured: number;
-    storage_location: string;
-  }> {
-    const storage_location = this.determineStorageLocation(request);
-
-    // 记录事件收集配置事件
-    await this.traceManagementService.recordEvent({
-      trace_id: trace.traceId,
-      event_type: 'event_collection_configured',
-      level: 'info',
-      timestamp: new Date(),
-      data: {
-        strategy: request.tracing_strategy,
-        sampling_rate: request.parameters.sampling_rate || 1.0,
-        event_filters: request.parameters.event_filters || [],
-        storage_location
-      }
-    });
-
-    return {
-      events_captured: 0, // 初始值
-      storage_location
-    };
-  }
-
-  /**
-   * 映射策略到跟踪类型
-   */
-  private mapStrategyToTraceType(strategy: string): TraceType {
-    switch (strategy) {
-      case 'real_time':
-        return 'execution';
-      case 'batch':
-        return 'monitoring';
-      case 'sampling':
-        return 'performance';
-      case 'adaptive':
-        return 'error';
-      default:
-        return 'execution';
-    }
-  }
-
-  /**
-   * 确定存储位置
-   */
-  private determineStorageLocation(request: TracingCoordinationRequest): string {
-    const strategy = request.tracing_strategy;
-    const contextId = request.contextId.substring(0, 8);
-    
-    switch (strategy) {
-      case 'real_time':
-        return `memory://traces/realtime/${contextId}`;
-      case 'batch':
-        return `disk://traces/batch/${contextId}`;
-      case 'sampling':
-        return `cache://traces/sampling/${contextId}`;
-      case 'adaptive':
-        return `hybrid://traces/adaptive/${contextId}`;
-      default:
-        return `default://traces/${contextId}`;
-    }
-  }
-
-  /**
-   * P0修复：执行工作流阶段
-   */
-  async executeStage(context: WorkflowExecutionContext): Promise<StageExecutionResult> {
-    const businessRequest = {
-      contextId: context.contextId,
-      coordination_id: 'stage-' + Date.now(),
-      context_id: context.contextId,
-      module: 'trace' as ProtocolModule,
-      coordination_type: 'tracing_coordination' as BusinessCoordinationType,
-      input_data: {
-        data_type: 'tracing_data' as BusinessDataType,
-        data_version: '1.0.0',
-        payload: { context_id: context.contextId },
-        metadata: {
-          source_module: 'trace' as ProtocolModule,
-          target_modules: ['trace' as ProtocolModule],
-          data_schema_version: '1.0.0',
-          validation_status: 'valid' as 'valid' | 'pending' | 'invalid',
-          security_level: 'internal' as 'internal' | 'public' | 'confidential' | 'restricted'
-        },
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      },
-      previous_stage_results: [],
-      configuration: {
-        timeout_ms: 30000,
-        retry_policy: { max_attempts: 3, delay_ms: 1000 },
-        retryPolicy: { max_attempts: 3, delay_ms: 1000 },
-        validation_rules: [],
-        validationRules: [],
-        output_format: 'tracing_data'
-      }
-    };
-
-    const result = await this.executeBusinessCoordination(businessRequest);
-    return {
-      stage: 'trace',
-      status: 'completed',
-      result: result.output_data,
-      duration_ms: 100,
-      startedAt: new Date().toISOString(),
-      completedAt: new Date().toISOString()
-    };
-  }
-
-  /**
-   * P0修复：执行业务协调
-   */
-  async executeBusinessCoordination(request: BusinessCoordinationRequest): Promise<BusinessCoordinationResult> {
-    const startTime = Date.now();
-
-    try {
-      const traceRequest = {
-        contextId: request.contextId,
-        tracing_strategy: (request.input_data.payload.tracing_strategy as 'real_time' | 'batch' | 'sampling' | 'adaptive') || 'real_time',
-        parameters: (request.input_data.payload.parameters as { [key: string]: unknown; sampling_rate?: number; retention_period?: number; event_filters?: string[]; }) || {
-          sampling_rate: 1.0,
-          retention_period: 86400000,
-          event_filters: []
-        },
-        monitoring_config: (request.input_data.payload.monitoring_config as { metrics_collection: boolean; alert_thresholds: Record<string, number>; dashboard_enabled: boolean; }) || {
-          metrics_collection: true,
-          alert_thresholds: {},
-          dashboard_enabled: false
-        }
+      // 创建协议工厂配置
+      const factoryConfig: TraceProtocolFactoryConfig = {
+        enableLogging: this.config.enableLogging,
+        enableCaching: this.config.enableCaching,
+        enableMetrics: this.config.enableMetrics,
+        repositoryType: this.config.repositoryType,
+        maxCacheSize: this.config.maxCacheSize,
+        cacheTimeout: this.config.cacheTimeout,
+        enableRealTimeMonitoring: this.config.enableRealTimeMonitoring,
+        enableCorrelationAnalysis: this.config.enableCorrelationAnalysis,
+        enableDistributedTracing: this.config.enableDistributedTracing,
+        maxTraceRetentionDays: this.config.maxTraceRetentionDays,
+        enableAutoArchiving: this.config.enableAutoArchiving
       };
 
-      const result = await this.execute(traceRequest);
+      // 创建协议实例
+      const factory = TraceProtocolFactory.getInstance();
+      this.protocol = await factory.createProtocol(factoryConfig);
 
-      return {
-        coordination_id: request.coordination_id,
-        module: 'trace',
-        status: 'completed',
-        output_data: {
-          data_type: 'tracing_data',
-          data_version: '1.0.0',
-          payload: result as unknown as Record<string, unknown>,
-          metadata: {
-            source_module: 'trace',
-            target_modules: ['core'],
-            data_schema_version: '1.0.0',
-            validation_status: 'valid',
-            security_level: 'internal'
-          },
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        },
-        execution_metrics: {
-          start_time: new Date(startTime).toISOString(),
-          end_time: new Date().toISOString(),
-          duration_ms: Date.now() - startTime
-        },
+      // 创建仓库实例
+      this.repository = new TraceRepository({
+        enableCaching: this.config.enableCaching,
+        maxCacheSize: this.config.maxCacheSize,
+        cacheTimeout: this.config.cacheTimeout
+      });
+
+      // 创建服务实例
+      this.service = new TraceManagementService(this.repository);
+      this.analyticsService = new TraceAnalyticsService(this.repository);
+      this.securityService = new TraceSecurityService(this.repository);
+
+      this.initialized = true;
+
+      // 发布初始化完成事件
+      await this.eventBusManager.publishEvent('trace_module_initialized', {
+        timestamp: new Date().toISOString(),
+        config: this.config
+      });
+
+    } catch (error) {
+      const handledError = await this.errorHandler.handleError(error, {
+        operation: 'initialize',
+        context: { config: this.config }
+      });
+      throw handledError;
+    }
+  }
+
+  /**
+   * 关闭适配器
+   */
+  async shutdown(): Promise<void> {
+    if (!this.initialized) {
+      return;
+    }
+
+    try {
+      // 发布关闭事件
+      await this.eventBusManager.publishEvent('trace_module_shutdown', {
         timestamp: new Date().toISOString()
-      };
+      });
+
+      // 清理资源
+      this.initialized = false;
 
     } catch (error) {
-      return {
-        coordination_id: request.coordination_id,
-        module: 'trace',
-        status: 'failed',
-        output_data: request.input_data,
-        execution_metrics: {
-          start_time: new Date(startTime).toISOString(),
-          end_time: new Date().toISOString(),
-          duration_ms: Date.now() - startTime
-        },
-        error: {
-          error_id: 'trace-error-' + Date.now(),
-          error_type: 'business_logic_error',
-          error_code: 'TRACE_COORDINATION_FAILED',
-          error_message: error instanceof Error ? error.message : String(error),
-          source_module: 'trace',
-          context_data: { coordinationId: request.coordination_id },
-          recovery_suggestions: [
-            {
-              suggestion_type: 'retry',
-              description: 'Retry the trace coordination',
-              automated: true
-            }
-          ],
+      const handledError = await this.errorHandler.handleError(error, {
+        operation: 'shutdown',
+        context: {}
+      });
+      throw handledError;
+    }
+  }
+
+  /**
+   * 确保适配器已初始化
+   */
+  private ensureInitialized(): void {
+    if (!this.initialized) {
+      throw new Error('TraceModuleAdapter must be initialized before use');
+    }
+  }
+
+  // ===== 核心业务操作 =====
+
+  /**
+   * 创建追踪记录
+   */
+  async createTrace(request: CreateTraceRequest): Promise<TraceExecutionResult> {
+    this.ensureInitialized();
+    return await this.protocol.createTrace(request);
+  }
+
+  /**
+   * 更新追踪记录
+   */
+  async updateTrace(request: UpdateTraceRequest): Promise<TraceExecutionResult> {
+    this.ensureInitialized();
+    return await this.protocol.updateTrace(request);
+  }
+
+  /**
+   * 获取追踪记录
+   */
+  async getTrace(traceId: UUID): Promise<TraceEntityData | null> {
+    this.ensureInitialized();
+    return await this.protocol.getTrace(traceId);
+  }
+
+  /**
+   * 查询追踪记录
+   */
+  async queryTraces(
+    filter: TraceQueryFilter,
+    pagination?: PaginationParams
+  ): Promise<{ traces: TraceEntityData[]; total: number }> {
+    this.ensureInitialized();
+    return await this.protocol.queryTraces(filter, pagination);
+  }
+
+  /**
+   * 分析追踪数据
+   */
+  async analyzeTrace(traceId: UUID): Promise<TraceAnalysisResult> {
+    this.ensureInitialized();
+    return await this.protocol.analyzeTrace(traceId);
+  }
+
+  /**
+   * 验证追踪数据
+   */
+  async validateTrace(traceData: TraceSchema): Promise<TraceValidationResult> {
+    this.ensureInitialized();
+    return await this.protocol.validateTrace(traceData);
+  }
+
+  // ===== 组件访问器 =====
+
+  /**
+   * 获取Trace管理服务
+   */
+  getService(): TraceManagementService {
+    this.ensureInitialized();
+    return this.service;
+  }
+
+  /**
+   * 获取Trace分析服务
+   */
+  getAnalyticsService(): TraceAnalyticsService {
+    this.ensureInitialized();
+    return this.analyticsService;
+  }
+
+  /**
+   * 获取Trace安全服务
+   */
+  getSecurityService(): TraceSecurityService {
+    this.ensureInitialized();
+    return this.securityService;
+  }
+
+  /**
+   * 获取Trace仓库
+   */
+  getRepository(): ITraceRepository {
+    this.ensureInitialized();
+    return this.repository;
+  }
+
+  /**
+   * 获取Trace协议
+   */
+  getProtocol(): TraceProtocol {
+    this.ensureInitialized();
+    return this.protocol;
+  }
+
+  /**
+   * 获取横切关注点管理器
+   */
+  getCrossCuttingManagers() {
+    this.ensureInitialized();
+    return {
+      security: this.securityManager,
+      performance: this.performanceMonitor,
+      eventBus: this.eventBusManager,
+      errorHandler: this.errorHandler,
+      coordination: this.coordinationManager,
+      orchestration: this.orchestrationManager,
+      stateSync: this.stateSyncManager,
+      transaction: this.transactionManager,
+      protocolVersion: this.protocolVersionManager
+    };
+  }
+
+  /**
+   * 获取协议元数据
+   */
+  getProtocolMetadata() {
+    this.ensureInitialized();
+    return this.protocol.getMetadata();
+  }
+
+  /**
+   * 获取协议工厂实例
+   */
+  getProtocolFactory(): TraceProtocolFactory {
+    return TraceProtocolFactory.getInstance();
+  }
+
+  /**
+   * 获取适配器配置
+   */
+  getConfig(): Required<TraceModuleAdapterConfig> {
+    return { ...this.config };
+  }
+
+  /**
+   * 获取健康状态
+   */
+  async getHealthStatus() {
+    try {
+      if (!this.initialized) {
+        return {
+          status: 'not_initialized',
           timestamp: new Date().toISOString()
+        };
+      }
+
+      const protocolHealth = await this.protocol.getHealthStatus();
+      const managersHealth = this.getCrossCuttingManagers();
+
+      return {
+        status: protocolHealth.status,
+        timestamp: new Date().toISOString(),
+        adapter: {
+          initialized: this.initialized,
+          config: this.config
         },
-        timestamp: new Date().toISOString()
+        protocol: protocolHealth,
+        managers: {
+          security: await managersHealth.security.getHealthStatus(),
+          performance: await managersHealth.performance.getHealthStatus(),
+          eventBus: await managersHealth.eventBus.getHealthStatus(),
+          errorHandler: await managersHealth.errorHandler.getHealthStatus(),
+          coordination: await managersHealth.coordination.getHealthStatus(),
+          orchestration: await managersHealth.orchestration.getHealthStatus(),
+          stateSync: await managersHealth.stateSync.getHealthStatus(),
+          transaction: await managersHealth.transaction.getHealthStatus(),
+          protocolVersion: await managersHealth.protocolVersion.getHealthStatus()
+        }
+      };
+    } catch (error) {
+      return {
+        status: 'unhealthy',
+        timestamp: new Date().toISOString(),
+        error: error instanceof Error ? error.message : 'Unknown error'
       };
     }
-  }
-
-  /**
-   * P0修复：验证输入数据
-   */
-  async validateInput(_input: unknown): Promise<ValidationResult> {
-    return {
-      is_valid: true,
-      errors: [],
-      warnings: []
-    };
-  }
-
-  /**
-   * P0修复：处理错误
-   */
-  async handleError(error: BusinessError, context: BusinessContext): Promise<ErrorHandlingResult> {
-    this.logger.error('Handling Trace module error', {
-      errorId: error.error_id,
-      errorType: error.error_type,
-      contextId: context.contextId
-    });
-
-    return {
-      handled: true,
-      recovery_action: 'retry'
-    };
   }
 }

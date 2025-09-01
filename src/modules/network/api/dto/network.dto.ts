@@ -1,434 +1,319 @@
 /**
- * Network模块API层数据传输对象 (DTO)
+ * Network模块DTO定义
  * 
- * 严格遵循MPLP模块标准化规则和双重命名约定
- * - API层使用camelCase命名
- * - 与Schema层(snake_case)通过Mapper进行转换
- * 
+ * @description Network模块的数据传输对象，基于DDD架构
  * @version 1.0.0
- * @created 2025-08-10
- * @compliance 模块标准化规则 - API层DTO (MANDATORY)
- * @compliance 双重命名约定 - camelCase (MANDATORY)
+ * @layer API层 - DTO
  */
 
-import { UUID, Timestamp, Version } from '../../../../public/shared/types';
-
-// ===== 基础DTO接口 =====
-
-/**
- * Network创建请求DTO (API层 - camelCase)
- */
-export interface CreateNetworkRequestDto {
-  contextId: UUID;
-  name: string;
-  description?: string;
-  topology: NetworkTopologyDto;
-  configuration?: NetworkConfigurationDto;
-  security?: NetworkSecurityDto;
-  metadata?: NetworkMetadataDto;
-}
+import {
+  NetworkTopology,
+  NodeType,
+  NodeStatus,
+  NodeCapability,
+  CommunicationProtocol,
+  NetworkStatus,
+  DiscoveryType,
+  RoutingAlgorithm,
+  LoadBalancingStrategy,
+  NetworkOperation
+} from '../../types';
 
 /**
- * Network更新请求DTO (API层 - camelCase)
- */
-export interface UpdateNetworkRequestDto {
-  networkId: UUID;
-  name?: string;
-  description?: string;
-  topology?: NetworkTopologyDto;
-  configuration?: NetworkConfigurationDto;
-  security?: NetworkSecurityDto;
-  metadata?: NetworkMetadataDto;
-}
-
-/**
- * Network查询请求DTO (API层 - camelCase)
- */
-export interface NetworkQueryRequestDto {
-  contextId?: UUID;
-  topology?: NetworkTopologyDto;
-  status?: NetworkStatusDto;
-  name?: string;
-  limit?: number;
-  offset?: number;
-}
-
-/**
- * Network响应DTO (API层 - camelCase)
- */
-export interface NetworkResponseDto {
-  networkId: UUID;
-  version: Version;
-  timestamp: Timestamp;
-  contextId: UUID;
-  name: string;
-  description?: string;
-  topology: NetworkTopologyDto;
-  nodes: NetworkNodeDto[];
-  connections: NetworkConnectionDto[];
-  configuration?: NetworkConfigurationDto;
-  security?: NetworkSecurityDto;
-  metadata?: NetworkMetadataDto;
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
-}
-
-// ===== 枚举类型DTO =====
-
-/**
- * 网络拓扑类型DTO (API层 - camelCase)
- */
-export type NetworkTopologyDto = 
-  | 'star'
-  | 'mesh'
-  | 'tree'
-  | 'ring'
-  | 'bus'
-  | 'hybrid'
-  | 'hierarchical';
-
-/**
- * 网络状态DTO (API层 - camelCase)
- */
-export type NetworkStatusDto = 
-  | 'active'
-  | 'inactive'
-  | 'pending'
-  | 'completed'
-  | 'failed'
-  | 'cancelled';
-
-/**
- * 节点类型DTO (API层 - camelCase)
- */
-export type NodeTypeDto = 
-  | 'coordinator'
-  | 'worker'
-  | 'gateway'
-  | 'relay'
-  | 'monitor'
-  | 'backup';
-
-/**
- * 节点状态DTO (API层 - camelCase)
- */
-export type NodeStatusDto = 
-  | 'online'
-  | 'offline'
-  | 'connecting'
-  | 'disconnecting'
-  | 'error'
-  | 'maintenance';
-
-/**
- * 节点能力DTO (API层 - camelCase)
- */
-export type NodeCapabilityDto = 
-  | 'compute'
-  | 'storage'
-  | 'network'
-  | 'coordination'
-  | 'monitoring'
-  | 'security';
-
-/**
- * 连接状态DTO (API层 - camelCase)
- */
-export type ConnectionStatusDto = 
-  | 'established'
-  | 'connecting'
-  | 'disconnected'
-  | 'failed'
-  | 'timeout';
-
-// ===== 复杂对象DTO =====
-
-/**
- * 网络节点DTO (API层 - camelCase)
- */
-export interface NetworkNodeDto {
-  nodeId: UUID;
-  agentId: UUID;
-  nodeType: NodeTypeDto;
-  status: NodeStatusDto;
-  capabilities: NodeCapabilityDto[];
-  address: NodeAddressDto;
-  metadata?: NodeMetadataDto;
-  lastSeen?: Timestamp;
-  joinedAt: Timestamp;
-}
-
-/**
- * 节点地址DTO (API层 - camelCase)
+ * 节点地址DTO
  */
 export interface NodeAddressDto {
   host: string;
   port: number;
-  protocol: ProtocolTypeDto;
-  path?: string;
+  protocol: CommunicationProtocol;
 }
 
 /**
- * 协议类型DTO (API层 - camelCase)
+ * 网络节点DTO
  */
-export type ProtocolTypeDto = 
-  | 'http'
-  | 'https'
-  | 'ws'
-  | 'wss'
-  | 'tcp'
-  | 'udp'
-  | 'grpc';
-
-/**
- * 节点元数据DTO (API层 - camelCase)
- */
-export interface NodeMetadataDto {
-  version?: string;
-  platform?: string;
-  region?: string;
-  zone?: string;
-  tags?: string[];
-  customProperties?: Record<string, unknown>;
+export interface NetworkNodeDto {
+  nodeId: string;
+  agentId: string;
+  nodeType: NodeType;
+  status: NodeStatus;
+  capabilities: NodeCapability[];
+  address?: NodeAddressDto;
+  metadata: { [key: string]: unknown };
 }
 
 /**
- * 网络连接DTO (API层 - camelCase)
+ * 网络边缘连接DTO
  */
-export interface NetworkConnectionDto {
-  connectionId: UUID;
-  sourceNodeId: UUID;
-  targetNodeId: UUID;
-  connectionType: ConnectionTypeDto;
-  status: ConnectionStatusDto;
-  latency?: number;
-  bandwidth?: number;
-  reliability?: number;
-  establishedAt: Timestamp;
-  lastActivity?: Timestamp;
+export interface NetworkEdgeDto {
+  edgeId: string;
+  sourceNodeId: string;
+  targetNodeId: string;
+  edgeType: string;
+  direction: 'bidirectional' | 'unidirectional';
+  status: string;
+  weight: number;
+  metadata: { [key: string]: unknown };
 }
 
 /**
- * 连接类型DTO (API层 - camelCase)
+ * 发现机制DTO
  */
-export type ConnectionTypeDto = 
-  | 'direct'
-  | 'relay'
-  | 'tunnel'
-  | 'proxy';
-
-/**
- * 网络配置DTO (API层 - camelCase)
- */
-export interface NetworkConfigurationDto {
-  maxNodes?: number;
-  maxConnections?: number;
-  heartbeatInterval?: number;
-  connectionTimeout?: number;
-  retryAttempts?: number;
-  loadBalancing?: LoadBalancingDto;
-  failover?: FailoverDto;
-}
-
-/**
- * 负载均衡DTO (API层 - camelCase)
- */
-export interface LoadBalancingDto {
+export interface DiscoveryMechanismDto {
+  type: DiscoveryType;
   enabled: boolean;
-  algorithm: LoadBalancingAlgorithmDto;
-  weights?: Record<string, number>;
+  configuration: { [key: string]: unknown };
 }
 
 /**
- * 负载均衡算法DTO (API层 - camelCase)
+ * 路由策略DTO
  */
-export type LoadBalancingAlgorithmDto = 
-  | 'round_robin'
-  | 'weighted_round_robin'
-  | 'least_connections'
-  | 'random'
-  | 'hash';
+export interface RoutingStrategyDto {
+  algorithm: RoutingAlgorithm;
+  loadBalancing: LoadBalancingStrategy;
+  configuration: { [key: string]: unknown };
+}
 
 /**
- * 故障转移DTO (API层 - camelCase)
+ * 性能指标DTO
  */
-export interface FailoverDto {
+export interface PerformanceMetricsDto {
   enabled: boolean;
-  strategy: FailoverStrategyDto;
-  backupNodes?: UUID[];
-  switchoverTime?: number;
+  collectionIntervalSeconds: number;
+  metrics: { [key: string]: unknown };
 }
 
 /**
- * 故障转移策略DTO (API层 - camelCase)
+ * 监控集成DTO
  */
-export type FailoverStrategyDto = 
-  | 'automatic'
-  | 'manual'
-  | 'hybrid';
-
-/**
- * 网络安全DTO (API层 - camelCase)
- */
-export interface NetworkSecurityDto {
-  encryption: EncryptionDto;
-  authentication: AuthenticationDto;
-  authorization?: AuthorizationDto;
-  firewall?: FirewallDto;
-}
-
-/**
- * 加密DTO (API层 - camelCase)
- */
-export interface EncryptionDto {
+export interface MonitoringIntegrationDto {
   enabled: boolean;
-  algorithm: EncryptionAlgorithmDto;
-  keySize?: number;
+  endpoints: string[];
+  configuration: { [key: string]: unknown };
 }
 
 /**
- * 加密算法DTO (API层 - camelCase)
+ * 审计追踪条目DTO
  */
-export type EncryptionAlgorithmDto = 
-  | 'AES-256'
-  | 'ChaCha20'
-  | 'RSA-2048'
-  | 'RSA-4096';
-
-/**
- * 认证DTO (API层 - camelCase)
- */
-export interface AuthenticationDto {
-  method: AuthenticationMethodDto;
-  tokenExpiry?: number;
-  refreshEnabled?: boolean;
-}
-
-/**
- * 认证方法DTO (API层 - camelCase)
- */
-export type AuthenticationMethodDto = 
-  | 'jwt'
-  | 'oauth2'
-  | 'api_key'
-  | 'certificate';
-
-/**
- * 授权DTO (API层 - camelCase)
- */
-export interface AuthorizationDto {
-  enabled: boolean;
-  policies: AuthorizationPolicyDto[];
-}
-
-/**
- * 授权策略DTO (API层 - camelCase)
- */
-export interface AuthorizationPolicyDto {
-  policyId: UUID;
-  name: string;
-  rules: AuthorizationRuleDto[];
-}
-
-/**
- * 授权规则DTO (API层 - camelCase)
- */
-export interface AuthorizationRuleDto {
-  resource: string;
+export interface AuditTrailEntryDto {
+  timestamp: string;
   action: string;
-  effect: AuthorizationEffectDto;
-  conditions?: Record<string, unknown>;
+  actor: string;
+  details: { [key: string]: unknown };
 }
 
 /**
- * 授权效果DTO (API层 - camelCase)
+ * 版本历史条目DTO
  */
-export type AuthorizationEffectDto = 'allow' | 'deny';
+export interface VersionHistoryEntryDto {
+  version: string;
+  timestamp: string;
+  changes: string[];
+  author: string;
+}
 
 /**
- * 防火墙DTO (API层 - camelCase)
+ * 搜索元数据DTO
  */
-export interface FirewallDto {
+export interface SearchMetadataDto {
+  tags: string[];
+  keywords: string[];
+  categories: string[];
+  indexed: boolean;
+}
+
+/**
+ * 事件集成DTO
+ */
+export interface EventIntegrationDto {
   enabled: boolean;
-  rules: FirewallRuleDto[];
+  eventTypes: string[];
+  configuration: { [key: string]: unknown };
 }
 
 /**
- * 防火墙规则DTO (API层 - camelCase)
+ * Network主DTO
  */
-export interface FirewallRuleDto {
-  ruleId: UUID;
+export interface NetworkDto {
+  networkId: string;
+  protocolVersion: string;
+  timestamp: string;
+  contextId: string;
   name: string;
-  action: FirewallActionDto;
-  source?: string;
-  destination?: string;
-  port?: number;
-  protocol?: ProtocolTypeDto;
+  description?: string;
+  topology: NetworkTopology;
+  nodes: NetworkNodeDto[];
+  edges: NetworkEdgeDto[];
+  discoveryMechanism: DiscoveryMechanismDto;
+  routingStrategy: RoutingStrategyDto;
+  status: NetworkStatus;
+  createdAt: string;
+  updatedAt?: string;
+  createdBy: string;
+  auditTrail: AuditTrailEntryDto[];
+  monitoringIntegration: MonitoringIntegrationDto;
+  performanceMetrics: PerformanceMetricsDto;
+  versionHistory: VersionHistoryEntryDto[];
+  searchMetadata: SearchMetadataDto;
+  networkOperation: NetworkOperation;
+  eventIntegration: EventIntegrationDto;
 }
 
 /**
- * 防火墙动作DTO (API层 - camelCase)
+ * 创建网络DTO
  */
-export type FirewallActionDto = 'allow' | 'deny' | 'log';
-
-/**
- * 网络元数据DTO (API层 - camelCase)
- */
-export interface NetworkMetadataDto {
-  owner?: string;
-  organization?: string;
-  environment?: string;
-  region?: string;
-  tags?: string[];
-  customProperties?: Record<string, unknown>;
-}
-
-// ===== 操作结果DTO =====
-
-/**
- * Network操作结果DTO (API层 - camelCase)
- */
-export interface NetworkOperationResultDto {
-  success: boolean;
-  networkId?: UUID;
-  message?: string;
-  errors?: string[];
-  data?: NetworkResponseDto;
+export interface CreateNetworkDto {
+  contextId: string;
+  name: string;
+  description?: string;
+  topology: NetworkTopology;
+  nodes: Array<{
+    agentId: string;
+    nodeType: NodeType;
+    capabilities?: NodeCapability[];
+    address?: NodeAddressDto;
+  }>;
+  discoveryMechanism: DiscoveryMechanismDto;
+  routingStrategy: RoutingStrategyDto;
+  createdBy: string;
 }
 
 /**
- * Network列表结果DTO (API层 - camelCase)
+ * 更新网络DTO
  */
-export interface NetworkListResultDto {
-  success: boolean;
-  networks: NetworkResponseDto[];
-  total: number;
+export interface UpdateNetworkDto {
+  name?: string;
+  description?: string;
+  status?: NetworkStatus;
+  discoveryMechanism?: DiscoveryMechanismDto;
+  routingStrategy?: RoutingStrategyDto;
+  performanceMetrics?: PerformanceMetricsDto;
+  monitoringIntegration?: MonitoringIntegrationDto;
+  searchMetadata?: SearchMetadataDto;
+  eventIntegration?: EventIntegrationDto;
+}
+
+/**
+ * 添加节点DTO
+ */
+export interface AddNodeDto {
+  agentId: string;
+  nodeType: NodeType;
+  capabilities?: NodeCapability[];
+  address?: NodeAddressDto;
+}
+
+/**
+ * 更新节点状态DTO
+ */
+export interface UpdateNodeStatusDto {
+  status: NodeStatus;
+}
+
+/**
+ * 添加边缘连接DTO
+ */
+export interface AddEdgeDto {
+  sourceNodeId: string;
+  targetNodeId: string;
+  edgeType: string;
+  direction: 'bidirectional' | 'unidirectional';
+  weight?: number;
+}
+
+/**
+ * 网络统计信息DTO
+ */
+export interface NetworkStatsDto {
+  totalNodes: number;
+  onlineNodes: number;
+  totalEdges: number;
+  activeEdges: number;
+  topologyEfficiency: number;
+}
+
+/**
+ * 全局统计信息DTO
+ */
+export interface GlobalStatsDto {
+  totalNetworks: number;
+  activeNetworks: number;
+  totalNodes: number;
+  totalEdges: number;
+  topologyDistribution: { [topology: string]: number };
+  statusDistribution: { [status: string]: number };
+}
+
+/**
+ * 网络搜索DTO
+ */
+export interface NetworkSearchDto {
+  query: string;
+  filters?: {
+    topology?: string;
+    status?: string;
+    tags?: string[];
+  };
+}
+
+/**
+ * 分页查询DTO
+ */
+export interface NetworkPaginationDto {
+  page: number;
   limit: number;
-  offset: number;
-  message?: string;
-}
-
-// ===== 节点操作DTO =====
-
-/**
- * 节点注册请求DTO (API层 - camelCase)
- */
-export interface NodeRegistrationRequestDto {
-  networkId: UUID;
-  agentId: UUID;
-  nodeType: NodeTypeDto;
-  capabilities: NodeCapabilityDto[];
-  address: NodeAddressDto;
-  metadata?: NodeMetadataDto;
+  filters?: {
+    contextId?: string;
+    topology?: string;
+    status?: string;
+    createdBy?: string;
+  };
 }
 
 /**
- * 节点注册结果DTO (API层 - camelCase)
+ * 分页结果DTO
  */
-export interface NodeRegistrationResultDto {
-  success: boolean;
-  nodeId?: UUID;
-  message?: string;
-  errors?: string[];
-  data?: NetworkNodeDto;
+export interface NetworkPaginationResultDto {
+  networks: NetworkDto[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+/**
+ * 网络健康状态DTO
+ */
+export interface NetworkHealthDto {
+  networkId: string;
+  isHealthy: boolean;
+  healthScore: number;
+  issues: string[];
+  recommendations: string[];
+}
+
+/**
+ * 拓扑数据DTO
+ */
+export interface TopologyDataDto {
+  nodes: Array<{
+    id: string;
+    type: string;
+    status: string;
+    position?: { x: number; y: number };
+  }>;
+  edges: Array<{
+    id: string;
+    source: string;
+    target: string;
+    type: string;
+    weight: number;
+  }>;
+}
+
+/**
+ * 更新拓扑DTO
+ */
+export interface UpdateTopologyDto {
+  nodes: Array<{ id: string; position?: { x: number; y: number } }>;
+  edges: Array<{ source: string; target: string; weight?: number }>;
 }

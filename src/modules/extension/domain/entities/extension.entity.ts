@@ -1,399 +1,256 @@
 /**
- * Extension领域实体
- *
- * 扩展管理的核心领域实体，封装扩展业务逻辑和不变性约束
- * 基于TDD模式重构，严格遵循mplp-extension.json Schema定义
- *
- * @version v2.0.0
- * @created 2025-09-16
- * @updated 2025-08-10 (TDD Green阶段重构)
- * @compliance 100% Schema合规性 - 完全匹配mplp-extension.json Schema定义
- * @naming_convention 双重命名约定 - Schema层(snake_case) ↔ Application层(camelCase)
- * @zero_any_policy 严格遵循 - 0个any类型，完全类型安全
+ * Extension实体
+ * 
+ * @description Extension模块的核心聚合根，封装扩展管理的所有业务逻辑
+ * @version 1.0.0
+ * @layer Domain层 - 实体
+ * @pattern DDD聚合根 + 业务逻辑封装
  */
 
-import { UUID, Timestamp, Version } from '../../../../public/shared/types';
-import {
+import { UUID } from '../../../../shared/types';
+import { 
+  ExtensionEntityData,
   ExtensionType,
   ExtensionStatus,
   ExtensionCompatibility,
   ExtensionConfiguration,
   ExtensionPoint,
-  ExtensionPointType,
   ApiExtension,
   EventSubscription,
   ExtensionLifecycle,
   ExtensionSecurity,
   ExtensionMetadata,
-  ModuleName,
+  AuditTrail,
+  ExtensionPerformanceMetrics,
+  MonitoringIntegration,
+  VersionHistory,
+  SearchMetadata,
+  EventIntegration,
+  AuditEvent,
+  AuditEventType
 } from '../../types';
 
-// 导入Schema层类型定义 (仅用于接口转换)
-import { ExtensionProtocolSchema } from '../../api/mappers/extension.mapper';
-
 /**
- * Extension领域实体 (TDD重构版本)
- * 基于mplp-extension.json Schema，严格实现双重命名约定
+ * Extension实体类
+ * 作为扩展管理的聚合根，封装所有扩展相关的业务逻辑
  */
-export class Extension {
-  // Application层私有字段 (camelCase)
-  private readonly _extensionId: UUID;
-  private readonly _contextId: UUID;
-  private readonly _protocolVersion: Version;
-  private readonly _name: string;
-  private readonly _version: Version;
-  private readonly _type: ExtensionType;
+export class ExtensionEntity {
+  // 核心标识属性
+  readonly extensionId: UUID;
+  readonly contextId: UUID;
+  readonly protocolVersion: string;
+  
+  // 基础信息属性
+  private _name: string;
+  private _displayName: string;
+  private _description: string;
+  private _version: string;
+  private _extensionType: ExtensionType;
   private _status: ExtensionStatus;
-  private readonly _timestamp: Timestamp;
-  private _createdAt: Timestamp;
-  private _updatedAt: Timestamp;
-
-  // 可选字段
-  private _displayName?: string;
-  private _description?: string;
-  private _compatibility?: ExtensionCompatibility;
-  private _configuration?: ExtensionConfiguration;
+  private _timestamp: string;
+  
+  // 复杂业务属性
+  private _compatibility: ExtensionCompatibility;
+  private _configuration: ExtensionConfiguration;
   private _extensionPoints: ExtensionPoint[];
   private _apiExtensions: ApiExtension[];
   private _eventSubscriptions: EventSubscription[];
-  private _lifecycle?: ExtensionLifecycle;
-  private _security?: ExtensionSecurity;
-  private _metadata?: ExtensionMetadata;
+  private _lifecycle: ExtensionLifecycle;
+  private _security: ExtensionSecurity;
+  private _metadata: ExtensionMetadata;
+  private _auditTrail: AuditTrail;
+  private _performanceMetrics: ExtensionPerformanceMetrics;
+  private _monitoringIntegration: MonitoringIntegration;
+  private _versionHistory: VersionHistory;
+  private _searchMetadata: SearchMetadata;
+  private _eventIntegration: EventIntegration;
 
   /**
-   * 构造函数 - 接受Schema格式数据 (snake_case)
-   * 符合TDD测试期望和双重命名约定
+   * 构造函数
+   * @param data - 扩展实体数据
    */
-  constructor(schemaData: Partial<ExtensionProtocolSchema>) {
+  constructor(data: ExtensionEntityData) {
     // 验证必需字段
-    this.validateRequiredFields(schemaData);
-
-    // Schema层(snake_case) → Application层(camelCase)映射
-    this._extensionId = schemaData.extension_id!;
-    this._contextId = schemaData.context_id!;
-    this._protocolVersion = schemaData.protocol_version!;
-    this._name = schemaData.name!;
-    this._version = schemaData.version!;
-    this._type = schemaData.extension_type!;
-    this._status = schemaData.status!;
-    this._timestamp = schemaData.timestamp!;
-    this._createdAt = schemaData.timestamp!; // 如果未提供created_at，使用timestamp
-    this._updatedAt = schemaData.timestamp!; // 如果未提供updated_at，使用timestamp
-
-    // 可选字段映射 (Schema → Application转换)
-    this._displayName = schemaData.display_name;
-    this._description = schemaData.description;
-    this._compatibility = this.mapCompatibilityFromSchema(
-      schemaData.compatibility
-    );
-    this._configuration = this.mapConfigurationFromSchema(
-      schemaData.configuration
-    );
-    this._extensionPoints = this.mapExtensionPointsFromSchema(
-      schemaData.extension_points || []
-    );
-    this._apiExtensions = this.mapApiExtensionsFromSchema(
-      schemaData.api_extensions || []
-    );
-    this._eventSubscriptions = this.mapEventSubscriptionsFromSchema(
-      schemaData.event_subscriptions || []
-    );
-    this._lifecycle = this.mapLifecycleFromSchema(schemaData.lifecycle);
-    this._security = this.mapSecurityFromSchema(schemaData.security);
-    this._metadata = this.mapMetadataFromSchema(schemaData.metadata);
-
-    // 验证领域不变性
-    this.validateInvariants();
+    this.validateRequiredFields(data);
+    
+    // 初始化核心属性
+    this.extensionId = data.extensionId;
+    this.contextId = data.contextId;
+    this.protocolVersion = data.protocolVersion;
+    
+    // 初始化基础属性
+    this._name = data.name;
+    this._displayName = data.displayName;
+    this._description = data.description;
+    this._version = data.version;
+    this._extensionType = data.extensionType;
+    this._status = data.status;
+    this._timestamp = data.timestamp;
+    
+    // 初始化复杂属性
+    this._compatibility = data.compatibility;
+    this._configuration = data.configuration;
+    this._extensionPoints = data.extensionPoints;
+    this._apiExtensions = data.apiExtensions;
+    this._eventSubscriptions = data.eventSubscriptions;
+    this._lifecycle = data.lifecycle;
+    this._security = data.security;
+    this._metadata = data.metadata;
+    this._auditTrail = data.auditTrail;
+    this._performanceMetrics = data.performanceMetrics;
+    this._monitoringIntegration = data.monitoringIntegration;
+    this._versionHistory = data.versionHistory;
+    this._searchMetadata = data.searchMetadata;
+    this._eventIntegration = data.eventIntegration;
   }
 
-  // Application层Getters (camelCase)
-  get extensionId(): UUID {
-    return this._extensionId;
-  }
-  get contextId(): UUID {
-    return this._contextId;
-  }
-  get protocolVersion(): Version {
-    return this._protocolVersion;
-  }
-  get name(): string {
-    return this._name;
-  }
-  get version(): Version {
-    return this._version;
-  }
-  get type(): ExtensionType {
-    return this._type;
-  }
-  get status(): ExtensionStatus {
-    return this._status;
-  }
-  get displayName(): string | undefined {
-    return this._displayName;
-  }
-  get description(): string | undefined {
-    return this._description;
-  }
-  get compatibility(): ExtensionCompatibility | undefined {
-    return this._compatibility;
-  }
-  get configuration(): ExtensionConfiguration | undefined {
-    return this._configuration;
-  }
-  get extensionPoints(): ExtensionPoint[] {
-    return [...this._extensionPoints];
-  }
-  get apiExtensions(): ApiExtension[] {
-    return [...this._apiExtensions];
-  }
-  get eventSubscriptions(): EventSubscription[] {
-    return [...this._eventSubscriptions];
-  }
-  get lifecycle(): ExtensionLifecycle | undefined {
-    return this._lifecycle;
-  }
-  get security(): ExtensionSecurity | undefined {
-    return this._security;
-  }
-  get metadata(): ExtensionMetadata | undefined {
-    return this._metadata;
-  }
-  get timestamp(): Timestamp {
-    return this._timestamp;
-  }
-  get createdAt(): Timestamp {
-    return this._createdAt;
-  }
-  get updatedAt(): Timestamp {
-    return this._updatedAt;
-  }
+  // ============================================================================
+  // 公共访问器属性
+  // ============================================================================
 
-  /**
-   * 更新扩展状态
-   */
-  updateStatus(newStatus: ExtensionStatus): void {
-    this.validateStatusTransition(this._status, newStatus);
-    this._status = newStatus;
-    this._updatedAt = new Date().toISOString();
-  }
+  get name(): string { return this._name; }
+  get displayName(): string { return this._displayName; }
+  get description(): string { return this._description; }
+  get version(): string { return this._version; }
+  get extensionType(): ExtensionType { return this._extensionType; }
+  get status(): ExtensionStatus { return this._status; }
+  get timestamp(): string { return this._timestamp; }
+  get compatibility(): ExtensionCompatibility { return this._compatibility; }
+  get configuration(): ExtensionConfiguration { return this._configuration; }
+  get extensionPoints(): ExtensionPoint[] { return [...this._extensionPoints]; }
+  get apiExtensions(): ApiExtension[] { return [...this._apiExtensions]; }
+  get eventSubscriptions(): EventSubscription[] { return [...this._eventSubscriptions]; }
+  get lifecycle(): ExtensionLifecycle { return this._lifecycle; }
+  get security(): ExtensionSecurity { return this._security; }
+  get metadata(): ExtensionMetadata { return this._metadata; }
+  get auditTrail(): AuditTrail { return this._auditTrail; }
+  get performanceMetrics(): ExtensionPerformanceMetrics { return this._performanceMetrics; }
+  get monitoringIntegration(): MonitoringIntegration { return this._monitoringIntegration; }
+  get versionHistory(): VersionHistory { return this._versionHistory; }
+  get searchMetadata(): SearchMetadata { return this._searchMetadata; }
+  get eventIntegration(): EventIntegration { return this._eventIntegration; }
+
+  // ============================================================================
+  // 核心业务方法
+  // ============================================================================
 
   /**
    * 激活扩展
+   * @param userId - 操作用户ID
+   * @returns 是否激活成功
    */
-  activate(): void {
-    if (this._status !== 'installed' && this._status !== 'inactive') {
-      throw new Error(`无法激活状态为 ${this._status} 的扩展`);
+  activate(userId?: string): boolean {
+    if (this._status === 'active') {
+      return true; // 已经激活
     }
+
+    if (this._status !== 'installed' && this._status !== 'inactive') {
+      throw new Error(`Cannot activate extension in status: ${this._status}`);
+    }
+
+    // 检查兼容性
+    if (!this.isCompatible()) {
+      throw new Error('Extension is not compatible with current MPLP version');
+    }
+
+    // 更新状态
     this._status = 'active';
-    this._updatedAt = new Date().toISOString();
+    this._timestamp = new Date().toISOString();
+    
+    // 更新生命周期信息
+    this._lifecycle = {
+      ...this._lifecycle,
+      activationCount: this._lifecycle.activationCount + 1
+    };
+
+    // 记录审计事件
+    this.addAuditEvent('activate', userId, {
+      previousStatus: this._status,
+      newStatus: 'active'
+    });
+
+    return true;
   }
 
   /**
    * 停用扩展
+   * @param userId - 操作用户ID
+   * @returns 是否停用成功
    */
-  deactivate(): void {
+  deactivate(userId?: string): boolean {
+    if (this._status === 'inactive') {
+      return true; // 已经停用
+    }
+
     if (this._status !== 'active') {
-      throw new Error(`无法停用状态为 ${this._status} 的扩展`);
+      throw new Error(`Cannot deactivate extension in status: ${this._status}`);
     }
+
+    // 更新状态
+    const previousStatus = this._status;
     this._status = 'inactive';
-    this._updatedAt = new Date().toISOString();
+    this._timestamp = new Date().toISOString();
+
+    // 记录审计事件
+    this.addAuditEvent('deactivate', userId, {
+      previousStatus,
+      newStatus: 'inactive'
+    });
+
+    return true;
   }
 
   /**
-   * 添加扩展点
+   * 标记扩展为错误状态
+   * @param error - 错误信息
+   * @param userId - 操作用户ID
    */
-  addExtensionPoint(extensionPoint: ExtensionPoint): void {
-    const exists = this._extensionPoints.some(
-      ep => ep.name === extensionPoint.name
-    );
-    if (!exists) {
-      this._extensionPoints.push(extensionPoint);
-      this._updatedAt = new Date().toISOString();
-    }
-  }
+  markAsError(error?: string, userId?: string): void {
+    const previousStatus = this._status;
+    this._status = 'error';
+    this._timestamp = new Date().toISOString();
 
-  /**
-   * 移除扩展点
-   */
-  removeExtensionPoint(pointName: string): void {
-    const initialLength = this._extensionPoints.length;
-    this._extensionPoints = this._extensionPoints.filter(
-      ep => ep.name !== pointName
-    );
-
-    if (this._extensionPoints.length !== initialLength) {
-      this._updatedAt = new Date().toISOString();
-    }
-  }
-
-  /**
-   * 添加API扩展
-   */
-  addApiExtension(apiExtension: ApiExtension): void {
-    const exists = this._apiExtensions.some(
-      ae => ae.endpoint_id === apiExtension.endpoint_id
-    );
-    if (!exists) {
-      this._apiExtensions.push(apiExtension);
-      this._updatedAt = new Date().toISOString();
-    }
-  }
-
-  /**
-   * 添加事件订阅
-   */
-  addEventSubscription(subscription: EventSubscription): void {
-    const exists = this._eventSubscriptions.some(
-      es =>
-        es.event_pattern === subscription.event_pattern &&
-        es.handler === subscription.handler
-    );
-    if (!exists) {
-      this._eventSubscriptions.push(subscription);
-      this._updatedAt = new Date().toISOString();
-    }
-  }
-
-  /**
-   * 检查是否激活
-   */
-  isActive(): boolean {
-    return this._status === 'active';
-  }
-
-  /**
-   * 检查是否可以卸载
-   */
-  canUninstall(): boolean {
-    return ['installed', 'inactive', 'disabled', 'error'].includes(
-      this._status
-    );
-  }
-
-  /**
-   * 检查版本兼容性
-   */
-  isCompatibleWith(mplpVersion: string): boolean {
-    if (!this._compatibility) return true;
-
-    // 简化的版本兼容性检查
-    return (
-      this._compatibility.mplp_version === mplpVersion ||
-      this._compatibility.mplp_version === '*'
-    );
-  }
-
-  /**
-   * 更新配置
-   */
-  updateConfiguration(config: ExtensionConfiguration): void {
-    this._configuration = { ...this._configuration, ...config };
-    this._updatedAt = new Date().toISOString();
-  }
-
-  /**
-   * 转换为Schema格式 (snake_case) - TDD测试期望
-   * 严格遵循mplp-extension.json Schema定义
-   */
-  toSchema(): ExtensionProtocolSchema {
-    return {
-      protocol_version: this._protocolVersion,
-      timestamp: this._timestamp,
-      extension_id: this._extensionId,
-      context_id: this._contextId,
-      name: this._name,
-      display_name: this._displayName || '',
-      description: this._description || '',
-      version: this._version,
-      extension_type: this._type,
-      status: this._status,
-      compatibility: this.mapCompatibilityToSchema(this._compatibility),
-      configuration: this.mapConfigurationToSchema(this._configuration),
-      extension_points: this.mapExtensionPointsToSchema(this._extensionPoints),
-      api_extensions: this.mapApiExtensionsToSchema(this._apiExtensions),
-      event_subscriptions: this.mapEventSubscriptionsToSchema(
-        this._eventSubscriptions
-      ),
-      lifecycle: this.mapLifecycleToSchema(this._lifecycle),
-      security: this.mapSecurityToSchema(this._security),
-      metadata: this.mapMetadataToSchema(this._metadata),
+    // 增加错误计数
+    this._lifecycle = {
+      ...this._lifecycle,
+      errorCount: this._lifecycle.errorCount + 1
     };
+
+    // 记录审计事件
+    this.addAuditEvent('error', userId, {
+      previousStatus,
+      newStatus: 'error',
+      error: error || 'Unknown error'
+    });
   }
 
   /**
-   * 转换为协议格式 (保持向后兼容，但已废弃)
-   * @deprecated 使用 toSchema() 替代
+   * 验证扩展的有效性
+   * @returns 是否有效
    */
-  toProtocol(): ExtensionProtocolSchema {
-    return this.toSchema();
-  }
-
-  /**
-   * 从Schema格式创建实体 - TDD测试期望的静态方法
-   */
-  static fromSchema(schemaData: Partial<ExtensionProtocolSchema>): Extension {
-    return new Extension(schemaData);
-  }
-
-  /**
-   * 验证Schema数据 - TDD测试期望的静态方法
-   */
-  static validateSchema(schemaData: Partial<ExtensionProtocolSchema>): boolean {
+  validate(): boolean {
     try {
       // 验证必需字段
-      const requiredFields = [
-        'protocol_version',
-        'timestamp',
-        'extension_id',
-        'context_id',
-        'name',
-        'extension_type',
-        'status',
-        'version',
-      ];
-
-      for (const field of requiredFields) {
-        if (
-          !(field in schemaData) ||
-          !schemaData[field as keyof ExtensionProtocolSchema]
-        ) {
-          return false;
-        }
+      if (!this.extensionId || !this.contextId || !this.name || !this.version) {
+        return false;
       }
 
-      // 验证UUID格式
-      const uuidRegex =
-        /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
-      if (!uuidRegex.test(schemaData.extension_id || '')) return false;
-      if (!uuidRegex.test(schemaData.context_id || '')) return false;
+      // 验证扩展类型
+      const validTypes = ['plugin', 'adapter', 'connector', 'middleware', 'hook', 'transformer'];
+      if (!validTypes.includes(this.extensionType)) {
+        return false;
+      }
 
-      // 验证枚举值
-      const validTypes = [
-        'plugin',
-        'adapter',
-        'connector',
-        'middleware',
-        'hook',
-        'transformer',
-      ];
-      if (!validTypes.includes(schemaData.extension_type || '')) return false;
+      // 验证状态
+      const validStatuses = ['installed', 'active', 'inactive', 'disabled', 'error', 'updating', 'uninstalling'];
+      if (!validStatuses.includes(this.status)) {
+        return false;
+      }
 
-      const validStatuses = [
-        'installed',
-        'active',
-        'inactive',
-        'disabled',
-        'error',
-        'updating',
-        'uninstalling',
-      ];
-      if (!validStatuses.includes(schemaData.status || '')) return false;
-
-      // 验证版本格式 (SemVer)
-      const semverRegex =
-        /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/;
-      if (!semverRegex.test(schemaData.version || '')) return false;
-      if (!semverRegex.test(schemaData.protocol_version || '')) return false;
+      // 验证配置
+      if (!this._configuration || typeof this._configuration !== 'object') {
+        return false;
+      }
 
       return true;
     } catch (error) {
@@ -402,474 +259,304 @@ export class Extension {
   }
 
   /**
+   * 更新扩展配置
+   * @param newConfig - 新的配置
+   * @param userId - 操作用户ID
+   */
+  updateConfiguration(newConfig: Record<string, unknown>, userId?: string): void {
+    // 验证配置
+    this.validateConfiguration(newConfig);
+
+    const previousConfig = { ...this._configuration.currentConfig };
+    
+    // 更新配置
+    this._configuration = {
+      ...this._configuration,
+      currentConfig: newConfig
+    };
+
+    this._timestamp = new Date().toISOString();
+
+    // 记录审计事件
+    this.addAuditEvent('configure', userId, {
+      previousConfig,
+      newConfig
+    });
+  }
+
+  /**
+   * 更新扩展版本
+   * @param newVersion - 新版本号
+   * @param changelog - 变更日志
+   * @param userId - 操作用户ID
+   */
+  updateVersion(newVersion: string, changelog: string, userId?: string): void {
+    if (!this.isValidVersion(newVersion)) {
+      throw new Error(`Invalid version format: ${newVersion}`);
+    }
+
+    const previousVersion = this._version;
+    
+    // 更新版本
+    this._version = newVersion;
+    this._timestamp = new Date().toISOString();
+
+    // 更新版本历史
+    this._versionHistory = {
+      ...this._versionHistory,
+      versions: [
+        ...this._versionHistory.versions,
+        {
+          version: newVersion,
+          releaseDate: new Date().toISOString(),
+          changelog,
+          breaking: this.isBreakingChange(previousVersion, newVersion),
+          deprecated: []
+        }
+      ]
+    };
+
+    // 记录审计事件
+    this.addAuditEvent('update', userId, {
+      previousVersion,
+      newVersion,
+      changelog
+    });
+  }
+
+  /**
+   * 添加扩展点
+   * @param extensionPoint - 扩展点定义
+   * @param userId - 操作用户ID
+   */
+  addExtensionPoint(extensionPoint: ExtensionPoint, userId?: string): void {
+    // 检查扩展点ID是否已存在
+    if (this._extensionPoints.some(ep => ep.id === extensionPoint.id)) {
+      throw new Error(`Extension point with ID '${extensionPoint.id}' already exists`);
+    }
+
+    // 添加扩展点
+    this._extensionPoints = [...this._extensionPoints, extensionPoint];
+    this._timestamp = new Date().toISOString();
+
+    // 记录审计事件
+    this.addAuditEvent('configure', userId, {
+      action: 'add_extension_point',
+      extensionPointId: extensionPoint.id,
+      extensionPointType: extensionPoint.type
+    });
+  }
+
+  /**
+   * 移除扩展点
+   * @param extensionPointId - 扩展点ID
+   * @param userId - 操作用户ID
+   */
+  removeExtensionPoint(extensionPointId: string, userId?: string): void {
+    const index = this._extensionPoints.findIndex(ep => ep.id === extensionPointId);
+    if (index === -1) {
+      throw new Error(`Extension point with ID '${extensionPointId}' not found`);
+    }
+
+    // 移除扩展点
+    this._extensionPoints = this._extensionPoints.filter(ep => ep.id !== extensionPointId);
+    this._timestamp = new Date().toISOString();
+
+    // 记录审计事件
+    this.addAuditEvent('configure', userId, {
+      action: 'remove_extension_point',
+      extensionPointId
+    });
+  }
+
+  /**
+   * 更新性能指标
+   * @param metrics - 新的性能指标
+   */
+  updatePerformanceMetrics(metrics: Partial<ExtensionPerformanceMetrics>): void {
+    // 更新lifecycle中的性能指标
+    this._lifecycle = {
+      ...this._lifecycle,
+      performanceMetrics: {
+        ...this._lifecycle.performanceMetrics,
+        ...metrics
+      }
+    };
+
+    // 同时更新主性能指标
+    this._performanceMetrics = {
+      ...this._performanceMetrics,
+      ...metrics,
+      healthStatus: this.calculateHealthStatus(metrics)
+    };
+    
+    this._timestamp = new Date().toISOString();
+  }
+
+  // ============================================================================
+  // 查询方法
+  // ============================================================================
+
+  /**
+   * 检查扩展是否处于活动状态
+   */
+  isActive(): boolean {
+    return this._status === 'active';
+  }
+
+  /**
+   * 检查扩展是否有错误
+   */
+  hasError(): boolean {
+    return this._status === 'error' || this._lifecycle.errorCount > 0;
+  }
+
+  /**
+   * 检查扩展是否兼容当前MPLP版本
+   */
+  isCompatible(): boolean {
+    // TODO: 实现版本兼容性检查逻辑
+    return true;
+  }
+
+  /**
+   * 获取扩展的健康状态
+   */
+  getHealthStatus(): 'healthy' | 'degraded' | 'unhealthy' {
+    return this._performanceMetrics.healthStatus;
+  }
+
+  /**
+   * 检查是否有特定类型的扩展点
+   * @param type - 扩展点类型
+   */
+  hasExtensionPointType(type: string): boolean {
+    return this._extensionPoints.some(ep => ep.type === type);
+  }
+
+  /**
+   * 获取特定类型的扩展点
+   * @param type - 扩展点类型
+   */
+  getExtensionPointsByType(type: string): ExtensionPoint[] {
+    return this._extensionPoints.filter(ep => ep.type === type);
+  }
+
+  // ============================================================================
+  // 数据转换方法
+  // ============================================================================
+
+  /**
+   * 转换为数据对象
+   * @returns 扩展实体数据
+   */
+  toData(): ExtensionEntityData {
+    return {
+      protocolVersion: this.protocolVersion,
+      timestamp: this._timestamp,
+      extensionId: this.extensionId,
+      contextId: this.contextId,
+      name: this._name,
+      displayName: this._displayName,
+      description: this._description,
+      version: this._version,
+      extensionType: this._extensionType,
+      status: this._status,
+      compatibility: this._compatibility,
+      configuration: this._configuration,
+      extensionPoints: [...this._extensionPoints],
+      apiExtensions: [...this._apiExtensions],
+      eventSubscriptions: [...this._eventSubscriptions],
+      lifecycle: this._lifecycle,
+      security: this._security,
+      metadata: this._metadata,
+      auditTrail: this._auditTrail,
+      performanceMetrics: this._performanceMetrics,
+      monitoringIntegration: this._monitoringIntegration,
+      versionHistory: this._versionHistory,
+      searchMetadata: this._searchMetadata,
+      eventIntegration: this._eventIntegration
+    };
+  }
+
+  // ============================================================================
+  // 私有辅助方法
+  // ============================================================================
+
+  /**
    * 验证必需字段
    */
-  private validateRequiredFields(
-    schemaData: Partial<ExtensionProtocolSchema>
-  ): void {
-    const requiredFields = [
-      'extension_id',
-      'context_id',
-      'protocol_version',
-      'name',
-      'version',
-      'extension_type',
-      'status',
-      'timestamp',
-    ];
-
+  private validateRequiredFields(data: ExtensionEntityData): void {
+    const requiredFields = ['extensionId', 'contextId', 'name', 'version', 'extensionType'];
+    
     for (const field of requiredFields) {
-      if (
-        !(field in schemaData) ||
-        !schemaData[field as keyof ExtensionProtocolSchema]
-      ) {
-        throw new Error(`必需字段缺失: ${field}`);
+      if (!data[field as keyof ExtensionEntityData]) {
+        throw new Error(`Missing required field: ${field}`);
       }
     }
   }
 
   /**
-   * 验证领域不变性
+   * 验证配置
    */
-  private validateInvariants(): void {
-    if (!this._extensionId) {
-      throw new Error('扩展ID不能为空');
-    }
-    if (!this._contextId) {
-      throw new Error('上下文ID不能为空');
-    }
-    if (!this._name || this._name.trim().length === 0) {
-      throw new Error('扩展名称不能为空');
-    }
-    if (this._name.length > 64) {
-      throw new Error('扩展名称不能超过64个字符');
-    }
-    if (!this._version) {
-      throw new Error('扩展版本不能为空');
-    }
-
-    // 验证名称格式 (符合Schema pattern)
-    const namePattern = /^[a-zA-Z0-9_-]+$/;
-    if (!namePattern.test(this._name)) {
-      throw new Error('扩展名称只能包含字母、数字、下划线和连字符');
+  private validateConfiguration(config: Record<string, unknown>): void {
+    // TODO: 根据配置Schema验证配置
+    if (!config || typeof config !== 'object') {
+      throw new Error('Invalid configuration: must be an object');
     }
   }
 
   /**
-   * 验证状态转换的有效性
+   * 验证版本格式
    */
-  private validateStatusTransition(
-    from: ExtensionStatus,
-    to: ExtensionStatus
-  ): void {
-    const validTransitions: Record<ExtensionStatus, ExtensionStatus[]> = {
-      installed: ['active', 'inactive', 'disabled', 'uninstalling'],
-      active: ['inactive', 'disabled', 'error', 'updating'],
-      inactive: ['active', 'disabled', 'uninstalling'],
-      disabled: ['inactive', 'uninstalling'],
-      error: ['inactive', 'disabled', 'uninstalling'],
-      updating: ['active', 'inactive', 'error'],
-      uninstalling: [],
-    };
+  private isValidVersion(version: string): boolean {
+    // 简单的语义版本验证
+    const semverRegex = /^\d+\.\d+\.\d+(-[a-zA-Z0-9-]+)?(\+[a-zA-Z0-9-]+)?$/;
+    return semverRegex.test(version);
+  }
 
-    if (!validTransitions[from].includes(to)) {
-      throw new Error(`无效的状态转换: ${from} -> ${to}`);
+  /**
+   * 检查是否为破坏性变更
+   */
+  private isBreakingChange(oldVersion: string, newVersion: string): boolean {
+    const oldMajor = parseInt(oldVersion.split('.')[0]);
+    const newMajor = parseInt(newVersion.split('.')[0]);
+    return newMajor > oldMajor;
+  }
+
+  /**
+   * 计算健康状态
+   */
+  private calculateHealthStatus(metrics: Partial<ExtensionPerformanceMetrics>): 'healthy' | 'degraded' | 'unhealthy' {
+    const errorRate = metrics.errorRate ?? this._performanceMetrics.errorRate;
+    const availability = metrics.availability ?? this._performanceMetrics.availability;
+    
+    if (errorRate > 0.1 || availability < 0.9) {
+      return 'unhealthy';
+    } else if (errorRate > 0.05 || availability < 0.95) {
+      return 'degraded';
+    } else {
+      return 'healthy';
     }
   }
 
   /**
-   * Schema → Application层映射方法
+   * 添加审计事件
    */
-  private mapCompatibilityFromSchema(
-    schemaData?: ExtensionProtocolSchema['compatibility']
-  ): ExtensionCompatibility | undefined {
-    if (!schemaData) return undefined;
-
-    return {
-      mplp_version: schemaData.mplp_version,
-      required_modules: schemaData.required_modules?.map(rm => ({
-        module: rm.module as ModuleName,
-        min_version: rm.min_version,
-        max_version: rm.max_version,
-      })),
-      dependencies: schemaData.dependencies?.map(dep => ({
-        extensionId: dep.extension_id,
-        name: dep.name,
-        version_range: dep.version_range,
-        optional: dep.optional,
-      })),
-      conflicts: schemaData.conflicts?.map(conflict => ({
-        extensionId: conflict.extension_id,
-        name: conflict.name,
-        reason: conflict.reason,
-      })),
+  private addAuditEvent(eventType: AuditEventType, userId?: string, details?: Record<string, unknown>): void {
+    const auditEvent: AuditEvent = {
+      id: `audit-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
+      timestamp: new Date().toISOString(),
+      eventType,
+      userId,
+      details: details || {},
+      ipAddress: undefined, // TODO: 从上下文获取
+      userAgent: undefined  // TODO: 从上下文获取
     };
-  }
 
-  private mapConfigurationFromSchema(
-    schemaData?: ExtensionProtocolSchema['configuration']
-  ): ExtensionConfiguration | undefined {
-    if (!schemaData) return undefined;
-
-    return {
-      schema: schemaData.schema,
-      current_config: schemaData.current_config,
-      default_config: schemaData.default_config,
-      validationRules: schemaData.validation_rules?.map(rule => ({
-        rule: rule.rule,
-        message: rule.message,
-        severity: rule.level,
-      })),
+    this._auditTrail = {
+      ...this._auditTrail,
+      events: [...this._auditTrail.events, auditEvent]
     };
-  }
-
-  private mapExtensionPointsFromSchema(
-    schemaData: ExtensionProtocolSchema['extension_points']
-  ): ExtensionPoint[] {
-    if (!schemaData) return [];
-    return schemaData.map(ep => ({
-      point_id: ep.point_id,
-      name: ep.name,
-      type: this.mapExtensionPointType(ep.type),
-      target_module: ep.target_module as any,
-      event_name: ep.event_name || '',
-      execution_order: ep.execution_order,
-      enabled: ep.enabled,
-      handler: {
-        function_name: 'default_handler',
-        parameters: ep.parameters || {},
-        timeoutMs: 5000,
-        retry_policy: undefined,
-      },
-      conditions: undefined,
-    }));
-  }
-
-  private mapApiExtensionsFromSchema(
-    schemaData: ExtensionProtocolSchema['api_extensions']
-  ): ApiExtension[] {
-    if (!schemaData) return [];
-    return schemaData.map(ae => ({
-      endpoint_id: ae.endpoint_id,
-      path: ae.path,
-      method: ae.method,
-      description: ae.description,
-      handler: ae.handler,
-      middleware: ae.middleware,
-      authentication_required: ae.authentication_required,
-
-      rate_limit: ae.rate_limit
-        ? {
-            requests_per_minute: ae.rate_limit.requests_per_minute || 100,
-            burst_limit: ae.rate_limit.burst_limit,
-          }
-        : undefined,
-
-    }));
-  }
-
-  private mapEventSubscriptionsFromSchema(
-    schemaData: ExtensionProtocolSchema['event_subscriptions']
-  ): EventSubscription[] {
-    if (!schemaData) return [];
-    return schemaData.map(es => ({
-      subscription_id: es.subscription_id,
-      event_pattern: es.event_pattern,
-      source_module: es.source_module as any,
-      handler: es.handler,
-      filter_conditions: es.filter_conditions,
-      delivery_guarantees: es.delivery_guarantees,
-      dead_letter_queue: es.dead_letter_queue,
-    }));
-  }
-
-  private mapLifecycleFromSchema(
-    schemaData?: ExtensionProtocolSchema['lifecycle']
-  ): ExtensionLifecycle | undefined {
-    if (!schemaData) return undefined;
-
-    return {
-      install_date: schemaData.install_date,
-      last_update: schemaData.last_update,
-      activation_count: schemaData.activation_count,
-      error_count: schemaData.error_count,
-      last_error: schemaData.last_error ? {
-        timestamp: new Date().toISOString(),
-        error_type: 'runtime_error',
-        message: schemaData.last_error,
-        stack_trace: undefined,
-      } : undefined,
-      performanceMetrics: undefined,
-
-    };
-  }
-
-  private mapSecurityFromSchema(
-    schemaData?: ExtensionProtocolSchema['security']
-  ): ExtensionSecurity | undefined {
-    if (!schemaData) return undefined;
-
-    return {
-      sandbox_enabled: schemaData.sandbox_enabled,
-      resource_limits: {
-        max_memory_mb: schemaData.resource_limits.max_memory_mb,
-        max_cpu_percent: schemaData.resource_limits.max_cpu_percent,
-        max_file_size_mb: schemaData.resource_limits.max_file_size_mb,
-
-      },
-
-      permissions: schemaData.permissions?.map(perm => ({
-        permission: perm.name,
-        justification: perm.description,
-        approved: perm.required,
-      })),
-    };
-  }
-
-  private mapMetadataFromSchema(
-    schemaData?: ExtensionProtocolSchema['metadata']
-  ): ExtensionMetadata | undefined {
-    if (!schemaData) return undefined;
-
-    return {
-      author: schemaData.author,
-      organization: schemaData.organization,
-      license: schemaData.license,
-      homepage: schemaData.homepage,
-      repository: schemaData.repository,
-      documentation: schemaData.documentation,
-      keywords: schemaData.keywords,
-
-    };
-  }
-
-  /**
-   * Application → Schema层映射方法 (反向映射)
-   */
-  private mapCompatibilityToSchema(
-    appData?: ExtensionCompatibility
-  ): ExtensionProtocolSchema['compatibility'] {
-    if (!appData) {
-      return {
-        mplp_version: '1.0.0',
-        required_modules: [],
-        dependencies: [],
-        conflicts: [],
-      };
-    }
-
-    return {
-      mplp_version: appData.mplp_version,
-      required_modules:
-        appData.required_modules?.map(rm => ({
-          module: rm.module,
-          min_version: rm.min_version,
-          max_version: rm.max_version,
-        })) || [],
-      dependencies:
-        appData.dependencies?.map(dep => ({
-          extension_id: dep.extensionId,
-          name: dep.name,
-          version_range: dep.version_range,
-          optional: dep.optional,
-        })) || [],
-      conflicts:
-        appData.conflicts?.map(conflict => ({
-          extension_id: conflict.extensionId,
-          name: conflict.name,
-          reason: conflict.reason,
-        })) || [],
-    };
-  }
-
-  private mapConfigurationToSchema(
-    appData?: ExtensionConfiguration
-  ): ExtensionProtocolSchema['configuration'] {
-    if (!appData) {
-      return {
-        schema: {},
-        current_config: {},
-      };
-    }
-
-    return {
-      schema: appData.schema,
-      current_config: appData.current_config,
-      default_config: appData.default_config,
-      validation_rules: appData.validationRules?.map(rule => ({
-        rule: rule.rule,
-        level: rule.severity,
-        message: rule.message,
-      })),
-    };
-  }
-
-  private mapExtensionPointsToSchema(
-    appData: ExtensionPoint[]
-  ): ExtensionProtocolSchema['extension_points'] {
-    return appData.map(ep => ({
-      point_id: ep.point_id,
-      name: ep.name,
-      type: ep.type as 'hook' | 'filter' | 'action' | 'listener',
-      target_module: ep.target_module,
-      event_name: ep.event_name || 'default',
-      execution_order: ep.execution_order,
-      enabled: ep.enabled,
-      handler: {
-        function_name: ep.handler.function_name,
-        parameters: ep.handler.parameters,
-        timeout_ms: ep.handler.timeoutMs,
-        retry_policy: ep.handler.retry_policy
-          ? {
-              max_retries: ep.handler.retry_policy.max_retries,
-              retry_delay_ms: ep.handler.retry_policy.retry_delay_ms,
-              backoff_strategy: ep.handler.retry_policy.backoff_strategy,
-            }
-          : undefined,
-      },
-      conditions: ep.conditions
-        ? {
-            when: ep.conditions.when,
-            required_permissions: ep.conditions.required_permissions,
-            context_filters: ep.conditions.context_filters,
-          }
-        : undefined,
-    }));
-  }
-
-  private mapApiExtensionsToSchema(
-    appData: ApiExtension[]
-  ): ExtensionProtocolSchema['api_extensions'] {
-    return appData.map(ae => ({
-      endpoint_id: ae.endpoint_id,
-      path: ae.path,
-      method: ae.method as 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH',
-      description: ae.description || '',
-      handler: ae.handler,
-      middleware: ae.middleware,
-      authentication_required: ae.authentication_required,
-
-      rate_limit: ae.rate_limit
-        ? {
-            requests_per_minute: ae.rate_limit.requests_per_minute,
-            burst_limit: ae.rate_limit.burst_size || 10,
-          }
-        : undefined,
-
-    }));
-  }
-
-  private mapEventSubscriptionsToSchema(
-    appData: EventSubscription[]
-  ): ExtensionProtocolSchema['event_subscriptions'] {
-    return appData.map(es => ({
-      subscription_id: es.subscription_id,
-      event_pattern: es.event_pattern,
-      source_module: es.source_module,
-      handler: es.handler,
-      filter_conditions: es.filter_conditions,
-      delivery_guarantees: es.delivery_guarantees,
-      dead_letter_queue: es.dead_letter_queue,
-    }));
-  }
-
-  private mapLifecycleToSchema(
-    appData?: ExtensionLifecycle
-  ): ExtensionProtocolSchema['lifecycle'] {
-    if (!appData) {
-      return {
-        install_date: this._createdAt,
-        activation_count: 0,
-        error_count: 0,
-        auto_start: false,
-        load_priority: 0,
-      };
-    }
-
-    return {
-      install_date: appData.install_date,
-      last_update: appData.last_update,
-      activation_count: appData.activation_count,
-      error_count: appData.error_count,
-      last_error: appData.last_error?.message || undefined,
-      auto_start: false,
-      load_priority: 0,
-
-
-    };
-  }
-
-  private mapSecurityToSchema(
-    appData?: ExtensionSecurity
-  ): ExtensionProtocolSchema['security'] {
-    if (!appData) {
-      return {
-        sandbox_enabled: true,
-        resource_limits: {},
-        permissions: [],
-      };
-    }
-
-    return {
-      sandbox_enabled: appData.sandbox_enabled,
-      resource_limits: {
-        max_memory_mb: appData.resource_limits.max_memory_mb,
-        max_cpu_percent: appData.resource_limits.max_cpu_percent,
-        max_file_size_mb: appData.resource_limits.max_file_size_mb,
-
-      },
-      code_signature: appData.code_signing
-        ? {
-            algorithm: 'SHA256',
-            signature: appData.code_signing.signature || '',
-            certificate: appData.code_signing.certificate || '',
-            timestamp: appData.code_signing.timestamp || new Date().toISOString(),
-          }
-        : undefined,
-      permissions: appData.permissions?.map(perm => ({
-        name: perm.permission,
-        description: perm.justification,
-        required: perm.approved,
-      })) || [],
-    };
-  }
-
-  private mapMetadataToSchema(
-    appData?: ExtensionMetadata
-  ): ExtensionProtocolSchema['metadata'] {
-    if (!appData) {
-      return {};
-    }
-
-    return {
-      author: appData.author,
-      organization: appData.organization,
-      license: appData.license,
-      homepage: appData.homepage,
-      repository: appData.repository,
-      documentation: appData.documentation,
-      keywords: appData.keywords,
-      category: appData.categories?.[0],
-    };
-  }
-
-  /**
-   * 映射ExtensionPointType到Schema支持的类型
-   */
-  private mapExtensionPointType(type: string): ExtensionPointType {
-    switch (type) {
-      case 'api_endpoint':
-        return 'api_endpoint';
-      case 'event_listener':
-        return 'event_listener';
-      case 'hook':
-      case 'filter':
-      case 'action':
-        return type as ExtensionPointType;
-      case 'listener':
-        return 'event_listener';
-      default:
-        return 'hook';
-    }
   }
 }

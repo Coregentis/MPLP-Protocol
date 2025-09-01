@@ -1,69 +1,38 @@
 /**
- * Jest全局测试设置
+ * Jest测试设置文件
  * 
- * 用于配置Jest测试环境，包括全局模拟、自定义匹配器等
- * 
- * @version v1.0.0
- * @created 2025-08-21T14:00:00+08:00
+ * @description 配置Jest测试环境和全局设置
+ * @version 1.0.0
  */
 
-import { jest } from '@jest/globals';
+// 设置测试超时时间
+jest.setTimeout(30000);
 
-// 全局环境设置
-process.env.NODE_ENV = 'test';
+// 全局测试配置
+beforeAll(() => {
+  // 设置测试环境变量
+  process.env.NODE_ENV = 'test';
+  process.env.LOG_LEVEL = 'error'; // 减少测试期间的日志输出
+});
 
-// 增加全局匹配器
-expect.extend({
-  toBeValidUUID(received) {
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-    const pass = uuidRegex.test(received);
-    
-    if (pass) {
-      return {
-        message: () => `expected ${received} not to be a valid UUID`,
-        pass: true
-      };
-    } else {
-      return {
-        message: () => `expected ${received} to be a valid UUID`,
-        pass: false
-      };
-    }
-  },
-  
-  toHaveSucceeded(response) {
-    const pass = response && response.success === true;
-    
-    if (pass) {
-      return {
-        message: () => `expected response not to have succeeded, but it did`,
-        pass: true
-      };
-    } else {
-      return {
-        message: () => `expected response to have succeeded, but it failed with: ${JSON.stringify(response?.error)}`,
-        pass: false
-      };
-    }
+// 每个测试后清理
+afterEach(() => {
+  // 清理模拟函数
+  jest.clearAllMocks();
+});
+
+// 全局错误处理
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+// 抑制控制台警告（仅在测试环境中）
+const originalConsoleWarn = console.warn;
+console.warn = (...args: unknown[]) => {
+  // 过滤掉特定的警告信息
+  const message = args.join(' ');
+  if (message.includes('deprecated') || message.includes('experimental')) {
+    return;
   }
-});
-
-// 全局模拟
-jest.mock('../src/public/utils/logger', () => {
-  return {
-    Logger: jest.fn().mockImplementation(() => ({
-      info: jest.fn(),
-      warn: jest.fn(),
-      error: jest.fn(),
-      debug: jest.fn(),
-      setLevel: jest.fn(),
-      getLevel: jest.fn(),
-      createSubLogger: jest.fn()
-    }))
-  };
-});
-
-// 监听未关闭的处理程序
-afterAll(async () => {
-  await new Promise<void>((resolve) => setTimeout(() => resolve(), 500));
-}); 
+  originalConsoleWarn.apply(console, args);
+};
