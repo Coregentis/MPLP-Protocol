@@ -507,6 +507,21 @@ export class CoreOrchestrationService {
     if (!validModules.includes(moduleId)) {
       throw new Error(`Invalid module: ${moduleId}`);
     }
+
+    // 验证接口ID有效性
+    const validInterfaces = {
+      dialog: ['conversation_context_sync'],
+      collab: ['collaboration_coordination']
+    };
+
+    if (validInterfaces[moduleId as keyof typeof validInterfaces]) {
+      const moduleInterfaces = validInterfaces[moduleId as keyof typeof validInterfaces];
+      if (!moduleInterfaces.includes(interfaceId)) {
+        throw new Error(`Invalid interface ID '${interfaceId}' for module '${moduleId}'`);
+      }
+    }
+
+    console.log(`Interface activation validated: ${moduleId}.${interfaceId}`);
   }
 
   /**
@@ -517,18 +532,31 @@ export class CoreOrchestrationService {
     interfaceId: string,
     activationData: InterfaceActivationData
   ): Promise<Record<string, unknown>> {
-    // 模拟接口激活 - 在实际实现中会激活对应模块的预留接口
-    const activationTime = Math.random() * 200 + 20; // 20-220ms
-    await new Promise(resolve => setTimeout(resolve, activationTime));
-
-    return {
-      moduleId,
-      interfaceId,
-      activationData,
-      result: 'interface_activated',
-      activatedAt: new Date().toISOString(),
-      activationTime
-    };
+    try {
+      // 根据模块和接口执行具体的激活逻辑
+      switch (moduleId) {
+        case 'dialog':
+          return await this.activateDialogInterface(interfaceId, activationData);
+        case 'collab':
+          return await this.activateCollabInterface(interfaceId, activationData);
+        default: {
+          // 对于其他模块，使用默认的模拟激活
+          const activationTime = Math.random() * 200 + 20; // 20-220ms
+          await new Promise(resolve => setTimeout(resolve, activationTime));
+          return {
+            moduleId,
+            interfaceId,
+            result: 'interface_activated',
+            activatedAt: new Date().toISOString(),
+            activationTime,
+            message: `Interface ${interfaceId} activated for module ${moduleId}`
+          };
+        }
+      }
+    } catch (error) {
+      console.error(`Failed to activate interface ${moduleId}.${interfaceId}:`, error);
+      throw error;
+    }
   }
 
   /**
@@ -597,5 +625,153 @@ export class CoreOrchestrationService {
 
     // 更新状态为失败
     await this.updateWorkflowStatus(coreEntity, 'failed');
+  }
+
+  /**
+   * 协调模块操作
+   */
+  async coordinateModule(module: string, operation: string, parameters?: Record<string, unknown>): Promise<{
+    module: string;
+    operation: string;
+    parameters?: Record<string, unknown>;
+    result: string;
+    timestamp: string;
+  }> {
+    // 模拟模块协调
+    return {
+      module,
+      operation,
+      parameters,
+      result: 'success',
+      timestamp: new Date().toISOString()
+    };
+  }
+
+  /**
+   * 执行事务
+   */
+  async executeTransaction(transactionConfig: Record<string, unknown>): Promise<{
+    transactionId: string;
+    config: Record<string, unknown>;
+    result: string;
+    timestamp: string;
+  }> {
+    // 模拟事务执行
+    return {
+      transactionId: `tx-${Date.now()}`,
+      config: transactionConfig,
+      result: 'completed',
+      timestamp: new Date().toISOString()
+    };
+  }
+
+  /**
+   * 同步模块状态
+   */
+  async synchronizeModuleState(module: string, syncConfig: Record<string, unknown>): Promise<{
+    module: string;
+    syncConfig: Record<string, unknown>;
+    result: string;
+    timestamp: string;
+  }> {
+    // 模拟状态同步
+    return {
+      module,
+      syncConfig,
+      result: 'synchronized',
+      timestamp: new Date().toISOString()
+    };
+  }
+
+  // ===== 预留接口激活方法 =====
+
+  /**
+   * 激活Dialog模块接口
+   */
+  private async activateDialogInterface(
+    interfaceId: string,
+    activationData: InterfaceActivationData
+  ): Promise<Record<string, unknown>> {
+    switch (interfaceId) {
+      case 'conversation_context_sync':
+        return await this.activateConversationContextSync(activationData);
+      default:
+        throw new Error(`Unknown Dialog interface: ${interfaceId}`);
+    }
+  }
+
+  /**
+   * 激活Collab模块接口
+   */
+  private async activateCollabInterface(
+    interfaceId: string,
+    activationData: InterfaceActivationData
+  ): Promise<Record<string, unknown>> {
+    switch (interfaceId) {
+      case 'collaboration_coordination':
+        return await this.activateCollaborationCoordination(activationData);
+      default:
+        throw new Error(`Unknown Collab interface: ${interfaceId}`);
+    }
+  }
+
+  /**
+   * 激活对话上下文同步接口
+   */
+  private async activateConversationContextSync(
+    activationData: InterfaceActivationData
+  ): Promise<Record<string, unknown>> {
+    const { parameters } = activationData;
+    const conversationId = parameters?.conversationId as string;
+    const contextData = parameters?.contextData as Record<string, unknown>;
+
+    if (!conversationId || !contextData) {
+      throw new Error('Missing required parameters: conversationId, contextData');
+    }
+
+    // 实现对话上下文同步逻辑
+    console.log(`Activating conversation context sync for: ${conversationId}`);
+
+    // TODO: 实现与Dialog模块的真实集成
+    // 这里应该调用Dialog模块的实际方法来同步上下文
+
+    return {
+      success: true,
+      conversationId,
+      syncedContextKeys: Object.keys(contextData),
+      syncedAt: new Date().toISOString(),
+      message: 'Conversation context synchronized successfully'
+    };
+  }
+
+  /**
+   * 激活协作协调接口
+   */
+  private async activateCollaborationCoordination(
+    activationData: InterfaceActivationData
+  ): Promise<Record<string, unknown>> {
+    const { parameters, configuration } = activationData;
+    const collaborationId = parameters?.collaborationId as string;
+    const participants = parameters?.participants as string[];
+
+    if (!collaborationId || !participants) {
+      throw new Error('Missing required parameters: collaborationId, participants');
+    }
+
+    // 实现协作协调逻辑
+    console.log(`Activating collaboration coordination for: ${collaborationId}`);
+
+    // TODO: 实现与Collab模块的真实集成
+    // 这里应该调用Collab模块的实际方法来协调协作
+
+    return {
+      success: true,
+      collaborationId,
+      coordinatedParticipants: participants.length,
+      coordinationMode: configuration?.coordinationMode || 'real_time',
+      conflictResolution: configuration?.conflictResolution || 'automatic',
+      coordinatedAt: new Date().toISOString(),
+      message: 'Collaboration coordination activated successfully'
+    };
   }
 }

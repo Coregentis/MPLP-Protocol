@@ -124,6 +124,15 @@ export class MLPPStateSyncManager {
   }
 
   /**
+   * 验证状态一致性
+   */
+  async validateStateConsistency(): Promise<boolean> {
+    // TODO: 等待CoreOrchestrator激活 - 实现状态一致性验证逻辑
+    // 当前Mock实现：总是返回一致性验证通过
+    return true;
+  }
+
+  /**
    * 健康检查
    */
   async healthCheck(): Promise<boolean> {

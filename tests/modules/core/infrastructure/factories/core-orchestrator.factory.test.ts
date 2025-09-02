@@ -172,7 +172,7 @@ describe('CoreOrchestratorFactory测试', () => {
       // 验证适配器方法存在（通过不抛出错误来验证）
       expect(() => {
         // 这里我们无法直接访问私有适配器，但可以通过创建成功来验证
-        result.orchestrator.coordinateModules(['test'], 'test', {});
+        result.orchestrator.coordinateModules(['context'], 'test-workflow', {});
       }).not.toThrow();
     });
 

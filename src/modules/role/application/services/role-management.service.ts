@@ -393,6 +393,46 @@ export class RoleManagementService {
     return await this.repository.update(role);
   }
 
+  // ===== 角色分配管理 =====
+
+  /**
+   * 分配角色给用户
+   * @param request 角色分配请求
+   * @returns 分配结果
+   */
+  async assignRole(request: AssignRoleRequest): Promise<{
+    roleId: UUID;
+    userId: string;
+    planId?: UUID;
+    assignedAt: string;
+    success: boolean;
+  }> {
+    // 验证角色是否存在
+    const role = await this.repository.findById(request.roleId);
+    if (!role) {
+      throw new Error(`Role with ID ${request.roleId} not found`);
+    }
+
+    // 验证角色是否处于活跃状态
+    if (role.status !== 'active') {
+      throw new Error(`Role ${request.roleId} is not active`);
+    }
+
+    // 执行角色分配逻辑
+    // 在实际实现中，这里应该：
+    // 1. 检查用户是否已有该角色
+    // 2. 验证分配权限
+    // 3. 记录分配历史
+    // 4. 发送通知等
+
+    return {
+      roleId: request.roleId,
+      userId: request.userId,
+      assignedAt: new Date().toISOString(),
+      success: true
+    };
+  }
+
   // ===== 角色状态管理 =====
 
   /**

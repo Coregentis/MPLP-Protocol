@@ -526,6 +526,59 @@ export class ReservedInterfaceActivator {
   }
 
   /**
+   * 激活指定模块的所有预留接口
+   * 这是测试中使用的统一接口方法
+   */
+  async activateModuleInterfaces(moduleId: string): Promise<{
+    success: boolean;
+    moduleId: string;
+    activatedInterfaces: number;
+    results: ActivationResult[];
+  }> {
+    let results: ActivationResult[] = [];
+
+    // 根据模块ID调用相应的激活方法
+    switch (moduleId) {
+      case 'context':
+        results = await this.activateContextInterfaces(`ctx-${Date.now()}`, `user-${Date.now()}`);
+        break;
+      case 'plan':
+        results = await this.activatePlanInterfaces(`plan-${Date.now()}`);
+        break;
+      case 'role':
+        results = await this.activateRoleInterfaces(`user-${Date.now()}`, `role-${Date.now()}`);
+        break;
+      case 'confirm':
+        results = await this.activateConfirmInterfaces(`approval-${Date.now()}`, [`user-${Date.now()}`]);
+        break;
+      case 'trace':
+        results = await this.activateTraceInterfaces(`exec-${Date.now()}`);
+        break;
+      case 'extension':
+        results = await this.activateExtensionInterfaces(`ext-${Date.now()}`);
+        break;
+      case 'dialog':
+        results = await this.activateDialogInterfaces(`dialog-${Date.now()}`, { test: true });
+        break;
+      case 'collab':
+        results = await this.activateCollabInterfaces(`collab-${Date.now()}`, [`user-${Date.now()}`]);
+        break;
+      case 'network':
+        results = await this.activateNetworkInterfaces(`network-${Date.now()}`, { nodeId: 'test' });
+        break;
+      default:
+        throw new Error(`Module not found: ${moduleId}`);
+    }
+
+    return {
+      success: true,
+      moduleId,
+      activatedInterfaces: results.length,
+      results
+    };
+  }
+
+  /**
    * 获取模块接口定义
    */
   getModuleInterfaceDefinitions(moduleId?: string): ModuleInterfaceMapping[] {

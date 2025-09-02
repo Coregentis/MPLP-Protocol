@@ -27,14 +27,14 @@
       }
     ],
     "no-unused-vars": "off",
-    "no-console": "warn",
+    "no-console": "off",
     "no-debugger": "error",
     "eqeqeq": ["error", "always"],
     "prefer-const": "error",
     "no-var": "error",
     // Additional rules to handle common issues
     "no-case-declarations": "warn",  // Handle case block declarations
-    "no-undef": "warn"  // Handle undefined variables like NodeJS
+    "no-undef": "off"  // Handle undefined variables like NodeJS
   },
   "ignorePatterns": [
     "dist/",

@@ -1,0 +1,996 @@
+{
+  "overallScore": 100,
+  "totalModules": 10,
+  "passedModules": 10,
+  "failedModules": [],
+  "moduleReports": [
+    {
+      "moduleName": "Context",
+      "overallScore": 100,
+      "passed": true,
+      "results": [
+        {
+          "moduleName": "Context",
+          "testType": "response_time",
+          "metrics": {
+            "measured": 0.024000000000114596,
+            "target": 100,
+            "passed": true,
+            "deviation": -99.97599999999989
+          },
+          "details": {
+            "p50": 0.020800000000008367,
+            "p95": 0.024000000000114596,
+            "p99": 0.13379999999983738,
+            "sampleCount": 1000
+          },
+          "timestamp": "2025-09-02T12:29:46.135Z",
+          "duration": 26.093200000000024
+        },
+        {
+          "moduleName": "Context",
+          "testType": "throughput",
+          "metrics": {
+            "measured": 92791.62833929123,
+            "target": 1000,
+            "passed": true,
+            "deviation": 9179.162833929124
+          },
+          "details": {
+            "operationCount": 464000,
+            "testDuration": 5000.451099999999,
+            "batchSize": 50
+          },
+          "timestamp": "2025-09-02T12:29:51.136Z",
+          "duration": 5000.451099999999
+        },
+        {
+          "moduleName": "Context",
+          "testType": "concurrency",
+          "metrics": {
+            "measured": 0.48127199999995357,
+            "target": 50,
+            "passed": true,
+            "deviation": -99.03745600000009
+          },
+          "details": {
+            "concurrentOperations": 50,
+            "successRate": 100,
+            "maxResponseTime": 0.8954000000003361,
+            "minResponseTime": 0.06890000000021246,
+            "totalTime": 0.9610000000002401
+          },
+          "timestamp": "2025-09-02T12:29:51.137Z",
+          "duration": 0.9610000000002401
+        },
+        {
+          "moduleName": "Context",
+          "testType": "memory",
+          "metrics": {
+            "measured": -7.773674011230469,
+            "target": 512,
+            "passed": true,
+            "deviation": -101.51829570531845
+          },
+          "details": {
+            "initialMemory": 232.33760833740234,
+            "finalMemory": 224.56393432617188,
+            "operationCount": 1000
+          },
+          "timestamp": "2025-09-02T12:29:51.168Z",
+          "duration": 0
+        },
+        {
+          "moduleName": "Context",
+          "testType": "reliability",
+          "metrics": {
+            "measured": 0.1,
+            "target": 1,
+            "passed": true,
+            "deviation": -90
+          },
+          "details": {
+            "testOperations": 1000,
+            "successCount": 999,
+            "errorCount": 1,
+            "availability": 99.9
+          },
+          "timestamp": "2025-09-02T12:29:51.192Z",
+          "duration": 0
+        }
+      ],
+      "recommendations": [],
+      "timestamp": "2025-09-02T12:29:51.192Z"
+    },
+    {
+      "moduleName": "Plan",
+      "overallScore": 100,
+      "passed": true,
+      "results": [
+        {
+          "moduleName": "Plan",
+          "testType": "response_time",
+          "metrics": {
+            "measured": 0.04609999999956926,
+            "target": 200,
+            "passed": true,
+            "deviation": -99.97695000000022
+          },
+          "details": {
+            "p50": 0.036800000000766886,
+            "p95": 0.04609999999956926,
+            "p99": 0.06670000000030996,
+            "sampleCount": 1000
+          },
+          "timestamp": "2025-09-02T12:29:51.232Z",
+          "duration": 5122.713
+        },
+        {
+          "moduleName": "Plan",
+          "testType": "throughput",
+          "metrics": {
+            "measured": 48407.87489429213,
+            "target": 500,
+            "passed": true,
+            "deviation": 9581.574978858425
+          },
+          "details": {
+            "operationCount": 242050,
+            "testDuration": 5000.219500000001,
+            "batchSize": 50
+          },
+          "timestamp": "2025-09-02T12:29:56.232Z",
+          "duration": 5000.219500000001
+        },
+        {
+          "moduleName": "Plan",
+          "testType": "concurrency",
+          "metrics": {
+            "measured": 0.7880750000001626,
+            "target": 100,
+            "passed": true,
+            "deviation": -99.21192499999984
+          },
+          "details": {
+            "concurrentOperations": 40,
+            "successRate": 100,
+            "maxResponseTime": 1.5046000000002095,
+            "minResponseTime": 0.07599999999911233,
+            "totalTime": 1.5454000000008818
+          },
+          "timestamp": "2025-09-02T12:29:56.234Z",
+          "duration": 1.5454000000008818
+        },
+        {
+          "moduleName": "Plan",
+          "testType": "memory",
+          "metrics": {
+            "measured": -10.078292846679688,
+            "target": 1024,
+            "passed": true,
+            "deviation": -100.98420828580856
+          },
+          "details": {
+            "initialMemory": 230.71932983398438,
+            "finalMemory": 220.6410369873047,
+            "operationCount": 1000
+          },
+          "timestamp": "2025-09-02T12:29:56.282Z",
+          "duration": 0
+        },
+        {
+          "moduleName": "Plan",
+          "testType": "reliability",
+          "metrics": {
+            "measured": 0.4,
+            "target": 1.5,
+            "passed": true,
+            "deviation": -73.33333333333334
+          },
+          "details": {
+            "testOperations": 1000,
+            "successCount": 996,
+            "errorCount": 4,
+            "availability": 99.6
+          },
+          "timestamp": "2025-09-02T12:29:56.320Z",
+          "duration": 0
+        }
+      ],
+      "recommendations": [],
+      "timestamp": "2025-09-02T12:29:56.320Z"
+    },
+    {
+      "moduleName": "Role",
+      "overallScore": 100,
+      "passed": true,
+      "results": [
+        {
+          "moduleName": "Role",
+          "testType": "response_time",
+          "metrics": {
+            "measured": 0.014400000000023283,
+            "target": 80,
+            "passed": true,
+            "deviation": -99.98199999999997
+          },
+          "details": {
+            "p50": 0.012800000000424916,
+            "p95": 0.014400000000023283,
+            "p99": 0.01599999999962165,
+            "sampleCount": 1000
+          },
+          "timestamp": "2025-09-02T12:29:56.334Z",
+          "duration": 10224.4306
+        },
+        {
+          "moduleName": "Role",
+          "testType": "throughput",
+          "metrics": {
+            "measured": 145361.11552861886,
+            "target": 1500,
+            "passed": true,
+            "deviation": 9590.741035241257
+          },
+          "details": {
+            "operationCount": 726850,
+            "testDuration": 5000.3056000000015,
+            "batchSize": 50
+          },
+          "timestamp": "2025-09-02T12:30:01.334Z",
+          "duration": 5000.3056000000015
+        },
+        {
+          "moduleName": "Role",
+          "testType": "concurrency",
+          "metrics": {
+            "measured": 0.3118033333331672,
+            "target": 40,
+            "passed": true,
+            "deviation": -99.22049166666709
+          },
+          "details": {
+            "concurrentOperations": 60,
+            "successRate": 100,
+            "maxResponseTime": 0.5698000000011234,
+            "minResponseTime": 0.055099999997764826,
+            "totalTime": 0.6209000000017113
+          },
+          "timestamp": "2025-09-02T12:30:01.335Z",
+          "duration": 0.6209000000017113
+        },
+        {
+          "moduleName": "Role",
+          "testType": "memory",
+          "metrics": {
+            "measured": 2.6954116821289062,
+            "target": 256,
+            "passed": true,
+            "deviation": -98.9471048116684
+          },
+          "details": {
+            "initialMemory": 221.71639251708984,
+            "finalMemory": 224.41180419921875,
+            "operationCount": 1000
+          },
+          "timestamp": "2025-09-02T12:30:01.350Z",
+          "duration": 0
+        },
+        {
+          "moduleName": "Role",
+          "testType": "reliability",
+          "metrics": {
+            "measured": 0,
+            "target": 0.5,
+            "passed": true,
+            "deviation": -100
+          },
+          "details": {
+            "testOperations": 1000,
+            "successCount": 1000,
+            "errorCount": 0,
+            "availability": 100
+          },
+          "timestamp": "2025-09-02T12:30:01.364Z",
+          "duration": 0
+        }
+      ],
+      "recommendations": [],
+      "timestamp": "2025-09-02T12:30:01.364Z"
+    },
+    {
+      "moduleName": "Confirm",
+      "overallScore": 100,
+      "passed": true,
+      "results": [
+        {
+          "moduleName": "Confirm",
+          "testType": "response_time",
+          "metrics": {
+            "measured": 0.029200000000855653,
+            "target": 120,
+            "passed": true,
+            "deviation": -99.97566666666596
+          },
+          "details": {
+            "p50": 0.02440000000206055,
+            "p95": 0.029200000000855653,
+            "p99": 0.05249999999796273,
+            "sampleCount": 1000
+          },
+          "timestamp": "2025-09-02T12:30:01.390Z",
+          "duration": 15281.152
+        },
+        {
+          "moduleName": "Confirm",
+          "testType": "throughput",
+          "metrics": {
+            "measured": 71163.92117785297,
+            "target": 750,
+            "passed": true,
+            "deviation": 9388.522823713729
+          },
+          "details": {
+            "operationCount": 355850,
+            "testDuration": 5000.427100000001,
+            "batchSize": 50
+          },
+          "timestamp": "2025-09-02T12:30:06.391Z",
+          "duration": 5000.427100000001
+        },
+        {
+          "moduleName": "Confirm",
+          "testType": "concurrency",
+          "metrics": {
+            "measured": 0.6390680000001158,
+            "target": 60,
+            "passed": true,
+            "deviation": -98.93488666666647
+          },
+          "details": {
+            "concurrentOperations": 50,
+            "successRate": 100,
+            "maxResponseTime": 1.2132999999994354,
+            "minResponseTime": 0.06750000000101863,
+            "totalTime": 1.2651000000005297
+          },
+          "timestamp": "2025-09-02T12:30:06.392Z",
+          "duration": 1.2651000000005297
+        },
+        {
+          "moduleName": "Confirm",
+          "testType": "memory",
+          "metrics": {
+            "measured": 2.695404052734375,
+            "target": 512,
+            "passed": true,
+            "deviation": -99.47355389595032
+          },
+          "details": {
+            "initialMemory": 222.83170318603516,
+            "finalMemory": 225.52710723876953,
+            "operationCount": 1000
+          },
+          "timestamp": "2025-09-02T12:30:06.430Z",
+          "duration": 0
+        },
+        {
+          "moduleName": "Confirm",
+          "testType": "reliability",
+          "metrics": {
+            "measured": 0.6,
+            "target": 1,
+            "passed": true,
+            "deviation": -40
+          },
+          "details": {
+            "testOperations": 1000,
+            "successCount": 994,
+            "errorCount": 6,
+            "availability": 99.4
+          },
+          "timestamp": "2025-09-02T12:30:06.461Z",
+          "duration": 0
+        }
+      ],
+      "recommendations": [],
+      "timestamp": "2025-09-02T12:30:06.461Z"
+    },
+    {
+      "moduleName": "Trace",
+      "overallScore": 100,
+      "passed": true,
+      "results": [
+        {
+          "moduleName": "Trace",
+          "testType": "response_time",
+          "metrics": {
+            "measured": 0.010200000000622822,
+            "target": 60,
+            "passed": true,
+            "deviation": -99.98299999999897
+          },
+          "details": {
+            "p50": 0.008900000000721775,
+            "p95": 0.010200000000622822,
+            "p99": 0.012200000001030276,
+            "sampleCount": 1000
+          },
+          "timestamp": "2025-09-02T12:30:06.471Z",
+          "duration": 20362.158
+        },
+        {
+          "moduleName": "Trace",
+          "testType": "throughput",
+          "metrics": {
+            "measured": 234843.31635921643,
+            "target": 2500,
+            "passed": true,
+            "deviation": 9293.732654368658
+          },
+          "details": {
+            "operationCount": 1174250,
+            "testDuration": 5000.1422999999995,
+            "batchSize": 50
+          },
+          "timestamp": "2025-09-02T12:30:11.472Z",
+          "duration": 5000.1422999999995
+        },
+        {
+          "moduleName": "Trace",
+          "testType": "concurrency",
+          "metrics": {
+            "measured": 0.2318733333334967,
+            "target": 30,
+            "passed": true,
+            "deviation": -99.22708888888835
+          },
+          "details": {
+            "concurrentOperations": 75,
+            "successRate": 100,
+            "maxResponseTime": 0.4062000000012631,
+            "minResponseTime": 0.05789999999979045,
+            "totalTime": 0.4631999999983236
+          },
+          "timestamp": "2025-09-02T12:30:11.472Z",
+          "duration": 0.4631999999983236
+        },
+        {
+          "moduleName": "Trace",
+          "testType": "memory",
+          "metrics": {
+            "measured": 2.6951522827148438,
+            "target": 256,
+            "passed": true,
+            "deviation": -98.94720613956451
+          },
+          "details": {
+            "initialMemory": 225.35352325439453,
+            "finalMemory": 228.04867553710938,
+            "operationCount": 1000
+          },
+          "timestamp": "2025-09-02T12:30:11.483Z",
+          "duration": 0
+        },
+        {
+          "moduleName": "Trace",
+          "testType": "reliability",
+          "metrics": {
+            "measured": 0.1,
+            "target": 0.5,
+            "passed": true,
+            "deviation": -80
+          },
+          "details": {
+            "testOperations": 1000,
+            "successCount": 999,
+            "errorCount": 1,
+            "availability": 99.9
+          },
+          "timestamp": "2025-09-02T12:30:11.493Z",
+          "duration": 0
+        }
+      ],
+      "recommendations": [],
+      "timestamp": "2025-09-02T12:30:11.493Z"
+    },
+    {
+      "moduleName": "Extension",
+      "overallScore": 100,
+      "passed": true,
+      "results": [
+        {
+          "moduleName": "Extension",
+          "testType": "response_time",
+          "metrics": {
+            "measured": 0.027900000000954606,
+            "target": 80,
+            "passed": true,
+            "deviation": -99.9651249999988
+          },
+          "details": {
+            "p50": 0.023000000001047738,
+            "p95": 0.027900000000954606,
+            "p99": 0.03540000000066357,
+            "sampleCount": 1000
+          },
+          "timestamp": "2025-09-02T12:30:11.518Z",
+          "duration": 25408.7813
+        },
+        {
+          "moduleName": "Extension",
+          "testType": "throughput",
+          "metrics": {
+            "measured": 75552.86327653487,
+            "target": 800,
+            "passed": true,
+            "deviation": 9344.10790956686
+          },
+          "details": {
+            "operationCount": 377800,
+            "testDuration": 5000.472300000001,
+            "batchSize": 50
+          },
+          "timestamp": "2025-09-02T12:30:16.519Z",
+          "duration": 5000.472300000001
+        },
+        {
+          "moduleName": "Extension",
+          "testType": "concurrency",
+          "metrics": {
+            "measured": 0.5739883333331818,
+            "target": 40,
+            "passed": true,
+            "deviation": -98.56502916666705
+          },
+          "details": {
+            "concurrentOperations": 60,
+            "successRate": 100,
+            "maxResponseTime": 1.0909999999967113,
+            "minResponseTime": 0.05849999999918509,
+            "totalTime": 1.1383999999998196
+          },
+          "timestamp": "2025-09-02T12:30:16.520Z",
+          "duration": 1.1383999999998196
+        },
+        {
+          "moduleName": "Extension",
+          "testType": "memory",
+          "metrics": {
+            "measured": 2.6952438354492188,
+            "target": 512,
+            "passed": true,
+            "deviation": -99.47358518838882
+          },
+          "details": {
+            "initialMemory": 222.98658752441406,
+            "finalMemory": 225.68183135986328,
+            "operationCount": 1000
+          },
+          "timestamp": "2025-09-02T12:30:16.548Z",
+          "duration": 0
+        },
+        {
+          "moduleName": "Extension",
+          "testType": "reliability",
+          "metrics": {
+            "measured": 0,
+            "target": 0.3,
+            "passed": true,
+            "deviation": -100
+          },
+          "details": {
+            "testOperations": 1000,
+            "successCount": 1000,
+            "errorCount": 0,
+            "availability": 100
+          },
+          "timestamp": "2025-09-02T12:30:16.576Z",
+          "duration": 0
+        }
+      ],
+      "recommendations": [],
+      "timestamp": "2025-09-02T12:30:16.576Z"
+    },
+    {
+      "moduleName": "Dialog",
+      "overallScore": 100,
+      "passed": true,
+      "results": [
+        {
+          "moduleName": "Dialog",
+          "testType": "response_time",
+          "metrics": {
+            "measured": 0.04860000000189757,
+            "target": 200,
+            "passed": true,
+            "deviation": -99.97569999999905
+          },
+          "details": {
+            "p50": 0.0385999999998603,
+            "p95": 0.04860000000189757,
+            "p99": 0.05470000000059372,
+            "sampleCount": 1000
+          },
+          "timestamp": "2025-09-02T12:30:16.617Z",
+          "duration": 30508.0356
+        },
+        {
+          "moduleName": "Dialog",
+          "testType": "throughput",
+          "metrics": {
+            "measured": 47596.28844142732,
+            "target": 500,
+            "passed": true,
+            "deviation": 9419.257688285465
+          },
+          "details": {
+            "operationCount": 238000,
+            "testDuration": 5000.389900000002,
+            "batchSize": 50
+          },
+          "timestamp": "2025-09-02T12:30:21.618Z",
+          "duration": 5000.389900000002
+        },
+        {
+          "moduleName": "Dialog",
+          "testType": "concurrency",
+          "metrics": {
+            "measured": 0.7456720000009227,
+            "target": 100,
+            "passed": true,
+            "deviation": -99.25432799999908
+          },
+          "details": {
+            "concurrentOperations": 50,
+            "successRate": 100,
+            "maxResponseTime": 1.4326000000000931,
+            "minResponseTime": 0.06169999999838183,
+            "totalTime": 1.4721999999965192
+          },
+          "timestamp": "2025-09-02T12:30:21.619Z",
+          "duration": 1.4721999999965192
+        },
+        {
+          "moduleName": "Dialog",
+          "testType": "memory",
+          "metrics": {
+            "measured": -10.11083984375,
+            "target": 1024,
+            "passed": true,
+            "deviation": -100.98738670349121
+          },
+          "details": {
+            "initialMemory": 232.38914489746094,
+            "finalMemory": 222.27830505371094,
+            "operationCount": 1000
+          },
+          "timestamp": "2025-09-02T12:30:21.664Z",
+          "duration": 0
+        },
+        {
+          "moduleName": "Dialog",
+          "testType": "reliability",
+          "metrics": {
+            "measured": 0.2,
+            "target": 0.5,
+            "passed": true,
+            "deviation": -60
+          },
+          "details": {
+            "testOperations": 1000,
+            "successCount": 998,
+            "errorCount": 2,
+            "availability": 99.8
+          },
+          "timestamp": "2025-09-02T12:30:21.700Z",
+          "duration": 0
+        }
+      ],
+      "recommendations": [],
+      "timestamp": "2025-09-02T12:30:21.700Z"
+    },
+    {
+      "moduleName": "Collab",
+      "overallScore": 100,
+      "passed": true,
+      "results": [
+        {
+          "moduleName": "Collab",
+          "testType": "response_time",
+          "metrics": {
+            "measured": 0.04799999999522697,
+            "target": 160,
+            "passed": true,
+            "deviation": -99.97000000000298
+          },
+          "details": {
+            "p50": 0.030799999993178062,
+            "p95": 0.04799999999522697,
+            "p99": 0.06349999999656575,
+            "sampleCount": 1000
+          },
+          "timestamp": "2025-09-02T12:30:21.735Z",
+          "duration": 35625.817299999995
+        },
+        {
+          "moduleName": "Collab",
+          "testType": "throughput",
+          "metrics": {
+            "measured": 56514.42993778533,
+            "target": 600,
+            "passed": true,
+            "deviation": 9319.071656297556
+          },
+          "details": {
+            "operationCount": 282600,
+            "testDuration": 5000.4928,
+            "batchSize": 50
+          },
+          "timestamp": "2025-09-02T12:30:26.736Z",
+          "duration": 5000.4928
+        },
+        {
+          "moduleName": "Collab",
+          "testType": "concurrency",
+          "metrics": {
+            "measured": 0.9081299999998009,
+            "target": 80,
+            "passed": true,
+            "deviation": -98.86483750000025
+          },
+          "details": {
+            "concurrentOperations": 60,
+            "successRate": 100,
+            "maxResponseTime": 1.7381999999997788,
+            "minResponseTime": 0.07920000000012806,
+            "totalTime": 1.797500000000582
+          },
+          "timestamp": "2025-09-02T12:30:26.737Z",
+          "duration": 1.797500000000582
+        },
+        {
+          "moduleName": "Collab",
+          "testType": "memory",
+          "metrics": {
+            "measured": 2.6954193115234375,
+            "target": 768,
+            "passed": true,
+            "deviation": -99.64903394381204
+          },
+          "details": {
+            "initialMemory": 225.00820922851562,
+            "finalMemory": 227.70362854003906,
+            "operationCount": 1000
+          },
+          "timestamp": "2025-09-02T12:30:26.779Z",
+          "duration": 0
+        },
+        {
+          "moduleName": "Collab",
+          "testType": "reliability",
+          "metrics": {
+            "measured": 0.2,
+            "target": 0.4,
+            "passed": true,
+            "deviation": -50
+          },
+          "details": {
+            "testOperations": 1000,
+            "successCount": 998,
+            "errorCount": 2,
+            "availability": 99.8
+          },
+          "timestamp": "2025-09-02T12:30:26.816Z",
+          "duration": 0
+        }
+      ],
+      "recommendations": [],
+      "timestamp": "2025-09-02T12:30:26.816Z"
+    },
+    {
+      "moduleName": "Core",
+      "overallScore": 100,
+      "passed": true,
+      "results": [
+        {
+          "moduleName": "Core",
+          "testType": "response_time",
+          "metrics": {
+            "measured": 0.0031000000017229468,
+            "target": 20,
+            "passed": true,
+            "deviation": -99.98449999999139
+          },
+          "details": {
+            "p50": 0.002700000004551839,
+            "p95": 0.0031000000017229468,
+            "p99": 0.008300000001327135,
+            "sampleCount": 1000
+          },
+          "timestamp": "2025-09-02T12:30:26.820Z",
+          "duration": 40710.7972
+        },
+        {
+          "moduleName": "Core",
+          "testType": "throughput",
+          "metrics": {
+            "measured": 728032.6031887509,
+            "target": 10000,
+            "passed": true,
+            "deviation": 7180.326031887509
+          },
+          "details": {
+            "operationCount": 3640200,
+            "testDuration": 5000.0508000000045,
+            "batchSize": 50
+          },
+          "timestamp": "2025-09-02T12:30:31.820Z",
+          "duration": 5000.0508000000045
+        },
+        {
+          "moduleName": "Core",
+          "testType": "concurrency",
+          "metrics": {
+            "measured": 0.1111579999998503,
+            "target": 10,
+            "passed": true,
+            "deviation": -98.8884200000015
+          },
+          "details": {
+            "concurrentOperations": 100,
+            "successRate": 100,
+            "maxResponseTime": 0.15209999999933643,
+            "minResponseTime": 0.07140000000072177,
+            "totalTime": 0.22780000000057044
+          },
+          "timestamp": "2025-09-02T12:30:31.820Z",
+          "duration": 0.22780000000057044
+        },
+        {
+          "moduleName": "Core",
+          "testType": "memory",
+          "metrics": {
+            "measured": -10.109855651855469,
+            "target": 256,
+            "passed": true,
+            "deviation": -103.94916236400604
+          },
+          "details": {
+            "initialMemory": 232.02064514160156,
+            "finalMemory": 221.9107894897461,
+            "operationCount": 1000
+          },
+          "timestamp": "2025-09-02T12:30:31.825Z",
+          "duration": 0
+        },
+        {
+          "moduleName": "Core",
+          "testType": "reliability",
+          "metrics": {
+            "measured": 0,
+            "target": 0.01,
+            "passed": true,
+            "deviation": -100
+          },
+          "details": {
+            "testOperations": 1000,
+            "successCount": 1000,
+            "errorCount": 0,
+            "availability": 100
+          },
+          "timestamp": "2025-09-02T12:30:31.828Z",
+          "duration": 0
+        }
+      ],
+      "recommendations": [],
+      "timestamp": "2025-09-02T12:30:31.828Z"
+    },
+    {
+      "moduleName": "Network",
+      "overallScore": 100,
+      "passed": true,
+      "results": [
+        {
+          "moduleName": "Network",
+          "testType": "response_time",
+          "metrics": {
+            "measured": 0.010899999993853271,
+            "target": 100,
+            "passed": true,
+            "deviation": -99.98910000000615
+          },
+          "details": {
+            "p50": 0.009799999999813735,
+            "p95": 0.010899999993853271,
+            "p99": 0.01660000000265427,
+            "sampleCount": 1000
+          },
+          "timestamp": "2025-09-02T12:30:31.839Z",
+          "duration": 45729.6064
+        },
+        {
+          "moduleName": "Network",
+          "testType": "throughput",
+          "metrics": {
+            "measured": 190050.12119470013,
+            "target": 2000,
+            "passed": true,
+            "deviation": 9402.506059735006
+          },
+          "details": {
+            "operationCount": 950300,
+            "testDuration": 5000.259900000005,
+            "batchSize": 50
+          },
+          "timestamp": "2025-09-02T12:30:36.839Z",
+          "duration": 5000.259900000005
+        },
+        {
+          "moduleName": "Network",
+          "testType": "concurrency",
+          "metrics": {
+            "measured": 0.47683100000016565,
+            "target": 50,
+            "passed": true,
+            "deviation": -99.04633799999966
+          },
+          "details": {
+            "concurrentOperations": 100,
+            "successRate": 100,
+            "maxResponseTime": 0.8701999999975669,
+            "minResponseTime": 0.08769999999640277,
+            "totalTime": 0.9554999999963911
+          },
+          "timestamp": "2025-09-02T12:30:36.840Z",
+          "duration": 0.9554999999963911
+        },
+        {
+          "moduleName": "Network",
+          "testType": "memory",
+          "metrics": {
+            "measured": 2.6951828002929688,
+            "target": 512,
+            "passed": true,
+            "deviation": -99.47359710931778
+          },
+          "details": {
+            "initialMemory": 226.48765563964844,
+            "finalMemory": 229.1828384399414,
+            "operationCount": 1000
+          },
+          "timestamp": "2025-09-02T12:30:36.855Z",
+          "duration": 0
+        },
+        {
+          "moduleName": "Network",
+          "testType": "reliability",
+          "metrics": {
+            "measured": 0,
+            "target": 0.2,
+            "passed": true,
+            "deviation": -100
+          },
+          "details": {
+            "testOperations": 1000,
+            "successCount": 1000,
+            "errorCount": 0,
+            "availability": 100
+          },
+          "timestamp": "2025-09-02T12:30:36.866Z",
+          "duration": 0
+        }
+      ],
+      "recommendations": [],
+      "timestamp": "2025-09-02T12:30:36.866Z"
+    }
+  ],
+  "summary": {
+    "avgResponseTime": 0.0262399999994841,
+    "totalThroughput": 1690314.16233847,
+    "systemReliability": 99.84,
+    "memoryEfficiency": 200.38886449553752
+  },
+  "recommendations": [],
+  "timestamp": "2025-09-02T12:30:36.867Z"
+}

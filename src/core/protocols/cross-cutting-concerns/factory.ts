@@ -143,14 +143,184 @@ export class CrossCuttingConcernsFactory {
   private applyConfiguration(config: CrossCuttingConcernsConfig): void {
     if (!this.managers) return;
 
-    // 应用性能监控配置
-    if (config.performance) {
-      // TODO: 等待CoreOrchestrator激活 - 实现配置应用逻辑
-      void config.performance; // 临时避免未使用变量警告
+    try {
+      // 应用安全管理器配置
+      if (config.security && this.managers.security) {
+        this.applySecurityConfig(config.security);
+      }
+
+      // 应用性能监控配置
+      if (config.performance && this.managers.performance) {
+        this.applyPerformanceConfig(config.performance);
+      }
+
+      // 应用事件总线配置
+      if (config.eventBus && this.managers.eventBus) {
+        this.applyEventBusConfig(config.eventBus);
+      }
+
+      // 应用错误处理配置
+      if (config.errorHandler && this.managers.errorHandler) {
+        this.applyErrorHandlerConfig(config.errorHandler);
+      }
+
+      // 应用协调管理器配置
+      if (config.coordination && this.managers.coordination) {
+        this.applyCoordinationConfig(config.coordination);
+      }
+
+      // 应用编排管理器配置
+      if (config.orchestration && this.managers.orchestration) {
+        this.applyOrchestrationConfig(config.orchestration);
+      }
+
+      // 应用状态同步配置
+      if (config.stateSync && this.managers.stateSync) {
+        this.applyStateSyncConfig(config.stateSync);
+      }
+
+      // 应用事务管理器配置
+      if (config.transaction && this.managers.transaction) {
+        this.applyTransactionConfig(config.transaction);
+      }
+
+      // 应用协议版本管理器配置
+      if (config.protocolVersion && this.managers.protocolVersion) {
+        this.applyProtocolVersionConfig(config.protocolVersion);
+      }
+    } catch (error) {
+      console.error('Failed to apply cross-cutting concerns configuration:', error);
+      throw new Error(`Configuration application failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+
+  // ===== 配置应用方法 =====
+
+  /**
+   * 应用安全管理器配置
+   */
+  private applySecurityConfig(config: NonNullable<CrossCuttingConcernsConfig['security']>): void {
+    // 安全管理器配置应用
+    // 注意：当前MLPPSecurityManager没有configure方法，这里实现基础配置逻辑
+    if (!config.enabled) {
+      // 如果禁用，可以设置标志或记录日志
+      console.log('Security manager disabled by configuration');
     }
 
-    // 应用其他配置...
-    // TODO: 为每个管理器实现配置应用逻辑
+    // TODO: 当MLPPSecurityManager添加configure方法时，在这里调用
+    // this.managers!.security.configure(config);
+  }
+
+  /**
+   * 应用性能监控配置
+   */
+  private applyPerformanceConfig(config: NonNullable<CrossCuttingConcernsConfig['performance']>): void {
+    // 性能监控配置应用
+    if (!config.enabled) {
+      console.log('Performance monitor disabled by configuration');
+      return;
+    }
+
+    // TODO: 当MLPPPerformanceMonitor添加configure方法时，在这里调用
+    // this.managers!.performance.configure(config);
+  }
+
+  /**
+   * 应用事件总线配置
+   */
+  private applyEventBusConfig(config: NonNullable<CrossCuttingConcernsConfig['eventBus']>): void {
+    // 事件总线配置应用
+    if (!config.enabled) {
+      console.log('Event bus disabled by configuration');
+      return;
+    }
+
+    // TODO: 当MLPPEventBusManager添加configure方法时，在这里调用
+    // this.managers!.eventBus.configure(config);
+  }
+
+  /**
+   * 应用错误处理配置
+   */
+  private applyErrorHandlerConfig(config: NonNullable<CrossCuttingConcernsConfig['errorHandler']>): void {
+    // 错误处理配置应用
+    if (!config.enabled) {
+      console.log('Error handler disabled by configuration');
+      return;
+    }
+
+    // TODO: 当MLPPErrorHandler添加configure方法时，在这里调用
+    // this.managers!.errorHandler.configure(config);
+  }
+
+  /**
+   * 应用协调管理器配置
+   */
+  private applyCoordinationConfig(config: NonNullable<CrossCuttingConcernsConfig['coordination']>): void {
+    // 协调管理器配置应用
+    if (!config.enabled) {
+      console.log('Coordination manager disabled by configuration');
+      return;
+    }
+
+    // TODO: 当MLPPCoordinationManager添加configure方法时，在这里调用
+    // this.managers!.coordination.configure(config);
+  }
+
+  /**
+   * 应用编排管理器配置
+   */
+  private applyOrchestrationConfig(config: NonNullable<CrossCuttingConcernsConfig['orchestration']>): void {
+    // 编排管理器配置应用
+    if (!config.enabled) {
+      console.log('Orchestration manager disabled by configuration');
+      return;
+    }
+
+    // TODO: 当MLPPOrchestrationManager添加configure方法时，在这里调用
+    // this.managers!.orchestration.configure(config);
+  }
+
+  /**
+   * 应用状态同步配置
+   */
+  private applyStateSyncConfig(config: NonNullable<CrossCuttingConcernsConfig['stateSync']>): void {
+    // 状态同步配置应用
+    if (!config.enabled) {
+      console.log('State sync manager disabled by configuration');
+      return;
+    }
+
+    // TODO: 当MLPPStateSyncManager添加configure方法时，在这里调用
+    // this.managers!.stateSync.configure(config);
+  }
+
+  /**
+   * 应用事务管理器配置
+   */
+  private applyTransactionConfig(config: NonNullable<CrossCuttingConcernsConfig['transaction']>): void {
+    // 事务管理器配置应用
+    if (!config.enabled) {
+      console.log('Transaction manager disabled by configuration');
+      return;
+    }
+
+    // TODO: 当MLPPTransactionManager添加configure方法时，在这里调用
+    // this.managers!.transaction.configure(config);
+  }
+
+  /**
+   * 应用协议版本管理器配置
+   */
+  private applyProtocolVersionConfig(config: NonNullable<CrossCuttingConcernsConfig['protocolVersion']>): void {
+    // 协议版本管理器配置应用
+    if (!config.enabled) {
+      console.log('Protocol version manager disabled by configuration');
+      return;
+    }
+
+    // TODO: 当MLPPProtocolVersionManager添加configure方法时，在这里调用
+    // this.managers!.protocolVersion.configure(config);
   }
 
   /**

@@ -6,7 +6,7 @@
  * @pattern 与Context、Plan、Role等模块使用IDENTICAL的测试模式
  */
 
-import { CoreOrchestrator, WorkflowExecutionRequest, WorkflowResult, CoordinationResult } from '../../../../../src/modules/core/domain/orchestrators/core.orchestrator';
+import { CoreOrchestrator, WorkflowExecutionRequest, WorkflowResult, CoordinationResult } from '../../../../../src/core/orchestrator/core.orchestrator';
 import { CoreOrchestrationService } from '../../../../../src/modules/core/application/services/core-orchestration.service';
 import { CoreResourceService } from '../../../../../src/modules/core/application/services/core-resource.service';
 import { CoreMonitoringService } from '../../../../../src/modules/core/application/services/core-monitoring.service';
@@ -190,6 +190,23 @@ describe('CoreOrchestrator测试', () => {
     );
   });
 
+  afterEach(async () => {
+    // 清理资源
+    if (orchestrator && typeof orchestrator.destroy === 'function') {
+      try {
+        await orchestrator.destroy();
+      } catch (error) {
+        // 忽略清理错误
+      }
+    }
+
+    // 清理所有定时器
+    jest.clearAllTimers();
+
+    // 清理所有模拟对象
+    jest.clearAllMocks();
+  });
+
   describe('构造函数测试', () => {
     it('应该正确创建CoreOrchestrator实例', () => {
       expect(orchestrator).toBeInstanceOf(CoreOrchestrator);
@@ -197,7 +214,7 @@ describe('CoreOrchestrator测试', () => {
 
     it('应该正确注入所有依赖', () => {
       // 通过调用方法来验证依赖注入是否正确
-      expect(() => orchestrator.coordinateModules(['test'], 'test', {})).not.toThrow();
+      expect(() => orchestrator.coordinateModules(['context'], 'test-workflow', {})).not.toThrow();
     });
   });
 

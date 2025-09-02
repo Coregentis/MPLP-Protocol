@@ -8,7 +8,7 @@
  */
 
 import { CoreOrchestratorFactory, CoreOrchestratorFactoryResult, CoreOrchestratorFactoryConfig } from './infrastructure/factories/core-orchestrator.factory';
-import { CoreOrchestrator } from './domain/orchestrators/core.orchestrator';
+import { CoreOrchestrator } from '../../core/orchestrator/core.orchestrator';
 import { ReservedInterfaceActivator } from './domain/activators/reserved-interface.activator';
 
 /**
@@ -295,6 +295,6 @@ export const DEFAULT_CORE_ORCHESTRATOR_CONFIG: CoreOrchestratorOptions = {
 };
 
 // 导出核心类型和接口
-export * from './domain/orchestrators/core.orchestrator';
+export * from '../../core/orchestrator/core.orchestrator';
 export * from './domain/activators/reserved-interface.activator';
 export * from './infrastructure/factories/core-orchestrator.factory';

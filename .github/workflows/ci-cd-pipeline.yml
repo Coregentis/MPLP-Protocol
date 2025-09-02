@@ -1,0 +1,513 @@
+# MPLP v1.0 Alpha CI/CD Pipeline
+# 完整的自动化测试流水线，支持持续集成和持续部署
+
+name: MPLP CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop, 'feature/*', 'hotfix/*' ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # 每日凌晨2点运行完整测试套件
+    - cron: '0 2 * * *'
+
+env:
+  NODE_VERSION: '18.x'
+  CACHE_VERSION: v1
+  
+jobs:
+  # 阶段1: 代码质量检查
+  code-quality:
+    name: 代码质量检查
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: 设置Node.js环境
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+    
+    - name: 安装依赖
+      run: |
+        npm ci --legacy-peer-deps
+        npm run build:types
+    
+    - name: TypeScript类型检查
+      run: npm run typecheck
+    
+    - name: ESLint代码检查
+      run: npm run lint
+    
+    - name: Prettier格式检查
+      run: npm run format:check
+    
+    - name: 安全漏洞扫描
+      run: npm audit --audit-level=moderate
+    
+    - name: 上传代码质量报告
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: code-quality-report
+        path: |
+          eslint-report.json
+          audit-report.json
+        retention-days: 7
+
+  # 阶段2: 单元测试
+  unit-tests:
+    name: 单元测试
+    runs-on: ubuntu-latest
+    needs: code-quality
+    timeout-minutes: 15
+    
+    strategy:
+      matrix:
+        node-version: ['18.x', '20.x', '21.x']
+    
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v4
+    
+    - name: 设置Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    
+    - name: 安装依赖
+      run: npm ci --legacy-peer-deps
+    
+    - name: 运行单元测试
+      run: |
+        npm run test:unit -- --coverage --ci --watchAll=false
+        npm run test:coverage:report
+    
+    - name: 上传测试覆盖率
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage/lcov.info
+        flags: unit-tests
+        name: unit-tests-${{ matrix.node-version }}
+    
+    - name: 上传测试报告
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: unit-test-report-${{ matrix.node-version }}
+        path: |
+          coverage/
+          test-results.xml
+        retention-days: 7
+
+  # 阶段3: 集成测试
+  integration-tests:
+    name: 集成测试
+    runs-on: ubuntu-latest
+    needs: code-quality
+    timeout-minutes: 20
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: mplp_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+    
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v4
+    
+    - name: 设置Node.js环境
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+    
+    - name: 安装依赖
+      run: npm ci --legacy-peer-deps
+    
+    - name: 设置测试数据库
+      run: |
+        npm run db:migrate:test
+        npm run db:seed:test
+      env:
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/mplp_test
+        REDIS_URL: redis://localhost:6379
+    
+    - name: 运行集成测试
+      run: npm run test:integration -- --ci --watchAll=false
+      env:
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/mplp_test
+        REDIS_URL: redis://localhost:6379
+        NODE_ENV: test
+    
+    - name: 上传集成测试报告
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: integration-test-report
+        path: |
+          test-results/
+          logs/
+        retention-days: 7
+
+  # 阶段4: 端到端测试
+  e2e-tests:
+    name: 端到端测试
+    runs-on: ubuntu-latest
+    needs: [unit-tests, integration-tests]
+    timeout-minutes: 30
+    
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v4
+    
+    - name: 设置Node.js环境
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+    
+    - name: 安装依赖
+      run: npm ci --legacy-peer-deps
+    
+    - name: 构建应用
+      run: npm run build
+    
+    - name: 启动测试环境
+      run: |
+        docker-compose -f docker-compose.test.yml up -d
+        sleep 30  # 等待服务启动
+    
+    - name: 运行端到端测试
+      run: npm run test:e2e -- --ci
+    
+    - name: 收集测试日志
+      if: always()
+      run: |
+        docker-compose -f docker-compose.test.yml logs > e2e-logs.txt
+        docker-compose -f docker-compose.test.yml down
+    
+    - name: 上传E2E测试报告
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: e2e-test-report
+        path: |
+          e2e-test-results/
+          e2e-logs.txt
+          screenshots/
+        retention-days: 7
+
+  # 阶段5: 性能测试
+  performance-tests:
+    name: 性能基准测试
+    runs-on: ubuntu-latest
+    needs: [unit-tests, integration-tests]
+    timeout-minutes: 45
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+    
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v4
+    
+    - name: 设置Node.js环境
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+    
+    - name: 安装依赖
+      run: npm ci --legacy-peer-deps
+    
+    - name: 运行性能基准测试
+      run: |
+        npm run test:performance:quick
+        npm run test:performance:standard
+      timeout-minutes: 30
+    
+    - name: 生成性能报告
+      run: npm run performance:report
+    
+    - name: 上传性能测试报告
+      uses: actions/upload-artifact@v4
+      with:
+        name: performance-test-report
+        path: |
+          tests/performance/reports/
+        retention-days: 30
+
+  # 阶段6: 安全扫描
+  security-scan:
+    name: 安全扫描
+    runs-on: ubuntu-latest
+    needs: code-quality
+    timeout-minutes: 15
+    
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v4
+    
+    - name: 运行Snyk安全扫描
+      uses: snyk/actions/node@master
+      continue-on-error: true
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      with:
+        args: --severity-threshold=high
+    
+    - name: 运行CodeQL分析
+      uses: github/codeql-action/init@v3
+      with:
+        languages: javascript
+    
+    - name: 执行CodeQL分析
+      uses: github/codeql-action/analyze@v3
+
+  # 阶段7: 构建和打包
+  build-and-package:
+    name: 构建和打包
+    runs-on: ubuntu-latest
+    needs: [unit-tests, integration-tests, e2e-tests]
+    timeout-minutes: 15
+    
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v4
+    
+    - name: 设置Node.js环境
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+    
+    - name: 安装依赖
+      run: npm ci --legacy-peer-deps
+    
+    - name: 构建项目
+      run: |
+        npm run build
+        npm run build:docs
+    
+    - name: 创建发布包
+      run: |
+        npm pack
+        tar -czf mplp-alpha-build.tar.gz dist/ docs/ package.json README.md
+    
+    - name: 上传构建产物
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-artifacts
+        path: |
+          *.tgz
+          mplp-alpha-build.tar.gz
+        retention-days: 30
+
+  # 阶段8: Docker镜像构建
+  docker-build:
+    name: Docker镜像构建
+    runs-on: ubuntu-latest
+    needs: build-and-package
+    timeout-minutes: 20
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
+    
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v4
+    
+    - name: 设置Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    
+    - name: 登录Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    
+    - name: 提取元数据
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: mplp/core
+        tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=raw,value=latest,enable={{is_default_branch}}
+    
+    - name: 构建并推送Docker镜像
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        platforms: linux/amd64,linux/arm64
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+  # 阶段9: 部署到测试环境
+  deploy-staging:
+    name: 部署到测试环境
+    runs-on: ubuntu-latest
+    needs: [build-and-package, docker-build]
+    timeout-minutes: 15
+    if: github.ref == 'refs/heads/develop'
+    environment: staging
+    
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v4
+    
+    - name: 下载构建产物
+      uses: actions/download-artifact@v4
+      with:
+        name: build-artifacts
+    
+    - name: 部署到测试环境
+      run: |
+        echo "部署到测试环境..."
+        # 这里添加实际的部署脚本
+        # 例如：kubectl apply -f k8s/staging/
+        # 或者：ansible-playbook deploy-staging.yml
+    
+    - name: 运行冒烟测试
+      run: |
+        sleep 60  # 等待部署完成
+        npm run test:smoke:staging
+
+  # 阶段10: 发布到生产环境
+  deploy-production:
+    name: 发布到生产环境
+    runs-on: ubuntu-latest
+    needs: [build-and-package, docker-build, security-scan]
+    timeout-minutes: 20
+    if: startsWith(github.ref, 'refs/tags/v')
+    environment: production
+    
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v4
+    
+    - name: 下载构建产物
+      uses: actions/download-artifact@v4
+      with:
+        name: build-artifacts
+    
+    - name: 创建GitHub Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: MPLP v1.0 Alpha ${{ github.ref }}
+        draft: false
+        prerelease: true
+    
+    - name: 发布到npm
+      run: |
+        echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+        npm publish --tag alpha
+    
+    - name: 部署到生产环境
+      run: |
+        echo "部署到生产环境..."
+        # 这里添加生产环境部署脚本
+
+  # 阶段11: 测试报告汇总
+  test-report-summary:
+    name: 测试报告汇总
+    runs-on: ubuntu-latest
+    needs: [unit-tests, integration-tests, e2e-tests, performance-tests]
+    if: always()
+    timeout-minutes: 10
+    
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v4
+    
+    - name: 下载所有测试报告
+      uses: actions/download-artifact@v4
+      with:
+        path: test-reports/
+    
+    - name: 生成汇总报告
+      run: |
+        node scripts/generate-test-summary.js
+    
+    - name: 上传汇总报告
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-summary-report
+        path: |
+          test-summary.html
+          test-summary.json
+        retention-days: 30
+    
+    - name: 发送通知
+      if: failure()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: '🚨 CI/CD流水线执行失败，请检查测试报告。'
+          })
+
+  # 质量门禁检查
+  quality-gate:
+    name: 质量门禁检查
+    runs-on: ubuntu-latest
+    needs: [unit-tests, integration-tests, e2e-tests, security-scan]
+    timeout-minutes: 5
+    
+    steps:
+    - name: 检查质量门禁
+      run: |
+        echo "检查质量门禁..."
+        # 这里可以添加具体的质量门禁逻辑
+        # 例如：测试覆盖率 > 90%，安全扫描无高危漏洞等
+        
+        # 模拟质量门禁检查
+        COVERAGE_THRESHOLD=80
+        SECURITY_ISSUES=0
+        
+        echo "代码覆盖率阈值: ${COVERAGE_THRESHOLD}%"
+        echo "安全问题数量: ${SECURITY_ISSUES}"
+        
+        if [ $SECURITY_ISSUES -gt 0 ]; then
+          echo "❌ 质量门禁失败：存在安全问题"
+          exit 1
+        fi
+        
+        echo "✅ 质量门禁检查通过"

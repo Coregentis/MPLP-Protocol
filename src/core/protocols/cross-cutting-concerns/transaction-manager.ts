@@ -117,6 +117,14 @@ export class MLPPTransactionManager {
   }
 
   /**
+   * 回滚事务
+   */
+  async rollbackTransaction(_transactionId: string): Promise<boolean> {
+    // TODO: 等待CoreOrchestrator激活 - 实现事务回滚逻辑
+    return this.abortTransaction(_transactionId);
+  }
+
+  /**
    * 中止事务
    */
   async abortTransaction(_transactionId: string): Promise<boolean> {

@@ -1,0 +1,168 @@
+# MPLP v1.0 Alpha 测试环境 Docker Compose 配置
+# 用于CI/CD流水线中的自动化测试
+
+version: '3.8'
+
+services:
+  # MPLP 核心服务
+  mplp-core:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    container_name: mplp-test-core
+    environment:
+      - NODE_ENV=test
+      - PORT=3000
+      - DATABASE_URL=postgresql://postgres:testpass@postgres:5432/mplp_test
+      - REDIS_URL=redis://redis:6379
+      - LOG_LEVEL=info
+      - MPLP_MAX_CONCURRENT_WORKFLOWS=10
+      - MPLP_DEFAULT_TIMEOUT=30000
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    volumes:
+      - ./logs:/app/logs
+      - ./test-data:/app/test-data
+    networks:
+      - mplp-test-network
+
+  # PostgreSQL 数据库
+  postgres:
+    image: postgres:15-alpine
+    container_name: mplp-test-postgres
+    environment:
+      - POSTGRES_DB=mplp_test
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=testpass
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
+      - ./scripts/db/init-test.sql:/docker-entrypoint-initdb.d/init-test.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d mplp_test"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - mplp-test-network
+
+  # Redis 缓存
+  redis:
+    image: redis:7-alpine
+    container_name: mplp-test-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_test_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - mplp-test-network
+
+  # 监控服务 (Prometheus)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: mplp-test-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus-test.yml:/etc/prometheus/prometheus.yml
+      - prometheus_test_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=1h'
+      - '--web.enable-lifecycle'
+    networks:
+      - mplp-test-network
+
+  # 测试数据生成器
+  test-data-generator:
+    build:
+      context: .
+      dockerfile: Dockerfile.test-data
+    container_name: mplp-test-data-generator
+    environment:
+      - DATABASE_URL=postgresql://postgres:testpass@postgres:5432/mplp_test
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./test-data:/app/output
+    command: ["node", "scripts/generate-test-data.js"]
+    networks:
+      - mplp-test-network
+
+  # 负载测试服务
+  load-tester:
+    image: loadimpact/k6:latest
+    container_name: mplp-load-tester
+    volumes:
+      - ./tests/load:/scripts
+      - ./test-results:/results
+    environment:
+      - TARGET_URL=http://mplp-core:3000
+    depends_on:
+      mplp-core:
+        condition: service_healthy
+    command: ["k6", "run", "--out", "json=/results/load-test-results.json", "/scripts/load-test.js"]
+    networks:
+      - mplp-test-network
+
+  # 端到端测试服务
+  e2e-tester:
+    build:
+      context: .
+      dockerfile: Dockerfile.e2e
+    container_name: mplp-e2e-tester
+    environment:
+      - BASE_URL=http://mplp-core:3000
+      - HEADLESS=true
+      - BROWSER=chromium
+    volumes:
+      - ./tests/e2e:/app/tests
+      - ./test-results:/app/results
+      - ./screenshots:/app/screenshots
+    depends_on:
+      mplp-core:
+        condition: service_healthy
+    command: ["npm", "run", "test:e2e:ci"]
+    networks:
+      - mplp-test-network
+
+volumes:
+  postgres_test_data:
+    driver: local
+  redis_test_data:
+    driver: local
+  prometheus_test_data:
+    driver: local
+
+networks:
+  mplp-test-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

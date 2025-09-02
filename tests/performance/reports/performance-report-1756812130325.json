@@ -1,0 +1,1003 @@
+{
+  "overallScore": 80.75,
+  "totalModules": 10,
+  "passedModules": 8,
+  "failedModules": [
+    "Role",
+    "Dialog"
+  ],
+  "moduleReports": [
+    {
+      "moduleName": "Context",
+      "overallScore": 81.25,
+      "passed": true,
+      "results": [
+        {
+          "moduleName": "Context",
+          "testType": "response_time",
+          "metrics": {
+            "measured": 16.172199999999975,
+            "target": 100,
+            "passed": true,
+            "deviation": -83.82780000000002
+          },
+          "details": {
+            "p50": 15.658900000000358,
+            "p95": 16.172199999999975,
+            "p99": 16.60839999999962,
+            "sampleCount": 1000
+          },
+          "timestamp": "2025-09-02T11:13:00.415Z",
+          "duration": 15414.5219
+        },
+        {
+          "moduleName": "Context",
+          "testType": "throughput",
+          "metrics": {
+            "measured": 71.9862470275054,
+            "target": 1000,
+            "passed": false,
+            "deviation": -92.80137529724945
+          },
+          "details": {
+            "operationCount": 720,
+            "testDuration": 10001.910499999998
+          },
+          "timestamp": "2025-09-02T11:13:10.418Z",
+          "duration": 10001.910499999998
+        },
+        {
+          "moduleName": "Context",
+          "testType": "concurrency",
+          "metrics": {
+            "measured": 15.69791999999994,
+            "target": 50,
+            "passed": true,
+            "deviation": -68.60416000000012
+          },
+          "details": {
+            "concurrentOperations": 50,
+            "successRate": 100,
+            "maxResponseTime": 15.719399999998132,
+            "totalTime": 15.827400000001944
+          },
+          "timestamp": "2025-09-02T11:13:10.434Z",
+          "duration": 15.827400000001944
+        },
+        {
+          "moduleName": "Context",
+          "testType": "memory",
+          "metrics": {
+            "measured": 0.285430908203125,
+            "target": 512,
+            "passed": true,
+            "deviation": -99.94425177574158
+          },
+          "details": {
+            "initialMemory": 214.5553741455078,
+            "finalMemory": 214.84080505371094,
+            "operationCount": 1000
+          },
+          "timestamp": "2025-09-02T11:13:25.864Z",
+          "duration": 0
+        },
+        {
+          "moduleName": "Context",
+          "testType": "reliability",
+          "metrics": {
+            "measured": 0.5,
+            "target": 1,
+            "passed": true,
+            "deviation": -50
+          },
+          "details": {
+            "testOperations": 1000,
+            "successCount": 995,
+            "errorCount": 5,
+            "availability": 99.5
+          },
+          "timestamp": "2025-09-02T11:13:41.319Z",
+          "duration": 0
+        }
+      ],
+      "recommendations": [
+        "提升Context模块吞吐量：当前72 ops/sec，目标1000 ops/sec"
+      ],
+      "timestamp": "2025-09-02T11:13:41.319Z"
+    },
+    {
+      "moduleName": "Plan",
+      "overallScore": 81.25,
+      "passed": true,
+      "results": [
+        {
+          "moduleName": "Plan",
+          "testType": "response_time",
+          "metrics": {
+            "measured": 16.160900000002584,
+            "target": 200,
+            "passed": true,
+            "deviation": -91.91954999999871
+          },
+          "details": {
+            "p50": 15.651400000002468,
+            "p95": 16.160900000002584,
+            "p99": 16.479800000000978,
+            "sampleCount": 1000
+          },
+          "timestamp": "2025-09-02T11:13:56.822Z",
+          "duration": 71820.65060000001
+        },
+        {
+          "moduleName": "Plan",
+          "testType": "throughput",
+          "metrics": {
+            "measured": 64.34665919339503,
+            "target": 500,
+            "passed": false,
+            "deviation": -87.130668161321
+          },
+          "details": {
+            "operationCount": 644,
+            "testDuration": 10008.289600000004
+          },
+          "timestamp": "2025-09-02T11:14:06.831Z",
+          "duration": 10008.289600000004
+        },
+        {
+          "moduleName": "Plan",
+          "testType": "concurrency",
+          "metrics": {
+            "measured": 15.869050000001153,
+            "target": 100,
+            "passed": true,
+            "deviation": -84.13094999999885
+          },
+          "details": {
+            "concurrentOperations": 40,
+            "successRate": 100,
+            "maxResponseTime": 15.894799999994575,
+            "totalTime": 15.98189999999886
+          },
+          "timestamp": "2025-09-02T11:14:06.847Z",
+          "duration": 15.98189999999886
+        },
+        {
+          "moduleName": "Plan",
+          "testType": "memory",
+          "metrics": {
+            "measured": -0.07637786865234375,
+            "target": 1024,
+            "passed": true,
+            "deviation": -100.00745877623558
+          },
+          "details": {
+            "initialMemory": 215.2583465576172,
+            "finalMemory": 215.18196868896484,
+            "operationCount": 1000
+          },
+          "timestamp": "2025-09-02T11:14:22.308Z",
+          "duration": 0
+        },
+        {
+          "moduleName": "Plan",
+          "testType": "reliability",
+          "metrics": {
+            "measured": 0.8,
+            "target": 1.5,
+            "passed": true,
+            "deviation": -46.666666666666664
+          },
+          "details": {
+            "testOperations": 1000,
+            "successCount": 992,
+            "errorCount": 8,
+            "availability": 99.2
+          },
+          "timestamp": "2025-09-02T11:14:37.731Z",
+          "duration": 0
+        }
+      ],
+      "recommendations": [
+        "提升Plan模块吞吐量：当前64 ops/sec，目标500 ops/sec"
+      ],
+      "timestamp": "2025-09-02T11:14:37.731Z"
+    },
+    {
+      "moduleName": "Role",
+      "overallScore": 78.75,
+      "passed": false,
+      "results": [
+        {
+          "moduleName": "Role",
+          "testType": "response_time",
+          "metrics": {
+            "measured": 16.121200000008685,
+            "target": 80,
+            "passed": true,
+            "deviation": -79.84849999998914
+          },
+          "details": {
+            "p50": 15.597299999993993,
+            "p95": 16.121200000008685,
+            "p99": 16.571899999995367,
+            "sampleCount": 1000
+          },
+          "timestamp": "2025-09-02T11:14:53.148Z",
+          "duration": 128146.24840000001
+        },
+        {
+          "moduleName": "Role",
+          "testType": "throughput",
+          "metrics": {
+            "measured": 64.53931303855674,
+            "target": 1500,
+            "passed": false,
+            "deviation": -95.6973791307629
+          },
+          "details": {
+            "operationCount": 646,
+            "testDuration": 10009.403099999996
+          },
+          "timestamp": "2025-09-02T11:15:03.158Z",
+          "duration": 10009.403099999996
+        },
+        {
+          "moduleName": "Role",
+          "testType": "concurrency",
+          "metrics": {
+            "measured": 1.0073116666671316,
+            "target": 40,
+            "passed": true,
+            "deviation": -97.48172083333218
+          },
+          "details": {
+            "concurrentOperations": 60,
+            "successRate": 100,
+            "maxResponseTime": 1.0634999999892898,
+            "totalTime": 1.1512000000220723
+          },
+          "timestamp": "2025-09-02T11:15:03.159Z",
+          "duration": 1.1512000000220723
+        },
+        {
+          "moduleName": "Role",
+          "testType": "memory",
+          "metrics": {
+            "measured": 0.1979522705078125,
+            "target": 256,
+            "passed": true,
+            "deviation": -99.92267489433289
+          },
+          "details": {
+            "initialMemory": 214.5975341796875,
+            "finalMemory": 214.7954864501953,
+            "operationCount": 1000
+          },
+          "timestamp": "2025-09-02T11:15:18.751Z",
+          "duration": 0
+        },
+        {
+          "moduleName": "Role",
+          "testType": "reliability",
+          "metrics": {
+            "measured": 0.6,
+            "target": 0.5,
+            "passed": false,
+            "deviation": 19.999999999999996
+          },
+          "details": {
+            "testOperations": 1000,
+            "successCount": 994,
+            "errorCount": 6,
+            "availability": 99.4
+          },
+          "timestamp": "2025-09-02T11:15:34.295Z",
+          "duration": 0
+        }
+      ],
+      "recommendations": [
+        "提升Role模块吞吐量：当前65 ops/sec，目标1500 ops/sec",
+        "提高Role模块可靠性：当前错误率0.60%，目标0.5%"
+      ],
+      "timestamp": "2025-09-02T11:15:34.295Z"
+    },
+    {
+      "moduleName": "Confirm",
+      "overallScore": 81.25,
+      "passed": true,
+      "results": [
+        {
+          "moduleName": "Confirm",
+          "testType": "response_time",
+          "metrics": {
+            "measured": 16.170899999997346,
+            "target": 120,
+            "passed": true,
+            "deviation": -86.52425000000221
+          },
+          "details": {
+            "p50": 15.73509999999078,
+            "p95": 16.170899999997346,
+            "p99": 16.479600000020582,
+            "sampleCount": 1000
+          },
+          "timestamp": "2025-09-02T11:15:49.815Z",
+          "duration": 184813.4978
+        },
+        {
+          "moduleName": "Confirm",
+          "testType": "throughput",
+          "metrics": {
+            "measured": 64.8274192214397,
+            "target": 750,
+            "passed": false,
+            "deviation": -91.35634410380806
+          },
+          "details": {
+            "operationCount": 649,
+            "testDuration": 10011.195999999996
+          },
+          "timestamp": "2025-09-02T11:15:59.827Z",
+          "duration": 10011.195999999996
+        },
+        {
+          "moduleName": "Confirm",
+          "testType": "concurrency",
+          "metrics": {
+            "measured": 0.7429859999986366,
+            "target": 60,
+            "passed": true,
+            "deviation": -98.76169000000226
+          },
+          "details": {
+            "concurrentOperations": 50,
+            "successRate": 100,
+            "maxResponseTime": 0.883399999991525,
+            "totalTime": 0.9307000000262633
+          },
+          "timestamp": "2025-09-02T11:15:59.827Z",
+          "duration": 0.9307000000262633
+        },
+        {
+          "moduleName": "Confirm",
+          "testType": "memory",
+          "metrics": {
+            "measured": 0.1962738037109375,
+            "target": 512,
+            "passed": true,
+            "deviation": -99.96166527271271
+          },
+          "details": {
+            "initialMemory": 214.6297836303711,
+            "finalMemory": 214.82605743408203,
+            "operationCount": 1000
+          },
+          "timestamp": "2025-09-02T11:16:15.328Z",
+          "duration": 0
+        },
+        {
+          "moduleName": "Confirm",
+          "testType": "reliability",
+          "metrics": {
+            "measured": 0.5,
+            "target": 1,
+            "passed": true,
+            "deviation": -50
+          },
+          "details": {
+            "testOperations": 1000,
+            "successCount": 995,
+            "errorCount": 5,
+            "availability": 99.5
+          },
+          "timestamp": "2025-09-02T11:16:30.907Z",
+          "duration": 0
+        }
+      ],
+      "recommendations": [
+        "提升Confirm模块吞吐量：当前65 ops/sec，目标750 ops/sec"
+      ],
+      "timestamp": "2025-09-02T11:16:30.907Z"
+    },
+    {
+      "moduleName": "Trace",
+      "overallScore": 81.25,
+      "passed": true,
+      "results": [
+        {
+          "moduleName": "Trace",
+          "testType": "response_time",
+          "metrics": {
+            "measured": 16.13289999999688,
+            "target": 60,
+            "passed": true,
+            "deviation": -73.11183333333854
+          },
+          "details": {
+            "p50": 15.706999999994878,
+            "p95": 16.13289999999688,
+            "p99": 16.413300000014715,
+            "sampleCount": 1000
+          },
+          "timestamp": "2025-09-02T11:16:46.380Z",
+          "duration": 241378.42380000002
+        },
+        {
+          "moduleName": "Trace",
+          "testType": "throughput",
+          "metrics": {
+            "measured": 64.50429046893089,
+            "target": 2500,
+            "passed": false,
+            "deviation": -97.41982838124277
+          },
+          "details": {
+            "operationCount": 646,
+            "testDuration": 10014.837700000004
+          },
+          "timestamp": "2025-09-02T11:16:56.395Z",
+          "duration": 10014.837700000004
+        },
+        {
+          "moduleName": "Trace",
+          "testType": "concurrency",
+          "metrics": {
+            "measured": 1.4350840000020495,
+            "target": 30,
+            "passed": true,
+            "deviation": -95.21638666665983
+          },
+          "details": {
+            "concurrentOperations": 75,
+            "successRate": 100,
+            "maxResponseTime": 1.588999999978114,
+            "totalTime": 2.1006000000052154
+          },
+          "timestamp": "2025-09-02T11:16:56.397Z",
+          "duration": 2.1006000000052154
+        },
+        {
+          "moduleName": "Trace",
+          "testType": "memory",
+          "metrics": {
+            "measured": 0.1981048583984375,
+            "target": 256,
+            "passed": true,
+            "deviation": -99.92261528968811
+          },
+          "details": {
+            "initialMemory": 214.6868438720703,
+            "finalMemory": 214.88494873046875,
+            "operationCount": 1000
+          },
+          "timestamp": "2025-09-02T11:17:11.863Z",
+          "duration": 0
+        },
+        {
+          "moduleName": "Trace",
+          "testType": "reliability",
+          "metrics": {
+            "measured": 0.4,
+            "target": 0.5,
+            "passed": true,
+            "deviation": -19.999999999999996
+          },
+          "details": {
+            "testOperations": 1000,
+            "successCount": 996,
+            "errorCount": 4,
+            "availability": 99.6
+          },
+          "timestamp": "2025-09-02T11:17:27.273Z",
+          "duration": 0
+        }
+      ],
+      "recommendations": [
+        "提升Trace模块吞吐量：当前65 ops/sec，目标2500 ops/sec"
+      ],
+      "timestamp": "2025-09-02T11:17:27.273Z"
+    },
+    {
+      "moduleName": "Extension",
+      "overallScore": 81.25,
+      "passed": true,
+      "results": [
+        {
+          "moduleName": "Extension",
+          "testType": "response_time",
+          "metrics": {
+            "measured": 16.159500000008848,
+            "target": 80,
+            "passed": true,
+            "deviation": -79.80062499998894
+          },
+          "details": {
+            "p50": 15.657999999995809,
+            "p95": 16.159500000008848,
+            "p99": 16.527300000016112,
+            "sampleCount": 1000
+          },
+          "timestamp": "2025-09-02T11:17:42.774Z",
+          "duration": 297772.4098
+        },
+        {
+          "moduleName": "Extension",
+          "testType": "throughput",
+          "metrics": {
+            "measured": 64.57983494653796,
+            "target": 800,
+            "passed": false,
+            "deviation": -91.92752063168275
+          },
+          "details": {
+            "operationCount": 646,
+            "testDuration": 10003.122499999998
+          },
+          "timestamp": "2025-09-02T11:17:52.777Z",
+          "duration": 10003.122499999998
+        },
+        {
+          "moduleName": "Extension",
+          "testType": "concurrency",
+          "metrics": {
+            "measured": 10.491056666664857,
+            "target": 40,
+            "passed": true,
+            "deviation": -73.77235833333786
+          },
+          "details": {
+            "concurrentOperations": 60,
+            "successRate": 100,
+            "maxResponseTime": 14.81150000001071,
+            "totalTime": 14.88790000003064
+          },
+          "timestamp": "2025-09-02T11:17:52.792Z",
+          "duration": 14.88790000003064
+        },
+        {
+          "moduleName": "Extension",
+          "testType": "memory",
+          "metrics": {
+            "measured": 0.2506256103515625,
+            "target": 512,
+            "passed": true,
+            "deviation": -99.95104968547821
+          },
+          "details": {
+            "initialMemory": 214.6834945678711,
+            "finalMemory": 214.93412017822266,
+            "operationCount": 1000
+          },
+          "timestamp": "2025-09-02T11:18:08.349Z",
+          "duration": 0
+        },
+        {
+          "moduleName": "Extension",
+          "testType": "reliability",
+          "metrics": {
+            "measured": 0.1,
+            "target": 0.3,
+            "passed": true,
+            "deviation": -66.66666666666666
+          },
+          "details": {
+            "testOperations": 1000,
+            "successCount": 999,
+            "errorCount": 1,
+            "availability": 99.9
+          },
+          "timestamp": "2025-09-02T11:18:23.838Z",
+          "duration": 0
+        }
+      ],
+      "recommendations": [
+        "提升Extension模块吞吐量：当前65 ops/sec，目标800 ops/sec"
+      ],
+      "timestamp": "2025-09-02T11:18:23.838Z"
+    },
+    {
+      "moduleName": "Dialog",
+      "overallScore": 78.75,
+      "passed": false,
+      "results": [
+        {
+          "moduleName": "Dialog",
+          "testType": "response_time",
+          "metrics": {
+            "measured": 16.146999999997206,
+            "target": 200,
+            "passed": true,
+            "deviation": -91.9265000000014
+          },
+          "details": {
+            "p50": 15.572600000014063,
+            "p95": 16.146999999997206,
+            "p99": 16.61199999996461,
+            "sampleCount": 1000
+          },
+          "timestamp": "2025-09-02T11:18:39.330Z",
+          "duration": 354328.3318
+        },
+        {
+          "moduleName": "Dialog",
+          "testType": "throughput",
+          "metrics": {
+            "measured": 64.32906177042315,
+            "target": 500,
+            "passed": false,
+            "deviation": -87.13418764591538
+          },
+          "details": {
+            "operationCount": 644,
+            "testDuration": 10011.02740000002
+          },
+          "timestamp": "2025-09-02T11:18:49.341Z",
+          "duration": 10011.02740000002
+        },
+        {
+          "moduleName": "Dialog",
+          "testType": "concurrency",
+          "metrics": {
+            "measured": 0.4073819999990519,
+            "target": 100,
+            "passed": true,
+            "deviation": -99.59261800000095
+          },
+          "details": {
+            "concurrentOperations": 50,
+            "successRate": 100,
+            "maxResponseTime": 0.43260000000009313,
+            "totalTime": 0.4595999999437481
+          },
+          "timestamp": "2025-09-02T11:18:49.342Z",
+          "duration": 0.4595999999437481
+        },
+        {
+          "moduleName": "Dialog",
+          "testType": "memory",
+          "metrics": {
+            "measured": 0.1962738037109375,
+            "target": 1024,
+            "passed": true,
+            "deviation": -99.98083263635635
+          },
+          "details": {
+            "initialMemory": 214.72333526611328,
+            "finalMemory": 214.91960906982422,
+            "operationCount": 1000
+          },
+          "timestamp": "2025-09-02T11:19:04.923Z",
+          "duration": 0
+        },
+        {
+          "moduleName": "Dialog",
+          "testType": "reliability",
+          "metrics": {
+            "measured": 0.6,
+            "target": 0.5,
+            "passed": false,
+            "deviation": 19.999999999999996
+          },
+          "details": {
+            "testOperations": 1000,
+            "successCount": 994,
+            "errorCount": 6,
+            "availability": 99.4
+          },
+          "timestamp": "2025-09-02T11:19:20.506Z",
+          "duration": 0
+        }
+      ],
+      "recommendations": [
+        "提升Dialog模块吞吐量：当前64 ops/sec，目标500 ops/sec",
+        "提高Dialog模块可靠性：当前错误率0.60%，目标0.5%"
+      ],
+      "timestamp": "2025-09-02T11:19:20.506Z"
+    },
+    {
+      "moduleName": "Collab",
+      "overallScore": 81.25,
+      "passed": true,
+      "results": [
+        {
+          "moduleName": "Collab",
+          "testType": "response_time",
+          "metrics": {
+            "measured": 16.20070000004489,
+            "target": 160,
+            "passed": true,
+            "deviation": -89.87456249997194
+          },
+          "details": {
+            "p50": 15.625700000033248,
+            "p95": 16.20070000004489,
+            "p99": 17.352300000027753,
+            "sampleCount": 1000
+          },
+          "timestamp": "2025-09-02T11:19:35.992Z",
+          "duration": 410990.4087
+        },
+        {
+          "moduleName": "Collab",
+          "testType": "throughput",
+          "metrics": {
+            "measured": 64.6627432672119,
+            "target": 600,
+            "passed": false,
+            "deviation": -89.22287612213134
+          },
+          "details": {
+            "operationCount": 647,
+            "testDuration": 10005.761699999974
+          },
+          "timestamp": "2025-09-02T11:19:45.998Z",
+          "duration": 10005.761699999974
+        },
+        {
+          "moduleName": "Collab",
+          "testType": "concurrency",
+          "metrics": {
+            "measured": 0.5985233333340148,
+            "target": 80,
+            "passed": true,
+            "deviation": -99.25184583333248
+          },
+          "details": {
+            "concurrentOperations": 60,
+            "successRate": 100,
+            "maxResponseTime": 0.6304999999701977,
+            "totalTime": 0.6651999999885447
+          },
+          "timestamp": "2025-09-02T11:19:45.999Z",
+          "duration": 0.6651999999885447
+        },
+        {
+          "moduleName": "Collab",
+          "testType": "memory",
+          "metrics": {
+            "measured": 0.198028564453125,
+            "target": 768,
+            "passed": true,
+            "deviation": -99.97421503067017
+          },
+          "details": {
+            "initialMemory": 214.75204467773438,
+            "finalMemory": 214.9500732421875,
+            "operationCount": 1000
+          },
+          "timestamp": "2025-09-02T11:20:01.555Z",
+          "duration": 0
+        },
+        {
+          "moduleName": "Collab",
+          "testType": "reliability",
+          "metrics": {
+            "measured": 0.2,
+            "target": 0.4,
+            "passed": true,
+            "deviation": -50
+          },
+          "details": {
+            "testOperations": 1000,
+            "successCount": 998,
+            "errorCount": 2,
+            "availability": 99.8
+          },
+          "timestamp": "2025-09-02T11:20:17.143Z",
+          "duration": 0
+        }
+      ],
+      "recommendations": [
+        "提升Collab模块吞吐量：当前65 ops/sec，目标600 ops/sec"
+      ],
+      "timestamp": "2025-09-02T11:20:17.143Z"
+    },
+    {
+      "moduleName": "Core",
+      "overallScore": 81.25,
+      "passed": true,
+      "results": [
+        {
+          "moduleName": "Core",
+          "testType": "response_time",
+          "metrics": {
+            "measured": 16.291800000006333,
+            "target": 20,
+            "passed": true,
+            "deviation": -18.540999999968335
+          },
+          "details": {
+            "p50": 15.71710000000894,
+            "p95": 16.291800000006333,
+            "p99": 17.946400000015274,
+            "sampleCount": 1000
+          },
+          "timestamp": "2025-09-02T11:20:32.670Z",
+          "duration": 467667.7314
+        },
+        {
+          "moduleName": "Core",
+          "testType": "throughput",
+          "metrics": {
+            "measured": 64.61491056272702,
+            "target": 10000,
+            "passed": false,
+            "deviation": -99.35385089437273
+          },
+          "details": {
+            "operationCount": 647,
+            "testDuration": 10013.168700000038
+          },
+          "timestamp": "2025-09-02T11:20:42.683Z",
+          "duration": 10013.168700000038
+        },
+        {
+          "moduleName": "Core",
+          "testType": "concurrency",
+          "metrics": {
+            "measured": 7.240956000001461,
+            "target": 10,
+            "passed": true,
+            "deviation": -27.590439999985396
+          },
+          "details": {
+            "concurrentOperations": 200,
+            "successRate": 100,
+            "maxResponseTime": 14.874499999976251,
+            "totalTime": 15.058499999984633
+          },
+          "timestamp": "2025-09-02T11:20:42.698Z",
+          "duration": 15.058499999984633
+        },
+        {
+          "moduleName": "Core",
+          "testType": "memory",
+          "metrics": {
+            "measured": 0.204071044921875,
+            "target": 256,
+            "passed": true,
+            "deviation": -99.92028474807739
+          },
+          "details": {
+            "initialMemory": 215.13658905029297,
+            "finalMemory": 215.34066009521484,
+            "operationCount": 1000
+          },
+          "timestamp": "2025-09-02T11:20:58.224Z",
+          "duration": 0
+        },
+        {
+          "moduleName": "Core",
+          "testType": "reliability",
+          "metrics": {
+            "measured": 0,
+            "target": 0.01,
+            "passed": true,
+            "deviation": -100
+          },
+          "details": {
+            "testOperations": 1000,
+            "successCount": 1000,
+            "errorCount": 0,
+            "availability": 100
+          },
+          "timestamp": "2025-09-02T11:21:13.755Z",
+          "duration": 0
+        }
+      ],
+      "recommendations": [
+        "提升Core模块吞吐量：当前65 ops/sec，目标10000 ops/sec"
+      ],
+      "timestamp": "2025-09-02T11:21:13.755Z"
+    },
+    {
+      "moduleName": "Network",
+      "overallScore": 81.25,
+      "passed": true,
+      "results": [
+        {
+          "moduleName": "Network",
+          "testType": "response_time",
+          "metrics": {
+            "measured": 16.18530000001192,
+            "target": 100,
+            "passed": true,
+            "deviation": -83.81469999998808
+          },
+          "details": {
+            "p50": 15.761300000012852,
+            "p95": 16.18530000001192,
+            "p99": 17.565100000007078,
+            "sampleCount": 1000
+          },
+          "timestamp": "2025-09-02T11:21:29.342Z",
+          "duration": 524340.4334999999
+        },
+        {
+          "moduleName": "Network",
+          "testType": "throughput",
+          "metrics": {
+            "measured": 64.00814127637305,
+            "target": 2000,
+            "passed": false,
+            "deviation": -96.79959293618136
+          },
+          "details": {
+            "operationCount": 641,
+            "testDuration": 10014.35109999997
+          },
+          "timestamp": "2025-09-02T11:21:39.357Z",
+          "duration": 10014.35109999997
+        },
+        {
+          "moduleName": "Network",
+          "testType": "concurrency",
+          "metrics": {
+            "measured": 14.374503000000258,
+            "target": 50,
+            "passed": true,
+            "deviation": -71.25099399999948
+          },
+          "details": {
+            "concurrentOperations": 100,
+            "successRate": 100,
+            "maxResponseTime": 14.39559999993071,
+            "totalTime": 14.451899999985471
+          },
+          "timestamp": "2025-09-02T11:21:39.371Z",
+          "duration": 14.451899999985471
+        },
+        {
+          "moduleName": "Network",
+          "testType": "memory",
+          "metrics": {
+            "measured": 0.19651031494140625,
+            "target": 512,
+            "passed": true,
+            "deviation": -99.961619079113
+          },
+          "details": {
+            "initialMemory": 215.28069305419922,
+            "finalMemory": 215.47720336914062,
+            "operationCount": 1000
+          },
+          "timestamp": "2025-09-02T11:21:54.899Z",
+          "duration": 0
+        },
+        {
+          "moduleName": "Network",
+          "testType": "reliability",
+          "metrics": {
+            "measured": 0.1,
+            "target": 0.2,
+            "passed": true,
+            "deviation": -50
+          },
+          "details": {
+            "testOperations": 1000,
+            "successCount": 999,
+            "errorCount": 1,
+            "availability": 99.9
+          },
+          "timestamp": "2025-09-02T11:22:10.319Z",
+          "duration": 0
+        }
+      ],
+      "recommendations": [
+        "提升Network模块吞吐量：当前64 ops/sec，目标2000 ops/sec"
+      ],
+      "timestamp": "2025-09-02T11:22:10.319Z"
+    }
+  ],
+  "summary": {
+    "avgResponseTime": 16.174240000007465,
+    "totalThroughput": 652.3986207731008,
+    "systemReliability": 99.62,
+    "memoryEfficiency": 199.96720715002579
+  },
+  "recommendations": [
+    "优先优化失败模块: Role, Dialog"
+  ],
+  "timestamp": "2025-09-02T11:22:10.320Z"
+}

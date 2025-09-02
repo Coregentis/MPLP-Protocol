@@ -113,7 +113,7 @@ export class MLPPPerformanceMonitor {
    * 开始操作跟踪
    */
   startTrace(operationName: string, metadata?: Record<string, unknown>): string {
-    const operationId = `trace-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const operationId = `trace-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
     
     const trace: OperationTrace = {
       operationId,
@@ -161,15 +161,43 @@ export class MLPPPerformanceMonitor {
    * 获取性能指标
    */
   getMetrics(
-    _filter?: {
+    filter?: {
       name?: string;
       startTime?: string;
       endTime?: string;
       tags?: Record<string, string>;
     }
   ): PerformanceMetric[] {
-    // TODO: 等待CoreOrchestrator激活 - 实现指标过滤和查询
-    return this.metrics;
+    if (!filter) {
+      return this.metrics;
+    }
+
+    return this.metrics.filter(metric => {
+      // 按名称过滤
+      if (filter.name && metric.name !== filter.name) {
+        return false;
+      }
+
+      // 按时间范围过滤
+      const metricTime = new Date(metric.timestamp).getTime();
+      if (filter.startTime && metricTime < new Date(filter.startTime).getTime()) {
+        return false;
+      }
+      if (filter.endTime && metricTime > new Date(filter.endTime).getTime()) {
+        return false;
+      }
+
+      // 按标签过滤
+      if (filter.tags && metric.tags) {
+        for (const [key, value] of Object.entries(filter.tags)) {
+          if (metric.tags[key] !== value) {
+            return false;
+          }
+        }
+      }
+
+      return true;
+    });
   }
 
   /**
@@ -218,14 +246,32 @@ export class MLPPPerformanceMonitor {
   /**
    * 解决告警
    */
-  async resolveAlert(_alertId: string): Promise<boolean> {
-    // TODO: 等待CoreOrchestrator激活 - 实现告警解决逻辑
-    const alert = this.alerts.find(a => a.id === _alertId);
-    if (alert) {
-      alert.resolved = true;
-      return true;
+  async resolveAlert(alertId: string): Promise<boolean> {
+    const alert = this.alerts.find(a => a.id === alertId);
+    if (!alert) {
+      return false;
     }
-    return false;
+
+    if (alert.resolved) {
+      return true; // 已经解决
+    }
+
+    alert.resolved = true;
+
+    // 记录告警解决指标
+    await this.recordMetric(
+      'alert_resolved',
+      1,
+      'count',
+      {
+        alert_id: alertId,
+        metric_name: alert.metricName,
+        severity: alert.severity
+      }
+    );
+
+    console.log(`Alert resolved: ${alertId} (${alert.metricName})`);
+    return true;
   }
 
   /**
@@ -249,9 +295,29 @@ export class MLPPPerformanceMonitor {
   /**
    * 更新监控配置
    */
-  updateConfig(_newConfig: Partial<PerformanceConfig>): void {
-    // TODO: 等待CoreOrchestrator激活 - 实现配置更新逻辑
-    this.config = { ...this.config, ..._newConfig };
+  updateConfig(newConfig: Partial<PerformanceConfig>): void {
+    const oldConfig = { ...this.config };
+    this.config = { ...this.config, ...newConfig };
+
+    // 记录配置更新
+    console.log('Performance monitor configuration updated:', {
+      oldConfig: oldConfig,
+      newConfig: this.config,
+      changes: Object.keys(newConfig)
+    });
+
+    // 如果禁用了监控，清理现有数据
+    if (newConfig.enabled === false) {
+      this.metrics = [];
+      this.alerts = [];
+      this.activeTraces.clear();
+      console.log('Performance monitoring disabled, data cleared');
+    }
+
+    // 如果更新了保留期，清理过期数据
+    if (newConfig.retentionPeriod !== undefined) {
+      this.cleanupOldMetrics();
+    }
   }
 
   /**
@@ -300,9 +366,13 @@ export class MLPPPerformanceMonitor {
    * 导出Prometheus格式
    */
   private exportPrometheusFormat(): string {
-    // TODO: 等待CoreOrchestrator激活 - 实现Prometheus格式导出
     const lines: string[] = [];
-    
+
+    // 添加通用信息
+    lines.push('# MPLP Performance Metrics Export');
+    lines.push(`# Generated at: ${new Date().toISOString()}`);
+    lines.push('');
+
     const metricGroups = this.metrics.reduce((groups, metric) => {
       if (!groups[metric.name]) {
         groups[metric.name] = [];
@@ -312,15 +382,22 @@ export class MLPPPerformanceMonitor {
     }, {} as Record<string, PerformanceMetric[]>);
 
     Object.entries(metricGroups).forEach(([name, metrics]) => {
-      lines.push(`# HELP ${name} Performance metric from MPLP`);
-      lines.push(`# TYPE ${name} gauge`);
-      
+      // 清理指标名称，确保符合Prometheus规范
+      const cleanName = name.replace(/[^a-zA-Z0-9_]/g, '_');
+
+      lines.push(`# HELP ${cleanName} Performance metric from MPLP`);
+      lines.push(`# TYPE ${cleanName} gauge`);
+
       metrics.forEach(metric => {
-        const tags = metric.tags ? 
-          Object.entries(metric.tags).map(([k, v]) => `${k}="${v}"`).join(',') : '';
+        const tags = metric.tags ?
+          Object.entries(metric.tags)
+            .map(([k, v]) => `${k.replace(/[^a-zA-Z0-9_]/g, '_')}="${v}"`)
+            .join(',') : '';
         const tagString = tags ? `{${tags}}` : '';
-        lines.push(`${name}${tagString} ${metric.value}`);
+        lines.push(`${cleanName}${tagString} ${metric.value} ${new Date(metric.timestamp).getTime()}`);
       });
+
+      lines.push(''); // 空行分隔不同指标
     });
 
     return lines.join('\n');
