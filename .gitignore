@@ -75,28 +75,8 @@ glfb-pseudocode-report.txt
 schemas/compiled/
 extensions/compiled/
 
-# AI Assistant internal files (not for public repository)
-.augment/
-.governance/
-docs/internal/
-docs/reports/
-
-# Archived files and directories
-Archived/
-archived/
-*.archived
-
-# IDE workspace files
-*.code-workspace
-.vscode/settings.json
-.vscode/launch.json
-.vscode/tasks.json
-.cursor/
-
-# Development artifacts
-README_NEW.md
-*_backup.*
-*.backup
+# Private Development Repository - Minimal .gitignore
+# Note: This is a private repository, so we keep most development files
 
 # Build and distribution files
 dist/
@@ -105,47 +85,13 @@ coverage/
 *.tgz
 *.tar.gz
 
-# Environment and configuration files
-.env
-.env.local
-.env.development
-.env.test
+# Environment files with actual secrets (if any)
 .env.production
 .env.staging
-config/development/
-config/production/
-config/testing/
-config/local/
-config/*.local.*
-config/**/secrets.*
-config/**/private.*
+**/actual-secrets.*
+**/production-keys.*
 
-# Validation and test results
-validation-results/
-test-results/
-*.log
-*.log.*
-coverage-reports/
-performance-reports/
-
-# Scripts with sensitive information
-scripts/internal/
-scripts/deployment/
-scripts/monitoring/
-scripts/**/deploy.*
-scripts/**/secrets.*
-scripts/**/private.*
-
-# Kubernetes and Docker secrets
-k8s/secrets/
-k8s/configmaps/
-k8s/**/secret.*
-docker/secrets/
-docker/**/secret.*
-
-# Backup and temporary files
-backup/
-backups/
+# Temporary and cache files
 temp/
 tmp/
 *.tmp
@@ -153,37 +99,25 @@ tmp/
 *.swp
 *.swo
 *~
-
-# AI Assistant and development tools
-.ai-assistant/
-.development-tools/
-.internal-tools/
-ai-*.log
-assistant-*.log
-
-# Database and cache files
-*.db
-*.sqlite
-*.sqlite3
 cache/
 .cache/
 
-# Certificate and key files
-*.pem
-*.key
-*.crt
-*.p12
-*.pfx
-certificates/
-keys/
-ssl/
+# Database files
+*.db
+*.sqlite
+*.sqlite3
 
-# IDE and editor specific files (additional)
-.idea/
-*.iml
-.project
-.classpath
-.settings/
-.metadata/
-*.sublime-*
-.brackets.json
+# IDE workspace files (personal preferences)
+.vscode/settings.json
+.vscode/launch.json
+.cursor/
+
+# Backup files
+*_backup.*
+*.backup
+README_NEW.md
+
+# Large archived files (keep structure, ignore large files)
+Archived/**/*.zip
+Archived/**/*.tar.gz
+Archived/**/*.7z

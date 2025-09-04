@@ -1,0 +1,304 @@
+{
+  "backupStrategy": {
+    "version": "1.0.0",
+    "description": "MPLP开发版本备份策略配置",
+    "lastUpdated": "2025-01-31"
+  },
+  "triggers": {
+    "immediate": {
+      "description": "立即执行的高优先级备份",
+      "events": [
+        {
+          "name": "version_release",
+          "description": "版本发布前备份",
+          "command": "npm version",
+          "retention_days": 365,
+          "auto_trigger": true,
+          "include_build_artifacts": true,
+          "compression_level": 9
+        },
+        {
+          "name": "major_refactor",
+          "description": "重大重构前备份",
+          "command": "npm run restructure",
+          "retention_days": 180,
+          "auto_trigger": true,
+          "include_build_artifacts": false,
+          "compression_level": 9
+        },
+        {
+          "name": "production_deploy",
+          "description": "生产部署前备份",
+          "trigger_on": "push to main",
+          "retention_days": 365,
+          "auto_trigger": true,
+          "include_build_artifacts": true,
+          "compression_level": 9
+        },
+        {
+          "name": "public_release",
+          "description": "开源发布前备份",
+          "command": "npm run build:public-release",
+          "retention_days": 365,
+          "auto_trigger": true,
+          "include_build_artifacts": true,
+          "compression_level": 9
+        },
+        {
+          "name": "schema_migration",
+          "description": "Schema迁移前备份",
+          "trigger_on": "schema file changes",
+          "retention_days": 180,
+          "auto_trigger": true,
+          "include_build_artifacts": false,
+          "compression_level": 6
+        }
+      ]
+    },
+    "delayed": {
+      "description": "延迟执行的中优先级备份",
+      "delay_minutes": 5,
+      "events": [
+        {
+          "name": "feature_merge",
+          "description": "功能分支合并后备份",
+          "trigger_on": "PR merge to develop",
+          "retention_days": 90,
+          "auto_trigger": true,
+          "include_build_artifacts": false,
+          "compression_level": 6
+        },
+        {
+          "name": "dependency_update",
+          "description": "依赖更新后备份",
+          "trigger_on": "package.json changes",
+          "retention_days": 60,
+          "auto_trigger": true,
+          "include_build_artifacts": false,
+          "compression_level": 6
+        },
+        {
+          "name": "config_change",
+          "description": "配置文件变更后备份",
+          "trigger_files": [
+            "tsconfig.json",
+            "jest.config.js",
+            ".github/workflows/*.yml",
+            "config/*.json"
+          ],
+          "retention_days": 60,
+          "auto_trigger": true,
+          "include_build_artifacts": false,
+          "compression_level": 6
+        },
+        {
+          "name": "test_architecture",
+          "description": "测试架构变更后备份",
+          "trigger_on": "test structure changes",
+          "retention_days": 90,
+          "auto_trigger": true,
+          "include_build_artifacts": false,
+          "compression_level": 6
+        }
+      ]
+    },
+    "scheduled": {
+      "description": "定时执行的备份",
+      "events": [
+        {
+          "name": "daily_scheduled",
+          "description": "每日定时备份",
+          "schedule": "0 2 * * *",
+          "schedule_description": "每天凌晨2点 (UTC)",
+          "retention_days": 30,
+          "condition": "has_changes_since_last_backup",
+          "include_build_artifacts": false,
+          "compression_level": 3
+        },
+        {
+          "name": "weekly_scheduled",
+          "description": "每周完整备份",
+          "schedule": "0 1 * * 0",
+          "schedule_description": "每周日凌晨1点 (UTC)",
+          "retention_days": 90,
+          "condition": "always",
+          "include_build_artifacts": true,
+          "compression_level": 6
+        },
+        {
+          "name": "monthly_archive",
+          "description": "每月归档备份",
+          "schedule": "0 0 1 * *",
+          "schedule_description": "每月1号凌晨0点 (UTC)",
+          "retention_days": 365,
+          "condition": "always",
+          "include_node_modules": true,
+          "include_build_artifacts": true,
+          "compression_level": 9
+        }
+      ]
+    }
+  },
+  "retention_policy": {
+    "description": "备份保留策略",
+    "rules": [
+      {
+        "type": "daily",
+        "keep_count": 7,
+        "description": "保留最近7天的每日备份"
+      },
+      {
+        "type": "weekly",
+        "keep_count": 4,
+        "description": "保留最近4周的每周备份"
+      },
+      {
+        "type": "monthly",
+        "keep_count": 12,
+        "description": "保留最近12个月的月度备份"
+      },
+      {
+        "type": "version_release",
+        "keep_count": 20,
+        "description": "保留最近20个版本发布备份"
+      },
+      {
+        "type": "major_refactor",
+        "keep_count": 10,
+        "description": "保留最近10个重构备份"
+      }
+    ]
+  },
+  "storage": {
+    "local": {
+      "enabled": true,
+      "path": ".backups",
+      "max_size_gb": 10,
+      "description": "本地备份存储"
+    },
+    "remote": {
+      "enabled": true,
+      "repository": "https://github.com/Coregentis/MPLP-Protocol-Dev.git",
+      "method": "git_tags",
+      "description": "远程Git仓库存储"
+    }
+  },
+  "exclusions": {
+    "always_exclude": [
+      ".git",
+      ".backups",
+      "node_modules",
+      "coverage",
+      "dist",
+      "release",
+      "public-release",
+      ".env*",
+      "*.log",
+      ".DS_Store",
+      "Thumbs.db",
+      "*.tmp",
+      "*.temp"
+    ],
+    "conditional_exclude": {
+      "node_modules": {
+        "exclude_unless": "monthly_archive",
+        "description": "除月度归档外都排除node_modules"
+      },
+      "build_artifacts": {
+        "include_for": ["version_release", "production_deploy", "public_release", "weekly_scheduled"],
+        "description": "仅在特定备份中包含构建产物"
+      }
+    }
+  },
+  "notifications": {
+    "enabled": true,
+    "channels": [
+      {
+        "type": "github_actions",
+        "enabled": true,
+        "events": ["backup_success", "backup_failure"]
+      },
+      {
+        "type": "slack",
+        "enabled": false,
+        "webhook_url": "${SLACK_WEBHOOK_URL}",
+        "events": ["weekly_backup_success", "monthly_backup_success", "backup_failure"]
+      },
+      {
+        "type": "email",
+        "enabled": false,
+        "recipients": ["team@coregentis.com"],
+        "events": ["backup_failure", "storage_full"]
+      }
+    ]
+  },
+  "monitoring": {
+    "health_checks": {
+      "enabled": true,
+      "check_interval_hours": 24,
+      "checks": [
+        "backup_freshness",
+        "storage_space",
+        "retention_compliance",
+        "remote_sync_status"
+      ]
+    },
+    "alerts": {
+      "backup_overdue": {
+        "threshold_hours": 48,
+        "severity": "warning"
+      },
+      "backup_failure": {
+        "consecutive_failures": 2,
+        "severity": "critical"
+      },
+      "storage_full": {
+        "threshold_percent": 90,
+        "severity": "warning"
+      }
+    }
+  },
+  "recovery": {
+    "procedures": {
+      "emergency_restore": {
+        "description": "紧急恢复流程",
+        "steps": [
+          "确定需要恢复的备份点",
+          "创建当前状态备份",
+          "执行恢复操作",
+          "验证恢复结果",
+          "更新团队状态"
+        ]
+      },
+      "partial_restore": {
+        "description": "部分文件恢复流程",
+        "supported_files": [
+          "配置文件",
+          "Schema文件",
+          "文档文件",
+          "脚本文件"
+        ]
+      }
+    },
+    "testing": {
+      "frequency": "monthly",
+      "test_types": [
+        "完整恢复测试",
+        "部分恢复测试",
+        "跨平台恢复测试"
+      ]
+    }
+  },
+  "compliance": {
+    "data_protection": {
+      "encryption": "in_transit",
+      "access_control": "team_only",
+      "audit_logging": true
+    },
+    "retention_compliance": {
+      "max_retention_days": 365,
+      "auto_cleanup": true,
+      "compliance_reporting": true
+    }
+  }
+}

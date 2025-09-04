@@ -1,0 +1,75 @@
+---
+type: "always_apply"
+description: "MPLP双重命名约定核心规则"
+priority: "critical"
+---
+
+# MPLP Dual Naming Convention - All Modules Rewrite Required
+
+## 🚨 **Core Rule - Updated for Unified Standards**
+Schema: snake_case, TypeScript: camelCase
+
+**REWRITE CONTEXT**: All 10 MPLP modules require rewrite due to Schema definition changes and architecture/implementation method clarifications. Dual naming convention must be applied uniformly across all rewritten modules with updated Schema definitions.
+
+## 🎯 **Implementation**
+
+### Schema (snake_case)
+```json
+{
+  "context_id": {"type": "string"},
+  "created_at": {"type": "string"}
+}
+```
+
+### TypeScript (camelCase)
+```typescript
+interface ContextEntity {
+  contextId: string;    // maps to: context_id
+  createdAt: Date;      // maps to: created_at
+}
+```
+
+### Mapping Functions (MANDATORY)
+```typescript
+class ContextMapper {
+  static toSchema(entity: ContextEntity): ContextSchema {
+    return {
+      context_id: entity.contextId,
+      created_at: entity.createdAt.toISOString()
+    };
+  }
+
+  static fromSchema(schema: ContextSchema): ContextEntity {
+    return {
+      contextId: schema.context_id,
+      createdAt: new Date(schema.created_at)
+    };
+  }
+}
+```
+
+## 📋 **Common Mappings**
+```typescript
+'context_id' → 'contextId'
+'created_at' → 'createdAt'
+'protocol_version' → 'protocolVersion'
+```
+
+## 🛠️ **Validation**
+```bash
+npm run validate:mapping  # Check consistency
+npm run check:naming      # Check conventions
+```
+
+## 🚫 **Prohibited**
+- snake_case in TypeScript
+- camelCase in Schema
+- Mixed conventions
+- Missing mapping functions
+
+## ✅ **Quality Gates**
+- Mapping consistency: 100%
+- Naming compliance: 100%
+
+---
+**ENFORCEMENT**: Mandatory rule, violations cause rejection.
