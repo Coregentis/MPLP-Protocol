@@ -73,4 +73,26 @@ glfb-pseudocode-report.txt
 
 # MPLP specific
 schemas/compiled/
-extensions/compiled/ 
+extensions/compiled/
+
+# AI Assistant internal files (not for public repository)
+.augment/
+.governance/
+docs/internal/
+docs/reports/
+
+# Archived files and directories
+Archived/
+archived/
+*.archived
+
+# IDE workspace files
+*.code-workspace
+.vscode/settings.json
+.vscode/launch.json
+.vscode/tasks.json
+
+# Development artifacts
+README_NEW.md
+*_backup.*
+*.backup
