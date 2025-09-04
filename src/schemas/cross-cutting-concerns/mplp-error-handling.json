@@ -2,8 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://mplp.dev/schemas/v1.0/mplp-error-handling.json",
   "title": "MPLP Error Handling Protocol v1.0",
-  "description": "多智能体协议生命周期平台统一错误处理和异常传播协议Schema",
-  "version": "1.0.0",
+  "description": "多智能体协议生命周期平台统一错误处理和异常传播协议Schema v1.0.0",
   "type": "object",
   "$defs": {
     "uuid": {

@@ -625,7 +625,7 @@ export class DialogAdapter implements DialogRepository {
    * 预热对话缓存
    * @param cacheAdapter 缓存适配器
    */
-  private async warmupDialogCache(cacheAdapter: unknown): Promise<void> {
+  private async warmupDialogCache(_cacheAdapter: unknown): Promise<void> {
     try {
       console.log('Warming up dialog cache...');
 
@@ -652,7 +652,7 @@ export class DialogAdapter implements DialogRepository {
    * 设置对话监控指标
    * @param monitoringAdapter 监控适配器
    */
-  private async setupDialogMetrics(monitoringAdapter: unknown): Promise<void> {
+  private async setupDialogMetrics(_monitoringAdapter: unknown): Promise<void> {
     try {
       console.log('Setting up dialog metrics...');
 
@@ -696,12 +696,12 @@ export class DialogAdapter implements DialogRepository {
    * 设置对话日志集成
    * @param monitoringAdapter 监控适配器
    */
-  private async setupDialogLogging(monitoringAdapter: unknown): Promise<void> {
+  private async setupDialogLogging(_monitoringAdapter: unknown): Promise<void> {
     try {
       console.log('Setting up dialog logging...');
 
       // 配置Dialog模块日志格式
-      const logConfig = {
+      const _logConfig = {
         level: 'info',
         format: 'json',
         fields: ['timestamp', 'level', 'message', 'dialogId', 'participantId', 'operation'],
@@ -726,12 +726,12 @@ export class DialogAdapter implements DialogRepository {
    * 设置对话追踪集成
    * @param monitoringAdapter 监控适配器
    */
-  private async setupDialogTracing(monitoringAdapter: unknown): Promise<void> {
+  private async setupDialogTracing(_monitoringAdapter: unknown): Promise<void> {
     try {
       console.log('Setting up dialog tracing...');
 
       // 配置Dialog模块追踪
-      const traceConfig = {
+      const _traceConfig = {
         serviceName: 'mplp-dialog',
         version: '1.0.0',
         environment: 'production',

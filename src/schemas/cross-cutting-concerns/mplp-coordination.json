@@ -2,8 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://mplp.dev/schemas/v1.0/mplp-coordination.json",
   "title": "MPLP Cross-Module Coordination Protocol v1.0",
-  "description": "多智能体协议生命周期平台跨模块协调通信协议Schema",
-  "version": "1.0.0",
+  "description": "多智能体协议生命周期平台跨模块协调通信协议Schema v1.0.0",
   "type": "object",
   "$defs": {
     "uuid": {

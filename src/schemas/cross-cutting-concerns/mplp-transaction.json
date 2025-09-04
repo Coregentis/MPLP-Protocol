@@ -3,7 +3,7 @@
   "$id": "https://mplp.dev/schemas/v1.0/mplp-transaction.json",
   "title": "MPLP Cross-Module Transaction Protocol v1.0",
   "description": "多智能体协议生命周期平台跨模块事务管理协议Schema",
-  "version": "1.0.0",
+  
   "type": "object",
   "$defs": {
     "uuid": {

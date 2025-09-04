@@ -3,7 +3,7 @@
   "$id": "https://mplp.dev/schemas/v1.0/mplp-performance.json",
   "title": "MPLP Performance Protocol v1.0",
   "description": "多智能体协议生命周期平台统一性能监控和指标协议Schema",
-  "version": "1.0.0",
+  
   "type": "object",
   "$defs": {
     "uuid": {

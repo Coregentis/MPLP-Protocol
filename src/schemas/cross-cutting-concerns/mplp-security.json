@@ -3,7 +3,7 @@
   "$id": "https://mplp.dev/schemas/v1.0/mplp-security.json",
   "title": "MPLP Security Protocol v1.0",
   "description": "多智能体协议生命周期平台统一安全和权限协议Schema",
-  "version": "1.0.0",
+  
   "type": "object",
   "$defs": {
     "uuid": {

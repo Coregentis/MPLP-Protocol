@@ -8,7 +8,7 @@
  * @layer 基础设施层 - 适配器
  */
 
-import { UUID, Timestamp } from '../../types';
+import { Timestamp } from '../../types';
 
 // ===== 外部缓存配置接口 =====
 
@@ -117,6 +117,16 @@ interface CacheConnection {
   connected: boolean;
   client?: unknown; // 实际的缓存客户端实例
   config?: Record<string, unknown>;
+}
+
+// 混合缓存特定配置接口
+interface HybridCacheConfig {
+  l1Cache?: Map<string, CacheEntry>;
+  l1TTL: number;
+  l2Connection?: {
+    provider: 'redis' | 'memcached';
+  };
+  syncStrategy?: 'write-through' | 'write-behind' | 'write-around';
 }
 
 // ===== 外部缓存适配器实现 =====
@@ -740,7 +750,7 @@ export class ExternalCacheAdapter {
   // ===== 混合缓存操作实现 =====
 
   private async getFromHybrid<T>(key: string): Promise<T | undefined> {
-    const config = this.connection?.config as any;
+    const config = this.connection?.config as unknown as HybridCacheConfig;
     const l1Cache = config?.l1Cache as Map<string, CacheEntry>;
 
     // 先从L1缓存获取
@@ -776,7 +786,7 @@ export class ExternalCacheAdapter {
   }
 
   private async setToHybrid<T>(key: string, value: T, options: CacheOperationOptions): Promise<boolean> {
-    const config = this.connection?.config as any;
+    const config = this.connection?.config as unknown as HybridCacheConfig;
     const l1Cache = config?.l1Cache as Map<string, CacheEntry>;
 
     // 根据同步策略处理
@@ -840,7 +850,7 @@ export class ExternalCacheAdapter {
   }
 
   private async deleteFromHybrid(key: string): Promise<boolean> {
-    const config = this.connection?.config as any;
+    const config = this.connection?.config as unknown as HybridCacheConfig;
     const l1Cache = config?.l1Cache as Map<string, CacheEntry>;
 
     // 从L1删除
@@ -855,7 +865,7 @@ export class ExternalCacheAdapter {
   }
 
   private async hasInHybrid(key: string): Promise<boolean> {
-    const config = this.connection?.config as any;
+    const config = this.connection?.config as unknown as HybridCacheConfig;
     const l1Cache = config?.l1Cache as Map<string, CacheEntry>;
 
     // 先检查L1
@@ -873,7 +883,7 @@ export class ExternalCacheAdapter {
   }
 
   private async clearHybrid(namespace?: string): Promise<boolean> {
-    const config = this.connection?.config as any;
+    const config = this.connection?.config as unknown as HybridCacheConfig;
     const l1Cache = config?.l1Cache as Map<string, CacheEntry>;
 
     // 清空L1
@@ -1075,12 +1085,13 @@ export class ExternalCacheAdapter {
         await this.disconnectProvider();
         console.log('Disconnected from Hybrid cache');
         break;
-      case 'memory':
+      case 'memory': {
         // 内存缓存只需要清理数据
         const memoryCache = this.connection?.client as Map<string, CacheEntry>;
         memoryCache?.clear();
         console.log('Cleared memory cache');
         break;
+      }
     }
   }
 }

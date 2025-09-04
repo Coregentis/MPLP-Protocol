@@ -90,9 +90,9 @@ export class MLPPOrchestrationManager {
    * 创建编排计划
    */
   async createOrchestrationPlan(
-    _workflowConfig: any,
-    _context?: any
-  ): Promise<any> {
+    _workflowConfig: Record<string, unknown>,
+    _context?: Record<string, unknown>
+  ): Promise<Record<string, unknown>> {
     // TODO: 等待CoreOrchestrator激活 - 实现编排计划创建逻辑
     return {
       planId: `plan-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
@@ -106,15 +106,15 @@ export class MLPPOrchestrationManager {
   /**
    * 执行编排计划
    */
-  async executeOrchestrationPlan(_orchestrationPlan: any): Promise<any> {
+  async executeOrchestrationPlan(_orchestrationPlan: Record<string, unknown>): Promise<Record<string, unknown>> {
     // TODO: 等待CoreOrchestrator激活 - 实现编排计划执行逻辑
     return {
       executionId: `exec-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       planId: _orchestrationPlan?.planId || 'unknown',
       status: 'completed',
       results: {
-        stagesExecuted: _orchestrationPlan?.stages?.length || 0,
-        successfulStages: _orchestrationPlan?.stages?.length || 0,
+        stagesExecuted: Array.isArray(_orchestrationPlan?.stages) ? _orchestrationPlan.stages.length : 0,
+        successfulStages: Array.isArray(_orchestrationPlan?.stages) ? _orchestrationPlan.stages.length : 0,
         failedStages: 0
       },
       startTime: new Date().toISOString(),
