@@ -14,9 +14,93 @@
 
 *The foundational protocol infrastructure that enables intelligent agents to communicate, coordinate, and collaborate at scale*
 
-[🚀 Quick Start](#quick-start) • [📖 Documentation](docs/) • [🎯 Examples](examples/) • [🤝 Contributing](CONTRIBUTING.md) • [💬 Discussions](https://github.com/Coregentis/MPLP-Protocol-Dev/discussions)
+## 🌐 **Multi-Language Navigation**
+
+**English** | [中文](docs/zh/README.md) | [日本語](docs/ja/README.md) | [한국어](docs/ko/README.md) | [Español](docs/es/README.md) | [Français](docs/fr/README.md) | [Deutsch](docs/de/README.md) | [Русский](docs/ru/README.md)
+
+---
+
+[🚀 Quick Start](#quick-start) • [⚡ Quick Deploy](#quick-deploy) • [📖 Documentation](docs/) • [🎯 Examples](examples/) • [🤝 Contributing](CONTRIBUTING.md) • [💬 Discussions](https://github.com/Coregentis/MPLP-Protocol-Dev/discussions)
 
 </div>
+
+---
+
+## 🚀 **Quick Start**
+
+Get up and running with MPLP in under 5 minutes:
+
+### **Prerequisites**
+- Node.js 18+ and npm/yarn
+- TypeScript 5.0+
+- Git
+
+### **Installation**
+```bash
+# Clone the repository
+git clone https://github.com/Coregentis/MPLP-Protocol-Dev.git
+cd MPLP-Protocol-Dev
+
+# Install dependencies
+npm install
+
+# Run tests to verify installation
+npm test
+
+# Start development server
+npm run dev
+```
+
+### **Basic Usage**
+```typescript
+import { ContextManager, PlanManager, CoreOrchestrator } from '@mplp/core';
+
+// Initialize MPLP components
+const context = new ContextManager();
+const planner = new PlanManager();
+const orchestrator = new CoreOrchestrator();
+
+// Create your first multi-agent workflow
+const workflow = await orchestrator.createWorkflow({
+  name: 'hello-world',
+  agents: ['agent1', 'agent2'],
+  protocol: 'coordination'
+});
+
+console.log('MPLP is ready! 🎉');
+```
+
+### **Next Steps**
+- 📖 Read the [Complete Documentation](docs/)
+- 🎯 Try the [Examples](examples/)
+- 🏗️ Build your first [Multi-Agent System](docs/en/tutorials/first-agent-system.md)
+
+## ⚡ **Quick Deploy**
+
+Deploy MPLP to production in minutes:
+
+### **Docker Deployment**
+```bash
+# Build and run with Docker
+docker build -t mplp-app .
+docker run -p 3000:3000 mplp-app
+```
+
+### **Cloud Deployment**
+```bash
+# Deploy to your favorite cloud platform
+npm run deploy:aws     # AWS
+npm run deploy:gcp     # Google Cloud
+npm run deploy:azure   # Microsoft Azure
+npm run deploy:vercel  # Vercel
+```
+
+### **Kubernetes**
+```bash
+# Deploy to Kubernetes cluster
+kubectl apply -f k8s/
+kubectl get pods -l app=mplp
+```
 
 ---
 
@@ -249,19 +333,19 @@ const result = await mplp.executeWorkflow(workflow, {
 
 ## 🛣️ **Roadmap**
 
-### **🎯 v1.0 Stable (Q4 2024)**
+### **🎯 v1.0 Stable (Q2 2026)**
 - **API Stabilization**: Finalize public APIs based on community feedback
 - **Performance Optimization**: Advanced caching and optimization features
 - **Enhanced Documentation**: Comprehensive guides and video tutorials
 - **Production Hardening**: Additional security and reliability features
 
-### **🚀 v1.1 (Q1 2025)**
+### **🚀 v1.1 (Q1 2027)**
 - **Advanced Monitoring**: Real-time dashboards and analytics
 - **Cloud Integration**: Native cloud provider integrations
 - **GraphQL Support**: GraphQL API layer for flexible queries
 - **Mobile SDK**: React Native and Flutter SDK support
 
-### **🌟 v2.0 (Q2 2025)**
+### **🌟 v2.0 (Q2 2027)**
 - **L4 Agent Templates**: Pre-built agent templates and frameworks
 - **Visual Workflow Designer**: GUI-based workflow creation
 - **Advanced AI Integration**: Native LLM and ML model integration
