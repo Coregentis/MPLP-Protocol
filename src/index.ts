@@ -1,78 +1,75 @@
 /**
- * MPLP v1.0 - Multi-Agent Protocol Lifecycle Platform
- * 主入口文件
- *
- * @version 1.0.0
- * @description MPLP协议栈的统一入口点，提供所有10个模块的标准化访问接口
- * @architecture L1-L3分层协议栈
- * - L1 Protocol Layer: 基础设施层 (Security • Performance • Events • Storage)
- * - L2 Coordination Layer: 协调管理层 (10个业务模块)
- * - L3 Execution Layer: 执行编排层 (CoreOrchestrator)
- * @modules Context, Plan, Confirm, Trace, Role, Extension, Core, Collab, Dialog, Network
+ * MPLP v1.0.0-alpha 主导出文件
+ * 
+ * Multi-Agent Protocol Lifecycle Platform
+ * L1-L3 协议栈统一导出
+ * 
+ * @version 1.0.0-alpha
+ * @architecture L1-L3 Protocol Stack
+ * @status Production Ready
+ * @created 2025-07-28
+ * @updated 2025-09-04
  */
 
-// ===== L1 协议层 (基础设施) =====
-export * from './core/protocols/mplp-protocol-base';
-export * from './core/protocols/cross-cutting-concerns';
+// ===== 版本信息 =====
+export const MPLP_VERSION = '1.0.0-alpha';
+export const MPLP_PROTOCOL_VERSION = 'L1-L3';
+export const MPLP_STATUS = 'Production Ready';
 
-// ===== 模块导出 (按架构层级排序) =====
+// ===== 项目信息 =====
+export const MPLP_INFO = {
+  name: 'MPLP',
+  version: '1.0.0-alpha',
+  fullName: 'Multi-Agent Protocol Lifecycle Platform',
+  description: 'L1-L3 Protocol Stack for Multi-Agent Systems',
+  architecture: 'L1-L3 Layered Architecture',
+  status: 'Production Ready',
+  modules: [
+    'context',   // Context management and lifecycle
+    'plan',      // Planning and task orchestration
+    'role',      // Role-based access control
+    'confirm',   // Approval and confirmation workflows
+    'trace',     // Monitoring and event tracking
+    'extension', // Plugin and extension management
+    'dialog',    // Dialog-driven development and memory
+    'collab',    // Multi-agent collaboration and decision-making
+    'core',      // Runtime orchestrator and coordinator
+    'network'    // Agent network topology and routing
+  ],
+  capabilities: [
+    'multi_agent_coordination',
+    'workflow_orchestration', 
+    'lifecycle_management',
+    'real_time_monitoring',
+    'role_based_security',
+    'extension_system',
+    'vendor_neutral_design',
+    'schema_driven_development'
+  ],
+  license: 'MIT',
+  repository: 'https://github.com/mplp-org/mplp',
+  documentation: 'https://docs.mplp.dev'
+} as const;
 
-// L2 协调层模块 (10个业务模块) - 命名空间导出避免冲突
-export * as Context from './modules/context';    // ✅ 企业级标准 (499/499测试)
-export * as Plan from './modules/plan';          // ✅ 企业级标准 (170/170测试)
-export * as Confirm from './modules/confirm';    // ✅ 企业级标准 (265/265测试)
-export * as Trace from './modules/trace';        // ✅ 企业级标准 (107/107测试)
-export * as Role from './modules/role';          // ✅ 企业级标准 (323/323测试)
-export * as Extension from './modules/extension'; // ✅ 企业级标准 (92/92测试)
-export * as Core from './modules/core';          // ✅ 企业级标准 (45/45测试)
-export * as Collab from './modules/collab';      // ✅ 企业级标准 (146/146测试)
-export * as Dialog from './modules/dialog';      // ✅ 企业级标准 (121/121测试)
-export * as Network from './modules/network';    // ✅ 企业级标准 (190/190测试)
+// ===== 版本兼容性 =====
+export const VERSION_INFO = {
+  current: '1.0.0-alpha',
+  api_version: 'v1',
+  schema_version: '1.0',
+  protocol_version: 'L1-L3',
+  compatibility: {
+    node: '>=18.0.0',
+    typescript: '>=5.0.0'
+  },
+  breaking_changes: [],
+  deprecated_features: []
+} as const;
 
-// L3 执行层 (CoreOrchestrator) - 中央协调器 (直接导出主要接口)
-export {
-  initializeCoreOrchestrator,
-  CoreOrchestratorOptions,
-  CoreOrchestratorResult
-} from './modules/core/orchestrator';
-
-// ===== 共享类型和工具 (具名导出避免冲突) =====
-export {
-  UUID,
-  Timestamp,
-  PaginatedResult,
-  PaginationParams
-} from './shared/types';
-export * from './shared/utils';
-
-// ===== Schema和验证 (具名导出避免冲突) =====
-export {
-  CrossCuttingConcernsSchemaMap,
-  CrossCuttingConcernSchemaName,
-  AllCrossCuttingConcernsSchemas,
-  CrossCuttingConcernNames
-} from './schemas';
-
-/**
- * MPLP平台版本信息
- */
-export const MPLP_VERSION = '1.0.0';
-export const MPLP_PROTOCOL_VERSION = '1.0.0';
-
-/**
- * 支持的模块列表 - 全部完成
- */
-export const MPLP_MODULES = [
-  'context',   // ✅ 企业级标准 (499/499测试)
-  'plan',      // ✅ 企业级标准 (170/170测试)
-  'confirm',   // ✅ 企业级标准 (265/265测试)
-  'trace',     // ✅ 企业级标准 (107/107测试)
-  'role',      // ✅ 企业级标准 (323/323测试)
-  'extension', // ✅ 企业级标准 (92/92测试)
-  'core',      // ✅ 企业级标准 (45/45测试)
-  'collab',    // ✅ 企业级标准 (146/146测试)
-  'dialog',    // ✅ 企业级标准 (121/121测试)
-  'network'    // ✅ 企业级标准 (190/190测试)
-] as const;
-
-export type MLPPModuleName = typeof MPLP_MODULES[number];
+// ===== 默认导出 =====
+export default {
+  MPLP_VERSION,
+  MPLP_PROTOCOL_VERSION,
+  MPLP_STATUS,
+  MPLP_INFO,
+  VERSION_INFO
+};

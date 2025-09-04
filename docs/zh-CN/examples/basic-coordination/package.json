@@ -1,0 +1,128 @@
+{
+  "name": "@mplp/example-basic-coordination",
+  "version": "1.0.0-alpha",
+  "description": "MPLP基础多智能体协调示例 - 展示文档处理流水线中的智能体协作",
+  "main": "dist/main.js",
+  "scripts": {
+    "start": "npm run build && node dist/main.js",
+    "start:verbose": "DEBUG=mplp:* npm start",
+    "dev": "ts-node src/main.ts",
+    "dev:watch": "ts-node-dev --respawn --transpile-only src/main.ts",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "clean": "rimraf dist",
+    "test": "jest",
+    "test:unit": "jest --testPathPattern=unit",
+    "test:integration": "jest --testPathPattern=integration",
+    "test:e2e": "jest --testPathPattern=e2e",
+    "test:coverage": "jest --coverage",
+    "test:watch": "jest --watch",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write src/**/*.ts",
+    "validate": "npm run typecheck && npm run lint && npm test",
+    "docs": "typedoc src --out docs/api"
+  },
+  "keywords": [
+    "mplp",
+    "multi-agent",
+    "协调",
+    "示例",
+    "文档处理",
+    "智能体",
+    "协作",
+    "typescript"
+  ],
+  "author": "MPLP Community",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mplp/examples.git",
+    "directory": "basic-coordination"
+  },
+  "bugs": {
+    "url": "https://github.com/mplp/examples/issues"
+  },
+  "homepage": "https://mplp.org/examples/basic-coordination",
+  "engines": {
+    "node": ">=18.17.0",
+    "npm": ">=9.0.0"
+  },
+  "dependencies": {
+    "@mplp/core": "^1.0.0-alpha",
+    "@mplp/context": "^1.0.0-alpha",
+    "@mplp/plan": "^1.0.0-alpha",
+    "@mplp/role": "^1.0.0-alpha",
+    "@mplp/utils": "^1.0.0-alpha"
+  },
+  "devDependencies": {
+    "@types/node": "^20.5.0",
+    "@types/jest": "^29.5.0",
+    "@typescript-eslint/eslint-plugin": "^6.4.0",
+    "@typescript-eslint/parser": "^6.4.0",
+    "eslint": "^8.47.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "jest": "^29.6.0",
+    "prettier": "^3.0.0",
+    "rimraf": "^5.0.0",
+    "ts-jest": "^29.1.0",
+    "ts-node": "^10.9.0",
+    "ts-node-dev": "^2.0.0",
+    "typedoc": "^0.24.0",
+    "typescript": "^5.1.0"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "roots": ["<rootDir>/src", "<rootDir>/tests"],
+    "testMatch": [
+      "**/__tests__/**/*.ts",
+      "**/?(*.)+(spec|test).ts"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.ts",
+      "!src/**/*.d.ts",
+      "!src/**/*.test.ts",
+      "!src/**/*.spec.ts"
+    ],
+    "coverageDirectory": "coverage",
+    "coverageReporters": ["text", "lcov", "html"],
+    "coverageThreshold": {
+      "global": {
+        "branches": 90,
+        "functions": 90,
+        "lines": 90,
+        "statements": 90
+      }
+    }
+  },
+  "eslintConfig": {
+    "parser": "@typescript-eslint/parser",
+    "extends": [
+      "eslint:recommended",
+      "@typescript-eslint/recommended",
+      "prettier"
+    ],
+    "plugins": ["@typescript-eslint", "prettier"],
+    "rules": {
+      "prettier/prettier": "error",
+      "@typescript-eslint/no-unused-vars": "error",
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/explicit-function-return-type": "warn"
+    },
+    "env": {
+      "node": true,
+      "es2020": true
+    }
+  },
+  "prettier": {
+    "semi": true,
+    "trailingComma": "es5",
+    "singleQuote": true,
+    "printWidth": 80,
+    "tabWidth": 2,
+    "useTabs": false
+  }
+}

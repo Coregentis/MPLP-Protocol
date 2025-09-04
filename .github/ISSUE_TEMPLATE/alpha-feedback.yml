@@ -1,0 +1,223 @@
+name: 🔬 Alpha Feedback
+description: Provide feedback on MPLP v1.0 Alpha
+title: "[Alpha Feedback]: "
+labels: ["alpha-feedback", "needs-review"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for trying MPLP v1.0 Alpha and providing feedback!
+        
+        Your input is crucial for improving MPLP before the stable release.
+
+  - type: dropdown
+    id: feedback-type
+    attributes:
+      label: Feedback Type
+      description: What type of feedback are you providing?
+      options:
+        - API Design
+        - Developer Experience
+        - Documentation
+        - Performance
+        - Protocol Design
+        - Integration Experience
+        - General Usability
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: experience-level
+    attributes:
+      label: Your Experience Level
+      description: How would you describe your experience with multi-agent systems?
+      options:
+        - Beginner - New to multi-agent systems
+        - Intermediate - Some experience with multi-agent systems
+        - Advanced - Extensive experience with multi-agent systems
+        - Expert - Professional/academic work in multi-agent systems
+    validations:
+      required: true
+
+  - type: textarea
+    id: usage-context
+    attributes:
+      label: Usage Context
+      description: How are you using or planning to use MPLP?
+      placeholder: |
+        Describe your use case...
+        
+        For example:
+        - "Building a multi-agent research platform"
+        - "Integrating with existing AI services"
+        - "Evaluating for enterprise adoption"
+        - "Academic research project"
+    validations:
+      required: true
+
+  - type: textarea
+    id: positive-feedback
+    attributes:
+      label: What's Working Well
+      description: What aspects of MPLP do you like?
+      placeholder: |
+        Tell us what you appreciate about MPLP...
+        
+        For example:
+        - "The protocol design is clean and well-structured"
+        - "Documentation is comprehensive"
+        - "API is intuitive to use"
+        - "Performance is good"
+
+  - type: textarea
+    id: pain-points
+    attributes:
+      label: Pain Points & Challenges
+      description: What challenges have you encountered?
+      placeholder: |
+        Describe any difficulties or frustrations...
+        
+        For example:
+        - "Setup was confusing because..."
+        - "The API for X is unclear"
+        - "Documentation lacks examples for..."
+        - "Performance issues with..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: missing-features
+    attributes:
+      label: Missing Features
+      description: What features do you wish MPLP had?
+      placeholder: |
+        List features that would improve your experience...
+        
+        For example:
+        - "Better integration with X service"
+        - "More examples for Y use case"
+        - "Support for Z protocol"
+        - "Enhanced monitoring capabilities"
+
+  - type: textarea
+    id: api-feedback
+    attributes:
+      label: API Design Feedback
+      description: Feedback on MPLP's API design
+      placeholder: |
+        Share your thoughts on the API design...
+        
+        For example:
+        - "The Context API is intuitive"
+        - "Plan API could be simplified"
+        - "Need more configuration options for..."
+        - "Error handling could be improved"
+
+  - type: textarea
+    id: documentation-feedback
+    attributes:
+      label: Documentation Feedback
+      description: Feedback on MPLP's documentation
+      placeholder: |
+        How can we improve the documentation?
+        
+        For example:
+        - "Quick start guide is excellent"
+        - "Need more advanced examples"
+        - "API reference is missing..."
+        - "Architecture docs are helpful"
+
+  - type: dropdown
+    id: likelihood-to-recommend
+    attributes:
+      label: Likelihood to Recommend
+      description: How likely are you to recommend MPLP to others?
+      options:
+        - "10 - Extremely likely"
+        - "9 - Very likely"
+        - "8 - Likely"
+        - "7 - Somewhat likely"
+        - "6 - Neutral"
+        - "5 - Somewhat unlikely"
+        - "4 - Unlikely"
+        - "3 - Very unlikely"
+        - "2 - Extremely unlikely"
+        - "1 - Would not recommend"
+    validations:
+      required: true
+
+  - type: textarea
+    id: comparison
+    attributes:
+      label: Comparison with Alternatives
+      description: How does MPLP compare to other solutions you've used?
+      placeholder: |
+        If you've used other multi-agent frameworks or protocols...
+        
+        For example:
+        - "Compared to X, MPLP is better at..."
+        - "MPLP lacks Y feature that Z framework has"
+        - "The protocol approach is unique because..."
+
+  - type: textarea
+    id: production-readiness
+    attributes:
+      label: Production Readiness Assessment
+      description: What would MPLP need for you to use it in production?
+      placeholder: |
+        What changes or improvements would make MPLP production-ready for your use case?
+        
+        For example:
+        - "Better error handling and recovery"
+        - "More comprehensive monitoring"
+        - "Performance optimizations"
+        - "Additional security features"
+        - "Stable API guarantees"
+
+  - type: textarea
+    id: timeline-feedback
+    attributes:
+      label: Timeline & Roadmap Feedback
+      description: Thoughts on MPLP's development timeline and roadmap
+      placeholder: |
+        Share your thoughts on the roadmap and timeline...
+        
+        For example:
+        - "The Alpha to Beta timeline seems reasonable"
+        - "Would like to see X feature prioritized"
+        - "The roadmap aligns with my needs"
+
+  - type: textarea
+    id: additional-feedback
+    attributes:
+      label: Additional Feedback
+      description: Any other feedback or suggestions
+      placeholder: |
+        Share any other thoughts, suggestions, or feedback...
+        
+        This is your opportunity to share anything else that would help improve MPLP.
+
+  - type: checkboxes
+    id: follow-up
+    attributes:
+      label: Follow-up
+      description: Would you like to be involved in MPLP's development?
+      options:
+        - label: I'm interested in beta testing future releases
+          required: false
+        - label: I'd like to be contacted for user research interviews
+          required: false
+        - label: I'm willing to contribute code or documentation
+          required: false
+        - label: I'd like to join the MPLP community discussions
+          required: false
+
+  - type: input
+    id: contact-info
+    attributes:
+      label: Contact Information (Optional)
+      description: If you'd like us to follow up, please provide contact information
+      placeholder: "email@example.com or @username"

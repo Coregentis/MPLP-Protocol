@@ -17,7 +17,7 @@ module.exports = {
   roots: ['<rootDir>/src', '<rootDir>/tests'],
   transform: {
     '^.+\\.tsx?$': ['ts-jest', {
-      tsconfig: '<rootDir>/tsconfig.test.json',
+      tsconfig: '<rootDir>/tsconfig.json',
       isolatedModules: true
     }]
   },

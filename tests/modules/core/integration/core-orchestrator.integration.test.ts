@@ -356,10 +356,16 @@ describe('CoreOrchestrator集成测试', () => {
         };
 
         const allocation = await limitedResourceManager.allocateResources(highRequirements);
-        
-        // 应该限制为系统最大值
-        expect(allocation.allocatedResources.cpuCores).toBe(1);
-        expect(allocation.allocatedResources.memoryMb).toBe(128);
+
+        // 验证资源被正确限制为系统最大值
+        expect(allocation.allocatedResources.cpuCores).toBe(1); // 限制为系统最大值
+        expect(allocation.allocatedResources.memoryMb).toBe(128); // 限制为系统最大值
+        expect(allocation.status).toBe('allocated');
+        expect(allocation.allocationId).toBeDefined();
+
+        // 验证原始需求被保留
+        expect(allocation.requirements.cpuCores).toBe(2); // 原始需求保持不变
+        expect(allocation.requirements.memoryMb).toBe(256); // 原始需求保持不变
 
         await limitedResourceManager.releaseResources(allocation.allocationId);
       } finally {

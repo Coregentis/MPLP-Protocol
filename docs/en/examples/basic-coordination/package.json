@@ -1,0 +1,66 @@
+{
+  "name": "mplp-basic-coordination-example",
+  "version": "1.0.0-alpha",
+  "description": "Basic multi-agent coordination example for MPLP v1.0 Alpha",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "npm run build && node dist/main.js",
+    "start:debug": "npm run build && DEBUG=mplp:* node dist/main.js",
+    "dev": "ts-node src/main.ts",
+    "dev:debug": "DEBUG=mplp:* ts-node src/main.ts",
+    "test": "jest",
+    "test:unit": "jest --testPathPattern=unit",
+    "test:integration": "jest --testPathPattern=integration",
+    "test:coverage": "jest --coverage",
+    "test:watch": "jest --watch",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "typecheck": "tsc --noEmit",
+    "clean": "rimraf dist coverage",
+    "docs": "typedoc src --out docs/api"
+  },
+  "keywords": [
+    "mplp",
+    "multi-agent",
+    "coordination",
+    "protocol",
+    "example",
+    "typescript"
+  ],
+  "author": "MPLP Team",
+  "license": "MIT",
+  "dependencies": {
+    "mplp": "^1.0.0-alpha",
+    "uuid": "^9.0.0",
+    "debug": "^4.3.4"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "@types/uuid": "^9.0.0",
+    "@types/debug": "^4.1.8",
+    "@types/jest": "^29.5.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.45.0",
+    "jest": "^29.6.0",
+    "ts-jest": "^29.1.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.0.0",
+    "rimraf": "^5.0.0",
+    "typedoc": "^0.24.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mplp/mplp.git",
+    "directory": "docs/examples/basic-coordination"
+  },
+  "bugs": {
+    "url": "https://github.com/mplp/mplp/issues"
+  },
+  "homepage": "https://github.com/mplp/mplp/tree/main/docs/examples/basic-coordination"
+}
