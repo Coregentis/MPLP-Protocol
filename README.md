@@ -16,11 +16,11 @@
 
 ## 🌐 **Multi-Language Navigation**
 
-**English** | [中文](docs/zh/README.md) | [日本語](docs/ja/README.md) | [한국어](docs/ko/README.md) | [Español](docs/es/README.md) | [Français](docs/fr/README.md) | [Deutsch](docs/de/README.md) | [Русский](docs/ru/README.md)
+**English** | [中文](docs/zh-CN/README.md) | [More Languages Coming Soon...](docs/)
 
 ---
 
-[🚀 Quick Start](#quick-start) • [⚡ Quick Deploy](#quick-deploy) • [📖 Documentation](docs/) • [🎯 Examples](examples/) • [🤝 Contributing](CONTRIBUTING.md) • [💬 Discussions](https://github.com/Coregentis/MPLP-Protocol-Dev/discussions)
+[🚀 Quick Start](#quick-start) • [⚡ Quick Deploy](#quick-deploy) • [📖 Documentation](docs/) • [🎯 Examples](docs/en/examples/) • [🤝 Contributing](CONTRIBUTING.md) • [💬 Discussions](https://github.com/Coregentis/MPLP-Protocol-Dev/discussions)
 
 </div>
 
