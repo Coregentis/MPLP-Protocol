@@ -2,7 +2,7 @@
   "project": {
     "name": "MPLP",
     "fullName": "Multi-Agent Protocol Lifecycle Platform",
-    "version": "1.0.0-alpha",
+    "version": "1.0.0--alpha",
     "status": "Production Ready",
     "description": "Enterprise-Grade L1-L3 Protocol Stack for Multi-Agent System Construction"
   },
