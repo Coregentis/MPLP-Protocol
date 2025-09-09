@@ -20,7 +20,20 @@
 
 ---
 
-[🚀 Quick Start](#quick-start) • [⚡ Quick Deploy](#quick-deploy) • [📖 Documentation](docs/) • [🎯 Examples](docs/en/examples/) • [🤝 Contributing](CONTRIBUTING.md) • [💬 Discussions](https://github.com/Coregentis/MPLP-Protocol-Dev/discussions)
+## 🌍 **Choose Your Language | 选择语言**
+
+<div align="center">
+
+| **🇺🇸 English** | **🇨🇳 中文** |
+|:---------------:|:------------:|
+| [🚀 Quick Start](docs/en/developers/quick-start.md) | [🚀 快速开始](docs/zh-CN/developers/quick-start.md) |
+| [📖 Full Documentation](docs/en/) | [📖 完整文档](docs/zh-CN/) |
+| [🔧 API Reference](docs/en/api-reference/) | [🔧 API参考](docs/zh-CN/api-reference/) |
+| [🎯 Examples](docs/en/examples/) | [🎯 示例](docs/zh-CN/examples/) |
+
+**Other Resources**: [🤝 Contributing](CONTRIBUTING.md) • [💬 Discussions](https://github.com/Coregentis/MPLP-Protocol-Dev/discussions) • [📋 Roadmap](ROADMAP.md)
+
+</div>
 
 </div>
 
@@ -72,8 +85,8 @@ console.log('MPLP is ready! 🎉');
 
 ### **Next Steps**
 - 📖 Read the [Complete Documentation](docs/)
-- 🎯 Try the [Examples](examples/)
-- 🏗️ Build your first [Multi-Agent System](docs/en/tutorials/first-agent-system.md)
+- 🎯 Try the [Examples](docs/en/examples/)
+- 🏗️ Build your first [Multi-Agent System](docs/en/developers/quick-start.md)
 
 ## ⚡ **Quick Deploy**
 
@@ -126,7 +139,7 @@ MPLP is **protocol infrastructure** that enables agent construction:
 MPLP v1.0 Alpha represents a **major milestone** in multi-agent protocol development:
 
 - **✅ 100% Feature Complete**: All 10 L2 coordination modules implemented and tested
-- **✅ Perfect Quality**: 2,869/2,869 tests passing (100% pass rate)
+- **✅ Perfect Quality**: 2869/2869 tests passing (100% pass rate)
 - **✅ Enterprise Ready**: Zero technical debt, 99.8% performance score
 - **✅ Production Tested**: Comprehensive security, performance, and integration testing
 - **⚠️ API Stability**: APIs may evolve based on community feedback before v1.0 stable
@@ -168,7 +181,7 @@ MPLP implements a **4-layer protocol stack** designed for enterprise-scale multi
 
 ## 🚀 **Core Features**
 
-### **📋 L2 Coordination Modules (10/10 Complete)**
+### **📋 L2 Coordination Modules (10/10 complete)**
 
 | Module | Purpose | Key Features | Tests |
 |--------|---------|--------------|-------|
@@ -294,22 +307,22 @@ const result = await mplp.executeWorkflow(workflow, {
 ## 📖 **Documentation**
 
 ### **📚 Core Documentation**
-- **[Architecture Guide](docs/architecture.md)** - Detailed system architecture and design principles
+- **[Architecture Guide](docs/en/architecture/)** - Detailed system architecture and design principles
 - **[API Reference](docs/api/)** - Complete API documentation for all modules
 - **[Protocol Specifications](docs/protocols/)** - L1-L3 protocol specifications and schemas
-- **[Integration Guide](docs/integration.md)** - How to integrate MPLP with your agents
+- **[Integration Guide](docs/en/implementation/)** - How to integrate MPLP with your agents
 
 ### **🎯 Tutorials & Examples**
-- **[Getting Started Tutorial](docs/tutorials/getting-started.md)** - Step-by-step introduction
+- **[Getting Started Tutorial](docs/en/developers/quick-start.md)** - Step-by-step introduction
 - **[Multi-Agent Patterns](docs/patterns/)** - Common multi-agent design patterns
 - **[Example Applications](examples/)** - Working examples and use cases
-- **[Best Practices](docs/best-practices.md)** - Development and deployment best practices
+- **[Best Practices](docs/en/guides/)** - Development and deployment best practices
 
 ### **🔧 Development**
 - **[Contributing Guide](CONTRIBUTING.md)** - How to contribute to MPLP
-- **[Development Setup](docs/development.md)** - Local development environment setup
-- **[Testing Guide](docs/testing.md)** - Testing strategies and guidelines
-- **[Release Process](docs/release.md)** - Release and versioning process
+- **[Development Setup](docs/en/developers/)** - Local development environment setup
+- **[Testing Guide](docs/en/testing/)** - Testing strategies and guidelines
+- **[Release Process](docs/en/guides/release-process.md)** - Release and versioning process
 
 ## 🌟 **Use Cases**
 

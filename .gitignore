@@ -34,6 +34,10 @@ pids
 *.swp
 *.swo
 *~
+.augment/
+.cursor/
+
+
 
 # OS generated files
 .DS_Store
@@ -70,6 +74,7 @@ playwright-report/
 # GLFB methodology reports
 glfb-pseudocode-report.txt
 **/glfb-pseudocode-report.txt
+
 
 # MPLP specific
 schemas/compiled/
