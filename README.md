@@ -389,6 +389,10 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 
 MPLP is released under the [MIT License](LICENSE). See the LICENSE file for details.
 
+## 📋 **Project Transparency Notice**
+
+**Commit History Clarification**: Recent commit messages may not accurately reflect the scope of changes. For detailed information about actual changes in each commit, please refer to [COMMIT-HISTORY-CLARIFICATION.md](COMMIT-HISTORY-CLARIFICATION.md).
+
 ---
 
 <div align="center">
