@@ -1,10 +1,59 @@
+# ========================================
+# MPLP Public Release .gitignore
+# ========================================
+# This .gitignore is specifically configured for the public-release branch
+# to exclude all private development content while preserving the core
+# open source components.
+
+# ========================================
+# PRIVATE DEVELOPMENT CONTENT (EXCLUDED)
+# ========================================
+
+# AI Assistant and Development Methodologies
+.augment/
+.backup-configs/
+.governance/
+.husky/
+.pctd/
+.quality/
+
+# CI/CD and Infrastructure
+.circleci/
+.github/workflows/
+docker/
+k8s/
+
+# Historical Archives and Internal Documentation
+Archived/
+validation-results/
+
+# Development Scripts (keep only essential build/test)
+scripts/
+!scripts/build.js
+!scripts/test.js
+
+# Internal Documentation and Reports
+COMMIT-HISTORY-CLARIFICATION.md
+GITHUB-RELEASE-NOTES.md
+OPEN-SOURCE-READINESS-REPORT.md
+OPEN-SOURCE-RELEASE-NOTES.md
+QUALITY-REPORT.md
+RELEASE-CHECKLIST.md
+
+# Development Configuration
+config/
+cucumber.config.js
+jest.schema-application.config.js
+
+# ========================================
+# STANDARD OPEN SOURCE EXCLUSIONS
+# ========================================
+
 # Dependencies
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-# package-lock.json should be committed for reproducible builds
-# yarn.lock should be committed if using yarn
 
 # Build outputs
 dist/
@@ -34,10 +83,7 @@ pids
 *.swp
 *.swo
 *~
-.augment/
 .cursor/
-
-
 
 # OS generated files
 .DS_Store
@@ -56,16 +102,9 @@ logs/
 tmp/
 temp/
 
-# Docker
-.dockerignore
-
 # Database
 *.sqlite
 *.db
-
-# Documentation
-docs/api/
-docs/others/
 
 # Test artifacts
 test-results/
@@ -75,54 +114,10 @@ playwright-report/
 glfb-pseudocode-report.txt
 **/glfb-pseudocode-report.txt
 
-
 # MPLP specific
 schemas/compiled/
 extensions/compiled/
 
-# Private Development Repository - Minimal .gitignore
-# Note: This is a private repository, so we keep most development files
-
-# Build and distribution files
-dist/
-build/
-coverage/
-*.tgz
-*.tar.gz
-
-# Environment files with actual secrets (if any)
-.env.production
-.env.staging
-**/actual-secrets.*
-**/production-keys.*
-
-# Temporary and cache files
-temp/
-tmp/
-*.tmp
-*.temp
-*.swp
-*.swo
-*~
-cache/
-.cache/
-
-# Database files
-*.db
-*.sqlite
-*.sqlite3
-
-# IDE workspace files (personal preferences)
-.vscode/settings.json
-.vscode/launch.json
-.cursor/
-
 # Backup files
 *_backup.*
 *.backup
-README_NEW.md
-
-# Large archived files (keep structure, ignore large files)
-Archived/**/*.zip
-Archived/**/*.tar.gz
-Archived/**/*.7z
