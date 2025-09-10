@@ -1,22 +1,25 @@
-# MPLP v1.0 Alpha - English Documentation
-
 <div align="center">
 
-[![Version](https://img.shields.io/badge/version-1.0.0--alpha-blue.svg)](https://github.com/Coregentis/MPLP-Protocol-Dev)
+# 🚀 MPLP v1.0 Alpha
+## English Documentation
+
+[![Version](https://img.shields.io/badge/version-1.0.0--alpha-blue.svg)](https://github.com/Coregentis/MPLP-Protocol)
 [![Protocol Stack](https://img.shields.io/badge/L1--L3-Protocol%20Stack-orange.svg)](./architecture/)
 [![Modules](https://img.shields.io/badge/modules-10%2F10%20complete-brightgreen.svg)](./modules/)
-[![Tests](https://img.shields.io/badge/tests-2869%20total%20%7C%20100%25%20pass-brightgreen.svg)](../../README.md#quality)
-[![Coverage](https://img.shields.io/badge/coverage-47.47%25-yellow.svg)](../../README.md#quality)
+[![Tests](https://img.shields.io/badge/tests-2869%20total%20%7C%20100%25%20pass-brightgreen.svg)](../../README.md#-enterprise-grade-quality)
+[![Coverage](https://img.shields.io/badge/coverage-47.47%25-yellow.svg)](../../README.md#-enterprise-grade-quality)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
 
-**🏗️ Enterprise-Grade L1-L3 Protocol Stack for Multi-Agent System Construction**
+### **🏗️ Enterprise-Grade L1-L3 Protocol Stack for Multi-Agent System Construction**
 
 *The foundational protocol infrastructure that enables intelligent agents to communicate, coordinate, and collaborate at scale*
 
-## 🌐 **Language Navigation**
+**[🚀 Quick Start](./developers/quick-start.md)** • **[🏗️ Architecture](./architecture/)** • **[🔧 API Reference](./api-reference/)** • **[🎯 Examples](./examples/)**
 
-**English** | [中文](../zh-CN/README.md) | [More Languages Coming Soon...](../MULTI-LANGUAGE-SUPPORT.md)
+### 🌐 **Language Navigation**
+
+**English** | [中文](../zh-CN/README.md) | [Documentation Hub](../)
 
 </div>
 
@@ -29,7 +32,7 @@
 | **Getting Started** | **Documentation** | **Development** | **Community** |
 |:-------------------:|:-----------------:|:---------------:|:-------------:|
 | [🚀 Quick Start](./developers/quick-start.md) | [📖 Protocol Overview](./protocol-foundation/protocol-overview.md) | [🔧 API Reference](./api-reference/) | [🤝 Contributing](./community/contributing.md) |
-| [⚡ Installation](./developers/quick-start.md#installation) | [🏗️ Architecture](./architecture/) | [🧪 Testing Guide](./testing/) | [💬 Discussions](https://github.com/Coregentis/MPLP-Protocol-Dev/discussions) |
+| [⚡ Installation](./developers/quick-start.md#installation) | [🏗️ Architecture](./architecture/) | [🧪 Testing Guide](./testing/) | [💬 Discussions](https://github.com/Coregentis/MPLP-Protocol/discussions) |
 | [🎯 Examples](./examples/) | [📋 Modules](./modules/) | [🚀 Deployment](./operations/) | [📋 Roadmap](./community/roadmap.md) |
 
 </div>
@@ -156,8 +159,8 @@ MPLP (Multi-Agent Protocol Lifecycle Platform) is an enterprise-grade L1-L3 prot
 
 ## 🤝 **Community and Support**
 
-- **GitHub Discussions**: [Project Discussions](https://github.com/Coregentis/MPLP-Protocol-Dev/discussions)
-- **Issue Reporting**: [GitHub Issues](https://github.com/Coregentis/MPLP-Protocol-Dev/issues)
+- **GitHub Discussions**: [Project Discussions](https://github.com/Coregentis/MPLP-Protocol/discussions)
+- **Issue Reporting**: [GitHub Issues](https://github.com/Coregentis/MPLP-Protocol/issues)
 - **Contributing Guide**: [CONTRIBUTING.md](./community/contributing.md)
 - **Code of Conduct**: [CODE_OF_CONDUCT.md](./community/code-of-conduct.md)
 - **Governance**: [GOVERNANCE.md](./community/governance.md)
