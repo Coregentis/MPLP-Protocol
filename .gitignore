@@ -126,3 +126,55 @@ README_NEW.md
 Archived/**/*.zip
 Archived/**/*.tar.gz
 Archived/**/*.7z
+
+# =============================================================================
+# PUBLIC RELEASE CONFIGURATION
+# =============================================================================
+# The following rules are used when creating public releases
+# These files/directories are kept in the development repository
+# but excluded from public open source releases
+
+# Private development content
+.augment/
+.circleci/
+.github/
+.husky/
+.pctd/
+.quality/
+
+# Internal documentation and reports
+COMMIT-HISTORY-CLARIFICATION.md
+OPEN-SOURCE-READINESS-REPORT.md
+QUALITY-REPORT.md
+GOVERNANCE.md
+PRIVACY.md
+SECURITY.md
+MAINTAINERS.md
+RELEASE-CHECKLIST.md
+
+# Development archives and history
+Archived/
+
+# Development configuration
+config/
+
+# Infrastructure and deployment (keep private)
+docker/
+k8s/
+
+# Development and build scripts (keep most private, allow basic ones)
+scripts/
+!scripts/build.js
+!scripts/test.js
+
+# Validation and quality results
+validation-results/
+
+# Development test configurations
+cucumber.config.js
+jest.schema-application.config.js
+
+# Development methodology files
+**/glfb-pseudocode-report.txt
+**/*methodology*.md
+**/*strategy*.md
