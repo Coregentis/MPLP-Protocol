@@ -1,6 +1,6 @@
 # MPLP Community Code of Conduct
 
-**Multi-Agent Protocol Lifecycle Platform - Community Code of Conduct v1.0.0-alpha**
+**Multi-Agent Protocol Lifecycle Platform - Community Code of Conduct**
 
 [![Community](https://img.shields.io/badge/community-inclusive-brightgreen.svg)](./CONTRIBUTING.md)
 [![Conduct](https://img.shields.io/badge/conduct-enforced-blue.svg)](mailto:conduct@mplp.dev)

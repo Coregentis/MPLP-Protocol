@@ -1,21 +1,23 @@
 # Contributing to MPLP
 
-**Multi-Agent Protocol Lifecycle Platform - Contribution Guide v1.0.0-alpha**
+**Multi-Agent Protocol Lifecycle Platform - Contribution Guide v1.1.0-beta**
 
 [![Contributors](https://img.shields.io/badge/contributors-welcome-brightgreen.svg)](./CODE_OF_CONDUCT.md)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 [![Status](https://img.shields.io/badge/status-production%20ready-brightgreen.svg)](./README.md)
-[![Tests](https://img.shields.io/badge/tests-2869%2F2869%20pass-brightgreen.svg)](./docs/en/testing/)
-[![Modules](https://img.shields.io/badge/modules-10%2F10%20complete-brightgreen.svg)](./docs/en/modules/)
+[![Tests](https://img.shields.io/badge/tests-3165%20total%20%7C%20100%25%20pass-brightgreen.svg)](./docs/en/testing/)
+[![Dual Version](https://img.shields.io/badge/dual%20version-v1.0%20%2B%20v1.1.0--beta-blue.svg)](./README.md)
 
-Thank you for your interest in contributing to MPLP! We welcome contributions from the community and are grateful for your support in building the future of multi-agent protocol systems.
+Thank you for your interest in contributing to MPLP! We welcome contributions from the community and are grateful for your support in building the future of multi-agent protocol systems and SDK ecosystem.
 
 ### **Project Status**
-- **Version**: 1.0.0-alpha (Production Ready)
-- **Modules**: 10/10 completed with enterprise-grade standards
-- **Tests**: 2,869/2,869 passing (100% pass rate)
+- **Version**: 1.1.0-beta (Dual Version Production Ready)
+- **Protocol Stack**: v1.0 Alpha with 10 enterprise-grade modules (2,905 tests)
+- **SDK Ecosystem**: v1.1.0-beta with 7 packages + 7 adapters (260 tests)
+- **Total Tests**: 3,165/3,165 passing (100% pass rate)
 - **Performance**: 99.8% performance score
 - **Security**: 100% security tests passing
+- **Release Date**: October 16, 2025
 
 ## 📋 Table of Contents
 
