@@ -11,7 +11,7 @@
 import { UUID } from '../../shared/types';
 
 // 重新导出UUID类型
-export { UUID };
+export type { UUID };
 
 // 本地类型定义
 export type Timestamp = string;

@@ -25,7 +25,7 @@ export {
   CollabCoordinationStrategy 
 } from './domain/entities/collab.entity';
 export { CollabCoordinationService } from './domain/services/collab-coordination.service';
-export { ICollabRepository } from './domain/repositories/collab.repository';
+export type { ICollabRepository } from './domain/repositories/collab.repository';
 
 // ===== 基础设施层 =====
 export { CollabRepositoryImpl } from './infrastructure/repositories/collab.repository.impl';

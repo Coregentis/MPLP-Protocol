@@ -34,7 +34,7 @@ export * from './infrastructure/factories/plan-protocol.factory';
 export * from './infrastructure/adapters/plan-module.adapter';
 
 // ===== 类型定义导出 ===== (MANDATORY SECTION)
-export {
+export type {
   // 基础枚举类型
   PlanStatus,
   TaskType,

@@ -1,0 +1,34 @@
+{
+  "timestamp": "2025-10-16T15:01:00.007Z",
+  "summary": {
+    "passed": 11,
+    "failed": 2,
+    "warnings": 0
+  },
+  "details": {
+    "passed": [
+      "Node.js version",
+      "npm version",
+      "package.json",
+      "tsconfig.json",
+      "jest.config.js",
+      "TypeScript compilation",
+      "ESLint check",
+      "Schema validation",
+      "Unit tests",
+      "Integration tests",
+      "Build"
+    ],
+    "failed": [
+      {
+        "name": "Mapper validation",
+        "error": "Command failed: npm run validate:mapping"
+      },
+      {
+        "name": "npm audit",
+        "error": "Command failed: npm audit --audit-level=moderate\nnpm notice\nnpm notice New major version of npm available! 10.9.2 -> 11.6.2\nnpm notice Changelog: https://github.com/npm/cli/releases/tag/v11.6.2\nnpm notice To update run: npm install -g npm@11.6.2\nnpm notice\n"
+      }
+    ],
+    "warnings": []
+  }
+}

@@ -10,7 +10,7 @@ import { UUID } from '../../shared/types';
 
 // ===== 基础类型 =====
 
-export { UUID };
+export type { UUID };
 
 export type CollabMode = 'sequential' | 'parallel' | 'hybrid' | 'pipeline' | 'mesh';
 

@@ -17,6 +17,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "downlevelIteration": true,
+    "isolatedModules": true,
     "baseUrl": ".",
     "paths": {
       "@public/*": [

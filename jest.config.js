@@ -18,7 +18,10 @@ module.exports = {
   transform: {
     '^.+\\.tsx?$': ['ts-jest', {
       tsconfig: '<rootDir>/tsconfig.json',
-      isolatedModules: true
+      isolatedModules: true,
+      diagnostics: {
+        warnOnly: true
+      }
     }]
   },
   testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$',
@@ -32,14 +35,6 @@ module.exports = {
   coverageDirectory: 'coverage',
   coveragePathIgnorePatterns: ['/node_modules/', '/dist/'],
   setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'],
-  globals: {
-    'ts-jest': {
-      isolatedModules: true,
-      diagnostics: {
-        warnOnly: true
-      }
-    }
-  },
   testTimeout: 30000,
   collectCoverageFrom: [
     'src/**/*.{ts,tsx}',
