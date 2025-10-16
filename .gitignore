@@ -136,8 +136,8 @@ Archived/**/*.7z
 
 # Private development content
 .augment/
-.circleci/
-.github/
+# .circleci/  # RESTORED for internal dev repo - needed for CI/CD
+# .github/    # RESTORED for internal dev repo - needed for GitHub Actions
 .husky/
 .pctd/
 .quality/
