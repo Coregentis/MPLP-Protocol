@@ -1,14 +1,17 @@
 #!/bin/bash
 
 # =============================================================================
-# MPLP Open Source Publishing Script
+# MPLP Open Source Publishing Script (Non-Destructive Version)
 # =============================================================================
 # This script publishes the MPLP project to the public open source repository
-# while filtering out internal development content.
+# while filtering out internal development content using .gitignore.public
+#
+# IMPORTANT: This script does NOT delete files from the internal repository!
+# It only filters what gets pushed to the public repository.
 #
 # Framework: SCTM+GLFB+ITCM+RBCT
 # Repository: https://github.com/Coregentis/MPLP-Protocol
-# Version: 1.0.0
+# Version: 2.0.0 (Non-Destructive)
 # Last Updated: 2025-10-16
 # =============================================================================
 
@@ -29,6 +32,7 @@ PUBLIC_GITIGNORE=".gitignore.public"
 
 echo -e "${BLUE}============================================${NC}"
 echo -e "${BLUE}MPLP Open Source Publishing Script${NC}"
+echo -e "${BLUE}(Non-Destructive Version)${NC}"
 echo -e "${BLUE}============================================${NC}"
 echo ""
 
@@ -76,11 +80,21 @@ echo ""
 
 # Count files to be published
 TOTAL_FILES=$(git ls-files | wc -l)
-echo "总文件数: $TOTAL_FILES"
+echo "内部库总文件数: $TOTAL_FILES"
 
-# Estimate filtered files
-FILTERED_ESTIMATE=$(grep -v '^#' $PUBLIC_GITIGNORE | grep -v '^$' | wc -l)
-echo "预计过滤规则数: $FILTERED_ESTIMATE"
+# Show what will be filtered
+echo ""
+echo -e "${YELLOW}将被过滤的内容（不会从内部库删除）:${NC}"
+echo "  - .augment/ (AI助手规则)"
+echo "  - .backup-configs/ (备份配置)"
+echo "  - Archived/ (历史归档)"
+echo "  - config/ (内部配置)"
+echo "  - docker/ (Docker配置)"
+echo "  - k8s/ (Kubernetes配置)"
+echo "  - 内部文档 (14个文件)"
+echo "  - 方法论文档 (*methodology*.md, *strategy*.md等)"
+echo "  - 开发脚本 (大部分)"
+echo ""
 
 echo -e "${GREEN}✓ 复杂度评估完成${NC}"
 echo ""
@@ -94,6 +108,8 @@ echo "  内部仓库: $(git remote get-url $INTERNAL_REPO)"
 echo "  公开仓库: $(git remote get-url $PUBLIC_REPO)"
 echo "  当前分支: $(git branch --show-current)"
 echo "  临时分支: $TEMP_BRANCH"
+echo ""
+echo -e "${GREEN}✓ 内部库文件不会被删除，只是不推送到公开库${NC}"
 echo ""
 
 read -p "是否继续? (y/N) " -n 1 -r
@@ -131,79 +147,26 @@ echo -e "${GREEN}✓ 全局规划完成${NC}"
 echo ""
 
 # =============================================================================
-# GLFB: Local Execution - Content Filtering
+# GLFB: Local Execution - Content Filtering (Non-Destructive)
 # =============================================================================
 
-echo -e "${BLUE}[GLFB] 局部执行 - 内容过滤...${NC}"
+echo -e "${BLUE}[GLFB] 局部执行 - 内容过滤（非破坏性）...${NC}"
 echo ""
 
 # Backup current .gitignore
 echo "备份当前.gitignore..."
-cp .gitignore .gitignore.backup
+cp .gitignore .gitignore.internal.backup
 
 # Replace with public .gitignore
 echo "应用公开专用.gitignore..."
 cp $PUBLIC_GITIGNORE .gitignore
 
-# Remove files that should not be published
-echo "移除内部开发文件..."
+# Re-index files with new .gitignore
+echo "重新索引文件（应用过滤规则）..."
+git rm -r --cached . > /dev/null 2>&1
+git add .
 
-# Remove internal documentation
-rm -f COMMIT-HISTORY-CLARIFICATION.md
-rm -f OPEN-SOURCE-READINESS-REPORT.md
-rm -f OPEN-SOURCE-RELEASE-PLAN.md
-rm -f QUALITY-REPORT.md
-rm -f GOVERNANCE.md
-rm -f PRIVACY.md
-rm -f SECURITY.md
-rm -f MAINTAINERS.md
-rm -f RELEASE-CHECKLIST.md
-rm -f BRANCH-MANAGEMENT-*.md
-rm -f CI-CD-FIX-SUMMARY.md
-rm -f ci-diagnostic-report.json
-
-# Remove internal directories
-rm -rf .augment/
-rm -rf .circleci/
-rm -rf .github/
-rm -rf .husky/
-rm -rf .pctd/
-rm -rf .quality/
-rm -rf Archived/
-rm -rf config/
-rm -rf docker/
-rm -rf k8s/
-rm -rf validation-results/
-rm -rf temp_studio/
-
-# Remove most scripts (keep only build.js and test.js)
-if [ -d "scripts" ]; then
-    find scripts -type f ! -name 'build.js' ! -name 'test.js' -delete
-    # Remove empty directories
-    find scripts -type d -empty -delete
-fi
-
-# Remove development test configurations
-rm -f cucumber.config.js
-rm -f jest.schema-application.config.js
-
-# Remove methodology files
-find . -name '*methodology*.md' -delete
-find . -name '*strategy*.md' -delete
-find . -name '*analysis*.md' -delete
-find . -name 'glfb-pseudocode-report.txt' -delete
-
-# Remove internal documentation
-rm -rf docs/L4-Intelligent-Agent-OPS-Refactor/
-rm -f V1.1.0-beta-文档分类整合规划.md
-
-# Remove development examples
-rm -f examples/emergency-fix.js
-rm -f examples/final-quality-fix.js
-rm -f examples/fix-quality-issues.js
-rm -f examples/quality-fix-phase2.js
-
-echo -e "${GREEN}✓ 内容过滤完成${NC}"
+echo -e "${GREEN}✓ 内容过滤完成（内部文件未被删除）${NC}"
 echo ""
 
 # =============================================================================
@@ -213,26 +176,67 @@ echo ""
 echo -e "${BLUE}[RBCT] 安全审查...${NC}"
 echo ""
 
-# Check for sensitive patterns
+# Show what will be published
+echo "检查将要发布的文件..."
+echo ""
+echo -e "${YELLOW}将要发布的主要内容:${NC}"
+git ls-files | head -20
+echo "  ... (共 $(git ls-files | wc -l) 个文件)"
+echo ""
+
+# Check for sensitive patterns in files that will be published
 echo "检查敏感信息..."
 
 SENSITIVE_FOUND=0
 
 # Check for API keys
-if grep -r "api[_-]key" --include="*.ts" --include="*.js" --include="*.json" . 2>/dev/null; then
+if git ls-files | xargs grep -l "api[_-]key" 2>/dev/null | grep -v node_modules; then
     echo -e "${RED}警告: 发现可能的API密钥${NC}"
     SENSITIVE_FOUND=1
 fi
 
 # Check for passwords
-if grep -r "password.*=" --include="*.ts" --include="*.js" . 2>/dev/null | grep -v "// "; then
+if git ls-files | xargs grep -l "password.*=" 2>/dev/null | grep -v node_modules | grep -v "// "; then
     echo -e "${RED}警告: 发现可能的密码${NC}"
     SENSITIVE_FOUND=1
 fi
 
 # Check for internal URLs
-if grep -r "internal\." --include="*.ts" --include="*.js" --include="*.md" . 2>/dev/null; then
+if git ls-files | xargs grep -l "internal\." 2>/dev/null | grep -v node_modules; then
     echo -e "${YELLOW}警告: 发现可能的内部URL${NC}"
+fi
+
+# Verify internal files are NOT in the index
+echo ""
+echo "验证内部文件已被过滤..."
+INTERNAL_FILES_FOUND=0
+
+if git ls-files | grep -q "\.augment/"; then
+    echo -e "${RED}错误: .augment/ 未被过滤${NC}"
+    INTERNAL_FILES_FOUND=1
+fi
+
+if git ls-files | grep -q "Archived/"; then
+    echo -e "${RED}错误: Archived/ 未被过滤${NC}"
+    INTERNAL_FILES_FOUND=1
+fi
+
+if git ls-files | grep -q "^config/"; then
+    echo -e "${RED}错误: config/ 未被过滤${NC}"
+    INTERNAL_FILES_FOUND=1
+fi
+
+if git ls-files | grep -q "BRANCH-MANAGEMENT"; then
+    echo -e "${RED}错误: 分支管理文档未被过滤${NC}"
+    INTERNAL_FILES_FOUND=1
+fi
+
+if [ $INTERNAL_FILES_FOUND -eq 1 ]; then
+    echo -e "${RED}发现内部文件未被过滤，请检查.gitignore.public${NC}"
+    git checkout main
+    git branch -D $TEMP_BRANCH
+    mv .gitignore.internal.backup .gitignore
+    exit 1
 fi
 
 if [ $SENSITIVE_FOUND -eq 1 ]; then
@@ -243,7 +247,7 @@ if [ $SENSITIVE_FOUND -eq 1 ]; then
         echo -e "${YELLOW}操作已取消${NC}"
         git checkout main
         git branch -D $TEMP_BRANCH
-        mv .gitignore.backup .gitignore
+        mv .gitignore.internal.backup .gitignore
         exit 1
     fi
 fi
@@ -258,21 +262,30 @@ echo ""
 echo -e "${BLUE}提交和推送...${NC}"
 echo ""
 
-# Stage all changes
-git add -A
+# Commit the .gitignore change
+git add .gitignore
+git commit -m "chore: apply public .gitignore for open source release
 
-# Commit
-git commit -m "chore: prepare public open source release
+- Use .gitignore.public to filter internal content
+- Keep internal files in development repository
+- Only publish clean public version to open source repository
 
-- Apply public .gitignore to filter internal content
-- Remove internal documentation and reports
-- Remove development tools and configurations
-- Remove methodology and strategy documents
-- Keep core source code and public documentation
-- Keep examples and SDK
+Filtered content (NOT published):
+- .augment/ (AI assistant rules)
+- .backup-configs/ (backup configurations)
+- Archived/ (historical archives)
+- config/ (internal configurations)
+- docker/, k8s/ (infrastructure)
+- Internal documentation (14 files)
+- Methodology documents
+- Development scripts (most)
 
-This is a clean public release of MPLP v1.0 Alpha + v1.1.0-beta SDK
-for the open source community.
+Published content:
+- Core source code (src/, sdk/)
+- Public documentation (docs/, docs-sdk/)
+- Examples and tutorials
+- Basic configurations
+- Open source license
 
 Framework: SCTM+GLFB+ITCM+RBCT
 Repository: https://github.com/Coregentis/MPLP-Protocol"
@@ -298,9 +311,10 @@ git checkout main
 git branch -D $TEMP_BRANCH
 
 # Restore original .gitignore
-mv .gitignore.backup .gitignore
+mv .gitignore.internal.backup .gitignore
 
 echo -e "${GREEN}✓ 清理完成${NC}"
+echo -e "${GREEN}✓ 内部库保持完整，所有文件都在${NC}"
 echo ""
 
 # =============================================================================
@@ -311,14 +325,17 @@ echo -e "${GREEN}============================================${NC}"
 echo -e "${GREEN}发布成功！${NC}"
 echo -e "${GREEN}============================================${NC}"
 echo ""
-echo "公开仓库: $(git remote get-url $PUBLIC_REPO)"
+echo "内部仓库: $(git remote get-url $INTERNAL_REPO) (完整保留)"
+echo "公开仓库: $(git remote get-url $PUBLIC_REPO) (纯净版)"
 echo "发布分支: main"
 echo ""
 echo -e "${YELLOW}下一步:${NC}"
 echo "1. 访问公开仓库验证内容"
 echo "2. 检查是否有遗漏的敏感信息"
-echo "3. 创建GitHub Release"
-echo "4. 发布公告"
+echo "3. 验证内部库文件完整性"
+echo "4. 创建GitHub Release (v1.0.0-alpha)"
+echo "5. 发布公告"
 echo ""
 echo -e "${GREEN}✓ 开源发布流程完成！${NC}"
+echo -e "${GREEN}✓ 内部开发库未受影响！${NC}"
 

@@ -107,6 +107,7 @@ extensions/compiled/
 .husky/
 .pctd/
 .quality/
+.backup-configs/
 
 # Internal CI/CD Configuration
 .circleci/
