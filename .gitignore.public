@@ -113,25 +113,37 @@ extensions/compiled/
 .circleci/
 .github/
 
-# Internal Documentation and Reports
-COMMIT-HISTORY-CLARIFICATION.md
-OPEN-SOURCE-READINESS-REPORT.md
-OPEN-SOURCE-RELEASE-PLAN.md
+# =============================================================================
+# ROOT DIRECTORY - INTERNAL DOCUMENTS (DO NOT PUBLISH)
+# =============================================================================
+
+# Branch Management Documentation
+BRANCH-MANAGEMENT-*.md
+
+# CI/CD and Quality Reports
+CI-CD-*.md
 QUALITY-REPORT.md
+ci-diagnostic-report.json
+
+# Open Source Release Planning (Internal) - These planning docs are internal!
+OPEN-SOURCE-*.md
+ROOT-FILES-AUDIT-*.md
+
+# Internal Governance and Policies
+COMMIT-HISTORY-*.md
 GOVERNANCE.md
 PRIVACY.md
 SECURITY.md
 MAINTAINERS.md
 RELEASE-CHECKLIST.md
 
-# Branch Management Documentation
-BRANCH-MANAGEMENT-ANALYSIS-REPORT.md
-BRANCH-MANAGEMENT-EXECUTIVE-SUMMARY.md
-BRANCH-STRATEGY.md
+# Chinese Planning Documents
+V1.1.0-beta-*.md
+*-文档分类整合规划.md
 
-# CI/CD and Development Reports
-CI-CD-FIX-SUMMARY.md
-ci-diagnostic-report.json
+# Internal Test Configurations
+cucumber.config.js
+jest.schema-application.config.js
 
 # Development Archives and History
 Archived/

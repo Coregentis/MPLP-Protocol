@@ -1,19 +1,37 @@
+# =============================================================================
+# MPLP Public Open Source Release - .gitignore
+# =============================================================================
+# This .gitignore is used for the public open source repository
+# It filters out internal development content while keeping core functionality
+#
+# Repository: https://github.com/Coregentis/MPLP-Protocol
+# Version: 1.0.0
+# Last Updated: 2025-10-16
+# =============================================================================
+
+# =============================================================================
+# STANDARD NODE.JS IGNORES
+# =============================================================================
+
 # Dependencies
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-# package-lock.json should be committed for reproducible builds
-# yarn.lock should be committed if using yarn
+pnpm-debug.log*
+lerna-debug.log*
 
 # Build outputs
 dist/
 build/
 *.tsbuildinfo
+.npm
+.eslintcache
 
 # Coverage reports
 coverage/
 *.lcov
+.nyc_output
 
 # Runtime data
 pids
@@ -27,6 +45,8 @@ pids
 .env.development.local
 .env.test.local
 .env.production.local
+.env.production
+.env.staging
 
 # IDE files
 .vscode/
@@ -34,12 +54,6 @@ pids
 *.swp
 *.swo
 *~
-.augment/
-.cursor/
-
-
-
-# OS generated files
 .DS_Store
 .DS_Store?
 ._*
@@ -55,126 +69,214 @@ logs/
 # Temporary folders
 tmp/
 temp/
+cache/
+.cache/
 
-# Docker
-.dockerignore
-
-# Database
+# Database files
 *.sqlite
 *.db
-
-# Documentation
-docs/api/
-docs/others/
+*.sqlite3
 
 # Test artifacts
 test-results/
 playwright-report/
 
-# GLFB methodology reports
-glfb-pseudocode-report.txt
-**/glfb-pseudocode-report.txt
+# =============================================================================
+# MPLP SPECIFIC - BUILD AND DISTRIBUTION
+# =============================================================================
 
-
-# MPLP specific
+# Compiled schemas and extensions
 schemas/compiled/
 extensions/compiled/
 
-# Private Development Repository - Minimal .gitignore
-# Note: This is a private repository, so we keep most development files
-
-# Build and distribution files
-dist/
-build/
-coverage/
+# Build artifacts
 *.tgz
 *.tar.gz
-
-# Environment files with actual secrets (if any)
-.env.production
-.env.staging
-**/actual-secrets.*
-**/production-keys.*
-
-# Temporary and cache files
-temp/
-tmp/
-*.tmp
-*.temp
-*.swp
-*.swo
-*~
-cache/
-.cache/
-
-# Database files
-*.db
-*.sqlite
-*.sqlite3
-
-# IDE workspace files (personal preferences)
-.vscode/settings.json
-.vscode/launch.json
-.cursor/
 
 # Backup files
 *_backup.*
 *.backup
-README_NEW.md
-
-# Large archived files (keep structure, ignore large files)
-Archived/**/*.zip
-Archived/**/*.tar.gz
-Archived/**/*.7z
 
 # =============================================================================
-# PUBLIC RELEASE CONFIGURATION
+# INTERNAL DEVELOPMENT CONTENT - DO NOT PUBLISH
 # =============================================================================
-# The following rules are used when creating public releases
-# These files/directories are kept in the development repository
-# but excluded from public open source releases
 
-# Private development content
+# AI Assistant and Development Tools
 .augment/
-# .circleci/  # RESTORED for internal dev repo - needed for CI/CD
-# .github/    # RESTORED for internal dev repo - needed for GitHub Actions
+.cursor/
 .husky/
 .pctd/
 .quality/
+.backup-configs/
 
-# Internal documentation and reports
-COMMIT-HISTORY-CLARIFICATION.md
-OPEN-SOURCE-READINESS-REPORT.md
+# Internal CI/CD Configuration
+.circleci/
+.github/
+
+# =============================================================================
+# ROOT DIRECTORY - INTERNAL DOCUMENTS (DO NOT PUBLISH)
+# =============================================================================
+
+# Branch Management Documentation
+BRANCH-MANAGEMENT-*.md
+
+# CI/CD and Quality Reports
+CI-CD-*.md
 QUALITY-REPORT.md
+ci-diagnostic-report.json
+
+# Open Source Release Planning (Internal) - These planning docs are internal!
+OPEN-SOURCE-*.md
+ROOT-FILES-AUDIT-*.md
+
+# Internal Governance and Policies
+COMMIT-HISTORY-*.md
 GOVERNANCE.md
 PRIVACY.md
 SECURITY.md
 MAINTAINERS.md
 RELEASE-CHECKLIST.md
 
-# Development archives and history
+# Chinese Planning Documents
+V1.1.0-beta-*.md
+*-文档分类整合规划.md
+
+# Internal Test Configurations
+cucumber.config.js
+jest.schema-application.config.js
+
+# Development Archives and History
 Archived/
 
-# Development configuration
+# Internal Configuration
 config/
 
-# Infrastructure and deployment (keep private)
+# Infrastructure and Deployment
 docker/
 k8s/
 
-# Development and build scripts (keep most private, allow basic ones)
+# Development and Build Scripts (keep only essential ones)
 scripts/
 !scripts/build.js
 !scripts/test.js
 
-# Validation and quality results
+# Validation and Quality Results
 validation-results/
 
-# Development test configurations
+# Development Test Configurations
 cucumber.config.js
 jest.schema-application.config.js
 
-# Development methodology files
+# Development Methodology Files
 **/glfb-pseudocode-report.txt
 **/*methodology*.md
 **/*strategy*.md
+**/*analysis*.md
+**/*executive-summary*.md
+
+# Temporary Studio and Workspaces
+temp_studio/
+
+# SDK Development Files (keep SDK source, remove dev artifacts)
+sdk/node_modules/
+sdk/dist/
+sdk/coverage/
+sdk/test-cli.js
+
+# Internal Documentation Directories
+docs/L4-Intelligent-Agent-OPS-Refactor/
+
+# Language-specific development files
+V1.1.0-beta-文档分类整合规划.md
+
+# =============================================================================
+# SECURITY - SENSITIVE INFORMATION
+# =============================================================================
+
+# Actual secrets and production keys
+**/actual-secrets.*
+**/production-keys.*
+**/*secret*.json
+**/*credential*.json
+**/*password*.txt
+
+# API keys and tokens
+.env.production
+.env.staging
+**/.env.production
+**/.env.staging
+
+# =============================================================================
+# LARGE FILES AND ARCHIVES
+# =============================================================================
+
+# Large archived files
+Archived/**/*.zip
+Archived/**/*.tar.gz
+Archived/**/*.7z
+**/*.zip
+**/*.tar.gz
+**/*.7z
+
+# =============================================================================
+# QUALITY ASSURANCE - INTERNAL ONLY
+# =============================================================================
+
+# Quality reports and audits
+QUALITY-*.md
+**/quality-report*.json
+**/audit-*.json
+
+# Performance benchmarks (internal)
+**/performance-*.json
+**/benchmark-*.json
+
+# =============================================================================
+# DEVELOPMENT WORKFLOW - INTERNAL ONLY
+# =============================================================================
+
+# Development planning and strategy
+**/planning-*.md
+**/roadmap-internal*.md
+**/strategy-*.md
+
+# Meeting notes and internal communications
+**/meeting-notes*.md
+**/internal-*.md
+
+# =============================================================================
+# EXAMPLES - KEEP ONLY CLEAN EXAMPLES
+# =============================================================================
+
+# Development and debugging examples
+examples/emergency-fix.js
+examples/final-quality-fix.js
+examples/fix-quality-issues.js
+examples/quality-fix-phase2.js
+
+# =============================================================================
+# DOCUMENTATION - INTERNAL ONLY
+# =============================================================================
+
+# Internal API documentation
+docs/api/
+docs/others/
+
+# Internal quality assurance docs
+docs/quality-assurance/
+
+# =============================================================================
+# NOTES
+# =============================================================================
+# This .gitignore is designed for the public open source repository.
+# It ensures that:
+# 1. Core functionality code is published
+# 2. Public documentation is available
+# 3. Examples and tutorials are included
+# 4. Internal development content is excluded
+# 5. Sensitive information is protected
+# 6. Methodology and strategy documents remain private
+#
+# For the internal development repository, use the standard .gitignore file.
+# =============================================================================
+
