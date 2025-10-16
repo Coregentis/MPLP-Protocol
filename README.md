@@ -234,7 +234,7 @@ MPLP implements a **4-layer architecture** with dual delivery modes:
 
 **Total**: 2,905 tests passing (100% pass rate) • 197 test suites • 99.8% performance score
 
-### **� v1.1.0-beta SDK - Complete Development Ecosystem**
+### **🎨 v1.1.0-beta SDK - Complete Development Ecosystem**
 
 #### **SDK Packages (7/7 Complete)**
 
@@ -275,7 +275,7 @@ MPLP implements a **4-layer architecture** with dual delivery modes:
 
 ---
 
-## � **Installation & Usage**
+## 📦 **Installation & Usage**
 
 ### **Option 1: SDK Installation (Recommended)**
 
@@ -406,7 +406,7 @@ const result = await mplp.executeWorkflow(workflow, {
 
 ## 📖 **Documentation**
 
-### **� Getting Started**
+### **🚀 Getting Started**
 
 | Resource | Description | Link |
 |----------|-------------|------|
@@ -528,7 +528,7 @@ We welcome contributions from everyone! Here's how you can help:
 
 ---
 
-## � **Project Status**
+## 📊 **Project Status**
 
 | Metric | Status | Details |
 |--------|--------|---------|
@@ -542,7 +542,7 @@ We welcome contributions from everyone! Here's how you can help:
 
 ---
 
-## �📄 **License**
+## 📄 **License**
 
 MPLP is released under the **[MIT License](LICENSE)**.
 
