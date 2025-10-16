@@ -1,11 +1,15 @@
 # Context Module Configuration Guide
 
+> **🌐 Language Navigation**: [English](configuration-guide.md) | [中文](../../../zh-CN/modules/context/configuration-guide.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Context Module Configuration Guide v1.0.0-alpha**
 
 [![Configuration](https://img.shields.io/badge/configuration-Comprehensive-green.svg)](./README.md)
 [![Module](https://img.shields.io/badge/module-Context-green.svg)](./implementation-guide.md)
 [![Environments](https://img.shields.io/badge/environments-Dev%20%7C%20Staging%20%7C%20Prod-blue.svg)](./performance-guide.md)
-[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../../zh-CN/modules/context/configuration-guide.md)
+[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../zh-CN/modules/context/configuration-guide.md)
 
 ---
 

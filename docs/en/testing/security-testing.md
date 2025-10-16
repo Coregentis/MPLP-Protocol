@@ -1,5 +1,9 @@
 # MPLP Security Testing
 
+> **🌐 Language Navigation**: [English](security-testing.md) | [中文](../../zh-CN/testing/security-testing.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Security Testing v1.0.0-alpha**
 
 [![Security](https://img.shields.io/badge/security-100%25%20Pass-brightgreen.svg)](./README.md)

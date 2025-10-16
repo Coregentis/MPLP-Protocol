@@ -1,5 +1,9 @@
 # MPLP 示例项目
 
+> **🌐 语言导航**: [English](../../en/examples/README.md) | [中文](README.md)
+
+
+
 **多智能体协议生命周期平台 v1.0 Alpha - 生产就绪示例项目**
 
 [![示例](https://img.shields.io/badge/examples-生产就绪-brightgreen.svg)](../developers/quick-start.md)

@@ -1,5 +1,9 @@
 # MPLP Schema 系统
 
+> **🌐 语言导航**: [English](../../en/schemas/README.md) | [中文](README.md)
+
+
+
 **多智能体协议生命周期平台 - Schema 和数据规范系统 v1.0.0-alpha**
 
 [![Schema](https://img.shields.io/badge/schema-JSON%20Schema%20Draft--07-blue.svg)](./schema-standards.md)
@@ -335,9 +339,9 @@ export class ContextMapper {
 - **[验证规则](./validation-rules.md)** - 完整的验证规则和业务逻辑
 
 ### **实现指南**
-- **[架构概述](../architecture/README.md)** - MPLP架构和设计
+- **架构概述 (开发中)** - MPLP架构和设计
 - **[实现指南](../implementation/README.md)** - 实现策略和模式
-- **[API参考](../api-reference/README.md)** - 完整的API文档
+- **API参考 (开发中)** - 完整的API文档
 
 ### **模块文档**
 - **[Context模块](../modules/context/README.md)** - 上下文管理模块

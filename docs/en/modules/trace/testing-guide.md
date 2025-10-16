@@ -1,11 +1,15 @@
 # Trace Module Testing Guide
 
+> **🌐 Language Navigation**: [English](testing-guide.md) | [中文](../../../zh-CN/modules/trace/testing-guide.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Trace Module Testing Guide v1.0.0-alpha**
 
 [![Testing](https://img.shields.io/badge/testing-Enterprise%20Validated-green.svg)](./README.md)
 [![Coverage](https://img.shields.io/badge/coverage-100%25-green.svg)](./implementation-guide.md)
 [![Monitoring](https://img.shields.io/badge/monitoring-Tested-blue.svg)](./performance-guide.md)
-[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../../zh-CN/modules/trace/testing-guide.md)
+[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../zh-CN/modules/trace/testing-guide.md)
 
 ---
 

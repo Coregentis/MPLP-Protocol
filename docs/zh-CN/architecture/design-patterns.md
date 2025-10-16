@@ -1,5 +1,9 @@
 # 设计模式
 
+> **🌐 语言导航**: [English](../../en/architecture/design-patterns.md) | [中文](design-patterns.md)
+
+
+
 **多智能体系统的企业级架构模式**
 
 [![模式](https://img.shields.io/badge/patterns-Enterprise%20Grade-blue.svg)](./architecture-overview.md)

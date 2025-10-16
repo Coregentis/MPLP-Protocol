@@ -1,5 +1,9 @@
 # MPLP合规性测试
 
+> **🌐 语言导航**: [English](../../en/protocol-foundation/compliance-testing.md) | [中文](compliance-testing.md)
+
+
+
 **协议一致性测试和验证框架**
 
 [![测试](https://img.shields.io/badge/testing-Automated-brightgreen.svg)](./protocol-specification.md)

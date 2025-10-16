@@ -1,0 +1,64 @@
+{
+  "name": "@mplp/agent-orchestrator",
+  "version": "1.1.0-beta",
+  "description": "Enterprise multi-agent orchestration platform built with MPLP SDK v1.1.0-beta",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node src/index.ts",
+    "start": "node dist/index.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "clean": "rimraf dist coverage"
+  },
+  "keywords": [
+    "mplp",
+    "agent",
+    "orchestrator",
+    "multi-agent",
+    "workflow",
+    "automation",
+    "enterprise"
+  ],
+  "author": "MPLP Team",
+  "license": "MIT",
+  "dependencies": {
+    "@mplp/sdk-core": "file:../../sdk/packages/core",
+    "@mplp/agent-builder": "file:../../sdk/packages/agent-builder",
+    "@mplp/orchestrator": "file:../../sdk/packages/orchestrator",
+    "@mplp/adapters": "file:../../sdk/packages/adapters",
+    "dotenv": "^16.4.5",
+    "uuid": "^10.0.0",
+    "joi": "^17.9.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.14.10",
+    "@types/uuid": "^10.0.0",
+    "@typescript-eslint/eslint-plugin": "^7.16.0",
+    "@typescript-eslint/parser": "^7.16.0",
+    "eslint": "^8.57.0",
+    "jest": "^29.7.0",
+    "rimraf": "^5.0.7",
+    "ts-jest": "^29.2.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mplp/agent-orchestrator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mplp/agent-orchestrator/issues"
+  },
+  "homepage": "https://github.com/mplp/agent-orchestrator#readme"
+}

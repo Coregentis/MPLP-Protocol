@@ -1,5 +1,9 @@
 # Dual Naming Convention
 
+> **🌐 Language Navigation**: [English](dual-naming-convention.md) | [中文](../../zh-CN/architecture/dual-naming-convention.md)
+
+
+
 **Schema-Implementation Naming Standards**
 
 [![Convention](https://img.shields.io/badge/convention-Dual%20Naming-blue.svg)](./architecture-overview.md)

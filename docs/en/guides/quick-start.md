@@ -1,5 +1,9 @@
 # MPLP v1.0 Alpha - Quick Start Guide
 
+> **🌐 Language Navigation**: [English](quick-start.md) | [中文](../../zh-CN/guides/quick-start.md)
+
+
+
 **Get up and running with enterprise-grade MPLP in 5 minutes!**
 
 ## 🎯 **What You'll Learn**

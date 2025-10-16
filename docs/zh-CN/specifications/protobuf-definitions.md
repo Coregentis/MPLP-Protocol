@@ -1,5 +1,9 @@
 # MPLP Protocol Buffer 定义
 
+> **🌐 语言导航**: [English](../../en/specifications/protobuf-definitions.md) | [中文](protobuf-definitions.md)
+
+
+
 **多智能体协议生命周期平台 - Protocol Buffer 定义 v1.0.0-alpha**
 
 [![Protocol Buffers](https://img.shields.io/badge/protobuf-生产就绪-brightgreen.svg)](./README.md)

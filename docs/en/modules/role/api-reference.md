@@ -1,11 +1,15 @@
 # Role Module API Reference
 
+> **🌐 Language Navigation**: [English](api-reference.md) | [中文](../../../zh-CN/modules/role/api-reference.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Role Module API Reference v1.0.0-alpha**
 
 [![API](https://img.shields.io/badge/API-REST%20%7C%20GraphQL%20%7C%20WebSocket-blue.svg)](./protocol-specification.md)
 [![Module](https://img.shields.io/badge/module-Role-purple.svg)](./README.md)
 [![RBAC](https://img.shields.io/badge/RBAC-Enterprise%20Grade-green.svg)](./implementation-guide.md)
-[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../../zh-CN/modules/role/api-reference.md)
+[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../zh-CN/modules/role/api-reference.md)
 
 ---
 

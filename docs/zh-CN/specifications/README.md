@@ -1,5 +1,9 @@
 # MPLP 技术规范
 
+> **🌐 语言导航**: [English](../../en/specifications/README.md) | [中文](README.md)
+
+
+
 **多智能体协议生命周期平台 - 正式技术规范和标准 v1.0.0-alpha**
 
 [![规范](https://img.shields.io/badge/specifications-生产就绪-brightgreen.svg)](../README.md)
@@ -158,7 +162,7 @@
 - [协议规范](../protocol-specs/README.md) - L1-L3协议层详细规范
 - [Schema文档](../schemas/README.md) - 完整的Schema系统文档
 - [实施指南](../implementation/README.md) - 详细的实施指导
-- [API参考](../api/README.md) - 完整的API参考文档
+- API参考 (开发中) - 完整的API参考文档
 
 ### **外部标准**
 - **JSON Schema**: https://json-schema.org/
@@ -413,7 +417,7 @@ certification_levels:
 
 ### **技术文档**
 - **[协议基础](../protocol-foundation/README.md)** - 核心协议概念
-- **[架构指南](../architecture/README.md)** - 系统架构概述
+- **架构指南 (开发中)** - 系统架构概述
 - **[实施指南](../implementation/README.md)** - 实施策略
 - **[测试框架](../testing/README.md)** - 测试和验证
 

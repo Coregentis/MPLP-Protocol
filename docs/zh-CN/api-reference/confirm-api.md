@@ -1,5 +1,9 @@
 # Confirm API 参考
 
+> **🌐 语言导航**: [English](../../en/api-reference/confirm-api.md) | [中文](confirm-api.md)
+
+
+
 **多方审批和共识机制 - MPLP v1.0 Alpha**
 
 [![API](https://img.shields.io/badge/api-Confirm%20模块-blue.svg)](../modules/confirm/README.md)

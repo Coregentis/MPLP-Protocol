@@ -1,5 +1,9 @@
 # 双重命名约定
 
+> **🌐 语言导航**: [English](../../en/architecture/dual-naming-convention.md) | [中文](dual-naming-convention.md)
+
+
+
 **Schema-实现层命名标准**
 
 [![约定](https://img.shields.io/badge/convention-Dual%20Naming-blue.svg)](./architecture-overview.md)

@@ -1,5 +1,9 @@
 # MPLP 实现指南
 
+> **🌐 语言导航**: [English](../../en/implementation/README.md) | [中文](README.md)
+
+
+
 **多智能体协议生命周期平台 - 实现指南和集成策略 v1.0.0-alpha**
 
 [![实现](https://img.shields.io/badge/implementation-100%25%20完成-brightgreen.svg)](./client-implementation.md)
@@ -465,9 +469,9 @@ spec:
 - **[安全要求](./security-requirements.md)** - 安全策略和合规要求
 
 ### **架构文档**
-- **[架构概述](../architecture/README.md)** - MPLP整体架构
+- **架构概述 (开发中)** - MPLP整体架构
 - **[模块规范](../modules/README.md)** - 10个核心模块详细规范
-- **[API参考](../api-reference/README.md)** - 完整的API文档
+- **API参考 (开发中)** - 完整的API文档
 
 ---
 

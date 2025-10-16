@@ -1,5 +1,9 @@
 # 横切关注点
 
+> **🌐 语言导航**: [English](../../en/architecture/cross-cutting-concerns.md) | [中文](cross-cutting-concerns.md)
+
+
+
 **企业级系统的九个标准化关注点**
 
 [![关注点](https://img.shields.io/badge/concerns-9%20Standardized-blue.svg)](./architecture-overview.md)

@@ -1,5 +1,9 @@
 # MPLP v1.0 Alpha - Limitations and Considerations
 
+> **🌐 Language Navigation**: [English](alpha-limitations.md) | [中文](../../zh-CN/guides/alpha-limitations.md)
+
+
+
 **Important information for Alpha version users**
 
 ## ⚠️ **Alpha Version Overview**

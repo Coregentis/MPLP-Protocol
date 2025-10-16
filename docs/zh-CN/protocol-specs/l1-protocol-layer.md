@@ -1,5 +1,9 @@
 # L1协议层规范
 
+> **🌐 语言导航**: [English](../../en/protocol-specs/l1-protocol-layer.md) | [中文](l1-protocol-layer.md)
+
+
+
 **版本**: 1.0.0-alpha  
 **最后更新**: 2025年9月4日  
 **状态**: 生产就绪 - 100%完成

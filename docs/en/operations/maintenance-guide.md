@@ -1,5 +1,9 @@
 # MPLP Maintenance Guide
 
+> **🌐 Language Navigation**: [English](maintenance-guide.md) | [中文](../../zh-CN/operations/maintenance-guide.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Production Maintenance Guide v1.0.0-alpha**
 
 [![Maintenance](https://img.shields.io/badge/maintenance-Zero%20Downtime-brightgreen.svg)](./README.md)

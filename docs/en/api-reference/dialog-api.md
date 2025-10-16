@@ -1,5 +1,9 @@
 # Dialog API Reference
 
+> **🌐 Language Navigation**: [English](dialog-api.md) | [中文](../../zh-CN/api-reference/dialog-api.md)
+
+
+
 **Inter-Agent Communication and Conversations - MPLP v1.0 Alpha**
 
 [![API](https://img.shields.io/badge/api-Dialog%20Module-blue.svg)](../modules/dialog/README.md)

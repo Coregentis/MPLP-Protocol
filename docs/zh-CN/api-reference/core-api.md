@@ -1,5 +1,9 @@
 # MPLP核心API参考文档
 
+> **🌐 语言导航**: [English](../../en/api-reference/core-api.md) | [中文](core-api.md)
+
+
+
 **主要MPLP初始化和管理API**
 
 [![Core](https://img.shields.io/badge/module-Core-blue.svg)](../modules/core/README.md)

@@ -1,5 +1,9 @@
 # MPLP 安全要求指南
 
+> **🌐 语言导航**: [English](../../en/implementation/security-requirements.md) | [中文](security-requirements.md)
+
+
+
 **多智能体协议生命周期平台 - 安全要求指南 v1.0.0-alpha**
 
 [![安全](https://img.shields.io/badge/security-100%25%20测试通过-brightgreen.svg)](./README.md)

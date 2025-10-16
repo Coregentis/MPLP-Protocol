@@ -1,5 +1,9 @@
 # MPLP OpenAPI 规范
 
+> **🌐 语言导航**: [English](../../en/specifications/openapi-specifications.md) | [中文](openapi-specifications.md)
+
+
+
 **多智能体协议生命周期平台 - OpenAPI 规范 v1.0.0-alpha**
 
 [![OpenAPI](https://img.shields.io/badge/openapi-生产就绪-brightgreen.svg)](./README.md)

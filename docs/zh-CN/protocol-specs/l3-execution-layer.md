@@ -1,5 +1,9 @@
 # L3执行层规范
 
+> **🌐 语言导航**: [English](../../en/protocol-specs/l3-execution-layer.md) | [中文](l3-execution-layer.md)
+
+
+
 **版本**: 1.0.0-alpha  
 **最后更新**: 2025年9月4日  
 **状态**: 生产就绪 - 核心编排器完成

@@ -1,5 +1,9 @@
 # MPLP Schema 标准
 
+> **🌐 语言导航**: [English](../../en/schemas/schema-standards.md) | [中文](schema-standards.md)
+
+
+
 **多智能体协议生命周期平台 - Schema 标准和约定 v1.0.0-alpha**
 
 [![Schema](https://img.shields.io/badge/schema-JSON%20Schema%20Draft--07-blue.svg)](./README.md)

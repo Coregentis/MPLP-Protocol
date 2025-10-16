@@ -1,5 +1,9 @@
 # L2协调层规范
 
+> **🌐 语言导航**: [English](../../en/protocol-specs/l2-coordination-layer.md) | [中文](l2-coordination-layer.md)
+
+
+
 **版本**: 1.0.0-alpha  
 **最后更新**: 2025年9月4日  
 **状态**: 生产就绪 - 所有10个模块完成

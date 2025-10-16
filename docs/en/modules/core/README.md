@@ -1,12 +1,16 @@
 # Core Module
 
+> **🌐 Language Navigation**: [English](README.md) | [中文](../../../zh-CN/modules/core/README.md)
+
+
+
 **MPLP L2 Coordination Layer - Central Orchestration System**
 
 [![Module](https://img.shields.io/badge/module-Core-red.svg)](../../architecture/l2-coordination-layer.md)
 [![Status](https://img.shields.io/badge/status-Enterprise%20Grade-green.svg)](../../../../ALPHA-RELEASE-NOTES.md)
 [![Tests](https://img.shields.io/badge/tests-584%2F584%20passing-green.svg)](./testing.md)
 [![Coverage](https://img.shields.io/badge/coverage-100%25-green.svg)](./testing.md)
-[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../../zh-CN/modules/core/README.md)
+[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../zh-CN/modules/core/README.md)
 
 ---
 

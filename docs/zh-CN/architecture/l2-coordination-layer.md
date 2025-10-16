@@ -1,5 +1,9 @@
 # L2协调层
 
+> **🌐 语言导航**: [English](../../en/architecture/l2-coordination-layer.md) | [中文](l2-coordination-layer.md)
+
+
+
 **协调层 - 多智能体协作模式**
 
 [![层级](https://img.shields.io/badge/layer-L2%20Coordination-green.svg)](./architecture-overview.md)

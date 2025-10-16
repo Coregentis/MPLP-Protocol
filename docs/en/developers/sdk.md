@@ -1,5 +1,9 @@
 # MPLP SDK Documentation
 
+> **🌐 Language Navigation**: [English](sdk.md) | [中文](../../zh-CN/developers/sdk.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - SDK Documentation v1.0.0-alpha**
 
 [![SDK](https://img.shields.io/badge/sdk-Multi%20Language-green.svg)](./README.md)

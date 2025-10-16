@@ -1,5 +1,9 @@
 # MPLP 运维指南
 
+> **🌐 语言导航**: [English](../../en/operations/README.md) | [中文](README.md)
+
+
+
 **多智能体协议生命周期平台 - 综合运维和部署指南 v1.0.0-alpha**
 
 [![运维](https://img.shields.io/badge/operations-100%25%20完成-brightgreen.svg)](./deployment-guide.md)
@@ -172,9 +176,9 @@ helm install mplp-monitoring mplp/monitoring \
 
 ### **内部文档**
 - [实施指南](../implementation/README.md) - 完整的实施文档
-- [架构设计](../architecture/README.md) - 统一DDD架构
-- [API参考](../api/README.md) - 完整的API文档
-- [示例代码](../examples/README.md) - 实施示例
+- 架构设计 (开发中) - 统一DDD架构
+- API参考 (开发中) - 完整的API文档
+- 示例代码 (开发中) - 实施示例
 
 ### **外部资源**
 - **官方网站**: https://mplp.dev

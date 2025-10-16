@@ -1,5 +1,9 @@
 # Dialog API 参考
 
+> **🌐 语言导航**: [English](../../en/api-reference/dialog-api.md) | [中文](dialog-api.md)
+
+
+
 **智能体间通信和对话 - MPLP v1.0 Alpha**
 
 [![API](https://img.shields.io/badge/api-Dialog%20模块-blue.svg)](../modules/dialog/README.md)

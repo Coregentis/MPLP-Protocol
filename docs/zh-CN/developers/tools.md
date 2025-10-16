@@ -1,5 +1,9 @@
 # MPLP 开发工具
 
+> **🌐 语言导航**: [English](../../en/developers/tools.md) | [中文](tools.md)
+
+
+
 **多智能体协议生命周期平台 - 开发工具和实用程序**
 
 [![工具](https://img.shields.io/badge/tools-开发必备-brightgreen.svg)](./README.md)

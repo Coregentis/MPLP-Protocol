@@ -1,5 +1,9 @@
 # MPLP Protocol Specification
 
+> **🌐 Language Navigation**: [English](protocol-specification.md) | [中文](../../zh-CN/protocol-foundation/protocol-specification.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Technical Specification v1.0.0-alpha**
 
 [![RFC Style](https://img.shields.io/badge/style-RFC%20Compliant-blue.svg)](https://tools.ietf.org/rfc/)

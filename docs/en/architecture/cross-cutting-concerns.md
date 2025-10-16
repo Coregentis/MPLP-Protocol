@@ -1,5 +1,9 @@
 # Cross-cutting Concerns
 
+> **🌐 Language Navigation**: [English](cross-cutting-concerns.md) | [中文](../../zh-CN/architecture/cross-cutting-concerns.md)
+
+
+
 **Nine Standardized Concerns for Enterprise-Grade Systems**
 
 [![Concerns](https://img.shields.io/badge/concerns-9%20Standardized-blue.svg)](./architecture-overview.md)

@@ -1,5 +1,9 @@
 # Confirm API Reference
 
+> **🌐 Language Navigation**: [English](confirm-api.md) | [中文](../../zh-CN/api-reference/confirm-api.md)
+
+
+
 **Multi-Party Approval and Consensus Mechanisms - MPLP v1.0 Alpha**
 
 [![API](https://img.shields.io/badge/api-Confirm%20Module-blue.svg)](../modules/confirm/README.md)

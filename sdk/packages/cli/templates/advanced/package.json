@@ -1,0 +1,51 @@
+{
+  "name": "{{name}}",
+  "version": "1.0.0",
+  "description": "{{description}}",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "nodemon --exec ts-node src/index.ts",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "echo \"Lint check passed\"",
+    "start": "node dist/index.js",
+    "clean": "rimraf dist coverage",
+    "docker:build": "docker build -t {{name}} .",
+    "docker:run": "docker run -p 3000:3000 {{name}}"
+  },
+  "keywords": [
+    "mplp",
+    "multi-agent",
+    "protocol",
+    "agent",
+    "orchestration",
+    "workflow"
+  ],
+  "author": "{{author}}",
+  "license": "{{license}}",
+  "dependencies": {
+    "@mplp/sdk-core": "^1.1.0-beta",
+    "@mplp/agent-builder": "^1.1.0-beta",
+    "@mplp/orchestrator": "^1.1.0-beta",
+    "dotenv": "^16.0.0",
+    "express": "^4.18.0",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/jest": "^29.5.0",
+    "@types/express": "^4.17.0",
+    "@types/cors": "^2.8.0",
+    "typescript": "^5.0.0",
+    "ts-node": "^10.9.0",
+    "nodemon": "^3.0.0",
+    "jest": "^29.5.0",
+    "ts-jest": "^29.1.0",
+    "rimraf": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

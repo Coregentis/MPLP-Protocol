@@ -1,12 +1,16 @@
 # Collab Module
 
+> **🌐 Language Navigation**: [English](README.md) | [中文](../../../zh-CN/modules/collab/README.md)
+
+
+
 **MPLP L2 Coordination Layer - Multi-Agent Collaboration System**
 
 [![Module](https://img.shields.io/badge/module-Collab-magenta.svg)](../../architecture/l2-coordination-layer.md)
 [![Status](https://img.shields.io/badge/status-Enterprise%20Grade-green.svg)](../../../../ALPHA-RELEASE-NOTES.md)
 [![Tests](https://img.shields.io/badge/tests-146%2F146%20passing-green.svg)](./testing.md)
 [![Coverage](https://img.shields.io/badge/coverage-91.3%25-green.svg)](./testing.md)
-[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../../zh-CN/modules/collab/README.md)
+[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../zh-CN/modules/collab/README.md)
 
 ---
 

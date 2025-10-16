@@ -1,11 +1,15 @@
 # Collab Module Configuration Guide
 
+> **🌐 Language Navigation**: [English](configuration-guide.md) | [中文](../../../zh-CN/modules/collab/configuration-guide.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Collab Module Configuration Guide v1.0.0-alpha**
 
 [![Configuration](https://img.shields.io/badge/configuration-Enterprise%20Grade-green.svg)](./README.md)
 [![Module](https://img.shields.io/badge/module-Collab-purple.svg)](./implementation-guide.md)
 [![Collaboration](https://img.shields.io/badge/collaboration-Configurable-orange.svg)](./performance-guide.md)
-[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../../zh-CN/modules/collab/configuration-guide.md)
+[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../zh-CN/modules/collab/configuration-guide.md)
 
 ---
 

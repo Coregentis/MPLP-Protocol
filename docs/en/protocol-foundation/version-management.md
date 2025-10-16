@@ -1,5 +1,9 @@
 # MPLP Version Management
 
+> **🌐 Language Navigation**: [English](version-management.md) | [中文](../../zh-CN/protocol-foundation/version-management.md)
+
+
+
 **Protocol Version Management and Compatibility Strategy**
 
 [![Current Version](https://img.shields.io/badge/version-1.0.0--alpha-brightgreen.svg)](https://semver.org/)

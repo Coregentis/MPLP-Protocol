@@ -1,12 +1,16 @@
 # Context模块
 
+> **🌐 语言导航**: [English](../../../en/modules/context/README.md) | [中文](README.md)
+
+
+
 **MPLP L2协调层 - 执行上下文管理系统**
 
 [![模块](https://img.shields.io/badge/module-Context-blue.svg)](../../architecture/l2-coordination-layer.md)
 [![状态](https://img.shields.io/badge/status-企业级-green.svg)](../../../../ALPHA-RELEASE-NOTES.md)
 [![测试](https://img.shields.io/badge/tests-499%2F499%20通过-green.svg)](./testing-guide.md)
 [![覆盖率](https://img.shields.io/badge/coverage-95.1%25-green.svg)](./testing-guide.md)
-[![语言](https://img.shields.io/badge/language-简体中文-red.svg)](../../../en/modules/context/README.md)
+[![语言](https://img.shields.io/badge/language-简体中文-red.svg)](../../en/modules/context/README.md)
 
 ---
 

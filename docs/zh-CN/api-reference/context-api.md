@@ -1,5 +1,9 @@
 # Context API 参考
 
+> **🌐 语言导航**: [English](../../en/api-reference/context-api.md) | [中文](context-api.md)
+
+
+
 **跨智能体的共享状态和上下文管理 - MPLP v1.0 Alpha**
 
 [![API](https://img.shields.io/badge/api-Context%20模块-blue.svg)](../modules/context/README.md)

@@ -1,5 +1,9 @@
 # MPLP Security Requirements Guide
 
+> **🌐 Language Navigation**: [English](security-requirements.md) | [中文](../../zh-CN/implementation/security-requirements.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Security Requirements Guide v1.0.0-alpha**
 
 [![Security](https://img.shields.io/badge/security-100%25%20Tests%20Pass-brightgreen.svg)](./README.md)

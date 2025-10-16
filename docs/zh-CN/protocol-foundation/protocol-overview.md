@@ -1,5 +1,9 @@
 # MPLP协议概览
 
+> **🌐 语言导航**: [English](../../en/protocol-foundation/protocol-overview.md) | [中文](protocol-overview.md)
+
+
+
 **多智能体协议生命周期平台 - L1-L3协议栈**
 
 [![版本](https://img.shields.io/badge/version-1.0.0--alpha-brightgreen.svg)](https://github.com/mplp/mplp)

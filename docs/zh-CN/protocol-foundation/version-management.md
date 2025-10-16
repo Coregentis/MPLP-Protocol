@@ -1,5 +1,9 @@
 # MPLP版本管理
 
+> **🌐 语言导航**: [English](../../en/protocol-foundation/version-management.md) | [中文](version-management.md)
+
+
+
 **协议版本管理和兼容性策略**
 
 [![语义化版本](https://img.shields.io/badge/versioning-Semantic-blue.svg)](https://semver.org/)

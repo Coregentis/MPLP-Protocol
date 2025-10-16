@@ -1,5 +1,9 @@
 # MPLP Architecture Overview
 
+> **🌐 Language Navigation**: [English](architecture-overview.md) | [中文](../../zh-CN/architecture/architecture-overview.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - System Architecture**
 
 [![Architecture](https://img.shields.io/badge/architecture-L1--L3%20Stack-blue.svg)](../protocol-foundation/protocol-specification.md)

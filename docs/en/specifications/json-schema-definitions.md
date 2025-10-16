@@ -1,5 +1,9 @@
 # MPLP JSON Schema Definitions
 
+> **🌐 Language Navigation**: [English](json-schema-definitions.md) | [中文](../../zh-CN/specifications/json-schema-definitions.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - JSON Schema Definitions v1.0.0-alpha**
 
 [![JSON Schema](https://img.shields.io/badge/json%20schema-Production%20Ready-brightgreen.svg)](./README.md)

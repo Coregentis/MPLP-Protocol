@@ -1,5 +1,9 @@
 # MPLP Community
 
+> **🌐 Language Navigation**: [English](README.md) | [中文](../../zh-CN/community/README.md)
+
+
+
 **Welcome to the Multi-Agent Protocol Lifecycle Platform Community**
 
 [![Community](https://img.shields.io/badge/community-Welcome-brightgreen.svg)](./guidelines.md)
@@ -156,10 +160,10 @@ The MPLP community is a vibrant, global network of developers, researchers, and 
 ## 📚 Resources
 
 ### **Documentation**
-- **[API Reference](../api-reference/README.md)**: Complete API documentation
-- **[Architecture Guide](../architecture/README.md)**: System architecture and design
-- **[User Guides](../guides/README.md)**: Step-by-step tutorials and guides
-- **[Examples](../examples/README.md)**: Code examples and use cases
+- **API Reference (开发中)**: Complete API documentation
+- **Architecture Guide (开发中)**: System architecture and design
+- **User Guides (开发中)**: Step-by-step tutorials and guides
+- **Examples (开发中)**: Code examples and use cases
 
 ### **Development**
 - **[Contributing Guide](./contributing.md)**: How to contribute to MPLP

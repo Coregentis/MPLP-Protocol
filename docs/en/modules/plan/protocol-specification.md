@@ -1,11 +1,15 @@
 # Plan Module Protocol Specification
 
+> **🌐 Language Navigation**: [English](protocol-specification.md) | [中文](../../../zh-CN/modules/plan/protocol-specification.md)
+
+
+
 **MPLP L2 Coordination Layer - Plan Module Protocol Definition**
 
 [![Protocol](https://img.shields.io/badge/protocol-Plan%20v1.0-green.svg)](./README.md)
 [![Schema](https://img.shields.io/badge/schema-JSON%20Schema%20Draft--07-blue.svg)](../../architecture/schema-system.md)
 [![Status](https://img.shields.io/badge/status-Stable-green.svg)](../../../../ALPHA-RELEASE-NOTES.md)
-[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../../zh-CN/modules/plan/protocol-specification.md)
+[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../zh-CN/modules/plan/protocol-specification.md)
 
 ---
 

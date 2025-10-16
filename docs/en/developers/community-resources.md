@@ -1,5 +1,9 @@
 # MPLP Community Resources
 
+> **🌐 Language Navigation**: [English](community-resources.md) | [中文](../../zh-CN/developers/community-resources.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Community Resources v1.0.0-alpha**
 
 [![Community](https://img.shields.io/badge/community-Open%20Source-green.svg)](./README.md)
@@ -210,7 +214,7 @@ npm run format            # Prettier formatting
 - **[Comprehensive Tutorials](./tutorials.md)** - Step-by-step learning
 - **[Code Examples](./examples.md)** - Working code samples
 - **[SDK Documentation](./sdk.md)** - Language-specific guides
-- **[API Reference](../api/README.md)** - Complete API documentation
+- **API Reference (开发中)** - Complete API documentation
 
 #### **Video Content**
 - **[YouTube Channel](https://youtube.com/mplp-dev)** - Official tutorials and demos

@@ -1,53 +1,63 @@
-# 📖 **MPLP Documentation Hub** | **MPLP文档中心**
+# MPLP - Multi-Agent Protocol Lifecycle Platform
+
+> **🌐 Language Navigation**: [English](en/README.md) | [中文](zh-CN/README.md)
+
+
+
+> **项目状态**: 🚀 **企业级发布就绪**
+> **当前版本**: v1.0 Alpha (协议) + v1.1.0-beta (SDK)
+> **更新时间**: 2025-09-20
 
 <div align="center">
 
-**Multi-Agent Protocol Lifecycle Platform - Documentation Hub**
-**多智能体协议生命周期平台 - 文档中心**
-
-[![Version](https://img.shields.io/badge/version-1.0.0--alpha-blue.svg)](https://github.com/Coregentis/MPLP-Protocol-Dev)
-[![Protocol Stack](https://img.shields.io/badge/L1--L3-Protocol%20Stack-orange.svg)](./en/architecture/)
-[![Modules](https://img.shields.io/badge/modules-10%2F10%20complete-brightgreen.svg)](./en/modules/)
-[![Tests](https://img.shields.io/badge/tests-2869%20total%20%7C%20100%25%20pass-brightgreen.svg)](../README.md#quality)
+[![Version](https://img.shields.io/badge/v1.0%20Alpha-Protocol%20Ready-blue.svg)](./protocol/en/)
+[![SDK](https://img.shields.io/badge/v1.1.0--beta-SDK%20Ready-green.svg)](./sdk/)
+[![Tests](https://img.shields.io/badge/tests-2905%20total%20%7C%20100%25%20pass-brightgreen.svg)](./project-management/quality-reports/)
 [![Languages](https://img.shields.io/badge/languages-English%20%7C%20中文-blue.svg)](#-choose-your-language--选择语言)
 
-**🏗️ Enterprise-Grade L1-L3 Protocol Stack for Multi-Agent System Construction**
-**🏗️ 企业级L1-L3协议栈，用于多智能体系统构建**
+**🏗️ Enterprise-Grade Multi-Agent Protocol + Complete SDK Ecosystem**
+**🏗️ 企业级多智能体协议 + 完整SDK生态系统**
 
 </div>
 
----
+## 🎯 **项目概览**
 
-## 🌍 **Choose Your Language | 选择语言**
+MPLP是一个企业级的多智能体协议生命周期平台，提供从协议定义到应用构建的完整工具链。
 
-<div align="center">
+### **双版本架构**
+- **🏗️ MPLP v1.0 Alpha**: L1-L3协议栈，10个企业级模块，100%完成
+- **🛠️ MPLP v1.1.0-beta**: 完整SDK生态系统，开发者工具链
 
-| **Language** | **Documentation** | **Quick Start** | **Status** |
-|:------------:|:-----------------:|:---------------:|:----------:|
-| **🇺🇸 English** | [📖 English Docs](./en/) | [🚀 Quick Start](./en/developers/quick-start.md) | ✅ Complete |
-| **🇨🇳 中文** | [📖 中文文档](./zh-CN/) | [🚀 快速开始](./zh-CN/developers/quick-start.md) | ✅ Complete |
+### **核心特性**
+- ✅ **企业级质量**: 2,905/2,905测试通过，零技术债务
+- ✅ **完整生态**: 协议 + SDK + CLI + Studio + 适配器
+- ✅ **厂商中立**: 支持多平台集成，避免供应商锁定
+- ✅ **开发者友好**: 30分钟构建第一个多智能体应用
 
-**Other Languages**: Coming in future releases | **其他语言**: 未来版本中推出
+## 📚 **文档导航**
 
-</div>
+### **🚀 快速开始**
+- [安装指南](zh-CN/sdk/getting-started/installation.md) - 快速安装和配置
+- [第一个应用](zh-CN/sdk/getting-started/quick-start.md) - 30分钟构建指南
+- [示例应用](zh-CN/examples/) - 完整的示例和最佳实践
 
----
+### **📖 协议文档 (v1.0 Alpha)**
+- [协议概览](zh-CN/modules/README.md) - MPLP协议完整介绍
+- [架构设计](zh-CN/architecture/README.md) - L1-L3分层架构
+- [API参考](zh-CN/api-reference/README.md) - 10个核心模块API
+- [English Docs](en/modules/README.md) - Complete English Documentation
 
-## 🚀 **Quick Navigation | 快速导航**
+### **🛠️ SDK文档 (v1.1.0-beta)**
+- [SDK概览](zh-CN/sdk/README.md) - SDK生态系统介绍
+- [API参考](zh-CN/sdk-api/README.md) - 完整API文档
+- [开发指南](zh-CN/guides/development/README.md) - 最佳实践和模式
+- [平台适配器](zh-CN/platform-adapters/README.md) - 7个主流平台集成
 
-<div align="center">
-
-### **🎯 For Users | 用户**
-Get started quickly with MPLP | 快速开始使用MPLP
-
-| English | 中文 |
-|:-------:|:----:|
-| [📖 Get Started](./en/developers/quick-start.md) | [📖 快速开始](./zh-CN/developers/quick-start.md) |
-| [🎯 Examples](./en/examples/) | [🎯 示例](./zh-CN/examples/) |
-| [❓ FAQ](./en/faq/) | [❓ 常见问题](./zh-CN/faq/) |
-
-### **🔧 For Developers | 开发者**
-Build with MPLP APIs and tools | 使用MPLP API和工具开发
+### **📊 项目管理**
+- [版本管理](zh-CN/versions/README.md) - 版本对比和迁移指南
+- [发布报告](zh-CN/project-management/releases/) - 详细的发布文档
+- [质量报告](zh-CN/project-management/quality-reports/) - 企业级质量验证
+- [测试报告](zh-CN/project-management/testing-reports/) - 完整测试覆盖
 
 | English | 中文 |
 |:-------:|:----:|

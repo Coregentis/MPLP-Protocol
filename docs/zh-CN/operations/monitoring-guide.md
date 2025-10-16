@@ -1,5 +1,9 @@
 # MPLP 监控指南
 
+> **🌐 语言导航**: [English](../../en/operations/monitoring-guide.md) | [中文](monitoring-guide.md)
+
+
+
 **多智能体协议生命周期平台 - 生产监控指南 v1.0.0-alpha**
 
 [![监控](https://img.shields.io/badge/monitoring-企业级就绪-brightgreen.svg)](./README.md)

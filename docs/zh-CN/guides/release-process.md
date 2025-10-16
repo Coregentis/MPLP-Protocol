@@ -1,5 +1,9 @@
 # 🚀 MPLP v1.0 发布流程指南
 
+> **🌐 语言导航**: [English](../../en/guides/release-process.md) | [中文](release-process.md)
+
+
+
 **MPLP v1.0 Alpha生产发布的完整指南**
 
 [![发布](https://img.shields.io/badge/version-v1.0.0--alpha-blue.svg)](../../../ALPHA-RELEASE-NOTES.md)
@@ -123,9 +127,9 @@ await mplp.initialize();
 ### 📚 文档
 
 - **[快速开始指南](./quick-start.md)** - 5分钟快速上手
-- **[架构概览](../architecture/README.md)** - 完整架构指南
-- **[API参考](../api-reference/README.md)** - 完整API文档
-- **[示例代码](../examples/README.md)** - 工作示例代码
+- **架构概览 (开发中)** - 完整架构指南
+- **API参考 (开发中)** - 完整API文档
+- **示例代码 (开发中)** - 工作示例代码
 
 ### 🤝 社区
 

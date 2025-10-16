@@ -1,5 +1,9 @@
 # MPLP OpenAPI Specifications
 
+> **🌐 Language Navigation**: [English](openapi-specifications.md) | [中文](../../zh-CN/specifications/openapi-specifications.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - OpenAPI Specifications v1.0.0-alpha**
 
 [![OpenAPI](https://img.shields.io/badge/openapi-Production%20Ready-brightgreen.svg)](./README.md)

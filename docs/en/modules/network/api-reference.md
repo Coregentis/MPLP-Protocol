@@ -1,11 +1,15 @@
 # Network Module API Reference
 
+> **🌐 Language Navigation**: [English](api-reference.md) | [中文](../../../zh-CN/modules/network/api-reference.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Network Module API Reference v1.0.0-alpha**
 
 [![API](https://img.shields.io/badge/API-REST%20%7C%20GraphQL%20%7C%20WebSocket-blue.svg)](./protocol-specification.md)
 [![Module](https://img.shields.io/badge/module-Network-cyan.svg)](./README.md)
 [![Networking](https://img.shields.io/badge/networking-Enterprise%20Grade-green.svg)](./implementation-guide.md)
-[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../../zh-CN/modules/network/api-reference.md)
+[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../zh-CN/modules/network/api-reference.md)
 
 ---
 

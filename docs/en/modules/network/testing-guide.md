@@ -1,11 +1,15 @@
 # Network Module Testing Guide
 
+> **🌐 Language Navigation**: [English](testing-guide.md) | [中文](../../../zh-CN/modules/network/testing-guide.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Network Module Testing Guide v1.0.0-alpha**
 
 [![Testing](https://img.shields.io/badge/testing-Enterprise%20Validated-green.svg)](./README.md)
 [![Coverage](https://img.shields.io/badge/coverage-100%25-green.svg)](./implementation-guide.md)
 [![Networking](https://img.shields.io/badge/networking-Tested-blue.svg)](./performance-guide.md)
-[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../../zh-CN/modules/network/testing-guide.md)
+[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../zh-CN/modules/network/testing-guide.md)
 
 ---
 

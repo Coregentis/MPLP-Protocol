@@ -1,5 +1,9 @@
 # MPLP Server Implementation Guide
 
+> **🌐 Language Navigation**: [English](server-implementation.md) | [中文](../../zh-CN/implementation/server-implementation.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Server Implementation Guide v1.0.0-alpha**
 
 [![Server](https://img.shields.io/badge/server-Enterprise%20Complete-brightgreen.svg)](./README.md)

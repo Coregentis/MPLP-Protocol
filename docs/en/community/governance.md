@@ -1,5 +1,9 @@
 # MPLP Governance
 
+> **🌐 Language Navigation**: [English](governance.md) | [中文](../../zh-CN/community/governance.md)
+
+
+
 **Project Governance and Decision-Making Structure**
 
 [![Governance](https://img.shields.io/badge/governance-Transparent-blue.svg)](./README.md)

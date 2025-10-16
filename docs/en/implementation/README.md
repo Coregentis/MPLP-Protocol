@@ -1,5 +1,9 @@
 # MPLP Implementation Guide
 
+> **🌐 Language Navigation**: [English](README.md) | [中文](../../zh-CN/implementation/README.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Implementation Guide Overview v1.0.0-alpha**
 
 [![Implementation](https://img.shields.io/badge/implementation-100%25%20Complete-brightgreen.svg)](./client-implementation.md)
@@ -157,10 +161,10 @@ All 10 modules follow identical Domain-Driven Design patterns:
 
 ## 📖 Related Documentation
 
-- [API Reference](../api/README.md) - Complete API documentation
-- [Architecture Design](../architecture/README.md) - Unified DDD architecture
+- API Reference (开发中) - Complete API documentation
+- Architecture Design (开发中) - Unified DDD architecture
 - [Quick Start Guide](../guides/quick-start.md) - 5-minute getting started
-- [Example Code](../examples/README.md) - Complete implementation examples
+- Example Code (开发中) - Complete implementation examples
 
 ## 🤝 Community Support
 

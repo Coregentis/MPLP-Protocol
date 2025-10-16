@@ -1,5 +1,9 @@
 # 🚀 MPLP v1.0 Release Process Guide
 
+> **🌐 Language Navigation**: [English](release-process.md) | [中文](../../zh-CN/guides/release-process.md)
+
+
+
 **Complete guide for releasing MPLP v1.0 Alpha to production**
 
 [![Release](https://img.shields.io/badge/version-v1.0.0--alpha-blue.svg)](../../../ALPHA-RELEASE-NOTES.md)
@@ -123,9 +127,9 @@ await mplp.initialize();
 ### 📚 Documentation
 
 - **[Quick Start Guide](./quick-start.md)** - Get started in 5 minutes
-- **[Architecture Overview](../architecture/README.md)** - Complete architecture guide
-- **[API Reference](../api-reference/README.md)** - Full API documentation
-- **[Examples](../examples/README.md)** - Working code examples
+- **Architecture Overview (开发中)** - Complete architecture guide
+- **API Reference (开发中)** - Full API documentation
+- **Examples (开发中)** - Working code examples
 
 ### 🤝 Community
 

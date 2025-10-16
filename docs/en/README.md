@@ -1,5 +1,9 @@
 # MPLP v1.0 Alpha - English Documentation
 
+> **🌐 Language Navigation**: [English](README.md) | [中文](../zh-CN/README.md)
+
+
+
 <div align="center">
 
 [![Version](https://img.shields.io/badge/version-1.0.0--alpha-blue.svg)](https://github.com/Coregentis/MPLP-Protocol-Dev)
@@ -22,14 +26,53 @@
 
 ---
 
+## 🚀 **Quick Start**
+
+Get MPLP up and running in 5 minutes:
+
+### **Prerequisites**
+- Node.js 18+ and npm/yarn
+- TypeScript 5.0+
+- Git
+
+### **Installation**
+```bash
+# Clone the repository
+git clone https://github.com/Coregentis/MPLP-Protocol-Dev.git
+cd MPLP-Protocol-Dev
+
+# Install dependencies
+npm install
+
+# Run tests to verify installation
+npm test
+
+# Start development server
+npm run dev
+```
+
+### **Verify Installation**
+```bash
+# Check all module status
+npm run status
+
+# Run full test suite
+npm run test:full
+
+# Check code quality
+npm run lint && npm run typecheck
+```
+
+---
+
 ## 🚀 **Quick Navigation**
 
 <div align="center">
 
 | **Getting Started** | **Documentation** | **Development** | **Community** |
 |:-------------------:|:-----------------:|:---------------:|:-------------:|
-| [🚀 Quick Start](./developers/quick-start.md) | [📖 Protocol Overview](./protocol-foundation/protocol-overview.md) | [🔧 API Reference](./api-reference/) | [🤝 Contributing](./community/contributing.md) |
-| [⚡ Installation](./developers/quick-start.md#installation) | [🏗️ Architecture](./architecture/) | [🧪 Testing Guide](./testing/) | [💬 Discussions](https://github.com/Coregentis/MPLP-Protocol-Dev/discussions) |
+| [🚀 Quick Start](#quick-start) | [📖 Protocol Overview](./protocol-foundation/protocol-overview.md) | [🔧 API Reference](./api-reference/) | [🤝 Contributing](./community/contributing.md) |
+| [⚡ Installation](#installation) | [🏗️ Architecture](./architecture/) | [🧪 Testing Guide](./testing/) | [💬 Discussions](https://github.com/Coregentis/MPLP-Protocol-Dev/discussions) |
 | [🎯 Examples](./examples/) | [📋 Modules](./modules/) | [🚀 Deployment](./operations/) | [📋 Roadmap](./community/roadmap.md) |
 
 </div>
@@ -121,6 +164,45 @@ MPLP (Multi-Agent Protocol Lifecycle Platform) is an enterprise-grade L1-L3 prot
 - **Interface Consistency**: 100%
 - **Schema Compliance**: 100%
 - **Dual Naming Convention**: 100% compliant
+
+---
+
+## 🛠️ **Development Guide**
+
+### **Development Environment Setup**
+```bash
+# Install development dependencies
+npm install
+
+# Start development mode
+npm run dev
+
+# Run tests (watch mode)
+npm run test:watch
+
+# Code quality checks
+npm run lint:fix
+npm run typecheck
+```
+
+### **Project Structure**
+```
+MPLP-Protocol-Dev/
+├── src/                    # Source code
+│   ├── modules/           # 10 core modules
+│   ├── schemas/           # JSON Schema definitions
+│   └── core/              # Core infrastructure
+├── tests/                 # Test suites
+├── docs/                  # Documentation
+└── scripts/               # Build and deployment scripts
+```
+
+### **Contributing Guide**
+1. Fork the project repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Create a Pull Request
 
 ---
 

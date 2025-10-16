@@ -1,5 +1,9 @@
 # MPLP Implementation Guide
 
+> **🌐 Language Navigation**: [English](implementation-guide.md) | [中文](../../zh-CN/protocol-foundation/implementation-guide.md)
+
+
+
 **Comprehensive Guide for Implementing MPLP Protocol**
 
 [![Implementation](https://img.shields.io/badge/implementation-Production%20Ready-brightgreen.svg)](./protocol-specification.md)

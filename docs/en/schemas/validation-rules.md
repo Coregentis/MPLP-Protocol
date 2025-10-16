@@ -1,5 +1,9 @@
 # MPLP Validation Rules
 
+> **🌐 Language Navigation**: [English](validation-rules.md) | [中文](../../zh-CN/schemas/validation-rules.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Comprehensive Validation Rules and Implementation**
 
 [![Validation](https://img.shields.io/badge/validation-Enterprise%20Grade-brightgreen.svg)](./schema-standards.md)

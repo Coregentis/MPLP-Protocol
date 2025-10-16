@@ -1,5 +1,9 @@
 # L3 Execution Layer
 
+> **🌐 Language Navigation**: [English](l3-execution-layer.md) | [中文](../../zh-CN/architecture/l3-execution-layer.md)
+
+
+
 **Execution Layer - Workflow Orchestration and System Coordination**
 
 [![Layer](https://img.shields.io/badge/layer-L3%20Execution-orange.svg)](./architecture-overview.md)

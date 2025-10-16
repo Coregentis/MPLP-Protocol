@@ -1,5 +1,9 @@
 # MPLP 性能要求指南
 
+> **🌐 语言导航**: [English](../../en/implementation/performance-requirements.md) | [中文](performance-requirements.md)
+
+
+
 **多智能体协议生命周期平台 - 性能要求指南 v1.0.0-alpha**
 
 [![性能](https://img.shields.io/badge/performance-99.8%25%20得分-brightgreen.svg)](./README.md)

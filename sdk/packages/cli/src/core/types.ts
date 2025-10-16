@@ -1,0 +1,346 @@
+/**
+ * @fileoverview Core types for MPLP CLI
+ */
+
+import { Command } from 'commander';
+
+/**
+ * CLI command interface
+ */
+export interface CLICommand {
+  readonly name: string;
+  readonly description: string;
+  readonly aliases?: string[];
+  readonly options?: CLIOption[];
+  readonly arguments?: CLIArgument[];
+  readonly examples?: string[];
+  execute(args: CLICommandArgs): Promise<void>;
+}
+
+/**
+ * CLI command option
+ */
+export interface CLIOption {
+  readonly flags: string;
+  readonly description: string;
+  readonly defaultValue?: unknown;
+  readonly required?: boolean;
+  readonly choices?: string[];
+}
+
+/**
+ * CLI command argument
+ */
+export interface CLIArgument {
+  readonly name: string;
+  readonly description: string;
+  readonly required?: boolean;
+  readonly variadic?: boolean;
+}
+
+/**
+ * CLI command arguments and options
+ */
+export interface CLICommandArgs {
+  readonly args: string[];
+  readonly options: Record<string, unknown>;
+  readonly command: Command;
+}
+
+/**
+ * CLI configuration
+ */
+export interface CLIConfig {
+  readonly name: string;
+  readonly version: string;
+  readonly description: string;
+  commands: CLICommand[];
+  readonly globalOptions?: CLIOption[];
+}
+
+/**
+ * Project template configuration
+ */
+export interface ProjectTemplate {
+  readonly name: string;
+  readonly description: string;
+  readonly type: 'basic' | 'advanced' | 'enterprise';
+  readonly files: TemplateFile[];
+  readonly dependencies: string[];
+  readonly devDependencies: string[];
+  readonly scripts: Record<string, string>;
+  readonly postInstall?: string[];
+}
+
+/**
+ * Template file definition
+ */
+export interface TemplateFile {
+  readonly path: string;
+  readonly content: string;
+  readonly template?: boolean;
+  readonly executable?: boolean;
+}
+
+/**
+ * Project creation options
+ */
+export interface ProjectOptions {
+  readonly name: string;
+  readonly template: string;
+  readonly directory?: string;
+  readonly description?: string;
+  readonly author?: string;
+  readonly license?: string;
+  readonly git?: boolean;
+  readonly install?: boolean;
+  readonly typescript?: boolean;
+  readonly eslint?: boolean;
+  readonly prettier?: boolean;
+}
+
+/**
+ * CLI context for command execution
+ */
+export interface CLIContext {
+  readonly cwd: string;
+  readonly config: CLIConfig;
+  readonly logger: CLILogger;
+  readonly spinner: CLISpinner;
+}
+
+/**
+ * CLI logger interface
+ */
+export interface CLILogger {
+  info(message: string, ...args: unknown[]): void;
+  warn(message: string, ...args: unknown[]): void;
+  error(message: string, ...args: unknown[]): void;
+  success(message: string, ...args: unknown[]): void;
+  debug(message: string, ...args: unknown[]): void;
+  log(message: string, ...args: unknown[]): void;
+  header(message: string): void;
+  subheader(message: string): void;
+  list(items: string[], bullet?: string): void;
+  table(data: Record<string, string>, indent?: number): void;
+  code(code: string, language?: string): void;
+  command(command: string, description?: string): void;
+  commands(commands: Array<{ command: string; description?: string }>): void;
+  banner(message: string, width?: number): void;
+  colored(color: string, text: string): string;
+  newline(): void;
+}
+
+/**
+ * CLI spinner interface
+ */
+export interface CLISpinner {
+  start(text?: string): void;
+  stop(): void;
+  succeed(text?: string): void;
+  fail(text?: string): void;
+  warn(text?: string): void;
+  info(text?: string): void;
+  text: string;
+  isSpinning: boolean;
+}
+
+/**
+ * CLI error types
+ */
+export class CLIError extends Error {
+  constructor(
+    message: string,
+    public readonly code?: string,
+    public readonly exitCode: number = 1
+  ) {
+    super(message);
+    this.name = 'CLIError';
+  }
+}
+
+export class CommandNotFoundError extends CLIError {
+  constructor(command: string) {
+    super(`Command '${command}' not found`, 'COMMAND_NOT_FOUND', 1);
+    this.name = 'CommandNotFoundError';
+  }
+}
+
+export class InvalidArgumentError extends CLIError {
+  constructor(argument: string, reason: string) {
+    super(`Invalid argument '${argument}': ${reason}`, 'INVALID_ARGUMENT', 1);
+    this.name = 'InvalidArgumentError';
+  }
+}
+
+export class ProjectCreationError extends CLIError {
+  constructor(message: string, cause?: Error) {
+    super(`Project creation failed: ${message}`, 'PROJECT_CREATION_FAILED', 1);
+    this.name = 'ProjectCreationError';
+    if (cause) {
+      this.stack = `${this.stack}\nCaused by: ${cause.stack}`;
+    }
+  }
+}
+
+export class TemplateNotFoundError extends CLIError {
+  constructor(template: string) {
+    super(`Template '${template}' not found`, 'TEMPLATE_NOT_FOUND', 1);
+    this.name = 'TemplateNotFoundError';
+  }
+}
+
+/**
+ * CLI validation result
+ */
+export interface ValidationResult {
+  readonly valid: boolean;
+  readonly errors: string[];
+  readonly warnings: string[];
+}
+
+/**
+ * File system operations interface
+ */
+export interface FileSystemOperations {
+  exists(path: string): boolean;
+  readFile(path: string, encoding?: BufferEncoding): string;
+  writeFile(path: string, content: string, encoding?: BufferEncoding): void;
+  mkdir(path: string, recursive?: boolean): void;
+  readdir(path: string): string[];
+  stat(path: string): { isDirectory(): boolean; isFile(): boolean };
+  copy(src: string, dest: string): void;
+  remove(path: string): void;
+}
+
+/**
+ * Package manager interface
+ */
+export interface PackageManager {
+  readonly name: 'npm' | 'yarn' | 'pnpm';
+  install(cwd: string, packages?: string[]): Promise<void>;
+  run(cwd: string, script: string): Promise<void>;
+  init(cwd: string): Promise<void>;
+}
+
+/**
+ * Git operations interface
+ */
+export interface GitOperations {
+  init(cwd: string): Promise<void>;
+  add(cwd: string, files: string[]): Promise<void>;
+  commit(cwd: string, message: string): Promise<void>;
+  isRepository(cwd: string): boolean;
+  getConfig(key: string): Promise<string | undefined>;
+}
+
+/**
+ * CLI metrics and analytics
+ */
+export interface CLIMetrics {
+  commandExecuted(command: string, duration: number, success: boolean): void;
+  projectCreated(template: string, options: ProjectOptions): void;
+  error(error: Error, command?: string): void;
+}
+
+/**
+ * Plugin interface for extending CLI functionality
+ */
+export interface CLIPlugin {
+  readonly name: string;
+  readonly version: string;
+  readonly commands?: CLICommand[];
+  readonly hooks?: CLIHooks;
+  initialize?(context: CLIContext): Promise<void>;
+}
+
+/**
+ * CLI hooks for plugin system
+ */
+export interface CLIHooks {
+  beforeCommand?(command: string, args: CLICommandArgs): Promise<void>;
+  afterCommand?(command: string, args: CLICommandArgs, result: unknown): Promise<void>;
+  onError?(error: Error, command?: string): Promise<void>;
+}
+
+/**
+ * Environment information
+ */
+export interface EnvironmentInfo {
+  nodeVersion: string;
+  npmVersion: string;
+  platform: string;
+  arch: string;
+  cwd: string;
+  home: string;
+}
+
+/**
+ * Command history entry
+ */
+export interface CommandHistory {
+  command: string;
+  args: string[];
+  options: Record<string, any>;
+  timestamp: string;
+  success: boolean;
+  duration: number;
+  cwd: string;
+}
+
+/**
+ * Plugin information
+ */
+export interface PluginInfo {
+  name: string;
+  version: string;
+  description: string;
+  commands: CLICommand[];
+  path: string;
+  loaded: boolean;
+}
+
+/**
+ * Performance metric
+ */
+export interface PerformanceMetric {
+  command: string;
+  duration: number;
+  success: boolean;
+  timestamp: string;
+  metadata: Record<string, any>;
+}
+
+/**
+ * Audit log entry
+ */
+export interface AuditLogEntry {
+  action: string;
+  details: Record<string, any>;
+  timestamp: string;
+  user: string;
+  cwd: string;
+}
+
+/**
+ * Batch operation
+ */
+export interface BatchOperation {
+  id: string;
+  name: string;
+  commands: Array<{
+    command: string;
+    args: string[];
+    options: Record<string, any>;
+  }>;
+  status: 'pending' | 'running' | 'completed' | 'failed';
+  createdAt: string;
+  startedAt?: string;
+  completedAt?: string;
+  results: Array<{
+    index: number;
+    success: boolean;
+    duration: number;
+    error?: string;
+  }>;
+}

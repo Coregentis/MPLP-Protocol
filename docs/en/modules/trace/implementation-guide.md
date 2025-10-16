@@ -1,11 +1,15 @@
 # Trace Module Implementation Guide
 
+> **🌐 Language Navigation**: [English](implementation-guide.md) | [中文](../../../zh-CN/modules/trace/implementation-guide.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Trace Module Implementation Guide v1.0.0-alpha**
 
 [![Implementation](https://img.shields.io/badge/implementation-Enterprise%20Ready-green.svg)](./README.md)
 [![Module](https://img.shields.io/badge/module-Trace-orange.svg)](./protocol-specification.md)
 [![Monitoring](https://img.shields.io/badge/monitoring-Advanced-blue.svg)](./api-reference.md)
-[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../../zh-CN/modules/trace/implementation-guide.md)
+[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../zh-CN/modules/trace/implementation-guide.md)
 
 ---
 

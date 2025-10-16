@@ -1,5 +1,9 @@
 # MPLP 双重命名约定指南
 
+> **🌐 语言导航**: [English](../../en/schemas/dual-naming-guide.md) | [中文](dual-naming-guide.md)
+
+
+
 **多智能体协议生命周期平台 - 双重命名约定完整指南 v1.0.0-alpha**
 
 [![命名](https://img.shields.io/badge/naming-双重约定-blue.svg)](./README.md)

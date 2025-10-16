@@ -1,5 +1,9 @@
 # 行为准则
 
+> **🌐 语言导航**: [English](../../en/community/code-of-conduct.md) | [中文](code-of-conduct.md)
+
+
+
 **MPLP社区行为准则**
 
 [![行为准则](https://img.shields.io/badge/conduct-必须遵守-blue.svg)](./README.md)

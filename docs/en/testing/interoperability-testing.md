@@ -1,5 +1,9 @@
 # MPLP Interoperability Testing
 
+> **🌐 Language Navigation**: [English](interoperability-testing.md) | [中文](../../zh-CN/testing/interoperability-testing.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Interoperability Testing v1.0.0-alpha**
 
 [![Interoperability](https://img.shields.io/badge/interoperability-Production%20Ready-brightgreen.svg)](./README.md)

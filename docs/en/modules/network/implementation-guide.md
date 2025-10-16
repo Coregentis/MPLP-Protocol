@@ -1,11 +1,15 @@
 # Network Module Implementation Guide
 
+> **🌐 Language Navigation**: [English](implementation-guide.md) | [中文](../../../zh-CN/modules/network/implementation-guide.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Network Module Implementation Guide v1.0.0-alpha**
 
 [![Implementation](https://img.shields.io/badge/implementation-Enterprise%20Ready-green.svg)](./README.md)
 [![Module](https://img.shields.io/badge/module-Network-cyan.svg)](./protocol-specification.md)
 [![Networking](https://img.shields.io/badge/networking-Advanced-blue.svg)](./api-reference.md)
-[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../../zh-CN/modules/network/implementation-guide.md)
+[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../zh-CN/modules/network/implementation-guide.md)
 
 ---
 

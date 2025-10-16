@@ -1,5 +1,9 @@
 # Role API Reference
 
+> **🌐 Language Navigation**: [English](role-api.md) | [中文](../../zh-CN/api-reference/role-api.md)
+
+
+
 **Role-Based Access Control and Capability Management - MPLP v1.0 Alpha**
 
 [![API](https://img.shields.io/badge/api-Role%20Module-blue.svg)](../modules/role/README.md)

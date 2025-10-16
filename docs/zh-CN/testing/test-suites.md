@@ -1,44 +1,48 @@
-# MPLP 测试套件
+# MPLP Test Suites
 
-**多智能体协议生命周期平台 - 测试套件 v1.0.0-alpha**
+> **🌐 Language Navigation**: [English](../../en/testing/test-suites.md) | [中文](test-suites.md)
 
-[![测试套件](https://img.shields.io/badge/test%20suites-2869%2F2869%20通过-brightgreen.svg)](./README.md)
-[![覆盖率](https://img.shields.io/badge/coverage-企业级-brightgreen.svg)](./protocol-compliance-testing.md)
-[![CI/CD](https://img.shields.io/badge/ci%2Fcd-生产就绪-brightgreen.svg)](../implementation/deployment-models.md)
-[![实现](https://img.shields.io/badge/implementation-10%2F10%20模块-brightgreen.svg)](./README.md)
-[![语言](https://img.shields.io/badge/language-中文-blue.svg)](../../en/testing/test-suites.md)
 
----
 
-## 🎯 测试套件概述
+**Multi-Agent Protocol Lifecycle Platform - Test Suites v1.0.0-alpha**
 
-本指南提供了MPLP的全面自动化测试套件，包括单元测试、集成测试、系统测试，以及协议合规性、性能和安全验证的专门测试套件。所有测试套件都设计用于持续集成和自动化执行。
-
-### **测试套件分类**
-- **单元测试套件**: 单个组件和函数测试
-- **集成测试套件**: 模块交互和工作流测试
-- **系统测试套件**: 端到端系统行为验证
-- **合规测试套件**: 协议和法规合规验证
-- **性能测试套件**: 负载、压力和可扩展性测试
-- **安全测试套件**: 漏洞和安全验证
-
-### **测试自动化标准**
-- **100%自动化执行**: 所有测试无需人工干预运行
-- **CI/CD集成**: 与部署流水线无缝集成
-- **并行执行**: 优化快速反馈和效率
-- **全面报告**: 详细的测试结果和覆盖率报告
-- **故障分析**: 自动化故障检测和根本原因分析
+[![Test Suites](https://img.shields.io/badge/test%20suites-2869%2F2869%20Pass-brightgreen.svg)](./README.md)
+[![Coverage](https://img.shields.io/badge/coverage-Enterprise%20Grade-brightgreen.svg)](./protocol-compliance-testing.md)
+[![CI/CD](https://img.shields.io/badge/ci%2Fcd-Production%20Ready-brightgreen.svg)](../implementation/deployment-models.md)
+[![Implementation](https://img.shields.io/badge/implementation-10%2F10%20Modules-brightgreen.svg)](./README.md)
+[![Language](https://img.shields.io/badge/language-English-blue.svg)](../zh-CN/testing/test-suites.md)
 
 ---
 
-## 🧪 核心测试套件
+## 🎯 Test Suites Overview
 
-### **单元测试套件**
+This guide provides comprehensive automated test suites for MPLP, including unit tests, integration tests, system tests, and specialized test suites for protocol compliance, performance, and security validation. All test suites are designed for continuous integration and automated execution.
 
-#### **Context模块单元测试套件**
+### **Test Suite Categories**
+- **Unit Test Suites**: Individual component and function testing
+- **Integration Test Suites**: Module interaction and workflow testing
+- **System Test Suites**: End-to-end system behavior validation
+- **Compliance Test Suites**: Protocol and regulatory compliance validation
+- **Performance Test Suites**: Load, stress, and scalability testing
+- **Security Test Suites**: Vulnerability and security validation
+
+### **Test Automation Standards**
+- **100% Automated Execution**: All tests run without manual intervention
+- **CI/CD Integration**: Seamless integration with deployment pipelines
+- **Parallel Execution**: Optimized for fast feedback and efficiency
+- **Comprehensive Reporting**: Detailed test results and coverage reports
+- **Failure Analysis**: Automated failure detection and root cause analysis
+
+---
+
+## 🧪 Core Test Suites
+
+### **Unit Test Suites**
+
+#### **Context Module Unit Test Suite**
 ```typescript
-// Context模块综合单元测试套件
-describe('Context模块单元测试套件', () => {
+// Context module comprehensive unit test suite
+describe('Context Module Unit Test Suite', () => {
   let contextService: ContextService;
   let contextRepository: ContextRepository;
   let contextMapper: ContextMapper;
@@ -50,378 +54,461 @@ describe('Context模块单元测试套件', () => {
     mockCache = new MockCache();
     contextRepository = new ContextRepository(mockDatabase);
     contextMapper = new ContextMapper();
-    contextService = new ContextService(contextRepository, contextMapper, mockCache);
+    contextService = new ContextService(contextRepository, mockCache, contextMapper);
   });
 
-  describe('上下文创建单元测试', () => {
-    it('应该成功创建有效的上下文', async () => {
-      const contextData = {
+  describe('Context Creation Unit Tests', () => {
+    it('should create context with valid input', async () => {
+      const createRequest = {
         contextId: 'ctx-unit-test-001',
         contextType: 'unit_test',
-        contextData: {
-          testProperty: 'testValue',
-          numericProperty: 42,
-          booleanProperty: true
-        },
+        contextData: { testData: 'unit test data' },
         createdBy: 'unit-test-suite'
       };
 
-      const result = await contextService.createContext(contextData);
+      const result = await contextService.createContext(createRequest);
 
       expect(result).toBeDefined();
-      expect(result.contextId).toBe(contextData.contextId);
-      expect(result.contextType).toBe(contextData.contextType);
+      expect(result.contextId).toBe(createRequest.contextId);
+      expect(result.contextType).toBe(createRequest.contextType);
       expect(result.contextStatus).toBe('active');
-      expect(result.version).toBe(1);
       expect(result.createdAt).toBeInstanceOf(Date);
-      expect(result.createdBy).toBe(contextData.createdBy);
+      expect(result.createdBy).toBe(createRequest.createdBy);
     });
 
-    it('应该验证必需字段', async () => {
-      const invalidContextData = {
-        // 缺少contextId
-        contextType: 'unit_test',
-        contextData: {},
-        createdBy: 'unit-test-suite'
-      };
-
-      await expect(contextService.createContext(invalidContextData))
-        .rejects.toThrow('contextId is required');
-    });
-
-    it('应该应用双重命名约定映射', async () => {
-      const schemaData = {
-        context_id: 'ctx-naming-test-001', // snake_case
-        context_type: 'naming_test',
-        context_data: {
-          user_id: 'user-001',
-          created_at: '2025-09-04T10:00:00.000Z'
-        },
-        created_by: 'naming-test'
-      };
-
-      // 测试Schema到TypeScript的映射
-      const mappedData = contextMapper.fromSchema(schemaData);
-      
-      expect(mappedData.contextId).toBe(schemaData.context_id);
-      expect(mappedData.contextType).toBe(schemaData.context_type);
-      expect(mappedData.contextData.userId).toBe(schemaData.context_data.user_id);
-      expect(mappedData.createdBy).toBe(schemaData.created_by);
-
-      // 测试TypeScript到Schema的映射
-      const schemaResult = contextMapper.toSchema(mappedData);
-      
-      expect(schemaResult.context_id).toBe(mappedData.contextId);
-      expect(schemaResult.context_type).toBe(mappedData.contextType);
-      expect(schemaResult.context_data.user_id).toBe(mappedData.contextData.userId);
-      expect(schemaResult.created_by).toBe(mappedData.createdBy);
-    });
-
-    it('应该处理上下文数据验证', async () => {
-      const contextWithInvalidData = {
-        contextId: 'ctx-validation-test-001',
-        contextType: 'validation_test',
-        contextData: {
-          invalidField: null,
-          emptyString: '',
-          negativeNumber: -1
-        },
-        createdBy: 'validation-test'
-      };
-
-      // 验证数据验证逻辑
-      const validationResult = await contextService.validateContextData(contextWithInvalidData);
-      
-      expect(validationResult.isValid).toBe(false);
-      expect(validationResult.errors).toContain('invalidField cannot be null');
-      expect(validationResult.errors).toContain('emptyString cannot be empty');
-      expect(validationResult.warnings).toContain('negativeNumber should be positive');
-    });
-  });
-
-  describe('上下文查询单元测试', () => {
-    beforeEach(async () => {
-      // 预设测试数据
-      const testContexts = [
-        {
-          contextId: 'ctx-query-001',
-          contextType: 'type_a',
-          contextData: { category: 'test', priority: 'high' },
-          createdBy: 'test-setup'
-        },
-        {
-          contextId: 'ctx-query-002',
-          contextType: 'type_b',
-          contextData: { category: 'test', priority: 'low' },
-          createdBy: 'test-setup'
-        },
-        {
-          contextId: 'ctx-query-003',
-          contextType: 'type_a',
-          contextData: { category: 'production', priority: 'high' },
-          createdBy: 'test-setup'
-        }
+    it('should validate input parameters', async () => {
+      const invalidRequests = [
+        { contextId: '', contextType: 'test', contextData: {}, createdBy: 'test' },
+        { contextId: 'ctx-001', contextType: '', contextData: {}, createdBy: 'test' },
+        { contextId: 'ctx-001', contextType: 'test', contextData: {}, createdBy: '' },
+        { contextId: 'invalid-format', contextType: 'test', contextData: {}, createdBy: 'test' }
       ];
 
-      for (const context of testContexts) {
-        await contextService.createContext(context);
+      for (const request of invalidRequests) {
+        await expect(contextService.createContext(request)).rejects.toThrow();
       }
     });
 
-    it('应该按ID查询上下文', async () => {
-      const context = await contextService.getContext('ctx-query-001');
-      
-      expect(context).toBeDefined();
-      expect(context.contextId).toBe('ctx-query-001');
-      expect(context.contextType).toBe('type_a');
-      expect(context.contextData.category).toBe('test');
-    });
-
-    it('应该按类型过滤上下文', async () => {
-      const contexts = await contextService.getContextsByType('type_a');
-      
-      expect(contexts).toHaveLength(2);
-      expect(contexts.every(ctx => ctx.contextType === 'type_a')).toBe(true);
-    });
-
-    it('应该执行复杂查询', async () => {
-      const searchCriteria = {
-        contextType: 'type_a',
-        filters: {
-          'contextData.category': 'test',
-          'contextData.priority': 'high'
-        }
+    it('should handle duplicate context ID', async () => {
+      const createRequest = {
+        contextId: 'ctx-duplicate-test',
+        contextType: 'test',
+        contextData: {},
+        createdBy: 'test'
       };
 
-      const results = await contextService.searchContexts(searchCriteria);
-      
-      expect(results.contexts).toHaveLength(1);
-      expect(results.contexts[0].contextId).toBe('ctx-query-001');
-      expect(results.totalCount).toBe(1);
+      // Create first context
+      await contextService.createContext(createRequest);
+
+      // Attempt to create duplicate
+      await expect(contextService.createContext(createRequest))
+        .rejects.toThrow('Context already exists');
     });
 
-    it('应该处理不存在的上下文查询', async () => {
-      const context = await contextService.getContext('non-existent-context');
-      
-      expect(context).toBeNull();
+    it('should apply dual naming convention mapping', async () => {
+      const schemaRequest = {
+        context_id: 'ctx-naming-test-001',
+        context_type: 'naming_test',
+        context_data: { test_field: 'test_value' },
+        created_by: 'naming-test'
+      };
+
+      const mappedRequest = contextMapper.fromSchema(schemaRequest);
+      expect(mappedRequest.contextId).toBe(schemaRequest.context_id);
+      expect(mappedRequest.contextType).toBe(schemaRequest.context_type);
+      expect(mappedRequest.contextData.testField).toBe(schemaRequest.context_data.test_field);
+      expect(mappedRequest.createdBy).toBe(schemaRequest.created_by);
+
+      const result = await contextService.createContext(mappedRequest);
+      const schemaResult = contextMapper.toSchema(result);
+      expect(schemaResult.context_id).toBe(result.contextId);
+      expect(schemaResult.context_type).toBe(result.contextType);
+      expect(schemaResult.created_by).toBe(result.createdBy);
     });
   });
 
-  describe('上下文更新单元测试', () => {
-    let existingContext: Context;
+  describe('Context Query Unit Tests', () => {
+    beforeEach(async () => {
+      // Pre-populate test data
+      await this.createTestContexts(10);
+    });
+
+    it('should retrieve context by ID', async () => {
+      const contextId = 'ctx-query-test-001';
+      const context = await contextService.getContext(contextId);
+
+      expect(context).toBeDefined();
+      expect(context.contextId).toBe(contextId);
+    });
+
+    it('should return null for non-existent context', async () => {
+      const context = await contextService.getContext('non-existent-context');
+      expect(context).toBeNull();
+    });
+
+    it('should search contexts with filters', async () => {
+      const searchResults = await contextService.searchContexts({
+        contextType: 'unit_test',
+        limit: 5,
+        offset: 0
+      });
+
+      expect(searchResults).toBeDefined();
+      expect(searchResults.results).toHaveLength(5);
+      expect(searchResults.totalCount).toBeGreaterThan(0);
+      expect(searchResults.pagination).toBeDefined();
+    });
+
+    it('should validate search parameters', async () => {
+      const invalidSearches = [
+        { limit: -1 },
+        { limit: 1001 }, // Exceeds max limit
+        { offset: -1 },
+        { sortBy: 'invalid_field' }
+      ];
+
+      for (const search of invalidSearches) {
+        await expect(contextService.searchContexts(search)).rejects.toThrow();
+      }
+    });
+  });
+
+  describe('Context Update Unit Tests', () => {
+    let existingContext: ContextEntity;
 
     beforeEach(async () => {
       existingContext = await contextService.createContext({
         contextId: 'ctx-update-test-001',
         contextType: 'update_test',
-        contextData: { value: 'original', counter: 1 },
-        createdBy: 'update-test-setup'
+        contextData: { originalData: 'original' },
+        createdBy: 'update-test'
       });
     });
 
-    it('应该成功更新上下文数据', async () => {
-      const updateData = {
-        contextData: { value: 'updated', counter: 2, newField: 'added' },
+    it('should update context data', async () => {
+      const updateRequest = {
+        contextData: { updatedData: 'updated', newField: 'new' },
         updatedBy: 'update-test'
       };
 
       const updatedContext = await contextService.updateContext(
         existingContext.contextId,
-        updateData
+        updateRequest
       );
 
-      expect(updatedContext.contextData.value).toBe('updated');
-      expect(updatedContext.contextData.counter).toBe(2);
-      expect(updatedContext.contextData.newField).toBe('added');
-      expect(updatedContext.version).toBe(existingContext.version + 1);
-      expect(updatedContext.updatedBy).toBe('update-test');
+      expect(updatedContext.contextData.updatedData).toBe('updated');
+      expect(updatedContext.contextData.newField).toBe('new');
       expect(updatedContext.updatedAt).toBeInstanceOf(Date);
+      expect(updatedContext.updatedBy).toBe('update-test');
     });
 
-    it('应该处理乐观锁定', async () => {
-      const updateData1 = {
-        contextData: { value: 'update1' },
-        version: existingContext.version,
-        updatedBy: 'user1'
+    it('should validate update permissions', async () => {
+      const updateRequest = {
+        contextData: { maliciousData: 'malicious' },
+        updatedBy: 'unauthorized-user'
       };
 
-      const updateData2 = {
-        contextData: { value: 'update2' },
-        version: existingContext.version, // 相同版本号
-        updatedBy: 'user2'
-      };
+      // Mock authorization failure
+      mockDatabase.setAuthorizationResult(false);
 
-      // 第一个更新应该成功
-      const firstUpdate = await contextService.updateContext(
+      await expect(contextService.updateContext(
         existingContext.contextId,
-        updateData1
-      );
-      expect(firstUpdate.version).toBe(existingContext.version + 1);
-
-      // 第二个更新应该失败（版本冲突）
-      await expect(contextService.updateContext(existingContext.contextId, updateData2))
-        .rejects.toThrow('Version conflict: context has been modified');
+        updateRequest
+      )).rejects.toThrow('Unauthorized');
     });
 
-    it('应该更新上下文状态', async () => {
-      const statusUpdate = await contextService.updateContextStatus(
-        existingContext.contextId,
-        'suspended',
-        'status-test'
+    it('should handle concurrent updates', async () => {
+      const updatePromises = Array.from({ length: 5 }, (_, i) =>
+        contextService.updateContext(existingContext.contextId, {
+          contextData: { concurrentUpdate: i },
+          updatedBy: `concurrent-user-${i}`
+        })
       );
 
-      expect(statusUpdate.contextStatus).toBe('suspended');
-      expect(statusUpdate.version).toBe(existingContext.version + 1);
-      expect(statusUpdate.updatedBy).toBe('status-test');
+      const results = await Promise.allSettled(updatePromises);
+      const successful = results.filter(r => r.status === 'fulfilled');
+      const failed = results.filter(r => r.status === 'rejected');
+
+      expect(successful).toHaveLength(1); // Only one should succeed
+      expect(failed).toHaveLength(4); // Others should fail due to optimistic locking
     });
   });
 
-  describe('上下文删除单元测试', () => {
-    let contextToDelete: Context;
+  describe('Context Deletion Unit Tests', () => {
+    let existingContext: ContextEntity;
 
     beforeEach(async () => {
-      contextToDelete = await contextService.createContext({
+      existingContext = await contextService.createContext({
         contextId: 'ctx-delete-test-001',
         contextType: 'delete_test',
-        contextData: { temporary: true },
-        createdBy: 'delete-test-setup'
+        contextData: { testData: 'to be deleted' },
+        createdBy: 'delete-test'
       });
     });
 
-    it('应该成功删除上下文', async () => {
-      const deleteResult = await contextService.deleteContext(
-        contextToDelete.contextId,
-        'delete-test'
-      );
+    it('should delete existing context', async () => {
+      await contextService.deleteContext(existingContext.contextId);
 
-      expect(deleteResult.success).toBe(true);
-      expect(deleteResult.deletedAt).toBeInstanceOf(Date);
-      expect(deleteResult.deletedBy).toBe('delete-test');
-
-      // 验证上下文已被删除
-      const deletedContext = await contextService.getContext(contextToDelete.contextId);
+      const deletedContext = await contextService.getContext(existingContext.contextId);
       expect(deletedContext).toBeNull();
     });
 
-    it('应该处理不存在的上下文删除', async () => {
-      await expect(contextService.deleteContext('non-existent-context', 'delete-test'))
+    it('should handle deletion of non-existent context', async () => {
+      await expect(contextService.deleteContext('non-existent-context'))
         .rejects.toThrow('Context not found');
     });
 
-    it('应该支持软删除', async () => {
-      const softDeleteResult = await contextService.softDeleteContext(
-        contextToDelete.contextId,
-        'soft-delete-test'
-      );
+    it('should validate deletion permissions', async () => {
+      // Mock authorization failure
+      mockDatabase.setAuthorizationResult(false);
 
-      expect(softDeleteResult.success).toBe(true);
-      expect(softDeleteResult.contextStatus).toBe('deleted');
+      await expect(contextService.deleteContext(existingContext.contextId))
+        .rejects.toThrow('Unauthorized');
+    });
 
-      // 验证上下文仍存在但状态为已删除
-      const softDeletedContext = await contextService.getContext(
-        contextToDelete.contextId,
-        { includeDeleted: true }
-      );
-      expect(softDeletedContext).toBeDefined();
-      expect(softDeletedContext.contextStatus).toBe('deleted');
+    it('should handle cascade deletion', async () => {
+      // Create dependent resources
+      await this.createDependentResources(existingContext.contextId);
+
+      await contextService.deleteContext(existingContext.contextId);
+
+      // Verify dependent resources are also deleted
+      const dependentResources = await this.getDependentResources(existingContext.contextId);
+      expect(dependentResources).toHaveLength(0);
     });
   });
+
+  // Helper methods
+  private async createTestContexts(count: number): Promise<void> {
+    const promises = Array.from({ length: count }, (_, i) =>
+      contextService.createContext({
+        contextId: `ctx-query-test-${String(i + 1).padStart(3, '0')}`,
+        contextType: 'unit_test',
+        contextData: { testIndex: i },
+        createdBy: 'unit-test-suite'
+      })
+    );
+
+    await Promise.all(promises);
+  }
+
+  private async createDependentResources(contextId: string): Promise<void> {
+    // Mock creation of dependent resources (plans, traces, etc.)
+    await mockDatabase.insert('plans', { contextId, planId: 'plan-001' });
+    await mockDatabase.insert('traces', { contextId, traceId: 'trace-001' });
+  }
+
+  private async getDependentResources(contextId: string): Promise<any[]> {
+    const plans = await mockDatabase.find('plans', { contextId });
+    const traces = await mockDatabase.find('traces', { contextId });
+    return [...plans, ...traces];
+  }
 });
 ```
 
-#### **Plan模块单元测试套件**
-```typescript
-// Plan模块综合单元测试套件
-describe('Plan模块单元测试套件', () => {
-  let planService: PlanService;
-  let planRepository: PlanRepository;
-  let planMapper: PlanMapper;
-  let planExecutor: PlanExecutor;
-  let mockDatabase: MockDatabase;
+### **Integration Test Suites**
 
-  beforeEach(() => {
-    mockDatabase = new MockDatabase();
-    planRepository = new PlanRepository(mockDatabase);
-    planMapper = new PlanMapper();
-    planExecutor = new PlanExecutor();
-    planService = new PlanService(planRepository, planMapper, planExecutor);
+#### **Multi-Module Integration Test Suite**
+```typescript
+// Multi-module integration test suite
+describe('Multi-Module Integration Test Suite', () => {
+  let testEnvironment: TestEnvironment;
+  let contextService: ContextService;
+  let planService: PlanService;
+  let roleService: RoleService;
+  let confirmService: ConfirmService;
+  let traceService: TraceService;
+
+  beforeAll(async () => {
+    testEnvironment = await TestEnvironment.setup({
+      modules: ['context', 'plan', 'role', 'confirm', 'trace'],
+      database: 'test',
+      cache: 'test',
+      messageQueue: 'test'
+    });
+
+    contextService = testEnvironment.getService('context');
+    planService = testEnvironment.getService('plan');
+    roleService = testEnvironment.getService('role');
+    confirmService = testEnvironment.getService('confirm');
+    traceService = testEnvironment.getService('trace');
   });
 
-  describe('计划创建单元测试', () => {
-    it('应该成功创建简单顺序计划', async () => {
-      const planData = {
-        planId: 'plan-unit-test-001',
-        contextId: 'ctx-plan-test-001',
-        planType: 'sequential',
+  afterAll(async () => {
+    await testEnvironment.teardown();
+  });
+
+  describe('Context-Plan Integration', () => {
+    it('should create plan with valid context', async () => {
+      // Create context
+      const context = await contextService.createContext({
+        contextId: 'ctx-integration-001',
+        contextType: 'integration_test',
+        contextData: { testType: 'context-plan-integration' },
+        createdBy: 'integration-test'
+      });
+
+      // Create plan with context
+      const plan = await planService.createPlan({
+        planId: 'plan-integration-001',
+        contextId: context.contextId,
+        planType: 'automated_workflow',
         planSteps: [
-          {
-            stepId: 'step-001',
-            operation: 'data_validation',
-            parameters: { rules: ['required', 'format'] },
-            dependencies: []
-          },
-          {
-            stepId: 'step-002',
-            operation: 'data_processing',
-            parameters: { type: 'transform' },
-            dependencies: ['step-001']
-          }
+          { stepId: 'step-001', operation: 'data_processing', estimatedDuration: 30 },
+          { stepId: 'step-002', operation: 'validation', estimatedDuration: 15 }
         ],
-        createdBy: 'plan-unit-test'
-      };
+        createdBy: 'integration-test'
+      });
 
-      const result = await planService.createPlan(planData);
+      expect(plan.contextId).toBe(context.contextId);
+      expect(plan.planSteps).toHaveLength(2);
 
-      expect(result).toBeDefined();
-      expect(result.planId).toBe(planData.planId);
-      expect(result.planType).toBe(planData.planType);
-      expect(result.planSteps).toHaveLength(2);
-      expect(result.planStatus).toBe('draft');
-      expect(result.createdBy).toBe(planData.createdBy);
+      // Verify context-plan relationship
+      const contextPlans = await planService.getPlansByContext(context.contextId);
+      expect(contextPlans).toContain(plan.planId);
     });
 
-    it('应该验证计划步骤依赖关系', async () => {
-      const planWithCyclicDependency = {
-        planId: 'plan-cyclic-test-001',
-        contextId: 'ctx-cyclic-test-001',
-        planType: 'sequential',
-        planSteps: [
-          {
-            stepId: 'step-001',
-            operation: 'operation_a',
-            dependencies: ['step-002'] // 循环依赖
-          },
-          {
-            stepId: 'step-002',
-            operation: 'operation_b',
-            dependencies: ['step-001'] // 循环依赖
-          }
-        ],
-        createdBy: 'cyclic-test'
-      };
-
-      await expect(planService.createPlan(planWithCyclicDependency))
-        .rejects.toThrow('Cyclic dependency detected');
+    it('should reject plan creation with invalid context', async () => {
+      await expect(planService.createPlan({
+        planId: 'plan-invalid-context',
+        contextId: 'non-existent-context',
+        planType: 'automated_workflow',
+        planSteps: [],
+        createdBy: 'integration-test'
+      })).rejects.toThrow('Context not found');
     });
+  });
 
-    it('应该验证计划步骤参数', async () => {
-      const planWithInvalidParameters = {
-        planId: 'plan-invalid-params-001',
-        contextId: 'ctx-invalid-params-001',
-        planType: 'sequential',
+  describe('Role-Based Access Control Integration', () => {
+    it('should enforce role-based access across modules', async () => {
+      // Create user with limited role
+      const user = await roleService.createUser({
+        userId: 'user-rbac-test',
+        username: 'rbac-test-user',
+        roles: ['viewer']
+      });
+
+      // Create context as admin
+      const context = await contextService.createContext({
+        contextId: 'ctx-rbac-test',
+        contextType: 'rbac_test',
+        contextData: { sensitive: true },
+        createdBy: 'admin'
+      });
+
+      // User should be able to read context
+      const readResult = await contextService.getContext(context.contextId, {
+        userId: user.userId
+      });
+      expect(readResult).toBeDefined();
+
+      // User should not be able to update context
+      await expect(contextService.updateContext(context.contextId, {
+        contextData: { modified: true },
+        updatedBy: user.userId
+      }, { userId: user.userId })).rejects.toThrow('Insufficient privileges');
+
+      // User should not be able to delete context
+      await expect(contextService.deleteContext(context.contextId, {
+        userId: user.userId
+      })).rejects.toThrow('Insufficient privileges');
+    });
+  });
+
+  describe('Approval Workflow Integration', () => {
+    it('should integrate approval workflow with plan execution', async () => {
+      // Create context and plan
+      const context = await contextService.createContext({
+        contextId: 'ctx-approval-test',
+        contextType: 'approval_test',
+        contextData: { requiresApproval: true },
+        createdBy: 'integration-test'
+      });
+
+      const plan = await planService.createPlan({
+        planId: 'plan-approval-test',
+        contextId: context.contextId,
+        planType: 'approval_required_workflow',
         planSteps: [
-          {
-            stepId: 'step-001',
-            operation: 'data_validation',
-            parameters: null, // 无效参数
-            dependencies: []
-          }
+          { stepId: 'step-001', operation: 'sensitive_operation', requiresApproval: true }
         ],
-        createdBy: 'invalid-params-test'
-      };
+        createdBy: 'integration-test'
+      });
 
-      await expect(planService.createPlan(planWithInvalidParameters))
-        .rejects.toThrow('Step parameters cannot be null');
+      // Request approval
+      const approvalRequest = await confirmService.requestApproval({
+        approvalId: 'approval-integration-test',
+        contextId: context.contextId,
+        planId: plan.planId,
+        approvalType: 'plan_execution',
+        requestedBy: 'integration-test',
+        approvers: ['approver-001'],
+        approvalData: {
+          operation: 'sensitive_operation',
+          impact: 'high',
+          justification: 'Integration test'
+        }
+      });
+
+      expect(approvalRequest.approvalStatus).toBe('pending');
+
+      // Approve the request
+      const approval = await confirmService.processApproval({
+        approvalId: approvalRequest.approvalId,
+        approverId: 'approver-001',
+        decision: 'approved',
+        comments: 'Integration test approval'
+      });
+
+      expect(approval.approvalStatus).toBe('approved');
+
+      // Execute plan (should now be allowed)
+      const executionResult = await planService.executePlan(plan.planId);
+      expect(executionResult.executionStatus).toBe('completed');
+    });
+  });
+
+  describe('Distributed Tracing Integration', () => {
+    it('should create distributed trace across modules', async () => {
+      const traceId = 'trace-integration-001';
+
+      // Start trace
+      const trace = await traceService.startTrace({
+        traceId: traceId,
+        traceType: 'integration_test',
+        operation: 'multi_module_workflow',
+        startedBy: 'integration-test'
+      });
+
+      // Create context with trace
+      const context = await contextService.createContext({
+        contextId: 'ctx-trace-test',
+        contextType: 'trace_test',
+        contextData: { traceId: traceId },
+        createdBy: 'integration-test'
+      }, { traceId: traceId });
+
+      // Create plan with trace
+      const plan = await planService.createPlan({
+        planId: 'plan-trace-test',
+        contextId: context.contextId,
+        planType: 'traced_workflow',
+        planSteps: [{ stepId: 'step-001', operation: 'traced_operation' }],
+        createdBy: 'integration-test'
+      }, { traceId: traceId });
+
+      // Execute plan with trace
+      await planService.executePlan(plan.planId, { traceId: traceId });
+
+      // End trace
+      await traceService.endTrace(traceId);
+
+      // Verify trace spans
+      const traceData = await traceService.getTrace(traceId);
+      expect(traceData.spans).toHaveLength(4); // start, context, plan, execution
+      expect(traceData.spans.map(s => s.operation)).toContain('create_context');
+      expect(traceData.spans.map(s => s.operation)).toContain('create_plan');
+      expect(traceData.spans.map(s => s.operation)).toContain('execute_plan');
     });
   });
 });
@@ -429,9 +516,428 @@ describe('Plan模块单元测试套件', () => {
 
 ---
 
-**测试套件版本**: 1.0.0-alpha  
-**最后更新**: 2025年9月4日  
-**下次审查**: 2025年12月4日  
-**状态**: 企业级验证  
+## 🚀 Automated Test Execution
 
-**✅ 生产就绪通知**: MPLP测试套件已完全实现并通过企业级验证，达到2,869/2,869测试通过率，支持所有10个模块的全面自动化测试。
+### **CI/CD Test Pipeline Configuration**
+
+#### **GitHub Actions Test Workflow**
+```yaml
+# .github/workflows/test-suites.yml
+name: MPLP Test Suites
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 2 * * *' # Daily at 2 AM
+
+env:
+  NODE_VERSION: '18'
+  POSTGRES_VERSION: '15'
+  REDIS_VERSION: '7'
+
+jobs:
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        module: [context, plan, role, confirm, trace, extension, dialog, collab, network, core]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests for ${{ matrix.module }}
+        run: npm run test:unit:${{ matrix.module }}
+        env:
+          CI: true
+          NODE_ENV: test
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage/${{ matrix.module }}/lcov.info
+          flags: unit-tests,${{ matrix.module }}
+
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:${{ env.POSTGRES_VERSION }}
+        env:
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: mplp_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:${{ env.REDIS_VERSION }}
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Setup test database
+        run: npm run db:setup:test
+        env:
+          DATABASE_URL: postgresql://postgres:test_password@localhost:5432/mplp_test
+
+      - name: Run integration tests
+        run: npm run test:integration
+        env:
+          CI: true
+          NODE_ENV: test
+          DATABASE_URL: postgresql://postgres:test_password@localhost:5432/mplp_test
+          REDIS_URL: redis://localhost:6379
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage/integration/lcov.info
+          flags: integration-tests
+
+  system-tests:
+    name: System Tests
+    runs-on: ubuntu-latest
+    needs: [unit-tests, integration-tests]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Start test environment
+        run: docker-compose -f docker-compose.test.yml up -d
+
+      - name: Wait for services
+        run: npm run wait-for-services
+
+      - name: Run system tests
+        run: npm run test:system
+        env:
+          CI: true
+          NODE_ENV: test
+          MPLP_API_URL: http://localhost:3000
+          MPLP_WS_URL: ws://localhost:3001
+
+      - name: Cleanup test environment
+        if: always()
+        run: docker-compose -f docker-compose.test.yml down
+
+  compliance-tests:
+    name: Compliance Tests
+    runs-on: ubuntu-latest
+    needs: [system-tests]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run protocol compliance tests
+        run: npm run test:compliance:protocol
+
+      - name: Run security compliance tests
+        run: npm run test:compliance:security
+
+      - name: Run performance compliance tests
+        run: npm run test:compliance:performance
+
+      - name: Generate compliance report
+        run: npm run generate:compliance-report
+
+      - name: Upload compliance report
+        uses: actions/upload-artifact@v3
+        with:
+          name: compliance-report
+          path: reports/compliance/
+
+  performance-tests:
+    name: Performance Tests
+    runs-on: ubuntu-latest
+    needs: [system-tests]
+    if: github.event_name == 'schedule' || contains(github.event.head_commit.message, '[perf-test]')
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Setup performance test environment
+        run: docker-compose -f docker-compose.perf.yml up -d
+
+      - name: Run performance benchmarks
+        run: npm run test:performance
+        env:
+          PERFORMANCE_TEST_DURATION: 300 # 5 minutes
+          PERFORMANCE_TEST_CONCURRENCY: 50
+
+      - name: Generate performance report
+        run: npm run generate:performance-report
+
+      - name: Upload performance report
+        uses: actions/upload-artifact@v3
+        with:
+          name: performance-report
+          path: reports/performance/
+
+  security-tests:
+    name: Security Tests
+    runs-on: ubuntu-latest
+    needs: [system-tests]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run security tests
+        run: npm run test:security
+
+      - name: Run OWASP ZAP scan
+        uses: zaproxy/action-full-scan@v0.4.0
+        with:
+          target: 'http://localhost:3000'
+          rules_file_name: '.zap/rules.tsv'
+          cmd_options: '-a'
+
+      - name: Generate security report
+        run: npm run generate:security-report
+
+      - name: Upload security report
+        uses: actions/upload-artifact@v3
+        with:
+          name: security-report
+          path: reports/security/
+```
+
+### **Test Suite Management**
+
+#### **Test Suite Configuration**
+```typescript
+// Test suite configuration and management
+export interface TestSuiteConfig {
+  name: string;
+  type: 'unit' | 'integration' | 'system' | 'compliance' | 'performance' | 'security';
+  modules: string[];
+  environment: TestEnvironmentConfig;
+  execution: TestExecutionConfig;
+  reporting: TestReportingConfig;
+}
+
+export class TestSuiteManager {
+  private readonly testSuites: Map<string, TestSuite>;
+  private readonly testRunner: TestRunner;
+  private readonly reportGenerator: TestReportGenerator;
+
+  constructor() {
+    this.testSuites = new Map();
+    this.testRunner = new TestRunner();
+    this.reportGenerator = new TestReportGenerator();
+    this.loadTestSuites();
+  }
+
+  async runTestSuite(suiteName: string, options: TestRunOptions = {}): Promise<TestSuiteResult> {
+    const suite = this.testSuites.get(suiteName);
+    if (!suite) {
+      throw new Error(`Test suite not found: ${suiteName}`);
+    }
+
+    const startTime = Date.now();
+
+    try {
+      // Setup test environment
+      await this.setupTestEnvironment(suite.config.environment);
+
+      // Execute test suite
+      const result = await this.testRunner.execute(suite, options);
+
+      // Generate reports
+      const report = await this.reportGenerator.generate(result, suite.config.reporting);
+
+      return {
+        suiteName: suiteName,
+        startTime: new Date(startTime),
+        endTime: new Date(),
+        duration: Date.now() - startTime,
+        result: result,
+        report: report
+      };
+
+    } finally {
+      // Cleanup test environment
+      await this.cleanupTestEnvironment(suite.config.environment);
+    }
+  }
+
+  async runAllTestSuites(options: TestRunOptions = {}): Promise<TestSuiteResults> {
+    const results: TestSuiteResult[] = [];
+    const startTime = Date.now();
+
+    for (const [suiteName, suite] of this.testSuites) {
+      if (options.suiteFilter && !options.suiteFilter.includes(suiteName)) {
+        continue;
+      }
+
+      try {
+        const result = await this.runTestSuite(suiteName, options);
+        results.push(result);
+      } catch (error) {
+        results.push({
+          suiteName: suiteName,
+          startTime: new Date(),
+          endTime: new Date(),
+          duration: 0,
+          result: { success: false, error: error.message },
+          report: null
+        });
+      }
+    }
+
+    return {
+      startTime: new Date(startTime),
+      endTime: new Date(),
+      totalDuration: Date.now() - startTime,
+      totalSuites: results.length,
+      passedSuites: results.filter(r => r.result.success).length,
+      failedSuites: results.filter(r => !r.result.success).length,
+      results: results,
+      overallReport: await this.reportGenerator.generateOverallReport(results)
+    };
+  }
+
+  private loadTestSuites(): void {
+    const suiteConfigs: TestSuiteConfig[] = [
+      {
+        name: 'unit-tests',
+        type: 'unit',
+        modules: ['context', 'plan', 'role', 'confirm', 'trace', 'extension', 'dialog', 'collab', 'network', 'core'],
+        environment: { type: 'isolated', database: 'mock', cache: 'mock' },
+        execution: { parallel: true, timeout: 300000 },
+        reporting: { format: 'junit', coverage: true }
+      },
+      {
+        name: 'integration-tests',
+        type: 'integration',
+        modules: ['context', 'plan', 'role', 'confirm', 'trace'],
+        environment: { type: 'containerized', database: 'postgres', cache: 'redis' },
+        execution: { parallel: false, timeout: 600000 },
+        reporting: { format: 'junit', coverage: true }
+      },
+      {
+        name: 'system-tests',
+        type: 'system',
+        modules: ['all'],
+        environment: { type: 'full-stack', database: 'postgres', cache: 'redis', messageQueue: 'rabbitmq' },
+        execution: { parallel: false, timeout: 1800000 },
+        reporting: { format: 'html', screenshots: true }
+      },
+      {
+        name: 'compliance-tests',
+        type: 'compliance',
+        modules: ['all'],
+        environment: { type: 'production-like', database: 'postgres', cache: 'redis' },
+        execution: { parallel: true, timeout: 3600000 },
+        reporting: { format: 'compliance', audit: true }
+      },
+      {
+        name: 'performance-tests',
+        type: 'performance',
+        modules: ['all'],
+        environment: { type: 'performance', database: 'postgres', cache: 'redis', monitoring: true },
+        execution: { parallel: false, timeout: 7200000 },
+        reporting: { format: 'performance', metrics: true }
+      },
+      {
+        name: 'security-tests',
+        type: 'security',
+        modules: ['all'],
+        environment: { type: 'security', database: 'postgres', cache: 'redis', vulnerability_scanner: true },
+        execution: { parallel: true, timeout: 3600000 },
+        reporting: { format: 'security', vulnerabilities: true }
+      }
+    ];
+
+    suiteConfigs.forEach(config => {
+      this.testSuites.set(config.name, new TestSuite(config));
+    });
+  }
+}
+```
+
+---
+
+## 🔗 Related Documentation
+
+- [Testing Framework Overview](./README.md) - Testing framework overview
+- [Protocol Compliance Testing](./protocol-compliance-testing.md) - L1-L3 protocol validation
+- [Interoperability Testing](./interoperability-testing.md) - Cross-platform compatibility
+- [Performance Benchmarking](./performance-benchmarking.md) - Performance validation
+- [Security Testing](./security-testing.md) - Security validation
+
+---
+
+**Test Suites Version**: 1.0.0-alpha
+**Last Updated**: September 4, 2025
+**Next Review**: December 4, 2025
+**Status**: Automated and Integrated
+
+**⚠️ Alpha Notice**: This test suites guide provides comprehensive automated testing capabilities for MPLP v1.0 Alpha. Additional test automation features and advanced CI/CD integration will be added in Beta release based on testing feedback and deployment requirements.

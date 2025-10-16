@@ -1,5 +1,9 @@
 # MPLP 验证规则
 
+> **🌐 语言导航**: [English](../../en/schemas/validation-rules.md) | [中文](validation-rules.md)
+
+
+
 **多智能体协议生命周期平台 - 综合验证规则 v1.0.0-alpha**
 
 [![验证](https://img.shields.io/badge/validation-企业级-brightgreen.svg)](./schema-standards.md)

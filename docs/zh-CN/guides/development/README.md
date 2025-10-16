@@ -1,12 +1,16 @@
 # MPLP 开发指南
 
+> **🌐 语言导航**: [English](../../../en/guides/development/README.md) | [中文](README.md)
+
+
+
 **MPLP v1.0 Alpha完整开发指南 - 100%完成的企业级平台**
 
 [![开发状态](https://img.shields.io/badge/development-100%25%20完成-brightgreen.svg)](../quick-start.md)
 [![贡献者](https://img.shields.io/badge/contributors-欢迎-blue.svg)](../../../../CONTRIBUTING.md)
 [![标准](https://img.shields.io/badge/standards-企业级-brightgreen.svg)](../../testing/README.md)
 [![质量](https://img.shields.io/badge/tests-2869%2F2869%20通过-brightgreen.svg)](../../testing/README.md)
-[![语言](https://img.shields.io/badge/language-中文-blue.svg)](../../../en/guides/development/README.md)
+[![语言](https://img.shields.io/badge/language-中文-blue.svg)](../../en/guides/development/README.md)
 
 ---
 

@@ -1,5 +1,9 @@
 # MPLP Development Tools
 
+> **🌐 Language Navigation**: [English](tools.md) | [中文](../../zh-CN/developers/tools.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Development Tools v1.0.0-alpha**
 
 [![Tools](https://img.shields.io/badge/tools-CLI%20%26%20Utilities-green.svg)](./README.md)

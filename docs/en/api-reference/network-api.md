@@ -1,5 +1,9 @@
 # Network API Reference
 
+> **🌐 Language Navigation**: [English](network-api.md) | [中文](../../zh-CN/api-reference/network-api.md)
+
+
+
 **Distributed Communication and Service Discovery - MPLP v1.0 Alpha**
 
 [![API](https://img.shields.io/badge/api-Network%20Module-blue.svg)](../modules/network/README.md)

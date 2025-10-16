@@ -1,5 +1,9 @@
 # Extension API Reference
 
+> **🌐 Language Navigation**: [English](extension-api.md) | [中文](../../zh-CN/api-reference/extension-api.md)
+
+
+
 **Plugin System and Custom Functionality - MPLP v1.0 Alpha**
 
 [![API](https://img.shields.io/badge/api-Extension%20Module-blue.svg)](../modules/extension/README.md)

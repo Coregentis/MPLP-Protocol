@@ -1,5 +1,9 @@
 # MPLP RFC风格规范
 
+> **🌐 语言导航**: [English](../../en/specifications/rfc-specifications.md) | [中文](rfc-specifications.md)
+
+
+
 **多智能体协议生命周期平台 - RFC风格规范 v1.0.0-alpha**
 
 [![RFC风格](https://img.shields.io/badge/rfc%20style-生产就绪-brightgreen.svg)](./README.md)

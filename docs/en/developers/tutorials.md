@@ -1,5 +1,9 @@
 # MPLP Tutorials
 
+> **🌐 Language Navigation**: [English](tutorials.md) | [中文](../../zh-CN/developers/tutorials.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Comprehensive Tutorials v1.0.0-alpha**
 
 [![Tutorials](https://img.shields.io/badge/tutorials-Step%20by%20Step-green.svg)](./README.md)

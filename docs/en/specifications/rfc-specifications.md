@@ -1,5 +1,9 @@
 # MPLP RFC-Style Specifications
 
+> **🌐 Language Navigation**: [English](rfc-specifications.md) | [中文](../../zh-CN/specifications/rfc-specifications.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - RFC-Style Specifications v1.0.0-alpha**
 
 [![RFC Style](https://img.shields.io/badge/rfc%20style-Production%20Ready-brightgreen.svg)](./README.md)

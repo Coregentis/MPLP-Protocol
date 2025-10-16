@@ -1,5 +1,9 @@
 # MPLP Test Suites
 
+> **🌐 Language Navigation**: [English](test-suites.md) | [中文](../../zh-CN/testing/test-suites.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Test Suites v1.0.0-alpha**
 
 [![Test Suites](https://img.shields.io/badge/test%20suites-2869%2F2869%20Pass-brightgreen.svg)](./README.md)

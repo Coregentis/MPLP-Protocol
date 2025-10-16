@@ -1,5 +1,9 @@
 # MPLP JSON Schema 定义
 
+> **🌐 语言导航**: [English](../../en/specifications/json-schema-definitions.md) | [中文](json-schema-definitions.md)
+
+
+
 **多智能体协议生命周期平台 - JSON Schema 定义 v1.0.0-alpha**
 
 [![JSON Schema](https://img.shields.io/badge/json%20schema-生产就绪-brightgreen.svg)](./README.md)

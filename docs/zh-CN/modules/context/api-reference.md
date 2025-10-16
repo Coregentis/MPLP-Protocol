@@ -1,11 +1,15 @@
 # Context模块API参考
 
+> **🌐 语言导航**: [English](../../../en/modules/context/api-reference.md) | [中文](api-reference.md)
+
+
+
 **跨智能体的共享状态和上下文管理 - MPLP v1.0 Alpha**
 
 [![API](https://img.shields.io/badge/api-Context%20模块-blue.svg)](./README.md)
 [![Schema](https://img.shields.io/badge/schema-mplp--context.json-green.svg)](../../schemas/README.md)
 [![状态](https://img.shields.io/badge/status-生产就绪-green.svg)](../../../../ALPHA-RELEASE-NOTES.md)
-[![语言](https://img.shields.io/badge/language-简体中文-red.svg)](../../../en/modules/context/api-reference.md)
+[![语言](https://img.shields.io/badge/language-简体中文-red.svg)](../../en/modules/context/api-reference.md)
 
 ---
 

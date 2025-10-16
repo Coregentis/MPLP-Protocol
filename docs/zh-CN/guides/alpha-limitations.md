@@ -1,5 +1,9 @@
 # MPLP v1.0 Alpha - 限制和注意事项
 
+> **🌐 语言导航**: [English](../../en/guides/alpha-limitations.md) | [中文](alpha-limitations.md)
+
+
+
 **Alpha版本用户的重要信息**
 
 ## ⚠️ **Alpha版本概述**

@@ -1,5 +1,9 @@
 # MPLP 快速开始指南
 
+> **🌐 语言导航**: [English](../../en/developers/quick-start.md) | [中文](quick-start.md)
+
+
+
 **多智能体协议生命周期平台 - 快速开始指南 v1.0.0-alpha**
 
 [![快速开始](https://img.shields.io/badge/quick%20start-5%20分钟-green.svg)](./README.md)
@@ -344,14 +348,14 @@ console.log(mplp.getConfig());
 - **[GitHub Issues](https://github.com/mplp/mplp/issues)** - 报告问题
 - **[GitHub Discussions](https://github.com/mplp/mplp/discussions)** - 社区讨论
 - **[文档](../README.md)** - 完整文档
-- **[示例代码](../examples/README.md)** - 更多示例
+- **示例代码 (开发中)** - 更多示例
 
 ---
 
 ## 📚 相关资源
 
 ### **开发文档**
-- **[API参考](../api-reference/README.md)** - 完整的API文档
+- **API参考 (开发中)** - 完整的API文档
 - **[开发指南](../guides/development/README.md)** - 开发最佳实践
 - **[部署指南](../implementation/deployment-models.md)** - 生产部署
 

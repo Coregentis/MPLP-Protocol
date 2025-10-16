@@ -1,5 +1,9 @@
 # MPLPCore API Reference
 
+> **🌐 Language Navigation**: [English](core-api.md) | [中文](../../zh-CN/api-reference/core-api.md)
+
+
+
 **Main MPLP initialization and management API**
 
 ## 🎯 **Overview**

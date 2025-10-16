@@ -1,5 +1,9 @@
 # Collab API 参考
 
+> **🌐 语言导航**: [English](../../en/api-reference/collab-api.md) | [中文](collab-api.md)
+
+
+
 **多智能体协作和协调 - MPLP v1.0 Alpha**
 
 [![API](https://img.shields.io/badge/api-Collab%20模块-blue.svg)](../modules/collab/README.md)

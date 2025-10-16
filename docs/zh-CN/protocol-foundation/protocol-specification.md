@@ -1,5 +1,9 @@
 # MPLP协议规范
 
+> **🌐 语言导航**: [English](../../en/protocol-foundation/protocol-specification.md) | [中文](protocol-specification.md)
+
+
+
 **多智能体协议生命周期平台 - 技术规范 v1.0.0-alpha**
 
 [![RFC风格](https://img.shields.io/badge/style-RFC%20Compliant-blue.svg)](https://tools.ietf.org/rfc/)

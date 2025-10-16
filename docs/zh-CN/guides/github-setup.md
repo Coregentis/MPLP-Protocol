@@ -1,5 +1,9 @@
 # 🚀 GitHub仓库设置指南 - MPLP v1.0
 
+> **🌐 语言导航**: [English](../../en/guides/github-setup.md) | [中文](github-setup.md)
+
+
+
 **MPLP v1.0 Alpha在GitHub上的完整设置指南**
 
 [![GitHub](https://img.shields.io/badge/platform-GitHub-black.svg)](https://github.com)
@@ -109,9 +113,9 @@ await mplp.initialize();
 ### 📚 文档
 
 - **[快速开始指南](./quick-start.md)** - 5分钟快速上手
-- **[架构概览](../architecture/README.md)** - 完整架构指南
-- **[API参考](../api-reference/README.md)** - 完整API文档
-- **[示例代码](../examples/README.md)** - 工作示例代码
+- **架构概览 (开发中)** - 完整架构指南
+- **API参考 (开发中)** - 完整API文档
+- **示例代码 (开发中)** - 工作示例代码
 
 ### 🤝 社区
 

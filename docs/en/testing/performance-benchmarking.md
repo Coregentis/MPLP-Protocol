@@ -1,5 +1,9 @@
 # MPLP Performance Benchmarking
 
+> **🌐 Language Navigation**: [English](performance-benchmarking.md) | [中文](../../zh-CN/testing/performance-benchmarking.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Performance Benchmarking v1.0.0-alpha**
 
 [![Performance](https://img.shields.io/badge/performance-99.8%25%20Score-brightgreen.svg)](./README.md)

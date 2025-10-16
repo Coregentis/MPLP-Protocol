@@ -1,5 +1,9 @@
 # L1 Protocol Layer
 
+> **🌐 Language Navigation**: [English](l1-protocol-layer.md) | [中文](../../zh-CN/architecture/l1-protocol-layer.md)
+
+
+
 **Foundation Layer - Schema Validation and Cross-cutting Concerns**
 
 [![Layer](https://img.shields.io/badge/layer-L1%20Protocol-blue.svg)](./architecture-overview.md)

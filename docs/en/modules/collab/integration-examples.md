@@ -1,11 +1,15 @@
 # Collab Module Integration Examples
 
+> **🌐 Language Navigation**: [English](integration-examples.md) | [中文](../../../zh-CN/modules/collab/integration-examples.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Collab Module Integration Examples v1.0.0-alpha**
 
 [![Integration](https://img.shields.io/badge/integration-Enterprise%20Ready-green.svg)](./README.md)
 [![Examples](https://img.shields.io/badge/examples-Production%20Ready-blue.svg)](./implementation-guide.md)
 [![Collaboration](https://img.shields.io/badge/collaboration-Best%20Practices-orange.svg)](./api-reference.md)
-[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../../zh-CN/modules/collab/integration-examples.md)
+[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../zh-CN/modules/collab/integration-examples.md)
 
 ---
 

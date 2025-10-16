@@ -1,11 +1,15 @@
 # Plan Module Configuration Guide
 
+> **🌐 Language Navigation**: [English](configuration-guide.md) | [中文](../../../zh-CN/modules/plan/configuration-guide.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Plan Module Configuration Guide v1.0.0-alpha**
 
 [![Configuration](https://img.shields.io/badge/configuration-Comprehensive-green.svg)](./README.md)
 [![Module](https://img.shields.io/badge/module-Plan-blue.svg)](./implementation-guide.md)
 [![AI](https://img.shields.io/badge/AI-Optimized-orange.svg)](./performance-guide.md)
-[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../../zh-CN/modules/plan/configuration-guide.md)
+[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../zh-CN/modules/plan/configuration-guide.md)
 
 ---
 

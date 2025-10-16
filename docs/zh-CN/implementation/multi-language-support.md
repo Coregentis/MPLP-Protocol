@@ -1,5 +1,9 @@
 # MPLP 多语言支持指南
 
+> **🌐 语言导航**: [English](../../en/implementation/multi-language-support.md) | [中文](multi-language-support.md)
+
+
+
 **多智能体协议生命周期平台 - 多语言支持指南 v1.0.0-alpha**
 
 [![多语言](https://img.shields.io/badge/languages-TypeScript完成-brightgreen.svg)](./README.md)

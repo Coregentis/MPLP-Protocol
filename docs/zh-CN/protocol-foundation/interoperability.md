@@ -1,5 +1,9 @@
 # MPLP互操作性
 
+> **🌐 语言导航**: [English](../../en/protocol-foundation/interoperability.md) | [中文](interoperability.md)
+
+
+
 **跨实现兼容性和集成标准**
 
 [![互操作性](https://img.shields.io/badge/interoperability-Cross%20Platform-green.svg)](./protocol-specification.md)

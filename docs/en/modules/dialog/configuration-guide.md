@@ -1,11 +1,15 @@
 # Dialog Module Configuration Guide
 
+> **🌐 Language Navigation**: [English](configuration-guide.md) | [中文](../../../zh-CN/modules/dialog/configuration-guide.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Dialog Module Configuration Guide v1.0.0-alpha**
 
 [![Configuration](https://img.shields.io/badge/configuration-Enterprise%20Grade-green.svg)](./README.md)
 [![Module](https://img.shields.io/badge/module-Dialog-teal.svg)](./implementation-guide.md)
 [![Conversations](https://img.shields.io/badge/conversations-Configurable-orange.svg)](./performance-guide.md)
-[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../../zh-CN/modules/dialog/configuration-guide.md)
+[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../zh-CN/modules/dialog/configuration-guide.md)
 
 ---
 

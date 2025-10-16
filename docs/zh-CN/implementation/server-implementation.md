@@ -1,5 +1,9 @@
 # MPLP 服务器实现指南
 
+> **🌐 语言导航**: [English](../../en/implementation/server-implementation.md) | [中文](server-implementation.md)
+
+
+
 **多智能体协议生命周期平台 - 服务器实现指南 v1.0.0-alpha**
 
 [![服务器](https://img.shields.io/badge/server-企业级完成-brightgreen.svg)](./README.md)

@@ -1,0 +1,93 @@
+{
+  "name": "@mplp/social-media-bot",
+  "version": "1.1.0-beta",
+  "description": "Enterprise social media automation system built with MPLP SDK",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node src/index.ts",
+    "start": "node dist/index.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "clean": "rimraf dist",
+    "start:social": "ts-node src/examples/social-media-demo.ts",
+    "scenario:content-publishing": "ts-node src/examples/content-publishing-scenario.ts",
+    "scenario:multi-platform": "ts-node src/examples/multi-platform-scenario.ts",
+    "scenario:engagement": "ts-node src/examples/engagement-scenario.ts",
+    "demo:basic": "ts-node src/demos/basic-social-media.ts",
+    "demo:advanced": "ts-node src/demos/advanced-social-media.ts",
+    "demo:enterprise": "ts-node src/demos/enterprise-social-media.ts"
+  },
+  "keywords": [
+    "mplp",
+    "social-media",
+    "automation",
+    "enterprise",
+    "multi-platform",
+    "content-management",
+    "social-engagement",
+    "analytics",
+    "multi-agent"
+  ],
+  "author": "MPLP Team",
+  "license": "MIT",
+  "dependencies": {
+    "@mplp/sdk-core": "file:../../sdk/packages/core",
+    "@mplp/agent-builder": "file:../../sdk/packages/agent-builder",
+    "@mplp/orchestrator": "file:../../sdk/packages/orchestrator",
+    "@mplp/adapters": "file:../../sdk/packages/adapters",
+    "chalk": "^4.1.2",
+    "inquirer": "^8.2.6",
+    "ora": "^5.4.1",
+    "commander": "^9.5.0",
+    "uuid": "^9.0.1",
+    "lodash": "^4.17.21",
+    "rxjs": "^7.8.1",
+    "eventemitter3": "^5.0.1",
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "winston": "^3.11.0",
+    "moment": "^2.29.4",
+    "axios": "^1.6.2",
+    "ws": "^8.14.2",
+    "node-cron": "^3.0.3",
+    "joi": "^17.9.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/jest": "^29.5.11",
+    "@types/inquirer": "^8.2.10",
+    "@types/uuid": "^9.0.7",
+    "@types/lodash": "^4.14.202",
+    "@types/express": "^4.17.21",
+    "@types/cors": "^2.8.17",
+    "@types/ws": "^8.5.10",
+    "@types/node-cron": "^3.0.11",
+    "@typescript-eslint/eslint-plugin": "^6.18.1",
+    "@typescript-eslint/parser": "^6.18.1",
+    "eslint": "^8.56.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3",
+    "rimraf": "^5.0.5"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mplp-ai/mplp-sdk.git",
+    "directory": "examples/social-media-bot"
+  },
+  "bugs": {
+    "url": "https://github.com/mplp-ai/mplp-sdk/issues"
+  },
+  "homepage": "https://github.com/mplp-ai/mplp-sdk/tree/main/examples/social-media-bot#readme"
+}

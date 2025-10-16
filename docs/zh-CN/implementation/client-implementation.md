@@ -1,5 +1,9 @@
 # MPLP 客户端实现指南
 
+> **🌐 语言导航**: [English](../../en/implementation/client-implementation.md) | [中文](client-implementation.md)
+
+
+
 **多智能体协议生命周期平台 - 客户端实现指南 v1.0.0-alpha**
 
 [![客户端](https://img.shields.io/badge/client-企业级就绪-brightgreen.svg)](./README.md)

@@ -1,5 +1,9 @@
 # MPLP架构概览
 
+> **🌐 语言导航**: [English](../../en/architecture/architecture-overview.md) | [中文](architecture-overview.md)
+
+
+
 **多智能体协议生命周期平台 - 系统架构**
 
 [![架构](https://img.shields.io/badge/architecture-L1--L3%20Stack-blue.svg)](../protocol-foundation/protocol-specification.md)

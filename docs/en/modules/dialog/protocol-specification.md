@@ -1,11 +1,15 @@
 # Dialog Module Protocol Specification
 
+> **🌐 Language Navigation**: [English](protocol-specification.md) | [中文](../../../zh-CN/modules/dialog/protocol-specification.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Dialog Module Protocol Specification v1.0.0-alpha**
 
 [![Protocol](https://img.shields.io/badge/protocol-Dialog%20v1.0-purple.svg)](./README.md)
 [![Specification](https://img.shields.io/badge/specification-Enterprise%20Grade-green.svg)](./api-reference.md)
 [![Conversations](https://img.shields.io/badge/conversations-Compliant-orange.svg)](./implementation-guide.md)
-[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../../zh-CN/modules/dialog/protocol-specification.md)
+[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../zh-CN/modules/dialog/protocol-specification.md)
 
 ---
 

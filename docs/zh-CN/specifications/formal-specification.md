@@ -1,5 +1,9 @@
 # MPLP 正式规范
 
+> **🌐 语言导航**: [English](../../en/specifications/formal-specification.md) | [中文](formal-specification.md)
+
+
+
 **多智能体协议生命周期平台 - 正式技术规范 v1.0.0-alpha**
 
 [![正式规范](https://img.shields.io/badge/formal%20spec-生产就绪-brightgreen.svg)](./README.md)

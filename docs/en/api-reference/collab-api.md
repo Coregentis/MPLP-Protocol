@@ -1,5 +1,9 @@
 # Collab API Reference
 
+> **🌐 Language Navigation**: [English](collab-api.md) | [中文](../../zh-CN/api-reference/collab-api.md)
+
+
+
 **Multi-Agent Collaboration and Coordination - MPLP v1.0 Alpha**
 
 [![API](https://img.shields.io/badge/api-Collab%20Module-blue.svg)](../modules/collab/README.md)

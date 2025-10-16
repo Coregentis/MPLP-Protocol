@@ -1,5 +1,9 @@
 # MPLP Schema Standards
 
+> **🌐 Language Navigation**: [English](schema-standards.md) | [中文](../../zh-CN/schemas/schema-standards.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Schema Definition Standards and Conventions**
 
 [![Standards](https://img.shields.io/badge/standards-JSON%20Schema%20Draft--07-blue.svg)](https://json-schema.org/draft-07/schema)

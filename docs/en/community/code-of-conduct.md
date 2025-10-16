@@ -1,5 +1,9 @@
 # Code of Conduct
 
+> **🌐 Language Navigation**: [English](code-of-conduct.md) | [中文](../../zh-CN/community/code-of-conduct.md)
+
+
+
 **MPLP Community Code of Conduct**
 
 [![Conduct](https://img.shields.io/badge/conduct-Code%20Required-blue.svg)](./README.md)

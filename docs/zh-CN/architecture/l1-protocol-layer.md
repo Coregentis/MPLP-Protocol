@@ -1,5 +1,9 @@
 # L1协议层
 
+> **🌐 语言导航**: [English](../../en/architecture/l1-protocol-layer.md) | [中文](l1-protocol-layer.md)
+
+
+
 **基础层 - Schema验证和横切关注点**
 
 [![层级](https://img.shields.io/badge/layer-L1%20Protocol-blue.svg)](./architecture-overview.md)

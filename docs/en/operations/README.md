@@ -1,5 +1,9 @@
 # MPLP Operations Guide
 
+> **🌐 Language Navigation**: [English](README.md) | [中文](../../zh-CN/operations/README.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Comprehensive Operations and Deployment Guide v1.0.0-alpha**
 
 [![Operations](https://img.shields.io/badge/operations-100%25%20Complete-brightgreen.svg)](./deployment-guide.md)

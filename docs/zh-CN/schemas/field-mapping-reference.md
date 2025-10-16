@@ -1,5 +1,9 @@
 # MPLP 字段映射参考
 
+> **🌐 语言导航**: [English](../../en/schemas/field-mapping-reference.md) | [中文](field-mapping-reference.md)
+
+
+
 **多智能体协议生命周期平台 - 完整字段映射参考 v1.0.0-alpha**
 
 [![映射](https://img.shields.io/badge/mapping-生产验证-brightgreen.svg)](./dual-naming-guide.md)

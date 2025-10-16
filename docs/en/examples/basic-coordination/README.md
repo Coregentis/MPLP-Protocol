@@ -1,5 +1,9 @@
 # Basic Multi-Agent Coordination Example
 
+> **🌐 Language Navigation**: [English](README.md) | [中文](../../../zh-CN/examples/basic-coordination/README.md)
+
+
+
 **MPLP v1.0 Alpha - Beginner Example**
 
 [![Difficulty](https://img.shields.io/badge/difficulty-Beginner-green.svg)](../README.md)

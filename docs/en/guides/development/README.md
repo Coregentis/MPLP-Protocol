@@ -1,12 +1,16 @@
 # MPLP Development Guide
 
+> **🌐 Language Navigation**: [English](README.md) | [中文](../../../zh-CN/guides/development/README.md)
+
+
+
 **Complete development guide for MPLP v1.0 Alpha - 100% Complete Enterprise-Grade Platform**
 
 [![Development](https://img.shields.io/badge/development-100%25%20Complete-brightgreen.svg)](../quick-start.md)
 [![Contributors](https://img.shields.io/badge/contributors-Welcome-blue.svg)](../../../../CONTRIBUTING.md)
 [![Standards](https://img.shields.io/badge/standards-Enterprise%20Grade-brightgreen.svg)](../../testing/README.md)
 [![Quality](https://img.shields.io/badge/tests-2869%2F2869%20Pass-brightgreen.svg)](../../testing/README.md)
-[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../../zh-CN/guides/development/README.md)
+[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../zh-CN/guides/development/README.md)
 
 ---
 

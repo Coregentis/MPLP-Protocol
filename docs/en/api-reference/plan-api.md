@@ -1,5 +1,9 @@
 # Plan API Reference
 
+> **🌐 Language Navigation**: [English](plan-api.md) | [中文](../../zh-CN/api-reference/plan-api.md)
+
+
+
 **Collaborative Planning and Goal Decomposition - MPLP v1.0 Alpha**
 
 [![API](https://img.shields.io/badge/api-Plan%20Module-blue.svg)](../modules/plan/README.md)

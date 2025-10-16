@@ -1,5 +1,9 @@
 # MPLP Multi-Language Support Guide
 
+> **🌐 Language Navigation**: [English](multi-language-support.md) | [中文](../../zh-CN/implementation/multi-language-support.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Multi-Language Support Guide v1.0.0-alpha**
 
 [![Multi-Language](https://img.shields.io/badge/languages-TypeScript%20Complete-brightgreen.svg)](./README.md)

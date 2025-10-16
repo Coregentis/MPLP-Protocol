@@ -1,5 +1,9 @@
 # MPLP 性能基准测试
 
+> **🌐 语言导航**: [English](../../en/testing/performance-benchmarking.md) | [中文](performance-benchmarking.md)
+
+
+
 **多智能体协议生命周期平台 - 性能基准测试 v1.0.0-alpha**
 
 [![性能](https://img.shields.io/badge/performance-99.8%25%20得分-brightgreen.svg)](./README.md)
@@ -416,11 +420,242 @@ describe('端到端系统性能基准测试', () => {
 });
 ```
 
+## 🏗️ 系统级性能基准测试
+
+### **端到端工作流性能测试**
+
+#### **复杂工作流基准测试**
+```typescript
+// 系统级性能基准测试
+describe('系统级性能基准测试', () => {
+  let systemBenchmark: SystemBenchmark;
+  let performanceMonitor: PerformanceMonitor;
+
+  beforeEach(() => {
+    systemBenchmark = new SystemBenchmark({
+      enableMetrics: true,
+      enableProfiling: true,
+      enableResourceMonitoring: true
+    });
+    performanceMonitor = new PerformanceMonitor();
+  });
+
+  describe('工作流性能基准测试', () => {
+    it('应该验证复杂工作流的端到端性能', async () => {
+      const workflowBenchmark = await systemBenchmark.runWorkflowBenchmark({
+        workflowComplexity: 'high',
+        parallelWorkflows: 100,
+        duration: 300, // 5分钟
+        workflowSteps: [
+          { module: 'context', operation: 'create', complexity: 'medium' },
+          { module: 'plan', operation: 'generate', complexity: 'high' },
+          { module: 'role', operation: 'assign', complexity: 'low' },
+          { module: 'confirm', operation: 'validate', complexity: 'medium' },
+          { module: 'trace', operation: 'monitor', complexity: 'low' },
+          { module: 'core', operation: 'orchestrate', complexity: 'high' }
+        ]
+      });
+
+      // 验证工作流性能指标
+      expect(workflowBenchmark.results.avgWorkflowTime).toBeLessThan(2000); // < 2s 平均
+      expect(workflowBenchmark.results.p95WorkflowTime).toBeLessThan(5000); // < 5s P95
+      expect(workflowBenchmark.results.p99WorkflowTime).toBeLessThan(10000); // < 10s P99
+      expect(workflowBenchmark.results.workflowThroughput).toBeGreaterThan(100); // > 100 工作流/秒
+      expect(workflowBenchmark.results.workflowSuccessRate).toBeGreaterThan(0.99); // > 99% 成功率
+    });
+
+    it('应该验证负载下的系统资源利用率', async () => {
+      const resourceBenchmark = await systemBenchmark.runResourceUtilizationTest({
+        duration: 600, // 10分钟
+        loadProfile: {
+          rampUp: 60, // 1分钟爬坡
+          steadyState: 480, // 8分钟稳定状态
+          rampDown: 60 // 1分钟下降
+        },
+        targetLoad: {
+          contextOperations: 2000, // RPS
+          planOperations: 1000, // RPS
+          roleOperations: 3000, // RPS
+          confirmOperations: 500, // RPS
+          traceOperations: 5000 // RPS
+        }
+      });
+
+      // 验证资源利用率保持在限制内
+      expect(resourceBenchmark.results.maxCpuUtilization).toBeLessThan(0.8); // < 80% CPU
+      expect(resourceBenchmark.results.maxMemoryUtilization).toBeLessThan(0.85); // < 85% 内存
+      expect(resourceBenchmark.results.maxDiskUtilization).toBeLessThan(0.9); // < 90% 磁盘
+      expect(resourceBenchmark.results.maxNetworkUtilization).toBeLessThan(0.7); // < 70% 网络
+
+      // 验证性能降级最小
+      expect(resourceBenchmark.results.performanceDegradation).toBeLessThan(0.1); // < 10% 降级
+    });
+  });
+
+  describe('可扩展性基准测试', () => {
+    it('应该验证水平扩展性能', async () => {
+      const scalingConfigurations = [
+        { instances: 1, expectedThroughput: 1000 },
+        { instances: 2, expectedThroughput: 1800 },
+        { instances: 4, expectedThroughput: 3200 },
+        { instances: 8, expectedThroughput: 6000 },
+        { instances: 16, expectedThroughput: 10000 }
+      ];
+
+      const scalingResults: ScalingBenchmarkResult[] = [];
+
+      for (const config of scalingConfigurations) {
+        const scalingBenchmark = await systemBenchmark.runScalingTest({
+          instances: config.instances,
+          testDuration: 300, // 5分钟
+          loadPattern: 'constant',
+          targetThroughput: config.expectedThroughput
+        });
+
+        scalingResults.push({
+          instances: config.instances,
+          actualThroughput: scalingBenchmark.results.throughput,
+          expectedThroughput: config.expectedThroughput,
+          scalingEfficiency: scalingBenchmark.results.throughput / config.expectedThroughput,
+          resourceUtilization: scalingBenchmark.results.resourceUtilization
+        });
+
+        // 验证扩展效率
+        expect(scalingBenchmark.results.throughput).toBeGreaterThan(config.expectedThroughput * 0.8); // 至少80%预期吞吐量
+      }
+
+      // 验证线性扩展特性
+      const scalingEfficiencies = scalingResults.map(r => r.scalingEfficiency);
+      const avgScalingEfficiency = scalingEfficiencies.reduce((a, b) => a + b, 0) / scalingEfficiencies.length;
+      expect(avgScalingEfficiency).toBeGreaterThan(0.75); // 平均扩展效率 > 75%
+    });
+
+    it('应该验证垂直扩展性能', async () => {
+      const resourceConfigurations = [
+        { cpu: '2 cores', memory: '4GB', expectedPerformance: 1.0 },
+        { cpu: '4 cores', memory: '8GB', expectedPerformance: 1.8 },
+        { cpu: '8 cores', memory: '16GB', expectedPerformance: 3.2 },
+        { cpu: '16 cores', memory: '32GB', expectedPerformance: 5.5 }
+      ];
+
+      for (const config of resourceConfigurations) {
+        const verticalBenchmark = await systemBenchmark.runVerticalScalingTest({
+          resourceConfig: config,
+          testDuration: 300,
+          workloadType: 'cpu_intensive'
+        });
+
+        // 验证垂直扩展效果
+        expect(verticalBenchmark.results.performanceRatio).toBeGreaterThan(config.expectedPerformance * 0.8);
+        expect(verticalBenchmark.results.resourceEfficiency).toBeGreaterThan(0.7); // > 70% 资源效率
+      }
+    });
+  });
+});
+```
+
+## 🔄 持续性能监控
+
+### **生产环境性能监控**
+
+#### **实时性能指标收集**
+```typescript
+// 生产环境性能监控配置
+const productionMonitoringConfig = {
+  metrics: {
+    collection: {
+      interval: 30, // 30秒收集间隔
+      retention: '30d', // 30天数据保留
+      aggregation: ['avg', 'p50', 'p95', 'p99', 'max']
+    },
+    alerts: {
+      responseTime: {
+        warning: 100, // 100ms警告阈值
+        critical: 200 // 200ms严重阈值
+      },
+      throughput: {
+        warning: 8000, // 8000 RPS警告阈值
+        critical: 5000 // 5000 RPS严重阈值
+      },
+      errorRate: {
+        warning: 0.01, // 1%错误率警告
+        critical: 0.05 // 5%错误率严重
+      },
+      resourceUtilization: {
+        cpu: { warning: 0.7, critical: 0.85 },
+        memory: { warning: 0.8, critical: 0.9 },
+        disk: { warning: 0.8, critical: 0.9 }
+      }
+    }
+  },
+  dashboards: {
+    overview: {
+      panels: [
+        'system_throughput',
+        'response_time_distribution',
+        'error_rate_trend',
+        'resource_utilization'
+      ]
+    },
+    modules: {
+      panels: [
+        'module_performance_comparison',
+        'module_resource_usage',
+        'module_error_breakdown'
+      ]
+    }
+  }
+};
+```
+
+### **性能回归检测**
+
+#### **自动化性能回归测试**
+```typescript
+// 性能回归检测套件
+describe('性能回归检测', () => {
+  it('应该检测性能回归', async () => {
+    const baselineMetrics = await loadBaselineMetrics('v1.0.0-alpha');
+    const currentMetrics = await runCurrentPerformanceTests();
+
+    const regressionAnalysis = await performanceAnalyzer.detectRegression({
+      baseline: baselineMetrics,
+      current: currentMetrics,
+      thresholds: {
+        responseTime: 0.1, // 10%回归阈值
+        throughput: 0.05, // 5%回归阈值
+        resourceUsage: 0.15 // 15%回归阈值
+      }
+    });
+
+    // 验证无显著性能回归
+    expect(regressionAnalysis.hasRegression).toBe(false);
+
+    if (regressionAnalysis.hasRegression) {
+      console.log('检测到性能回归:', regressionAnalysis.regressions);
+      regressionAnalysis.regressions.forEach(regression => {
+        console.log(`- ${regression.metric}: ${regression.change}% 变化`);
+      });
+    }
+  });
+});
+```
+
 ---
 
-**性能基准测试版本**: 1.0.0-alpha  
-**最后更新**: 2025年9月4日  
-**下次审查**: 2025年12月4日  
-**状态**: 企业级验证  
+## 🔗 相关文档
 
-**✅ 生产就绪通知**: MPLP性能基准测试已完全实现并通过企业级验证，达到99.8%性能得分，支持所有10个模块的2,869/2,869测试通过。
+- [测试框架概述](./README.md) - 测试框架概述
+- [互操作性测试](./interoperability-testing.md) - 跨平台和多语言验证
+- [协议合规性测试](./protocol-compliance-testing.md) - L1-L3协议验证
+- [安全测试](./security-testing.md) - 安全验证
+- [性能要求](../implementation/performance-requirements.md) - 性能要求规范
+
+---
+
+**性能基准测试版本**: 1.0.0-alpha
+**最后更新**: 2025年9月4日
+**下次审查**: 2025年12月4日
+**状态**: 企业级验证
+
+**⚠️ Alpha通知**: 此性能基准测试指南为MPLP v1.0 Alpha提供了全面的性能验证和监控。基于性能反馈和扩展需求，将在Beta版本中添加额外的性能优化和监控功能。

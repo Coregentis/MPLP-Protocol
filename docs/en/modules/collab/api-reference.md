@@ -1,11 +1,15 @@
 # Collab Module API Reference
 
+> **🌐 Language Navigation**: [English](api-reference.md) | [中文](../../../zh-CN/modules/collab/api-reference.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Collab Module API Reference v1.0.0-alpha**
 
 [![API](https://img.shields.io/badge/API-REST%20%7C%20GraphQL%20%7C%20WebSocket-blue.svg)](./protocol-specification.md)
 [![Module](https://img.shields.io/badge/module-Collab-purple.svg)](./README.md)
 [![Collaboration](https://img.shields.io/badge/collaboration-Enterprise%20Grade-green.svg)](./implementation-guide.md)
-[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../../zh-CN/modules/collab/api-reference.md)
+[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../zh-CN/modules/collab/api-reference.md)
 
 ---
 

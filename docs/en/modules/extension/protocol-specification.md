@@ -1,11 +1,15 @@
 # Extension Module Protocol Specification
 
+> **🌐 Language Navigation**: [English](protocol-specification.md) | [中文](../../../zh-CN/modules/extension/protocol-specification.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Extension Module Protocol Specification v1.0.0-alpha**
 
 [![Protocol](https://img.shields.io/badge/protocol-Extension%20v1.0-purple.svg)](./README.md)
 [![Specification](https://img.shields.io/badge/specification-Enterprise%20Grade-green.svg)](./api-reference.md)
 [![Extensions](https://img.shields.io/badge/extensions-Compliant-orange.svg)](./implementation-guide.md)
-[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../../zh-CN/modules/extension/protocol-specification.md)
+[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../zh-CN/modules/extension/protocol-specification.md)
 
 ---
 

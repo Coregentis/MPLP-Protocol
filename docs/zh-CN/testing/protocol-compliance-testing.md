@@ -1,5 +1,9 @@
 # MPLP 协议合规性测试
 
+> **🌐 语言导航**: [English](../../en/testing/protocol-compliance-testing.md) | [中文](protocol-compliance-testing.md)
+
+
+
 **多智能体协议生命周期平台 - 协议合规性测试 v1.0.0-alpha**
 
 [![合规性](https://img.shields.io/badge/compliance-生产就绪-brightgreen.svg)](./README.md)

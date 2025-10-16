@@ -1,5 +1,9 @@
 # L3 Execution Layer Specification
 
+> **🌐 Language Navigation**: [English](l3-execution-layer.md) | [中文](../../zh-CN/protocol-specs/l3-execution-layer.md)
+
+
+
 **Version**: 1.0.0-alpha
 **Last Updated**: September 4, 2025
 **Status**: Production Ready - CoreOrchestrator Complete
@@ -421,11 +425,11 @@ const distributedConfig: CoreOrchestratorConfig = {
 ## 📚 **API Reference**
 
 ### **Core Operations**
-- **[Workflow API](../api-reference/workflow-api.md)** - Workflow management operations
-- **[Module API](../api-reference/module-api.md)** - Module lifecycle management
-- **[Communication API](../api-reference/communication-api.md)** - Inter-module messaging
-- **[Resource API](../api-reference/resource-api.md)** - Resource allocation and management
-- **[Monitoring API](../api-reference/monitoring-api.md)** - System monitoring and health checks
+- **Workflow API (开发中)** - Workflow management operations
+- **Module API (开发中)** - Module lifecycle management
+- **Communication API (开发中)** - Inter-module messaging
+- **Resource API (开发中)** - Resource allocation and management
+- **Monitoring API (开发中)** - System monitoring and health checks
 
 ## 🔗 **Related Documentation**
 

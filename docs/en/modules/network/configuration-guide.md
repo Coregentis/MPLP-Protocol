@@ -1,11 +1,15 @@
 # Network Module Configuration Guide
 
+> **🌐 Language Navigation**: [English](configuration-guide.md) | [中文](../../../zh-CN/modules/network/configuration-guide.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Network Module Configuration Guide v1.0.0-alpha**
 
 [![Configuration](https://img.shields.io/badge/configuration-Enterprise%20Grade-green.svg)](./README.md)
 [![Module](https://img.shields.io/badge/module-Network-cyan.svg)](./implementation-guide.md)
 [![Networking](https://img.shields.io/badge/networking-Configurable-orange.svg)](./performance-guide.md)
-[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../../zh-CN/modules/network/configuration-guide.md)
+[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../zh-CN/modules/network/configuration-guide.md)
 
 ---
 

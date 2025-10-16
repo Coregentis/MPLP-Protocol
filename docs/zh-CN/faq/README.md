@@ -1,5 +1,9 @@
 # MPLP Frequently Asked Questions
 
+> **🌐 语言导航**: [English](../../en/faq/README.md) | [中文](README.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - FAQ v1.0.0-alpha**
 
 [![FAQ](https://img.shields.io/badge/faq-comprehensive-brightgreen.svg)](../quick-start/README.md)

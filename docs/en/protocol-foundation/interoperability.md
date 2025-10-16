@@ -1,5 +1,9 @@
 # MPLP Interoperability
 
+> **🌐 Language Navigation**: [English](interoperability.md) | [中文](../../zh-CN/protocol-foundation/interoperability.md)
+
+
+
 **Cross-Implementation Compatibility and Integration Standards**
 
 [![Interoperability](https://img.shields.io/badge/interoperability-Production%20Validated-brightgreen.svg)](./protocol-specification.md)

@@ -1,5 +1,9 @@
 # MPLP 代码示例
 
+> **🌐 语言导航**: [English](../../en/developers/examples.md) | [中文](examples.md)
+
+
+
 **多智能体协议生命周期平台 - 实用代码示例**
 
 [![示例](https://img.shields.io/badge/examples-可工作代码-brightgreen.svg)](./README.md)

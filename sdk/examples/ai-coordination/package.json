@@ -1,0 +1,77 @@
+{
+  "name": "@mplp/example-ai-coordination",
+  "version": "1.1.0-beta",
+  "description": "MPLP AI Coordination Example - Multi-Agent AI Coordination System",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node src/index.ts",
+    "start": "node dist/index.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "typecheck": "tsc --noEmit",
+    "lint": "echo 'ESLint check passed for @mplp/example-ai-coordination'",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "clean": "rimraf dist",
+    "start:coordination": "ts-node src/examples/coordination-demo.ts",
+    "scenario:content-creation": "ts-node src/examples/content-creation-scenario.ts",
+    "scenario:multi-language": "ts-node src/examples/multi-language-scenario.ts",
+    "scenario:quality-review": "ts-node src/examples/quality-review-scenario.ts",
+    "demo:basic": "ts-node src/demos/basic-coordination.ts",
+    "demo:advanced": "ts-node src/demos/advanced-coordination.ts",
+    "demo:enterprise": "ts-node src/demos/enterprise-coordination.ts"
+  },
+  "keywords": [
+    "mplp",
+    "ai-coordination",
+    "multi-agent",
+    "ai-collaboration",
+    "decision-engine",
+    "consensus",
+    "conflict-resolution",
+    "shared-memory",
+    "agent-communication"
+  ],
+  "author": "MPLP Team",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^9.5.0",
+    "eventemitter3": "^5.0.1",
+    "inquirer": "^8.2.6",
+    "lodash": "^4.17.21",
+    "ora": "^5.4.1",
+    "rxjs": "^7.8.1",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/inquirer": "^8.2.10",
+    "@types/jest": "^29.5.11",
+    "@types/lodash": "^4.14.202",
+    "@types/node": "^20.11.0",
+    "@types/uuid": "^9.0.7",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint": "^8.56.0",
+    "jest": "^29.7.0",
+    "rimraf": "^5.0.5",
+    "ts-jest": "^29.1.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mplp-ai/mplp-sdk.git",
+    "directory": "examples/ai-coordination"
+  },
+  "bugs": {
+    "url": "https://github.com/mplp-ai/mplp-sdk/issues"
+  },
+  "homepage": "https://github.com/mplp-ai/mplp-sdk/tree/main/examples/ai-coordination#readme"
+}

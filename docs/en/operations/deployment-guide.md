@@ -1,5 +1,9 @@
 # MPLP Deployment Guide
 
+> **🌐 Language Navigation**: [English](deployment-guide.md) | [中文](../../zh-CN/operations/deployment-guide.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Production Deployment Guide v1.0.0-alpha**
 
 [![Deployment](https://img.shields.io/badge/deployment-Production%20Validated-brightgreen.svg)](./README.md)

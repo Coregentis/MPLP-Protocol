@@ -1,5 +1,9 @@
 # MPLP Scaling Guide
 
+> **🌐 Language Navigation**: [English](scaling-guide.md) | [中文](../../zh-CN/operations/scaling-guide.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Production Scaling Guide v1.0.0-alpha**
 
 [![Scaling](https://img.shields.io/badge/scaling-Production%20Validated-brightgreen.svg)](./README.md)

@@ -1,11 +1,15 @@
 # Plan Module API Reference
 
+> **🌐 Language Navigation**: [English](api-reference.md) | [中文](../../../zh-CN/modules/plan/api-reference.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Plan Module API Reference v1.0.0-alpha**
 
 [![API](https://img.shields.io/badge/API-REST%20%7C%20GraphQL%20%7C%20WebSocket-blue.svg)](./protocol-specification.md)
 [![Module](https://img.shields.io/badge/module-Plan-blue.svg)](./README.md)
 [![OpenAPI](https://img.shields.io/badge/OpenAPI-3.0.3-green.svg)](./openapi.yaml)
-[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../../zh-CN/modules/plan/api-reference.md)
+[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../zh-CN/modules/plan/api-reference.md)
 
 ---
 

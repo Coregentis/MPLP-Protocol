@@ -1,0 +1,56 @@
+{
+  "name": "@mplp/example-cli-usage",
+  "version": "1.1.0-beta",
+  "description": "MPLP CLI usage examples and demonstrations",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node src/index.ts",
+    "test": "jest",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --ext .ts",
+    "clean": "rm -rf dist",
+    "demo:basic": "ts-node src/demos/basic-usage.ts",
+    "demo:advanced": "ts-node src/demos/advanced-usage.ts",
+    "demo:enterprise": "ts-node src/demos/enterprise-usage.ts",
+    "demo:all": "npm run demo:basic && npm run demo:advanced && npm run demo:enterprise",
+    "example:init": "ts-node src/examples/project-initialization.ts",
+    "example:generate": "ts-node src/examples/code-generation.ts",
+    "example:workflow": "ts-node src/examples/development-workflow.ts"
+  },
+  "dependencies": {
+    "@mplp/cli": "file:../../packages/cli",
+    "@mplp/sdk-core": "file:../../packages/core",
+    "@mplp/agent-builder": "file:../../packages/agent-builder",
+    "chalk": "^4.1.2",
+    "inquirer": "^8.2.5",
+    "ora": "^5.4.1",
+    "commander": "^9.4.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/inquirer": "^8.2.6",
+    "@types/jest": "^29.5.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.45.0",
+    "jest": "^29.6.0",
+    "ts-jest": "^29.1.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.1.0"
+  },
+  "keywords": [
+    "mplp",
+    "cli",
+    "agent",
+    "multi-agent",
+    "examples",
+    "demonstration"
+  ],
+  "author": "MPLP Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,5 +1,9 @@
 # MPLP v1.0 Alpha - API 参考文档
 
+> **🌐 语言导航**: [English](../../en/api-reference/README.md) | [中文](README.md)
+
+
+
 **多智能体协议生命周期平台的完整API文档**
 
 [![API](https://img.shields.io/badge/API-v1.0.0--alpha-blue.svg)](../../ALPHA-RELEASE-NOTES.md)
@@ -253,7 +257,7 @@ const hasPermission = await mplp.security.checkPermission({
 ## 🔗 相关资源
 
 ### **核心文档**
-- **[架构概述](../architecture/README.md)** - 系统架构设计
+- **架构概述 (开发中)** - 系统架构设计
 - **[模块规范](../modules/README.md)** - 各模块详细规范
 - **[Schema系统](../schemas/README.md)** - 数据Schema规范
 

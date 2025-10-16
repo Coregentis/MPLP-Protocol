@@ -1,5 +1,9 @@
 # Contributing to MPLP
 
+> **🌐 Language Navigation**: [English](contributing.md) | [中文](../../zh-CN/community/contributing.md)
+
+
+
 **How to Contribute to the Multi-Agent Protocol Lifecycle Platform**
 
 [![Contributing](https://img.shields.io/badge/contributing-Welcome-brightgreen.svg)](./README.md)

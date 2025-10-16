@@ -1,5 +1,9 @@
 # MPLP 维护指南
 
+> **🌐 语言导航**: [English](../../en/operations/maintenance-guide.md) | [中文](maintenance-guide.md)
+
+
+
 **多智能体协议生命周期平台 - 生产维护指南 v1.0.0-alpha**
 
 [![维护](https://img.shields.io/badge/maintenance-零停机-brightgreen.svg)](./README.md)

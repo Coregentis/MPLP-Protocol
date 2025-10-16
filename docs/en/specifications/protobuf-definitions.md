@@ -1,5 +1,9 @@
 # MPLP Protocol Buffer Definitions
 
+> **🌐 Language Navigation**: [English](protobuf-definitions.md) | [中文](../../zh-CN/specifications/protobuf-definitions.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Protocol Buffer Definitions v1.0.0-alpha**
 
 [![Protocol Buffers](https://img.shields.io/badge/protobuf-Production%20Ready-brightgreen.svg)](./README.md)

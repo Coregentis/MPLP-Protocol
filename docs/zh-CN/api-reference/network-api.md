@@ -1,5 +1,9 @@
 # Network API 参考
 
+> **🌐 语言导航**: [English](../../en/api-reference/network-api.md) | [中文](network-api.md)
+
+
+
 **分布式通信和服务发现 - MPLP v1.0 Alpha**
 
 [![API](https://img.shields.io/badge/api-Network%20模块-blue.svg)](../modules/network/README.md)

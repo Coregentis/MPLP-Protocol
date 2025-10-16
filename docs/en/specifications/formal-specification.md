@@ -1,5 +1,9 @@
 # MPLP Formal Specification
 
+> **🌐 Language Navigation**: [English](formal-specification.md) | [中文](../../zh-CN/specifications/formal-specification.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Formal Specification v1.0.0-alpha**
 
 [![Formal Spec](https://img.shields.io/badge/formal%20spec-Production%20Ready-brightgreen.svg)](./README.md)

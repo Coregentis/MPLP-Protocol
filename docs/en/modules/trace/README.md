@@ -1,12 +1,16 @@
 # Trace Module
 
+> **🌐 Language Navigation**: [English](README.md) | [中文](../../../zh-CN/modules/trace/README.md)
+
+
+
 **MPLP L2 Coordination Layer - Execution Monitoring and Performance Tracking System**
 
 [![Module](https://img.shields.io/badge/module-Trace-red.svg)](../../architecture/l2-coordination-layer.md)
 [![Status](https://img.shields.io/badge/status-Enterprise%20Grade-green.svg)](../../../../ALPHA-RELEASE-NOTES.md)
 [![Tests](https://img.shields.io/badge/tests-212%2F212%20passing-green.svg)](./testing.md)
 [![Coverage](https://img.shields.io/badge/coverage-89.7%25-green.svg)](./testing.md)
-[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../../zh-CN/modules/trace/README.md)
+[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../zh-CN/modules/trace/README.md)
 
 ---
 

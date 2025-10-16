@@ -1,5 +1,9 @@
 # Plan API 参考
 
+> **🌐 语言导航**: [English](../../en/api-reference/plan-api.md) | [中文](plan-api.md)
+
+
+
 **协作规划和目标分解 - MPLP v1.0 Alpha**
 
 [![API](https://img.shields.io/badge/api-Plan%20模块-blue.svg)](../modules/plan/README.md)

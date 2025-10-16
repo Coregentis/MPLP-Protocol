@@ -1,5 +1,9 @@
 # MPLP 教程指南
 
+> **🌐 语言导航**: [English](../../en/developers/tutorials.md) | [中文](tutorials.md)
+
+
+
 **多智能体协议生命周期平台 - 深度学习教程**
 
 [![教程](https://img.shields.io/badge/tutorials-深度学习-blue.svg)](./README.md)

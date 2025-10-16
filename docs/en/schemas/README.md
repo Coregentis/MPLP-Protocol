@@ -1,5 +1,9 @@
 # MPLP Schema System
 
+> **🌐 Language Navigation**: [English](README.md) | [中文](../../zh-CN/schemas/README.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Schema and Data Specification System v1.0.0-alpha**
 
 [![Schema](https://img.shields.io/badge/schema-JSON%20Schema%20Draft--07-blue.svg)](./schema-standards.md)

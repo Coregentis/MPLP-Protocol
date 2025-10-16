@@ -1,5 +1,9 @@
 # Schema系统
 
+> **🌐 语言导航**: [English](../../en/architecture/schema-system.md) | [中文](schema-system.md)
+
+
+
 **基于JSON Schema的数据验证和类型安全**
 
 [![Schema](https://img.shields.io/badge/schema-JSON%20Draft--07-blue.svg)](./architecture-overview.md)

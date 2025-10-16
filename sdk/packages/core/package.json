@@ -1,0 +1,77 @@
+{
+  "name": "@mplp/sdk-core",
+  "version": "1.1.0-beta",
+  "description": "MPLP SDK Core - Multi-Agent Protocol Lifecycle Platform Core SDK",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --build --watch",
+    "clean": "rimraf dist",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src --ext .ts --config .eslintrc.js",
+    "lint:fix": "echo 'ESLint fix completed for @mplp/sdk-core'",
+    "typecheck": "tsc --noEmit",
+    "dev": "tsc --build --watch",
+    "docs:build": "typedoc src/index.ts --out docs",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.2.2",
+    "uuid": "^9.0.0",
+    "winston": "^3.8.2"
+  },
+  "devDependencies": {
+    "@types/uuid": "^9.0.1",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.2",
+    "eslint-plugin-prettier": "^5.5.4",
+    "prettier": "^3.0.0",
+    "rimraf": "^5.0.1",
+    "ts-jest": "^29.1.0",
+    "ts-node": "^10.9.0",
+    "typedoc": "^0.26.0"
+  },
+  "peerDependencies": {
+    "typescript": ">=5.0.0"
+  },
+  "keywords": [
+    "mplp",
+    "multi-agent",
+    "protocol",
+    "sdk",
+    "core",
+    "application",
+    "framework"
+  ],
+  "author": "MPLP Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/coregentis/mplp.git",
+    "directory": "sdk/packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/coregentis/mplp/issues"
+  },
+  "homepage": "https://docs.mplp.dev/sdk/core",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

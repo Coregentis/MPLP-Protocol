@@ -1,5 +1,9 @@
 # MPLP实现指南
 
+> **🌐 语言导航**: [English](../../en/protocol-foundation/implementation-guide.md) | [中文](implementation-guide.md)
+
+
+
 **MPLP协议实现的综合指南**
 
 [![实现](https://img.shields.io/badge/implementation-Multi%20Language-blue.svg)](./protocol-specification.md)

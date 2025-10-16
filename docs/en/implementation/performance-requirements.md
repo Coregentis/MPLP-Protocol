@@ -1,5 +1,9 @@
 # MPLP Performance Requirements Guide
 
+> **🌐 Language Navigation**: [English](performance-requirements.md) | [中文](../../zh-CN/implementation/performance-requirements.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Performance Requirements Guide v1.0.0-alpha**
 
 [![Performance](https://img.shields.io/badge/performance-99.8%25%20Score-brightgreen.svg)](./README.md)

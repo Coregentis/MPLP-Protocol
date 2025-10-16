@@ -1,5 +1,9 @@
 # MPLP Quick Start Guide
 
+> **🌐 Language Navigation**: [English](quick-start.md) | [中文](../../zh-CN/developers/quick-start.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Quick Start Guide v1.0.0-alpha**
 
 [![Quick Start](https://img.shields.io/badge/quick%20start-5%20Minutes-green.svg)](./README.md)

@@ -1,5 +1,9 @@
 # Context API Reference
 
+> **🌐 Language Navigation**: [English](context-api.md) | [中文](../../zh-CN/api-reference/context-api.md)
+
+
+
 **Shared state and context management across agents - MPLP v1.0 Alpha**
 
 [![API](https://img.shields.io/badge/api-Context%20Module-blue.svg)](../modules/context/README.md)

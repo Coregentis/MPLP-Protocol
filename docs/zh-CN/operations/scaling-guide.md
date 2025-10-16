@@ -1,5 +1,9 @@
 # MPLP 扩展指南
 
+> **🌐 语言导航**: [English](../../en/operations/scaling-guide.md) | [中文](scaling-guide.md)
+
+
+
 **多智能体协议生命周期平台 - 生产扩展指南 v1.0.0-alpha**
 
 [![扩展](https://img.shields.io/badge/scaling-生产验证-brightgreen.svg)](./README.md)

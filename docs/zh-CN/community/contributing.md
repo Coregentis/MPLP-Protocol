@@ -1,5 +1,9 @@
 # 为MPLP做贡献
 
+> **🌐 语言导航**: [English](../../en/community/contributing.md) | [中文](contributing.md)
+
+
+
 **如何为多智能体协议生命周期平台做贡献**
 
 [![贡献](https://img.shields.io/badge/contributing-欢迎-brightgreen.svg)](./README.md)

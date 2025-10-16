@@ -1,5 +1,9 @@
 # MPLP v1.0 Alpha - 快速开始指南
 
+> **🌐 语言导航**: [English](../../en/guides/quick-start.md) | [中文](quick-start.md)
+
+
+
 **5分钟快速上手企业级MPLP！**
 
 ## 🎯 **学习内容**

@@ -383,4 +383,111 @@ export class CoreManagementService {
       averageDuration
     };
   }
+
+  /**
+   * 执行工作流
+   * @param workflowId 工作流ID
+   * @returns 执行后的Core实体
+   */
+  async executeWorkflow(workflowId: UUID): Promise<CoreEntity> {
+    const entity = await this.coreRepository.findById(workflowId);
+    if (!entity) {
+      throw new Error('Workflow not found');
+    }
+
+    // 更新执行状态
+    entity.executionStatus = {
+      ...entity.executionStatus,
+      status: 'running' as WorkflowStatusType,
+      startTime: new Date().toISOString()
+    };
+
+    return await this.coreRepository.save(entity);
+  }
+
+  /**
+   * 获取工作流状态
+   * @param workflowId 工作流ID
+   * @returns 工作流状态信息
+   */
+  async getWorkflowStatus(workflowId: UUID): Promise<{
+    workflowId: UUID;
+    status: WorkflowStatusType;
+    currentStage?: WorkflowStageType;
+    progress: number;
+    startTime?: string;
+    endTime?: string;
+  }> {
+    const entity = await this.coreRepository.findById(workflowId);
+    if (!entity) {
+      throw new Error('Workflow not found');
+    }
+
+    return {
+      workflowId,
+      status: entity.executionStatus.status || 'created',
+      currentStage: entity.executionStatus.currentStage,
+      progress: entity.executionStatus.completedStages?.length || 0,
+      startTime: entity.executionStatus.startTime,
+      endTime: entity.executionStatus.endTime
+    };
+  }
+
+  /**
+   * 暂停工作流
+   * @param workflowId 工作流ID
+   * @returns 暂停后的Core实体
+   */
+  async pauseWorkflow(workflowId: UUID): Promise<CoreEntity> {
+    const entity = await this.coreRepository.findById(workflowId);
+    if (!entity) {
+      throw new Error('Workflow not found');
+    }
+
+    entity.executionStatus = {
+      ...entity.executionStatus,
+      status: 'paused' as WorkflowStatusType
+    };
+
+    return await this.coreRepository.save(entity);
+  }
+
+  /**
+   * 恢复工作流
+   * @param workflowId 工作流ID
+   * @returns 恢复后的Core实体
+   */
+  async resumeWorkflow(workflowId: UUID): Promise<CoreEntity> {
+    const entity = await this.coreRepository.findById(workflowId);
+    if (!entity) {
+      throw new Error('Workflow not found');
+    }
+
+    entity.executionStatus = {
+      ...entity.executionStatus,
+      status: 'running' as WorkflowStatusType
+    };
+
+    return await this.coreRepository.save(entity);
+  }
+
+  /**
+   * 取消工作流
+   * @param workflowId 工作流ID
+   * @returns 取消后的Core实体
+   */
+  async cancelWorkflow(workflowId: UUID): Promise<CoreEntity> {
+    const entity = await this.coreRepository.findById(workflowId);
+    if (!entity) {
+      throw new Error('Workflow not found');
+    }
+
+    entity.executionStatus = {
+      ...entity.executionStatus,
+      status: 'cancelled' as WorkflowStatusType,
+      endTime: new Date().toISOString()
+    };
+
+    return await this.coreRepository.save(entity);
+  }
 }

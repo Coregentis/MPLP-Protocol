@@ -1,5 +1,9 @@
 # Extension API 参考
 
+> **🌐 语言导航**: [English](../../en/api-reference/extension-api.md) | [中文](extension-api.md)
+
+
+
 **插件系统和自定义功能 - MPLP v1.0 Alpha**
 
 [![API](https://img.shields.io/badge/api-Extension%20模块-blue.svg)](../modules/extension/README.md)

@@ -1,5 +1,9 @@
 # Trace API 参考
 
+> **🌐 语言导航**: [English](../../en/api-reference/trace-api.md) | [中文](trace-api.md)
+
+
+
 **执行监控和性能跟踪 - MPLP v1.0 Alpha**
 
 [![API](https://img.shields.io/badge/api-Trace%20模块-blue.svg)](../modules/trace/README.md)

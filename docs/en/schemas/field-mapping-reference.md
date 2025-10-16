@@ -1,5 +1,9 @@
 # MPLP Field Mapping Reference
 
+> **🌐 Language Navigation**: [English](field-mapping-reference.md) | [中文](../../zh-CN/schemas/field-mapping-reference.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Comprehensive Field Mapping Reference**
 
 [![Mapping](https://img.shields.io/badge/mapping-Production%20Validated-brightgreen.svg)](./dual-naming-guide.md)

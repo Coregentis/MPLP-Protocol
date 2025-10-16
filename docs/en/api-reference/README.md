@@ -1,5 +1,9 @@
 # MPLP v1.0 Alpha - API Reference
 
+> **🌐 Language Navigation**: [English](README.md) | [中文](../../zh-CN/api-reference/README.md)
+
+
+
 **Complete API documentation for the Multi-Agent Protocol Lifecycle Platform**
 
 ## 📚 **API Documentation Overview**

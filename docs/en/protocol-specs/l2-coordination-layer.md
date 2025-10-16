@@ -1,5 +1,9 @@
 # L2 Coordination Layer Specification
 
+> **🌐 Language Navigation**: [English](l2-coordination-layer.md) | [中文](../../zh-CN/protocol-specs/l2-coordination-layer.md)
+
+
+
 **Version**: 1.0.0-alpha
 **Last Updated**: September 4, 2025
 **Status**: Production Ready - All 10 Modules Complete
@@ -310,16 +314,16 @@ interface ProtocolError {
 
 ## 📚 **Module-Specific Documentation**
 
-- **[Context Module API](../api-reference/context-api.md)** - Context management protocols
-- **[Plan Module API](../api-reference/plan-api.md)** - Planning and orchestration protocols
-- **[Role Module API](../api-reference/role-api.md)** - RBAC and security protocols
-- **[Confirm Module API](../api-reference/confirm-api.md)** - Approval workflow protocols
-- **[Trace Module API](../api-reference/trace-api.md)** - Monitoring and tracing protocols
-- **[Extension Module API](../api-reference/extension-api.md)** - Plugin system protocols
-- **[Dialog Module API](../api-reference/dialog-api.md)** - Communication protocols
-- **[Collab Module API](../api-reference/collab-api.md)** - Collaboration protocols
-- **[Network Module API](../api-reference/network-api.md)** - Distributed communication protocols
-- **[Core Module API](../api-reference/core-api.md)** - Central coordination protocols
+- **Context Module API (开发中)** - Context management protocols
+- **Plan Module API (开发中)** - Planning and orchestration protocols
+- **Role Module API (开发中)** - RBAC and security protocols
+- **Confirm Module API (开发中)** - Approval workflow protocols
+- **Trace Module API (开发中)** - Monitoring and tracing protocols
+- **Extension Module API (开发中)** - Plugin system protocols
+- **Dialog Module API (开发中)** - Communication protocols
+- **Collab Module API (开发中)** - Collaboration protocols
+- **Network Module API (开发中)** - Distributed communication protocols
+- **Core Module API (开发中)** - Central coordination protocols
 
 ## 🔗 **Related Documentation**
 

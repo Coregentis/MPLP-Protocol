@@ -1,5 +1,9 @@
 # Schema System
 
+> **🌐 Language Navigation**: [English](schema-system.md) | [中文](../../zh-CN/architecture/schema-system.md)
+
+
+
 **JSON Schema-Based Data Validation and Type Safety**
 
 [![Schema](https://img.shields.io/badge/schema-JSON%20Draft--07-blue.svg)](./architecture-overview.md)

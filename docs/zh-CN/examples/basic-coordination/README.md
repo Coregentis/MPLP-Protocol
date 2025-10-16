@@ -1,5 +1,9 @@
 # 基础多智能体协调示例
 
+> **🌐 语言导航**: [English](../../../en/examples/basic-coordination/README.md) | [中文](README.md)
+
+
+
 **MPLP v1.0 Alpha - 初级示例**
 
 [![难度](https://img.shields.io/badge/difficulty-初级-green.svg)](../README.md)

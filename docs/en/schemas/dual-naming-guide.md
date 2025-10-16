@@ -1,5 +1,9 @@
 # MPLP Dual Naming Convention Guide
 
+> **🌐 Language Navigation**: [English](dual-naming-guide.md) | [中文](../../zh-CN/schemas/dual-naming-guide.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Comprehensive Dual Naming Convention Implementation Guide**
 
 [![Convention](https://img.shields.io/badge/convention-snake__case%20%E2%86%94%20camelCase-blue.svg)](./field-mapping-reference.md)

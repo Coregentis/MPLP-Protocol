@@ -1,5 +1,9 @@
 # MPLP Code Examples
 
+> **🌐 Language Navigation**: [English](examples.md) | [中文](../../zh-CN/developers/examples.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Code Examples v1.0.0-alpha**
 
 [![Examples](https://img.shields.io/badge/examples-Working%20Code-green.svg)](./README.md)

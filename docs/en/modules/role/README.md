@@ -1,12 +1,16 @@
 # Role Module
 
+> **🌐 Language Navigation**: [English](README.md) | [中文](../../../zh-CN/modules/role/README.md)
+
+
+
 **MPLP L2 Coordination Layer - Enterprise RBAC and Permission Management System**
 
 [![Module](https://img.shields.io/badge/module-Role-purple.svg)](../../architecture/l2-coordination-layer.md)
 [![Status](https://img.shields.io/badge/status-Enterprise%20Grade-green.svg)](../../../../ALPHA-RELEASE-NOTES.md)
 [![Tests](https://img.shields.io/badge/tests-323%2F323%20passing-green.svg)](./testing.md)
 [![Coverage](https://img.shields.io/badge/coverage-75.31%25-green.svg)](./testing.md)
-[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../../zh-CN/modules/role/README.md)
+[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../zh-CN/modules/role/README.md)
 
 ---
 

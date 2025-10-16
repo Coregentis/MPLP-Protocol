@@ -1,5 +1,9 @@
 # MPLP 社区资源
 
+> **🌐 语言导航**: [English](../../en/developers/community-resources.md) | [中文](community-resources.md)
+
+
+
 **多智能体协议生命周期平台 - 开发者社区资源**
 
 [![社区](https://img.shields.io/badge/community-活跃社区-brightgreen.svg)](./README.md)
@@ -120,7 +124,7 @@ MPLP Community Discord
 ### **官方文档**
 - **[快速开始](./quick-start.md)**: 5分钟快速上手指南
 - **[完整教程](./tutorials.md)**: 从入门到精通的学习路径
-- **[API参考](../api-reference/README.md)**: 完整的API文档
+- **API参考 (开发中)**: 完整的API文档
 - **[最佳实践](./tutorials.md#best-practices)**: 企业级开发最佳实践
 
 ### **视频教程**

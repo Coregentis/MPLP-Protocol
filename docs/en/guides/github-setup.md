@@ -1,5 +1,9 @@
 # 🚀 GitHub Repository Setup Guide - MPLP v1.0
 
+> **🌐 Language Navigation**: [English](github-setup.md) | [中文](../../zh-CN/guides/github-setup.md)
+
+
+
 **Complete guide for setting up MPLP v1.0 Alpha on GitHub**
 
 [![GitHub](https://img.shields.io/badge/platform-GitHub-black.svg)](https://github.com)

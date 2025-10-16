@@ -1,11 +1,15 @@
 # Context Module Protocol Specification
 
+> **🌐 Language Navigation**: [English](protocol-specification.md) | [中文](../../../zh-CN/modules/context/protocol-specification.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Context Module Protocol Specification v1.0.0-alpha**
 
 [![Protocol](https://img.shields.io/badge/protocol-MPLP%20v1.0.0--alpha-blue.svg)](../../protocol-foundation/protocol-specification.md)
 [![Module](https://img.shields.io/badge/module-Context-green.svg)](./README.md)
 [![Status](https://img.shields.io/badge/status-Stable-green.svg)](./implementation-guide.md)
-[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../../zh-CN/modules/context/protocol-specification.md)
+[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../zh-CN/modules/context/protocol-specification.md)
 
 ---
 

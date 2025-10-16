@@ -1,5 +1,9 @@
 # Role API 参考
 
+> **🌐 语言导航**: [English](../../en/api-reference/role-api.md) | [中文](role-api.md)
+
+
+
 **基于角色的访问控制和能力管理 - MPLP v1.0 Alpha**
 
 [![API](https://img.shields.io/badge/api-Role%20模块-blue.svg)](../modules/role/README.md)

@@ -1,5 +1,9 @@
 # Design Patterns
 
+> **🌐 Language Navigation**: [English](design-patterns.md) | [中文](../../zh-CN/architecture/design-patterns.md)
+
+
+
 **Enterprise Architecture Patterns for Multi-Agent Systems**
 
 [![Patterns](https://img.shields.io/badge/patterns-Enterprise%20Grade-blue.svg)](./architecture-overview.md)

@@ -1,5 +1,9 @@
 # MPLP Protocol Overview
 
+> **🌐 Language Navigation**: [English](protocol-overview.md) | [中文](../../zh-CN/protocol-foundation/protocol-overview.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - L1-L3 Protocol Stack**
 
 [![Version](https://img.shields.io/badge/version-1.0.0--alpha-brightgreen.svg)](https://github.com/mplp/mplp)

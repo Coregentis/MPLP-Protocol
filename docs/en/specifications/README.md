@@ -1,5 +1,9 @@
 # MPLP Specifications and Standards
 
+> **🌐 Language Navigation**: [English](README.md) | [中文](../../zh-CN/specifications/README.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Specifications and Standards v1.0.0-alpha**
 
 [![Specifications](https://img.shields.io/badge/specifications-Production%20Ready-brightgreen.svg)](../README.md)
@@ -413,7 +417,7 @@ certification_levels:
 
 ### **Technical Documentation**
 - **[Protocol Foundation](../protocol-foundation/README.md)** - Core protocol concepts
-- **[Architecture Guide](../architecture/README.md)** - System architecture overview
+- **Architecture Guide (开发中)** - System architecture overview
 - **[Implementation Guide](../implementation/README.md)** - Implementation strategies
 - **[Testing Framework](../testing/README.md)** - Testing and validation
 

@@ -1,5 +1,9 @@
 # MPLP Monitoring Guide
 
+> **🌐 Language Navigation**: [English](monitoring-guide.md) | [中文](../../zh-CN/operations/monitoring-guide.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Production Monitoring Guide v1.0.0-alpha**
 
 [![Monitoring](https://img.shields.io/badge/monitoring-Enterprise%20Ready-brightgreen.svg)](./README.md)

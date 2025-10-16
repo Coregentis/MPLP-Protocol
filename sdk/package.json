@@ -1,0 +1,93 @@
+{
+  "name": "@mplp/sdk-root",
+  "version": "1.1.0-beta",
+  "description": "MPLP SDK - Multi-Agent Protocol Lifecycle Platform SDK",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "examples/*"
+  ],
+  "scripts": {
+    "install:all": "npm install",
+    "build": "npm run build:core",
+    "build:core": "cd packages/core && npm run build",
+    "build:watch": "lerna run build:watch --parallel",
+    "clean": "lerna run clean && lerna clean --yes",
+    "test": "lerna run test",
+    "test:watch": "lerna run test:watch --parallel",
+    "test:coverage": "lerna run test:coverage",
+    "lint": "lerna run lint",
+    "lint:fix": "lerna run lint:fix",
+    "typecheck": "lerna run typecheck",
+    "dev": "lerna run dev --parallel",
+    "start": "lerna run start --parallel",
+    "publish": "lerna publish",
+    "publish:beta": "lerna publish --dist-tag beta",
+    "version": "lerna version",
+    "version:beta": "lerna version prerelease --preid beta",
+    "changed": "lerna changed",
+    "diff": "lerna diff",
+    "validate:packages": "node scripts/validate-packages.js",
+    "publish:beta:dry": "node scripts/publish.js --dry-run",
+    "publish:beta:real": "node scripts/publish.js",
+    "publish:force": "node scripts/publish.js --force",
+    "docs:build": "lerna run docs:build",
+    "docs:dev": "lerna run docs:dev --parallel",
+    "prepare": "echo 'Skipping husky install'",
+    "precommit": "lint-staged",
+    "prepush": "npm run test && npm run typecheck"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.5",
+    "@types/node": "^18.15.13",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.2",
+    "eslint-plugin-prettier": "^5.5.4",
+    "husky": "^8.0.3",
+    "jest": "^29.5.0",
+    "lerna": "^8.2.4",
+    "lint-staged": "^15.0.0",
+    "prettier": "^3.0.0",
+    "ts-jest": "^29.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/coregentis/mplp.git",
+    "directory": "sdk"
+  },
+  "keywords": [
+    "mplp",
+    "multi-agent",
+    "protocol",
+    "sdk",
+    "agent-builder",
+    "orchestrator",
+    "cli",
+    "typescript"
+  ],
+  "author": "MPLP Team",
+  "license": "MIT",
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "npm run test && npm run typecheck"
+    }
+  }
+}

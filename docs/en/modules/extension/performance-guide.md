@@ -1,11 +1,15 @@
 # Extension Module Performance Guide
 
+> **🌐 Language Navigation**: [English](performance-guide.md) | [中文](../../../zh-CN/modules/extension/performance-guide.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Extension Module Performance Guide v1.0.0-alpha**
 
 [![Performance](https://img.shields.io/badge/performance-Enterprise%20Optimized-green.svg)](./README.md)
 [![Benchmarks](https://img.shields.io/badge/benchmarks-Validated-blue.svg)](./testing-guide.md)
 [![Extensions](https://img.shields.io/badge/extensions-High%20Performance-orange.svg)](./configuration-guide.md)
-[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../../zh-CN/modules/extension/performance-guide.md)
+[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../zh-CN/modules/extension/performance-guide.md)
 
 ---
 

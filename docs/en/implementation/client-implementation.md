@@ -1,5 +1,9 @@
 # MPLP Client Implementation Guide
 
+> **🌐 Language Navigation**: [English](client-implementation.md) | [中文](../../zh-CN/implementation/client-implementation.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Client Implementation Guide v1.0.0-alpha**
 
 [![Client](https://img.shields.io/badge/client-Enterprise%20Ready-brightgreen.svg)](./README.md)

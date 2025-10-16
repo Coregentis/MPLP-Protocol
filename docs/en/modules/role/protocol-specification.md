@@ -1,11 +1,15 @@
 # Role Module Protocol Specification
 
+> **🌐 Language Navigation**: [English](protocol-specification.md) | [中文](../../../zh-CN/modules/role/protocol-specification.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Role Module Protocol Specification v1.0.0-alpha**
 
 [![Protocol](https://img.shields.io/badge/protocol-RBAC%20v1.0-blue.svg)](./README.md)
 [![Specification](https://img.shields.io/badge/specification-Enterprise%20Grade-green.svg)](./api-reference.md)
 [![Security](https://img.shields.io/badge/security-Compliant-orange.svg)](./implementation-guide.md)
-[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../../zh-CN/modules/role/protocol-specification.md)
+[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../zh-CN/modules/role/protocol-specification.md)
 
 ---
 

@@ -1,5 +1,9 @@
 # L1 Protocol Layer Specification
 
+> **🌐 Language Navigation**: [English](l1-protocol-layer.md) | [中文](../../zh-CN/protocol-specs/l1-protocol-layer.md)
+
+
+
 **Version**: 1.0.0-alpha
 **Last Updated**: September 4, 2025
 **Status**: Production Ready - 100% Complete
@@ -251,7 +255,7 @@ npm run validate:mapping
 
 - **[L2 Coordination Layer](l2-coordination-layer.md)** - How L2 modules use L1 protocols
 - **[L3 Execution Layer](l3-execution-layer.md)** - CoreOrchestrator integration with L1
-- **[Schema Reference](../api-reference/schema-reference.md)** - Complete schema documentation
+- **Schema Reference (开发中)** - Complete schema documentation
 - **[Dual Naming Convention](../architecture/dual-naming-convention.md)** - Detailed naming guidelines
 
 ---

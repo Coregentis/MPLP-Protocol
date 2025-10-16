@@ -1,5 +1,9 @@
 # MPLP Compliance Testing
 
+> **🌐 Language Navigation**: [English](compliance-testing.md) | [中文](../../zh-CN/protocol-foundation/compliance-testing.md)
+
+
+
 **Protocol Conformance Testing and Validation Framework**
 
 [![Testing](https://img.shields.io/badge/testing-2869%2F2869%20Pass-brightgreen.svg)](./protocol-specification.md)

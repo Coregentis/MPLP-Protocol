@@ -1,11 +1,15 @@
 # Extension Module Configuration Guide
 
+> **🌐 Language Navigation**: [English](configuration-guide.md) | [中文](../../../zh-CN/modules/extension/configuration-guide.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Extension Module Configuration Guide v1.0.0-alpha**
 
 [![Configuration](https://img.shields.io/badge/configuration-Enterprise%20Grade-green.svg)](./README.md)
 [![Module](https://img.shields.io/badge/module-Extension-purple.svg)](./implementation-guide.md)
 [![Extensions](https://img.shields.io/badge/extensions-Configurable-orange.svg)](./performance-guide.md)
-[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../../zh-CN/modules/extension/configuration-guide.md)
+[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../zh-CN/modules/extension/configuration-guide.md)
 
 ---
 

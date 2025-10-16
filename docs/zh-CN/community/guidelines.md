@@ -1,5 +1,9 @@
 # 社区指南
 
+> **🌐 语言导航**: [English](../../en/community/guidelines.md) | [中文](guidelines.md)
+
+
+
 **MPLP社区 - 参与详细指南**
 
 [![指南](https://img.shields.io/badge/guidelines-Community-green.svg)](./README.md)
@@ -196,9 +200,9 @@
 - **Release Notes**：重要更新和公告
 
 ### **学习资源**
-- **[架构文档](../architecture/README.md)**：系统架构和设计
-- **[API参考](../api-reference/README.md)**：完整的API文档
-- **[示例代码](../examples/README.md)**：实际使用示例
+- **架构文档 (开发中)**：系统架构和设计
+- **API参考 (开发中)**：完整的API文档
+- **示例代码 (开发中)**：实际使用示例
 - **[测试指南](../testing/README.md)**：测试策略和最佳实践
 
 ---

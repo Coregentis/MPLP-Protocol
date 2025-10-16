@@ -1,11 +1,15 @@
 # Context Module Implementation Guide
 
+> **🌐 Language Navigation**: [English](implementation-guide.md) | [中文](../../../zh-CN/modules/context/implementation-guide.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Context Module Implementation Guide v1.0.0-alpha**
 
 [![Implementation](https://img.shields.io/badge/implementation-Production%20Ready-green.svg)](./README.md)
 [![Module](https://img.shields.io/badge/module-Context-green.svg)](./protocol-specification.md)
 [![Examples](https://img.shields.io/badge/examples-Complete-blue.svg)](./integration-examples.md)
-[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../../zh-CN/modules/context/implementation-guide.md)
+[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../zh-CN/modules/context/implementation-guide.md)
 
 ---
 

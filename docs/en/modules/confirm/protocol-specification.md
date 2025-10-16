@@ -1,11 +1,15 @@
 # Confirm Module Protocol Specification
 
+> **🌐 Language Navigation**: [English](protocol-specification.md) | [中文](../../../zh-CN/modules/confirm/protocol-specification.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Confirm Module Protocol Specification v1.0.0-alpha**
 
 [![Protocol](https://img.shields.io/badge/protocol-Workflow%20v1.0-blue.svg)](./README.md)
 [![Specification](https://img.shields.io/badge/specification-Enterprise%20Grade-green.svg)](./api-reference.md)
 [![Workflow](https://img.shields.io/badge/workflow-Compliant-orange.svg)](./implementation-guide.md)
-[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../../zh-CN/modules/confirm/protocol-specification.md)
+[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../zh-CN/modules/confirm/protocol-specification.md)
 
 ---
 

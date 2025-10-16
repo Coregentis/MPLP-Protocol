@@ -1,5 +1,9 @@
 # MPLP 治理
 
+> **🌐 语言导航**: [English](../../en/community/governance.md) | [中文](governance.md)
+
+
+
 **项目治理和决策制定结构**
 
 [![治理](https://img.shields.io/badge/governance-透明-blue.svg)](./README.md)

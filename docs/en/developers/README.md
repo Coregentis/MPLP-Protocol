@@ -1,5 +1,9 @@
 # MPLP Developer Documentation
 
+> **🌐 Language Navigation**: [English](README.md) | [中文](../../zh-CN/developers/README.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Developer Resources**
 
 [![Developers](https://img.shields.io/badge/developers-Welcome-brightgreen.svg)](../community/README.md)
@@ -36,8 +40,8 @@ Welcome to the MPLP developer documentation! As the **first production-ready mul
 
 1. **🔧 [Development Tools](./tools.md)**: Essential tools and utilities
 2. **🤝 [Community Resources](./community-resources.md)**: Community support and resources
-3. **📋 [API Reference](../api-reference/README.md)**: Complete API documentation
-4. **🏗️ [Architecture Guide](../architecture/README.md)**: System architecture and design
+3. **📋 API Reference (开发中)**: Complete API documentation
+4. **🏗️ Architecture Guide (开发中)**: System architecture and design
 
 ---
 
@@ -53,7 +57,7 @@ Welcome to the MPLP developer documentation! As the **first production-ready mul
 
 #### **SDK and APIs**
 - **[SDK Documentation](./sdk.md)**: Complete SDK reference
-- **[API Reference](../api-reference/README.md)**: All 10 module APIs
+- **API Reference (开发中)**: All 10 module APIs
 - **[TypeScript Support](./sdk.md#typescript)**: Full TypeScript integration
 - **[Error Handling](./sdk.md#error-handling)**: Best practices for error management
 
@@ -92,16 +96,16 @@ MPLP provides a complete three-layer protocol stack:
 - **Data Serialization**: High-performance serialization and validation
 
 #### **L2 Coordination Layer** (10 Modules)
-1. **[Context](../api-reference/context-api.md)**: Shared state and context management
-2. **[Plan](../api-reference/plan-api.md)**: Collaborative planning and goal decomposition
-3. **[Role](../api-reference/role-api.md)**: RBAC and capability management
-4. **[Confirm](../api-reference/confirm-api.md)**: Multi-party approval and consensus
-5. **[Trace](../api-reference/trace-api.md)**: Execution monitoring and performance tracking
-6. **[Extension](../api-reference/extension-api.md)**: Plugin system and custom functionality
-7. **[Dialog](../api-reference/dialog-api.md)**: Inter-agent communication and conversations
-8. **[Collab](../api-reference/collab-api.md)**: Multi-agent collaboration patterns
-9. **[Network](../api-reference/network-api.md)**: Distributed communication and service discovery
-10. **[Core](../api-reference/core-api.md)**: Central coordination and system management
+1. **Context (开发中)**: Shared state and context management
+2. **Plan (开发中)**: Collaborative planning and goal decomposition
+3. **Role (开发中)**: RBAC and capability management
+4. **Confirm (开发中)**: Multi-party approval and consensus
+5. **Trace (开发中)**: Execution monitoring and performance tracking
+6. **Extension (开发中)**: Plugin system and custom functionality
+7. **Dialog (开发中)**: Inter-agent communication and conversations
+8. **Collab (开发中)**: Multi-agent collaboration patterns
+9. **Network (开发中)**: Distributed communication and service discovery
+10. **Core (开发中)**: Central coordination and system management
 
 #### **L3 Execution Layer** (Orchestration)
 - **CoreOrchestrator**: Central coordination and workflow management
@@ -206,12 +210,12 @@ We welcome contributions from developers of all skill levels:
 
 ### **Essential Resources**
 - **[Quick Start](./quick-start.md)**: Get started in 5 minutes
-- **[API Reference](../api-reference/README.md)**: Complete API documentation
+- **API Reference (开发中)**: Complete API documentation
 - **[Examples](./examples.md)**: Working code examples
 - **[Community](../community/README.md)**: Join the community
 
 ### **Advanced Topics**
-- **[Architecture](../architecture/README.md)**: System architecture and design
+- **Architecture (开发中)**: System architecture and design
 - **[Performance](./tutorials.md#performance)**: Performance optimization
 - **[Security](./tutorials.md#security)**: Security best practices
 - **[Deployment](./tutorials.md#deployment)**: Production deployment

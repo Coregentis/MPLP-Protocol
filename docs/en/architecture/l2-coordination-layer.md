@@ -1,5 +1,9 @@
 # L2 Coordination Layer
 
+> **🌐 Language Navigation**: [English](l2-coordination-layer.md) | [中文](../../zh-CN/architecture/l2-coordination-layer.md)
+
+
+
 **Coordination Layer - Multi-Agent Collaboration Patterns**
 
 [![Layer](https://img.shields.io/badge/layer-L2%20Coordination-green.svg)](./architecture-overview.md)

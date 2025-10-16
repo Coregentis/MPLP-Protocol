@@ -1,5 +1,9 @@
 # MPLP 开发者文档
 
+> **🌐 语言导航**: [English](../../en/developers/README.md) | [中文](README.md)
+
+
+
 **多智能体协议生命周期平台 - 开发者资源**
 
 [![开发者](https://img.shields.io/badge/developers-欢迎-brightgreen.svg)](../community/README.md)
@@ -36,8 +40,8 @@
 
 1. **🔧 [开发工具](./tools.md)**: 必备工具和实用程序
 2. **🤝 [社区资源](./community-resources.md)**: 社区支持和资源
-3. **📋 [API参考](../api-reference/README.md)**: 完整的API文档
-4. **🏗️ [架构指南](../architecture/README.md)**: 系统架构和设计
+3. **📋 API参考 (开发中)**: 完整的API文档
+4. **🏗️ 架构指南 (开发中)**: 系统架构和设计
 
 ---
 
@@ -53,7 +57,7 @@
 
 #### **SDK和API**
 - **[SDK文档](./sdk.md)**: 完整的SDK参考
-- **[API参考](../api-reference/README.md)**: 所有10个模块API
+- **API参考 (开发中)**: 所有10个模块API
 - **[TypeScript支持](./sdk.md#typescript)**: 完整的TypeScript集成
 - **[错误处理](./sdk.md#error-handling)**: 错误管理最佳实践
 
@@ -92,16 +96,16 @@ MPLP提供完整的三层协议栈：
 - **数据序列化**: 高性能序列化和验证
 
 #### **L2协调层**（10个模块）
-1. **[Context](../api-reference/context-api.md)**: 共享状态和上下文管理
-2. **[Plan](../api-reference/plan-api.md)**: 协作规划和目标分解
-3. **[Role](../api-reference/role-api.md)**: RBAC和能力管理
-4. **[Confirm](../api-reference/confirm-api.md)**: 多方审批和共识
-5. **[Trace](../api-reference/trace-api.md)**: 执行监控和性能跟踪
-6. **[Extension](../api-reference/extension-api.md)**: 插件系统和自定义功能
-7. **[Dialog](../api-reference/dialog-api.md)**: 智能体间通信和对话
-8. **[Collab](../api-reference/collab-api.md)**: 多智能体协作模式
-9. **[Network](../api-reference/network-api.md)**: 分布式通信和服务发现
-10. **[Core](../api-reference/core-api.md)**: 中央协调和系统管理
+1. **Context (开发中)**: 共享状态和上下文管理
+2. **Plan (开发中)**: 协作规划和目标分解
+3. **Role (开发中)**: RBAC和能力管理
+4. **Confirm (开发中)**: 多方审批和共识
+5. **Trace (开发中)**: 执行监控和性能跟踪
+6. **Extension (开发中)**: 插件系统和自定义功能
+7. **Dialog (开发中)**: 智能体间通信和对话
+8. **Collab (开发中)**: 多智能体协作模式
+9. **Network (开发中)**: 分布式通信和服务发现
+10. **Core (开发中)**: 中央协调和系统管理
 
 #### **L3执行层**（协调）
 - **CoreOrchestrator**: 中央协调和工作流管理
@@ -206,12 +210,12 @@ MPLP提供完整的三层协议栈：
 
 ### **必备资源**
 - **[快速开始](./quick-start.md)**: 5分钟快速上手
-- **[API参考](../api-reference/README.md)**: 完整的API文档
+- **API参考 (开发中)**: 完整的API文档
 - **[示例](./examples.md)**: 可工作的代码示例
 - **[社区](../community/README.md)**: 加入社区
 
 ### **高级主题**
-- **[架构](../architecture/README.md)**: 系统架构和设计
+- **架构 (开发中)**: 系统架构和设计
 - **[性能](./tutorials.md#performance)**: 性能优化
 - **[安全](./tutorials.md#security)**: 安全最佳实践
 - **[部署](./tutorials.md#deployment)**: 生产部署

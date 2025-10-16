@@ -1,5 +1,9 @@
 # MPLP 互操作性测试
 
+> **🌐 语言导航**: [English](../../en/testing/interoperability-testing.md) | [中文](interoperability-testing.md)
+
+
+
 **多智能体协议生命周期平台 - 互操作性测试 v1.0.0-alpha**
 
 [![互操作性](https://img.shields.io/badge/interoperability-生产就绪-brightgreen.svg)](./README.md)
@@ -488,11 +492,70 @@ describe('多语言互操作性', () => {
 });
 ```
 
+### **版本兼容性测试**
+
+#### **协议版本兼容性矩阵**
+```typescript
+// 版本兼容性测试套件
+describe('MPLP版本兼容性测试', () => {
+  const versionMatrix = [
+    { version: '1.0.0-alpha', compatible: ['1.0.0-alpha'] },
+    { version: '1.0.0-beta', compatible: ['1.0.0-alpha', '1.0.0-beta'] },
+    { version: '1.0.0', compatible: ['1.0.0-alpha', '1.0.0-beta', '1.0.0'] },
+    { version: '1.1.0', compatible: ['1.0.0', '1.1.0'] }
+  ];
+
+  versionMatrix.forEach(currentVersion => {
+    describe(`版本 ${currentVersion.version} 兼容性`, () => {
+      currentVersion.compatible.forEach(compatibleVersion => {
+        it(`应该与版本 ${compatibleVersion} 兼容`, async () => {
+          const currentClient = new MPLPClient({
+            protocolVersion: currentVersion.version
+          });
+          const compatibleClient = new MPLPClient({
+            protocolVersion: compatibleVersion
+          });
+
+          // 测试基本通信
+          const context = await currentClient.context.createContext({
+            contextId: `ctx-version-test-${currentVersion.version}-${compatibleVersion}`,
+            contextType: 'version_compatibility_test',
+            contextData: {
+              currentVersion: currentVersion.version,
+              compatibleVersion: compatibleVersion
+            },
+            createdBy: 'version-compatibility-test'
+          });
+
+          const retrievedContext = await compatibleClient.context.getContext(context.contextId);
+          expect(retrievedContext.contextId).toBe(context.contextId);
+
+          // 测试协议协商
+          const negotiationResult = await currentClient.core.negotiateProtocolVersion(compatibleVersion);
+          expect(negotiationResult.negotiated).toBe(true);
+          expect(negotiationResult.agreedVersion).toBeDefined();
+        });
+      });
+    });
+  });
+});
+```
+
 ---
 
-**互操作性测试版本**: 1.0.0-alpha  
-**最后更新**: 2025年9月4日  
-**下次审查**: 2025年12月4日  
-**状态**: 生产就绪  
+## 🔗 相关文档
 
-**✅ 生产就绪通知**: MPLP互操作性测试已完全实现并通过企业级验证，支持跨平台和多语言环境的2,869/2,869测试通过。
+- [测试框架概述](./README.md) - 测试框架概述
+- [协议合规性测试](./protocol-compliance-testing.md) - L1-L3协议验证
+- [性能基准测试](./performance-benchmarking.md) - 性能验证
+- [安全测试](./security-testing.md) - 安全验证
+- [多语言支持](../implementation/multi-language-support.md) - 语言实现
+
+---
+
+**互操作性测试版本**: 1.0.0-alpha
+**最后更新**: 2025年9月4日
+**下次审查**: 2025年12月4日
+**状态**: 企业级验证
+
+**⚠️ Alpha通知**: 此互操作性测试指南为MPLP v1.0 Alpha提供了全面的跨平台和多语言验证。基于集成反馈和平台演进，将在Beta版本中添加额外的互操作性测试和兼容性功能。

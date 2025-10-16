@@ -1,5 +1,9 @@
 # MPLP SDK 文档
 
+> **🌐 语言导航**: [English](../../en/developers/sdk.md) | [中文](sdk.md)
+
+
+
 **多智能体协议生命周期平台 - SDK文档 v1.0.0-alpha**
 
 [![SDK](https://img.shields.io/badge/sdk-Multi%20Language-green.svg)](./README.md)
@@ -496,7 +500,7 @@ try {
 ## 🔗 相关资源
 
 ### **SDK文档**
-- **[API参考](../api-reference/README.md)** - 完整的API文档
+- **API参考 (开发中)** - 完整的API文档
 - **[示例代码](./examples.md)** - 实际使用示例
 - **[开发工具](./tools.md)** - 开发和调试工具
 

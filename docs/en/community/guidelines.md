@@ -1,5 +1,9 @@
 # Community Guidelines
 
+> **🌐 Language Navigation**: [English](guidelines.md) | [中文](../../zh-CN/community/guidelines.md)
+
+
+
 **MPLP Community - Detailed Guidelines for Participation**
 
 [![Guidelines](https://img.shields.io/badge/guidelines-Community-green.svg)](./README.md)

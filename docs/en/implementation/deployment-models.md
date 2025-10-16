@@ -1,5 +1,9 @@
 # MPLP Deployment Models Guide
 
+> **🌐 Language Navigation**: [English](deployment-models.md) | [中文](../../zh-CN/implementation/deployment-models.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Deployment Models Guide v1.0.0-alpha**
 
 [![Deployment](https://img.shields.io/badge/deployment-Enterprise%20Ready-brightgreen.svg)](./README.md)

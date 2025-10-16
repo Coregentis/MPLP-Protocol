@@ -1,11 +1,15 @@
 # Plan Module Performance Guide
 
+> **🌐 Language Navigation**: [English](performance-guide.md) | [中文](../../../zh-CN/modules/plan/performance-guide.md)
+
+
+
 **Multi-Agent Protocol Lifecycle Platform - Plan Module Performance Guide v1.0.0-alpha**
 
 [![Performance](https://img.shields.io/badge/performance-AI%20Optimized-green.svg)](./README.md)
 [![Benchmarks](https://img.shields.io/badge/benchmarks-Validated-blue.svg)](./testing-guide.md)
 [![Scalability](https://img.shields.io/badge/scalability-Enterprise-orange.svg)](./configuration-guide.md)
-[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../../zh-CN/modules/plan/performance-guide.md)
+[![Language](https://img.shields.io/badge/language-English-blue.svg)](../../zh-CN/modules/plan/performance-guide.md)
 
 ---
 
