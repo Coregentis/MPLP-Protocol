@@ -5,9 +5,63 @@
 # It filters out internal development content while keeping core functionality
 #
 # Repository: https://github.com/Coregentis/MPLP-Protocol
-# Version: 1.0.0
+# Version: 2.0.0
 # Last Updated: 2025-10-16
+# Strategy: Clean production release (exclude ALL development configuration)
 # =============================================================================
+
+# =============================================================================
+# DEVELOPMENT CONFIGURATION FILES - DO NOT PUBLISH
+# =============================================================================
+# These files are for development only and should NOT appear in public release
+
+# Git Configuration
+.gitignore
+.gitignore.public
+.gitattributes
+
+# Code Quality & Linting
+.eslintrc.json
+.eslintrc.js
+.eslintrc.yml
+.eslintrc
+.eslintignore
+.prettierrc.json
+.prettierrc.js
+.prettierrc.yml
+.prettierrc
+.prettierignore
+.editorconfig
+
+# TypeScript Configuration
+tsconfig.json
+tsconfig.base.json
+tsconfig.build.json
+tsconfig.*.json
+
+# Testing Configuration
+jest.config.js
+jest.config.ts
+jest.config.json
+cucumber.config.js
+jest.schema-application.config.js
+
+# Build & Package Configuration
+.npmignore
+.npmrc
+.yarnrc
+.yarnrc.yml
+
+# IDE & Editor Configuration
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment Files
+.env.example
+.env.template
 
 # =============================================================================
 # STANDARD NODE.JS IGNORES
@@ -129,6 +183,7 @@ ci-diagnostic-report.json
 OPEN-SOURCE-*.md
 ROOT-FILES-AUDIT-*.md
 DOCUMENTATION-REVIEW-*.md
+PUBLIC-REPO-AUDIT-*.md
 
 # Internal Governance and Policies
 COMMIT-HISTORY-*.md
@@ -142,9 +197,28 @@ RELEASE-CHECKLIST.md
 V1.1.0-beta-*.md
 *-文档分类整合规划.md
 
-# Internal Test Configurations
-cucumber.config.js
-jest.schema-application.config.js
+# Internal Test Configurations (duplicates removed - already in dev config section)
+# cucumber.config.js
+# jest.schema-application.config.js
+
+# =============================================================================
+# TEST DIRECTORIES - DO NOT PUBLISH
+# =============================================================================
+# Test suites are for development only, not needed by end users
+
+tests/
+test/
+__tests__/
+*.test.ts
+*.test.js
+*.spec.ts
+*.spec.js
+
+# Test Coverage and Reports
+coverage/
+.nyc_output/
+test-results/
+playwright-report/
 
 # Development Archives and History
 Archived/
