@@ -1,27 +1,44 @@
 /**
- * MPLP v1.0.0-alpha 主导出文件
- * 
+ * MPLP v1.1.0-beta 主导出文件
+ *
  * Multi-Agent Protocol Lifecycle Platform
- * L1-L3 协议栈统一导出
- * 
- * @version 1.0.0-alpha
+ * L1-L3 协议栈统一导出 + SDK生态系统
+ *
+ * @version 1.1.0-beta
  * @architecture L1-L3 Protocol Stack
  * @status Production Ready
  * @created 2025-07-28
- * @updated 2025-09-04
+ * @updated 2025-10-16
+ *
+ * 使用说明:
+ * - 主包导出: import { MPLP_VERSION } from 'mplp'
+ * - 模块导出: import { ContextManager } from 'mplp/context'
+ * - 类型导出: import type { UUID } from 'mplp/types'
+ * - 工具导出: import { generateUUID } from 'mplp/utils'
  */
 
 // ===== 版本信息 =====
-export const MPLP_VERSION = '1.0.0-alpha';
+export const MPLP_VERSION = '1.1.0-beta';
 export const MPLP_PROTOCOL_VERSION = 'L1-L3';
 export const MPLP_STATUS = 'Production Ready';
+export const MPLP_PROJECT_NAME = 'Multi-Agent Protocol Lifecycle Platform';
+export const MPLP_CAPABILITIES = [
+  'multi_agent_coordination',
+  'workflow_orchestration',
+  'lifecycle_management',
+  'real_time_monitoring',
+  'role_based_security',
+  'extension_system',
+  'vendor_neutral_design',
+  'schema_driven_development'
+];
 
 // ===== 项目信息 =====
 export const MPLP_INFO = {
   name: 'MPLP',
-  version: '1.0.0-alpha',
+  version: '1.1.0-beta',
   fullName: 'Multi-Agent Protocol Lifecycle Platform',
-  description: 'L1-L3 Protocol Stack for Multi-Agent Systems',
+  description: 'L1-L3 Protocol Stack for Multi-Agent Systems with Complete SDK Ecosystem',
   architecture: 'L1-L3 Layered Architecture',
   status: 'Production Ready',
   modules: [
@@ -36,26 +53,17 @@ export const MPLP_INFO = {
     'core',      // Runtime orchestrator and coordinator
     'network'    // Agent network topology and routing
   ],
-  capabilities: [
-    'multi_agent_coordination',
-    'workflow_orchestration', 
-    'lifecycle_management',
-    'real_time_monitoring',
-    'role_based_security',
-    'extension_system',
-    'vendor_neutral_design',
-    'schema_driven_development'
-  ],
+  capabilities: MPLP_CAPABILITIES,
   license: 'MIT',
-  repository: 'https://github.com/mplp-org/mplp',
-  documentation: 'https://docs.mplp.dev'
+  repository: 'https://github.com/Coregentis/MPLP-Protocol',
+  documentation: 'https://github.com/Coregentis/MPLP-Protocol/tree/main/docs'
 } as const;
 
 // ===== 版本兼容性 =====
 export const VERSION_INFO = {
-  current: '1.0.0-alpha',
+  current: '1.1.0-beta',
   api_version: 'v1',
-  schema_version: '1.0',
+  schema_version: '1.1',
   protocol_version: 'L1-L3',
   compatibility: {
     node: '>=18.0.0',
@@ -70,6 +78,8 @@ export default {
   MPLP_VERSION,
   MPLP_PROTOCOL_VERSION,
   MPLP_STATUS,
+  MPLP_PROJECT_NAME,
+  MPLP_CAPABILITIES,
   MPLP_INFO,
   VERSION_INFO
 };
