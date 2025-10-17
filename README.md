@@ -33,11 +33,13 @@
 
 <div align="center">
 
-| **🇺🇸 English** | **🇨🇳 中文** | **🌍 More Languages** |
-|:---------------:|:------------:|:---------------------:|
-| [📖 Documentation](docs/en/) | [📖 文档](docs/zh-CN/) | [🌐 See All](docs/) |
-| [🚀 Quick Start](docs/en/developers/quick-start.md) | [🚀 快速开始](docs/zh-CN/developers/quick-start.md) | [🎯 Guides](docs/) |
-| [🔧 API Reference](docs/en/api-reference/) | [🔧 API参考](docs/zh-CN/api-reference/) | [📚 Tutorials](docs/) |
+| **🇺🇸 English** | **🇨🇳 中文** | **🇯🇵 日本語** |
+|:---------------:|:------------:|:---------------:|
+| [📖 Documentation](docs/en/) | [📖 文档](docs/zh-CN/) | [📖 ドキュメント](docs/ja/) |
+| [🚀 Quick Start](docs/en/developers/quick-start.md) | [🚀 快速开始](docs/zh-CN/developers/quick-start.md) | [🚀 クイックスタート](docs/ja/developers/quick-start.md) |
+| [🔧 API Reference](docs/en/api-reference/) | [🔧 API参考](docs/zh-CN/api-reference/) | [🔧 APIリファレンス](docs/ja/api-reference/) |
+
+> **Available Languages**: We currently provide **complete documentation** in English and Chinese, with **basic documentation** in Japanese. Additional language translations are in progress. [Contributions welcome!](CONTRIBUTING.md)
 
 **Community**: [🤝 Contributing](CONTRIBUTING.md) • [💬 Discussions](https://github.com/Coregentis/MPLP-Protocol/discussions) • [📋 Roadmap](ROADMAP.md) • [🐛 Issues](https://github.com/Coregentis/MPLP-Protocol/issues)
 
@@ -468,7 +470,7 @@ const result = await mplp.executeWorkflow(workflow, {
 
 | Resource | Description | Link |
 |----------|-------------|------|
-| **Quick Start** | Get running in 5 minutes | [English](docs/en/developers/quick-start.md) • [中文](docs/zh-CN/developers/quick-start.md) |
+| **Quick Start** | Get running in 5 minutes | [English](docs/en/developers/quick-start.md) • [中文](docs/zh-CN/developers/quick-start.md) • [日本語](docs/ja/developers/quick-start.md) |
 | **SDK Guide** | Complete SDK documentation | [English](docs/en/sdk/) • [中文](docs/zh-CN/sdk/) |
 | **Examples** | Working code examples | [View Examples](examples/) |
 
@@ -476,8 +478,8 @@ const result = await mplp.executeWorkflow(workflow, {
 
 | Topic | Description | Link |
 |-------|-------------|------|
-| **Architecture** | System design and principles | [English](docs/en/architecture/) • [中文](docs/zh-CN/architecture/) |
-| **API Reference** | Complete API docs for all modules | [English](docs/en/api-reference/) • [中文](docs/zh-CN/api-reference/) |
+| **Architecture** | System design and principles | [English](docs/en/architecture/) • [中文](docs/zh-CN/architecture/) • [日本語](docs/ja/architecture/) |
+| **API Reference** | Complete API docs for all modules | [English](docs/en/api-reference/) • [中文](docs/zh-CN/api-reference/) • [日本語](docs/ja/api-reference/) |
 | **Protocol Specs** | L1-L3 protocol specifications | [English](docs/en/protocol-specs/) • [中文](docs/zh-CN/protocol-specs/) |
 | **SDK API** | SDK package documentation | [English](docs/en/sdk-api/) • [中文](docs/zh-CN/sdk-api/) |
 
@@ -486,7 +488,7 @@ const result = await mplp.executeWorkflow(workflow, {
 | Resource | Description | Link |
 |----------|-------------|------|
 | **Platform Adapters** | Integration guides for 7 platforms | [English](docs/en/platform-adapters/) • [中文](docs/zh-CN/platform-adapters/) |
-| **Development Tools** | CLI and dev tools documentation | [English](docs/en/development-tools/) • [中文](docs/zh-CN/development-tools/) |
+| **Development Tools** | CLI and dev tools documentation | [English](docs/en/development-tools/) • [中文](docs/zh-CN/development-tools/) • [日本語](docs/ja/development-tools/) |
 | **Best Practices** | Development and deployment guides | [English](docs/en/guides/) • [中文](docs/zh-CN/guides/) |
 | **Tutorials** | Step-by-step learning paths | [English](docs/en/developers/tutorials.md) • [中文](docs/zh-CN/developers/tutorials.md) |
 

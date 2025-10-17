@@ -1,1 +1,0 @@
-{"version":3,"file":"ModuleError.d.ts","sourceRoot":"","sources":["../../src/errors/ModuleError.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAE,MAAM,aAAa,CAAC;AAExC;;;;;GAKG;AACH,qBAAa,WAAY,SAAQ,SAAS;gBAC5B,OAAO,EAAE,MAAM,EAAE,KAAK,CAAC,EAAE,KAAK;CAI3C"}
