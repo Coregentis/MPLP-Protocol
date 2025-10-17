@@ -166,7 +166,12 @@ extensions/compiled/
 
 # Internal CI/CD Configuration
 .circleci/
+
+# GitHub Configuration (keep workflows for public CI/CD)
 .github/
+!.github/workflows/
+!.github/workflows/*.yml
+!.github/workflows/*.yaml
 
 # =============================================================================
 # ROOT DIRECTORY - INTERNAL DOCUMENTS (DO NOT PUBLISH)
