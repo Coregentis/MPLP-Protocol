@@ -257,6 +257,8 @@ temp_studio/
 # SDK Development Files (keep SDK source, remove dev artifacts)
 sdk/node_modules/
 sdk/dist/
+sdk/packages/*/dist/
+sdk/packages/*/node_modules/
 sdk/coverage/
 sdk/test-cli.js
 
@@ -330,6 +332,8 @@ examples/emergency-fix.js
 examples/final-quality-fix.js
 examples/fix-quality-issues.js
 examples/quality-fix-phase2.js
+examples/*/dist/
+examples/*/node_modules/
 
 # =============================================================================
 # DOCUMENTATION - INTERNAL ONLY
