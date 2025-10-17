@@ -11,64 +11,64 @@
       "types": "./dist/index.d.ts"
     },
     "./core": {
-      "import": "./dist/src/modules/core/index.js",
-      "require": "./dist/src/modules/core/index.js",
-      "types": "./dist/src/modules/core/index.d.ts"
+      "import": "./dist/modules/core/index.js",
+      "require": "./dist/modules/core/index.js",
+      "types": "./dist/modules/core/index.d.ts"
     },
     "./context": {
-      "import": "./dist/src/modules/context/index.js",
-      "require": "./dist/src/modules/context/index.js",
-      "types": "./dist/src/modules/context/index.d.ts"
+      "import": "./dist/modules/context/index.js",
+      "require": "./dist/modules/context/index.js",
+      "types": "./dist/modules/context/index.d.ts"
     },
     "./plan": {
-      "import": "./dist/src/modules/plan/index.js",
-      "require": "./dist/src/modules/plan/index.js",
-      "types": "./dist/src/modules/plan/index.d.ts"
+      "import": "./dist/modules/plan/index.js",
+      "require": "./dist/modules/plan/index.js",
+      "types": "./dist/modules/plan/index.d.ts"
     },
     "./confirm": {
-      "import": "./dist/src/modules/confirm/index.js",
-      "require": "./dist/src/modules/confirm/index.js",
-      "types": "./dist/src/modules/confirm/index.d.ts"
+      "import": "./dist/modules/confirm/index.js",
+      "require": "./dist/modules/confirm/index.js",
+      "types": "./dist/modules/confirm/index.d.ts"
     },
     "./trace": {
-      "import": "./dist/src/modules/trace/index.js",
-      "require": "./dist/src/modules/trace/index.js",
-      "types": "./dist/src/modules/trace/index.d.ts"
+      "import": "./dist/modules/trace/index.js",
+      "require": "./dist/modules/trace/index.js",
+      "types": "./dist/modules/trace/index.d.ts"
     },
     "./role": {
-      "import": "./dist/src/modules/role/index.js",
-      "require": "./dist/src/modules/role/index.js",
-      "types": "./dist/src/modules/role/index.d.ts"
+      "import": "./dist/modules/role/index.js",
+      "require": "./dist/modules/role/index.js",
+      "types": "./dist/modules/role/index.d.ts"
     },
     "./extension": {
-      "import": "./dist/src/modules/extension/index.js",
-      "require": "./dist/src/modules/extension/index.js",
-      "types": "./dist/src/modules/extension/index.d.ts"
+      "import": "./dist/modules/extension/index.js",
+      "require": "./dist/modules/extension/index.js",
+      "types": "./dist/modules/extension/index.d.ts"
     },
     "./collab": {
-      "import": "./dist/src/modules/collab/index.js",
-      "require": "./dist/src/modules/collab/index.js",
-      "types": "./dist/src/modules/collab/index.d.ts"
+      "import": "./dist/modules/collab/index.js",
+      "require": "./dist/modules/collab/index.js",
+      "types": "./dist/modules/collab/index.d.ts"
     },
     "./dialog": {
-      "import": "./dist/src/modules/dialog/index.js",
-      "require": "./dist/src/modules/dialog/index.js",
-      "types": "./dist/src/modules/dialog/index.d.ts"
+      "import": "./dist/modules/dialog/index.js",
+      "require": "./dist/modules/dialog/index.js",
+      "types": "./dist/modules/dialog/index.d.ts"
     },
     "./network": {
-      "import": "./dist/src/modules/network/index.js",
-      "require": "./dist/src/modules/network/index.js",
-      "types": "./dist/src/modules/network/index.d.ts"
+      "import": "./dist/modules/network/index.js",
+      "require": "./dist/modules/network/index.js",
+      "types": "./dist/modules/network/index.d.ts"
     },
     "./types": {
-      "import": "./dist/src/public/shared/types/index.js",
-      "require": "./dist/src/public/shared/types/index.js",
-      "types": "./dist/src/public/shared/types/index.d.ts"
+      "import": "./dist/shared/types/index.js",
+      "require": "./dist/shared/types/index.js",
+      "types": "./dist/shared/types/index.d.ts"
     },
     "./utils": {
-      "import": "./dist/src/public/utils/index.js",
-      "require": "./dist/src/public/utils/index.js",
-      "types": "./dist/src/public/utils/index.d.ts"
+      "import": "./dist/shared/utils/index.js",
+      "require": "./dist/shared/utils/index.js",
+      "types": "./dist/shared/utils/index.d.ts"
     },
     "./package.json": "./package.json"
   },
