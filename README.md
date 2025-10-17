@@ -47,40 +47,98 @@
 
 ---
 
-## 🚀 **Quick Start - Choose Your Path**
+## 📦 **Installation**
 
-### **Path 1: SDK Quick Start (Recommended for Beginners)**
+> **⚠️ Important**: MPLP is currently in beta and not yet published to npm. Please install from source.
 
-Get your first multi-agent application running in **under 5 minutes**:
+### **Install from Source**
 
 ```bash
-# Install MPLP SDK
-npm install -g @mplp/cli
+# 1. Clone the repository
+git clone https://github.com/Coregentis/MPLP-Protocol.git
+cd MPLP-Protocol
 
-# Create a new project
-mplp init my-agent-app --template basic
+# 2. Install dependencies
+npm install
 
-# Start development
-cd my-agent-app
-npm run dev
+# 3. Build the project
+npm run build
+
+# 4. Verify installation
+node -e "const mplp = require('./dist/index.js'); console.log('MPLP Version:', mplp.MPLP_VERSION);"
+# Expected output: MPLP Version: 1.1.0-beta
 ```
 
-**Your first agent is ready!** 🎉 See [SDK Documentation](docs/en/sdk/) for more.
+### **Link for Local Development**
+
+To use MPLP in your own projects:
+
+```bash
+# In the MPLP directory
+npm link
+
+# In your project directory
+npm link mplp
+```
+
+### **Verify Installation**
+
+```bash
+# Check build output
+ls -la dist/
+# Should see: index.js, index.d.ts, modules/, shared/, etc.
+
+# Test module imports
+node -e "const ctx = require('./dist/modules/context/index.js'); console.log('✅ Context module loaded');"
+```
+
+---
+
+## 🚀 **Quick Start - Choose Your Path**
+
+### **Path 1: Basic Usage (Recommended for Beginners)**
+
+Get started with MPLP in **under 5 minutes**:
+
+```bash
+# After building from source (see Installation above)
+
+# Create a new project
+mkdir my-mplp-app
+cd my-mplp-app
+npm init -y
+
+# Link MPLP
+npm link mplp
+
+# Create index.js
+cat > index.js << 'EOF'
+const { MPLP_VERSION, MPLP_INFO } = require('mplp');
+
+console.log('MPLP Version:', MPLP_VERSION);
+console.log('Available Modules:', MPLP_INFO.modules.join(', '));
+EOF
+
+# Run your app
+node index.js
+```
+
+**Your first MPLP app is ready!** 🎉 See [Quick Start Guide](./QUICK_START.md) for more.
 
 ### **Path 2: Protocol Stack Development**
 
 For advanced users building custom protocol implementations:
 
 ```bash
-# Clone the repository
-git clone https://github.com/Coregentis/MPLP-Protocol.git
-cd MPLP-Protocol
+# After cloning and building (see Installation above)
 
-# Install dependencies
-npm install
-
-# Run tests to verify installation
+# Run tests to verify everything works
 npm test
+
+# Explore the examples
+cd examples/agent-orchestrator
+npm install
+npm start
 ```
 
 **Example: Using the Protocol Stack**
