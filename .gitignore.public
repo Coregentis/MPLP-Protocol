@@ -268,6 +268,13 @@ docs/L4-Intelligent-Agent-OPS-Refactor/
 # Language-specific development files
 V1.1.0-beta-文档分类整合规划.md
 
+# Internal Documentation Files (root level)
+MPLP-OPEN-SOURCE-*.md
+OPEN-SOURCE-*.md
+PUBLIC-REPO-*.md
+DOCUMENTATION-REVIEW-*.md
+ROOT-FILES-AUDIT-*.md
+
 # =============================================================================
 # SECURITY - SENSITIVE INFORMATION
 # =============================================================================
