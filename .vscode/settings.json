@@ -1,0 +1,113 @@
+{
+  "// MPLP项目实时验证配置": "确保开发时的质量标准执行",
+  
+  "// 保存时自动验证": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true,
+      "source.organizeImports": true
+    },
+    "editor.formatOnSave": true,
+    "files.autoSave": "onFocusChange"
+  },
+
+  "// TypeScript严格模式": {
+    "typescript.preferences.strictMode": true,
+    "typescript.suggest.autoImports": true,
+    "typescript.validate.enable": true
+  },
+
+  "// ESLint实时检查": {
+    "eslint.enable": true,
+    "eslint.run": "onType",
+    "eslint.validate": [
+      "javascript",
+      "typescript"
+    ]
+  },
+
+  "// JSON Schema验证": {
+    "json.validate.enable": true,
+    "json.schemas": [
+      {
+        "fileMatch": ["**/schemas/mplp-*.json"],
+        "url": "http://json-schema.org/draft-07/schema#"
+      }
+    ]
+  },
+
+  "// 文件保存时触发验证": {
+    "emeraldwalk.runonsave": {
+      "commands": [
+        {
+          "match": ".*\\.json$",
+          "isAsync": true,
+          "cmd": "node scripts/validation/real-time-schema-validator.js ${file}"
+        },
+        {
+          "match": ".*\\.mapper\\.ts$",
+          "isAsync": true, 
+          "cmd": "node scripts/validation/real-time-schema-validator.js ${file}"
+        },
+        {
+          "match": ".*\\.dto\\.ts$",
+          "isAsync": true,
+          "cmd": "node scripts/validation/real-time-schema-validator.js ${file}"
+        }
+      ]
+    }
+  },
+
+  "// 实时错误高亮": {
+    "problems.decorations.enabled": true,
+    "problems.showCurrentInStatus": true
+  },
+
+  "// 命名约定检查": {
+    "cSpell.words": [
+      "mplp",
+      "contextId", 
+      "createdAt",
+      "protocolVersion",
+      "auditTrail"
+    ],
+    "cSpell.flagWords": [
+      "context_id",
+      "created_at", 
+      "protocol_version",
+      "audit_trail"
+    ]
+  },
+
+  "// 工作区推荐扩展": {
+    "extensions.recommendations": [
+      "ms-vscode.vscode-typescript-next",
+      "dbaeumer.vscode-eslint", 
+      "esbenp.prettier-vscode",
+      "emeraldwalk.RunOnSave",
+      "streetsidesoftware.code-spell-checker"
+    ]
+  },
+
+  "// 文件关联": {
+    "files.associations": {
+      "**/schemas/mplp-*.json": "json",
+      "**/*.mapper.ts": "typescript",
+      "**/*.dto.ts": "typescript"
+    }
+  },
+
+  "// 排除文件": {
+    "files.exclude": {
+      "**/node_modules": true,
+      "**/dist": true,
+      "**/.git": true
+    }
+  },
+
+  "// 搜索配置": {
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/dist": true
+    }
+  }
+}
