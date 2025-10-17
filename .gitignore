@@ -22,7 +22,8 @@ pnpm-debug.log*
 lerna-debug.log*
 
 # Build outputs
-dist/
+# NOTE: dist/ is now INCLUDED in repo for easier distribution
+# dist/  # COMMENTED OUT - include dist/ in repo
 build/
 *.tsbuildinfo
 .npm
@@ -280,3 +281,4 @@ docs/quality-assurance/
 # For the internal development repository, use the standard .gitignore file.
 # =============================================================================
 
+node_modules

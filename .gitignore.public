@@ -76,7 +76,8 @@ pnpm-debug.log*
 lerna-debug.log*
 
 # Build outputs
-dist/
+# NOTE: dist/ is INCLUDED in public repo so users can use without building
+# dist/  # COMMENTED OUT - dist/ should be published
 build/
 *.tsbuildinfo
 .npm

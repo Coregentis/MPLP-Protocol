@@ -1,0 +1,50 @@
+import { CollabManagementService } from './application/services/collab-management.service';
+import { CollabCoordinationService } from './domain/services/collab-coordination.service';
+import { CollabRepositoryImpl } from './infrastructure/repositories/collab.repository.impl';
+import { CollabModuleAdapter } from './infrastructure/adapters/collab-module.adapter';
+import { CollabProtocol } from './infrastructure/protocols/collab.protocol';
+import { CollabController } from './api/controllers/collab.controller';
+import { CollabModuleConfig } from './types';
+export declare class CollabModule {
+    private static instance;
+    private collabRepository;
+    private collabCoordinationService;
+    private collabManagementService;
+    private collabModuleAdapter;
+    private collabProtocol;
+    private collabController;
+    private _securityManager;
+    private _performanceMonitor;
+    private _eventBusManager;
+    private _errorHandler;
+    private _coordinationManager;
+    private _orchestrationManager;
+    private _stateSyncManager;
+    private _transactionManager;
+    private _protocolVersionManager;
+    private config;
+    private constructor();
+    static getInstance(): CollabModule;
+    private initializeConfig;
+    private initializeL3Managers;
+    private initializeServices;
+    private initializeInfrastructure;
+    getCollabManagementService(): CollabManagementService;
+    getCollabCoordinationService(): CollabCoordinationService;
+    getCollabRepository(): CollabRepositoryImpl;
+    getCollabModuleAdapter(): CollabModuleAdapter;
+    getCollabProtocol(): CollabProtocol;
+    getCollabController(): CollabController;
+    getConfig(): CollabModuleConfig;
+    updateConfig(newConfig: Partial<CollabModuleConfig>): void;
+    start(): Promise<void>;
+    stop(): Promise<void>;
+    restart(): Promise<void>;
+    healthCheck(): Promise<{
+        status: 'healthy' | 'unhealthy';
+        timestamp: string;
+        details: Record<string, unknown>;
+    }>;
+}
+export default CollabModule;
+//# sourceMappingURL=module.d.ts.map
