@@ -18,7 +18,7 @@ module.exports = {
   transform: {
     '^.+\\.tsx?$': ['ts-jest', {
       tsconfig: '<rootDir>/tsconfig.json',
-      isolatedModules: true,
+      // isolatedModules已移至tsconfig.json (deprecated in ts-jest config)
       diagnostics: {
         warnOnly: true
       }
