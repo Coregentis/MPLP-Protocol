@@ -4,7 +4,7 @@
 
 **Reviewer Role**: New user attempting to build a multi-agent application using MPLP  
 **Review Date**: October 17, 2025  
-**Repository**: https://github.com/Coregentis/MPLP-Protocol  
+**Repository**: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev  
 **Framework**: SCTM+GLFB+ITCM+RBCT Enhanced Methodology  
 **Question**: Can I immediately start building a multi-agent app with this open source project?
 
@@ -72,7 +72,7 @@ dist/modules/core/index.js  // ✅ CORRECT PATH
 
 #### **Test 1: Clone Repository** ✅ PASS
 ```bash
-git clone https://github.com/Coregentis/MPLP-Protocol.git
+git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
 cd MPLP-Protocol
 ```
 **Result**: ✅ Successful, fast clone

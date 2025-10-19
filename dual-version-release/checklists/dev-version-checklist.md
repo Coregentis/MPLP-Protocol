@@ -2,7 +2,7 @@
 ## Development Version Release Checklist
 
 **版本**: 1.0.0  
-**仓库**: https://github.com/Coregentis/MPLP-Protocol-Dev  
+**仓库**: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev  
 **用途**: 开发版本发布前的完整检查清单
 
 ---
@@ -47,9 +47,9 @@
 
 ### **2.2 仓库信息**
 - [ ] repository.type: "git"
-- [ ] repository.url: "https://github.com/Coregentis/MPLP-Protocol-Dev.git"
-- [ ] bugs.url: "https://github.com/Coregentis/MPLP-Protocol-Dev/issues"
-- [ ] homepage: "https://github.com/Coregentis/MPLP-Protocol-Dev#readme"
+- [ ] repository.url: "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev.git"
+- [ ] bugs.url: "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/issues"
+- [ ] homepage: "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev#readme"
 
 ### **2.3 入口文件**
 - [ ] main: "dist/index.js"
@@ -68,10 +68,10 @@
 ## 📋 **Phase 3: README.md检查**
 
 ### **3.1 GitHub链接**
-- [ ] 仓库链接: https://github.com/Coregentis/MPLP-Protocol-Dev
-- [ ] Issues链接: https://github.com/Coregentis/MPLP-Protocol-Dev/issues
-- [ ] Discussions链接: https://github.com/Coregentis/MPLP-Protocol-Dev/discussions
-- [ ] PR链接: https://github.com/Coregentis/MPLP-Protocol-Dev/pulls
+- [ ] 仓库链接: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev
+- [ ] Issues链接: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/issues
+- [ ] Discussions链接: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/discussions
+- [ ] PR链接: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/pulls
 
 ### **3.2 徽章**
 - [ ] 所有徽章链接指向Dev仓库

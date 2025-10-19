@@ -50,8 +50,8 @@ MPLP项目采用**双仓库双版本发布策略**，以满足不同用户群体
 
 | 版本类型 | 仓库 | 目标用户 | 发布范围 |
 |---------|------|---------|---------|
-| **开发版本** | [MPLP-Protocol-Dev](https://github.com/Coregentis/MPLP-Protocol-Dev) | 核心开发团队、贡献者 | 完整开发环境 |
-| **开源版本** | [MPLP-Protocol](https://github.com/Coregentis/MPLP-Protocol) | 开源社区、企业用户 | 纯净生产版本 |
+| **开发版本** | [MPLP-Protocol-Dev](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev) | 核心开发团队、贡献者 | 完整开发环境 |
+| **开源版本** | [MPLP-Protocol](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev) | 开源社区、企业用户 | 纯净生产版本 |
 
 ### **版本差异**
 
@@ -197,7 +197,7 @@ cp .gitignore .gitignore.dev.backup  # 备份当前配置
 
 # 2. 更新package.json的repository字段
 # 手动编辑package.json，将repository.url更新为：
-# "url": "https://github.com/Coregentis/MPLP-Protocol-Dev.git"
+# "url": "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev.git"
 
 # 3. 更新所有文档中的GitHub链接
 # 使用dual-version-release/execution/phase3-dev-version.md中的脚本
@@ -219,7 +219,7 @@ npm run build
 
 # 3. 更新package.json的repository字段
 # 手动编辑package.json，将repository.url更新为：
-# "url": "https://github.com/Coregentis/MPLP-Protocol.git"
+# "url": "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git"
 
 # 4. 更新所有文档中的GitHub链接
 # 使用dual-version-release/execution/phase4-public-version.md中的脚本

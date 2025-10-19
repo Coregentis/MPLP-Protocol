@@ -285,7 +285,7 @@ Platform Breakdown:
 **Developer Journey**:
 ```
 1. Clone MPLP (2 min)
-   git clone https://github.com/Coregentis/MPLP-Protocol.git
+   git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
 
 2. Create Project (3 min)
    mkdir my-app && cd my-app

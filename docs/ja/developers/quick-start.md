@@ -67,7 +67,7 @@ node -e "const mplp = require('mplp'); console.log('MPLPバージョン:', mplp.
 #### **オプションB：ソースからクローンしてビルド**
 ```bash
 # MPLPリポジトリをクローン
-git clone https://github.com/Coregentis/MPLP-Protocol.git
+git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
 cd MPLP-Protocol
 
 # 依存関係をインストール

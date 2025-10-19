@@ -155,7 +155,7 @@ node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VE
 - ✅ 在Prerequisites部分添加"Install MPLP"章节
 - ✅ 包含`npm install mplp@beta`安装命令
 - ✅ 添加安装验证步骤
-- ✅ 更新仓库URL为`https://github.com/Coregentis/MPLP-Protocol.git`
+- ✅ 更新仓库URL为`https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git`
 - ✅ 更新安装路径为`MPLP-Protocol/examples/agent-orchestrator`
 
 **关键更新**:
@@ -180,7 +180,7 @@ node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VE
 - ✅ 添加"第0步: 安装MPLP（1分钟）"章节
 - ✅ 包含`npm install mplp@beta`安装命令
 - ✅ 添加安装验证步骤
-- ✅ 更新仓库URL为`https://github.com/Coregentis/MPLP-Protocol.git`
+- ✅ 更新仓库URL为`https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git`
 - ✅ 更新安装路径为`MPLP-Protocol/examples/marketing-automation`
 
 **关键更新**:

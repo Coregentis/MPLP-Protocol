@@ -153,11 +153,11 @@ Phase 4: 远程验证
 {
   "repository": {
     "type": "git",
-    "url": "https://github.com/Coregentis/MPLP-Protocol.git"
+    "url": "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git"
   },
-  "homepage": "https://github.com/Coregentis/MPLP-Protocol#readme",
+  "homepage": "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev#readme",
   "bugs": {
-    "url": "https://github.com/Coregentis/MPLP-Protocol/issues"
+    "url": "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/issues"
   }
 }
 ```
@@ -490,7 +490,7 @@ node -e "const mplp = require('mplp'); console.log(mplp.MPLP_VERSION);"
 **之前**:
 ```bash
 # 用户需要从源码构建
-git clone https://github.com/Coregentis/MPLP-Protocol.git
+git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
 cd MPLP-Protocol
 npm install
 npm run build

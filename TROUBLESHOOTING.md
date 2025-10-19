@@ -36,7 +36,7 @@ node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VE
 **Alternative: Install from Source**:
 ```bash
 # Clone the repository
-git clone https://github.com/Coregentis/MPLP-Protocol.git
+git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
 cd MPLP-Protocol
 
 # Install dependencies
@@ -459,7 +459,7 @@ const module = await initializeContextModule({
 ### Before Asking for Help
 
 1. **Check this troubleshooting guide**
-2. **Search existing issues**: [GitHub Issues](https://github.com/Coregentis/MPLP-Protocol/issues)
+2. **Search existing issues**: [GitHub Issues](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/issues)
 3. **Read the documentation**: [Docs](./docs/en/README.md)
 4. **Try the examples**: `examples/` directory
 
@@ -493,8 +493,8 @@ cat package.json | grep "mplp"
 
 ### Where to Get Help
 
-- **GitHub Issues**: [Report bugs](https://github.com/Coregentis/MPLP-Protocol/issues/new)
-- **GitHub Discussions**: [Ask questions](https://github.com/Coregentis/MPLP-Protocol/discussions)
+- **GitHub Issues**: [Report bugs](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/issues/new)
+- **GitHub Discussions**: [Ask questions](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/discussions)
 - **Documentation**: [Read docs](./docs/en/README.md)
 - **Email**: support@coregentis.com
 
@@ -551,5 +551,5 @@ node -e "const ctx = require('mplp/dist/modules/context/index.js'); console.log(
 
 ---
 
-**Still having issues?** Don't hesitate to [open an issue](https://github.com/Coregentis/MPLP-Protocol/issues/new) or [start a discussion](https://github.com/Coregentis/MPLP-Protocol/discussions/new)!
+**Still having issues?** Don't hesitate to [open an issue](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/issues/new) or [start a discussion](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/discussions/new)!
 

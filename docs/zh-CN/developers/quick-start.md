@@ -67,7 +67,7 @@ node -e "const mplp = require('mplp'); console.log('MPLP版本:', mplp.MPLP_VERS
 #### **选项B：从源码安装**
 ```bash
 # 克隆MPLP仓库
-git clone https://github.com/Coregentis/MPLP-Protocol.git
+git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
 cd MPLP-Protocol
 
 # 安装依赖

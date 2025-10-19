@@ -169,11 +169,11 @@
 {
   "repository": {
     "type": "git",
-    "url": "https://github.com/Coregentis/MPLP-Protocol.git"
+    "url": "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git"
   },
-  "homepage": "https://github.com/Coregentis/MPLP-Protocol#readme",
+  "homepage": "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev#readme",
   "bugs": {
-    "url": "https://github.com/Coregentis/MPLP-Protocol/issues"
+    "url": "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/issues"
   }
 }
 ```
@@ -350,7 +350,7 @@ node -e "const mplp = require('mplp'); console.log(mplp.MPLP_VERSION);"
 
 #### **3. 创建GitHub Release**
 
-- [ ] 访问 https://github.com/Coregentis/MPLP-Protocol/releases/new
+- [ ] 访问 https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/releases/new
 - [ ] 标签: v1.1.0-beta
 - [ ] 标题: MPLP v1.1.0-beta - Complete SDK Ecosystem
 - [ ] 描述: 包含发布说明和npm安装说明
@@ -383,7 +383,7 @@ node -e "const mplp = require('mplp'); console.log(mplp.MPLP_VERSION);"
 **发布前**:
 ```bash
 # 用户需要从源码构建（5-10分钟）
-git clone https://github.com/Coregentis/MPLP-Protocol.git
+git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
 cd MPLP-Protocol
 npm install
 npm run build
