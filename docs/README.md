@@ -24,6 +24,17 @@
 
 MPLP是一个企业级的多智能体协议生命周期平台，提供从协议定义到应用构建的完整工具链。
 
+### **📦 快速安装**
+
+```bash
+# 安装MPLP核心包（推荐）
+npm install mplp@beta
+
+# 验证安装
+node -e "const mplp = require('mplp'); console.log('MPLP版本:', mplp.MPLP_VERSION);"
+# 预期输出: MPLP版本: 1.1.0-beta
+```
+
 ### **双版本架构**
 - **🏗️ MPLP v1.0 Alpha**: L1-L3协议栈，10个企业级模块，100%完成
 - **🛠️ MPLP v1.1.0-beta**: 完整SDK生态系统，开发者工具链

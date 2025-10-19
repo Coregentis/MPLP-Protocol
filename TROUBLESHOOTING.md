@@ -1,8 +1,8 @@
 # MPLP Troubleshooting Guide
 ## Common Issues and Solutions
 
-**Version**: 1.1.0-beta  
-**Last Updated**: October 16, 2025
+**Version**: 1.1.0-beta
+**Last Updated**: October 17, 2025
 
 ---
 
@@ -20,6 +20,35 @@
 
 ## 🔧 Installation Issues
 
+### Issue 0: How to install MPLP
+
+**Recommended Installation**:
+
+```bash
+# Install MPLP core package (Recommended)
+npm install mplp@beta
+
+# Verify installation
+node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VERSION);"
+# Expected output: MPLP Version: 1.1.0-beta
+```
+
+**Alternative: Install from Source**:
+```bash
+# Clone the repository
+git clone https://github.com/Coregentis/MPLP-Protocol.git
+cd MPLP-Protocol
+
+# Install dependencies
+npm install
+
+# Build the project
+npm run build
+
+# Link for local development
+npm link
+```
+
 ### Issue 1: npm install fails
 
 **Symptoms**:
@@ -34,12 +63,12 @@ npm ERR! ERESOLVE unable to resolve dependency tree
 ```bash
 npm cache clean --force
 rm -rf node_modules package-lock.json
-npm install
+npm install mplp@beta
 ```
 
 2. **Use legacy peer deps** (if needed):
 ```bash
-npm install --legacy-peer-deps
+npm install mplp@beta --legacy-peer-deps
 ```
 
 3. **Check Node.js version**:

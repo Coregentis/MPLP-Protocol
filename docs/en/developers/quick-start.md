@@ -35,7 +35,7 @@ In this quick start, you'll create a simple multi-agent workflow that:
 
 ### **Step 1: Installation (1 minute)**
 
-#### **Option A: Using NPM (Recommended)**
+#### **Option A: Using npm (Recommended)** ⚡
 ```bash
 # Create a new project directory
 mkdir my-mplp-app
@@ -44,21 +44,31 @@ cd my-mplp-app
 # Initialize npm project
 npm init -y
 
-# Install MPLP v1.0 Alpha
-npm install mplp@1.0.0-alpha
+# Install MPLP v1.1.0-beta
+npm install mplp@beta
 
-# Install TypeScript for development
+# Or install a specific version
+npm install mplp@1.1.0-beta
+
+# Install TypeScript for development (optional)
 npm install -D typescript @types/node ts-node
 
-# Create TypeScript configuration
+# Create TypeScript configuration (optional)
 npx tsc --init
+```
+
+**Verify Installation**:
+```bash
+# Check MPLP version
+node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VERSION);"
+# Expected output: MPLP Version: 1.1.0-beta
 ```
 
 #### **Option B: Clone and Build from Source**
 ```bash
 # Clone the MPLP repository
-git clone https://github.com/YOUR_USERNAME/MPLP-v1.0.git
-cd MPLP-v1.0
+git clone https://github.com/Coregentis/MPLP-Protocol.git
+cd MPLP-Protocol
 
 # Install dependencies
 npm install
@@ -68,11 +78,15 @@ npm run build
 
 # Link for local development
 npm link
+
+# In your project directory
+cd ../my-mplp-app
+npm link mplp
 ```
 
 #### **Option C: Using Docker (Future)**
 ```bash
-# Note: Docker images will be available after official release
+# Note: Docker images will be available in future releases
 # Pull and run MPLP development container
 docker run -it --name mplp-quickstart -p 3000:3000 mplp/quickstart:latest
 

@@ -12,6 +12,22 @@
 
 MPLP CLI是多智能体协议生命周期平台的综合命令行界面。它提供了强大的项目创建、开发工作流管理、代码生成、测试和部署工具，具有企业级功能和广泛的自定义选项。
 
+### **📦 包关系说明**
+
+**重要**: MPLP CLI (`@mplp/cli`) 是一个**独立的开发工具**，用于项目脚手架和管理。对于大多数MPLP应用程序，您需要：
+
+1. **MPLP核心包** (`mplp@beta`): 包含L1-L3协议栈和所有10个核心模块的主包
+2. **MPLP CLI** (`@mplp/cli`): 可选的CLI工具，用于项目脚手架和开发工作流
+
+**快速开始**:
+```bash
+# 安装MPLP核心包（所有项目必需）
+npm install mplp@beta
+
+# 全局安装MPLP CLI（可选，用于项目脚手架）
+npm install -g @mplp/cli
+```
+
 ### **🎯 关键功能**
 
 - **🚀 项目脚手架**: 使用多种模板创建新的MPLP项目（基础、高级、企业级）
@@ -27,8 +43,21 @@ MPLP CLI是多智能体协议生命周期平台的综合命令行界面。它提
 
 ### **📦 安装**
 
+#### **步骤1: 安装MPLP核心包** ⚡
+
 ```bash
-# 全局安装（推荐）
+# 安装MPLP核心包（必需）
+npm install mplp@beta
+
+# 验证安装
+node -e "const mplp = require('mplp'); console.log('MPLP版本:', mplp.MPLP_VERSION);"
+# 预期输出: MPLP版本: 1.1.0-beta
+```
+
+#### **步骤2: 安装MPLP CLI（可选）**
+
+```bash
+# 全局安装（推荐用于CLI使用）
 npm install -g @mplp/cli
 
 # 使用yarn
@@ -37,8 +66,9 @@ yarn global add @mplp/cli
 # 使用pnpm
 pnpm add -g @mplp/cli
 
-# 验证安装
+# 验证CLI安装
 mplp --version
+# 预期输出: @mplp/cli/1.1.0-beta
 ```
 
 ## 🚀 **快速开始**

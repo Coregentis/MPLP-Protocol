@@ -12,6 +12,13 @@
 
 The `@mplp/cli` package provides a comprehensive command-line interface for the MPLP (Multi-Agent Protocol Lifecycle Platform). It offers powerful tools for project initialization, code generation, development workflow management, and deployment utilities with enterprise-grade features.
 
+### **📦 Package Relationship**
+
+**Important**: The MPLP CLI (`@mplp/cli`) is a **separate development tool** for project scaffolding. For MPLP applications, you'll need:
+
+1. **MPLP Core Package** (`mplp@beta`): The main package with L1-L3 protocol stack (Required)
+2. **MPLP CLI** (`@mplp/cli`): CLI tool for project scaffolding (Optional)
+
 ### **🎯 Key Features**
 
 - **Project Initialization**: Create new MPLP projects with multiple templates (basic, advanced, enterprise)
@@ -25,15 +32,29 @@ The `@mplp/cli` package provides a comprehensive command-line interface for the 
 
 ### **📦 Installation**
 
+#### **Step 1: Install MPLP Core Package** ⚡
+
 ```bash
-# Global installation (recommended)
+# Install MPLP core package (Required)
+npm install mplp@beta
+
+# Verify installation
+node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VERSION);"
+# Expected output: MPLP Version: 1.1.0-beta
+```
+
+#### **Step 2: Install MPLP CLI (Optional)**
+
+```bash
+# Global installation (recommended for CLI usage)
 npm install -g @mplp/cli
 
 # Local installation
 npm install @mplp/cli --save-dev
 
-# Verify installation
+# Verify CLI installation
 mplp --version
+# Expected output: @mplp/cli/1.1.0-beta
 ```
 
 ### **🏗️ CLI Architecture**

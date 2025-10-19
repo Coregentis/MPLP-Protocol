@@ -12,6 +12,13 @@
 
 The `@mplp/dev-tools` package provides comprehensive development tools and utilities for MPLP applications, including debugging, monitoring, performance analysis, and logging management. It offers both programmatic APIs and CLI tools for enhanced development experience.
 
+### **📦 Package Relationship**
+
+**Important**: MPLP Dev Tools (`@mplp/dev-tools`) is a **development-only package**. For MPLP applications, you'll need:
+
+1. **MPLP Core Package** (`mplp@beta`): The main package with L1-L3 protocol stack (Required)
+2. **MPLP Dev Tools** (`@mplp/dev-tools`): Development and debugging utilities (Optional)
+
 ### **🎯 Key Features**
 
 - **🐛 Debugging Tools**: Agent debugger, workflow debugger, protocol inspector, state inspector
@@ -24,14 +31,27 @@ The `@mplp/dev-tools` package provides comprehensive development tools and utili
 
 ### **📦 Installation**
 
+#### **Step 1: Install MPLP Core Package** ⚡
+
 ```bash
-# Local installation
+# Install MPLP core package (Required)
+npm install mplp@beta
+
+# Verify installation
+node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VERSION);"
+# Expected output: MPLP Version: 1.1.0-beta
+```
+
+#### **Step 2: Install Dev Tools (Optional)**
+
+```bash
+# Local installation (recommended)
 npm install @mplp/dev-tools
 
 # Global installation for CLI tools
 npm install -g @mplp/dev-tools
 
-# Verify installation
+# Verify dev tools installation
 mplp-debug --version
 ```
 

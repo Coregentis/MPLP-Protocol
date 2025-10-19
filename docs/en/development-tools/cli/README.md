@@ -12,6 +12,22 @@
 
 The MPLP CLI is a comprehensive command-line interface for the Multi-Agent Protocol Lifecycle Platform. It provides powerful tools for project creation, development workflow management, code generation, testing, and deployment with enterprise-grade features and extensive customization options.
 
+### **📦 Package Relationship**
+
+**Important**: The MPLP CLI (`@mplp/cli`) is a **separate development tool** for project scaffolding and management. For most MPLP applications, you'll need:
+
+1. **MPLP Core Package** (`mplp@beta`): The main package containing the L1-L3 protocol stack and all 10 core modules
+2. **MPLP CLI** (`@mplp/cli`): Optional CLI tool for project scaffolding and development workflow
+
+**Quick Start**:
+```bash
+# Install MPLP core package (Required for all projects)
+npm install mplp@beta
+
+# Install MPLP CLI globally (Optional, for project scaffolding)
+npm install -g @mplp/cli
+```
+
 ### **🎯 Key Features**
 
 - **🚀 Project Scaffolding**: Create new MPLP projects with multiple templates (Basic, Advanced, Enterprise)
@@ -27,8 +43,21 @@ The MPLP CLI is a comprehensive command-line interface for the Multi-Agent Proto
 
 ### **📦 Installation**
 
+#### **Step 1: Install MPLP Core Package** ⚡
+
 ```bash
-# Global installation (recommended)
+# Install MPLP core package (Required)
+npm install mplp@beta
+
+# Verify installation
+node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VERSION);"
+# Expected output: MPLP Version: 1.1.0-beta
+```
+
+#### **Step 2: Install MPLP CLI (Optional)**
+
+```bash
+# Global installation (recommended for CLI usage)
 npm install -g @mplp/cli
 
 # Using yarn
@@ -37,8 +66,9 @@ yarn global add @mplp/cli
 # Using pnpm
 pnpm add -g @mplp/cli
 
-# Verify installation
+# Verify CLI installation
 mplp --version
+# Expected output: @mplp/cli/1.1.0-beta
 ```
 
 ## 🚀 **Quick Start**

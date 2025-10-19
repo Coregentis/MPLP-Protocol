@@ -55,12 +55,12 @@ This directory contains comprehensive implementation guides for the **fully comp
 
 ### **1. Environment Setup**
 ```bash
-# Install MPLP Alpha version
-npm install mplp@alpha
+# Install MPLP Beta version
+npm install mplp@beta
 
 # Verify installation
-npm list mplp
-# Should display: mplp@1.0.0-alpha
+node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VERSION);"
+# Expected output: MPLP Version: 1.1.0-beta
 ```
 
 ### **2. Basic Configuration**

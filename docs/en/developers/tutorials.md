@@ -64,7 +64,11 @@ cd mplp-task-manager
 
 # Initialize project
 npm init -y
-npm install @mplp/core @mplp/context @mplp/plan @mplp/role @mplp/confirm @mplp/trace
+
+# Install MPLP core package
+npm install mplp@beta
+
+# Install development dependencies
 npm install -D typescript @types/node ts-node
 
 # Create TypeScript configuration

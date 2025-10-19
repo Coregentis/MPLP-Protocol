@@ -262,6 +262,66 @@ npm run test:coverage
 - **Up-to-date**: Keep docs synchronized with code
 - **Comprehensive**: Cover all public APIs
 
+### Documentation Modification Guidelines
+
+#### **Multi-language Documentation Parity**
+
+MPLP maintains documentation in multiple languages (English and Chinese). When modifying documentation, you **MUST** ensure parity between all language versions.
+
+**Rules**:
+1. **Modify Both Versions**: When you modify `docs/en/`, you MUST also modify `docs/zh-CN/`
+2. **Same Structure**: Both language versions must have the same file structure
+3. **Same Content**: Content should be equivalent (translated, not identical)
+
+**Workflow**:
+
+```bash
+# 1. Modify English documentation
+vim docs/en/guide.md
+
+# 2. Modify Chinese documentation (同步修改中文文档)
+vim docs/zh-CN/guide.md
+
+# 3. Run parity check before committing
+npm run docs:check-parity
+
+# 4. If parity check passes, commit
+git add docs/
+git commit -m "docs: update guide"
+```
+
+**Automated Checks**:
+
+- **Pre-commit Hook**: Automatically runs `npm run docs:check-parity` when you commit documentation changes
+- **CI/CD**: Documentation parity is checked in the CI/CD pipeline
+
+**Example**:
+
+```bash
+# ✅ Correct: Modify both versions
+docs/en/getting-started.md
+docs/zh-CN/getting-started.md
+
+# ❌ Incorrect: Only modify one version
+docs/en/getting-started.md
+# Missing: docs/zh-CN/getting-started.md
+```
+
+**Troubleshooting**:
+
+If the parity check fails:
+
+```bash
+# View detailed parity check results
+npm run docs:check-parity
+
+# The output will show:
+# - Missing files in each language version
+# - Extra files in each language version
+
+# Fix by creating missing files or removing extra files
+```
+
 ## 🌟 Community
 
 ### Getting Help

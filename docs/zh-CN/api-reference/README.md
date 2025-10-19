@@ -231,7 +231,7 @@ const hasPermission = await mplp.security.checkPermission({
 ## 🔧 SDK和工具
 
 ### **官方SDK**
-- **TypeScript/JavaScript**: `npm install mplp`
+- **TypeScript/JavaScript**: `npm install mplp@beta`
 - **Python**: `pip install mplp-python`
 - **Java**: Maven/Gradle依赖
 - **Go**: `go get github.com/mplp/go-sdk`

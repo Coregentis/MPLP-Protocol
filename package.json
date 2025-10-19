@@ -148,6 +148,17 @@
     "security:fix": "npm audit fix || echo '⚠️ Some vulnerabilities cannot be auto-fixed'",
     "quality:fix": "node scripts/fix-code-quality.js || echo '⚠️ Quality fix script needs update'",
     "quality:gate": "node scripts/quality-gate.js || echo '⚠️ Quality gate script needs update'",
+    "docs:check-parity": "node scripts/check-docs-parity.js",
+    "version:switch": "bash scripts/switch-version.sh",
+    "version:switch-to-dev": "bash scripts/switch-version.sh dev",
+    "version:switch-to-public": "bash scripts/switch-version.sh public",
+    "version:verify": "node scripts/verify-version-consistency.js",
+    "links:switch-to-dev": "node scripts/switch-repository-links.js dev",
+    "links:switch-to-public": "node scripts/switch-repository-links.js public",
+    "links:verify": "node scripts/verify-repository-links.js",
+    "release:validate-dev": "bash scripts/pre-release-validation.sh dev",
+    "release:validate-public": "bash scripts/pre-release-validation.sh public",
+    "release:prepare-public": "bash scripts/prepare-public-release.sh",
     "ai-agent:constraint-check": "node scripts/ai-agent-constraint-checklist.js",
     "ai-agent:pre-check": "node scripts/ai-agent-constraint-checklist.js pre-check",
     "ai-agent:live-check": "node scripts/ai-agent-constraint-checklist.js live-check",
@@ -220,6 +231,14 @@
   ],
   "author": "MPLP Team",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Coregentis/MPLP-Protocol.git"
+  },
+  "homepage": "https://github.com/Coregentis/MPLP-Protocol#readme",
+  "bugs": {
+    "url": "https://github.com/Coregentis/MPLP-Protocol/issues"
+  },
   "devDependencies": {
     "@cucumber/cucumber": "^12.1.0",
     "@cucumber/pretty-formatter": "^2.0.1",

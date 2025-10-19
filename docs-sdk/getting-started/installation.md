@@ -16,21 +16,65 @@
 
 ## 📦 **安装方式**
 
-### **方式1: 完整SDK安装（推荐）**
+### **方式1: 安装MPLP核心包（推荐）** ⚡
 
-安装所有核心包：
+安装包含所有核心功能的主MPLP包：
+
+```bash
+# 安装最新的beta版本
+npm install mplp@beta
+
+# 或安装指定版本
+npm install mplp@1.1.0-beta
+```
+
+**验证安装**:
+```bash
+# 检查MPLP版本
+node -e "const mplp = require('mplp'); console.log('MPLP版本:', mplp.MPLP_VERSION);"
+# 预期输出: MPLP版本: 1.1.0-beta
+```
+
+**包含内容**:
+- ✅ 完整的L1-L3协议栈
+- ✅ 所有10个核心模块（Context、Plan、Role、Confirm、Trace、Extension、Dialog、Collab、Core、Network）
+- ✅ TypeScript类型定义
+- ✅ 生产就绪构建
+
+### **方式2: 使用CLI脚手架**
+
+使用MPLP CLI快速创建项目：
+
+```bash
+# 安装MPLP核心包
+npm install mplp@beta
+
+# 全局安装CLI（可选，用于项目脚手架）
+npm install -g @mplp/cli
+
+# 创建新项目
+mplp create my-agent-app
+
+# 进入项目目录
+cd my-agent-app
+
+# 安装依赖
+npm install
+
+# 启动开发服务器
+npm run dev
+```
+
+### **方式3: 安装SDK包（高级用例）**
+
+根据需要安装特定的SDK包：
+
+**完整SDK安装**：
 ```bash
 npm install @mplp/sdk-core @mplp/agent-builder @mplp/orchestrator @mplp/cli @mplp/dev-tools
 ```
 
-或使用yarn：
-```bash
-yarn add @mplp/sdk-core @mplp/agent-builder @mplp/orchestrator @mplp/cli @mplp/dev-tools
-```
-
-### **方式2: 按需安装**
-
-根据需要安装特定包：
+**按需安装**：
 
 **核心应用框架**：
 ```bash
@@ -57,25 +101,7 @@ npm install -g @mplp/cli
 npm install --save-dev @mplp/dev-tools
 ```
 
-### **方式3: 使用CLI脚手架**
-
-使用MPLP CLI快速创建项目：
-```bash
-# 全局安装CLI
-npm install -g @mplp/cli
-
-# 创建新项目
-mplp create my-agent-app
-
-# 进入项目目录
-cd my-agent-app
-
-# 安装依赖
-npm install
-
-# 启动开发服务器
-npm run dev
-```
+**注意**: 对于大多数用户，`npm install mplp@beta`就足够了。SDK包适用于需要特定SDK功能的高级场景。
 
 ## 🔧 **平台适配器安装**
 

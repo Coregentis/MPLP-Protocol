@@ -12,6 +12,22 @@
 
 MPLP Dev Tools provides a comprehensive suite of development and debugging utilities for Multi-Agent Protocol Lifecycle Platform applications. It offers real-time monitoring, performance analysis, debugging tools, and analytics to enhance the development experience and ensure optimal application performance.
 
+### **📦 Package Relationship**
+
+**Important**: MPLP Dev Tools (`@mplp/dev-tools`) is a **development-only package** for debugging and monitoring. For MPLP applications, you'll need:
+
+1. **MPLP Core Package** (`mplp@beta`): The main package containing the L1-L3 protocol stack and all 10 core modules (Required)
+2. **MPLP Dev Tools** (`@mplp/dev-tools`): Development and debugging utilities (Optional, for development only)
+
+**Quick Start**:
+```bash
+# Install MPLP core package (Required)
+npm install mplp@beta
+
+# Install dev tools as development dependency (Optional)
+npm install --save-dev @mplp/dev-tools
+```
+
 ### **🎯 Key Features**
 
 - **📊 Real-time Monitoring**: Live monitoring of agent activities, protocol communications, and system metrics
@@ -24,6 +40,19 @@ MPLP Dev Tools provides a comprehensive suite of development and debugging utili
 - **📱 Live Reload**: Hot module replacement and live reload for faster development cycles
 
 ### **📦 Installation**
+
+#### **Step 1: Install MPLP Core Package** ⚡
+
+```bash
+# Install MPLP core package (Required)
+npm install mplp@beta
+
+# Verify installation
+node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VERSION);"
+# Expected output: MPLP Version: 1.1.0-beta
+```
+
+#### **Step 2: Install Dev Tools (Optional)**
 
 ```bash
 # Install as development dependency (recommended)

@@ -35,31 +35,52 @@ Get MPLP up and running in 5 minutes:
 - TypeScript 5.0+
 - Git
 
-### **Installation**
+### **安装**
+
+#### **选项1：通过npm安装（推荐）** ⚡
 ```bash
-# Clone the repository
-git clone https://github.com/Coregentis/MPLP-Protocol-Dev.git
-cd MPLP-Protocol-Dev
+# 安装最新的beta版本
+npm install mplp@beta
 
-# Install dependencies
-npm install
-
-# Run tests to verify installation
-npm test
-
-# Start development server
-npm run dev
+# 或安装指定版本
+npm install mplp@1.1.0-beta
 ```
 
-### **Verify Installation**
+**验证安装**:
 ```bash
-# Check all module status
+# 检查MPLP版本
+node -e "const mplp = require('mplp'); console.log('MPLP版本:', mplp.MPLP_VERSION);"
+# 预期输出: MPLP版本: 1.1.0-beta
+```
+
+#### **选项2：从源码安装（用于开发）**
+```bash
+# 克隆仓库
+git clone https://github.com/Coregentis/MPLP-Protocol.git
+cd MPLP-Protocol
+
+# 安装依赖
+npm install
+
+# 构建项目
+npm run build
+
+# 运行测试以验证安装
+npm test
+
+# 链接到本地开发
+npm link
+```
+
+**验证构建**:
+```bash
+# 检查所有模块状态
 npm run status
 
-# Run full test suite
+# 运行完整测试套件
 npm run test:full
 
-# Check code quality
+# 检查代码质量
 npm run lint && npm run typecheck
 ```
 

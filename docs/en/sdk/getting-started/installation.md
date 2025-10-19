@@ -24,15 +24,43 @@ MPLP SDK provides a complete development environment for building multi-agent ap
 
 ## 📦 **Installation Methods**
 
-### **Method 1: Quick Install (Recommended)**
+### **Method 1: Install MPLP Core Package (Recommended)** ⚡
 
-Install the complete MPLP SDK with a single command:
+Install the main MPLP package with all core functionality:
 
 ```bash
-# Install MPLP CLI globally
+# Install the latest beta version
+npm install mplp@beta
+
+# Or install a specific version
+npm install mplp@1.1.0-beta
+```
+
+**Verify Installation**:
+```bash
+# Check MPLP version
+node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VERSION);"
+# Expected output: MPLP Version: 1.1.0-beta
+```
+
+**What's Included**:
+- ✅ Complete L1-L3 Protocol Stack
+- ✅ All 10 Core Modules (Context, Plan, Role, Confirm, Trace, Extension, Dialog, Collab, Core, Network)
+- ✅ TypeScript Type Definitions
+- ✅ Production-Ready Build
+
+### **Method 2: Install with CLI Tools**
+
+For project scaffolding and development tools:
+
+```bash
+# Install MPLP core package
+npm install mplp@beta
+
+# Install MPLP CLI globally (optional, for project scaffolding)
 npm install -g @mplp/cli
 
-# Verify installation
+# Verify CLI installation
 mplp --version
 # Expected output: @mplp/cli/1.1.0-beta
 
@@ -47,12 +75,12 @@ npm install
 npm run dev
 ```
 
-### **Method 2: Manual Package Installation**
+### **Method 3: Install SDK Packages**
 
-Install individual SDK packages as needed:
+Install individual SDK packages for advanced use cases:
 
 ```bash
-# Core SDK packages
+# Core SDK packages (if you need SDK-specific features)
 npm install @mplp/sdk-core @mplp/agent-builder @mplp/orchestrator
 
 # Development tools
@@ -61,18 +89,17 @@ npm install -D @mplp/dev-tools
 # Platform adapters (choose what you need)
 npm install @mplp/adapters
 
-# CLI tools (optional, for project scaffolding)
-npm install -g @mplp/cli
+# Note: For most users, 'npm install mplp@beta' is sufficient
 ```
 
-### **Method 3: Development Installation**
+### **Method 4: Development Installation**
 
 For contributors and advanced users:
 
 ```bash
 # Clone the repository
-git clone https://github.com/mplp-org/mplp.git
-cd mplp
+git clone https://github.com/Coregentis/MPLP-Protocol.git
+cd MPLP-Protocol
 
 # Install dependencies
 npm install
@@ -81,7 +108,7 @@ npm install
 npm run build
 
 # Link packages locally
-npm run link:all
+npm link
 
 # Run tests
 npm test

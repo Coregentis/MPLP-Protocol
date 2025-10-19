@@ -6,6 +6,17 @@ MPLP SDK是基于MPLP v1.0 Alpha协议构建的完整开发者工具链，旨在
 
 **基础协议状态**: ✅ MPLP v1.0 Alpha - 100%完成 (2905/2905测试通过，199/199测试套件通过)
 
+### **📦 快速安装**
+
+```bash
+# 安装MPLP核心包（推荐）
+npm install mplp@beta
+
+# 验证安装
+node -e "const mplp = require('mplp'); console.log('MPLP版本:', mplp.MPLP_VERSION);"
+# 预期输出: MPLP版本: 1.1.0-beta
+```
+
 ### **核心价值**
 - **开发者友好**: 简单易用的API和工具
 - **生态完整**: 从协议到应用的完整工具链

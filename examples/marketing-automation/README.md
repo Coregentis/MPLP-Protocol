@@ -35,13 +35,26 @@
 
 ## ⏱️ **30分钟快速开始**
 
+### **第0步: 安装MPLP（1分钟）** ⚡
+
+在运行此示例之前，先安装MPLP：
+
+```bash
+# 安装MPLP核心包（必需）
+npm install mplp@beta
+
+# 验证安装
+node -e "const mplp = require('mplp'); console.log('MPLP版本:', mplp.MPLP_VERSION);"
+# 预期输出: MPLP版本: 1.1.0-beta
+```
+
 ### **第1步: 环境准备（5分钟）**
 ```bash
 # 克隆项目
-git clone <repository-url>
-cd examples/marketing-automation
+git clone https://github.com/Coregentis/MPLP-Protocol.git
+cd MPLP-Protocol/examples/marketing-automation
 
-# 安装依赖
+# 安装依赖（MPLP将自动安装）
 npm install
 
 # 验证安装

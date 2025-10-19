@@ -24,15 +24,43 @@ MPLP SDK提供了构建多智能体应用的完整开发环境。本指南将引
 
 ## 📦 **安装方法**
 
-### **方法1: 快速安装（推荐）**
+### **方法1: 安装MPLP核心包（推荐）** ⚡
 
-使用单个命令安装完整的MPLP SDK：
+安装包含所有核心功能的主MPLP包：
 
 ```bash
-# 全局安装MPLP CLI
+# 安装最新的beta版本
+npm install mplp@beta
+
+# 或安装指定版本
+npm install mplp@1.1.0-beta
+```
+
+**验证安装**:
+```bash
+# 检查MPLP版本
+node -e "const mplp = require('mplp'); console.log('MPLP版本:', mplp.MPLP_VERSION);"
+# 预期输出: MPLP版本: 1.1.0-beta
+```
+
+**包含内容**:
+- ✅ 完整的L1-L3协议栈
+- ✅ 所有10个核心模块（Context、Plan、Role、Confirm、Trace、Extension、Dialog、Collab、Core、Network）
+- ✅ TypeScript类型定义
+- ✅ 生产就绪构建
+
+### **方法2: 安装CLI工具**
+
+用于项目脚手架和开发工具：
+
+```bash
+# 安装MPLP核心包
+npm install mplp@beta
+
+# 全局安装MPLP CLI（可选，用于项目脚手架）
 npm install -g @mplp/cli
 
-# 验证安装
+# 验证CLI安装
 mplp --version
 # 预期输出: @mplp/cli/1.1.0-beta
 
@@ -47,12 +75,12 @@ npm install
 npm run dev
 ```
 
-### **方法2: 手动包安装**
+### **方法3: 安装SDK包**
 
-根据需要安装单个SDK包：
+为高级用例安装单个SDK包：
 
 ```bash
-# 核心SDK包
+# 核心SDK包（如果您需要SDK特定功能）
 npm install @mplp/sdk-core @mplp/agent-builder @mplp/orchestrator
 
 # 开发工具
@@ -61,18 +89,17 @@ npm install -D @mplp/dev-tools
 # 平台适配器（选择您需要的）
 npm install @mplp/adapters
 
-# CLI工具（可选，用于项目脚手架）
-npm install -g @mplp/cli
+# 注意：对于大多数用户，'npm install mplp@beta'就足够了
 ```
 
-### **方法3: 开发安装**
+### **方法4: 开发安装**
 
 适用于贡献者和高级用户：
 
 ```bash
 # 克隆仓库
-git clone https://github.com/mplp-org/mplp.git
-cd mplp
+git clone https://github.com/Coregentis/MPLP-Protocol.git
+cd MPLP-Protocol
 
 # 安装依赖
 npm install
@@ -81,7 +108,7 @@ npm install
 npm run build
 
 # 本地链接包
-npm run link:all
+npm link
 
 # 运行测试
 npm test

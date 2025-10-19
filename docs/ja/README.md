@@ -36,22 +36,43 @@ MPLPを5分で起動して実行：
 - Git
 
 ### **インストール**
+
+#### **オプション1：npmでインストール（推奨）** ⚡
+```bash
+# 最新のbetaバージョンをインストール
+npm install mplp@beta
+
+# または特定のバージョンをインストール
+npm install mplp@1.1.0-beta
+```
+
+**インストールの確認**:
+```bash
+# MPLPバージョンを確認
+node -e "const mplp = require('mplp'); console.log('MPLPバージョン:', mplp.MPLP_VERSION);"
+# 期待される出力: MPLPバージョン: 1.1.0-beta
+```
+
+#### **オプション2：ソースからインストール（開発用）**
 ```bash
 # リポジトリをクローン
-git clone https://github.com/Coregentis/MPLP-Protocol-Dev.git
-cd MPLP-Protocol-Dev
+git clone https://github.com/Coregentis/MPLP-Protocol.git
+cd MPLP-Protocol
 
 # 依存関係をインストール
 npm install
 
+# プロジェクトをビルド
+npm run build
+
 # インストールを確認するためにテストを実行
 npm test
 
-# 開発サーバーを起動
-npm run dev
+# ローカル開発用にリンク
+npm link
 ```
 
-### **インストールの確認**
+**ビルドの確認**:
 ```bash
 # すべてのモジュールステータスを確認
 npm run status

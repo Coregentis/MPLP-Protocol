@@ -35,7 +35,7 @@
 
 ### **步骤1：安装 (1分钟)**
 
-#### **选项A：使用NPM（推荐）**
+#### **选项A：使用npm（推荐）** ⚡
 ```bash
 # 创建新项目目录
 mkdir my-mplp-app
@@ -44,24 +44,44 @@ cd my-mplp-app
 # 初始化npm项目
 npm init -y
 
-# 安装MPLP核心包
-npm install @mplp/core @mplp/context @mplp/plan @mplp/trace
+# 安装MPLP v1.1.0-beta
+npm install mplp@beta
 
-# 安装TypeScript用于开发
+# 或安装指定版本
+npm install mplp@1.1.0-beta
+
+# 安装TypeScript用于开发（可选）
 npm install -D typescript @types/node ts-node
+
+# 创建TypeScript配置（可选）
+npx tsc --init
 ```
 
-#### **选项B：使用MPLP CLI**
+**验证安装**:
 ```bash
-# 安装MPLP CLI
-npm install -g @mplp/cli
+# 检查MPLP版本
+node -e "const mplp = require('mplp'); console.log('MPLP版本:', mplp.MPLP_VERSION);"
+# 预期输出: MPLP版本: 1.1.0-beta
+```
 
-# 创建新项目
-mplp create my-mplp-app
-cd my-mplp-app
+#### **选项B：从源码安装**
+```bash
+# 克隆MPLP仓库
+git clone https://github.com/Coregentis/MPLP-Protocol.git
+cd MPLP-Protocol
 
 # 安装依赖
 npm install
+
+# 构建项目
+npm run build
+
+# 链接到本地开发
+npm link
+
+# 在您的项目目录中
+cd ../my-mplp-app
+npm link mplp
 ```
 
 ### **步骤2：创建基本应用 (2分钟)**

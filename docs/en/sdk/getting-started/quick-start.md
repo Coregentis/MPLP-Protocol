@@ -18,17 +18,32 @@ In this tutorial, you'll create a **Social Media Manager Agent** that can:
 ## 📋 **Prerequisites**
 
 Before starting, ensure you have:
-- ✅ [MPLP SDK installed](installation.md)
 - ✅ Node.js 18+ and npm 8+
 - ✅ Basic TypeScript/JavaScript knowledge
 - ✅ A code editor (VS Code recommended)
+
+### **Install MPLP** ⚡
+
+```bash
+# Install MPLP core package (Recommended)
+npm install mplp@beta
+
+# Or install MPLP CLI for project scaffolding
+npm install -g @mplp/cli
+
+# Verify installation
+node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VERSION);"
+# Expected output: MPLP Version: 1.1.0-beta
+```
+
+For detailed installation options, see the [Installation Guide](installation.md).
 
 ## 🏗️ **Step 1: Create Your Project (5 minutes)**
 
 ### **Initialize the Project**
 
 ```bash
-# Create a new MPLP project
+# Create a new MPLP project (requires @mplp/cli)
 mplp create social-media-manager --template agent-app
 cd social-media-manager
 

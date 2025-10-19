@@ -49,9 +49,31 @@
 
 ## 📦 **Installation**
 
-> **⚠️ Important**: MPLP is currently in beta and not yet published to npm. Please install from source.
+### **Option 1: Install via npm (Recommended)** ⚡
 
-### **Install from Source**
+MPLP is now available on npm! Install it with a single command:
+
+```bash
+# Install the latest beta version
+npm install mplp@beta
+
+# Or install a specific version
+npm install mplp@1.1.0-beta
+```
+
+**Verify Installation**:
+```bash
+# Check MPLP version
+node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VERSION);"
+# Expected output: MPLP Version: 1.1.0-beta
+
+# Test module imports
+node -e "const { ContextModule } = require('mplp'); console.log('✅ Context module loaded');"
+```
+
+### **Option 2: Install from Source**
+
+For development or contributing to MPLP:
 
 ```bash
 # 1. Clone the repository
@@ -64,32 +86,21 @@ npm install
 # 3. Build the project
 npm run build
 
-# 4. Verify installation
-node -e "const mplp = require('./dist/index.js'); console.log('MPLP Version:', mplp.MPLP_VERSION);"
-# Expected output: MPLP Version: 1.1.0-beta
-```
-
-### **Link for Local Development**
-
-To use MPLP in your own projects:
-
-```bash
-# In the MPLP directory
+# 4. Link for local development
 npm link
 
-# In your project directory
+# 5. In your project directory
 npm link mplp
 ```
 
-### **Verify Installation**
-
+**Verify Build**:
 ```bash
 # Check build output
 ls -la dist/
 # Should see: index.js, index.d.ts, modules/, shared/, etc.
 
-# Test module imports
-node -e "const ctx = require('./dist/modules/context/index.js'); console.log('✅ Context module loaded');"
+# Test local build
+node -e "const mplp = require('./dist/index.js'); console.log('MPLP Version:', mplp.MPLP_VERSION);"
 ```
 
 ---

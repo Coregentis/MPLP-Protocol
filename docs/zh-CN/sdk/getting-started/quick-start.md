@@ -18,17 +18,32 @@
 ## 📋 **前置条件**
 
 开始之前，请确保您已：
-- ✅ [安装了MPLP SDK](installation.md)
 - ✅ Node.js 18+ 和 npm 8+
 - ✅ 基础的TypeScript/JavaScript知识
 - ✅ 代码编辑器（推荐VS Code）
+
+### **安装MPLP** ⚡
+
+```bash
+# 安装MPLP核心包（推荐）
+npm install mplp@beta
+
+# 或安装MPLP CLI用于项目脚手架
+npm install -g @mplp/cli
+
+# 验证安装
+node -e "const mplp = require('mplp'); console.log('MPLP版本:', mplp.MPLP_VERSION);"
+# 预期输出: MPLP版本: 1.1.0-beta
+```
+
+详细的安装选项请参阅[安装指南](installation.md)。
 
 ## 🏗️ **步骤1: 创建您的项目（5分钟）**
 
 ### **初始化项目**
 
 ```bash
-# 创建新的MPLP项目
+# 创建新的MPLP项目（需要@mplp/cli）
 mplp create social-media-manager --template agent-app
 cd social-media-manager
 

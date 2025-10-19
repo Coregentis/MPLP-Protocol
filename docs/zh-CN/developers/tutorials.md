@@ -42,10 +42,20 @@
 - 10个L2协调模块的作用和关系
 - 上下文、计划、角色的基本概念
 
+**安装MPLP**：
+```bash
+# 安装MPLP核心包
+npm install mplp@beta
+
+# 验证安装
+node -e "const mplp = require('mplp'); console.log('MPLP版本:', mplp.MPLP_VERSION);"
+# 预期输出: MPLP版本: 1.1.0-beta
+```
+
 **实践项目**：
 ```typescript
 // 创建你的第一个多智能体系统
-import { MPLP } from '@mplp/core';
+import { MPLP } from 'mplp';
 
 async function basicConcepts() {
   const mplp = new MPLP({ name: 'learning-system' });

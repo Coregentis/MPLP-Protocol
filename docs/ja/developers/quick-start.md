@@ -35,7 +35,7 @@
 
 ### **ステップ1：インストール（1分）**
 
-#### **オプションA：NPMを使用（推奨）**
+#### **オプションA：npmを使用（推奨）** ⚡
 ```bash
 # 新しいプロジェクトディレクトリを作成
 mkdir my-mplp-app
@@ -44,21 +44,31 @@ cd my-mplp-app
 # npmプロジェクトを初期化
 npm init -y
 
-# MPLP v1.0 Alphaをインストール
-npm install mplp@1.0.0-alpha
+# MPLP v1.1.0-betaをインストール
+npm install mplp@beta
 
-# 開発用にTypeScriptをインストール
+# または特定のバージョンをインストール
+npm install mplp@1.1.0-beta
+
+# 開発用にTypeScriptをインストール（オプション）
 npm install -D typescript @types/node ts-node
 
-# TypeScript設定を作成
+# TypeScript設定を作成（オプション）
 npx tsc --init
+```
+
+**インストールの確認**:
+```bash
+# MPLPバージョンを確認
+node -e "const mplp = require('mplp'); console.log('MPLPバージョン:', mplp.MPLP_VERSION);"
+# 期待される出力: MPLPバージョン: 1.1.0-beta
 ```
 
 #### **オプションB：ソースからクローンしてビルド**
 ```bash
 # MPLPリポジトリをクローン
-git clone https://github.com/YOUR_USERNAME/MPLP-v1.0.git
-cd MPLP-v1.0
+git clone https://github.com/Coregentis/MPLP-Protocol.git
+cd MPLP-Protocol
 
 # 依存関係をインストール
 npm install
@@ -68,11 +78,15 @@ npm run build
 
 # ローカル開発用にリンク
 npm link
+
+# プロジェクトディレクトリで
+cd ../my-mplp-app
+npm link mplp
 ```
 
 #### **オプションC：Dockerを使用（将来）**
 ```bash
-# 注意：Dockerイメージは正式リリース後に利用可能になります
+# 注意：Dockerイメージは将来のリリースで利用可能になります
 # MPLP開発コンテナをプルして実行
 docker run -it --name mplp-quickstart -p 3000:3000 mplp/quickstart:latest
 

@@ -199,11 +199,16 @@ npm run enterprise
 # 确保安装了正确的Node.js版本
 node --version  # 应该是 v18.17.0 或更高
 
-# 安装MPLP CLI（可选但推荐）
-npm install -g @mplp/cli
+# 安装MPLP核心包（必需）
+npm install mplp@beta
 
 # 验证MPLP安装
-mplp --version  # 应该显示 v1.0.0-alpha
+node -e "const mplp = require('mplp'); console.log('MPLP版本:', mplp.MPLP_VERSION);"
+# 预期输出: MPLP版本: 1.1.0-beta
+
+# 可选：安装MPLP CLI用于项目脚手架
+npm install -g @mplp/cli
+mplp --version
 ```
 
 ### **通用运行步骤**

@@ -8,14 +8,29 @@
 
 确保您已经：
 - ✅ 安装了Node.js 18+
-- ✅ 安装了MPLP SDK（参考[安装指南](installation.md)）
 - ✅ 有基本的TypeScript/JavaScript知识
+
+### **安装MPLP** ⚡
+
+```bash
+# 安装MPLP核心包（推荐）
+npm install mplp@beta
+
+# 或安装MPLP CLI用于项目脚手架
+npm install -g @mplp/cli
+
+# 验证安装
+node -e "const mplp = require('mplp'); console.log('MPLP版本:', mplp.MPLP_VERSION);"
+# 预期输出: MPLP版本: 1.1.0-beta
+```
+
+详细的安装选项请参考[安装指南](installation.md)。
 
 ## 🚀 **第1步: 创建项目（5分钟）**
 
 ### **使用CLI创建项目**
 ```bash
-# 创建新项目
+# 创建新项目（需要@mplp/cli）
 mplp create hello-mplp-app
 
 # 进入项目目录
@@ -34,7 +49,10 @@ cd hello-mplp-app
 # 初始化npm项目
 npm init -y
 
-# 安装MPLP SDK
+# 安装MPLP核心包
+npm install mplp@beta
+
+# 或安装SDK包（高级用例）
 npm install @mplp/sdk-core @mplp/agent-builder @mplp/orchestrator
 
 # 安装TypeScript开发依赖

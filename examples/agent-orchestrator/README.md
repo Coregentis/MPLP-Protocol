@@ -40,17 +40,29 @@ Enterprise-grade multi-agent orchestration platform built with **MPLP SDK v1.1.0
 
 - **Node.js**: >= 18.0.0
 - **npm**: >= 8.0.0
-- **MPLP SDK**: v1.1.0-beta (automatically installed)
 - **TypeScript**: >= 5.0.0
+
+### **Install MPLP** ⚡
+
+Before running this example, install MPLP:
+
+```bash
+# Install MPLP core package (Required)
+npm install mplp@beta
+
+# Verify installation
+node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VERSION);"
+# Expected output: MPLP Version: 1.1.0-beta
+```
 
 ## 🛠️ Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/mplp/agent-orchestrator.git
-cd agent-orchestrator
+git clone https://github.com/Coregentis/MPLP-Protocol.git
+cd MPLP-Protocol/examples/agent-orchestrator
 
-# Install dependencies
+# Install dependencies (MPLP will be installed automatically)
 npm install
 
 # Build the project

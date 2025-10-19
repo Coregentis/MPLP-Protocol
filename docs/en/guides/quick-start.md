@@ -29,26 +29,29 @@ MPLP v1.0 Alpha is **FULLY COMPLETED** with enterprise-grade quality:
 - npm 9+ or yarn 3+
 - TypeScript 5.0+ (for TypeScript projects)
 
-### **Install MPLP Alpha**
+### **Install MPLP**
 
 ```bash
-# Using npm
-npm install mplp@alpha
+# Using npm (Recommended)
+npm install mplp@beta
+
+# Or install a specific version
+npm install mplp@1.1.0-beta
 
 # Using yarn
-yarn add mplp@alpha
+yarn add mplp@beta
 
 # Using pnpm
-pnpm add mplp@alpha
+pnpm add mplp@beta
 ```
 
 ### **Verify Installation**
 
 ```bash
 # Check version
-npm list mplp
+node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VERSION);"
 
-# Should show: mplp@1.0.0-alpha
+# Expected output: MPLP Version: 1.1.0-beta
 ```
 
 ## 🚀 **Basic Usage**

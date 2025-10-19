@@ -130,13 +130,15 @@ npm run demo
 
 ### **MPLP Installation**
 ```bash
-# Install MPLP globally
-npm install -g mplp
-
-# Or install locally in your project
-npm install mplp
+# Install MPLP core package (Recommended)
+npm install mplp@beta
 
 # Verify installation
+node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VERSION);"
+# Expected output: MPLP Version: 1.1.0-beta
+
+# Optional: Install MPLP CLI for project scaffolding
+npm install -g @mplp/cli
 mplp --version
 ```
 

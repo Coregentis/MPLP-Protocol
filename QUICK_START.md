@@ -28,9 +28,28 @@ npm --version   # Should be >= 8.0.0
 
 ## 🚀 Installation
 
-### Option 1: Install from Source (Current Method)
+### Option 1: Install via npm (Recommended) ⚡
 
-Since MPLP is not yet published to npm, you'll need to build from source:
+MPLP is now available on npm! This is the fastest way to get started:
+
+```bash
+# Install the latest beta version
+npm install mplp@beta
+
+# Or install a specific version
+npm install mplp@1.1.0-beta
+```
+
+**Verify Installation**:
+```bash
+# Check MPLP version
+node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VERSION);"
+# Expected output: MPLP Version: 1.1.0-beta
+```
+
+### Option 2: Install from Source
+
+For development or contributing to MPLP:
 
 ```bash
 # 1. Clone the repository
@@ -48,7 +67,7 @@ ls -la dist/
 # You should see: index.js, index.d.ts, modules/, shared/, etc.
 ```
 
-### Option 2: Link Locally for Development
+### Option 3: Link Locally for Development
 
 If you want to use MPLP in another project:
 

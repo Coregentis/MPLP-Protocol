@@ -98,6 +98,21 @@ This directory contains complete, production-ready example applications built wi
 
 ### Prerequisites
 
+Before running any example, you need to install MPLP:
+
+#### **Install MPLP Core Package** ⚡
+
+```bash
+# Install MPLP core package (Required)
+npm install mplp@beta
+
+# Verify installation
+node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VERSION);"
+# Expected output: MPLP Version: 1.1.0-beta
+```
+
+#### **System Prerequisites**
+
 - **Node.js**: ≥18.0.0
 - **npm**: ≥9.0.0
 - **Docker**: ≥20.0.0 (optional)

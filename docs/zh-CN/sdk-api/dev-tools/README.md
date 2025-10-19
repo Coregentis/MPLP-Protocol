@@ -12,6 +12,13 @@
 
 `@mplp/dev-tools`包为MPLP应用程序提供全面的开发工具和实用程序，包括调试、监控、性能分析和日志管理。它提供编程API和CLI工具，以增强开发体验。
 
+### **📦 包关系说明**
+
+**重要**: MPLP开发工具 (`@mplp/dev-tools`) 是一个**仅用于开发的包**。对于MPLP应用程序，您需要：
+
+1. **MPLP核心包** (`mplp@beta`): 包含L1-L3协议栈的主包（必需）
+2. **MPLP开发工具** (`@mplp/dev-tools`): 开发和调试实用程序（可选）
+
 ### **🎯 关键功能**
 
 - **🐛 调试工具**: 代理调试器、工作流调试器、协议检查器、状态检查器
@@ -24,14 +31,27 @@
 
 ### **📦 安装**
 
+#### **步骤1: 安装MPLP核心包** ⚡
+
 ```bash
-# 本地安装
+# 安装MPLP核心包（必需）
+npm install mplp@beta
+
+# 验证安装
+node -e "const mplp = require('mplp'); console.log('MPLP版本:', mplp.MPLP_VERSION);"
+# 预期输出: MPLP版本: 1.1.0-beta
+```
+
+#### **步骤2: 安装开发工具（可选）**
+
+```bash
+# 本地安装（推荐）
 npm install @mplp/dev-tools
 
 # 全局安装CLI工具
 npm install -g @mplp/dev-tools
 
-# 验证安装
+# 验证开发工具安装
 mplp-debug --version
 ```
 

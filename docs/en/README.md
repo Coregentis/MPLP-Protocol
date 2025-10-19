@@ -36,22 +36,43 @@ Get MPLP up and running in 5 minutes:
 - Git
 
 ### **Installation**
+
+#### **Option 1: Install via npm (Recommended)** ⚡
+```bash
+# Install the latest beta version
+npm install mplp@beta
+
+# Or install a specific version
+npm install mplp@1.1.0-beta
+```
+
+**Verify Installation**:
+```bash
+# Check MPLP version
+node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VERSION);"
+# Expected output: MPLP Version: 1.1.0-beta
+```
+
+#### **Option 2: Install from Source (For Development)**
 ```bash
 # Clone the repository
-git clone https://github.com/Coregentis/MPLP-Protocol-Dev.git
-cd MPLP-Protocol-Dev
+git clone https://github.com/Coregentis/MPLP-Protocol.git
+cd MPLP-Protocol
 
 # Install dependencies
 npm install
 
+# Build the project
+npm run build
+
 # Run tests to verify installation
 npm test
 
-# Start development server
-npm run dev
+# Link for local development
+npm link
 ```
 
-### **Verify Installation**
+**Verify Build**:
 ```bash
 # Check all module status
 npm run status
