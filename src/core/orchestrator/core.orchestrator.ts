@@ -664,9 +664,9 @@ export class CoreOrchestrator {
       // 创建一个基本的WorkflowConfig对象
       const basicWorkflowConfig: WorkflowConfig = {
         stages: (workflowConfig.stages as WorkflowStageType[]) || ['context'],
-        executionMode: (workflowConfig.executionMode as ExecutionModeType) || 'sequential',
+        executionMode: ((workflowConfig.executionMode as ExecutionModeType) || 'sequential') as ExecutionModeType,
         parallelExecution: (workflowConfig.parallelExecution as boolean) || false,
-        priority: (workflowConfig.priority as Priority) || 'medium'
+        priority: ((workflowConfig.priority as Priority) || 'medium') as Priority
       };
 
       await this.securityManager.validateWorkflowExecution(

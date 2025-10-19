@@ -84,8 +84,8 @@ MPLP has contributors and users from around the world:
 
 ## 💬 Join Our Community
 
-- **GitHub Discussions**: [Join the conversation](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/discussions)
-- **GitHub Issues**: [Report bugs or request features](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/issues)
+- **GitHub Discussions**: [Join the conversation](https://github.com/Coregentis/MPLP-Protocol/discussions)
+- **GitHub Issues**: [Report bugs or request features](https://github.com/Coregentis/MPLP-Protocol/issues)
 - **Documentation**: [Read the docs](./docs/README.md)
 
 ## 📄 License

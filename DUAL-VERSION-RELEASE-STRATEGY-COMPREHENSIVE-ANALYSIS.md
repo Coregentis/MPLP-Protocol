@@ -16,8 +16,8 @@ MPLP项目采用**双仓库双版本发布策略**，以满足不同用户群体
 
 | 版本类型 | 仓库 | 目标用户 | 发布范围 | .gitignore文件 |
 |---------|------|---------|---------|---------------|
-| **开发版本** | [MPLP-Protocol-Dev](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev) | 核心开发团队、贡献者 | 完整开发环境 | `.gitignore` |
-| **开源版本** | [MPLP-Protocol](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev) | 开源社区、企业用户 | 纯净生产版本 | `.gitignore.public` |
+| **开发版本** | [MPLP-Protocol-Dev](https://github.com/Coregentis/MPLP-Protocol-Dev) | 核心开发团队、贡献者 | 完整开发环境 | `.gitignore` |
+| **开源版本** | [MPLP-Protocol](https://github.com/Coregentis/MPLP-Protocol) | 开源社区、企业用户 | 纯净生产版本 | `.gitignore.public` |
 
 ### **战略目标**
 
@@ -182,8 +182,8 @@ coverage/
 
 #### **文档链接一致性**
 - ✅ **README.md中的链接必须指向正确的仓库**
-  - Dev版本: `https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev`
-  - Public版本: `https://github.com/Coregentis/MPLP-Protocol-Dev-Dev`
+  - Dev版本: `https://github.com/Coregentis/MPLP-Protocol-Dev`
+  - Public版本: `https://github.com/Coregentis/MPLP-Protocol`
 - ✅ **package.json中的repository字段必须正确**
 - ✅ **所有文档中的GitHub链接必须更新**
 
@@ -364,12 +364,12 @@ scripts/
 {
   "repository": {
     "type": "git",
-    "url": "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev.git"
+    "url": "https://github.com/Coregentis/MPLP-Protocol-Dev.git"
   },
   "bugs": {
-    "url": "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/issues"
+    "url": "https://github.com/Coregentis/MPLP-Protocol-Dev/issues"
   },
-  "homepage": "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev#readme"
+  "homepage": "https://github.com/Coregentis/MPLP-Protocol-Dev#readme"
 }
 ```
 
@@ -378,12 +378,12 @@ scripts/
 {
   "repository": {
     "type": "git",
-    "url": "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git"
+    "url": "https://github.com/Coregentis/MPLP-Protocol.git"
   },
   "bugs": {
-    "url": "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/issues"
+    "url": "https://github.com/Coregentis/MPLP-Protocol/issues"
   },
-  "homepage": "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev#readme"
+  "homepage": "https://github.com/Coregentis/MPLP-Protocol#readme"
 }
 ```
 

@@ -114,7 +114,7 @@ export class CollabModuleAdapter {
       planId: (contextData.planId as UUID) || generateUUID(),
       name: (contextData.name as string) || `Collaboration for Context ${contextId}`,
       description: (contextData.description as string) || 'Auto-generated collaboration from context',
-      mode: (contextData.mode as 'sequential' | 'parallel' | 'hybrid' | 'pipeline' | 'mesh') || 'distributed',
+      mode: ((contextData.mode as 'sequential' | 'parallel' | 'hybrid' | 'pipeline' | 'mesh') || 'sequential') as 'sequential' | 'parallel' | 'hybrid' | 'pipeline' | 'mesh',
       coordinationStrategy: {
         type: 'distributed' as const,
         decisionMaking: 'consensus' as const,

@@ -2,7 +2,7 @@
 
 <div align="center">
 
-[![Dual Version](https://img.shields.io/badge/dual%20version-v1.0%20Alpha%20%2B%20v1.1.0--beta%20SDK-blue.svg)](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev)
+[![Dual Version](https://img.shields.io/badge/dual%20version-v1.0%20Alpha%20%2B%20v1.1.0--beta%20SDK-blue.svg)](https://github.com/Coregentis/MPLP-Protocol)
 [![Protocol Stack](https://img.shields.io/badge/L1--L3-Protocol%20Stack-orange.svg)](#architecture)
 [![SDK Ecosystem](https://img.shields.io/badge/SDK-7%20packages%20%2B%207%20adapters-purple.svg)](#sdk)
 [![Tests](https://img.shields.io/badge/tests-3165%20total%20%7C%20100%25%20pass-brightgreen.svg)](#quality)
@@ -39,7 +39,7 @@
 | [🚀 Quick Start](docs/en/developers/quick-start.md) | [🚀 快速开始](docs/zh-CN/developers/quick-start.md) | [🎯 Guides](docs/) |
 | [🔧 API Reference](docs/en/api-reference/) | [🔧 API参考](docs/zh-CN/api-reference/) | [📚 Tutorials](docs/) |
 
-**Community**: [🤝 Contributing](CONTRIBUTING.md) • [💬 Discussions](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/discussions) • [📋 Roadmap](ROADMAP.md) • [🐛 Issues](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/issues)
+**Community**: [🤝 Contributing](CONTRIBUTING.md) • [💬 Discussions](https://github.com/Coregentis/MPLP-Protocol/discussions) • [📋 Roadmap](ROADMAP.md) • [🐛 Issues](https://github.com/Coregentis/MPLP-Protocol/issues)
 
 </div>
 
@@ -77,7 +77,7 @@ For development or contributing to MPLP:
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
+git clone https://github.com/Coregentis/MPLP-Protocol.git
 cd MPLP-Protocol
 
 # 2. Install dependencies
@@ -366,7 +366,7 @@ npm install @mplp/core @mplp/agent-builder @mplp/orchestrator
 npm install mplp@alpha
 
 # Or clone from source
-git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
+git clone https://github.com/Coregentis/MPLP-Protocol.git
 cd MPLP-Protocol
 npm install
 ```
@@ -569,8 +569,8 @@ We welcome developers, researchers, and organizations to join the MPLP community
 
 | Platform | Purpose | Link |
 |----------|---------|------|
-| **GitHub** | Source code, issues, pull requests | [MPLP-Protocol](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev) |
-| **Discussions** | Q&A, ideas, community support | [Join Discussions](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/discussions) |
+| **GitHub** | Source code, issues, pull requests | [MPLP-Protocol](https://github.com/Coregentis/MPLP-Protocol) |
+| **Discussions** | Q&A, ideas, community support | [Join Discussions](https://github.com/Coregentis/MPLP-Protocol/discussions) |
 | **Documentation** | Complete guides and references | [View Docs](docs/) |
 | **Examples** | Working code samples | [Browse Examples](examples/) |
 
@@ -578,9 +578,9 @@ We welcome developers, researchers, and organizations to join the MPLP community
 
 | Need Help With | Resource | Link |
 |----------------|----------|------|
-| **Bug Reports** | GitHub Issues | [Report Bug](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/issues/new?template=bug_report.md) |
-| **Feature Requests** | GitHub Issues | [Request Feature](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/issues/new?template=feature_request.md) |
-| **Questions** | GitHub Discussions | [Ask Question](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/discussions/new?category=q-a) |
+| **Bug Reports** | GitHub Issues | [Report Bug](https://github.com/Coregentis/MPLP-Protocol/issues/new?template=bug_report.md) |
+| **Feature Requests** | GitHub Issues | [Request Feature](https://github.com/Coregentis/MPLP-Protocol/issues/new?template=feature_request.md) |
+| **Questions** | GitHub Discussions | [Ask Question](https://github.com/Coregentis/MPLP-Protocol/discussions/new?category=q-a) |
 | **Documentation** | Docs Site | [Browse Docs](docs/) |
 
 ### **🚀 Contributing**
@@ -642,12 +642,12 @@ MPLP is built on the shoulders of giants. We thank:
 
 If MPLP helps your multi-agent projects, please give us a star! ⭐
 
-[![GitHub stars](https://img.shields.io/github/stars/Coregentis/MPLP-Protocol?style=social)](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/Coregentis/MPLP-Protocol?style=social)](https://github.com/Coregentis/MPLP-Protocol/stargazers)
 
 ---
 
 **Built with ❤️ by the MPLP Community**
 
-[🏠 Home](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev) • [📖 Docs](docs/) • [💬 Discussions](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/discussions) • [🐛 Issues](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/issues)
+[🏠 Home](https://github.com/Coregentis/MPLP-Protocol) • [📖 Docs](docs/) • [💬 Discussions](https://github.com/Coregentis/MPLP-Protocol/discussions) • [🐛 Issues](https://github.com/Coregentis/MPLP-Protocol/issues)
 
 </div>

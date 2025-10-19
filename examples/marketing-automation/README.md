@@ -51,7 +51,7 @@ node -e "const mplp = require('mplp'); console.log('MPLP版本:', mplp.MPLP_VERS
 ### **第1步: 环境准备（5分钟）**
 ```bash
 # 克隆项目
-git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
+git clone https://github.com/Coregentis/MPLP-Protocol.git
 cd MPLP-Protocol/examples/marketing-automation
 
 # 安装依赖（MPLP将自动安装）

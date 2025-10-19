@@ -92,7 +92,7 @@ Contribute to MPLP development | 参与MPLP开发
 |:-------:|:----:|
 | [🤝 Contributing](./en/community/contributing.md) | [🤝 贡献指南](./zh-CN/community/contributing.md) |
 | [📋 Roadmap](./en/community/roadmap.md) | [📋 发展路线](./zh-CN/community/roadmap.md) |
-| [💬 Discussions](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/discussions) | [💬 讨论区](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/discussions) |
+| [💬 Discussions](https://github.com/Coregentis/MPLP-Protocol-Dev/discussions) | [💬 讨论区](https://github.com/Coregentis/MPLP-Protocol-Dev/discussions) |
 
 </div>
 
@@ -121,8 +121,8 @@ Contribute to MPLP development | 参与MPLP开发
 
 | **Resource 资源** | **English** | **中文** |
 |:-----------------:|:-----------:|:--------:|
-| **GitHub Issues** | [🐛 Bug Reports](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/issues) | [🐛 问题报告](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/issues) |
-| **GitHub Discussions** | [💬 Community Q&A](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/discussions) | [💬 社区问答](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/discussions) |
+| **GitHub Issues** | [🐛 Bug Reports](https://github.com/Coregentis/MPLP-Protocol-Dev/issues) | [🐛 问题报告](https://github.com/Coregentis/MPLP-Protocol-Dev/issues) |
+| **GitHub Discussions** | [💬 Community Q&A](https://github.com/Coregentis/MPLP-Protocol-Dev/discussions) | [💬 社区问答](https://github.com/Coregentis/MPLP-Protocol-Dev/discussions) |
 | **Contributing** | [🤝 Contributing Guide](../CONTRIBUTING.md) | [🤝 贡献指南](../CONTRIBUTING.md) |
 | **Roadmap** | [📋 Future Plans](../ROADMAP.md) | [📋 发展规划](../ROADMAP.md) |
 

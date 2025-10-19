@@ -53,7 +53,7 @@ For development or contributing to MPLP:
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
+git clone https://github.com/Coregentis/MPLP-Protocol.git
 cd MPLP-Protocol
 
 # 2. Install dependencies
@@ -240,9 +240,9 @@ npm start
 
 ### 3. Join the Community
 
-- **GitHub**: [Coregentis/MPLP-Protocol](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev)
-- **Issues**: [Report bugs or request features](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/issues)
-- **Discussions**: [Ask questions and share ideas](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/discussions)
+- **GitHub**: [Coregentis/MPLP-Protocol](https://github.com/Coregentis/MPLP-Protocol)
+- **Issues**: [Report bugs or request features](https://github.com/Coregentis/MPLP-Protocol/issues)
+- **Discussions**: [Ask questions and share ideas](https://github.com/Coregentis/MPLP-Protocol/discussions)
 
 ---
 
@@ -343,8 +343,8 @@ You've successfully set up MPLP and created your first application!
 
 **Need Help?**
 - 📖 [Full Documentation](./docs/en/README.md)
-- 🐛 [Report Issues](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/issues)
-- 💬 [Community Discussions](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/discussions)
+- 🐛 [Report Issues](https://github.com/Coregentis/MPLP-Protocol/issues)
+- 💬 [Community Discussions](https://github.com/Coregentis/MPLP-Protocol/discussions)
 - 📧 [Contact Us](mailto:support@coregentis.com)
 
 **Happy Building with MPLP!** 🚀

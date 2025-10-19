@@ -179,8 +179,8 @@ We appreciate security researchers who help us keep MPLP secure:
 For security-related questions or concerns:
 
 - **Email**: security@mplp.dev
-- **GitHub Security Advisories**: [Create a private security advisory](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/security/advisories/new)
-- **General Issues**: [GitHub Issues](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/issues) (for non-security issues only)
+- **GitHub Security Advisories**: [Create a private security advisory](https://github.com/Coregentis/MPLP-Protocol/security/advisories/new)
+- **General Issues**: [GitHub Issues](https://github.com/Coregentis/MPLP-Protocol/issues) (for non-security issues only)
 
 ## 📄 Additional Resources
 

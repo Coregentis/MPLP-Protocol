@@ -86,7 +86,7 @@
 **用户操作**:
 ```bash
 # 1. 克隆Dev仓库
-git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev.git
+git clone https://github.com/Coregentis/MPLP-Protocol-Dev.git
 cd MPLP-Protocol-Dev
 
 # 2. 安装依赖

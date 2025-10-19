@@ -3,7 +3,7 @@
 ## 🎯 **Audit Objective**
 
 **Framework**: SCTM+GLFB+ITCM+RBCT Enhanced Framework  
-**Target**: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev  
+**Target**: https://github.com/Coregentis/MPLP-Protocol  
 **Date**: October 16, 2025  
 **Auditor**: AI Assistant using systematic critical thinking methodology
 
@@ -202,7 +202,7 @@ Internal Dev Repo
 
 **Approach**: Separate GitHub repository and npm package distribution
 
-#### **GitHub Repository** (https://github.com/Coregentis/MPLP-Protocol-Dev-Dev)
+#### **GitHub Repository** (https://github.com/Coregentis/MPLP-Protocol)
 **Purpose**: Open source collaboration, examples, documentation
 
 **Should Include**:

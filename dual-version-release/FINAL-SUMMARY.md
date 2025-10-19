@@ -24,13 +24,13 @@
 - ✅ 创建了完整的开发版本.gitignore（150行）
 - ✅ 策略：最小排除 - 仅排除运行时生成的文件
 - ✅ 保留所有开发工具、内部文档、测试套件
-- ✅ 仓库：https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev
+- ✅ 仓库：https://github.com/Coregentis/MPLP-Protocol-Dev
 
 #### **开源版本 .gitignore.public**
 - ✅ 更新了开源版本.gitignore.public（添加npm和双版本文档排除规则）
 - ✅ 策略：最大排除 - 排除所有开发内容
 - ✅ 仅保留生产代码、用户文档、示例、SDK
-- ✅ 仓库：https://github.com/Coregentis/MPLP-Protocol-Dev-Dev
+- ✅ 仓库：https://github.com/Coregentis/MPLP-Protocol
 
 ### **2. 双版本发布管理文件夹** ✅
 
@@ -215,7 +215,7 @@ dual-version-release/
 # 参考: dual-version-release/checklists/dev-version-checklist.md
 
 # 3. 更新package.json的repository字段
-# "url": "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev.git"
+# "url": "https://github.com/Coregentis/MPLP-Protocol-Dev.git"
 
 # 4. 验证和发布
 npm install
@@ -237,7 +237,7 @@ npm run build
 # 参考: dual-version-release/checklists/public-version-checklist.md
 
 # 4. 更新package.json的repository字段
-# "url": "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git"
+# "url": "https://github.com/Coregentis/MPLP-Protocol.git"
 
 # 5. 验证和发布
 npm install

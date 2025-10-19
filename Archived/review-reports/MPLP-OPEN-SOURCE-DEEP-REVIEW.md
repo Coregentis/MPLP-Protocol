@@ -149,7 +149,7 @@ MPLP-Protocol/
 ✅ **安装流程**:
 ```bash
 # 1. 克隆仓库
-git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
+git clone https://github.com/Coregentis/MPLP-Protocol.git
 cd MPLP-Protocol
 
 # 2. 安装依赖
@@ -689,7 +689,7 @@ npm install -g typescript
 
 ```bash
 # 克隆仓库
-git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
+git clone https://github.com/Coregentis/MPLP-Protocol.git
 cd MPLP-Protocol
 
 # 安装依赖
@@ -815,24 +815,24 @@ npm install -g typescript@latest
 
 ### **官方资源**
 
-- **GitHub仓库**: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev
-- **文档**: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/tree/main/docs
-- **示例**: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/tree/main/examples
-- **Issues**: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/issues
-- **Discussions**: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/discussions
+- **GitHub仓库**: https://github.com/Coregentis/MPLP-Protocol
+- **文档**: https://github.com/Coregentis/MPLP-Protocol/tree/main/docs
+- **示例**: https://github.com/Coregentis/MPLP-Protocol/tree/main/examples
+- **Issues**: https://github.com/Coregentis/MPLP-Protocol/issues
+- **Discussions**: https://github.com/Coregentis/MPLP-Protocol/discussions
 
 ### **学习资源**
 
-- **快速开始**: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/blob/main/QUICK_START.md
-- **架构指南**: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/tree/main/docs/en/architecture
-- **API参考**: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/tree/main/docs/en/api-reference
-- **故障排除**: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/blob/main/TROUBLESHOOTING.md
+- **快速开始**: https://github.com/Coregentis/MPLP-Protocol/blob/main/QUICK_START.md
+- **架构指南**: https://github.com/Coregentis/MPLP-Protocol/tree/main/docs/en/architecture
+- **API参考**: https://github.com/Coregentis/MPLP-Protocol/tree/main/docs/en/api-reference
+- **故障排除**: https://github.com/Coregentis/MPLP-Protocol/blob/main/TROUBLESHOOTING.md
 
 ### **社区资源**
 
-- **贡献指南**: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/blob/main/CONTRIBUTING.md
-- **行为准则**: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/blob/main/CODE_OF_CONDUCT.md
-- **路线图**: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/blob/main/ROADMAP.md
+- **贡献指南**: https://github.com/Coregentis/MPLP-Protocol/blob/main/CONTRIBUTING.md
+- **行为准则**: https://github.com/Coregentis/MPLP-Protocol/blob/main/CODE_OF_CONDUCT.md
+- **路线图**: https://github.com/Coregentis/MPLP-Protocol/blob/main/ROADMAP.md
 
 ---
 

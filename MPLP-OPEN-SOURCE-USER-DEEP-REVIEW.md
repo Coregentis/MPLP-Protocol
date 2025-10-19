@@ -5,7 +5,7 @@
 **评估目标**: 评估是否可以基于MPLP构建独立的多Agent APP
 **评估方法**: SCTM+GLFB+ITCM+RBCT增强框架
 **评估日期**: 2025年10月17日
-**项目地址**: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev
+**项目地址**: https://github.com/Coregentis/MPLP-Protocol
 
 ---
 
@@ -394,7 +394,7 @@
 ✅ **立即可以开始使用MPLP构建多Agent APP**
 
 **推荐步骤**：
-1. Clone仓库：`git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git`
+1. Clone仓库：`git clone https://github.com/Coregentis/MPLP-Protocol.git`
 2. 安装依赖：`npm install`
 3. 构建项目：`npm run build`
 4. 运行示例：`cd examples/agent-orchestrator && npm install && npm start`

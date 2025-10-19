@@ -16,7 +16,7 @@
 ## 📊 **版本概述**
 
 ### **Dev版本（开发版本）**
-- **仓库**: https://github.com/Coregentis/MPLP-Protocol-Dev
+- **仓库**: https://github.com/Coregentis/MPLP-Protocol
 - **用途**: 开发、测试、贡献代码
 - **.gitignore**: 最小排除（仅运行时生成文件）
 - **包含内容**: 所有开发工具、测试套件、内部文档
@@ -70,7 +70,7 @@ bash scripts/switch-version.sh public
    - Dev版本的.gitignore已经是当前的.gitignore
 
 3. **更新package.json的repository字段**
-   - 更新为: `https://github.com/Coregentis/MPLP-Protocol-Dev.git`
+   - 更新为: `https://github.com/Coregentis/MPLP-Protocol.git`
 
 4. **更新文档中的GitHub链接**
    - 自动替换所有文档中的链接为Dev仓库
@@ -156,7 +156,7 @@ diff .gitignore .gitignore.public
 node -p "require('./package.json').repository.url"
 
 # Dev版本应该输出:
-# https://github.com/Coregentis/MPLP-Protocol-Dev.git
+# https://github.com/Coregentis/MPLP-Protocol.git
 
 # Public版本应该输出:
 # https://github.com/Coregentis/MPLP-Protocol.git

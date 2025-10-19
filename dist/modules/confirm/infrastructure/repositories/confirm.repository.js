@@ -1,0 +1,275 @@
+"use strict";
+/**
+ * Confirm内存仓库实现
+ *
+ * @description Confirm模块的内存仓库实现，用于开发和测试
+ * @version 1.0.0
+ * @layer 基础设施层 - 仓库实现
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.MemoryConfirmRepository = void 0;
+const confirm_entity_1 = require("../../domain/entities/confirm.entity");
+/**
+ * 内存Confirm仓库实现
+ *
+ * @description 基于内存存储的Confirm仓库实现，提供完整的CRUD操作
+ */
+class MemoryConfirmRepository {
+    constructor() {
+        this.confirms = new Map();
+    }
+    /**
+     * 创建确认
+     */
+    async create(confirm) {
+        this.confirms.set(confirm.confirmId, confirm);
+        return confirm;
+    }
+    /**
+     * 根据ID获取确认
+     */
+    async findById(confirmId) {
+        return this.confirms.get(confirmId) || null;
+    }
+    /**
+     * 更新确认
+     */
+    async update(confirmId, updates) {
+        const existing = this.confirms.get(confirmId);
+        if (!existing) {
+            throw new Error(`Confirm with ID ${confirmId} not found`);
+        }
+        // 创建更新后的实体
+        const updated = new confirm_entity_1.ConfirmEntity({
+            protocolVersion: existing.protocolVersion,
+            timestamp: new Date(),
+            confirmId: existing.confirmId,
+            contextId: existing.contextId,
+            planId: existing.planId,
+            confirmationType: updates.confirmationType || existing.confirmationType,
+            status: updates.status || existing.status,
+            priority: updates.priority || existing.priority,
+            requester: updates.requester || existing.requester,
+            approvalWorkflow: updates.approvalWorkflow || existing.approvalWorkflow,
+            subject: updates.subject || existing.subject,
+            riskAssessment: updates.riskAssessment || existing.riskAssessment
+        });
+        this.confirms.set(confirmId, updated);
+        return updated;
+    }
+    /**
+     * 删除确认
+     */
+    async delete(confirmId) {
+        if (!this.confirms.has(confirmId)) {
+            throw new Error(`Confirm with ID ${confirmId} not found`);
+        }
+        this.confirms.delete(confirmId);
+    }
+    /**
+     * 列出所有确认
+     */
+    async findAll(pagination) {
+        const allConfirms = Array.from(this.confirms.values());
+        return this.paginateResults(allConfirms, pagination);
+    }
+    /**
+     * 根据条件查询确认
+     */
+    async findByFilter(filter, pagination) {
+        let results = Array.from(this.confirms.values());
+        // 应用过滤器
+        if (filter.confirmationType && filter.confirmationType.length > 0) {
+            results = results.filter(confirm => filter.confirmationType.includes(confirm.confirmationType));
+        }
+        if (filter.status && filter.status.length > 0) {
+            results = results.filter(confirm => filter.status.includes(confirm.status));
+        }
+        if (filter.priority && filter.priority.length > 0) {
+            results = results.filter(confirm => filter.priority.includes(confirm.priority));
+        }
+        if (filter.requesterId) {
+            results = results.filter(confirm => confirm.requester.userId === filter.requesterId);
+        }
+        if (filter.approverId) {
+            results = results.filter(confirm => confirm.approvalWorkflow.steps.some(step => step.approver.userId === filter.approverId));
+        }
+        if (filter.contextId) {
+            results = results.filter(confirm => confirm.contextId === filter.contextId);
+        }
+        if (filter.planId) {
+            results = results.filter(confirm => confirm.planId === filter.planId);
+        }
+        if (filter.createdAfter) {
+            results = results.filter(confirm => confirm.timestamp >= filter.createdAfter);
+        }
+        if (filter.createdBefore) {
+            results = results.filter(confirm => confirm.timestamp <= filter.createdBefore);
+        }
+        if (filter.riskLevel && filter.riskLevel.length > 0) {
+            results = results.filter(confirm => filter.riskLevel.includes(confirm.riskAssessment.overallRiskLevel));
+        }
+        if (filter.workflowType && filter.workflowType.length > 0) {
+            results = results.filter(confirm => filter.workflowType.includes(confirm.approvalWorkflow.workflowType));
+        }
+        return this.paginateResults(results, pagination);
+    }
+    /**
+     * 根据上下文ID查询确认
+     */
+    async findByContextId(contextId, pagination) {
+        const results = Array.from(this.confirms.values()).filter(confirm => confirm.contextId === contextId);
+        return this.paginateResults(results, pagination);
+    }
+    /**
+     * 根据计划ID查询确认
+     */
+    async findByPlanId(planId, pagination) {
+        const results = Array.from(this.confirms.values()).filter(confirm => confirm.planId === planId);
+        return this.paginateResults(results, pagination);
+    }
+    /**
+     * 根据请求者ID查询确认
+     */
+    async findByRequesterId(requesterId, pagination) {
+        const results = Array.from(this.confirms.values()).filter(confirm => confirm.requester.userId === requesterId);
+        return this.paginateResults(results, pagination);
+    }
+    /**
+     * 根据审批者ID查询确认
+     */
+    async findByApproverId(approverId, pagination) {
+        const results = Array.from(this.confirms.values()).filter(confirm => confirm.approvalWorkflow.steps.some(step => step.approver.userId === approverId));
+        return this.paginateResults(results, pagination);
+    }
+    /**
+     * 根据状态查询确认
+     */
+    async findByStatus(status, pagination) {
+        const results = Array.from(this.confirms.values()).filter(confirm => confirm.status === status);
+        return this.paginateResults(results, pagination);
+    }
+    /**
+     * 根据确认类型查询确认
+     */
+    async findByType(confirmationType, pagination) {
+        const results = Array.from(this.confirms.values()).filter(confirm => confirm.confirmationType === confirmationType);
+        return this.paginateResults(results, pagination);
+    }
+    /**
+     * 根据优先级查询确认
+     */
+    async findByPriority(priority, pagination) {
+        const results = Array.from(this.confirms.values()).filter(confirm => confirm.priority === priority);
+        return this.paginateResults(results, pagination);
+    }
+    /**
+     * 根据时间范围查询确认 - 基于Schema timestamp字段
+     */
+    async findByTimeRange(timeRange, pagination) {
+        const allConfirms = Array.from(this.confirms.values());
+        const filteredConfirms = allConfirms.filter(confirm => {
+            const confirmTime = confirm.timestamp.getTime();
+            return confirmTime >= timeRange.startDate.getTime() && confirmTime <= timeRange.endDate.getTime();
+        });
+        // 应用分页
+        if (pagination) {
+            const offset = pagination.offset || ((pagination.page || 1) - 1) * (pagination.limit || 10);
+            const limit = pagination.limit || 10;
+            return filteredConfirms.slice(offset, offset + limit);
+        }
+        return filteredConfirms;
+    }
+    /**
+     * 统计确认数量
+     */
+    async count(filter) {
+        if (!filter) {
+            return this.confirms.size;
+        }
+        const results = await this.findByFilter(filter);
+        return results.total;
+    }
+    /**
+     * 检查确认是否存在
+     */
+    async exists(confirmId) {
+        return this.confirms.has(confirmId);
+    }
+    /**
+     * 批量创建确认
+     */
+    async createBatch(confirms) {
+        const results = [];
+        for (const confirm of confirms) {
+            const created = await this.create(confirm);
+            results.push(created);
+        }
+        return results;
+    }
+    /**
+     * 批量更新确认
+     */
+    async updateBatch(updates) {
+        const results = [];
+        for (const { confirmId, updates: updateData } of updates) {
+            const updated = await this.update(confirmId, updateData);
+            results.push(updated);
+        }
+        return results;
+    }
+    /**
+     * 批量删除确认
+     */
+    async deleteBatch(confirmIds) {
+        for (const confirmId of confirmIds) {
+            await this.delete(confirmId);
+        }
+    }
+    /**
+     * 清空所有确认
+     */
+    async clear() {
+        this.confirms.clear();
+    }
+    /**
+     * 获取仓库统计信息
+     */
+    async getStatistics() {
+        const allConfirms = Array.from(this.confirms.values());
+        const byStatus = {};
+        const byType = {};
+        const byPriority = {};
+        for (const confirm of allConfirms) {
+            byStatus[confirm.status] = (byStatus[confirm.status] || 0) + 1;
+            byType[confirm.confirmationType] = (byType[confirm.confirmationType] || 0) + 1;
+            byPriority[confirm.priority] = (byPriority[confirm.priority] || 0) + 1;
+        }
+        return {
+            total: allConfirms.length,
+            byStatus,
+            byType,
+            byPriority
+        };
+    }
+    /**
+     * 分页结果辅助方法
+     */
+    paginateResults(items, pagination) {
+        const page = pagination?.page || 1;
+        const limit = pagination?.limit || 10;
+        const offset = pagination?.offset || (page - 1) * limit;
+        const total = items.length;
+        const paginatedItems = items.slice(offset, offset + limit);
+        return {
+            items: paginatedItems,
+            total,
+            page,
+            limit,
+            hasNext: offset + limit < total,
+            hasPrevious: offset > 0
+        };
+    }
+}
+exports.MemoryConfirmRepository = MemoryConfirmRepository;
+//# sourceMappingURL=confirm.repository.js.map

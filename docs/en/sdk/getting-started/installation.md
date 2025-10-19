@@ -98,7 +98,7 @@ For contributors and advanced users:
 
 ```bash
 # Clone the repository
-git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
+git clone https://github.com/Coregentis/MPLP-Protocol.git
 cd MPLP-Protocol
 
 # Install dependencies

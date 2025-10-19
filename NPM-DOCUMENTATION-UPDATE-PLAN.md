@@ -161,7 +161,7 @@ npm install mplp@1.1.0-beta
 
 ```bash
 # Clone the repository
-git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
+git clone https://github.com/Coregentis/MPLP-Protocol.git
 cd MPLP-Protocol
 
 # Install dependencies
@@ -198,7 +198,7 @@ npm install mplp@1.1.0-beta
 
 ```bash
 # 克隆仓库
-git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
+git clone https://github.com/Coregentis/MPLP-Protocol.git
 cd MPLP-Protocol
 
 # 安装依赖
@@ -235,7 +235,7 @@ npm install mplp@1.1.0-beta
 
 ```bash
 # リポジトリをクローン
-git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
+git clone https://github.com/Coregentis/MPLP-Protocol.git
 cd MPLP-Protocol
 
 # 依存関係をインストール

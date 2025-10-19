@@ -959,7 +959,7 @@ export class ExtensionMapper {
     return {
       enabled: true,
       event_bus_connection: {
-        bus_type: integration.eventBus?.provider === 'custom' ? 'kafka' : (integration.eventBus?.provider || 'memory'),
+        bus_type: (integration.eventBus?.provider === 'custom' ? 'kafka' : (integration.eventBus?.provider || 'kafka')) as 'custom' | 'kafka' | 'rabbitmq' | 'redis' | 'nats',
         connection_string: integration.eventBus?.connectionString || '',
         topic_prefix: 'extension',
         consumer_group: 'extension-group'

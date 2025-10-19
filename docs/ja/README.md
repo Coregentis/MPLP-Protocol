@@ -6,7 +6,7 @@
 
 <div align="center">
 
-[![Version](https://img.shields.io/badge/version-1.0.0--alpha-blue.svg)](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev)
+[![Version](https://img.shields.io/badge/version-1.0.0--alpha-blue.svg)](https://github.com/Coregentis/MPLP-Protocol-Dev)
 [![Protocol Stack](https://img.shields.io/badge/L1--L3-Protocol%20Stack-orange.svg)](./architecture/)
 [![Modules](https://img.shields.io/badge/modules-10%2F10%20complete-brightgreen.svg)](./modules/)
 [![Tests](https://img.shields.io/badge/tests-2869%20total%20%7C%20100%25%20pass-brightgreen.svg)](../../README.md#quality)
@@ -56,7 +56,7 @@ node -e "const mplp = require('mplp'); console.log('MPLPバージョン:', mplp.
 #### **オプション2：ソースからインストール（開発用）**
 ```bash
 # リポジトリをクローン
-git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
+git clone https://github.com/Coregentis/MPLP-Protocol.git
 cd MPLP-Protocol
 
 # 依存関係をインストール
@@ -93,7 +93,7 @@ npm run lint && npm run typecheck
 | **はじめに** | **ドキュメント** | **開発** | **コミュニティ** |
 |:-------------------:|:-----------------:|:---------------:|:-------------:|
 | [🚀 クイックスタート](#クイックスタート) | [📖 プロトコル概要](./protocol-foundation/protocol-overview.md) | [🔧 APIリファレンス](./api-reference/) | [🤝 貢献](./community/contributing.md) |
-| [⚡ インストール](#インストール) | [🏗️ アーキテクチャ](./architecture/) | [🧪 テストガイド](./testing/) | [💬 ディスカッション](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/discussions) |
+| [⚡ インストール](#インストール) | [🏗️ アーキテクチャ](./architecture/) | [🧪 テストガイド](./testing/) | [💬 ディスカッション](https://github.com/Coregentis/MPLP-Protocol-Dev/discussions) |
 | [🎯 サンプル](./examples/) | [📋 モジュール](./modules/) | [🚀 デプロイ](./operations/) | [📋 ロードマップ](./community/roadmap.md) |
 
 </div>
@@ -259,8 +259,8 @@ MPLP-Protocol-Dev/
 
 ## 🤝 **コミュニティとサポート**
 
-- **GitHubディスカッション**: [プロジェクトディスカッション](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/discussions)
-- **問題報告**: [GitHub Issues](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/issues)
+- **GitHubディスカッション**: [プロジェクトディスカッション](https://github.com/Coregentis/MPLP-Protocol-Dev/discussions)
+- **問題報告**: [GitHub Issues](https://github.com/Coregentis/MPLP-Protocol-Dev/issues)
 - **貢献ガイド**: [CONTRIBUTING.md](./community/contributing.md)
 - **行動規範**: [CODE_OF_CONDUCT.md](./community/code-of-conduct.md)
 - **ガバナンス**: [GOVERNANCE.md](./community/governance.md)
