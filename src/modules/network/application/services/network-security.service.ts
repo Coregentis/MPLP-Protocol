@@ -320,8 +320,8 @@ export class NetworkSecurityService {
     const threatLevel = this.calculateThreatLevel(threats);
     const securityScore = this.calculateSecurityScore(networkId);
     
-    const lastAudit = audits.length > 0 ? 
-      audits.sort((a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime())[0].startedAt :
+    const lastAudit = audits.length > 0 ?
+      audits.sort((a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime())[0]!.startedAt :
       'Never';
 
     return {

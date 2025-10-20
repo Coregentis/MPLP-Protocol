@@ -180,7 +180,9 @@ export class TraceResponseDto {
   severity: Severity = 'info';
   event: EventObjectDto = new EventObjectDto();
   timestamp: string = '';
-  traceOperation: TraceOperation = 'create';
+  // 修复：'create'不是有效的TraceOperation值，使用'start'代替
+  // TraceOperation定义：'start' | 'record' | 'analyze' | 'export' | 'archive' | 'update'
+  traceOperation: TraceOperation = 'start';
   contextSnapshot?: ContextSnapshotDto = undefined;
   errorInformation?: ErrorInformationDto = undefined;
   decisionLog?: DecisionLogDto = undefined;

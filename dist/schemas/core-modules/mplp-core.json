@@ -1,0 +1,851 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://mplp.dev/schemas/v1.0/mplp-core.json",
+    "title": "MPLP Core Protocol v1.0",
+    "description": "Core协议Schema - MPLP工作流定义和生命周期管理。职责：工作流配置、状态跟踪、模块适配器管理。不包含具体执行逻辑（由Orchestration负责）。",
+    "type": "object",
+    "$defs": {
+        "uuid": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "description": "UUID v4格式的唯一标识符"
+        },
+        "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO 8601格式的时间戳"
+        },
+        "version": {
+            "type": "string",
+            "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+            "description": "语义化版本号 (SemVer)"
+        },
+        "priority": {
+            "type": "string",
+            "enum": [
+                "critical",
+                "high",
+                "medium",
+                "low"
+            ],
+            "description": "优先级枚举"
+        },
+        "workflow_stage": {
+            "type": "string",
+            "enum": [
+                "context",
+                "plan",
+                "confirm",
+                "trace",
+                "role",
+                "extension",
+                "collab",
+                "dialog",
+                "network"
+            ],
+            "description": "工作流阶段，对应MPLP的9个协议模块"
+        },
+        "workflow_status": {
+            "type": "string",
+            "enum": [
+                "created",
+                "in_progress",
+                "completed",
+                "failed",
+                "cancelled",
+                "paused"
+            ],
+            "description": "工作流执行状态"
+        },
+        "execution_mode": {
+            "type": "string",
+            "enum": [
+                "sequential",
+                "parallel",
+                "conditional",
+                "hybrid"
+            ],
+            "description": "工作流执行模式"
+        }
+    },
+    "properties": {
+        "protocol_version": {
+            "$ref": "#/$defs/version",
+            "description": "MPLP Core协议版本",
+            "const": "1.0.0"
+        },
+        "timestamp": {
+            "$ref": "#/$defs/timestamp",
+            "description": "协议消息时间戳"
+        },
+        "workflow_id": {
+            "$ref": "#/$defs/uuid",
+            "description": "工作流唯一标识符"
+        },
+        "orchestrator_id": {
+            "$ref": "#/$defs/uuid",
+            "description": "协调器实例标识符"
+        },
+        "workflow_config": {
+            "type": "object",
+            "description": "工作流配置",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 255,
+                    "description": "工作流名称"
+                },
+                "description": {
+                    "type": "string",
+                    "maxLength": 1000,
+                    "description": "工作流描述"
+                },
+                "stages": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/workflow_stage"
+                    },
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "description": "工作流包含的阶段列表"
+                },
+                "execution_mode": {
+                    "$ref": "#/$defs/execution_mode",
+                    "description": "工作流执行模式"
+                },
+                "timeout_ms": {
+                    "type": "integer",
+                    "minimum": 1000,
+                    "maximum": 3600000,
+                    "description": "工作流超时时间（毫秒）"
+                },
+                "max_concurrent_executions": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 1000,
+                    "description": "最大并发执行数"
+                },
+                "retry_policy": {
+                    "type": "object",
+                    "properties": {
+                        "max_attempts": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 10,
+                            "description": "最大重试次数"
+                        },
+                        "delay_ms": {
+                            "type": "integer",
+                            "minimum": 100,
+                            "maximum": 60000,
+                            "description": "重试延迟（毫秒）"
+                        },
+                        "backoff_factor": {
+                            "type": "number",
+                            "minimum": 1,
+                            "maximum": 5,
+                            "description": "退避因子"
+                        }
+                    },
+                    "required": [
+                        "max_attempts",
+                        "delay_ms"
+                    ],
+                    "additionalProperties": false,
+                    "description": "重试策略配置"
+                }
+            },
+            "required": [
+                "name",
+                "stages",
+                "execution_mode"
+            ],
+            "additionalProperties": false
+        },
+        "execution_context": {
+            "type": "object",
+            "description": "工作流执行上下文",
+            "properties": {
+                "user_id": {
+                    "type": "string",
+                    "description": "用户标识符"
+                },
+                "session_id": {
+                    "$ref": "#/$defs/uuid",
+                    "description": "会话标识符"
+                },
+                "request_id": {
+                    "$ref": "#/$defs/uuid",
+                    "description": "请求标识符"
+                },
+                "priority": {
+                    "$ref": "#/$defs/priority",
+                    "description": "执行优先级"
+                },
+                "metadata": {
+                    "type": "object",
+                    "description": "扩展元数据",
+                    "additionalProperties": true
+                },
+                "variables": {
+                    "type": "object",
+                    "description": "工作流变量",
+                    "additionalProperties": true
+                }
+            },
+            "additionalProperties": false
+        },
+        "execution_status": {
+            "type": "object",
+            "description": "工作流执行状态",
+            "properties": {
+                "status": {
+                    "$ref": "#/$defs/workflow_status",
+                    "description": "当前执行状态"
+                },
+                "current_stage": {
+                    "$ref": "#/$defs/workflow_stage",
+                    "description": "当前执行阶段"
+                },
+                "completed_stages": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/workflow_stage"
+                    },
+                    "description": "已完成的阶段列表"
+                },
+                "stage_results": {
+                    "type": "object",
+                    "description": "各阶段执行结果",
+                    "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                            "status": {
+                                "type": "string",
+                                "enum": [
+                                    "pending",
+                                    "running",
+                                    "completed",
+                                    "failed",
+                                    "skipped"
+                                ]
+                            },
+                            "start_time": {
+                                "$ref": "#/$defs/timestamp"
+                            },
+                            "end_time": {
+                                "$ref": "#/$defs/timestamp"
+                            },
+                            "duration_ms": {
+                                "type": "integer",
+                                "minimum": 0
+                            },
+                            "result": {
+                                "type": "object",
+                                "description": "阶段执行结果数据"
+                            },
+                            "error": {
+                                "type": "object",
+                                "properties": {
+                                    "code": {
+                                        "type": "string"
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    },
+                                    "details": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        },
+                        "required": [
+                            "status"
+                        ]
+                    }
+                },
+                "start_time": {
+                    "$ref": "#/$defs/timestamp",
+                    "description": "工作流开始时间"
+                },
+                "end_time": {
+                    "$ref": "#/$defs/timestamp",
+                    "description": "工作流结束时间"
+                },
+                "duration_ms": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "工作流执行时长（毫秒）"
+                },
+                "retry_count": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "重试次数"
+                }
+            },
+            "required": [
+                "status"
+            ],
+            "additionalProperties": false
+        },
+        "module_coordination": {
+            "type": "object",
+            "description": "模块协调配置",
+            "properties": {
+                "module_adapters": {
+                    "type": "object",
+                    "description": "模块适配器配置",
+                    "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                            "adapter_type": {
+                                "type": "string",
+                                "description": "适配器类型"
+                            },
+                            "config": {
+                                "type": "object",
+                                "description": "适配器配置",
+                                "additionalProperties": true
+                            },
+                            "timeout_ms": {
+                                "type": "integer",
+                                "minimum": 1000,
+                                "maximum": 300000,
+                                "description": "模块超时时间（毫秒）"
+                            },
+                            "retry_policy": {
+                                "type": "object",
+                                "properties": {
+                                    "max_attempts": {
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 5
+                                    },
+                                    "delay_ms": {
+                                        "type": "integer",
+                                        "minimum": 100,
+                                        "maximum": 10000
+                                    }
+                                },
+                                "required": [
+                                    "max_attempts",
+                                    "delay_ms"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "adapter_type"
+                        ],
+                        "additionalProperties": false
+                    }
+                },
+                "data_flow": {
+                    "type": "object",
+                    "description": "模块间数据流配置",
+                    "properties": {
+                        "input_mappings": {
+                            "type": "object",
+                            "description": "输入数据映射",
+                            "additionalProperties": {
+                                "type": "object",
+                                "properties": {
+                                    "source_stage": {
+                                        "$ref": "#/$defs/workflow_stage"
+                                    },
+                                    "source_field": {
+                                        "type": "string"
+                                    },
+                                    "target_field": {
+                                        "type": "string"
+                                    },
+                                    "transformation": {
+                                        "type": "string",
+                                        "description": "数据转换规则"
+                                    }
+                                },
+                                "required": [
+                                    "source_stage",
+                                    "source_field",
+                                    "target_field"
+                                ]
+                            }
+                        },
+                        "output_mappings": {
+                            "type": "object",
+                            "description": "输出数据映射",
+                            "additionalProperties": {
+                                "type": "object",
+                                "properties": {
+                                    "target_stage": {
+                                        "$ref": "#/$defs/workflow_stage"
+                                    },
+                                    "source_field": {
+                                        "type": "string"
+                                    },
+                                    "target_field": {
+                                        "type": "string"
+                                    },
+                                    "transformation": {
+                                        "type": "string",
+                                        "description": "数据转换规则"
+                                    }
+                                },
+                                "required": [
+                                    "target_stage",
+                                    "source_field",
+                                    "target_field"
+                                ]
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "additionalProperties": false
+        },
+        "event_handling": {
+            "type": "object",
+            "description": "事件处理配置",
+            "properties": {
+                "event_listeners": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "event_type": {
+                                "type": "string",
+                                "enum": [
+                                    "workflow_created",
+                                    "workflow_started",
+                                    "workflow_completed",
+                                    "workflow_failed",
+                                    "workflow_cancelled",
+                                    "stage_started",
+                                    "stage_completed",
+                                    "stage_failed",
+                                    "module_connected",
+                                    "module_disconnected",
+                                    "data_transferred"
+                                ],
+                                "description": "事件类型"
+                            },
+                            "handler": {
+                                "type": "string",
+                                "description": "事件处理器标识"
+                            },
+                            "config": {
+                                "type": "object",
+                                "description": "处理器配置",
+                                "additionalProperties": true
+                            }
+                        },
+                        "required": [
+                            "event_type",
+                            "handler"
+                        ],
+                        "additionalProperties": false
+                    },
+                    "description": "事件监听器配置"
+                },
+                "event_routing": {
+                    "type": "object",
+                    "description": "事件路由配置",
+                    "properties": {
+                        "default_handler": {
+                            "type": "string",
+                            "description": "默认事件处理器"
+                        },
+                        "routing_rules": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "condition": {
+                                        "type": "string",
+                                        "description": "路由条件表达式"
+                                    },
+                                    "handler": {
+                                        "type": "string",
+                                        "description": "目标处理器"
+                                    }
+                                },
+                                "required": [
+                                    "condition",
+                                    "handler"
+                                ]
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "additionalProperties": false
+        },
+        "audit_trail": {
+            "type": "object",
+            "properties": {
+                "enabled": { "type": "boolean" },
+                "retention_days": { "type": "integer", "minimum": 1, "maximum": 2555 },
+                "audit_events": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "event_id": { "$ref": "#/$defs/uuid" },
+                            "event_type": {
+                                "type": "string",
+                                "enum": ["workflow_started", "workflow_completed", "workflow_failed", "module_coordinated", "resource_allocated", "system_recovered", "cluster_scaled", "configuration_changed", "orchestration_updated"]
+                            },
+                            "timestamp": { "$ref": "#/$defs/timestamp" },
+                            "user_id": { "type": "string" },
+                            "user_role": { "type": "string" },
+                            "action": { "type": "string" },
+                            "resource": { "type": "string" },
+                            "system_operation": { "type": "string" },
+                            "workflow_id": { "$ref": "#/$defs/uuid" },
+                            "orchestrator_id": { "$ref": "#/$defs/uuid" },
+                            "core_operation": { "type": "string" },
+                            "core_status": { "type": "string" },
+                            "module_ids": {
+                                "type": "array",
+                                "items": { "type": "string" }
+                            },
+                            "core_details": { "type": "object" },
+                            "ip_address": { "type": "string" },
+                            "user_agent": { "type": "string" },
+                            "session_id": { "type": "string" },
+                            "correlation_id": { "$ref": "#/$defs/uuid" }
+                        },
+                        "required": ["event_id", "event_type", "timestamp", "user_id", "action", "resource"]
+                    }
+                },
+                "compliance_settings": {
+                    "type": "object",
+                    "properties": {
+                        "gdpr_enabled": { "type": "boolean" },
+                        "hipaa_enabled": { "type": "boolean" },
+                        "sox_enabled": { "type": "boolean" },
+                        "core_audit_level": {
+                            "type": "string",
+                            "enum": ["basic", "detailed", "comprehensive"]
+                        },
+                        "core_data_logging": { "type": "boolean" },
+                        "custom_compliance": {
+                            "type": "array",
+                            "items": { "type": "string" }
+                        }
+                    }
+                }
+            },
+            "required": ["enabled", "retention_days"]
+        },
+        "monitoring_integration": {
+            "type": "object",
+            "properties": {
+                "enabled": { "type": "boolean" },
+                "supported_providers": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": ["prometheus", "grafana", "datadog", "new_relic", "elastic_apm", "custom"]
+                    }
+                },
+                "integration_endpoints": {
+                    "type": "object",
+                    "properties": {
+                        "metrics_api": { "type": "string", "format": "uri" },
+                        "system_health_api": { "type": "string", "format": "uri" },
+                        "workflow_metrics_api": { "type": "string", "format": "uri" },
+                        "resource_metrics_api": { "type": "string", "format": "uri" }
+                    }
+                },
+                "system_metrics": {
+                    "type": "object",
+                    "properties": {
+                        "track_workflow_execution": { "type": "boolean" },
+                        "track_module_coordination": { "type": "boolean" },
+                        "track_resource_usage": { "type": "boolean" },
+                        "track_system_health": { "type": "boolean" }
+                    }
+                },
+                "export_formats": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": ["prometheus", "opentelemetry", "custom"]
+                    }
+                }
+            },
+            "required": ["enabled", "supported_providers"]
+        },
+        "performance_metrics": {
+            "type": "object",
+            "properties": {
+                "enabled": { "type": "boolean" },
+                "collection_interval_seconds": { "type": "integer", "minimum": 10, "maximum": 3600 },
+                "metrics": {
+                    "type": "object",
+                    "properties": {
+                        "core_orchestration_latency_ms": { "type": "number", "minimum": 0 },
+                        "workflow_coordination_efficiency_score": { "type": "number", "minimum": 0, "maximum": 10 },
+                        "system_reliability_score": { "type": "number", "minimum": 0, "maximum": 10 },
+                        "module_integration_success_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+                        "core_management_efficiency_score": { "type": "number", "minimum": 0, "maximum": 10 },
+                        "active_workflows_count": { "type": "integer", "minimum": 0 },
+                        "core_operations_per_second": { "type": "number", "minimum": 0 },
+                        "core_memory_usage_mb": { "type": "number", "minimum": 0 },
+                        "average_workflow_complexity_score": { "type": "number", "minimum": 0, "maximum": 10 }
+                    }
+                },
+                "health_status": {
+                    "type": "object",
+                    "properties": {
+                        "status": {
+                            "type": "string",
+                            "enum": ["healthy", "degraded", "unhealthy", "critical"]
+                        },
+                        "last_check": { "$ref": "#/$defs/timestamp" },
+                        "checks": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "check_name": { "type": "string" },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": ["pass", "fail", "warn"]
+                                    },
+                                    "message": { "type": "string" },
+                                    "duration_ms": { "type": "number", "minimum": 0 }
+                                },
+                                "required": ["check_name", "status"]
+                            }
+                        }
+                    }
+                },
+                "alerting": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": { "type": "boolean" },
+                        "thresholds": {
+                            "type": "object",
+                            "properties": {
+                                "max_core_orchestration_latency_ms": { "type": "number", "minimum": 0 },
+                                "min_workflow_coordination_efficiency_score": { "type": "number", "minimum": 0, "maximum": 10 },
+                                "min_system_reliability_score": { "type": "number", "minimum": 0, "maximum": 10 },
+                                "min_module_integration_success_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+                                "min_core_management_efficiency_score": { "type": "number", "minimum": 0, "maximum": 10 }
+                            }
+                        },
+                        "notification_channels": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "enum": ["email", "slack", "webhook", "sms", "pagerduty"]
+                            }
+                        }
+                    }
+                }
+            },
+            "required": ["enabled", "collection_interval_seconds"]
+        },
+        "version_history": {
+            "type": "object",
+            "properties": {
+                "enabled": { "type": "boolean" },
+                "max_versions": { "type": "integer", "minimum": 1, "maximum": 100, "default": 50 },
+                "versions": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "version_id": { "$ref": "#/$defs/uuid" },
+                            "version_number": { "type": "integer", "minimum": 1 },
+                            "created_at": { "$ref": "#/$defs/timestamp" },
+                            "created_by": { "type": "string" },
+                            "change_summary": { "type": "string" },
+                            "system_snapshot": { "type": "object" },
+                            "change_type": {
+                                "type": "string",
+                                "enum": ["system_initialized", "configuration_updated", "workflow_deployed", "cluster_scaled", "recovery_executed"]
+                            }
+                        },
+                        "required": ["version_id", "version_number", "created_at", "created_by", "change_type"]
+                    }
+                },
+                "auto_versioning": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": { "type": "boolean" },
+                        "version_on_config_change": { "type": "boolean" },
+                        "version_on_deployment": { "type": "boolean" },
+                        "version_on_scaling": { "type": "boolean" }
+                    }
+                }
+            },
+            "required": ["enabled", "max_versions"]
+        },
+        "search_metadata": {
+            "type": "object",
+            "properties": {
+                "enabled": { "type": "boolean" },
+                "indexing_strategy": {
+                    "type": "string",
+                    "enum": ["full_text", "keyword", "semantic", "hybrid"]
+                },
+                "searchable_fields": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": ["workflow_id", "orchestrator_id", "workflow_config", "execution_status", "system_metrics", "audit_logs", "metadata"]
+                    }
+                },
+                "search_indexes": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "index_id": { "type": "string" },
+                            "index_name": { "type": "string" },
+                            "fields": { "type": "array", "items": { "type": "string" } },
+                            "index_type": {
+                                "type": "string",
+                                "enum": ["btree", "hash", "gin", "gist", "full_text"]
+                            },
+                            "created_at": { "$ref": "#/$defs/timestamp" },
+                            "last_updated": { "$ref": "#/$defs/timestamp" }
+                        },
+                        "required": ["index_id", "index_name", "fields", "index_type"]
+                    }
+                },
+                "system_indexing": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": { "type": "boolean" },
+                        "index_workflow_data": { "type": "boolean" },
+                        "index_system_metrics": { "type": "boolean" },
+                        "index_audit_logs": { "type": "boolean" }
+                    }
+                },
+                "auto_indexing": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": { "type": "boolean" },
+                        "index_new_workflows": { "type": "boolean" },
+                        "reindex_interval_hours": { "type": "integer", "minimum": 1 }
+                    }
+                }
+            },
+            "required": ["enabled", "indexing_strategy"]
+        },
+        "core_operation": {
+            "type": "string",
+            "enum": [
+                "workflow_execution",
+                "module_coordination",
+                "resource_management",
+                "system_monitoring",
+                "error_recovery"
+            ],
+            "description": "核心操作类型"
+        },
+        "core_details": {
+            "type": "object",
+            "properties": {
+                "orchestration_mode": {
+                    "type": "string",
+                    "enum": [
+                        "centralized",
+                        "distributed",
+                        "hybrid"
+                    ]
+                },
+                "resource_allocation": {
+                    "type": "string",
+                    "enum": [
+                        "static",
+                        "dynamic",
+                        "adaptive"
+                    ]
+                },
+                "fault_tolerance": {
+                    "type": "string",
+                    "enum": [
+                        "none",
+                        "basic",
+                        "advanced"
+                    ]
+                }
+            },
+            "description": "核心详细配置"
+        },
+        "event_integration": {
+            "type": "object",
+            "properties": {
+                "enabled": { "type": "boolean" },
+                "event_bus_connection": {
+                    "type": "object",
+                    "properties": {
+                        "bus_type": {
+                            "type": "string",
+                            "enum": ["kafka", "rabbitmq", "redis", "nats", "custom"]
+                        },
+                        "connection_string": { "type": "string" },
+                        "topic_prefix": { "type": "string" },
+                        "consumer_group": { "type": "string" }
+                    }
+                },
+                "published_events": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": ["system_started", "system_stopped", "workflow_executed", "workflow_failed", "module_coordinated", "resource_allocated", "system_recovered", "cluster_scaled"]
+                    }
+                },
+                "subscribed_events": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": ["context_updated", "plan_executed", "confirm_approved", "trace_completed", "role_assigned", "extension_activated", "dialog_started", "network_connected"]
+                    }
+                },
+                "event_routing": {
+                    "type": "object",
+                    "properties": {
+                        "routing_rules": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "rule_id": { "type": "string" },
+                                    "condition": { "type": "string" },
+                                    "target_topic": { "type": "string" },
+                                    "enabled": { "type": "boolean" }
+                                },
+                                "required": ["rule_id", "condition", "target_topic"]
+                            }
+                        }
+                    }
+                }
+            },
+            "required": ["enabled"]
+        }
+    },
+    "required": [
+        "protocol_version",
+        "timestamp",
+        "workflow_id",
+        "orchestrator_id",
+        "workflow_config",
+        "execution_context",
+        "execution_status",
+        "audit_trail",
+        "monitoring_integration",
+        "performance_metrics",
+        "version_history",
+        "search_metadata", "core_operation",
+        "event_integration"
+    ],
+    "additionalProperties": false
+}

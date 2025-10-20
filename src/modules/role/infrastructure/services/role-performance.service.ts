@@ -379,7 +379,8 @@ export class RolePerformanceService {
 
     // 检查基准性能
     for (const [operation, benchmark] of this.benchmarks) {
-      if (benchmark.p95 > this.config.alertThresholds[`${operation}_latency_ms`]) {
+      const threshold = this.config.alertThresholds[`${operation}_latency_ms`];
+      if (threshold !== undefined && benchmark.p95 > threshold) {
         issues.push(`${operation} P95 latency exceeds threshold`);
         score -= 15;
         recommendations.push(`Optimize ${operation} performance`);

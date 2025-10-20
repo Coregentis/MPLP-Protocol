@@ -1318,8 +1318,8 @@ export class NetworkProtocol implements IMLPPProtocol {
     const totalCost = distances.get(target) || 0;
 
     for (let i = 0; i < path.length - 1; i++) {
-      const currentNode = path[i];
-      const nextNode = path[i + 1];
+      const currentNode = path[i]!; // 非空断言：i < path.length - 1
+      const nextNode = path[i + 1]!; // 非空断言：i + 1 < path.length
       const connections = graph.get(currentNode) || [];
       const connection = connections.find(c => c.nodeId === nextNode);
 
@@ -1478,8 +1478,8 @@ export class NetworkProtocol implements IMLPPProtocol {
     }
 
     const graph = this.buildNetworkGraph(filteredNetwork);
-    const source = originalRoute.path[0];
-    const target = originalRoute.path[originalRoute.path.length - 1];
+    const source = originalRoute.path[0]!; // 非空断言：path非空数组
+    const target = originalRoute.path[originalRoute.path.length - 1]!; // 非空断言：path非空数组
 
     try {
       return this.dijkstraShortestPath(graph, source, target);

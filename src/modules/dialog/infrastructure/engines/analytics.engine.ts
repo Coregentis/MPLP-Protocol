@@ -306,7 +306,8 @@ export class AnalyticsEngine implements IAnalyticsEngine {
       return { outcome: 'low', score: normalizedScore };
     }
 
-    return { outcome: _model.outcomes[0], score: normalizedScore };
+    // 使用非空断言：outcomes数组在initializeModels中已初始化为非空
+    return { outcome: _model.outcomes[0]!, score: normalizedScore };
   }
 
   private executeRegression(_model: AnalyticsModel, features: Record<string, number>): { outcome: string; score: number } {
@@ -445,10 +446,11 @@ export class AnalyticsEngine implements IAnalyticsEngine {
   private calculateMedian(values: number[]): number {
     const sorted = [...values].sort((a, b) => a - b);
     const mid = Math.floor(sorted.length / 2);
-    
+
+    // 使用非空断言：sorted数组长度已验证 > 0
     return sorted.length % 2 === 0
-      ? (sorted[mid - 1] + sorted[mid]) / 2
-      : sorted[mid];
+      ? (sorted[mid - 1]! + sorted[mid]!) / 2
+      : sorted[mid]!;
   }
 
   private calculateStandardDeviation(values: number[], mean: number): number {

@@ -386,13 +386,13 @@ export class ExtensionAnalyticsService {
     const rankings: ExtensionRanking[] = [];
     
     for (let i = 0; i < extensionIds.length; i++) {
-      const extensionId = extensionIds[i];
+      const extensionId = extensionIds[i]!; // 非空断言：i < extensionIds.length
       const extension = await this.extensionRepository.findById(extensionId);
-      
+
       if (extension) {
         rankings.push({
           extensionId,
-          name: extension.name,
+          name: extension.name ?? 'Unknown', // 空值合并：确保name为string类型
           rank: i + 1,
           score: Math.random() * 100, // 简化实现
           category: 'performance'

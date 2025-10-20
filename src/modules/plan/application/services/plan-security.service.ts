@@ -292,7 +292,7 @@ export class PlanSecurityService {
   ): Promise<{ allowed: boolean; reason?: string; conditions?: string[] }> {
     const applicablePolicies = Array.from(this.securityPolicies.values())
       .filter(policy => policy.enabled)
-      .sort((a, b) => b.rules[0]?.priority - a.rules[0]?.priority);
+      .sort((a, b) => (b.rules[0]?.priority ?? 0) - (a.rules[0]?.priority ?? 0));
 
     const conditions: string[] = [];
 
