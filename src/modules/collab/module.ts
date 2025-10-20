@@ -105,7 +105,7 @@ export class CollabModule {
   
   /**
    * 初始化L3横切关注点管理器
-   * 
+   *
    * @description 与其他6个模块保持IDENTICAL的L3管理器注入模式
    */
   private initializeL3Managers(): void {
@@ -120,6 +120,17 @@ export class CollabModule {
     this._stateSyncManager = new MLPPStateSyncManager();
     this._transactionManager = new MLPPTransactionManager();
     this._protocolVersionManager = new MLPPProtocolVersionManager();
+
+    // Mark managers as intentionally initialized for future use
+    void this._securityManager;
+    void this._performanceMonitor;
+    void this._eventBusManager;
+    void this._errorHandler;
+    void this._coordinationManager;
+    void this._orchestrationManager;
+    void this._stateSyncManager;
+    void this._transactionManager;
+    void this._protocolVersionManager;
   }
   
   /**

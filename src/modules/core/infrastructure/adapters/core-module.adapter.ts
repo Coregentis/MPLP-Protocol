@@ -82,7 +82,9 @@ export class CoreModuleAdapter {
   private coordinator!: CoreServicesCoordinator;
   private protocol!: CoreProtocol;
 
-  // ===== L3横切关注点管理器 (Reserved for future use) =====
+  // ===== L3横切关注点管理器 (Reserved for CoreOrchestrator injection) =====
+  // Note: These managers are initialized but reserved for future use when CoreOrchestrator is activated
+  // They maintain IDENTICAL architecture pattern across all 10 modules
   private crossCuttingFactory!: CrossCuttingConcernsFactory;
   private _securityManager!: MLPPSecurityManager;
   private _performanceMonitor!: MLPPPerformanceMonitor;
@@ -138,6 +140,17 @@ export class CoreModuleAdapter {
     this._stateSyncManager = managers.stateSync;
     this._transactionManager = managers.transaction;
     this._protocolVersionManager = managers.protocolVersion;
+
+    // Mark managers as intentionally initialized for future use
+    void this._securityManager;
+    void this._performanceMonitor;
+    void this._eventBusManager;
+    void this._errorHandler;
+    void this._coordinationManager;
+    void this._orchestrationManager;
+    void this._stateSyncManager;
+    void this._transactionManager;
+    void this._protocolVersionManager;
 
     // 初始化核心组件
     this.repository = new MemoryCoreRepository();

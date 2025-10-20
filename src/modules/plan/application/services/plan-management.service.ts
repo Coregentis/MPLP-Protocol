@@ -351,7 +351,9 @@ export class PlanManagementService {
    * @param _planId - Target plan for coordination
    * @param _coordinationContext - Coordination context data
    * @returns Promise<boolean> - Whether coordination is permitted
+   * @reserved Reserved for CoreOrchestrator activation
    */
+  // @ts-expect-error - Reserved method for future CoreOrchestrator integration
   private async validatePlanCoordinationPermission(
     _userId: UUID,
     _planId: UUID,
@@ -370,7 +372,9 @@ export class PlanManagementService {
    * @param _contextId - Associated context ID
    * @param _planType - Type of plan for context retrieval
    * @returns Promise<Record<string, unknown>> - Coordination context data
+   * @reserved Reserved for CoreOrchestrator activation
    */
+  // @ts-expect-error - Reserved method for future CoreOrchestrator integration
   private async getPlanCoordinationContext(
     _contextId: UUID,
     _planType: string
@@ -394,7 +398,9 @@ export class PlanManagementService {
    * @param _planId - Plan ID for metrics recording
    * @param _metrics - Coordination metrics data
    * @returns Promise<void> - Metrics recording completion
+   * @reserved Reserved for CoreOrchestrator activation
    */
+  // @ts-expect-error - Reserved method for future CoreOrchestrator integration
   private async recordPlanCoordinationMetrics(
     _planId: UUID,
     _metrics: Record<string, unknown>
@@ -412,7 +418,9 @@ export class PlanManagementService {
    * @param _planId - Plan ID for extension coordination
    * @param _extensions - Extension coordination data
    * @returns Promise<boolean> - Whether extension coordination succeeded
+   * @reserved Reserved for CoreOrchestrator activation
    */
+  // @ts-expect-error - Reserved method for future CoreOrchestrator integration
   private async managePlanExtensionCoordination(
     _planId: UUID,
     _extensions: Record<string, unknown>
