@@ -200,8 +200,9 @@ NPM-PHASE*.md
 NPM-PUBLISH-*.md
 
 # Dual Version Release Documentation (Internal)
-DUAL-VERSION-*.md
-dual-version-release/
+# Note: dual-version-release/ folder is tracked in Dev version for release documentation
+# Only exclude DUAL-VERSION-*.md files in root directory (not in subdirectories)
+/DUAL-VERSION-*.md
 
 # Internal Governance and Policies
 COMMIT-HISTORY-*.md
