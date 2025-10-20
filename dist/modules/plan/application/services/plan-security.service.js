@@ -177,7 +177,7 @@ class PlanSecurityService {
     async applySecurityPolicies(request, securityContext) {
         const applicablePolicies = Array.from(this.securityPolicies.values())
             .filter(policy => policy.enabled)
-            .sort((a, b) => b.rules[0]?.priority - a.rules[0]?.priority);
+            .sort((a, b) => (b.rules[0]?.priority ?? 0) - (a.rules[0]?.priority ?? 0));
         const conditions = [];
         for (const policy of applicablePolicies) {
             for (const rule of policy.rules) {

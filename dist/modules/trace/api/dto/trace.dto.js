@@ -92,7 +92,9 @@ class TraceResponseDto {
         this.severity = 'info';
         this.event = new EventObjectDto();
         this.timestamp = '';
-        this.traceOperation = 'create';
+        // 修复：'create'不是有效的TraceOperation值，使用'start'代替
+        // TraceOperation定义：'start' | 'record' | 'analyze' | 'export' | 'archive' | 'update'
+        this.traceOperation = 'start';
         this.contextSnapshot = undefined;
         this.errorInformation = undefined;
         this.decisionLog = undefined;

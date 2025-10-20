@@ -237,7 +237,7 @@ export class CollabMonitoringService {
   /**
    * Check for alert conditions and create alerts
    */
-  private async checkAlertConditions(collaboration: CollabEntity, metrics: CollabMonitoringMetrics): Promise<void> {
+  private async checkAlertConditions(_collaboration: CollabEntity, metrics: CollabMonitoringMetrics): Promise<void> {
     const now = new Date();
 
     // Participant utilization alert

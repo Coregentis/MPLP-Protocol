@@ -48,7 +48,8 @@ export class ConfirmProtocol implements IMLPPProtocol {
   
   constructor(
     private readonly confirmService: ConfirmManagementService,
-    // ===== 9个L3横切关注点管理器注入 (与Context/Plan模块IDENTICAL模式) =====
+    // ===== 9个L3横切关注点管理器注入 (Reserved for CoreOrchestrator activation) =====
+    // Note: These managers maintain IDENTICAL architecture pattern across all 10 modules
     private readonly _securityManager: MLPPSecurityManager,
     private readonly _performanceMonitor: MLPPPerformanceMonitor,
     private readonly _eventBusManager: MLPPEventBusManager,

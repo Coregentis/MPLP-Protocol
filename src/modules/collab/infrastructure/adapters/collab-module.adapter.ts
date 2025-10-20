@@ -11,25 +11,12 @@ import { CollabEntity } from '../../domain/entities/collab.entity';
 import { CollabManagementService } from '../../application/services/collab-management.service';
 
 // Type definitions for adapter interfaces
-interface _ContextData {
-  planId?: UUID;
-  name?: string;
-  description?: string;
-  mode?: 'sequential' | 'parallel' | 'hybrid' | 'pipeline' | 'mesh';
-  participants?: ParticipantData[];
-}
+// Note: Interfaces prefixed with _ are reserved for future use
 
 interface ContextUpdates {
   name?: string;
   description?: string;
   mode?: 'sequential' | 'parallel' | 'hybrid' | 'pipeline' | 'mesh';
-}
-
-interface _PlanData {
-  contextId?: UUID;
-  name?: string;
-  description?: string;
-  complexity?: 'simple' | 'medium' | 'high' | 'distributed';
 }
 
 interface PlanUpdates {
@@ -42,29 +29,6 @@ interface ParticipantData {
   agentId: UUID;
   roleId: UUID;
   capabilities?: string[];
-}
-
-interface _ParticipantRole {
-  agentId: UUID;
-  roleId: UUID;
-}
-
-interface _ValidationResult {
-  valid: boolean;
-  violations: string[];
-  recommendations: string[];
-}
-
-interface _CoordinationRequest {
-  action: string;
-  participants: ParticipantData[];
-  metadata?: Record<string, unknown>;
-}
-
-interface _CoordinationResult {
-  success: boolean;
-  message: string;
-  data?: Record<string, unknown>;
 }
 
 interface UpdateData {
@@ -473,9 +437,10 @@ export class CollabModuleAdapter {
       throw new Error('Collaboration not found');
     }
 
-    const _traceId = generateUUID();
-    const _tracingLevel = tracingConfig.level as string || 'info';
-    const _includeParticipants = tracingConfig.includeParticipants as boolean || true;
+    // Reserved: tracing configuration would be used when CoreOrchestrator is activated
+    // const traceId = generateUUID();
+    // const tracingLevel = tracingConfig.level as string || 'info';
+    // const includeParticipants = tracingConfig.includeParticipants as boolean || true;
 
     // TODO: Implement actual tracing when CoreOrchestrator is activated
     // Starting tracing for collaboration ${collaborationId}: traceId=${traceId}, level=${tracingLevel}
@@ -517,17 +482,18 @@ export class CollabModuleAdapter {
     // 4. Update trace spans and metrics
 
     // For now, just log the event structure
-    const _enrichedEvent = {
-      collaborationId,
-      traceId,
-      eventType,
-      timestamp,
-      data: {
-        ...eventData,
-        collaborationName: 'Unknown', // Would be fetched from collaboration
-        participantCount: 0 // Would be fetched from collaboration
-      }
-    };
+    // Reserved: enrichedEvent would be processed when CoreOrchestrator is activated
+    // const enrichedEvent = {
+    //   collaborationId,
+    //   traceId,
+    //   eventType,
+    //   timestamp,
+    //   data: {
+    //     ...eventData,
+    //     collaborationName: 'Unknown', // Would be fetched from collaboration
+    //     participantCount: 0 // Would be fetched from collaboration
+    //   }
+    // };
 
     // TODO: Implement actual enriched trace event processing when CoreOrchestrator is activated
     // Enriched trace event processed

@@ -50,7 +50,9 @@ export class CollabModule {
   private collabProtocol!: CollabProtocol;
   private collabController!: CollabController;
 
-  // ===== L3横切关注点管理器 =====
+  // ===== L3横切关注点管理器 (Reserved for CoreOrchestrator injection) =====
+  // Note: These managers are initialized but reserved for future use when CoreOrchestrator is activated
+  // They maintain IDENTICAL architecture pattern across all 10 modules
   private _securityManager!: MLPPSecurityManager;
   private _performanceMonitor!: MLPPPerformanceMonitor;
   private _eventBusManager!: MLPPEventBusManager;
