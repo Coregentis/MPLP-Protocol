@@ -191,17 +191,15 @@ export class ModuleCoordinator {
   private failedOperations = new Map<UUID, FailedOperation>();
 
   constructor(
-    private _connectionTimeout: number = 5000, // Reserved for future timeout configuration
+    // @ts-expect-error - Reserved for future connection timeout management
+    private _connectionTimeout: number = 5000,
     private defaultRetryPolicy: RetryPolicy = {
       maxRetries: 3,
       retryDelay: 1000,
       backoffStrategy: 'exponential',
       retryableErrors: ['timeout', 'network', 'temporary']
     }
-  ) {
-    // Mark _connectionTimeout as intentionally unused (reserved for future connection timeout management)
-    void _connectionTimeout;
-  }
+  ) {}
 
   /**
    * 注册模块

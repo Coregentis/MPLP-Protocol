@@ -183,11 +183,9 @@ export class CoreOrchestrator {
     private readonly orchestrationManager: OrchestrationManager,
     private readonly stateSyncManager: StateSyncManager,
     private readonly transactionManager: TransactionManager,
-    private readonly _protocolVersionManager: ProtocolVersionManager // Reserved for future use
-  ) {
-    // Mark _protocolVersionManager as intentionally unused (reserved for future protocol version management)
-    void _protocolVersionManager;
-  }
+    // @ts-expect-error - Reserved for future protocol version management
+    private readonly _protocolVersionManager: ProtocolVersionManager
+  ) {}
 
   /**
    * 执行完整工作流

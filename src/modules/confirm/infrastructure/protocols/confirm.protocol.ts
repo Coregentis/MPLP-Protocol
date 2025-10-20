@@ -50,27 +50,25 @@ export class ConfirmProtocol implements IMLPPProtocol {
     private readonly confirmService: ConfirmManagementService,
     // ===== 9个L3横切关注点管理器注入 (Reserved for CoreOrchestrator activation) =====
     // Note: These managers maintain IDENTICAL architecture pattern across all 10 modules
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly _securityManager: MLPPSecurityManager,
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly _performanceMonitor: MLPPPerformanceMonitor,
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly _eventBusManager: MLPPEventBusManager,
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly _errorHandler: MLPPErrorHandler,
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly _coordinationManager: MLPPCoordinationManager,
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly _orchestrationManager: MLPPOrchestrationManager,
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly _stateSyncManager: MLPPStateSyncManager,
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly _transactionManager: MLPPTransactionManager,
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly _protocolVersionManager: MLPPProtocolVersionManager
-  ) {
-    // Mark L3 managers as intentionally unused (reserved for CoreOrchestrator activation)
-    void _securityManager;
-    void _performanceMonitor;
-    void _eventBusManager;
-    void _errorHandler;
-    void _coordinationManager;
-    void _orchestrationManager;
-    void _stateSyncManager;
-    void _transactionManager;
-    void _protocolVersionManager;
-  }
+  ) {}
 
   /**
    * 实现IMLPPProtocol标准接口：执行协议操作
