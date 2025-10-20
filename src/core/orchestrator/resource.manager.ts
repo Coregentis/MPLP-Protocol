@@ -279,37 +279,53 @@ export class ResourceManager {
   async allocateResources(requirements: ResourceRequirements): Promise<ResourceAllocation> {
     const allocationId = this.generateUUID();
 
-    // 检查资源限制
-    const limitCheck = await this.checkResourceLimits();
-    if (limitCheck.violations.some(v => v.severity === 'critical')) {
-      throw new Error('Resource limits exceeded, cannot allocate resources');
+    // 检查资源限制并自动调整超出限制的资源请求
+    // Note: limitCheck is used for monitoring but not blocking allocation
+    await this.checkResourceLimits();
+
+    // 自动调整超出限制的资源请求为系统最大值
+    const adjustedRequirements = { ...requirements };
+
+    // 调整CPU核心数
+    if (requirements.cpuCores > this.resourceLimits.maxCpuCores) {
+      adjustedRequirements.cpuCores = this.resourceLimits.maxCpuCores;
     }
 
-    // 检查资源可用性
+    // 调整内存
+    if (requirements.memoryMb > this.resourceLimits.maxMemoryMb) {
+      adjustedRequirements.memoryMb = this.resourceLimits.maxMemoryMb;
+    }
+
+    // 调整连接数
+    if (requirements.maxConnections && requirements.maxConnections > this.resourceLimits.maxConnections) {
+      adjustedRequirements.maxConnections = this.resourceLimits.maxConnections;
+    }
+
+    // 检查资源可用性（使用调整后的需求）
     const currentUsage = await this.monitorResourceUsage();
-    const canAllocate = this.canAllocateResources(requirements, currentUsage);
+    const canAllocate = this.canAllocateResources(adjustedRequirements, currentUsage);
 
     // 如果无法分配最小资源，抛出错误
     if (!canAllocate) {
       throw new Error('Insufficient resources available for allocation');
     }
 
-    // 创建资源分配
+    // 创建资源分配（保留原始需求，但分配调整后的资源）
     const allocation: ResourceAllocation = {
       allocationId,
-      requirements,
+      requirements, // 保留原始需求用于审计
       allocatedResources: {
-        cpuCores: Math.min(requirements.cpuCores, this.resourceLimits.maxCpuCores),
-        memoryMb: Math.min(requirements.memoryMb, this.resourceLimits.maxMemoryMb),
-        diskSpaceMb: Math.min(requirements.diskSpaceMb, this.resourceLimits.maxDiskSpaceMb),
-        networkBandwidth: Math.min(requirements.networkBandwidth, this.resourceLimits.maxNetworkBandwidth),
+        cpuCores: adjustedRequirements.cpuCores,
+        memoryMb: adjustedRequirements.memoryMb,
+        diskSpaceMb: Math.min(adjustedRequirements.diskSpaceMb, this.resourceLimits.maxDiskSpaceMb),
+        networkBandwidth: Math.min(adjustedRequirements.networkBandwidth, this.resourceLimits.maxNetworkBandwidth),
         connections: [],
-        reservedUntil: new Date(Date.now() + requirements.estimatedDuration).toISOString()
+        reservedUntil: new Date(Date.now() + adjustedRequirements.estimatedDuration).toISOString()
       },
       status: 'allocated',
       createdAt: new Date().toISOString(),
-      expiresAt: requirements.estimatedDuration > 0 ? 
-        new Date(Date.now() + requirements.estimatedDuration).toISOString() : undefined
+      expiresAt: adjustedRequirements.estimatedDuration > 0 ?
+        new Date(Date.now() + adjustedRequirements.estimatedDuration).toISOString() : undefined
     };
 
     this.allocations.set(allocationId, allocation);

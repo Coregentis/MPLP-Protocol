@@ -98,7 +98,7 @@ npm install @mplp/adapters
 
 ```bash
 # 克隆仓库
-git clone https://github.com/Coregentis/MPLP-Protocol.git
+git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
 cd MPLP-Protocol
 
 # 安装依赖

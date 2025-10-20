@@ -35,7 +35,7 @@
 - ✅ 说明主包包含的内容（L1-L3协议栈、10个核心模块）
 - ✅ 将CLI工具移至Method 2
 - ✅ 将SDK包移至Method 3（高级用例）
-- ✅ 更新仓库URL为`https://github.com/Coregentis/MPLP-Protocol.git`
+- ✅ 更新仓库URL为`https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git`
 
 **关键代码**:
 ```bash
@@ -59,7 +59,7 @@ node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VE
 - ✅ 说明主包包含的内容（L1-L3协议栈、10个核心模块）
 - ✅ 将CLI工具移至方法2
 - ✅ 将SDK包移至方法3（高级用例）
-- ✅ 更新仓库URL为`https://github.com/Coregentis/MPLP-Protocol.git`
+- ✅ 更新仓库URL为`https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git`
 
 **关键代码**:
 ```bash

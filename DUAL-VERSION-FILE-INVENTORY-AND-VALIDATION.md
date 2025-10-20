@@ -384,12 +384,12 @@ coverage/                   # 测试覆盖率报告
   "version": "1.1.0-beta",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Coregentis/MPLP-Protocol-Dev.git"
+    "url": "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev.git"
   },
   "bugs": {
-    "url": "https://github.com/Coregentis/MPLP-Protocol-Dev/issues"
+    "url": "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/issues"
   },
-  "homepage": "https://github.com/Coregentis/MPLP-Protocol-Dev#readme"
+  "homepage": "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev#readme"
 }
 ```
 
@@ -400,12 +400,12 @@ coverage/                   # 测试覆盖率报告
   "version": "1.1.0-beta",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Coregentis/MPLP-Protocol.git"
+    "url": "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git"
   },
   "bugs": {
-    "url": "https://github.com/Coregentis/MPLP-Protocol/issues"
+    "url": "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/issues"
   },
-  "homepage": "https://github.com/Coregentis/MPLP-Protocol#readme",
+  "homepage": "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev#readme",
   "files": [
     "dist",
     "README.md",
@@ -421,16 +421,16 @@ coverage/                   # 测试覆盖率报告
 
 **Dev版本**:
 ```markdown
-- [GitHub Repository](https://github.com/Coregentis/MPLP-Protocol-Dev)
-- [Issues](https://github.com/Coregentis/MPLP-Protocol-Dev/issues)
-- [Discussions](https://github.com/Coregentis/MPLP-Protocol-Dev/discussions)
+- [GitHub Repository](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev)
+- [Issues](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/issues)
+- [Discussions](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/discussions)
 ```
 
 **Public版本**:
 ```markdown
-- [GitHub Repository](https://github.com/Coregentis/MPLP-Protocol)
-- [Issues](https://github.com/Coregentis/MPLP-Protocol/issues)
-- [Discussions](https://github.com/Coregentis/MPLP-Protocol/discussions)
+- [GitHub Repository](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev)
+- [Issues](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/issues)
+- [Discussions](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/discussions)
 ```
 
 ---

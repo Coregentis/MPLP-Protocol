@@ -183,7 +183,7 @@ export class CoreOrchestrator {
     private readonly orchestrationManager: OrchestrationManager,
     private readonly stateSyncManager: StateSyncManager,
     private readonly transactionManager: TransactionManager,
-    private readonly protocolVersionManager: ProtocolVersionManager
+    private readonly _protocolVersionManager: ProtocolVersionManager // Reserved for future use
   ) {}
 
   /**

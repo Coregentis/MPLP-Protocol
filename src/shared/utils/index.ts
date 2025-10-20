@@ -50,15 +50,16 @@ export function parseTimestamp(timestamp: Timestamp): Date {
  */
 export function formatTimestamp(timestamp: Timestamp, format: 'date' | 'time' | 'datetime' = 'datetime'): string {
   const date = parseTimestamp(timestamp);
-  
+  const isoString = date.toISOString();
+
   switch (format) {
     case 'date':
-      return date.toISOString().split('T')[0];
+      return isoString.split('T')[0] || '';
     case 'time':
-      return date.toISOString().split('T')[1].split('.')[0];
+      return isoString.split('T')[1]?.split('.')[0] || '';
     case 'datetime':
     default:
-      return date.toISOString();
+      return isoString;
   }
 }
 

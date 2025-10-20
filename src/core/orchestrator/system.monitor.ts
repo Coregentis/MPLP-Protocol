@@ -450,9 +450,9 @@ export class SystemMonitor {
       stackTrace: error.stack || '',
       source: {
         moduleId: 'core',
-        functionName: this.extractFunctionName(error.stack),
-        fileName: this.extractFileName(error.stack),
-        lineNumber: this.extractLineNumber(error.stack)
+        functionName: this.extractFunctionName(error.stack || undefined),
+        fileName: this.extractFileName(error.stack || undefined),
+        lineNumber: this.extractLineNumber(error.stack || undefined)
       },
       context: {
         environment: {

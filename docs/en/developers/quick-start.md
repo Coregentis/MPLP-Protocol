@@ -67,7 +67,7 @@ node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VE
 #### **Option B: Clone and Build from Source**
 ```bash
 # Clone the MPLP repository
-git clone https://github.com/Coregentis/MPLP-Protocol.git
+git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
 cd MPLP-Protocol
 
 # Install dependencies

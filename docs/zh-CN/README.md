@@ -6,7 +6,7 @@
 
 <div align="center">
 
-[![版本](https://img.shields.io/badge/version-1.0.0--alpha-blue.svg)](https://github.com/Coregentis/MPLP-Protocol-Dev)
+[![版本](https://img.shields.io/badge/version-1.0.0--alpha-blue.svg)](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev)
 [![协议栈](https://img.shields.io/badge/L1--L3-Protocol%20Stack-orange.svg)](#架构)
 [![模块](https://img.shields.io/badge/modules-10%2F10%20完成-brightgreen.svg)](#模块)
 [![测试](https://img.shields.io/badge/tests-2869%20总计%20%7C%20100%25%20通过-brightgreen.svg)](#质量)
@@ -56,7 +56,7 @@ node -e "const mplp = require('mplp'); console.log('MPLP版本:', mplp.MPLP_VERS
 #### **选项2：从源码安装（用于开发）**
 ```bash
 # 克隆仓库
-git clone https://github.com/Coregentis/MPLP-Protocol.git
+git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
 cd MPLP-Protocol
 
 # 安装依赖
@@ -93,7 +93,7 @@ npm run lint && npm run typecheck
 | **Getting Started** | **Documentation** | **Development** | **Community** |
 |:-------------------:|:-----------------:|:---------------:|:-------------:|
 | [🚀 Quick Start](#quick-start) | [📖 Protocol Overview](./protocol-foundation/protocol-overview.md) | [🔧 API Reference](./api-reference/) | [🤝 Contributing](./community/contributing.md) |
-| [⚡ Installation](#installation) | [🏗️ Architecture](./architecture/) | [🧪 Testing Guide](./testing/) | [💬 Discussions](https://github.com/Coregentis/MPLP-Protocol-Dev/discussions) |
+| [⚡ Installation](#installation) | [🏗️ Architecture](./architecture/) | [🧪 Testing Guide](./testing/) | [💬 Discussions](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/discussions) |
 | [🎯 Examples](./examples/) | [📋 Modules](./modules/) | [🚀 Deployment](./operations/) | [📋 Roadmap](./community/roadmap.md) |
 
 </div>
@@ -259,8 +259,8 @@ MPLP-Protocol-Dev/
 
 ## 🤝 **Community and Support**
 
-- **GitHub Discussions**: [Project Discussions](https://github.com/Coregentis/MPLP-Protocol-Dev/discussions)
-- **Issue Reporting**: [GitHub Issues](https://github.com/Coregentis/MPLP-Protocol-Dev/issues)
+- **GitHub Discussions**: [Project Discussions](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/discussions)
+- **Issue Reporting**: [GitHub Issues](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/issues)
 - **Contributing Guide**: [CONTRIBUTING.md](./community/contributing.md)
 - **Code of Conduct**: [CODE_OF_CONDUCT.md](./community/code-of-conduct.md)
 - **Governance**: [GOVERNANCE.md](./community/governance.md)

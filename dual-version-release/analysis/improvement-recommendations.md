@@ -88,8 +88,8 @@ const path = require('path');
 const glob = require('glob');
 
 const REPO_MAPPINGS = {
-  dev: 'https://github.com/Coregentis/MPLP-Protocol-Dev',
-  public: 'https://github.com/Coregentis/MPLP-Protocol'
+  dev: 'https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev',
+  public: 'https://github.com/Coregentis/MPLP-Protocol-Dev-Dev'
 };
 
 function switchLinks(targetRepo) {
@@ -269,7 +269,7 @@ if [ "$VERSION" = "dev" ]; then
   fi
   npm run links:switch-to-dev
   echo "✅ Switched to Dev version"
-  echo "📝 Repository: https://github.com/Coregentis/MPLP-Protocol-Dev"
+  echo "📝 Repository: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev"
 else
   # 切换到Public版本
   cp .gitignore .gitignore.dev.backup
@@ -277,7 +277,7 @@ else
   npm run build
   npm run links:switch-to-public
   echo "✅ Switched to Public version"
-  echo "📝 Repository: https://github.com/Coregentis/MPLP-Protocol"
+  echo "📝 Repository: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev"
 fi
 
 echo "🎯 Next steps:"

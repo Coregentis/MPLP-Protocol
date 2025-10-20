@@ -82,17 +82,17 @@ export class CoreModuleAdapter {
   private coordinator!: CoreServicesCoordinator;
   private protocol!: CoreProtocol;
 
-  // ===== L3横切关注点管理器 =====
+  // ===== L3横切关注点管理器 (Reserved for future use) =====
   private crossCuttingFactory!: CrossCuttingConcernsFactory;
-  private securityManager!: MLPPSecurityManager;
-  private performanceMonitor!: MLPPPerformanceMonitor;
-  private eventBusManager!: MLPPEventBusManager;
-  private errorHandler!: MLPPErrorHandler;
-  private coordinationManager!: MLPPCoordinationManager;
-  private orchestrationManager!: MLPPOrchestrationManager;
-  private stateSyncManager!: MLPPStateSyncManager;
-  private transactionManager!: MLPPTransactionManager;
-  private protocolVersionManager!: MLPPProtocolVersionManager;
+  private _securityManager!: MLPPSecurityManager;
+  private _performanceMonitor!: MLPPPerformanceMonitor;
+  private _eventBusManager!: MLPPEventBusManager;
+  private _errorHandler!: MLPPErrorHandler;
+  private _coordinationManager!: MLPPCoordinationManager;
+  private _orchestrationManager!: MLPPOrchestrationManager;
+  private _stateSyncManager!: MLPPStateSyncManager;
+  private _transactionManager!: MLPPTransactionManager;
+  private _protocolVersionManager!: MLPPProtocolVersionManager;
 
   constructor(config: CoreModuleAdapterConfig = {}) {
     this.config = {
@@ -129,15 +129,15 @@ export class CoreModuleAdapter {
       protocolVersion: { enabled: true }
     });
 
-    this.securityManager = managers.security;
-    this.performanceMonitor = managers.performance;
-    this.eventBusManager = managers.eventBus;
-    this.errorHandler = managers.errorHandler;
-    this.coordinationManager = managers.coordination;
-    this.orchestrationManager = managers.orchestration;
-    this.stateSyncManager = managers.stateSync;
-    this.transactionManager = managers.transaction;
-    this.protocolVersionManager = managers.protocolVersion;
+    this._securityManager = managers.security;
+    this._performanceMonitor = managers.performance;
+    this._eventBusManager = managers.eventBus;
+    this._errorHandler = managers.errorHandler;
+    this._coordinationManager = managers.coordination;
+    this._orchestrationManager = managers.orchestration;
+    this._stateSyncManager = managers.stateSync;
+    this._transactionManager = managers.transaction;
+    this._protocolVersionManager = managers.protocolVersion;
 
     // 初始化核心组件
     this.repository = new MemoryCoreRepository();

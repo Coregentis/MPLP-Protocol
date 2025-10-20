@@ -233,11 +233,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Coregentis/MPLP-Protocol.git"
+    "url": "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev.git"
   },
-  "homepage": "https://github.com/Coregentis/MPLP-Protocol#readme",
+  "homepage": "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev#readme",
   "bugs": {
-    "url": "https://github.com/Coregentis/MPLP-Protocol/issues"
+    "url": "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/issues"
   },
   "devDependencies": {
     "@cucumber/cucumber": "^12.1.0",

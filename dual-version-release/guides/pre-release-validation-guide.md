@@ -76,12 +76,12 @@ cp .gitignore.dev.backup .gitignore
 node -p "require('./package.json').repository.url"
 ```
 
-**预期结果**: `https://github.com/Coregentis/MPLP-Protocol-Dev.git`
+**预期结果**: `https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev.git`
 
 **失败处理**:
 ```bash
 # 手动更新repository字段
-node scripts/update-package-repository.js https://github.com/Coregentis/MPLP-Protocol-Dev
+node scripts/update-package-repository.js https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev
 ```
 
 ---
@@ -210,12 +210,12 @@ cp .gitignore.public .gitignore
 node -p "require('./package.json').repository.url"
 ```
 
-**预期结果**: `https://github.com/Coregentis/MPLP-Protocol.git`
+**预期结果**: `https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git`
 
 **失败处理**:
 ```bash
 # 手动更新repository字段
-node scripts/update-package-repository.js https://github.com/Coregentis/MPLP-Protocol
+node scripts/update-package-repository.js https://github.com/Coregentis/MPLP-Protocol-Dev-Dev
 ```
 
 ---

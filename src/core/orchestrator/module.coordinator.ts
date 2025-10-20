@@ -191,7 +191,7 @@ export class ModuleCoordinator {
   private failedOperations = new Map<UUID, FailedOperation>();
 
   constructor(
-    private connectionTimeout: number = 5000,
+    private _connectionTimeout: number = 5000, // Reserved for future timeout configuration
     private defaultRetryPolicy: RetryPolicy = {
       maxRetries: 3,
       retryDelay: 1000,

@@ -286,7 +286,7 @@
 ### **✅ Phase 13: GitHub Release**
 
 - [ ] **创建GitHub Release**
-  - [ ] 访问 https://github.com/Coregentis/MPLP-Protocol/releases/new
+  - [ ] 访问 https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/releases/new
   - [ ] 标签: v1.1.0-beta
   - [ ] 标题: MPLP v1.1.0-beta - Complete SDK Ecosystem
   - [ ] 描述: 包含发布说明和npm安装说明

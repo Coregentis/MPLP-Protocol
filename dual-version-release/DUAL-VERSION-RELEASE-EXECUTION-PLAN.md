@@ -21,7 +21,7 @@
 ### **R1: Dev版本发布规则**
 
 #### **规则1.1: 仓库配置**
-- **仓库URL**: https://github.com/Coregentis/MPLP-Protocol-Dev
+- **仓库URL**: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev
 - **.gitignore**: 使用当前的.gitignore（最小排除）
 - **package.json**: repository指向Dev仓库
 
@@ -41,7 +41,7 @@
 ### **R2: Public版本发布规则**
 
 #### **规则2.1: 仓库配置**
-- **仓库URL**: https://github.com/Coregentis/MPLP-Protocol
+- **仓库URL**: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev
 - **.gitignore**: 使用.gitignore.public（最大排除）
 - **package.json**: repository指向Public仓库
 
@@ -103,7 +103,7 @@ git add .
 git commit -m "chore: prepare dev version release"
 
 # 推送到Dev仓库
-git remote add dev https://github.com/Coregentis/MPLP-Protocol-Dev.git
+git remote add dev https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev.git
 git push dev main
 ```
 
@@ -135,7 +135,7 @@ git add .
 git commit -m "chore: prepare public version release"
 
 # 推送到Public仓库
-git remote add public https://github.com/Coregentis/MPLP-Protocol.git
+git remote add public https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
 git push public main
 ```
 

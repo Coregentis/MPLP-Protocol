@@ -59,7 +59,7 @@ node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VE
 
 ```bash
 # Clone the repository
-git clone https://github.com/Coregentis/MPLP-Protocol.git
+git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
 cd MPLP-Protocol/examples/agent-orchestrator
 
 # Install dependencies (MPLP will be installed automatically)

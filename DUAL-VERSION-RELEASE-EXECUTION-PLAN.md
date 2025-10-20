@@ -91,12 +91,12 @@ cache/
 {
   "repository": {
     "type": "git",
-    "url": "https://github.com/Coregentis/MPLP-Protocol-Dev.git"
+    "url": "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev.git"
   },
   "bugs": {
-    "url": "https://github.com/Coregentis/MPLP-Protocol-Dev/issues"
+    "url": "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/issues"
   },
-  "homepage": "https://github.com/Coregentis/MPLP-Protocol-Dev#readme"
+  "homepage": "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev#readme"
 }
 ```
 
@@ -113,10 +113,10 @@ cache/
 #### **需要更新的链接**
 ```markdown
 # 从
-https://github.com/Coregentis/MPLP-Protocol
+https://github.com/Coregentis/MPLP-Protocol-Dev-Dev
 
 # 更新为
-https://github.com/Coregentis/MPLP-Protocol-Dev
+https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev
 ```
 
 ### **3.4 更新所有文档中的链接（45分钟）**
@@ -135,14 +135,14 @@ find . -type f \( -name "*.md" -o -name "*.json" \) \
   -not -path "*/node_modules/*" \
   -not -path "*/dist/*" \
   -not -path "*/coverage/*" \
-  -exec grep -l "github.com/Coregentis/MPLP-Protocol" {} \;
+  -exec grep -l "github.com/Coregentis/MPLP-Protocol-Dev" {} \;
 
 # 批量替换（需要手动验证）
 find . -type f \( -name "*.md" -o -name "*.json" \) \
   -not -path "*/node_modules/*" \
   -not -path "*/dist/*" \
   -not -path "*/coverage/*" \
-  -exec sed -i 's|github.com/Coregentis/MPLP-Protocol|github.com/Coregentis/MPLP-Protocol-Dev|g' {} \;
+  -exec sed -i 's|github.com/Coregentis/MPLP-Protocol-Dev|github.com/Coregentis/MPLP-Protocol-Dev-Dev|g' {} \;
 ```
 
 ### **3.5 验证完整性（15分钟）**
@@ -315,12 +315,12 @@ ls -la dist/modules/
 {
   "repository": {
     "type": "git",
-    "url": "https://github.com/Coregentis/MPLP-Protocol.git"
+    "url": "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git"
   },
   "bugs": {
-    "url": "https://github.com/Coregentis/MPLP-Protocol/issues"
+    "url": "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/issues"
   },
-  "homepage": "https://github.com/Coregentis/MPLP-Protocol#readme",
+  "homepage": "https://github.com/Coregentis/MPLP-Protocol-Dev-Dev#readme",
   "files": [
     "dist",
     "README.md",
@@ -348,7 +348,7 @@ ls -la dist/modules/
 find . -type f \( -name "*.md" -o -name "*.json" \) \
   -not -path "*/node_modules/*" \
   -not -path "*/dist/*" \
-  -exec sed -i 's|github.com/Coregentis/MPLP-Protocol-Dev|github.com/Coregentis/MPLP-Protocol|g' {} \;
+  -exec sed -i 's|github.com/Coregentis/MPLP-Protocol-Dev-Dev|github.com/Coregentis/MPLP-Protocol-Dev|g' {} \;
 ```
 
 ### **4.10 验证完整性（15分钟）**
@@ -426,15 +426,15 @@ git push origin release/public-v1.1.0-beta
 
 ## 📦 Installation
 \`\`\`bash
-git clone https://github.com/Coregentis/MPLP-Protocol-Dev.git
+git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev.git
 cd MPLP-Protocol-Dev
 npm install
 npm run build
 \`\`\`
 
 ## 🔗 Links
-- [Documentation](https://github.com/Coregentis/MPLP-Protocol-Dev/tree/main/docs)
-- [Contributing](https://github.com/Coregentis/MPLP-Protocol-Dev/blob/main/CONTRIBUTING.md)
+- [Documentation](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/tree/main/docs)
+- [Contributing](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/blob/main/CONTRIBUTING.md)
 ```
 
 #### **Public版本Release Notes**
@@ -453,8 +453,8 @@ npm install mplp@beta
 \`\`\`
 
 ## 🔗 Links
-- [Documentation](https://github.com/Coregentis/MPLP-Protocol/tree/main/docs)
-- [Examples](https://github.com/Coregentis/MPLP-Protocol/tree/main/examples)
+- [Documentation](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/tree/main/docs)
+- [Examples](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/tree/main/examples)
 ```
 
 ### **6.3 最终验证（15分钟）**

@@ -144,7 +144,7 @@ Status: Production Ready
 
 **当前状态**:
 ```
-Repository: https://github.com/Coregentis/MPLP-Protocol
+Repository: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev
 .gitignore: Dev版本（最小排除）
 Documentation Links: Dev仓库
 dist/: 已删除（Dev版本特征）

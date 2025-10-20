@@ -16,13 +16,13 @@
 ## 📊 **版本概述**
 
 ### **Dev版本（开发版本）**
-- **仓库**: https://github.com/Coregentis/MPLP-Protocol
+- **仓库**: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev
 - **用途**: 开发、测试、贡献代码
 - **.gitignore**: 最小排除（仅运行时生成文件）
 - **包含内容**: 所有开发工具、测试套件、内部文档
 
 ### **Public版本（开源版本）**
-- **仓库**: https://github.com/Coregentis/MPLP-Protocol
+- **仓库**: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev
 - **用途**: npm发布、用户使用
 - **.gitignore**: 最大排除（所有开发内容）
 - **包含内容**: 生产代码、用户文档、预构建输出
@@ -70,7 +70,7 @@ bash scripts/switch-version.sh public
    - Dev版本的.gitignore已经是当前的.gitignore
 
 3. **更新package.json的repository字段**
-   - 更新为: `https://github.com/Coregentis/MPLP-Protocol.git`
+   - 更新为: `https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git`
 
 4. **更新文档中的GitHub链接**
    - 自动替换所有文档中的链接为Dev仓库
@@ -111,7 +111,7 @@ git commit -m "chore: switch to dev version"
    - 检查dist/index.js和dist/index.d.ts是否存在
 
 5. **更新package.json的repository字段**
-   - 更新为: `https://github.com/Coregentis/MPLP-Protocol.git`
+   - 更新为: `https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git`
 
 6. **更新文档中的GitHub链接**
    - 自动替换所有文档中的链接为Public仓库
@@ -156,10 +156,10 @@ diff .gitignore .gitignore.public
 node -p "require('./package.json').repository.url"
 
 # Dev版本应该输出:
-# https://github.com/Coregentis/MPLP-Protocol.git
+# https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
 
 # Public版本应该输出:
-# https://github.com/Coregentis/MPLP-Protocol.git
+# https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
 ```
 
 ### **验证文档链接**

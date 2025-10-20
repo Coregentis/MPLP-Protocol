@@ -337,12 +337,12 @@ node scripts/comprehensive-parity-analysis.js
 
 **开发版本链接**:
 ```markdown
-https://github.com/Coregentis/MPLP-Protocol-Dev
+https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev
 ```
 
 **开源版本链接**:
 ```markdown
-https://github.com/Coregentis/MPLP-Protocol
+https://github.com/Coregentis/MPLP-Protocol-Dev-Dev
 ```
 
 **要求**:

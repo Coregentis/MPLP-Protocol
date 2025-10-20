@@ -367,7 +367,7 @@ git clone + npm install + npm run build + npm link
 **更新前**:
 ```bash
 # 用户只能从源码安装（5-10分钟）
-git clone https://github.com/Coregentis/MPLP-Protocol.git
+git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
 cd MPLP-Protocol
 npm install
 npm run build

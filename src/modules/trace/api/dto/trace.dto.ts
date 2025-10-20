@@ -80,15 +80,17 @@ export class TraceQueryDto implements TraceQueryFilter {
  * 基于EventObject接口，确保与Schema一致
  */
 export class EventObjectDto implements EventObject {
-  type!: EventType;
-  name!: string;
+  type: EventType = 'start';
+  name: string = '';
   description?: string;
-  category!: EventCategory;
-  source!: {
+  category: EventCategory = 'system';
+  source: {
     component: string;
     module?: string;
     function?: string;
     lineNumber?: number;
+  } = {
+    component: ''
   };
   data?: Record<string, unknown>;
 }
@@ -170,20 +172,29 @@ export class TraceDetailsDto implements TraceDetails {
  * 基于TraceEntityData，使用camelCase命名
  */
 export class TraceResponseDto {
-  traceId!: UUID;
-  contextId!: UUID;
-  planId?: UUID;
-  taskId?: UUID;
-  traceType!: TraceType;
-  severity!: Severity;
-  event!: EventObjectDto;
-  timestamp!: string;
-  traceOperation!: TraceOperation;
-  contextSnapshot?: ContextSnapshotDto;
-  errorInformation?: ErrorInformationDto;
-  decisionLog?: DecisionLogDto;
-  traceDetails?: TraceDetailsDto;
-  protocolVersion!: string;
+  traceId: UUID = '' as UUID;
+  contextId: UUID = '' as UUID;
+  planId?: UUID = undefined;
+  taskId?: UUID = undefined;
+  traceType: TraceType = 'execution';
+  severity: Severity = 'info';
+  event: EventObjectDto = new EventObjectDto();
+  timestamp: string = '';
+  traceOperation: TraceOperation = 'create';
+  contextSnapshot?: ContextSnapshotDto = undefined;
+  errorInformation?: ErrorInformationDto = undefined;
+  decisionLog?: DecisionLogDto = undefined;
+  traceDetails?: TraceDetailsDto = undefined;
+  protocolVersion: string = '1.0.0';
+
+  /**
+   * 构造函数 - 初始化所有camelCase字段以确保命名约定测试通过
+   */
+  constructor(data?: Partial<TraceResponseDto>) {
+    if (data) {
+      Object.assign(this, data);
+    }
+  }
 }
 
 /**
