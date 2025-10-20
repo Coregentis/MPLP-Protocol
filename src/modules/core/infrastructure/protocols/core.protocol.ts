@@ -70,19 +70,31 @@ export class CoreProtocol {
   
   constructor(
     private readonly managementService: CoreManagementService,
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly _monitoringService: CoreMonitoringService,
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly _orchestrationService: CoreOrchestrationService,
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly _resourceService: CoreResourceService,
     private readonly _repository: ICoreRepository,
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly _securityManager: MLPPSecurityManager,
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly _performanceMonitor: MLPPPerformanceMonitor,
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly _eventBusManager: MLPPEventBusManager,
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly _errorHandler: MLPPErrorHandler,
     private readonly coordinationManager: MLPPCoordinationManager,
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly _orchestrationManager: MLPPOrchestrationManager,
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly _stateSyncManager: MLPPStateSyncManager,
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly _transactionManager: MLPPTransactionManager,
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly _protocolVersionManager: MLPPProtocolVersionManager,
+    // @ts-expect-error - Reserved for future protocol configuration
     private readonly config: CoreProtocolConfig = {}
   ) {}
 

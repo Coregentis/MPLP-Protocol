@@ -236,8 +236,10 @@ export class CoreController {
   constructor(
     private readonly coreManagementService: CoreManagementService,
     private readonly coreOrchestrationService: CoreOrchestrationService,
-    private readonly _coreResourceService: CoreResourceService, // Reserved for future resource management APIs
-    private readonly _coreMonitoringService: CoreMonitoringService // Reserved for future monitoring APIs
+    // @ts-expect-error - Reserved for future resource management APIs
+    private readonly _coreResourceService: CoreResourceService,
+    // @ts-expect-error - Reserved for future monitoring APIs
+    private readonly _coreMonitoringService: CoreMonitoringService
   ) {}
 
   // ===== 工作流管理API =====
