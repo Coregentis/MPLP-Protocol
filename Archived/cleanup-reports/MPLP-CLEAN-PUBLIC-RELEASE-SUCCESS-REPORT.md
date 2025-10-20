@@ -203,7 +203,7 @@
 ### **安全漏洞**
 - **级别**: 中等
 - **数量**: 1个
-- **链接**: https://github.com/Coregentis/MPLP-Protocol/security/dependabot/4
+- **链接**: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/security/dependabot/4
 - **状态**: ⚠️ 待修复
 
 ---
@@ -211,19 +211,19 @@
 ## 🚀 **后续步骤**
 
 ### **1. 验证公开仓库** (立即)
-- [ ] 访问: https://github.com/Coregentis/MPLP-Protocol
+- [ ] 访问: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev
 - [ ] 确认无内部文件
 - [ ] 确认必要文件存在
 - [ ] 验证README和文档
 
 ### **2. 修复安全漏洞** (高优先级)
-- [ ] 访问: https://github.com/Coregentis/MPLP-Protocol/security/dependabot/4
+- [ ] 访问: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/security/dependabot/4
 - [ ] 查看漏洞详情
 - [ ] 更新受影响的依赖
 - [ ] 重新推送
 
 ### **3. 监控CI/CD** (中优先级)
-- [ ] 检查CodeQL扫描: https://github.com/Coregentis/MPLP-Protocol/actions
+- [ ] 检查CodeQL扫描: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/actions
 - [ ] 确保CI工作流正常运行
 - [ ] 验证测试通过
 
@@ -266,7 +266,7 @@
 **完成时间**: ⏱️ **~15分钟**
 **完成日期**: 📅 **2025年10月17日**
 
-**公开仓库**: 🌐 **https://github.com/Coregentis/MPLP-Protocol**
+**公开仓库**: 🌐 **https://github.com/Coregentis/MPLP-Protocol-Dev-Dev**
 
 ---
 

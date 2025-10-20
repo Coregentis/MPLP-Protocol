@@ -350,7 +350,7 @@ examples/*/coverage/
 **方法论**: 🏆 **SCTM+GLFB+ITCM+RBCT完全应用**
 **执行质量**: 💯 **企业级用户视角标准**
 **执行日期**: 📅 **2025年10月17日**
-**公开仓库**: 🌐 **https://github.com/Coregentis/MPLP-Protocol**
+**公开仓库**: 🌐 **https://github.com/Coregentis/MPLP-Protocol-Dev-Dev**
 
 **用户现在可以完全使用MPLP来构建多Agent APP！** 🚀🎉
 

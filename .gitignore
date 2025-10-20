@@ -239,7 +239,8 @@ test-results/
 playwright-report/
 
 # Development Archives and History
-Archived/
+# Note: Archived/ folder is tracked in Dev version for historical documentation
+# Only large binary files are excluded (see below)
 
 # Internal Configuration
 config/
