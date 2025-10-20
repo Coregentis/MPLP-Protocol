@@ -94,6 +94,8 @@ export class CoreProtocol {
   async createWorkflow(request: CoreWorkflowCreationRequest): Promise<CoreProtocolResult<CoreEntity>> {
     const operationId = this.generateOperationId();
     const _startTime = Date.now();
+    // Mark _startTime as intentionally unused (reserved for future performance monitoring)
+    void _startTime;
 
     try {
       // 1. 安全验证（简化实现）
@@ -104,6 +106,8 @@ export class CoreProtocol {
 
       // 3. 事务开始（简化实现）
       const _transaction = Date.now(); // 简化的事务ID
+      // Mark _transaction as intentionally unused (reserved for future transaction management)
+      void _transaction;
 
       // 4. 创建工作流
       const workflow = await this.managementService.createWorkflow({
@@ -155,6 +159,8 @@ export class CoreProtocol {
   async executeWorkflow(workflowId: UUID): Promise<CoreProtocolResult<boolean>> {
     const operationId = this.generateOperationId();
     const _startTime = Date.now();
+    // Mark _startTime as intentionally unused (reserved for future performance monitoring)
+    void _startTime;
 
     try {
       // 1. 安全验证（简化实现）
@@ -210,6 +216,8 @@ export class CoreProtocol {
     try {
       // 1. 获取工作流统计
       const _stats = await this.managementService.getWorkflowStatistics();
+      // Mark _stats as intentionally unused (reserved for future status calculation)
+      void _stats;
 
       // 2. 模拟状态（简化实现）
       const status = {
