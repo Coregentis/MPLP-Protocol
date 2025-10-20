@@ -59,7 +59,18 @@ export class ConfirmProtocol implements IMLPPProtocol {
     private readonly _stateSyncManager: MLPPStateSyncManager,
     private readonly _transactionManager: MLPPTransactionManager,
     private readonly _protocolVersionManager: MLPPProtocolVersionManager
-  ) {}
+  ) {
+    // Mark L3 managers as intentionally unused (reserved for CoreOrchestrator activation)
+    void _securityManager;
+    void _performanceMonitor;
+    void _eventBusManager;
+    void _errorHandler;
+    void _coordinationManager;
+    void _orchestrationManager;
+    void _stateSyncManager;
+    void _transactionManager;
+    void _protocolVersionManager;
+  }
 
   /**
    * 实现IMLPPProtocol标准接口：执行协议操作

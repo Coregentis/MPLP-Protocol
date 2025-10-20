@@ -121,8 +121,11 @@ export interface IAnalyticsEngine {
 export class ConfirmAnalyticsService {
   constructor(
     private readonly confirmRepository: IConfirmRepository,
-    private readonly analyticsEngine: IAnalyticsEngine
-  ) {}
+    private readonly _analyticsEngine: IAnalyticsEngine // Reserved for future advanced analytics features
+  ) {
+    // Mark _analyticsEngine as intentionally unused (reserved for future workflow performance analysis)
+    void _analyticsEngine;
+  }
 
   /**
    * 分析确认请求 - 基于Schema confirm_id字段
