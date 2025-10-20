@@ -184,7 +184,10 @@ export class CoreOrchestrator {
     private readonly stateSyncManager: StateSyncManager,
     private readonly transactionManager: TransactionManager,
     private readonly _protocolVersionManager: ProtocolVersionManager // Reserved for future use
-  ) {}
+  ) {
+    // Mark _protocolVersionManager as intentionally unused (reserved for future protocol version management)
+    void _protocolVersionManager;
+  }
 
   /**
    * 执行完整工作流

@@ -198,7 +198,10 @@ export class ModuleCoordinator {
       backoffStrategy: 'exponential',
       retryableErrors: ['timeout', 'network', 'temporary']
     }
-  ) {}
+  ) {
+    // Mark _connectionTimeout as intentionally unused (reserved for future connection timeout management)
+    void _connectionTimeout;
+  }
 
   /**
    * 注册模块
