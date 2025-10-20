@@ -224,8 +224,8 @@ V1.1.0-beta-*.md
 # TEST DIRECTORIES - DO NOT PUBLISH
 # =============================================================================
 # Test suites are for development only, not needed by end users
-
-tests/
+# Note: tests/ folder is tracked in Dev version for comprehensive testing
+# Only exclude test/ and __tests__/ folders (if they exist)
 test/
 __tests__/
 *.test.ts
