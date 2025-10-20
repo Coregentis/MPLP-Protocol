@@ -434,9 +434,14 @@ export class CoreResourceService {
     expectedImprovement: number;
   }> {
     const nodeLoads = currentLoad.nodeLoads;
-    const recommendedNode = Object.entries(nodeLoads)
-      .sort(([,a], [,b]) => (a as number) - (b as number))[0][0];
+    const sortedNodes = Object.entries(nodeLoads)
+      .sort(([,a], [,b]) => (a as number) - (b as number));
 
+    if (sortedNodes.length === 0) {
+      throw new Error('No nodes available for allocation');
+    }
+
+    const recommendedNode = sortedNodes[0]![0];
     const currentNodeLoad = nodeLoads[recommendedNode] as number;
     const expectedImprovement = Math.max(0, 100 - currentNodeLoad);
 

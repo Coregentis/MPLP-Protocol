@@ -554,7 +554,7 @@ export class LoadBalancer {
       : instances;
 
     if (healthyInstances.length === 0) {
-      return this.config.failoverEnabled ? instances[0] : null;
+      return this.config.failoverEnabled ? (instances[0] ?? null) : null;
     }
 
     switch (this.config.strategy) {
@@ -567,23 +567,23 @@ export class LoadBalancer {
       case 'least_connections':
         return this.leastConnectionsSelect(healthyInstances);
       default:
-        return healthyInstances[0];
+        return healthyInstances[0] ?? null;
     }
   }
 
   private roundRobinSelect(instances: ServiceInstance[]): ServiceInstance {
-    const serviceName = instances[0].serviceName;
+    const serviceName = instances[0]!.serviceName;
     const counter = this.roundRobinCounters.get(serviceName) || 0;
     const selectedIndex = counter % instances.length;
     this.roundRobinCounters.set(serviceName, counter + 1);
-    return instances[selectedIndex];
+    return instances[selectedIndex]!;
   }
 
   private weightedRoundRobinSelect(instances: ServiceInstance[]): ServiceInstance {
     // 简化实现：基于权重选择
     const totalWeight = instances.reduce((sum, instance) => sum + instance.metadata.weight, 0);
     const random = Math.random() * totalWeight;
-    
+
     let currentWeight = 0;
     for (const instance of instances) {
       currentWeight += instance.metadata.weight;
@@ -591,17 +591,17 @@ export class LoadBalancer {
         return instance;
       }
     }
-    
-    return instances[0];
+
+    return instances[0]!;
   }
 
   private randomSelect(instances: ServiceInstance[]): ServiceInstance {
     const randomIndex = Math.floor(Math.random() * instances.length);
-    return instances[randomIndex];
+    return instances[randomIndex]!;
   }
 
   private leastConnectionsSelect(instances: ServiceInstance[]): ServiceInstance {
     // 简化实现：返回第一个实例
-    return instances[0];
+    return instances[0]!;
   }
 }

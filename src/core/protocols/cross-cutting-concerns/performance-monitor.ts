@@ -221,7 +221,7 @@ export class MLPPPerformanceMonitor {
       if (!groups[metric.name]) {
         groups[metric.name] = [];
       }
-      groups[metric.name].push(metric.value);
+      groups[metric.name]!.push(metric.value);
       return groups;
     }, {} as Record<string, number[]>);
 
@@ -377,7 +377,7 @@ export class MLPPPerformanceMonitor {
       if (!groups[metric.name]) {
         groups[metric.name] = [];
       }
-      groups[metric.name].push(metric);
+      groups[metric.name]!.push(metric);
       return groups;
     }, {} as Record<string, PerformanceMetric[]>);
 

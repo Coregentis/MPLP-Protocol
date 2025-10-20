@@ -292,7 +292,7 @@ export class ConfirmAnalyticsService {
    */
   private calculateProcessingTime(request: ConfirmEntity, history: ApprovalHistoryEntry[]): number {
     if (history.length === 0) return 0;
-    const lastEntry = history[history.length - 1];
+    const lastEntry = history[history.length - 1]!;
     return lastEntry.timestamp.getTime() - request.timestamp.getTime();
   }
 

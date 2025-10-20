@@ -300,8 +300,8 @@ export class PerformanceOptimizer {
       };
     }
 
-    const latest = recentAnalyses[recentAnalyses.length - 1];
-    const earliest = recentAnalyses[0];
+    const latest = recentAnalyses[recentAnalyses.length - 1]!;
+    const earliest = recentAnalyses[0]!;
 
     // 计算趋势
     const scoreTrend = latest.overallScore - earliest.overallScore;

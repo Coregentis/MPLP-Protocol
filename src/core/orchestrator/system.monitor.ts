@@ -650,19 +650,19 @@ export class SystemMonitor {
   private extractFunctionName(stack?: string): string {
     if (!stack) return 'unknown';
     const match = stack.match(/at\s+([^\s]+)/);
-    return match ? match[1] : 'unknown';
+    return match?.[1] ?? 'unknown';
   }
 
   private extractFileName(stack?: string): string {
     if (!stack) return 'unknown';
     const match = stack.match(/\(([^:]+):/);
-    return match ? match[1] : 'unknown';
+    return match?.[1] ?? 'unknown';
   }
 
   private extractLineNumber(stack?: string): number {
     if (!stack) return 0;
     const match = stack.match(/:(\d+):/);
-    return match ? parseInt(match[1], 10) : 0;
+    return match?.[1] ? parseInt(match[1], 10) : 0;
   }
 
   private cleanupOldMetrics(): void {

@@ -604,7 +604,7 @@ export class CollabManagementService {
       throw new Error(`Task ${taskId} not found in collaboration ${collaborationId}`);
     }
 
-    const task = collabWithTasks.tasks[taskIndex];
+    const task = collabWithTasks.tasks[taskIndex]!;
 
     // ===== STEP 4: VALIDATE STATUS TRANSITION =====
     const validTransitions: Record<string, string[]> = {
@@ -616,7 +616,7 @@ export class CollabManagementService {
       'cancelled': [] // Terminal state
     };
 
-    if (!validTransitions[task.status] || !validTransitions[task.status].includes(status)) {
+    if (!validTransitions[task.status] || !validTransitions[task.status]!.includes(status)) {
       throw new Error(`Invalid status transition from ${task.status} to ${status}`);
     }
 
@@ -1517,11 +1517,11 @@ export class CollabManagementService {
     );
 
     if (leadersWithCapabilities.length > 0) {
-      return leadersWithCapabilities[0];
+      return leadersWithCapabilities[0] ?? null;
     }
 
     // Fallback to first participant
-    return participants.length > 0 ? participants[0] : null;
+    return participants[0] ?? null;
   }
 
   /**

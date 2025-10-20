@@ -90,8 +90,8 @@ export class MLPPProtocolVersionManager {
     }
 
     // 版本比较逻辑
-    const [reqMajor, reqMinor, reqPatch] = _requestedVersion.split('.').map(Number);
-    const [curMajor, curMinor, curPatch] = this.currentVersion.split('.').map(Number);
+    const [reqMajor = 0, reqMinor = 0, reqPatch = 0] = _requestedVersion.split('.').map(Number);
+    const [curMajor = 0, curMinor = 0, curPatch = 0] = this.currentVersion.split('.').map(Number);
 
     if (reqMajor < curMajor) {
       result.warnings.push(`Requested version ${_requestedVersion} is older than current ${this.currentVersion}`);

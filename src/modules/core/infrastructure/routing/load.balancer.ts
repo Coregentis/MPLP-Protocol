@@ -389,7 +389,7 @@ export class LoadBalancer {
       : instances;
 
     if (healthyInstances.length === 0) {
-      return this.config.failoverEnabled ? instances[0] : null;
+      return this.config.failoverEnabled ? (instances[0] ?? null) : null;
     }
 
     // 根据策略选择实例
@@ -411,24 +411,24 @@ export class LoadBalancer {
       case 'ip_hash':
         return this.ipHashSelect(healthyInstances, request);
       default:
-        return healthyInstances[0];
+        return healthyInstances[0] ?? null;
     }
   }
 
   // ===== 负载均衡算法实现 =====
 
   private roundRobinSelect(instances: ServiceInstance[]): ServiceInstance {
-    const serviceName = instances[0].serviceName;
+    const serviceName = instances[0]!.serviceName;
     const counter = this.roundRobinCounters.get(serviceName) || 0;
     const selectedIndex = counter % instances.length;
     this.roundRobinCounters.set(serviceName, counter + 1);
-    return instances[selectedIndex];
+    return instances[selectedIndex]!;
   }
 
   private weightedRoundRobinSelect(instances: ServiceInstance[]): ServiceInstance {
     const totalWeight = instances.reduce((sum, instance) => sum + instance.weight, 0);
     const random = Math.random() * totalWeight;
-    
+
     let currentWeight = 0;
     for (const instance of instances) {
       currentWeight += instance.weight;
@@ -436,12 +436,12 @@ export class LoadBalancer {
         return instance;
       }
     }
-    
-    return instances[0];
+
+    return instances[0]!;
   }
 
   private leastConnectionsSelect(instances: ServiceInstance[]): ServiceInstance {
-    return instances.reduce((min, instance) => 
+    return instances.reduce((min, instance) =>
       instance.metrics.activeConnections < min.metrics.activeConnections ? instance : min
     );
   }
@@ -455,14 +455,14 @@ export class LoadBalancer {
   }
 
   private responseTimeSelect(instances: ServiceInstance[]): ServiceInstance {
-    return instances.reduce((min, instance) => 
+    return instances.reduce((min, instance) =>
       instance.metrics.averageResponseTime < min.metrics.averageResponseTime ? instance : min
     );
   }
 
   private randomSelect(instances: ServiceInstance[]): ServiceInstance {
     const randomIndex = Math.floor(Math.random() * instances.length);
-    return instances[randomIndex];
+    return instances[randomIndex]!;
   }
 
   private consistentHashSelect(instances: ServiceInstance[], request: RoutingRequest): ServiceInstance {

@@ -286,18 +286,18 @@ export class MemoryCoreRepository implements ICoreRepository {
     let newestEntity: { workflowId: UUID; timestamp: string } | undefined;
 
     if (entities.length > 0) {
-      const sortedByTime = entities.sort((a, b) => 
+      const sortedByTime = entities.sort((a, b) =>
         new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
       );
 
       oldestEntity = {
-        workflowId: sortedByTime[0].workflowId,
-        timestamp: sortedByTime[0].timestamp
+        workflowId: sortedByTime[0]!.workflowId,
+        timestamp: sortedByTime[0]!.timestamp
       };
 
       newestEntity = {
-        workflowId: sortedByTime[sortedByTime.length - 1].workflowId,
-        timestamp: sortedByTime[sortedByTime.length - 1].timestamp
+        workflowId: sortedByTime[sortedByTime.length - 1]!.workflowId,
+        timestamp: sortedByTime[sortedByTime.length - 1]!.timestamp
       };
     }
 
