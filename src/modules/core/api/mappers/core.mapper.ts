@@ -231,37 +231,9 @@ export class CoreMapper {
    * @param entity Core实体
    * @returns Schema格式数据
    */
-  // 性能优化辅助方法
-  private static generateCacheKey(data: unknown, operation: string): string {
-    return `${operation}_${JSON.stringify(data).substring(0, 100)}`;
-  }
-
-  private static getCachedResult<T>(key: string): T | null {
-    if (!this.cacheEnabled) return null;
-
-    const cached = this.mappingCache.get(key);
-    if (cached) {
-      this.performanceMetrics.cacheHits++;
-      return cached as T;
-    }
-
-    this.performanceMetrics.cacheMisses++;
-    return null;
-  }
-
-  private static setCachedResult(key: string, result: unknown): void {
-    if (!this.cacheEnabled) return;
-
-    // 缓存大小控制
-    if (this.mappingCache.size >= this.cacheMaxSize) {
-      const firstKey = this.mappingCache.keys().next().value;
-      if (firstKey) {
-        this.mappingCache.delete(firstKey);
-      }
-    }
-
-    this.mappingCache.set(key, result);
-  }
+  // Note: Cache optimization methods (generateCacheKey, getCachedResult, setCachedResult)
+  // were removed as they are not currently used. The caching infrastructure (mappingCache,
+  // cacheEnabled, performanceMetrics) is kept for future performance optimization.
 
   // 性能监控方法
   static getPerformanceMetrics() {

@@ -236,8 +236,8 @@ export class CoreController {
   constructor(
     private readonly coreManagementService: CoreManagementService,
     private readonly coreOrchestrationService: CoreOrchestrationService,
-    private readonly coreResourceService: CoreResourceService,
-    private readonly coreMonitoringService: CoreMonitoringService
+    private readonly _coreResourceService: CoreResourceService, // Reserved for future resource management APIs
+    private readonly _coreMonitoringService: CoreMonitoringService // Reserved for future monitoring APIs
   ) {}
 
   // ===== 工作流管理API =====
