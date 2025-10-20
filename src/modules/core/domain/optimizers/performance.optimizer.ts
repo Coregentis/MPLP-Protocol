@@ -354,6 +354,8 @@ export class PerformanceOptimizer {
     // 获取系统性能指标
     const systemPerformance = await this.resourceService.monitorSystemPerformance();
     const _resourceStats = await this.resourceService.getResourceUsageStatistics();
+    // Mark _resourceStats as intentionally unused (reserved for future resource analysis)
+    void _resourceStats;
 
     // 模拟模块性能指标
     const modules = ['context', 'plan', 'role', 'confirm', 'trace', 'extension', 'dialog', 'collab', 'network'];

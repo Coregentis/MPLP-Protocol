@@ -293,14 +293,16 @@ export class ConfigManager {
   /**
    * 设置配置（带用户ID）
    */
-  async setConfig(key: string, value: any, userId?: string): Promise<void> {
+  async setConfig(key: string, value: any, _userId?: string): Promise<void> {
+    // Note: userId reserved for future user audit logging
     await this.set(key, value, false);
   }
 
   /**
    * 获取配置（带用户ID）
    */
-  async getConfig(key: string, userId?: string): Promise<any> {
+  async getConfig(key: string, _userId?: string): Promise<any> {
+    // Note: userId reserved for future user audit logging
     return await this.get(key);
   }
 
@@ -322,8 +324,8 @@ export class ConfigManager {
   /**
    * 取消配置监听
    */
-  unwatchConfig(watcherId: string): void {
-    // 简化实现
+  unwatchConfig(_watcherId: string): void {
+    // 简化实现 - watcherId reserved for future implementation
   }
 
   /**
@@ -337,7 +339,8 @@ export class ConfigManager {
   /**
    * 回滚配置到指定版本
    */
-  async rollbackConfig(key: string, version: number, userId?: string): Promise<void> {
+  async rollbackConfig(key: string, version: number, _userId?: string): Promise<void> {
+    // Note: userId reserved for future user audit logging
     const history = this.versionHistory.get(key);
     if (!history || history.length === 0) {
       throw new Error(`No version history found for key: ${key}`);
@@ -478,8 +481,9 @@ export class ConfigManager {
   /**
    * 审计日志
    */
-  private auditLog(operation: string, key: string, value: any): void {
+  private auditLog(operation: string, key: string, _value: any): void {
     // 简化实现：实际应写入审计日志系统
+    // Note: value reserved for future detailed audit logging
     console.log(`[ConfigManager Audit] ${operation} ${key} at ${new Date().toISOString()}`);
   }
 

@@ -212,9 +212,9 @@ interface MonitoringIntegrationSchema {
  */
 export class CoreMapper {
   // 性能优化：映射缓存
+  // Note: mappingCache is kept for resetPerformanceMetrics() method
+  // cacheMaxSize and cacheEnabled were removed as cache methods were deleted
   private static readonly mappingCache = new Map<string, unknown>();
-  private static readonly cacheMaxSize = 1000;
-  private static readonly cacheEnabled = process.env.NODE_ENV !== 'test'; // 测试环境禁用缓存
 
   // 性能监控
   private static performanceMetrics = {
