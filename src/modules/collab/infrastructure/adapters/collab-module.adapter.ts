@@ -423,7 +423,7 @@ export class CollabModuleAdapter {
    */
   async startCollaborationTracing(
     collaborationId: UUID,   // Reserved for CoreOrchestrator activation
-    tracingConfig: Record<string, unknown> // Reserved for CoreOrchestrator activation
+    _tracingConfig: Record<string, unknown> // Reserved for CoreOrchestrator activation
   ): Promise<{
     traceId: UUID;
     tracingEnabled: boolean;
@@ -439,8 +439,8 @@ export class CollabModuleAdapter {
 
     // Reserved: tracing configuration would be used when CoreOrchestrator is activated
     const traceId = generateUUID();
-    // const tracingLevel = tracingConfig.level as string || 'info';
-    // const includeParticipants = tracingConfig.includeParticipants as boolean || true;
+    // const tracingLevel = _tracingConfig.level as string || 'info';
+    // const includeParticipants = _tracingConfig.includeParticipants as boolean || true;
 
     // TODO: Implement actual tracing when CoreOrchestrator is activated
     // Starting tracing for collaboration ${collaborationId}: traceId=${traceId}, level=${tracingLevel}
@@ -461,19 +461,26 @@ export class CollabModuleAdapter {
    * Reserved interface for Trace module integration
    */
   async recordCollaborationTraceEvent(
-    collaborationId: UUID,   // Reserved for CoreOrchestrator activation
+    _collaborationId: UUID,   // Reserved for CoreOrchestrator activation
     traceEvent: Record<string, unknown> // Reserved for CoreOrchestrator activation
   ): Promise<void> {
     // TODO: Implement actual Trace module integration when CoreOrchestrator is activated
 
     // Placeholder implementation with event recording
+    // Extract event details for future use when CoreOrchestrator is activated
     const eventType = traceEvent.type as string;
     const eventData = traceEvent.data as Record<string, unknown>;
     const timestamp = traceEvent.timestamp as string || new Date().toISOString();
     const traceId = traceEvent.traceId as UUID;
 
+    // Mark extracted variables as intentionally unused (reserved for future Trace module integration)
+    void eventType;
+    void eventData;
+    void timestamp;
+    void traceId;
+
     // TODO: Implement actual trace event recording when CoreOrchestrator is activated
-    // Recording trace event for collaboration ${collaborationId}: traceId=${traceId}, eventType=${eventType}
+    // Recording trace event for collaboration ${_collaborationId}: traceId=${traceId}, eventType=${eventType}
 
     // In real implementation, this would:
     // 1. Validate trace event format
