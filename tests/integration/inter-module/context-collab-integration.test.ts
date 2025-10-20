@@ -145,21 +145,24 @@ describe('Context-Collab模块间集成测试', () => {
       };
 
       // Mock context service
+      // 注意: ContextEntity不包含decisionSupport字段，使用metadata存储自定义属性
       jest.spyOn(contextService, 'getContext').mockResolvedValue({
         contextId: decisionData.contextId,
         name: 'Decision Context',
         status: 'active',
-        decisionSupport: true
+        metadata: { decisionSupport: true } // 使用metadata存储自定义属性
       } as any);
 
       // Mock collab service - 使用实际存在的方法
+      // 注意: CollabEntity的decisionMaking是coordinationStrategy的子属性
       jest.spyOn(collabService, 'getCollaboration').mockResolvedValue({
         id: decisionData.collabId,
         contextId: decisionData.contextId,
         status: 'active',
-        decisionMaking: {
-          strategy: 'consensus',
-          participants: ['agent-001', 'agent-002', 'agent-003']
+        coordinationStrategy: {
+          type: 'centralized',
+          decisionMaking: 'consensus',
+          coordinatorId: 'coordinator-001'
         }
       } as any);
 
@@ -168,22 +171,23 @@ describe('Context-Collab模块间集成测试', () => {
       const collab = await collabService.getCollaboration(decisionData.collabId);
 
       // Assert
-      expect(context.decisionSupport).toBe(true);
+      expect((context as any).metadata?.decisionSupport).toBe(true);
       expect(collab.contextId).toBe(decisionData.contextId);
-      expect(collab.decisionMaking.strategy).toBe('consensus');
+      expect((collab as any).coordinationStrategy?.decisionMaking).toBe('consensus');
     });
   });
 
   describe('错误处理集成测试', () => {
     it('应该正确处理上下文不支持协作的情况', async () => {
       const contextId = 'no-collab-context';
+      // 注意: ContextEntity不包含collaborationEnabled字段，使用metadata存储
       jest.spyOn(contextService, 'getContext').mockResolvedValue({
         contextId,
-        collaborationEnabled: false
+        metadata: { collaborationEnabled: false }
       } as any);
 
       const context = await contextService.getContext(contextId);
-      expect(context.collaborationEnabled).toBe(false);
+      expect((context as any).metadata?.collaborationEnabled).toBe(false);
     });
 
     it('应该正确处理协作创建失败', async () => {

@@ -469,13 +469,13 @@ export class LoadBalancer {
     // 简化的一致性哈希实现
     const hash = this.hashString(request.path + request.clientIp);
     const index = hash % instances.length;
-    return instances[index];
+    return instances[index]!; // 非空断言：instances.length > 0 已在调用方验证
   }
 
   private ipHashSelect(instances: ServiceInstance[], request: RoutingRequest): ServiceInstance {
     const hash = this.hashString(request.clientIp);
     const index = hash % instances.length;
-    return instances[index];
+    return instances[index]!; // 非空断言：instances.length > 0 已在调用方验证
   }
 
   // ===== 辅助方法 =====

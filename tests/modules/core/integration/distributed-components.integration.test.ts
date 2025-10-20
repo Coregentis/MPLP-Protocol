@@ -47,7 +47,9 @@ describe('分布式组件集成测试', () => {
       encryptionEnabled: true,
       auditEnabled: true,
       cacheEnabled: true,
-      watchEnabled: true
+      cacheTtl: 3600000, // 添加缺失的必需字段
+      watchEnabled: true,
+      backupEnabled: false // 添加缺失的必需字段
     });
 
     messageQueue = new MessageQueueManager({
@@ -171,14 +173,15 @@ describe('分布式组件集成测试', () => {
         });
 
         expect(discoveredServices).toHaveLength(1);
-        expect(discoveredServices[0].serviceName).toBe(serviceConfig.serviceName);
-        expect(discoveredServices[0].version).toBe(serviceConfig.version);
-        expect(discoveredServices[0].port).toBe(serviceConfig.port);
+        expect(discoveredServices[0]!.serviceName).toBe(serviceConfig.serviceName);
+        expect(discoveredServices[0]!.version).toBe(serviceConfig.version);
+        expect(discoveredServices[0]!.port).toBe(serviceConfig.port);
       }
 
       // 测试按能力发现服务
+      // 注意: ServiceQuery接口不包含capabilities字段，使用metadata过滤
       const authServices = await serviceDiscovery.discoverServices({
-        capabilities: ['authentication']
+        metadata: { capabilities: 'authentication' }
       });
 
       expect(authServices).toHaveLength(3); // 实际发现的服务数量（包括所有注册的服务）
@@ -211,7 +214,8 @@ describe('分布式组件集成测试', () => {
         tags: ['critical', 'primary']
       });
 
-      const backupService = await serviceDiscovery.registerService({
+      // 注册备份服务（用于故障转移测试）
+      await serviceDiscovery.registerService({
         serviceName: 'critical-service',
         version: '1.0.0',
         address: '127.0.0.1',
@@ -253,7 +257,7 @@ describe('分布式组件集成测试', () => {
       });
 
       expect(remainingServices).toHaveLength(1);
-      expect(remainingServices[0].port).toBe(9001); // 备份服务
+      expect(remainingServices[0]!.port).toBe(9001); // 备份服务
     });
   });
 
@@ -558,7 +562,7 @@ describe('分布式组件集成测试', () => {
 
       // 验证当前版本
       const currentValue = await configManager.getConfig(configKey, testUserId);
-      expect(currentValue).toEqual(versions[2].value);
+      expect(currentValue).toEqual(versions[2]!.value);
 
       // 获取版本历史
       const versionHistory = configManager.getConfigVersions(configKey);
@@ -569,7 +573,7 @@ describe('分布式组件集成测试', () => {
 
       // 验证回滚结果
       const rolledBackValue = await configManager.getConfig(configKey, testUserId);
-      expect(rolledBackValue).toEqual(versions[0].value);
+      expect(rolledBackValue).toEqual(versions[0]!.value);
     });
   });
 
@@ -814,7 +818,7 @@ describe('分布式组件集成测试', () => {
     });
 
     it('应该支持降级策略', async () => {
-      const fallbackData = { message: 'Service temporarily unavailable', timestamp: new Date().toISOString() };
+      const fallbackData = { message: 'Service temporarily unavailable', data: 'fallback', timestamp: new Date().toISOString() };
 
       const unreliableServiceCall = async () => {
         // 模拟不可靠的服务调用
@@ -928,7 +932,7 @@ describe('分布式组件集成测试', () => {
 
       // 验证并发请求结果
       expect(responses).toHaveLength(concurrentRequests);
-      responses.forEach((response, index) => {
+      responses.forEach((response) => {
         expect(response.status).toBe(200);
         expect(response.requestId).toBeDefined();
       });
@@ -994,8 +998,9 @@ describe('分布式组件集成测试', () => {
       });
 
       // 3. 负载均衡：注册服务实例
+      // 注意: ServiceRegistration使用serviceId，而ServiceInstance使用instanceId
       loadBalancer.registerInstance({
-        instanceId: testService.instanceId,
+        instanceId: testService.serviceId, // ServiceRegistration的serviceId映射到ServiceInstance的instanceId
         serviceName: testService.serviceName,
         address: testService.address,
         port: testService.port,
