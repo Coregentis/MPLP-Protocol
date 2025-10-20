@@ -886,89 +886,9 @@ export class DialogSecurityService {
   }
 
   // ===== 隐私合规检查私有方法 =====
-
-  private async checkGDPRCompliance(dialog: DialogEntity): Promise<Array<{
-    regulation: 'GDPR';
-    requirement: string;
-    violation: string;
-    severity: 'low' | 'medium' | 'high' | 'critical';
-    remediation: string;
-  }>> {
-    // TODO: 等待L3管理器激活GDPR合规检查
-    const violations = [];
-
-    // 检查数据处理同意
-    if (!dialog.auditTrail.enabled) {
-      violations.push({
-        regulation: 'GDPR' as const,
-        requirement: 'Article 7 - Consent',
-        violation: '缺少数据处理同意记录',
-        severity: 'high' as const,
-        remediation: '启用审计追踪并记录用户同意'
-      });
-    }
-
-    // 检查数据保留期限
-    if (dialog.auditTrail.retentionDays > 365) {
-      violations.push({
-        regulation: 'GDPR' as const,
-        requirement: 'Article 5 - Storage limitation',
-        violation: '数据保留期限过长',
-        severity: 'medium' as const,
-        remediation: '调整数据保留期限至合规范围'
-      });
-    }
-
-    return violations;
-  }
-
-  private async checkCCPACompliance(dialog: DialogEntity): Promise<Array<{
-    regulation: 'CCPA';
-    requirement: string;
-    violation: string;
-    severity: 'low' | 'medium' | 'high' | 'critical';
-    remediation: string;
-  }>> {
-    // TODO: 等待L3管理器激活CCPA合规检查
-    const violations = [];
-
-    // 检查数据删除权
-    if (!dialog.auditTrail.enabled) {
-      violations.push({
-        regulation: 'CCPA' as const,
-        requirement: 'Right to Delete',
-        violation: '缺少数据删除机制',
-        severity: 'medium' as const,
-        remediation: '实施数据删除和匿名化机制'
-      });
-    }
-
-    return violations;
-  }
-
-  private async checkHIPAACompliance(dialog: DialogEntity): Promise<Array<{
-    regulation: 'HIPAA';
-    requirement: string;
-    violation: string;
-    severity: 'low' | 'medium' | 'high' | 'critical';
-    remediation: string;
-  }>> {
-    // TODO: 等待L3管理器激活HIPAA合规检查
-    const violations = [];
-
-    // 检查健康信息保护
-    if (dialog.participants.length > 2) {
-      violations.push({
-        regulation: 'HIPAA' as const,
-        requirement: 'Minimum Necessary Standard',
-        violation: '可能存在过度的健康信息访问',
-        severity: 'high' as const,
-        remediation: '限制健康信息的访问范围'
-      });
-    }
-
-    return violations;
-  }
+  // Note: checkGDPRCompliance, checkCCPACompliance, and checkHIPAACompliance methods
+  // were removed as they are not currently used. Compliance checking will be added
+  // when L3 managers are activated and integrated with the security framework.
 
   private async checkDataRetention(dialog: DialogEntity): Promise<Array<{
     regulation: 'DATA_RETENTION';

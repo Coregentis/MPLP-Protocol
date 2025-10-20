@@ -41,7 +41,7 @@ export interface CrossCuttingConcerns {
  * @description 提供Dialog的业务逻辑协调和管理功能，整合核心业务、协调场景和MPLP集成
  */
 export class DialogManagementService {
-  private readonly flowEngine: IDialogFlowEngine;
+  private readonly _flowEngine: IDialogFlowEngine; // Reserved for future dialog flow management
   private readonly stateManager: IDialogStateManager;
   private readonly nlpProcessor: INLPProcessor;
 
@@ -53,7 +53,7 @@ export class DialogManagementService {
     nlpProcessor?: INLPProcessor
   ) {
     // 使用依赖注入或创建默认实例
-    this.flowEngine = flowEngine || new DialogFlowEngine();
+    this._flowEngine = flowEngine || new DialogFlowEngine();
     this.stateManager = stateManager || new DialogStateManager();
     this.nlpProcessor = nlpProcessor || new NLPProcessor();
   }
@@ -704,9 +704,8 @@ export class DialogManagementService {
     // TODO: 等待L3管理器激活访问记录
   }
 
-  private async _validateUpdateAccess(_dialogId: UUID, _updateData: Partial<DialogSchema>): Promise<void> {
-    // TODO: 等待L3管理器激活更新权限验证
-  }
+  // Note: _validateUpdateAccess method removed as it's not currently used
+  // Update access validation will be added when L3 managers are activated
 
   private async _validateDeleteAccess(_dialogId: UUID): Promise<void> {
     // TODO: 等待L3管理器激活删除权限验证

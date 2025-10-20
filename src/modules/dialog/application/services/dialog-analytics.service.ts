@@ -134,7 +134,7 @@ export interface DialogRanking {
  */
 export class DialogAnalyticsService {
   private readonly analyticsEngine: IAnalyticsEngine;
-  private readonly nlpProcessor: INLPProcessor;
+  private readonly _nlpProcessor: INLPProcessor; // Reserved for future NLP analysis features
 
   constructor(
     private readonly dialogRepository: DialogRepository,
@@ -143,7 +143,7 @@ export class DialogAnalyticsService {
   ) {
     // 使用依赖注入或创建默认实例
     this.analyticsEngine = analyticsEngine || new AnalyticsEngine();
-    this.nlpProcessor = nlpProcessor || new NLPProcessor();
+    this._nlpProcessor = nlpProcessor || new NLPProcessor();
   }
 
   /**
@@ -414,7 +414,7 @@ export class DialogAnalyticsService {
    * @param predictionType 预测类型
    * @returns 预测分析结果
    */
-  async generatePredictiveAnalysis(dialogIds: UUID[], predictionType: 'volume' | 'satisfaction' | 'resolution_time' | 'churn'): Promise<{
+  async generatePredictiveAnalysis(_dialogIds: UUID[], predictionType: 'volume' | 'satisfaction' | 'resolution_time' | 'churn'): Promise<{
     predictions: Array<{
       timestamp: string;
       predictedValue: number;
@@ -484,6 +484,8 @@ export class DialogAnalyticsService {
     }));
 
     const _patterns = await this.analyticsEngine.analyzePatterns(dialogData);
+    // Mark _patterns as intentionally unused (reserved for future pattern-based predictions)
+    void _patterns;
     const insights = await this.analyticsEngine.generateInsights(dialogData);
 
     // 基于分析结果计算使用模式
