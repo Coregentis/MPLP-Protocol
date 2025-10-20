@@ -438,7 +438,7 @@ export class CollabModuleAdapter {
     }
 
     // Reserved: tracing configuration would be used when CoreOrchestrator is activated
-    // const traceId = generateUUID();
+    const traceId = generateUUID();
     // const tracingLevel = tracingConfig.level as string || 'info';
     // const includeParticipants = tracingConfig.includeParticipants as boolean || true;
 
@@ -451,7 +451,7 @@ export class CollabModuleAdapter {
     // 3. Configure trace sampling and retention
 
     return {
-      traceId: _traceId,
+      traceId,
       tracingEnabled: true
     };
   }
