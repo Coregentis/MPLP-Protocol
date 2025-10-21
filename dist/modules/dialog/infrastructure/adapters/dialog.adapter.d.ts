@@ -205,39 +205,5 @@ export declare class DialogAdapter implements DialogRepository {
         collab: string;
         network: string;
     };
-    /**
-     * 处理对话事件
-     * @param message 消息队列消息
-     */
-    private handleDialogEvent;
-    /**
-     * 同步对话状态
-     * @param message 状态同步消息
-     */
-    private syncDialogState;
-    /**
-     * 预热对话缓存
-     * @param cacheAdapter 缓存适配器
-     */
-    private warmupDialogCache;
-    /**
-     * 设置对话监控指标
-     * @param monitoringAdapter 监控适配器
-     */
-    private setupDialogMetrics;
-    /**
-     * 设置对话日志集成
-     * @param monitoringAdapter 监控适配器
-     */
-    private setupDialogLogging;
-    /**
-     * 设置对话追踪集成
-     * @param monitoringAdapter 监控适配器
-     */
-    private setupDialogTracing;
-    private onDialogCreated;
-    private onDialogUpdated;
-    private onDialogCompleted;
-    private onDialogError;
 }
 //# sourceMappingURL=dialog.adapter.d.ts.map

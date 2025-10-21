@@ -19,8 +19,7 @@ exports.PlanIntegrationService = void 0;
  * @standard Context模块A+企业级质量标准
  */
 class PlanIntegrationService {
-    constructor(_planRepository, // 预留给CoreOrchestrator使用
-    coordinationManager, logger) {
+    constructor(_planRepository, coordinationManager, logger) {
         this._planRepository = _planRepository;
         this.coordinationManager = coordinationManager;
         this.logger = logger;

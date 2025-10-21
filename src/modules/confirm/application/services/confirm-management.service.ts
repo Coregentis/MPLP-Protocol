@@ -352,7 +352,6 @@ export class ConfirmManagementService {
    * @returns Promise<boolean> - Whether coordination is permitted
    * @reserved Reserved for CoreOrchestrator activation
    */
-  // @ts-expect-error - Reserved method for future CoreOrchestrator integration
   private async validateConfirmCoordinationPermission(
     _userId: UUID,
     _confirmId: UUID,
@@ -373,7 +372,6 @@ export class ConfirmManagementService {
    * @returns Promise<Record<string, unknown>> - Coordination context data
    * @reserved Reserved for CoreOrchestrator activation
    */
-  // @ts-expect-error - Reserved method for future CoreOrchestrator integration
   private async getConfirmCoordinationContext(
     _contextId: UUID,
     _confirmType: string
@@ -399,7 +397,6 @@ export class ConfirmManagementService {
    * @returns Promise<void> - Metrics recording completion
    * @reserved Reserved for CoreOrchestrator activation
    */
-  // @ts-expect-error - Reserved method for future CoreOrchestrator integration
   private async recordConfirmCoordinationMetrics(
     _confirmId: UUID,
     _metrics: Record<string, unknown>
@@ -419,7 +416,6 @@ export class ConfirmManagementService {
    * @returns Promise<boolean> - Whether extension coordination succeeded
    * @reserved Reserved for CoreOrchestrator activation
    */
-  // @ts-expect-error - Reserved method for future CoreOrchestrator integration
   private async manageConfirmExtensionCoordination(
     _confirmId: UUID,
     _extensions: Record<string, unknown>
@@ -444,7 +440,6 @@ export class ConfirmManagementService {
    * @returns Promise<boolean> - Whether plan coordination was successful
    * @reserved Reserved for CoreOrchestrator activation
    */
-  // @ts-expect-error - Reserved method for future CoreOrchestrator integration
   private async requestConfirmPlanCoordination(
     _planId: UUID,
     _confirmConfig: Record<string, unknown>
@@ -464,7 +459,6 @@ export class ConfirmManagementService {
    * @returns Promise<boolean> - Whether collaboration coordination succeeded
    * @reserved Reserved for CoreOrchestrator activation
    */
-  // @ts-expect-error - Reserved method for future CoreOrchestrator integration
   private async coordinateCollabConfirmManagement(
     _collabId: UUID,
     _confirmConfig: Record<string, unknown>
@@ -484,7 +478,6 @@ export class ConfirmManagementService {
    * @returns Promise<boolean> - Whether dialog coordination succeeded
    * @reserved Reserved for CoreOrchestrator activation
    */
-  // @ts-expect-error - Reserved method for future CoreOrchestrator integration
   private async enableDialogDrivenConfirmCoordination(
     _dialogId: UUID,
     _confirmParticipants: Record<string, unknown>
@@ -504,7 +497,6 @@ export class ConfirmManagementService {
    * @returns Promise<boolean> - Whether network coordination succeeded
    * @reserved Reserved for CoreOrchestrator activation
    */
-  // @ts-expect-error - Reserved method for future CoreOrchestrator integration
   private async coordinateConfirmAcrossNetwork(
     _networkId: UUID,
     _confirmConfig: Record<string, unknown>

@@ -12,9 +12,9 @@ exports.ConfirmAnalyticsService = void 0;
  * 基于重构指南第200-377行实现，严格遵循Schema驱动开发
  */
 class ConfirmAnalyticsService {
-    constructor(confirmRepository, analyticsEngine) {
+    constructor(confirmRepository, _analyticsEngine) {
         this.confirmRepository = confirmRepository;
-        this.analyticsEngine = analyticsEngine;
+        this._analyticsEngine = _analyticsEngine;
     }
     /**
      * 分析确认请求 - 基于Schema confirm_id字段

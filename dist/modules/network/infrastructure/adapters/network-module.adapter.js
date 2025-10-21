@@ -135,12 +135,6 @@ class NetworkModuleAdapter {
         }
     }
     /**
-     * 获取适配器ID
-     */
-    _getAdapterId() {
-        return `network-adapter-${Date.now()}`;
-    }
-    /**
      * 获取控制器实例
      */
     getController() {

@@ -27,7 +27,7 @@ export interface CrossCuttingConcerns {
 export declare class DialogManagementService {
     private readonly dialogRepository;
     private readonly crossCuttingConcerns;
-    private readonly flowEngine;
+    private readonly _flowEngine;
     private readonly stateManager;
     private readonly nlpProcessor;
     constructor(dialogRepository: DialogRepository, crossCuttingConcerns: CrossCuttingConcerns, flowEngine?: IDialogFlowEngine, stateManager?: IDialogStateManager, nlpProcessor?: INLPProcessor);
@@ -179,7 +179,6 @@ export declare class DialogManagementService {
     private _handleError;
     private _validateAccess;
     private _recordAccess;
-    private _validateUpdateAccess;
     private _validateDeleteAccess;
     private _validateSearchAccess;
     private _recordSearch;

@@ -108,8 +108,8 @@ export interface IAnalyticsEngine {
  */
 export declare class ConfirmAnalyticsService {
     private readonly confirmRepository;
-    private readonly analyticsEngine;
-    constructor(confirmRepository: IConfirmRepository, analyticsEngine: IAnalyticsEngine);
+    private readonly _analyticsEngine;
+    constructor(confirmRepository: IConfirmRepository, _analyticsEngine: IAnalyticsEngine);
     /**
      * 分析确认请求 - 基于Schema confirm_id字段
      * @param requestId 请求ID

@@ -67,7 +67,6 @@ export interface ILogger {
 export class PlanIntegrationService {
   
   constructor(
-    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly _planRepository: IPlanRepository,
     private readonly coordinationManager: CoordinationManager,
     private readonly logger: ILogger

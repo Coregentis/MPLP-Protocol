@@ -183,7 +183,6 @@ export class CoreOrchestrator {
     private readonly orchestrationManager: OrchestrationManager,
     private readonly stateSyncManager: StateSyncManager,
     private readonly transactionManager: TransactionManager,
-    // @ts-expect-error - Reserved for future protocol version management
     private readonly _protocolVersionManager: ProtocolVersionManager
   ) {}
 

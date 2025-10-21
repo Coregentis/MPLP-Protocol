@@ -112,7 +112,7 @@ export interface DialogRanking {
 export declare class DialogAnalyticsService {
     private readonly dialogRepository;
     private readonly analyticsEngine;
-    private readonly nlpProcessor;
+    private readonly _nlpProcessor;
     constructor(dialogRepository: DialogRepository, analyticsEngine?: IAnalyticsEngine, nlpProcessor?: INLPProcessor);
     /**
      * 生成对话分析报告
@@ -210,7 +210,7 @@ export declare class DialogAnalyticsService {
      * @param predictionType 预测类型
      * @returns 预测分析结果
      */
-    generatePredictiveAnalysis(dialogIds: UUID[], predictionType: 'volume' | 'satisfaction' | 'resolution_time' | 'churn'): Promise<{
+    generatePredictiveAnalysis(_dialogIds: UUID[], predictionType: 'volume' | 'satisfaction' | 'resolution_time' | 'churn'): Promise<{
         predictions: Array<{
             timestamp: string;
             predictedValue: number;

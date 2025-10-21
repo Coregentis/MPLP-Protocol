@@ -267,6 +267,7 @@ class PlanManagementService {
      * @param _planId - Target plan for coordination
      * @param _coordinationContext - Coordination context data
      * @returns Promise<boolean> - Whether coordination is permitted
+     * @reserved Reserved for CoreOrchestrator activation
      */
     async validatePlanCoordinationPermission(_userId, _planId, _coordinationContext) {
         // TODO: Wait for CoreOrchestrator activation Role module coordination permission validation
@@ -280,6 +281,7 @@ class PlanManagementService {
      * @param _contextId - Associated context ID
      * @param _planType - Type of plan for context retrieval
      * @returns Promise<Record<string, unknown>> - Coordination context data
+     * @reserved Reserved for CoreOrchestrator activation
      */
     async getPlanCoordinationContext(_contextId, _planType) {
         // TODO: Wait for CoreOrchestrator activation Context module coordination environment retrieval
@@ -299,6 +301,7 @@ class PlanManagementService {
      * @param _planId - Plan ID for metrics recording
      * @param _metrics - Coordination metrics data
      * @returns Promise<void> - Metrics recording completion
+     * @reserved Reserved for CoreOrchestrator activation
      */
     async recordPlanCoordinationMetrics(_planId, _metrics) {
         // TODO: Wait for CoreOrchestrator activation Trace module coordination monitoring recording
@@ -312,86 +315,13 @@ class PlanManagementService {
      * @param _planId - Plan ID for extension coordination
      * @param _extensions - Extension coordination data
      * @returns Promise<boolean> - Whether extension coordination succeeded
+     * @reserved Reserved for CoreOrchestrator activation
      */
     async managePlanExtensionCoordination(_planId, _extensions) {
         // TODO: Wait for CoreOrchestrator activation Extension module coordination management
         // Integration with orchestration cross-cutting concern
         // const orchestrationResult = await this.orchestrationManager.coordinateExtensions(...);
         // Temporary implementation: Allow all extension coordination
-        return true;
-    }
-    /**
-     * Extended coordination interfaces (4 additional modules)
-     * These provide broader ecosystem integration capabilities
-     */
-    /**
-     * Request plan change coordination - Confirm module change coordination
-     * @param _planId - Plan ID for change coordination
-     * @param _change - Change coordination data
-     * @returns Promise<boolean> - Whether change coordination was approved
-     */
-    async requestPlanChangeCoordination(_planId, _change) {
-        // TODO: Wait for CoreOrchestrator activation Confirm module change coordination
-        // Integration with event bus cross-cutting concern
-        await this.eventBusManager.publish({
-            id: `plan-change-${Date.now()}`,
-            type: 'plan.change.coordination.requested',
-            source: 'plan_protocol',
-            payload: {
-                plan_id: _planId,
-                change: _change
-            },
-            timestamp: new Date().toISOString()
-        });
-        // Temporary implementation: Allow all change coordination
-        return true;
-    }
-    /**
-     * Coordinate collaborative plan management - Collab module collaboration coordination
-     * @param _collabId - Collaboration ID for plan management
-     * @param _planConfig - Plan configuration for collaboration
-     * @returns Promise<boolean> - Whether collaboration coordination succeeded
-     */
-    async coordinateCollabPlanManagement(_collabId, _planConfig) {
-        // TODO: Wait for CoreOrchestrator activation Collab module collaboration coordination
-        // Integration with state sync cross-cutting concern
-        // await this.stateSyncManager.syncState(...);
-        // Temporary implementation: Allow all collaboration coordination
-        return true;
-    }
-    /**
-     * Enable dialog-driven plan coordination - Dialog module conversation coordination
-     * @param _dialogId - Dialog ID for plan coordination
-     * @param _planParticipants - Plan participants for dialog coordination
-     * @returns Promise<boolean> - Whether dialog coordination succeeded
-     */
-    async enableDialogDrivenPlanCoordination(_dialogId, _planParticipants) {
-        // TODO: Wait for CoreOrchestrator activation Dialog module conversation coordination
-        // Integration with event bus cross-cutting concern
-        await this.eventBusManager.publish({
-            id: `plan-dialog-${Date.now()}`,
-            type: 'plan.dialog.coordination.enabled',
-            source: 'plan_protocol',
-            payload: {
-                dialog_id: _dialogId,
-                participants: _planParticipants
-            },
-            timestamp: new Date().toISOString()
-        });
-        // Temporary implementation: Allow all dialog coordination
-        return true;
-    }
-    /**
-     * Coordinate plan across network - Network module distributed coordination
-     * @param _networkId - Network ID for plan coordination
-     * @param _planConfig - Plan configuration for network coordination
-     * @returns Promise<boolean> - Whether network coordination succeeded
-     */
-    async coordinatePlanAcrossNetwork(_networkId, _planConfig) {
-        // TODO: Wait for CoreOrchestrator activation Network module distributed coordination
-        // Integration with transaction cross-cutting concern
-        // const distributedTransaction = await this.transactionManager.beginDistributedTransaction(...);
-        // Temporary implementation: Allow all network coordination
         return true;
     }
 }

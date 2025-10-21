@@ -11,17 +11,12 @@ import { CoreEntity, CoreSchema } from '../../types';
  */
 export declare class CoreMapper {
     private static readonly mappingCache;
-    private static readonly cacheMaxSize;
-    private static readonly cacheEnabled;
     private static performanceMetrics;
     /**
      * 将TypeScript实体转换为Schema格式
      * @param entity Core实体
      * @returns Schema格式数据
      */
-    private static generateCacheKey;
-    private static getCachedResult;
-    private static setCachedResult;
     static getPerformanceMetrics(): {
         averageToSchemaTime: number;
         averageFromSchemaTime: number;

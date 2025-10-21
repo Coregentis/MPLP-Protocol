@@ -113,6 +113,7 @@ export declare class PlanManagementService {
      * @param _planId - Target plan for coordination
      * @param _coordinationContext - Coordination context data
      * @returns Promise<boolean> - Whether coordination is permitted
+     * @reserved Reserved for CoreOrchestrator activation
      */
     private validatePlanCoordinationPermission;
     /**
@@ -120,6 +121,7 @@ export declare class PlanManagementService {
      * @param _contextId - Associated context ID
      * @param _planType - Type of plan for context retrieval
      * @returns Promise<Record<string, unknown>> - Coordination context data
+     * @reserved Reserved for CoreOrchestrator activation
      */
     private getPlanCoordinationContext;
     /**
@@ -127,6 +129,7 @@ export declare class PlanManagementService {
      * @param _planId - Plan ID for metrics recording
      * @param _metrics - Coordination metrics data
      * @returns Promise<void> - Metrics recording completion
+     * @reserved Reserved for CoreOrchestrator activation
      */
     private recordPlanCoordinationMetrics;
     /**
@@ -134,39 +137,8 @@ export declare class PlanManagementService {
      * @param _planId - Plan ID for extension coordination
      * @param _extensions - Extension coordination data
      * @returns Promise<boolean> - Whether extension coordination succeeded
+     * @reserved Reserved for CoreOrchestrator activation
      */
     private managePlanExtensionCoordination;
-    /**
-     * Extended coordination interfaces (4 additional modules)
-     * These provide broader ecosystem integration capabilities
-     */
-    /**
-     * Request plan change coordination - Confirm module change coordination
-     * @param _planId - Plan ID for change coordination
-     * @param _change - Change coordination data
-     * @returns Promise<boolean> - Whether change coordination was approved
-     */
-    private requestPlanChangeCoordination;
-    /**
-     * Coordinate collaborative plan management - Collab module collaboration coordination
-     * @param _collabId - Collaboration ID for plan management
-     * @param _planConfig - Plan configuration for collaboration
-     * @returns Promise<boolean> - Whether collaboration coordination succeeded
-     */
-    private coordinateCollabPlanManagement;
-    /**
-     * Enable dialog-driven plan coordination - Dialog module conversation coordination
-     * @param _dialogId - Dialog ID for plan coordination
-     * @param _planParticipants - Plan participants for dialog coordination
-     * @returns Promise<boolean> - Whether dialog coordination succeeded
-     */
-    private enableDialogDrivenPlanCoordination;
-    /**
-     * Coordinate plan across network - Network module distributed coordination
-     * @param _networkId - Network ID for plan coordination
-     * @param _planConfig - Plan configuration for network coordination
-     * @returns Promise<boolean> - Whether network coordination succeeded
-     */
-    private coordinatePlanAcrossNetwork;
 }
 //# sourceMappingURL=plan-management.service.d.ts.map

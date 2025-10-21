@@ -68,10 +68,6 @@ export declare class NetworkModuleAdapter {
      */
     private handleConnectionChange;
     /**
-     * 获取适配器ID
-     */
-    private _getAdapterId;
-    /**
      * 获取控制器实例
      */
     getController(): NetworkController;

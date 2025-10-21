@@ -191,7 +191,6 @@ export class ModuleCoordinator {
   private failedOperations = new Map<UUID, FailedOperation>();
 
   constructor(
-    // @ts-expect-error - Reserved for future connection timeout management
     private _connectionTimeout: number = 5000,
     private defaultRetryPolicy: RetryPolicy = {
       maxRetries: 3,

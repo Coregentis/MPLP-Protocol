@@ -122,6 +122,8 @@ class CoreServicesCoordinator {
             this.logger?.info('Starting coordinated workflow execution', { workflowId });
             // 1. 获取工作流统计（使用实际存在的方法）
             const _stats = await this.managementService.getWorkflowStatistics();
+            // Mark _stats as intentionally unused (reserved for future logging/monitoring)
+            void _stats;
             // 2. 执行协调操作
             await this.orchestrationService.coordinateModuleOperation({
                 sourceModule: 'core',
@@ -220,27 +222,6 @@ class CoreServicesCoordinator {
         if (healthScore >= 2)
             return 'warning';
         return 'critical';
-    }
-    /**
-     * 更新监控状态
-     */
-    async _updateMonitoringStatus(_workflowId) {
-        try {
-            // 简化实现：使用实际存在的方法
-            await this.monitoringService.performHealthCheck();
-            return true;
-        }
-        catch {
-            return false;
-        }
-    }
-    /**
-     * 检查资源状态
-     */
-    async _checkResourceStatus(_workflowId) {
-        // 简化实现：假设资源状态良好
-        // 这里可以添加实际的资源检查逻辑
-        return true;
     }
 }
 exports.CoreServicesCoordinator = CoreServicesCoordinator;

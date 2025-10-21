@@ -232,6 +232,7 @@ export declare class RoleManagementService {
      * @param _roleId - Target role for coordination
      * @param _coordinationContext - Coordination context data
      * @returns Promise<boolean> - Whether coordination is permitted
+     * @reserved Reserved for CoreOrchestrator activation
      */
     private validateRoleCoordinationPermission;
     /**
@@ -239,6 +240,7 @@ export declare class RoleManagementService {
      * @param _contextId - Associated context ID
      * @param _roleType - Type of role for context retrieval
      * @returns Promise<Record<string, unknown>> - Coordination context data
+     * @reserved Reserved for CoreOrchestrator activation
      */
     private getRoleCoordinationContext;
     /**
@@ -246,6 +248,7 @@ export declare class RoleManagementService {
      * @param _roleId - Role ID for metrics recording
      * @param _metrics - Coordination metrics data
      * @returns Promise<void> - Metrics recording completion
+     * @reserved Reserved for CoreOrchestrator activation
      */
     private recordRoleCoordinationMetrics;
     /**
@@ -253,6 +256,7 @@ export declare class RoleManagementService {
      * @param _roleId - Role ID for extension coordination
      * @param _extensions - Extension coordination data
      * @returns Promise<boolean> - Whether extension coordination succeeded
+     * @reserved Reserved for CoreOrchestrator activation
      */
     private manageRoleExtensionCoordination;
     /**
@@ -264,6 +268,7 @@ export declare class RoleManagementService {
      * @param _roleId - Role ID for change coordination
      * @param _change - Change coordination data
      * @returns Promise<boolean> - Whether change coordination was approved
+     * @reserved Reserved for CoreOrchestrator activation
      */
     private requestRoleChangeCoordination;
     /**
@@ -271,6 +276,7 @@ export declare class RoleManagementService {
      * @param _collabId - Collaboration ID for role management
      * @param _roleConfig - Role configuration for collaboration
      * @returns Promise<boolean> - Whether collaboration coordination succeeded
+     * @reserved Reserved for CoreOrchestrator activation
      */
     private coordinateCollabRoleManagement;
     /**
@@ -278,6 +284,7 @@ export declare class RoleManagementService {
      * @param _dialogId - Dialog ID for role coordination
      * @param _roleParticipants - Role participants for dialog coordination
      * @returns Promise<boolean> - Whether dialog coordination succeeded
+     * @reserved Reserved for CoreOrchestrator activation
      */
     private enableDialogDrivenRoleCoordination;
     /**
@@ -285,6 +292,7 @@ export declare class RoleManagementService {
      * @param _networkId - Network ID for role coordination
      * @param _roleConfig - Role configuration for network coordination
      * @returns Promise<boolean> - Whether network coordination succeeded
+     * @reserved Reserved for CoreOrchestrator activation
      */
     private coordinateRoleAcrossNetwork;
     /**
@@ -305,11 +313,5 @@ export declare class RoleManagementService {
      * @returns 去重后的权限列表
      */
     private deduplicatePermissions;
-    /**
-     * 验证角色数据
-     * @param data 角色数据
-     * @returns 是否有效
-     */
-    private validateRoleData;
 }
 //# sourceMappingURL=role-management.service.d.ts.map

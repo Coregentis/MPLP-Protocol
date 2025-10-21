@@ -158,9 +158,6 @@ export declare class RoleSecurityService {
      */
     handleSecurityEvent(event: SecurityEvent): Promise<void>;
     private evaluateConditions;
-    private checkTimeRange;
-    private checkIPAddress;
-    private checkUserAgent;
     private handleUnauthorizedAccess;
     private handleSuspiciousActivity;
     private handleSecurityViolation;

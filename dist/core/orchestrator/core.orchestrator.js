@@ -13,8 +13,7 @@ exports.CoreOrchestrator = void 0;
 class CoreOrchestrator {
     constructor(orchestrationService, resourceService, monitoringService, 
     // 9个L3管理器注入
-    securityManager, performanceMonitor, eventBusManager, errorHandler, coordinationManager, orchestrationManager, stateSyncManager, transactionManager, _protocolVersionManager // Reserved for future use
-    ) {
+    securityManager, performanceMonitor, eventBusManager, errorHandler, coordinationManager, orchestrationManager, stateSyncManager, transactionManager, _protocolVersionManager) {
         this.orchestrationService = orchestrationService;
         this.resourceService = resourceService;
         this.monitoringService = monitoringService;

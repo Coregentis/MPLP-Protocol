@@ -18,7 +18,9 @@ class DialogAnalyticsService {
         this.dialogRepository = dialogRepository;
         // 使用依赖注入或创建默认实例
         this.analyticsEngine = analyticsEngine || new analytics_engine_1.AnalyticsEngine();
-        this.nlpProcessor = nlpProcessor || new nlp_processor_1.NLPProcessor();
+        this._nlpProcessor = nlpProcessor || new nlp_processor_1.NLPProcessor();
+        // Mark _nlpProcessor as intentionally unused (reserved for future NLP analysis features)
+        void this._nlpProcessor;
     }
     /**
      * 生成对话分析报告
@@ -219,7 +221,7 @@ class DialogAnalyticsService {
      * @param predictionType 预测类型
      * @returns 预测分析结果
      */
-    async generatePredictiveAnalysis(dialogIds, predictionType) {
+    async generatePredictiveAnalysis(_dialogIds, predictionType) {
         // 模拟预测分析结果
         const predictions = [];
         const now = new Date();
@@ -265,6 +267,8 @@ class DialogAnalyticsService {
             status: dialog.dialogOperation || 'unknown'
         }));
         const _patterns = await this.analyticsEngine.analyzePatterns(dialogData);
+        // Mark _patterns as intentionally unused (reserved for future pattern-based predictions)
+        void _patterns;
         const insights = await this.analyticsEngine.generateInsights(dialogData);
         // 基于分析结果计算使用模式
         const totalInteractions = validDialogs.length * 50; // 平均每个对话50次交互

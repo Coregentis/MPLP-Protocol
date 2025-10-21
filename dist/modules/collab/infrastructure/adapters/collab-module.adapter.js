@@ -324,7 +324,7 @@ class CollabModuleAdapter {
      * Reserved interface for Trace module integration
      */
     async startCollaborationTracing(collaborationId, // Reserved for CoreOrchestrator activation
-    tracingConfig // Reserved for CoreOrchestrator activation
+    _tracingConfig // Reserved for CoreOrchestrator activation
     ) {
         // TODO: Implement actual Trace module integration when CoreOrchestrator is activated
         // This will enable distributed tracing for collaboration operations
@@ -333,9 +333,10 @@ class CollabModuleAdapter {
         if (!collaboration) {
             throw new Error('Collaboration not found');
         }
-        const _traceId = (0, utils_1.generateUUID)();
-        const _tracingLevel = tracingConfig.level || 'info';
-        const _includeParticipants = tracingConfig.includeParticipants || true;
+        // Reserved: tracing configuration would be used when CoreOrchestrator is activated
+        const traceId = (0, utils_1.generateUUID)();
+        // const tracingLevel = _tracingConfig.level as string || 'info';
+        // const includeParticipants = _tracingConfig.includeParticipants as boolean || true;
         // TODO: Implement actual tracing when CoreOrchestrator is activated
         // Starting tracing for collaboration ${collaborationId}: traceId=${traceId}, level=${tracingLevel}
         // In real implementation, this would:
@@ -343,7 +344,7 @@ class CollabModuleAdapter {
         // 2. Set up distributed tracing context
         // 3. Configure trace sampling and retention
         return {
-            traceId: _traceId,
+            traceId,
             tracingEnabled: true
         };
     }
@@ -351,34 +352,41 @@ class CollabModuleAdapter {
      * Record collaboration trace event
      * Reserved interface for Trace module integration
      */
-    async recordCollaborationTraceEvent(collaborationId, // Reserved for CoreOrchestrator activation
+    async recordCollaborationTraceEvent(_collaborationId, // Reserved for CoreOrchestrator activation
     traceEvent // Reserved for CoreOrchestrator activation
     ) {
         // TODO: Implement actual Trace module integration when CoreOrchestrator is activated
         // Placeholder implementation with event recording
+        // Extract event details for future use when CoreOrchestrator is activated
         const eventType = traceEvent.type;
         const eventData = traceEvent.data;
         const timestamp = traceEvent.timestamp || new Date().toISOString();
         const traceId = traceEvent.traceId;
+        // Mark extracted variables as intentionally unused (reserved for future Trace module integration)
+        void eventType;
+        void eventData;
+        void timestamp;
+        void traceId;
         // TODO: Implement actual trace event recording when CoreOrchestrator is activated
-        // Recording trace event for collaboration ${collaborationId}: traceId=${traceId}, eventType=${eventType}
+        // Recording trace event for collaboration ${_collaborationId}: traceId=${traceId}, eventType=${eventType}
         // In real implementation, this would:
         // 1. Validate trace event format
         // 2. Enrich event with collaboration context
         // 3. Store event in distributed tracing system
         // 4. Update trace spans and metrics
         // For now, just log the event structure
-        const _enrichedEvent = {
-            collaborationId,
-            traceId,
-            eventType,
-            timestamp,
-            data: {
-                ...eventData,
-                collaborationName: 'Unknown', // Would be fetched from collaboration
-                participantCount: 0 // Would be fetched from collaboration
-            }
-        };
+        // Reserved: enrichedEvent would be processed when CoreOrchestrator is activated
+        // const enrichedEvent = {
+        //   collaborationId,
+        //   traceId,
+        //   eventType,
+        //   timestamp,
+        //   data: {
+        //     ...eventData,
+        //     collaborationName: 'Unknown', // Would be fetched from collaboration
+        //     participantCount: 0 // Would be fetched from collaboration
+        //   }
+        // };
         // TODO: Implement actual enriched trace event processing when CoreOrchestrator is activated
         // Enriched trace event processed
     }

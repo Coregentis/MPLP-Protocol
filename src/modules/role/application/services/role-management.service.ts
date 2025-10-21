@@ -586,7 +586,6 @@ export class RoleManagementService {
    * @returns Promise<boolean> - Whether coordination is permitted
    * @reserved Reserved for CoreOrchestrator activation
    */
-  // @ts-expect-error - Reserved method for future CoreOrchestrator integration
   private async validateRoleCoordinationPermission(
     _userId: UUID,
     _roleId: UUID,
@@ -607,7 +606,6 @@ export class RoleManagementService {
    * @returns Promise<Record<string, unknown>> - Coordination context data
    * @reserved Reserved for CoreOrchestrator activation
    */
-  // @ts-expect-error - Reserved method for future CoreOrchestrator integration
   private async getRoleCoordinationContext(
     _contextId: UUID,
     _roleType: string
@@ -633,7 +631,6 @@ export class RoleManagementService {
    * @returns Promise<void> - Metrics recording completion
    * @reserved Reserved for CoreOrchestrator activation
    */
-  // @ts-expect-error - Reserved method for future CoreOrchestrator integration
   private async recordRoleCoordinationMetrics(
     _roleId: UUID,
     _metrics: Record<string, unknown>
@@ -653,7 +650,6 @@ export class RoleManagementService {
    * @returns Promise<boolean> - Whether extension coordination succeeded
    * @reserved Reserved for CoreOrchestrator activation
    */
-  // @ts-expect-error - Reserved method for future CoreOrchestrator integration
   private async manageRoleExtensionCoordination(
     _roleId: UUID,
     _extensions: Record<string, unknown>
@@ -678,7 +674,6 @@ export class RoleManagementService {
    * @returns Promise<boolean> - Whether change coordination was approved
    * @reserved Reserved for CoreOrchestrator activation
    */
-  // @ts-expect-error - Reserved method for future CoreOrchestrator integration
   private async requestRoleChangeCoordination(
     _roleId: UUID,
     _change: Record<string, unknown>
@@ -698,7 +693,6 @@ export class RoleManagementService {
    * @returns Promise<boolean> - Whether collaboration coordination succeeded
    * @reserved Reserved for CoreOrchestrator activation
    */
-  // @ts-expect-error - Reserved method for future CoreOrchestrator integration
   private async coordinateCollabRoleManagement(
     _collabId: UUID,
     _roleConfig: Record<string, unknown>
@@ -718,7 +712,6 @@ export class RoleManagementService {
    * @returns Promise<boolean> - Whether dialog coordination succeeded
    * @reserved Reserved for CoreOrchestrator activation
    */
-  // @ts-expect-error - Reserved method for future CoreOrchestrator integration
   private async enableDialogDrivenRoleCoordination(
     _dialogId: UUID,
     _roleParticipants: Record<string, unknown>
@@ -738,7 +731,6 @@ export class RoleManagementService {
    * @returns Promise<boolean> - Whether network coordination succeeded
    * @reserved Reserved for CoreOrchestrator activation
    */
-  // @ts-expect-error - Reserved method for future CoreOrchestrator integration
   private async coordinateRoleAcrossNetwork(
     _networkId: UUID,
     _roleConfig: Record<string, unknown>

@@ -94,7 +94,7 @@ export declare class CollabModuleAdapter {
      * Reserved interface for Trace module integration
      */
     startCollaborationTracing(collaborationId: UUID, // Reserved for CoreOrchestrator activation
-    tracingConfig: Record<string, unknown>): Promise<{
+    _tracingConfig: Record<string, unknown>): Promise<{
         traceId: UUID;
         tracingEnabled: boolean;
     }>;
@@ -102,7 +102,7 @@ export declare class CollabModuleAdapter {
      * Record collaboration trace event
      * Reserved interface for Trace module integration
      */
-    recordCollaborationTraceEvent(collaborationId: UUID, // Reserved for CoreOrchestrator activation
+    recordCollaborationTraceEvent(_collaborationId: UUID, // Reserved for CoreOrchestrator activation
     traceEvent: Record<string, unknown>): Promise<void>;
     /**
      * Load collaboration extensions

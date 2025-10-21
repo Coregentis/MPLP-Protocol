@@ -39,6 +39,8 @@ class CoreProtocol {
     async createWorkflow(request) {
         const operationId = this.generateOperationId();
         const _startTime = Date.now();
+        // Mark _startTime as intentionally unused (reserved for future performance monitoring)
+        void _startTime;
         try {
             // 1. 安全验证（简化实现）
             // TODO: 等待SecurityManager实现validateOperation方法
@@ -46,6 +48,8 @@ class CoreProtocol {
             // TODO: 等待PerformanceMonitor实现startOperation方法
             // 3. 事务开始（简化实现）
             const _transaction = Date.now(); // 简化的事务ID
+            // Mark _transaction as intentionally unused (reserved for future transaction management)
+            void _transaction;
             // 4. 创建工作流
             const workflow = await this.managementService.createWorkflow({
                 workflowId: request.workflowId,
@@ -89,6 +93,8 @@ class CoreProtocol {
     async executeWorkflow(workflowId) {
         const operationId = this.generateOperationId();
         const _startTime = Date.now();
+        // Mark _startTime as intentionally unused (reserved for future performance monitoring)
+        void _startTime;
         try {
             // 1. 安全验证（简化实现）
             // TODO: 等待SecurityManager实现validateOperation方法
@@ -126,6 +132,8 @@ class CoreProtocol {
         try {
             // 1. 获取工作流统计
             const _stats = await this.managementService.getWorkflowStatistics();
+            // Mark _stats as intentionally unused (reserved for future status calculation)
+            void _stats;
             // 2. 模拟状态（简化实现）
             const status = {
                 status: 'running',

@@ -274,9 +274,6 @@ export declare class DialogSecurityService {
     private checkPersonalInfo;
     private calculateModerationConfidence;
     private sanitizeContent;
-    private checkGDPRCompliance;
-    private checkCCPACompliance;
-    private checkHIPAACompliance;
     private checkDataRetention;
     private analyzeDataProcessing;
     private generatePrivacyRecommendations;

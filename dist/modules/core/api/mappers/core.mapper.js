@@ -19,33 +19,9 @@ class CoreMapper {
      * @param entity Core实体
      * @returns Schema格式数据
      */
-    // 性能优化辅助方法
-    static generateCacheKey(data, operation) {
-        return `${operation}_${JSON.stringify(data).substring(0, 100)}`;
-    }
-    static getCachedResult(key) {
-        if (!this.cacheEnabled)
-            return null;
-        const cached = this.mappingCache.get(key);
-        if (cached) {
-            this.performanceMetrics.cacheHits++;
-            return cached;
-        }
-        this.performanceMetrics.cacheMisses++;
-        return null;
-    }
-    static setCachedResult(key, result) {
-        if (!this.cacheEnabled)
-            return;
-        // 缓存大小控制
-        if (this.mappingCache.size >= this.cacheMaxSize) {
-            const firstKey = this.mappingCache.keys().next().value;
-            if (firstKey) {
-                this.mappingCache.delete(firstKey);
-            }
-        }
-        this.mappingCache.set(key, result);
-    }
+    // Note: Cache optimization methods (generateCacheKey, getCachedResult, setCachedResult)
+    // were removed as they are not currently used. The caching infrastructure (mappingCache,
+    // cacheEnabled, performanceMetrics) is kept for future performance optimization.
     // 性能监控方法
     static getPerformanceMetrics() {
         return {
@@ -867,9 +843,9 @@ class CoreMapper {
 }
 exports.CoreMapper = CoreMapper;
 // 性能优化：映射缓存
+// Note: mappingCache is kept for resetPerformanceMetrics() method
+// cacheMaxSize and cacheEnabled were removed as cache methods were deleted
 CoreMapper.mappingCache = new Map();
-CoreMapper.cacheMaxSize = 1000;
-CoreMapper.cacheEnabled = process.env.NODE_ENV !== 'test'; // 测试环境禁用缓存
 // 性能监控
 CoreMapper.performanceMetrics = {
     toSchemaCount: 0,

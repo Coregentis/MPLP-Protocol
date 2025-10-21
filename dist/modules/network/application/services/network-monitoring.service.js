@@ -148,6 +148,8 @@ class NetworkMonitoringService {
      */
     async collectRealtimeMetrics(network) {
         const _activeNodes = network.nodes.filter(n => n.status === 'online').length;
+        // Mark as intentionally unused (reserved for future monitoring features)
+        void _activeNodes;
         const activeConnections = network.edges.filter(e => e.status === 'active').length;
         return {
             activeConnections,

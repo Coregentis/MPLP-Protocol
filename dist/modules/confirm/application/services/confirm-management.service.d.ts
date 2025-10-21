@@ -82,6 +82,7 @@ export declare class ConfirmManagementService {
      * @param _confirmId - Target confirmation for coordination
      * @param _coordinationContext - Coordination context data
      * @returns Promise<boolean> - Whether coordination is permitted
+     * @reserved Reserved for CoreOrchestrator activation
      */
     private validateConfirmCoordinationPermission;
     /**
@@ -89,6 +90,7 @@ export declare class ConfirmManagementService {
      * @param _contextId - Associated context ID
      * @param _confirmType - Type of confirmation for context retrieval
      * @returns Promise<Record<string, unknown>> - Coordination context data
+     * @reserved Reserved for CoreOrchestrator activation
      */
     private getConfirmCoordinationContext;
     /**
@@ -96,6 +98,7 @@ export declare class ConfirmManagementService {
      * @param _confirmId - Confirmation ID for metrics recording
      * @param _metrics - Coordination metrics data
      * @returns Promise<void> - Metrics recording completion
+     * @reserved Reserved for CoreOrchestrator activation
      */
     private recordConfirmCoordinationMetrics;
     /**
@@ -103,6 +106,7 @@ export declare class ConfirmManagementService {
      * @param _confirmId - Confirmation ID for extension coordination
      * @param _extensions - Extension coordination data
      * @returns Promise<boolean> - Whether extension coordination succeeded
+     * @reserved Reserved for CoreOrchestrator activation
      */
     private manageConfirmExtensionCoordination;
     /**
@@ -114,6 +118,7 @@ export declare class ConfirmManagementService {
      * @param _planId - Plan ID for confirmation coordination
      * @param _confirmConfig - Confirmation configuration for planning
      * @returns Promise<boolean> - Whether plan coordination was successful
+     * @reserved Reserved for CoreOrchestrator activation
      */
     private requestConfirmPlanCoordination;
     /**
@@ -121,6 +126,7 @@ export declare class ConfirmManagementService {
      * @param _collabId - Collaboration ID for confirm management
      * @param _confirmConfig - Confirmation configuration for collaboration
      * @returns Promise<boolean> - Whether collaboration coordination succeeded
+     * @reserved Reserved for CoreOrchestrator activation
      */
     private coordinateCollabConfirmManagement;
     /**
@@ -128,6 +134,7 @@ export declare class ConfirmManagementService {
      * @param _dialogId - Dialog ID for confirm coordination
      * @param _confirmParticipants - Confirmation participants for dialog coordination
      * @returns Promise<boolean> - Whether dialog coordination succeeded
+     * @reserved Reserved for CoreOrchestrator activation
      */
     private enableDialogDrivenConfirmCoordination;
     /**
@@ -135,6 +142,7 @@ export declare class ConfirmManagementService {
      * @param _networkId - Network ID for confirm coordination
      * @param _confirmConfig - Confirmation configuration for network coordination
      * @returns Promise<boolean> - Whether network coordination succeeded
+     * @reserved Reserved for CoreOrchestrator activation
      */
     private coordinateConfirmAcrossNetwork;
 }

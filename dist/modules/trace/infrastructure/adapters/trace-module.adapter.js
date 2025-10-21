@@ -73,28 +73,6 @@ class MockCoordinationManagerImpl extends MockL3ManagerImpl {
         // Mock implementation
     }
 }
-// ===== Mock横切关注点工厂 =====
-class _MockCrossCuttingConcernsFactory {
-    static getInstance() {
-        if (!_MockCrossCuttingConcernsFactory.instance) {
-            _MockCrossCuttingConcernsFactory.instance = new _MockCrossCuttingConcernsFactory();
-        }
-        return _MockCrossCuttingConcernsFactory.instance;
-    }
-    createManagers(_config) {
-        return {
-            security: new MockL3ManagerImpl(),
-            performance: new MockPerformanceMonitorImpl(),
-            eventBus: new MockEventBusManagerImpl(),
-            errorHandler: new MockErrorHandlerImpl(),
-            coordination: new MockCoordinationManagerImpl(),
-            orchestration: new MockL3ManagerImpl(),
-            stateSync: new MockL3ManagerImpl(),
-            transaction: new MockTransactionManagerImpl(),
-            protocolVersion: new MockL3ManagerImpl()
-        };
-    }
-}
 /**
  * Trace模块适配器
  *
@@ -354,6 +332,8 @@ class TraceModuleAdapter {
             const protocolHealth = await this.protocol.getHealthStatus();
             // 获取管理器实例（用于健康检查）
             const _managersHealth = this.getCrossCuttingManagers();
+            // Mark as intentionally unused (reserved for future health check features)
+            void _managersHealth;
             return {
                 status: protocolHealth.status,
                 timestamp: new Date().toISOString(),

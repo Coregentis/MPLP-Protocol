@@ -20,7 +20,6 @@ class NetworkProtocol {
     networkAnalyticsService, networkMonitoringService, networkSecurityService, 
     // ===== L3横切关注点管理器注入 (与其他8个模块IDENTICAL) =====
     securityManager, performanceMonitor, eventBusManager, errorHandler, coordinationManager, orchestrationManager, stateSyncManager, transactionManager, protocolVersionManager) {
-        // 统一的L3管理器注入模式 (与其他8个模块IDENTICAL)
         this.networkManagementService = networkManagementService;
         this.networkAnalyticsService = networkAnalyticsService;
         this.networkMonitoringService = networkMonitoringService;

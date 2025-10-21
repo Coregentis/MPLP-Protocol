@@ -17,7 +17,8 @@ exports.ConfirmProtocol = void 0;
  */
 class ConfirmProtocol {
     constructor(confirmService, 
-    // ===== 9个L3横切关注点管理器注入 (与Context/Plan模块IDENTICAL模式) =====
+    // ===== 9个L3横切关注点管理器注入 (Reserved for CoreOrchestrator activation) =====
+    // Note: These managers maintain IDENTICAL architecture pattern across all 10 modules
     _securityManager, _performanceMonitor, _eventBusManager, _errorHandler, _coordinationManager, _orchestrationManager, _stateSyncManager, _transactionManager, _protocolVersionManager) {
         this.confirmService = confirmService;
         this._securityManager = _securityManager;

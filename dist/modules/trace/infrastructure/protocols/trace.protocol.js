@@ -67,20 +67,8 @@ class MockCoordinationManagerImpl extends MockL3ManagerImpl {
         // Mock implementation
     }
 }
-// ===== Mock管理器工厂函数 =====
-function _createMockManagers() {
-    return {
-        security: new MockL3ManagerImpl(),
-        performance: new MockPerformanceMonitorImpl(),
-        eventBus: new MockEventBusManagerImpl(),
-        errorHandler: new MockErrorHandlerImpl(),
-        coordination: new MockCoordinationManagerImpl(),
-        orchestration: new MockL3ManagerImpl(),
-        stateSync: new MockL3ManagerImpl(),
-        transaction: new MockTransactionManagerImpl(),
-        protocolVersion: new MockL3ManagerImpl()
-    };
-}
+// Note: _createMockManagers function was removed as it is not currently used.
+// Mock manager creation will be reimplemented when needed for testing.
 /**
  * Trace协议类
  *

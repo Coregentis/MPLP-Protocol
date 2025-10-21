@@ -159,8 +159,7 @@ export declare class ModuleCoordinator {
     private activeConnections;
     private pendingRequests;
     private failedOperations;
-    constructor(_connectionTimeout?: number, // Reserved for future timeout configuration
-    defaultRetryPolicy?: RetryPolicy);
+    constructor(_connectionTimeout?: number, defaultRetryPolicy?: RetryPolicy);
     /**
      * 注册模块
      */

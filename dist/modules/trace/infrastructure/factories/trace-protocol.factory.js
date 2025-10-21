@@ -170,10 +170,12 @@ class TraceProtocolFactory {
                 throw new Error('File repository not implemented yet');
         }
     }
+    // Note: validateConfig method was removed as it is not currently used.
+    // Configuration validation will be reimplemented when needed.
     /**
-     * 验证配置
+     * Placeholder for future configuration validation
      */
-    validateConfig(config) {
+    _validateConfigPlaceholder(config) {
         if (config.maxCacheSize && config.maxCacheSize <= 0) {
             throw new Error('maxCacheSize must be greater than 0');
         }

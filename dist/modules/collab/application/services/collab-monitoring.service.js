@@ -203,7 +203,7 @@ class CollabMonitoringService {
     /**
      * Check for alert conditions and create alerts
      */
-    async checkAlertConditions(collaboration, metrics) {
+    async checkAlertConditions(_collaboration, metrics) {
         const now = new Date();
         // Participant utilization alert
         if (metrics.performanceMetrics.participantUtilization < this.alertThresholds.participantUtilizationMin) {

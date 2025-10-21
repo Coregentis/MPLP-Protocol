@@ -22,6 +22,8 @@ class PlanCoordinationService {
         this.registeredAgents = new Map();
         this.activeAssignments = new Map();
         this.resourceAllocations = new Map();
+        // Mark resourceAllocations as intentionally unused (reserved for future resource management)
+        void this.resourceAllocations;
     }
     // ===== 协调管理核心方法 =====
     /**

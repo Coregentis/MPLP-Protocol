@@ -417,6 +417,7 @@ class RoleManagementService {
      * @param _roleId - Target role for coordination
      * @param _coordinationContext - Coordination context data
      * @returns Promise<boolean> - Whether coordination is permitted
+     * @reserved Reserved for CoreOrchestrator activation
      */
     async validateRoleCoordinationPermission(_userId, _roleId, _coordinationContext) {
         // TODO: Wait for CoreOrchestrator activation cross-module permission validation
@@ -430,6 +431,7 @@ class RoleManagementService {
      * @param _contextId - Associated context ID
      * @param _roleType - Type of role for context retrieval
      * @returns Promise<Record<string, unknown>> - Coordination context data
+     * @reserved Reserved for CoreOrchestrator activation
      */
     async getRoleCoordinationContext(_contextId, _roleType) {
         // TODO: Wait for CoreOrchestrator activation Context module coordination environment retrieval
@@ -449,6 +451,7 @@ class RoleManagementService {
      * @param _roleId - Role ID for metrics recording
      * @param _metrics - Coordination metrics data
      * @returns Promise<void> - Metrics recording completion
+     * @reserved Reserved for CoreOrchestrator activation
      */
     async recordRoleCoordinationMetrics(_roleId, _metrics) {
         // TODO: Wait for CoreOrchestrator activation Trace module coordination monitoring recording
@@ -462,6 +465,7 @@ class RoleManagementService {
      * @param _roleId - Role ID for extension coordination
      * @param _extensions - Extension coordination data
      * @returns Promise<boolean> - Whether extension coordination succeeded
+     * @reserved Reserved for CoreOrchestrator activation
      */
     async manageRoleExtensionCoordination(_roleId, _extensions) {
         // TODO: Wait for CoreOrchestrator activation Extension module coordination management
@@ -479,6 +483,7 @@ class RoleManagementService {
      * @param _roleId - Role ID for change coordination
      * @param _change - Change coordination data
      * @returns Promise<boolean> - Whether change coordination was approved
+     * @reserved Reserved for CoreOrchestrator activation
      */
     async requestRoleChangeCoordination(_roleId, _change) {
         // TODO: Wait for CoreOrchestrator activation Confirm module change coordination
@@ -492,6 +497,7 @@ class RoleManagementService {
      * @param _collabId - Collaboration ID for role management
      * @param _roleConfig - Role configuration for collaboration
      * @returns Promise<boolean> - Whether collaboration coordination succeeded
+     * @reserved Reserved for CoreOrchestrator activation
      */
     async coordinateCollabRoleManagement(_collabId, _roleConfig) {
         // TODO: Wait for CoreOrchestrator activation Collab module collaboration coordination
@@ -505,6 +511,7 @@ class RoleManagementService {
      * @param _dialogId - Dialog ID for role coordination
      * @param _roleParticipants - Role participants for dialog coordination
      * @returns Promise<boolean> - Whether dialog coordination succeeded
+     * @reserved Reserved for CoreOrchestrator activation
      */
     async enableDialogDrivenRoleCoordination(_dialogId, _roleParticipants) {
         // TODO: Wait for CoreOrchestrator activation Dialog module conversation coordination
@@ -518,6 +525,7 @@ class RoleManagementService {
      * @param _networkId - Network ID for role coordination
      * @param _roleConfig - Role configuration for network coordination
      * @returns Promise<boolean> - Whether network coordination succeeded
+     * @reserved Reserved for CoreOrchestrator activation
      */
     async coordinateRoleAcrossNetwork(_networkId, _roleConfig) {
         // TODO: Wait for CoreOrchestrator activation Network module distributed coordination
@@ -603,14 +611,6 @@ class RoleManagementService {
             seen.add(key);
             return true;
         });
-    }
-    /**
-     * 验证角色数据
-     * @param data 角色数据
-     * @returns 是否有效
-     */
-    validateRoleData(data) {
-        return !!(data.name && data.roleType && data.contextId);
     }
 }
 exports.RoleManagementService = RoleManagementService;

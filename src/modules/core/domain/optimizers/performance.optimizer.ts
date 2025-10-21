@@ -114,7 +114,6 @@ export class PerformanceOptimizer {
 
   constructor(
     private readonly resourceService: CoreResourceService,
-    // @ts-expect-error - Reserved for future monitoring integration
     private readonly monitoringService: CoreMonitoringService
   ) {}
 

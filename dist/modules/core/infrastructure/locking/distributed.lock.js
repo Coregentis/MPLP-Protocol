@@ -475,6 +475,8 @@ class DeadlockDetector {
         this.detectionInterval = null;
         this.detectionEnabled = false;
         this._lockManager = lockManager;
+        // Mark _lockManager as intentionally unused (reserved for future deadlock detection logic)
+        void this._lockManager;
     }
     start() {
         if (this.detectionEnabled)

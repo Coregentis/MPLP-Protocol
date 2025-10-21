@@ -107,9 +107,9 @@ export declare class TraceProtocolFactory {
      */
     private createRepository;
     /**
-     * 验证配置
+     * Placeholder for future configuration validation
      */
-    private validateConfig;
+    private _validateConfigPlaceholder;
     /**
      * 获取默认配置
      */

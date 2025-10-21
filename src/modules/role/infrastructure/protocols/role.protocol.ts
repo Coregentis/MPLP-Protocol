@@ -48,23 +48,14 @@ export class RoleProtocol implements IMLPPProtocol {
   constructor(
     private readonly roleService: RoleManagementService,
     // ===== 9个L3横切关注点管理器注入 (与Context/Plan/Confirm模块IDENTICAL模式) =====
-    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly _securityManager: MLPPSecurityManager,
-    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly _performanceMonitor: MLPPPerformanceMonitor,
-    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly _eventBusManager: MLPPEventBusManager,
-    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly _errorHandler: MLPPErrorHandler,
-    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly _coordinationManager: MLPPCoordinationManager,
-    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly _orchestrationManager: MLPPOrchestrationManager,
-    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly _stateSyncManager: MLPPStateSyncManager,
-    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly _transactionManager: MLPPTransactionManager,
-    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly _protocolVersionManager: MLPPProtocolVersionManager
   ) {}
 

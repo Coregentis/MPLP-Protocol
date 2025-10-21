@@ -73,6 +73,16 @@ class CollabModule {
         this._stateSyncManager = new cross_cutting_concerns_1.MLPPStateSyncManager();
         this._transactionManager = new cross_cutting_concerns_1.MLPPTransactionManager();
         this._protocolVersionManager = new cross_cutting_concerns_1.MLPPProtocolVersionManager();
+        // Mark managers as intentionally initialized for future use
+        void this._securityManager;
+        void this._performanceMonitor;
+        void this._eventBusManager;
+        void this._errorHandler;
+        void this._coordinationManager;
+        void this._orchestrationManager;
+        void this._stateSyncManager;
+        void this._transactionManager;
+        void this._protocolVersionManager;
     }
     /**
      * 初始化核心服务

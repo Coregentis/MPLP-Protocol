@@ -59,8 +59,7 @@ export declare class PlanIntegrationService {
     private readonly _planRepository;
     private readonly coordinationManager;
     private readonly logger;
-    constructor(_planRepository: IPlanRepository, // 预留给CoreOrchestrator使用
-    coordinationManager: CoordinationManager, logger: ILogger);
+    constructor(_planRepository: IPlanRepository, coordinationManager: CoordinationManager, logger: ILogger);
     /**
      * 与Context模块集成
      * 预留接口：等待CoreOrchestrator激活Context模块集成

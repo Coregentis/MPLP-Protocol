@@ -121,7 +121,6 @@ export interface IAnalyticsEngine {
 export class ConfirmAnalyticsService {
   constructor(
     private readonly confirmRepository: IConfirmRepository,
-    // @ts-expect-error - Reserved for future advanced analytics features
     private readonly _analyticsEngine: IAnalyticsEngine
   ) {}
 

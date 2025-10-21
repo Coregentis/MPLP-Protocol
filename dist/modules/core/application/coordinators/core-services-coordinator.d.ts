@@ -81,13 +81,5 @@ export declare class CoreServicesCoordinator {
      * 评估工作流健康状态
      */
     private evaluateWorkflowHealth;
-    /**
-     * 更新监控状态
-     */
-    private _updateMonitoringStatus;
-    /**
-     * 检查资源状态
-     */
-    private _checkResourceStatus;
 }
 //# sourceMappingURL=core-services-coordinator.d.ts.map

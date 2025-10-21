@@ -211,9 +211,9 @@ export interface CreateAlertResponse {
 export declare class CoreController {
     private readonly coreManagementService;
     private readonly coreOrchestrationService;
-    private readonly coreResourceService;
-    private readonly coreMonitoringService;
-    constructor(coreManagementService: CoreManagementService, coreOrchestrationService: CoreOrchestrationService, coreResourceService: CoreResourceService, coreMonitoringService: CoreMonitoringService);
+    private readonly _coreResourceService;
+    private readonly _coreMonitoringService;
+    constructor(coreManagementService: CoreManagementService, coreOrchestrationService: CoreOrchestrationService, _coreResourceService: CoreResourceService, _coreMonitoringService: CoreMonitoringService);
     /**
      * 创建工作流
      * POST /api/core/workflows

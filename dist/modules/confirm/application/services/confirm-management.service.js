@@ -290,6 +290,7 @@ class ConfirmManagementService {
      * @param _confirmId - Target confirmation for coordination
      * @param _coordinationContext - Coordination context data
      * @returns Promise<boolean> - Whether coordination is permitted
+     * @reserved Reserved for CoreOrchestrator activation
      */
     async validateConfirmCoordinationPermission(_userId, _confirmId, _coordinationContext) {
         // TODO: Wait for CoreOrchestrator activation Role module coordination permission validation
@@ -303,6 +304,7 @@ class ConfirmManagementService {
      * @param _contextId - Associated context ID
      * @param _confirmType - Type of confirmation for context retrieval
      * @returns Promise<Record<string, unknown>> - Coordination context data
+     * @reserved Reserved for CoreOrchestrator activation
      */
     async getConfirmCoordinationContext(_contextId, _confirmType) {
         // TODO: Wait for CoreOrchestrator activation Context module coordination environment retrieval
@@ -322,6 +324,7 @@ class ConfirmManagementService {
      * @param _confirmId - Confirmation ID for metrics recording
      * @param _metrics - Coordination metrics data
      * @returns Promise<void> - Metrics recording completion
+     * @reserved Reserved for CoreOrchestrator activation
      */
     async recordConfirmCoordinationMetrics(_confirmId, _metrics) {
         // TODO: Wait for CoreOrchestrator activation Trace module coordination monitoring recording
@@ -335,6 +338,7 @@ class ConfirmManagementService {
      * @param _confirmId - Confirmation ID for extension coordination
      * @param _extensions - Extension coordination data
      * @returns Promise<boolean> - Whether extension coordination succeeded
+     * @reserved Reserved for CoreOrchestrator activation
      */
     async manageConfirmExtensionCoordination(_confirmId, _extensions) {
         // TODO: Wait for CoreOrchestrator activation Extension module coordination management
@@ -352,6 +356,7 @@ class ConfirmManagementService {
      * @param _planId - Plan ID for confirmation coordination
      * @param _confirmConfig - Confirmation configuration for planning
      * @returns Promise<boolean> - Whether plan coordination was successful
+     * @reserved Reserved for CoreOrchestrator activation
      */
     async requestConfirmPlanCoordination(_planId, _confirmConfig) {
         // TODO: Wait for CoreOrchestrator activation Plan module planning coordination
@@ -365,6 +370,7 @@ class ConfirmManagementService {
      * @param _collabId - Collaboration ID for confirm management
      * @param _confirmConfig - Confirmation configuration for collaboration
      * @returns Promise<boolean> - Whether collaboration coordination succeeded
+     * @reserved Reserved for CoreOrchestrator activation
      */
     async coordinateCollabConfirmManagement(_collabId, _confirmConfig) {
         // TODO: Wait for CoreOrchestrator activation Collab module collaboration coordination
@@ -378,6 +384,7 @@ class ConfirmManagementService {
      * @param _dialogId - Dialog ID for confirm coordination
      * @param _confirmParticipants - Confirmation participants for dialog coordination
      * @returns Promise<boolean> - Whether dialog coordination succeeded
+     * @reserved Reserved for CoreOrchestrator activation
      */
     async enableDialogDrivenConfirmCoordination(_dialogId, _confirmParticipants) {
         // TODO: Wait for CoreOrchestrator activation Dialog module conversation coordination
@@ -391,6 +398,7 @@ class ConfirmManagementService {
      * @param _networkId - Network ID for confirm coordination
      * @param _confirmConfig - Confirmation configuration for network coordination
      * @returns Promise<boolean> - Whether network coordination succeeded
+     * @reserved Reserved for CoreOrchestrator activation
      */
     async coordinateConfirmAcrossNetwork(_networkId, _confirmConfig) {
         // TODO: Wait for CoreOrchestrator activation Network module distributed coordination

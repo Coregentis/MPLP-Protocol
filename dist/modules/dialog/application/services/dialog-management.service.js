@@ -23,9 +23,11 @@ class DialogManagementService {
         this.dialogRepository = dialogRepository;
         this.crossCuttingConcerns = crossCuttingConcerns;
         // 使用依赖注入或创建默认实例
-        this.flowEngine = flowEngine || new dialog_flow_engine_1.DialogFlowEngine();
+        this._flowEngine = flowEngine || new dialog_flow_engine_1.DialogFlowEngine();
         this.stateManager = stateManager || new dialog_state_manager_1.DialogStateManager();
         this.nlpProcessor = nlpProcessor || new nlp_processor_1.NLPProcessor();
+        // Mark _flowEngine as intentionally unused (reserved for future dialog flow management)
+        void this._flowEngine;
     }
     // ===== 核心业务方法 =====
     /**
@@ -510,9 +512,8 @@ class DialogManagementService {
     async _recordAccess(_dialogId) {
         // TODO: 等待L3管理器激活访问记录
     }
-    async _validateUpdateAccess(_dialogId, _updateData) {
-        // TODO: 等待L3管理器激活更新权限验证
-    }
+    // Note: _validateUpdateAccess method removed as it's not currently used
+    // Update access validation will be added when L3 managers are activated
     async _validateDeleteAccess(_dialogId) {
         // TODO: 等待L3管理器激活删除权限验证
     }

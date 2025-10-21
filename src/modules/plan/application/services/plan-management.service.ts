@@ -73,22 +73,14 @@ export class PlanManagementService {
   
   constructor(
     // ===== L3横切关注点管理器注入 (与Context模块IDENTICAL) =====
-    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly securityManager: MLPPSecurityManager,
-    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly performanceMonitor: MLPPPerformanceMonitor,
     private readonly eventBusManager: MLPPEventBusManager,
-    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly errorHandler: MLPPErrorHandler,
-    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly coordinationManager: MLPPCoordinationManager,
-    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly orchestrationManager: MLPPOrchestrationManager,
-    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly stateSyncManager: MLPPStateSyncManager,
-    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly transactionManager: MLPPTransactionManager,
-    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly protocolVersionManager: MLPPProtocolVersionManager,
 
     // AI服务适配器 (AI算法外置)
@@ -361,7 +353,6 @@ export class PlanManagementService {
    * @returns Promise<boolean> - Whether coordination is permitted
    * @reserved Reserved for CoreOrchestrator activation
    */
-  // @ts-expect-error - Reserved method for future CoreOrchestrator integration
   private async validatePlanCoordinationPermission(
     _userId: UUID,
     _planId: UUID,
@@ -382,7 +373,6 @@ export class PlanManagementService {
    * @returns Promise<Record<string, unknown>> - Coordination context data
    * @reserved Reserved for CoreOrchestrator activation
    */
-  // @ts-expect-error - Reserved method for future CoreOrchestrator integration
   private async getPlanCoordinationContext(
     _contextId: UUID,
     _planType: string
@@ -408,7 +398,6 @@ export class PlanManagementService {
    * @returns Promise<void> - Metrics recording completion
    * @reserved Reserved for CoreOrchestrator activation
    */
-  // @ts-expect-error - Reserved method for future CoreOrchestrator integration
   private async recordPlanCoordinationMetrics(
     _planId: UUID,
     _metrics: Record<string, unknown>
@@ -428,7 +417,6 @@ export class PlanManagementService {
    * @returns Promise<boolean> - Whether extension coordination succeeded
    * @reserved Reserved for CoreOrchestrator activation
    */
-  // @ts-expect-error - Reserved method for future CoreOrchestrator integration
   private async managePlanExtensionCoordination(
     _planId: UUID,
     _extensions: Record<string, unknown>

@@ -13,11 +13,11 @@ const types_1 = require("../../types");
  * 处理所有Core模块相关的HTTP请求
  */
 class CoreController {
-    constructor(coreManagementService, coreOrchestrationService, coreResourceService, coreMonitoringService) {
+    constructor(coreManagementService, coreOrchestrationService, _coreResourceService, _coreMonitoringService) {
         this.coreManagementService = coreManagementService;
         this.coreOrchestrationService = coreOrchestrationService;
-        this.coreResourceService = coreResourceService;
-        this.coreMonitoringService = coreMonitoringService;
+        this._coreResourceService = _coreResourceService;
+        this._coreMonitoringService = _coreMonitoringService;
     }
     // ===== 工作流管理API =====
     /**

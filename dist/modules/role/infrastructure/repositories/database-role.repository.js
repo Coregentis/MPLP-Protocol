@@ -24,6 +24,9 @@ class DatabaseRoleRepository {
         this.permissionsTableName = 'mplp_role_permissions';
         this.inheritanceTableName = 'mplp_role_inheritance';
         this.delegationTableName = 'mplp_role_delegations';
+        // Mark table names as intentionally unused (reserved for future multi-table operations)
+        void this.inheritanceTableName;
+        void this.delegationTableName;
     }
     // ===== 基础CRUD操作 =====
     /**

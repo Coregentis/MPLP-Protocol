@@ -179,18 +179,11 @@ class RoleSecurityService {
         // 简化的条件评估，实际实现中应该根据PermissionConditions接口进行评估
         return true; // 暂时返回true，允许所有条件
     }
-    checkTimeRange(_timeRange, _timestamp) {
-        // 时间范围检查逻辑
-        return true;
-    }
-    checkIPAddress(_allowedIPs, _clientIP) {
-        // IP地址检查逻辑
-        return true;
-    }
-    checkUserAgent(_allowedAgents, _userAgent) {
-        // User Agent检查逻辑
-        return true;
-    }
+    // Note: The following condition check methods were removed as they are not currently used:
+    // - checkTimeRange (time-based access control)
+    // - checkIPAddress (IP-based access control)
+    // - checkUserAgent (user agent-based access control)
+    // These methods will be reimplemented when advanced permission conditions are activated.
     async handleUnauthorizedAccess(_event) {
         // 处理未授权访问
     }

@@ -44,7 +44,6 @@ export class TraceManagementService {
   constructor(
     private readonly _repository: ITraceRepository,
     private readonly _dataCollector?: IDataCollector,
-    // @ts-expect-error - Reserved for future logging integration
     private readonly _logger?: ILogger
   ) {}
 
