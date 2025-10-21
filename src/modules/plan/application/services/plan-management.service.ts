@@ -73,14 +73,22 @@ export class PlanManagementService {
   
   constructor(
     // ===== L3横切关注点管理器注入 (与Context模块IDENTICAL) =====
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly securityManager: MLPPSecurityManager,
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly performanceMonitor: MLPPPerformanceMonitor,
     private readonly eventBusManager: MLPPEventBusManager,
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly errorHandler: MLPPErrorHandler,
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly coordinationManager: MLPPCoordinationManager,
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly orchestrationManager: MLPPOrchestrationManager,
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly stateSyncManager: MLPPStateSyncManager,
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly transactionManager: MLPPTransactionManager,
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly protocolVersionManager: MLPPProtocolVersionManager,
 
     // AI服务适配器 (AI算法外置)

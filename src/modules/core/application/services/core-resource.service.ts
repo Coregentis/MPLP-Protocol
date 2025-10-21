@@ -75,6 +75,7 @@ export class CoreResourceService {
   private readonly performanceHistory: SystemPerformanceMetrics[] = [];
 
   constructor(
+    // @ts-expect-error - Reserved for future repository integration
     private readonly coreRepository: ICoreRepository
   ) {}
 

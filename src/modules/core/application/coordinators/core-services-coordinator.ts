@@ -62,6 +62,7 @@ export class CoreServicesCoordinator {
     private readonly monitoringService: CoreMonitoringService,
     private readonly orchestrationService: CoreOrchestrationService,
     private readonly resourceService: CoreResourceService,
+    // @ts-expect-error - Reserved for future repository integration
     private readonly coreRepository: ICoreRepository,
     private readonly logger?: { info: (msg: string, meta?: Record<string, unknown>) => void; error: (msg: string, meta?: Record<string, unknown>) => void }
   ) {}

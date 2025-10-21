@@ -48,6 +48,7 @@ export interface IAnomalyDetector {
 export class TraceAnalyticsService {
   constructor(
     private readonly traceRepository: ITraceRepository,
+    // @ts-expect-error - Reserved for future advanced analytics features
     private readonly _analyticsEngine?: IAnalyticsEngine,
     private readonly _anomalyDetector?: IAnomalyDetector
   ) {}

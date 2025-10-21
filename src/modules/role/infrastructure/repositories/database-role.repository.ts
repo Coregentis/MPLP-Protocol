@@ -57,6 +57,7 @@ export class DatabaseRoleRepository implements IRoleRepository {
 
   constructor(
     private readonly dbClient: IDatabaseClient,
+    // @ts-expect-error - Reserved for future database configuration
     private readonly config: DatabaseConfig
   ) {}
 

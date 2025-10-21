@@ -183,17 +183,23 @@ export class NetworkProtocol implements IMLPPProtocol {
     private readonly networkMonitoringService: NetworkMonitoringService,
     private readonly networkSecurityService: NetworkSecurityService,
     // ===== L3横切关注点管理器注入 (与其他8个模块IDENTICAL) =====
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly securityManager: MLPPSecurityManager,
     private readonly performanceMonitor: MLPPPerformanceMonitor,
     private readonly eventBusManager: MLPPEventBusManager,
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly errorHandler: MLPPErrorHandler,
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly coordinationManager: MLPPCoordinationManager,
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly orchestrationManager: MLPPOrchestrationManager,
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly stateSyncManager: MLPPStateSyncManager,
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly transactionManager: MLPPTransactionManager,
+    // @ts-expect-error - Reserved for CoreOrchestrator activation
     private readonly protocolVersionManager: MLPPProtocolVersionManager
   ) {
-    // 统一的L3管理器注入模式 (与其他8个模块IDENTICAL)
 
     this.protocolName = 'network';
     this.protocolVersion = '1.0.0';

@@ -47,6 +47,7 @@ export class DialogManagementService {
 
   constructor(
     private readonly dialogRepository: DialogRepository,
+    // @ts-expect-error - Reserved for future L3 cross-cutting concerns integration
     private readonly crossCuttingConcerns: CrossCuttingConcerns,
     flowEngine?: IDialogFlowEngine,
     stateManager?: IDialogStateManager,
