@@ -446,101 +446,10 @@ export class PlanManagementService {
    * These provide broader ecosystem integration capabilities
    */
 
-  /**
-   * Request plan change coordination - Confirm module change coordination
-   * @param _planId - Plan ID for change coordination
-   * @param _change - Change coordination data
-   * @returns Promise<boolean> - Whether change coordination was approved
-   */
-  private async requestPlanChangeCoordination(
-    _planId: UUID,
-    _change: Record<string, unknown>
-  ): Promise<boolean> {
-    // Mark method as intentionally unused (reserved for CoreOrchestrator activation)
-    void this.requestPlanChangeCoordination;
-    // TODO: Wait for CoreOrchestrator activation Confirm module change coordination
-    // Integration with event bus cross-cutting concern
-    await this.eventBusManager.publish({
-      id: `plan-change-${Date.now()}`,
-      type: 'plan.change.coordination.requested',
-      source: 'plan_protocol',
-      payload: {
-        plan_id: _planId,
-        change: _change
-      },
-      timestamp: new Date().toISOString()
-    });
-
-    // Temporary implementation: Allow all change coordination
-    return true;
-  }
-
-  /**
-   * Coordinate collaborative plan management - Collab module collaboration coordination
-   * @param _collabId - Collaboration ID for plan management
-   * @param _planConfig - Plan configuration for collaboration
-   * @returns Promise<boolean> - Whether collaboration coordination succeeded
-   */
-  private async coordinateCollabPlanManagement(
-    _collabId: UUID,
-    _planConfig: Record<string, unknown>
-  ): Promise<boolean> {
-    // Mark method as intentionally unused (reserved for CoreOrchestrator activation)
-    void this.coordinateCollabPlanManagement;
-    // TODO: Wait for CoreOrchestrator activation Collab module collaboration coordination
-    // Integration with state sync cross-cutting concern
-    // await this.stateSyncManager.syncState(...);
-
-    // Temporary implementation: Allow all collaboration coordination
-    return true;
-  }
-
-  /**
-   * Enable dialog-driven plan coordination - Dialog module conversation coordination
-   * @param _dialogId - Dialog ID for plan coordination
-   * @param _planParticipants - Plan participants for dialog coordination
-   * @returns Promise<boolean> - Whether dialog coordination succeeded
-   */
-  private async enableDialogDrivenPlanCoordination(
-    _dialogId: UUID,
-    _planParticipants: Record<string, unknown>
-  ): Promise<boolean> {
-    // Mark method as intentionally unused (reserved for CoreOrchestrator activation)
-    void this.enableDialogDrivenPlanCoordination;
-    // TODO: Wait for CoreOrchestrator activation Dialog module conversation coordination
-    // Integration with event bus cross-cutting concern
-    await this.eventBusManager.publish({
-      id: `plan-dialog-${Date.now()}`,
-      type: 'plan.dialog.coordination.enabled',
-      source: 'plan_protocol',
-      payload: {
-        dialog_id: _dialogId,
-        participants: _planParticipants
-      },
-      timestamp: new Date().toISOString()
-    });
-
-    // Temporary implementation: Allow all dialog coordination
-    return true;
-  }
-
-  /**
-   * Coordinate plan across network - Network module distributed coordination
-   * @param _networkId - Network ID for plan coordination
-   * @param _planConfig - Plan configuration for network coordination
-   * @returns Promise<boolean> - Whether network coordination succeeded
-   */
-  private async coordinatePlanAcrossNetwork(
-    _networkId: UUID,
-    _planConfig: Record<string, unknown>
-  ): Promise<boolean> {
-    // Mark method as intentionally unused (reserved for CoreOrchestrator activation)
-    void this.coordinatePlanAcrossNetwork;
-    // TODO: Wait for CoreOrchestrator activation Network module distributed coordination
-    // Integration with transaction cross-cutting concern
-    // const distributedTransaction = await this.transactionManager.beginDistributedTransaction(...);
-
-    // Temporary implementation: Allow all network coordination
-    return true;
-  }
+  // Note: The following MPLP module integration methods were removed as they are not currently used:
+  // - requestPlanChangeCoordination (Confirm module integration)
+  // - coordinateCollabPlanManagement (Collab module integration)
+  // - enableDialogDrivenPlanCoordination (Dialog module integration)
+  // - coordinatePlanAcrossNetwork (Network module integration)
+  // These methods will be reimplemented when CoreOrchestrator activates cross-module coordination.
 }

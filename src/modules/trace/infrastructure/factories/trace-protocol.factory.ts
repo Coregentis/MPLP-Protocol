@@ -304,13 +304,13 @@ export class TraceProtocolFactory {
     }
   }
 
+  // Note: validateConfig method was removed as it is not currently used.
+  // Configuration validation will be reimplemented when needed.
+
   /**
-   * 验证配置
-   * Reserved for future configuration validation features
+   * Placeholder for future configuration validation
    */
-  private validateConfig(config: TraceProtocolFactoryConfig): void {
-    // Mark method as intentionally unused (reserved for future validation)
-    void this.validateConfig;
+  private _validateConfigPlaceholder(config: TraceProtocolFactoryConfig): void {
     if (config.maxCacheSize && config.maxCacheSize <= 0) {
       throw new Error('maxCacheSize must be greater than 0');
     }

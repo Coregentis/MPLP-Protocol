@@ -136,32 +136,6 @@ class MockCoordinationManagerImpl extends MockL3ManagerImpl implements MockCoord
   }
 }
 
-// ===== Mock横切关注点工厂 =====
-class _MockCrossCuttingConcernsFactory {
-  private static instance: _MockCrossCuttingConcernsFactory;
-
-  static getInstance(): _MockCrossCuttingConcernsFactory {
-    if (!_MockCrossCuttingConcernsFactory.instance) {
-      _MockCrossCuttingConcernsFactory.instance = new _MockCrossCuttingConcernsFactory();
-    }
-    return _MockCrossCuttingConcernsFactory.instance;
-  }
-
-  createManagers(_config: Record<string, { enabled?: boolean }>) {
-    return {
-      security: new MockL3ManagerImpl(),
-      performance: new MockPerformanceMonitorImpl(),
-      eventBus: new MockEventBusManagerImpl(),
-      errorHandler: new MockErrorHandlerImpl(),
-      coordination: new MockCoordinationManagerImpl(),
-      orchestration: new MockL3ManagerImpl(),
-      stateSync: new MockL3ManagerImpl(),
-      transaction: new MockTransactionManagerImpl(),
-      protocolVersion: new MockL3ManagerImpl()
-    };
-  }
-}
-
 /**
  * Trace模块适配器配置
  */

@@ -197,15 +197,6 @@ export class NetworkModuleAdapter {
   }
 
   /**
-   * 获取适配器ID
-   * Reserved for future adapter identification features
-   */
-  private _getAdapterId(): string {
-    void this._getAdapterId; // Mark as intentionally unused
-    return `network-adapter-${Date.now()}`;
-  }
-
-  /**
    * 获取控制器实例
    */
   getController(): NetworkController {

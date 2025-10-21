@@ -340,26 +340,11 @@ export class RoleSecurityService {
     return true; // 暂时返回true，允许所有条件
   }
 
-  private checkTimeRange(_timeRange: string, _timestamp?: Date): boolean {
-    // Mark method as intentionally unused (reserved for future time-based access control)
-    void this.checkTimeRange;
-    // 时间范围检查逻辑
-    return true;
-  }
-
-  private checkIPAddress(_allowedIPs: string, _clientIP?: string): boolean {
-    // Mark method as intentionally unused (reserved for future IP-based access control)
-    void this.checkIPAddress;
-    // IP地址检查逻辑
-    return true;
-  }
-
-  private checkUserAgent(_allowedAgents: string, _userAgent?: string): boolean {
-    // Mark method as intentionally unused (reserved for future user agent-based access control)
-    void this.checkUserAgent;
-    // User Agent检查逻辑
-    return true;
-  }
+  // Note: The following condition check methods were removed as they are not currently used:
+  // - checkTimeRange (time-based access control)
+  // - checkIPAddress (IP-based access control)
+  // - checkUserAgent (user agent-based access control)
+  // These methods will be reimplemented when advanced permission conditions are activated.
 
   private async handleUnauthorizedAccess(_event: SecurityEvent): Promise<void> {
     // 处理未授权访问
