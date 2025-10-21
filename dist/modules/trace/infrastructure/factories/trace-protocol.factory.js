@@ -172,20 +172,8 @@ class TraceProtocolFactory {
     }
     // Note: validateConfig method was removed as it is not currently used.
     // Configuration validation will be reimplemented when needed.
-    /**
-     * Placeholder for future configuration validation
-     */
-    _validateConfigPlaceholder(config) {
-        if (config.maxCacheSize && config.maxCacheSize <= 0) {
-            throw new Error('maxCacheSize must be greater than 0');
-        }
-        if (config.cacheTimeout && config.cacheTimeout <= 0) {
-            throw new Error('cacheTimeout must be greater than 0');
-        }
-        if (config.maxTraceRetentionDays && config.maxTraceRetentionDays <= 0) {
-            throw new Error('maxTraceRetentionDays must be greater than 0');
-        }
-    }
+    // Note: _validateConfigPlaceholder method removed as it is not currently used.
+    // Configuration validation will be reimplemented when needed.
     /**
      * 获取默认配置
      */

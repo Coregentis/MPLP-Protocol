@@ -19,56 +19,8 @@ class MockL3ManagerImpl {
         };
     }
 }
-class MockPerformanceMonitorImpl extends MockL3ManagerImpl {
-    constructor() {
-        super(...arguments);
-        this.operations = new Map();
-    }
-    async startOperation(operation) {
-        const operationId = `${operation}-${Date.now()}`;
-        this.operations.set(operationId, Date.now());
-        return operationId;
-    }
-    async endOperation(_operationId, _success = true) {
-        // Mock implementation
-    }
-    async getOperationDuration(operationId) {
-        const startTime = this.operations.get(operationId);
-        return startTime ? Date.now() - startTime : 0;
-    }
-}
-class MockEventBusManagerImpl extends MockL3ManagerImpl {
-    async publishEvent(_eventType, _data) {
-        // Mock implementation
-    }
-}
-class MockErrorHandlerImpl extends MockL3ManagerImpl {
-    async handleError(error, _context) {
-        return {
-            code: 'MOCK_ERROR',
-            message: error instanceof Error ? error.message : 'Unknown error',
-            details: error
-        };
-    }
-}
-class MockTransactionManagerImpl extends MockL3ManagerImpl {
-    async beginTransaction() {
-        return `transaction-${Date.now()}`;
-    }
-    async commitTransaction(_transactionId) {
-        // Mock implementation
-    }
-    async rollbackTransaction(_transactionId) {
-        // Mock implementation
-    }
-}
-class MockCoordinationManagerImpl extends MockL3ManagerImpl {
-    async registerIntegration(_sourceModule, _targetModule) {
-        // Mock implementation
-    }
-}
-// Note: _createMockManagers function was removed as it is not currently used.
-// Mock manager creation will be reimplemented when needed for testing.
+// Note: Mock L3 manager implementations removed as they are not currently used.
+// These will be reimplemented when needed for testing.
 /**
  * Trace协议类
  *

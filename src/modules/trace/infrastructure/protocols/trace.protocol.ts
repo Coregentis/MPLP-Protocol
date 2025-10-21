@@ -71,63 +71,8 @@ class MockL3ManagerImpl implements MockL3Manager {
   }
 }
 
-class MockPerformanceMonitorImpl extends MockL3ManagerImpl implements MockPerformanceMonitor {
-  private operations = new Map<string, number>();
-
-  async startOperation(operation: string): Promise<string> {
-    const operationId = `${operation}-${Date.now()}`;
-    this.operations.set(operationId, Date.now());
-    return operationId;
-  }
-
-  async endOperation(_operationId: string, _success = true): Promise<void> {
-    // Mock implementation
-  }
-
-  async getOperationDuration(operationId: string): Promise<number> {
-    const startTime = this.operations.get(operationId);
-    return startTime ? Date.now() - startTime : 0;
-  }
-}
-
-class MockEventBusManagerImpl extends MockL3ManagerImpl implements MockEventBusManager {
-  async publishEvent(_eventType: string, _data: Record<string, unknown>): Promise<void> {
-    // Mock implementation
-  }
-}
-
-class MockErrorHandlerImpl extends MockL3ManagerImpl implements MockErrorHandler {
-  async handleError(error: unknown, _context: Record<string, unknown>) {
-    return {
-      code: 'MOCK_ERROR',
-      message: error instanceof Error ? error.message : 'Unknown error',
-      details: error as Record<string, unknown>
-    };
-  }
-}
-
-class MockTransactionManagerImpl extends MockL3ManagerImpl implements MockTransactionManager {
-  async beginTransaction(): Promise<string> {
-    return `transaction-${Date.now()}`;
-  }
-
-  async commitTransaction(_transactionId: string): Promise<void> {
-    // Mock implementation
-  }
-
-  async rollbackTransaction(_transactionId: string): Promise<void> {
-    // Mock implementation
-  }
-}
-
-class MockCoordinationManagerImpl extends MockL3ManagerImpl implements MockCoordinationManager {
-  async registerIntegration(_sourceModule: string, _targetModule: string): Promise<void> {
-    // Mock implementation
-  }
-}
-
-// Note: _createMockManagers function was removed as it is not currently used.
-// Mock manager creation will be reimplemented when needed for testing.
+// Note: Mock L3 manager implementations removed as they are not currently used.
+// These will be reimplemented when needed for testing.
 
 /**
  * Trace协议类
