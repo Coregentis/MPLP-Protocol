@@ -16,15 +16,6 @@ const trace_security_service_1 = require("../../application/services/trace-secur
 const trace_repository_1 = require("../repositories/trace.repository");
 // ===== L3横切关注点管理器导入 =====
 const cross_cutting_concerns_1 = require("../../../../core/protocols/cross-cutting-concerns");
-// ===== Mock管理器实现 =====
-class MockL3ManagerImpl {
-    async getHealthStatus() {
-        return {
-            status: 'healthy',
-            timestamp: new Date().toISOString()
-        };
-    }
-}
 /**
  * Trace模块适配器
  *

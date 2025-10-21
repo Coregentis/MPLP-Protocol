@@ -42,46 +42,7 @@ import {
 import { UUID, PaginationParams } from '../../../../shared/types';
 
 // ===== 预留L3横切关注点管理器接口 =====
-// TODO: 等待完整的横切关注点管理器实现
-interface MockL3Manager {
-  getHealthStatus(): Promise<{ status: string; timestamp: string }>;
-}
-
-interface MockPerformanceMonitor extends MockL3Manager {
-  startOperation(operation: string): Promise<string>;
-  endOperation(operationId: string, success?: boolean): Promise<void>;
-  getOperationDuration(operationId: string): Promise<number>;
-}
-
-interface MockEventBusManager extends MockL3Manager {
-  publishEvent(eventType: string, data: Record<string, unknown>): Promise<void>;
-}
-
-interface MockErrorHandler extends MockL3Manager {
-  handleError(error: unknown, context: Record<string, unknown>): Promise<{ code: string; message: string; details?: unknown }>;
-}
-
-interface MockTransactionManager extends MockL3Manager {
-  beginTransaction(): Promise<string>;
-  commitTransaction(transactionId: string): Promise<void>;
-  rollbackTransaction(transactionId: string): Promise<void>;
-}
-
-interface MockCoordinationManager extends MockL3Manager {
-  registerIntegration(sourceModule: string, targetModule: string): Promise<void>;
-}
-
-// ===== Mock管理器实现 =====
-class MockL3ManagerImpl implements MockL3Manager {
-  async getHealthStatus() {
-    return {
-      status: 'healthy',
-      timestamp: new Date().toISOString()
-    };
-  }
-}
-
-// Note: Mock L3 manager implementations removed as they are not currently used.
+// Note: Mock L3 manager interfaces and implementations removed as they are not currently used.
 // These will be reimplemented when needed for testing.
 
 /**

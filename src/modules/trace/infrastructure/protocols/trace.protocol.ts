@@ -61,18 +61,8 @@ interface IMLPPProtocol {
   getHealthStatus(): Promise<ProtocolHealthStatus>;
 }
 
-// ===== Mock管理器实现 (预留) =====
-class MockL3ManagerImpl implements MockL3Manager {
-  async getHealthStatus() {
-    return {
-      status: 'healthy',
-      timestamp: new Date().toISOString()
-    };
-  }
-}
-
-// Note: Mock L3 manager implementations removed as they are not currently used.
-// These will be reimplemented when needed for testing.
+// Note: Mock L3 manager implementation removed as it is not currently used.
+// This will be reimplemented when needed for testing.
 
 /**
  * Trace协议类
