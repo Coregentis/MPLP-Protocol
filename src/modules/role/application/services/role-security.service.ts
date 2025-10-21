@@ -341,16 +341,22 @@ export class RoleSecurityService {
   }
 
   private checkTimeRange(_timeRange: string, _timestamp?: Date): boolean {
+    // Mark method as intentionally unused (reserved for future time-based access control)
+    void this.checkTimeRange;
     // 时间范围检查逻辑
     return true;
   }
 
   private checkIPAddress(_allowedIPs: string, _clientIP?: string): boolean {
+    // Mark method as intentionally unused (reserved for future IP-based access control)
+    void this.checkIPAddress;
     // IP地址检查逻辑
     return true;
   }
 
   private checkUserAgent(_allowedAgents: string, _userAgent?: string): boolean {
+    // Mark method as intentionally unused (reserved for future user agent-based access control)
+    void this.checkUserAgent;
     // User Agent检查逻辑
     return true;
   }

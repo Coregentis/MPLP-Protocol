@@ -57,6 +57,8 @@ export class DialogManagementService {
     this._flowEngine = flowEngine || new DialogFlowEngine();
     this.stateManager = stateManager || new DialogStateManager();
     this.nlpProcessor = nlpProcessor || new NLPProcessor();
+    // Mark _flowEngine as intentionally unused (reserved for future dialog flow management)
+    void this._flowEngine;
   }
 
   // ===== 核心业务方法 =====

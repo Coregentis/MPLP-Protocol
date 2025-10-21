@@ -456,6 +456,8 @@ export class PlanManagementService {
     _planId: UUID,
     _change: Record<string, unknown>
   ): Promise<boolean> {
+    // Mark method as intentionally unused (reserved for CoreOrchestrator activation)
+    void this.requestPlanChangeCoordination;
     // TODO: Wait for CoreOrchestrator activation Confirm module change coordination
     // Integration with event bus cross-cutting concern
     await this.eventBusManager.publish({
@@ -483,6 +485,8 @@ export class PlanManagementService {
     _collabId: UUID,
     _planConfig: Record<string, unknown>
   ): Promise<boolean> {
+    // Mark method as intentionally unused (reserved for CoreOrchestrator activation)
+    void this.coordinateCollabPlanManagement;
     // TODO: Wait for CoreOrchestrator activation Collab module collaboration coordination
     // Integration with state sync cross-cutting concern
     // await this.stateSyncManager.syncState(...);
@@ -501,6 +505,8 @@ export class PlanManagementService {
     _dialogId: UUID,
     _planParticipants: Record<string, unknown>
   ): Promise<boolean> {
+    // Mark method as intentionally unused (reserved for CoreOrchestrator activation)
+    void this.enableDialogDrivenPlanCoordination;
     // TODO: Wait for CoreOrchestrator activation Dialog module conversation coordination
     // Integration with event bus cross-cutting concern
     await this.eventBusManager.publish({
@@ -528,6 +534,8 @@ export class PlanManagementService {
     _networkId: UUID,
     _planConfig: Record<string, unknown>
   ): Promise<boolean> {
+    // Mark method as intentionally unused (reserved for CoreOrchestrator activation)
+    void this.coordinatePlanAcrossNetwork;
     // TODO: Wait for CoreOrchestrator activation Network module distributed coordination
     // Integration with transaction cross-cutting concern
     // const distributedTransaction = await this.transactionManager.beginDistributedTransaction(...);

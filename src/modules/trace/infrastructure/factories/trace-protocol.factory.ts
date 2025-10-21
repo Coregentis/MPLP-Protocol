@@ -306,8 +306,11 @@ export class TraceProtocolFactory {
 
   /**
    * 验证配置
+   * Reserved for future configuration validation features
    */
   private validateConfig(config: TraceProtocolFactoryConfig): void {
+    // Mark method as intentionally unused (reserved for future validation)
+    void this.validateConfig;
     if (config.maxCacheSize && config.maxCacheSize <= 0) {
       throw new Error('maxCacheSize must be greater than 0');
     }

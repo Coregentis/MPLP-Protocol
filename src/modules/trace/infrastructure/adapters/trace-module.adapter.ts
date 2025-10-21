@@ -506,6 +506,8 @@ export class TraceModuleAdapter {
       const protocolHealth = await this.protocol.getHealthStatus();
       // 获取管理器实例（用于健康检查）
       const _managersHealth = this.getCrossCuttingManagers();
+      // Mark as intentionally unused (reserved for future health check features)
+      void _managersHealth;
 
       return {
         status: protocolHealth.status,

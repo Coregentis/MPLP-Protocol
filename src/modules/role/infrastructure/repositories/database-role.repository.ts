@@ -59,7 +59,11 @@ export class DatabaseRoleRepository implements IRoleRepository {
     private readonly dbClient: IDatabaseClient,
     // @ts-expect-error - Reserved for future database configuration
     private readonly config: DatabaseConfig
-  ) {}
+  ) {
+    // Mark table names as intentionally unused (reserved for future multi-table operations)
+    void this.inheritanceTableName;
+    void this.delegationTableName;
+  }
 
   // ===== 基础CRUD操作 =====
 

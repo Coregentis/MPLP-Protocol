@@ -269,6 +269,8 @@ export class NetworkMonitoringService {
    */
   private async collectRealtimeMetrics(network: NetworkEntity): Promise<MonitoringMetrics['realTime']> {
     const _activeNodes = network.nodes.filter(n => n.status === 'online').length;
+    // Mark as intentionally unused (reserved for future monitoring features)
+    void _activeNodes;
     const activeConnections = network.edges.filter(e => e.status === 'active').length;
 
     return {

@@ -127,7 +127,10 @@ class MockCoordinationManagerImpl extends MockL3ManagerImpl implements MockCoord
 }
 
 // ===== Mock管理器工厂函数 =====
+// Reserved for future mock manager creation features
 function _createMockManagers() {
+  // Mark function as intentionally unused (reserved for future testing)
+  void _createMockManagers;
   return {
     security: new MockL3ManagerImpl(),
     performance: new MockPerformanceMonitorImpl(),

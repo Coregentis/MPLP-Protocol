@@ -150,6 +150,9 @@ export class NetworkAnalyticsService {
     // 模拟性能分析逻辑
     const _nodeCount = network.nodes.length;
     const _edgeCount = network.edges.length;
+    // Mark as intentionally unused (reserved for future performance analysis features)
+    void _nodeCount;
+    void _edgeCount;
 
     // 基于网络规模和拓扑计算性能指标
     const averageLatency = this.calculateAverageLatency(network);

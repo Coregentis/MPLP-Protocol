@@ -110,14 +110,17 @@ export interface ILogger {
  * 职责：任务分配、资源协调、执行监控、冲突解决
  */
 export class PlanCoordinationService {
-  
+
   private readonly registeredAgents = new Map<UUID, AgentInfo>();
   private readonly activeAssignments = new Map<UUID, TaskAssignment>();
   private readonly resourceAllocations = new Map<string, ResourceAllocation>();
-  
+
   constructor(
     private readonly logger: ILogger
-  ) {}
+  ) {
+    // Mark resourceAllocations as intentionally unused (reserved for future resource management)
+    void this.resourceAllocations;
+  }
 
   // ===== 协调管理核心方法 =====
 

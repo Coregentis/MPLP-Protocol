@@ -144,6 +144,8 @@ export class DialogAnalyticsService {
     // 使用依赖注入或创建默认实例
     this.analyticsEngine = analyticsEngine || new AnalyticsEngine();
     this._nlpProcessor = nlpProcessor || new NLPProcessor();
+    // Mark _nlpProcessor as intentionally unused (reserved for future NLP analysis features)
+    void this._nlpProcessor;
   }
 
   /**
