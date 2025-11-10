@@ -1,6 +1,6 @@
 {
   "name": "@mplp/sdk-core",
-  "version": "1.1.0-beta",
+  "version": "1.1.0",
   "description": "MPLP SDK Core - Multi-Agent Protocol Lifecycle Platform Core SDK",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

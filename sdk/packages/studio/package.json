@@ -1,6 +1,6 @@
 {
   "name": "@mplp/studio",
-  "version": "1.1.0-beta",
+  "version": "1.1.0",
   "description": "Visual development environment for MPLP applications - drag-and-drop agent builder and workflow designer",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
