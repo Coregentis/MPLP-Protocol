@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.build.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "baseUrl": ".",
+    "paths": {
+      "@mplp/sdk-core": ["../../sdk/packages/core/src"],
+      "@mplp/agent-builder": ["../../sdk/packages/agent-builder/src"],
+      "@mplp/orchestrator": ["../../sdk/packages/orchestrator/src"],
+      "@mplp/adapters": ["../../sdk/packages/adapters/src"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]
+}
+
