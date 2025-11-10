@@ -316,6 +316,10 @@ ROOT-FILES-AUDIT-*.md
 # LARGE FILES AND ARCHIVES
 # =============================================================================
 
+# Archived directory - internal development files
+Archived/
+Archived/**/*
+
 # Large archived files
 Archived/**/*.zip
 Archived/**/*.tar.gz
