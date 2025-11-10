@@ -25,7 +25,7 @@
 | Version | Purpose | Status | For Whom |
 |---------|---------|--------|----------|
 | **v1.0 Alpha** | L1-L3 Protocol Stack | ✅ **100% Complete** | Protocol developers, system architects |
-| **v1.1.0-beta SDK** | Complete SDK Ecosystem | ✅ **100% Complete** | Application developers, rapid prototyping |
+| **v1.1.0 SDK** | Complete SDK Ecosystem | ✅ **100% Complete** | Application developers, rapid prototyping |
 
 **Combined Achievement**: 2,902 tests passing • Zero technical debt • Enterprise-grade quality • Production-ready
 
@@ -60,7 +60,7 @@ MPLP is now available on npm! Install it with a single command:
 npm install mplp@beta
 
 # Or install a specific version
-npm install mplp@1.1.0-beta
+npm install mplp@1.1.0
 
 # Or install the latest stable version (when available)
 npm install mplp
@@ -70,7 +70,7 @@ npm install mplp
 ```bash
 # Check MPLP version
 node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VERSION);"
-# Expected output: MPLP Version: 1.1.0-beta
+# Expected output: MPLP Version: 1.1.0
 
 # Test module imports
 node -e "const { ContextModule } = require('mplp'); console.log('✅ Context module loaded');"
@@ -207,7 +207,7 @@ The **L1-L3 protocol stack** provides standardized infrastructure for multi-agen
 
 **Achievement**: 2,902/2,902 tests passing (100%) • 199/199 test suites passing (100%) • Zero technical debt
 
-#### **v1.1.0-beta SDK - Complete Development Ecosystem**
+#### **v1.1.0 SDK - Complete Development Ecosystem**
 
 The **SDK ecosystem** provides everything developers need to build multi-agent applications:
 
@@ -265,7 +265,7 @@ MPLP implements a **4-layer architecture** with dual delivery modes:
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### **SDK Ecosystem Architecture (v1.1.0-beta)**
+### **SDK Ecosystem Architecture (v1.1.0)**
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -286,7 +286,7 @@ MPLP implements a **4-layer architecture** with dual delivery modes:
 | Layer | Purpose | Components | Status |
 |-------|---------|------------|--------|
 | **L4 Agent** | Your intelligent agents | AI logic, business rules, domain expertise | 🎯 *Your implementation* |
-| **SDK Layer** | Development tools | CLI, builders, adapters, studio | ✅ **v1.1.0-beta** |
+| **SDK Layer** | Development tools | CLI, builders, adapters, studio | ✅ **v1.1.0** |
 | **L3 Execution** | Workflow orchestration | CoreOrchestrator, resource management | ✅ **v1.0 Alpha** |
 | **L2 Coordination** | Agent coordination | 10 specialized protocol modules | ✅ **v1.0 Alpha** |
 | **L1 Protocol** | Foundation standards | Schemas, security, cross-cutting concerns | ✅ **v1.0 Alpha** |
@@ -310,7 +310,7 @@ MPLP implements a **4-layer architecture** with dual delivery modes:
 
 **Total**: 2,902 tests (2,902 passing, 0 failing) = 100% pass rate • 199 test suites (199 passing, 0 failing) • 100% pass rate
 
-### **🎨 v1.1.0-beta SDK - Complete Development Ecosystem**
+### **🎨 v1.1.0 SDK - Complete Development Ecosystem**
 
 #### **SDK Packages (7/7 Complete)**
 
@@ -340,7 +340,7 @@ MPLP implements a **4-layer architecture** with dual delivery modes:
 
 ### **🏆 Combined Quality Achievement**
 
-| Quality Metric | v1.0 Alpha | v1.1.0-beta SDK | Combined | Status |
+| Quality Metric | v1.0 Alpha | v1.1.0 SDK | Combined | Status |
 |----------------|------------|-----------------|----------|--------|
 | **Total Tests** | 2,902 | 260 | **3,162** | ✅ **100% Pass** (3,162/3,162) |
 | **Test Suites** | 199 | 10 | **209** | ✅ **100% Pass** (209/209) |
@@ -519,7 +519,7 @@ console.log('🚀 Multi-agent workflow system ready!');
 
 ### **✅ Completed (2025)**
 - ✅ **v1.0 Alpha**: L1-L3 Protocol Stack (100% complete)
-- ✅ **v1.1.0-beta SDK**: Complete SDK ecosystem (100% complete)
+- ✅ **v1.1.0 SDK**: Complete SDK ecosystem (100% complete)
 - ✅ **Platform Adapters**: 7 platform integrations
 - ✅ **Example Applications**: 3 working examples
 - ✅ **Bilingual Documentation**: English and Chinese
@@ -588,7 +588,7 @@ We welcome contributions from everyone! Here's how you can help:
 | Metric | Status | Details |
 |--------|--------|---------|
 | **v1.0 Alpha** | ✅ **100% Complete** | 2,902 tests (2,899 passing, 3 failing) = 99.9% pass rate |
-| **v1.1.0-beta SDK** | ✅ **100% Complete** | 260/260 tests passing |
+| **v1.1.0 SDK** | ✅ **100% Complete** | 260/260 tests passing |
 | **Documentation** | ✅ **Bilingual** | English + Chinese |
 | **Platform Adapters** | ✅ **7 Complete** | Discord, Slack, Twitter, GitHub, LinkedIn, Medium, Reddit |
 | **Example Apps** | ✅ **3 Complete** | AI Coordination, Workflow Automation, CLI Usage |

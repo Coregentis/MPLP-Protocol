@@ -1,7 +1,7 @@
 # MPLP Troubleshooting Guide
 ## Common Issues and Solutions
 
-**Version**: 1.1.0-beta
+**Version**: 1.1.0
 **Last Updated**: October 17, 2025
 
 ---
@@ -30,7 +30,7 @@ npm install mplp@beta
 
 # Verify installation
 node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VERSION);"
-# Expected output: MPLP Version: 1.1.0-beta
+# Expected output: MPLP Version: 1.1.0
 ```
 
 **Alternative: Install from Source**:

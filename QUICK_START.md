@@ -1,7 +1,7 @@
 # MPLP Quick Start Guide
 ## Get Your First Multi-Agent Application Running
 
-**Version**: 1.1.0-beta  
+**Version**: 1.1.0  
 **Last Updated**: October 16, 2025  
 **Difficulty**: Beginner  
 **Time**: 15-30 minutes
@@ -37,14 +37,14 @@ MPLP is now available on npm! This is the fastest way to get started:
 npm install mplp@beta
 
 # Or install a specific version
-npm install mplp@1.1.0-beta
+npm install mplp@1.1.0
 ```
 
 **Verify Installation**:
 ```bash
 # Check MPLP version
 node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VERSION);"
-# Expected output: MPLP Version: 1.1.0-beta
+# Expected output: MPLP Version: 1.1.0
 ```
 
 ### Option 2: Install from Source
@@ -120,7 +120,7 @@ node index.js
 **Expected Output**:
 ```
 === MPLP Quick Start ===
-Version: 1.1.0-beta
+Version: 1.1.0
 Modules: context, plan, role, confirm, trace, extension, dialog, collab, core, network
 Capabilities: multi_agent_coordination, workflow_orchestration, lifecycle_management, ...
 ```

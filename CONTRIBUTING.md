@@ -1,6 +1,6 @@
 # Contributing to MPLP
 
-**Multi-Agent Protocol Lifecycle Platform - Contribution Guide v1.1.0-beta**
+**Multi-Agent Protocol Lifecycle Platform - Contribution Guide v1.1.0**
 
 [![Contributors](https://img.shields.io/badge/contributors-welcome-brightgreen.svg)](./CODE_OF_CONDUCT.md)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
@@ -11,9 +11,9 @@
 Thank you for your interest in contributing to MPLP! We welcome contributions from the community and are grateful for your support in building the future of multi-agent protocol systems and SDK ecosystem.
 
 ### **Project Status**
-- **Version**: 1.1.0-beta (Dual Version Production Ready)
+- **Version**: 1.1.0 (Dual Version Production Ready)
 - **Protocol Stack**: v1.0 Alpha with 10 enterprise-grade modules (2,902 tests)
-- **SDK Ecosystem**: v1.1.0-beta with 7 packages + 7 adapters (260 tests)
+- **SDK Ecosystem**: v1.1.0 with 7 packages + 7 adapters (260 tests)
 - **Total Tests**: 2,902/2,902 passing (100% pass rate)
 - **Performance**: 100% performance score
 - **Security**: 100% security tests passing

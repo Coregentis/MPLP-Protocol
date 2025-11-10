@@ -10,7 +10,7 @@ We provide security updates for the following versions:
 
 | Version | Supported          | Status |
 | ------- | ------------------ | ------ |
-| 1.1.0-beta | ✅ Yes | Current beta release |
+| 1.1.0 | ✅ Yes | Current beta release |
 | 1.0.0-alpha | ✅ Yes | Previous alpha release |
 | < 1.0.0 | ❌ No | Not supported |
 
@@ -48,7 +48,7 @@ Please include the following information in your report:
 
 **Affected Component**: Module/Component name
 
-**Affected Versions**: 1.0.0-alpha, 1.1.0-beta
+**Affected Versions**: 1.0.0-alpha, 1.1.0
 
 **Description**:
 Detailed description of the vulnerability
