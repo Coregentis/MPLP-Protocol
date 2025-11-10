@@ -1,6 +1,6 @@
 {
   "name": "mplp",
-  "version": "1.1.0-beta",
+  "version": "1.1.0",
   "description": "MPLP v1.1.0-beta - Multi-Agent Protocol Lifecycle Platform with complete SDK ecosystem, L1-L3 layered architecture, 10 enterprise-grade modules, and comprehensive developer tools",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
