@@ -242,6 +242,8 @@ playwright-report/
 # Development Archives and History
 # Note: Archived/ folder is tracked in Dev version for historical documentation
 # Only large binary files are excluded (see below)
+.archive/
+.archive/**/*
 
 # Internal Configuration
 config/
