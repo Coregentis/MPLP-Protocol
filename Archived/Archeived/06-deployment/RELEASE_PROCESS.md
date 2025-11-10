@@ -4,8 +4,8 @@
 
 MPLP项目采用双仓库架构，明确区分开发版本和开源版本：
 
-- **开发仓库** (Private): `https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev`
-- **开源仓库** (Public): `https://github.com/Coregentis/MPLP-Protocol-Dev-Dev`
+- **开发仓库** (Private): `https://github.com/Coregentis/MPLP-Protocol`
+- **开源仓库** (Public): `https://github.com/Coregentis/MPLP-Protocol`
 
 ## 🏗️ 仓库架构
 
@@ -105,7 +105,7 @@ npm pack --dry-run
 #### 3.1 推送到开源仓库
 ```bash
 # 克隆开源仓库
-git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
+git clone https://github.com/Coregentis/MPLP-Protocol.git
 cd MPLP-Protocol
 
 # 复制构建结果

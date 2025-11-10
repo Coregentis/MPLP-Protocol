@@ -415,7 +415,7 @@ class MemoryRoleRepository {
                 return false;
             if (filter.department && role.attributes?.department !== filter.department)
                 return false;
-            if (filter.securityClearance && !filter.securityClearance.includes(role.attributes?.securityClearance))
+            if (filter.securityClearance && role.attributes?.securityClearance && !filter.securityClearance.includes(role.attributes.securityClearance))
                 return false;
             if (filter.hasPermission) {
                 const { resourceType, resourceId, action } = filter.hasPermission;

@@ -24,7 +24,10 @@ class MLPPEventBusManager {
         if (!this.handlers.has(eventType)) {
             this.handlers.set(eventType, []);
         }
-        this.handlers.get(eventType).push(handler);
+        const handlers = this.handlers.get(eventType);
+        if (handlers) {
+            handlers.push(handler);
+        }
     }
     /**
      * 发布事件

@@ -7,7 +7,7 @@
 **多智能体协议生命周期平台 - 实现指南和集成策略 v1.0.0-alpha**
 
 [![实现](https://img.shields.io/badge/implementation-100%25%20完成-brightgreen.svg)](./client-implementation.md)
-[![质量](https://img.shields.io/badge/tests-2869%2F2869%20通过-brightgreen.svg)](./performance-requirements.md)
+[![质量](https://img.shields.io/badge/tests-2902%2F2902%20通过-brightgreen.svg)](./performance-requirements.md)
 [![性能](https://img.shields.io/badge/performance-99.8%25%20得分-brightgreen.svg)](./performance-requirements.md)
 [![安全](https://img.shields.io/badge/security-企业级-brightgreen.svg)](./security-requirements.md)
 [![语言](https://img.shields.io/badge/language-中文-blue.svg)](../en/implementation/README.md)

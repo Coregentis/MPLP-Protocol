@@ -519,8 +519,10 @@ export class ExtensionEntity {
    * 检查是否为破坏性变更
    */
   private isBreakingChange(oldVersion: string, newVersion: string): boolean {
-    const oldMajor = parseInt(oldVersion.split('.')[0]!); // 非空断言：版本号格式已验证
-    const newMajor = parseInt(newVersion.split('.')[0]!); // 非空断言：版本号格式已验证
+    const oldParts = oldVersion.split('.');
+    const newParts = newVersion.split('.');
+    const oldMajor = parseInt(oldParts[0] || '0');
+    const newMajor = parseInt(newParts[0] || '0');
     return newMajor > oldMajor;
   }
 

@@ -392,7 +392,10 @@ class MessageQueueManager {
         if (!topics.has(options.topic)) {
             topics.set(options.topic, []);
         }
-        topics.get(options.topic).push(message);
+        const topicMessages = topics.get(options.topic);
+        if (topicMessages) {
+            topicMessages.push(message);
+        }
         // 立即分发给订阅者
         const subscribers = this.connection.subscribers.get(options.topic) || [];
         for (const subscription of subscribers) {
@@ -441,7 +444,10 @@ class MessageQueueManager {
         if (!subscribers.has(subscription.topic)) {
             subscribers.set(subscription.topic, []);
         }
-        subscribers.get(subscription.topic).push(subscription);
+        const topicSubscribers = subscribers.get(subscription.topic);
+        if (topicSubscribers) {
+            topicSubscribers.push(subscription);
+        }
         // 处理已存在的消息
         const messages = this.connection.topics.get(subscription.topic) || [];
         for (const message of messages) {

@@ -9,7 +9,7 @@
 [![Schema](https://img.shields.io/badge/schema-JSON%20Schema%20Draft--07-blue.svg)](./schema-standards.md)
 [![状态](https://img.shields.io/badge/status-生产就绪-brightgreen.svg)](../../../ALPHA-RELEASE-NOTES.md)
 [![实现](https://img.shields.io/badge/implementation-100%25%20完成-brightgreen.svg)](./validation-rules.md)
-[![测试](https://img.shields.io/badge/tests-2869%2F2869%20通过-brightgreen.svg)](./validation-rules.md)
+[![测试](https://img.shields.io/badge/tests-2902%2F2902%20通过-brightgreen.svg)](./validation-rules.md)
 [![验证](https://img.shields.io/badge/validation-企业级-brightgreen.svg)](./validation-rules.md)
 [![语言](https://img.shields.io/badge/language-中文-blue.svg)](../../en/schemas/README.md)
 

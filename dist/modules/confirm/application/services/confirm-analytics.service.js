@@ -12,9 +12,13 @@ exports.ConfirmAnalyticsService = void 0;
  * 基于重构指南第200-377行实现，严格遵循Schema驱动开发
  */
 class ConfirmAnalyticsService {
-    constructor(confirmRepository, _analyticsEngine) {
+    constructor(confirmRepository, 
+    // Reserved for future analytics engine integration
+    _analyticsEngine) {
         this.confirmRepository = confirmRepository;
         this._analyticsEngine = _analyticsEngine;
+        // Explicitly mark as intentionally unused - Reserved for future analytics engine integration
+        void this._analyticsEngine;
     }
     /**
      * 分析确认请求 - 基于Schema confirm_id字段
@@ -168,6 +172,8 @@ class ConfirmAnalyticsService {
         if (history.length === 0)
             return 0;
         const lastEntry = history[history.length - 1];
+        if (!lastEntry)
+            return 0;
         return lastEntry.timestamp.getTime() - request.timestamp.getTime();
     }
     /**

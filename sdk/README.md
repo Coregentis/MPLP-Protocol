@@ -159,7 +159,7 @@ await orchestrator.executeWorkflow('daily_posting');
 ```bash
 # 克隆仓库
 git clone <repository-url>
-cd mplp-v1.0/sdk
+cd MPLP-Protocol-v1.0/sdk
 
 # 安装依赖
 npm install

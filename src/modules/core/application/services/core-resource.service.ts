@@ -76,7 +76,10 @@ export class CoreResourceService {
 
   constructor(
     private readonly coreRepository: ICoreRepository
-  ) {}
+  ) {
+    // Explicitly mark repository as intentionally unused - Reserved for future persistence operations
+    void this.coreRepository;
+  }
 
   /**
    * 分配系统资源
@@ -441,7 +444,11 @@ export class CoreResourceService {
       throw new Error('No nodes available for allocation');
     }
 
-    const recommendedNode = sortedNodes[0]![0];
+    const firstNode = sortedNodes[0];
+    if (!firstNode) {
+      throw new Error('No nodes available for allocation');
+    }
+    const recommendedNode = firstNode[0];
     const currentNodeLoad = nodeLoads[recommendedNode] as number;
     const expectedImprovement = Math.max(0, 100 - currentNodeLoad);
 

@@ -303,10 +303,12 @@ class CollabRepositoryImpl {
         });
         // Apply filters
         if (query.filters?.status) {
-            matchedSchemas = matchedSchemas.filter(s => query.filters.status.includes(s.status));
+            const statusFilter = query.filters.status;
+            matchedSchemas = matchedSchemas.filter(s => statusFilter.includes(s.status));
         }
         if (query.filters?.mode) {
-            matchedSchemas = matchedSchemas.filter(s => query.filters.mode.includes(s.mode));
+            const modeFilter = query.filters.mode;
+            matchedSchemas = matchedSchemas.filter(s => modeFilter.includes(s.mode));
         }
         if (query.filters?.dateRange) {
             const from = new Date(query.filters.dateRange.from);

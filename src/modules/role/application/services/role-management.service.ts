@@ -84,8 +84,19 @@ export interface AssignRoleRequest {
  * @description 提供Role模块的核心业务逻辑，包括角色管理、权限控制、安全审计
  */
 export class RoleManagementService {
-  
-  constructor(private readonly repository: IRoleRepository) {}
+
+  constructor(private readonly repository: IRoleRepository) {
+    // Explicitly mark reserved coordination methods as intentionally unused
+    // These methods are reserved for CoreOrchestrator activation
+    void this.validateRoleCoordinationPermission;
+    void this.getRoleCoordinationContext;
+    void this.recordRoleCoordinationMetrics;
+    void this.manageRoleExtensionCoordination;
+    void this.requestRoleChangeCoordination;
+    void this.coordinateCollabRoleManagement;
+    void this.enableDialogDrivenRoleCoordination;
+    void this.coordinateRoleAcrossNetwork;
+  }
 
   // ===== 角色CRUD操作 =====
 
@@ -586,6 +597,7 @@ export class RoleManagementService {
    * @returns Promise<boolean> - Whether coordination is permitted
    * @reserved Reserved for CoreOrchestrator activation
    */
+  // Reserved for CoreOrchestrator activation - Cross-module permission validation
   private async validateRoleCoordinationPermission(
     _userId: UUID,
     _roleId: UUID,
@@ -606,6 +618,7 @@ export class RoleManagementService {
    * @returns Promise<Record<string, unknown>> - Coordination context data
    * @reserved Reserved for CoreOrchestrator activation
    */
+  // Reserved for CoreOrchestrator activation - Context module integration
   private async getRoleCoordinationContext(
     _contextId: UUID,
     _roleType: string
@@ -631,6 +644,7 @@ export class RoleManagementService {
    * @returns Promise<void> - Metrics recording completion
    * @reserved Reserved for CoreOrchestrator activation
    */
+  // Reserved for CoreOrchestrator activation - Trace module integration
   private async recordRoleCoordinationMetrics(
     _roleId: UUID,
     _metrics: Record<string, unknown>
@@ -650,6 +664,7 @@ export class RoleManagementService {
    * @returns Promise<boolean> - Whether extension coordination succeeded
    * @reserved Reserved for CoreOrchestrator activation
    */
+  // Reserved for CoreOrchestrator activation - Extension module integration
   private async manageRoleExtensionCoordination(
     _roleId: UUID,
     _extensions: Record<string, unknown>
@@ -674,6 +689,7 @@ export class RoleManagementService {
    * @returns Promise<boolean> - Whether change coordination was approved
    * @reserved Reserved for CoreOrchestrator activation
    */
+  // Reserved for CoreOrchestrator activation - Confirm module integration
   private async requestRoleChangeCoordination(
     _roleId: UUID,
     _change: Record<string, unknown>
@@ -693,6 +709,7 @@ export class RoleManagementService {
    * @returns Promise<boolean> - Whether collaboration coordination succeeded
    * @reserved Reserved for CoreOrchestrator activation
    */
+  // Reserved for CoreOrchestrator activation - Collab module integration
   private async coordinateCollabRoleManagement(
     _collabId: UUID,
     _roleConfig: Record<string, unknown>
@@ -712,6 +729,7 @@ export class RoleManagementService {
    * @returns Promise<boolean> - Whether dialog coordination succeeded
    * @reserved Reserved for CoreOrchestrator activation
    */
+  // Reserved for CoreOrchestrator activation - Dialog module integration
   private async enableDialogDrivenRoleCoordination(
     _dialogId: UUID,
     _roleParticipants: Record<string, unknown>
@@ -731,6 +749,7 @@ export class RoleManagementService {
    * @returns Promise<boolean> - Whether network coordination succeeded
    * @reserved Reserved for CoreOrchestrator activation
    */
+  // Reserved for CoreOrchestrator activation - Network module integration
   private async coordinateRoleAcrossNetwork(
     _networkId: UUID,
     _roleConfig: Record<string, unknown>

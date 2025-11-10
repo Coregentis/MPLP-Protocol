@@ -1002,7 +1002,7 @@ class MessageProcessor {
 
 #### **资源**
 - **文档**：[https://docs.mplp.org](https://docs.mplp.org)
-- **GitHub问题**：[https://github.com/mplp/mplp/issues](https://github.com/mplp/mplp/issues)
+- **GitHub问题**：[https://github.com/Coregentis/MPLP-Protocol/issues](https://github.com/Coregentis/MPLP-Protocol/issues)
 - **社区论坛**：[https://community.mplp.org](https://community.mplp.org)
 - **Discord**：[https://discord.gg/mplp](https://discord.gg/mplp)
 

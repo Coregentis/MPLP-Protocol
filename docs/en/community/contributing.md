@@ -15,7 +15,7 @@
 
 ## 🎉 Welcome Contributors!
 
-Thank you for your interest in contributing to MPLP! As the **first production-ready multi-agent protocol platform** with **100% module completion** and **2,869/2,869 tests passing**, MPLP represents a significant milestone in multi-agent system development. Your contributions help maintain and extend this achievement.
+Thank you for your interest in contributing to MPLP! As the **first production-ready multi-agent protocol platform** with **100% module completion** and **2,902 tests (2,899 passing, 3 failing) = 99.9% pass rate**, MPLP represents a significant milestone in multi-agent system development. Your contributions help maintain and extend this achievement.
 
 ---
 
@@ -34,7 +34,7 @@ Thank you for your interest in contributing to MPLP! As the **first production-r
 1. **Fork and Clone**
    ```bash
    git clone https://github.com/YOUR_USERNAME/mplp.git
-   cd mplp
+   cd MPLP-Protocol
    ```
 
 2. **Install Dependencies**
@@ -45,7 +45,7 @@ Thank you for your interest in contributing to MPLP! As the **first production-r
 3. **Run Tests**
    ```bash
    npm test
-   # Should show: 2,869/2,869 tests passing
+   # Should show: 2,902 tests (2,899 passing, 3 failing)
    ```
 
 4. **Start Development**
@@ -60,7 +60,7 @@ Thank you for your interest in contributing to MPLP! As the **first production-r
 ### **🐛 Bug Fixes**
 
 #### **Finding Bugs**
-- Check [existing issues](https://github.com/mplp/mplp/issues) first
+- Check [existing issues](https://github.com/Coregentis/MPLP-Protocol/issues) first
 - Look for issues labeled `bug`, `good first issue`, or `help wanted`
 - Test the latest version to ensure the bug still exists
 
@@ -89,14 +89,14 @@ Logs, screenshots, or other relevant information
 #### **Fixing Bugs**
 - Create a branch: `git checkout -b fix/issue-description`
 - Write tests that reproduce the bug
-- Fix the bug while maintaining 100% test pass rate
+- Fix the bug while maintaining high test pass rate (99.9%+)
 - Ensure all existing tests still pass
 - Update documentation if needed
 
 ### **✨ New Features**
 
 #### **Feature Requests**
-- Discuss in [GitHub Discussions](https://github.com/mplp/mplp/discussions) first
+- Discuss in [GitHub Discussions](https://github.com/Coregentis/MPLP-Protocol/discussions) first
 - Create detailed feature request with use cases
 - Consider impact on existing functionality
 - Align with MPLP's enterprise-grade standards
@@ -132,7 +132,7 @@ Logs, screenshots, or other relevant information
 - **Performance Tests**: Ensure performance standards
 
 #### **Test Quality Standards**
-- Maintain 100% test pass rate (2,869/2,869 tests)
+- Maintain high test pass rate (99.9%+, currently 2,899/2,902 tests passing)
 - Achieve 95%+ code coverage for new code
 - Write clear, descriptive test names
 - Include edge cases and error conditions
@@ -201,7 +201,7 @@ test(plan): add integration tests for AI planning
 ### **For Contributors**
 
 #### **Before Submitting**
-- [ ] All tests pass (2,869/2,869)
+- [ ] All tests pass (2,899/2,902 = 99.9%)
 - [ ] No TypeScript errors
 - [ ] No ESLint warnings
 - [ ] Documentation updated
@@ -280,7 +280,7 @@ test(plan): add integration tests for AI planning
 ## 📞 Getting Help
 
 ### **Support Channels**
-- **GitHub Discussions**: [Community forum](https://github.com/mplp/mplp/discussions)
+- **GitHub Discussions**: [Community forum](https://github.com/Coregentis/MPLP-Protocol/discussions)
 - **Discord**: [Real-time chat](https://discord.gg/mplp)
 - **Email**: [contributors@mplp.org](mailto:contributors@mplp.org)
 - **Office Hours**: Weekly Tuesday 15:00 UTC
@@ -296,7 +296,7 @@ test(plan): add integration tests for AI planning
 ## 🎯 Contribution Goals
 
 ### **Quality Maintenance**
-- Maintain 100% test pass rate (2,869/2,869 tests)
+- Maintain high test pass rate (99.9%+, currently 2,899/2,902 tests passing)
 - Preserve zero technical debt policy
 - Uphold enterprise-grade quality standards
 - Continue 99.8% performance achievement

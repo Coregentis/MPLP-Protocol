@@ -62,7 +62,7 @@ describe('TraceEntity测试', () => {
       const invalidData = {};
 
       // 🎬 Act & Assert
-      expect(() => new TraceEntity(invalidData)).toThrow('Context ID is required');
+      expect(() => new TraceEntity(invalidData)).toThrow('contextId is required for TraceEntity');
     });
 
     it('应该验证事件名称', () => {

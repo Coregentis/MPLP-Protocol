@@ -8,7 +8,7 @@
 
 [![部署](https://img.shields.io/badge/deployment-生产验证-brightgreen.svg)](./README.md)
 [![基础设施](https://img.shields.io/badge/infrastructure-企业级就绪-brightgreen.svg)](./scaling-guide.md)
-[![质量](https://img.shields.io/badge/tests-2869%2F2869%20通过-brightgreen.svg)](./monitoring-guide.md)
+[![质量](https://img.shields.io/badge/tests-2902%2F2902%20通过-brightgreen.svg)](./monitoring-guide.md)
 [![正常运行时间](https://img.shields.io/badge/uptime-99.9%25%20目标-brightgreen.svg)](./maintenance-guide.md)
 [![语言](https://img.shields.io/badge/language-中文-blue.svg)](../../en/operations/deployment-guide.md)
 

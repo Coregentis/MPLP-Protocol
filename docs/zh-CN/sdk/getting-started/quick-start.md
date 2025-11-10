@@ -1,26 +1,14 @@
-# MPLP SDK 快速开始 - 30分钟构建您的第一个智能体
+# MPLP SDK 快速开始
 
-> **🌐 语言导航**: [English](../../../en/sdk/getting-started/quick-start.md) | [中文](quick-start.md)
+## 🎯 **30分钟构建第一个多智能体应用**
 
+本指南将带您在30分钟内从零开始构建一个完整的多智能体应用。
 
-> **⏱️ 预计时间**: 30分钟  
-> **💡 难度**: 初学者  
-> **🎯 目标**: 创建一个可工作的多智能体应用  
+## 📋 **准备工作**
 
-## 🚀 **您将构建什么**
-
-在本教程中，您将创建一个**社交媒体管理智能体**，它可以：
-- 监控多个平台上的提及
-- 自动回复用户互动
-- 安排和发布内容
-- 生成参与度报告
-
-## 📋 **前置条件**
-
-开始之前，请确保您已：
-- ✅ Node.js 18+ 和 npm 8+
-- ✅ 基础的TypeScript/JavaScript知识
-- ✅ 代码编辑器（推荐VS Code）
+确保您已经：
+- ✅ 安装了Node.js 18+
+- ✅ 有基本的TypeScript/JavaScript知识
 
 ### **安装MPLP** ⚡
 
@@ -36,344 +24,298 @@ node -e "const mplp = require('mplp'); console.log('MPLP版本:', mplp.MPLP_VERS
 # 预期输出: MPLP版本: 1.1.0-beta
 ```
 
-详细的安装选项请参阅[安装指南](installation.md)。
+详细的安装选项请参考[安装指南](installation.md)。
 
-## 🏗️ **步骤1: 创建您的项目（5分钟）**
+## 🚀 **第1步: 创建项目（5分钟）**
 
-### **初始化项目**
-
+### **使用CLI创建项目**
 ```bash
-# 创建新的MPLP项目（需要@mplp/cli）
-mplp create social-media-manager --template agent-app
-cd social-media-manager
+# 创建新项目（需要@mplp/cli）
+mplp create hello-mplp-app
+
+# 进入项目目录
+cd hello-mplp-app
 
 # 安装依赖
 npm install
+```
 
-# 验证设置
-npm run test
+### **手动创建项目**
+```bash
+# 创建项目目录
+mkdir hello-mplp-app
+cd hello-mplp-app
+
+# 初始化npm项目
+npm init -y
+
+# 安装MPLP核心包
+npm install mplp@beta
+
+# 或安装SDK包（高级用例）
+npm install @mplp/sdk-core @mplp/agent-builder @mplp/orchestrator
+
+# 安装TypeScript开发依赖
+npm install --save-dev typescript @types/node ts-node
 ```
 
 ### **项目结构**
 ```
-social-media-manager/
+hello-mplp-app/
 ├── src/
-│   ├── agents/          # 智能体定义
-│   ├── config/          # 配置文件
-│   ├── services/        # 业务逻辑
-│   └── index.ts         # 应用入口点
-├── tests/               # 测试文件
-├── .env.example         # 环境变量模板
-└── package.json         # 项目配置
+│   ├── index.ts          # 应用入口
+│   ├── agents/           # Agent定义
+│   └── workflows/        # 工作流定义
+├── package.json
+├── tsconfig.json
+└── README.md
 ```
 
-## 🤖 **步骤2: 创建您的第一个智能体（10分钟）**
+## 🤖 **第2步: 创建第一个Agent（10分钟）**
 
-### **定义智能体**
-
-创建 `src/agents/social-media-agent.ts`:
+创建 `src/agents/GreetingAgent.ts`：
 
 ```typescript
-import { Agent, AgentBuilder } from '@mplp/agent-builder';
-import { TwitterAdapter, LinkedInAdapter } from '@mplp/adapters';
+import { AgentBuilder } from '@mplp/agent-builder';
 
-export class SocialMediaAgent extends Agent {
-  private twitterAdapter: TwitterAdapter;
-  private linkedinAdapter: LinkedInAdapter;
+export class GreetingAgent {
+  private agent: any;
 
   constructor() {
-    super('social-media-manager');
-    
-    // 初始化平台适配器
-    this.twitterAdapter = new TwitterAdapter({
-      apiKey: process.env.TWITTER_API_KEY!,
-      apiSecret: process.env.TWITTER_API_SECRET!,
-      accessToken: process.env.TWITTER_ACCESS_TOKEN!,
-      accessTokenSecret: process.env.TWITTER_ACCESS_TOKEN_SECRET!
-    });
-
-    this.linkedinAdapter = new LinkedInAdapter({
-      clientId: process.env.LINKEDIN_CLIENT_ID!,
-      clientSecret: process.env.LINKEDIN_CLIENT_SECRET!,
-      accessToken: process.env.LINKEDIN_ACCESS_TOKEN!
-    });
+    this.agent = new AgentBuilder('GreetingAgent')
+      .withDescription('一个友好的问候Agent')
+      .withCapability('greeting', {
+        handler: this.greet.bind(this)
+      })
+      .withCapability('farewell', {
+        handler: this.farewell.bind(this)
+      })
+      .build();
   }
 
-  async initialize(): Promise<void> {
-    // 设置事件监听器
-    this.setupEventHandlers();
-    
-    // 开始监控
-    await this.startMonitoring();
-    
-    console.log('🤖 社交媒体智能体初始化成功！');
+  async greet(name: string): Promise<string> {
+    return `你好，${name}！欢迎使用MPLP！`;
   }
 
-  private setupEventHandlers(): void {
-    // 处理Twitter提及
-    this.twitterAdapter.on('mention', async (mention) => {
-      await this.handleMention('twitter', mention);
-    });
-
-    // 处理LinkedIn消息
-    this.linkedinAdapter.on('message', async (message) => {
-      await this.handleMessage('linkedin', message);
-    });
+  async farewell(name: string): Promise<string> {
+    return `再见，${name}！感谢使用MPLP！`;
   }
 
-  private async startMonitoring(): Promise<void> {
-    // 开始实时监控
-    await this.twitterAdapter.startStream(['mention', 'direct_message']);
-    await this.linkedinAdapter.startMonitoring();
-  }
-
-  private async handleMention(platform: string, mention: any): Promise<void> {
-    console.log(`📱 ${platform}上的新提及:`, mention.text);
-    
-    // 使用AI生成回复（占位符）
-    const response = await this.generateResponse(mention.text);
-    
-    // 回复提及
-    if (platform === 'twitter') {
-      await this.twitterAdapter.reply(mention.id, response);
-    }
-  }
-
-  private async handleMessage(platform: string, message: any): Promise<void> {
-    console.log(`💬 ${platform}上的新消息:`, message.content);
-    
-    // 处理并回复消息
-    const response = await this.generateResponse(message.content);
-    
-    if (platform === 'linkedin') {
-      await this.linkedinAdapter.sendMessage(message.senderId, response);
-    }
-  }
-
-  private async generateResponse(input: string): Promise<string> {
-    // 简单的回复生成（您可以集成AI服务）
-    const responses = [
-      "感谢您的联系！我们会尽快回复您。",
-      "感谢您的关注！今天我们能为您做些什么？",
-      "我们感谢您的消息！我们的团队会很快回复。",
-    ];
-    
-    return responses[Math.floor(Math.random() * responses.length)];
-  }
-
-  async publishContent(content: string, platforms: string[]): Promise<void> {
-    for (const platform of platforms) {
-      try {
-        if (platform === 'twitter' && content.length <= 280) {
-          await this.twitterAdapter.tweet(content);
-        } else if (platform === 'linkedin') {
-          await this.linkedinAdapter.post(content);
-        }
-        
-        console.log(`✅ 内容已发布到${platform}`);
-      } catch (error) {
-        console.error(`❌ 发布到${platform}失败:`, error);
-      }
-    }
+  getAgent() {
+    return this.agent;
   }
 }
 ```
 
-## ⚙️ **步骤3: 配置您的应用（5分钟）**
+## 🔄 **第3步: 创建工作流（10分钟）**
 
-### **环境设置**
-
-复制 `.env.example` 到 `.env` 并添加您的API密钥：
-
-```bash
-# 复制环境模板
-cp .env.example .env
-```
-
-编辑 `.env`:
-```bash
-# Twitter API凭证
-TWITTER_API_KEY=your_twitter_api_key
-TWITTER_API_SECRET=your_twitter_api_secret
-TWITTER_ACCESS_TOKEN=your_twitter_access_token
-TWITTER_ACCESS_TOKEN_SECRET=your_twitter_access_token_secret
-
-# LinkedIn API凭证
-LINKEDIN_CLIENT_ID=your_linkedin_client_id
-LINKEDIN_CLIENT_SECRET=your_linkedin_client_secret
-LINKEDIN_ACCESS_TOKEN=your_linkedin_access_token
-
-# 应用设置
-NODE_ENV=development
-LOG_LEVEL=info
-```
-
-### **应用配置**
-
-更新 `src/config/app.config.ts`:
+创建 `src/workflows/GreetingWorkflow.ts`：
 
 ```typescript
-export const appConfig = {
-  name: '社交媒体管理器',
-  version: '1.0.0',
-  agents: {
-    socialMedia: {
-      enabled: true,
-      platforms: ['twitter', 'linkedin'],
-      autoReply: true,
-      responseDelay: 5000 // 5秒
-    }
-  },
-  monitoring: {
-    keywords: ['@yourbrand', '#yourbrand'],
-    languages: ['zh', 'en'],
-    sentiment: true
+import { MultiAgentOrchestrator } from '@mplp/orchestrator';
+import { GreetingAgent } from '../agents/GreetingAgent';
+
+export class GreetingWorkflow {
+  private orchestrator: MultiAgentOrchestrator;
+  private greetingAgent: GreetingAgent;
+
+  constructor() {
+    this.orchestrator = new MultiAgentOrchestrator();
+    this.greetingAgent = new GreetingAgent();
+    
+    // 注册Agent
+    this.orchestrator.registerAgent(this.greetingAgent.getAgent());
   }
-};
+
+  async createWorkflow() {
+    return this.orchestrator
+      .createWorkflow('greeting_workflow')
+      .step('greet_user', async (input: { name: string }) => {
+        const greeting = await this.greetingAgent.greet(input.name);
+        console.log('问候:', greeting);
+        return { greeting, name: input.name };
+      })
+      .step('process_greeting', async (input: { greeting: string, name: string }) => {
+        // 模拟一些处理逻辑
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        console.log('处理完成，准备告别...');
+        return input;
+      })
+      .step('farewell_user', async (input: { name: string }) => {
+        const farewell = await this.greetingAgent.farewell(input.name);
+        console.log('告别:', farewell);
+        return { farewell };
+      })
+      .build();
+  }
+
+  async execute(userName: string) {
+    const workflow = await this.createWorkflow();
+    return await this.orchestrator.executeWorkflow('greeting_workflow', { name: userName });
+  }
+}
 ```
 
-## 🎮 **步骤4: 创建主应用（5分钟）**
+## 🏗️ **第4步: 创建应用入口（5分钟）**
 
-### **应用入口点**
-
-更新 `src/index.ts`:
+创建 `src/index.ts`：
 
 ```typescript
 import { MPLPApplication } from '@mplp/sdk-core';
-import { SocialMediaAgent } from './agents/social-media-agent';
-import { appConfig } from './config/app.config';
+import { GreetingWorkflow } from './workflows/GreetingWorkflow';
 
 async function main() {
+  console.log('🚀 启动MPLP应用...');
+
   try {
     // 创建MPLP应用
-    const app = new MPLPApplication({
-      name: appConfig.name,
-      version: appConfig.version,
-      logLevel: process.env.LOG_LEVEL || 'info'
+    const app = new MPLPApplication('HelloMPLPApp', {
+      logLevel: 'info',
+      enableHealthCheck: true
     });
-
-    // 创建并注册社交媒体智能体
-    const socialMediaAgent = new SocialMediaAgent();
-    app.registerAgent('social-media', socialMediaAgent);
 
     // 初始化应用
     await app.initialize();
+    console.log('✅ 应用初始化成功');
+
+    // 启动应用
+    await app.start();
+    console.log('✅ 应用启动成功');
+
+    // 创建并执行工作流
+    const workflow = new GreetingWorkflow();
+    console.log('🤖 执行问候工作流...');
     
-    console.log('🚀 社交媒体管理器启动成功！');
-    console.log('📱 正在监控社交媒体平台...');
+    const result = await workflow.execute('MPLP开发者');
+    console.log('🎉 工作流执行完成:', result);
 
-    // 示例：安排一个帖子
-    setTimeout(async () => {
-      await socialMediaAgent.publishContent(
-        "来自我们MPLP驱动的社交媒体智能体的问候！🤖 #MPLP #MultiAgent",
-        ['twitter', 'linkedin']
-      );
-    }, 10000); // 10秒后发布
-
-    // 处理优雅关闭
-    process.on('SIGINT', async () => {
-      console.log('\n🛑 正在优雅关闭...');
-      await app.shutdown();
-      process.exit(0);
-    });
+    // 优雅关闭
+    await app.stop();
+    console.log('✅ 应用已停止');
 
   } catch (error) {
-    console.error('❌ 启动应用失败:', error);
+    console.error('❌ 应用执行失败:', error);
     process.exit(1);
   }
 }
+
+// 处理未捕获的异常
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('未处理的Promise拒绝:', reason);
+  process.exit(1);
+});
+
+process.on('uncaughtException', (error) => {
+  console.error('未捕获的异常:', error);
+  process.exit(1);
+});
 
 // 启动应用
 main().catch(console.error);
 ```
 
-## 🧪 **步骤5: 测试您的智能体（5分钟）**
+## ⚙️ **第5步: 配置和运行**
+
+### **配置TypeScript**
+创建 `tsconfig.json`：
+```json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "lib": ["ES2020"],
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+### **配置package.json脚本**
+在 `package.json` 中添加：
+```json
+{
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "clean": "rm -rf dist"
+  }
+}
+```
 
 ### **运行应用**
-
 ```bash
-# 在开发模式下启动
+# 开发模式运行
 npm run dev
 
-# 预期输出:
-# 🤖 社交媒体智能体初始化成功！
-# 🚀 社交媒体管理器启动成功！
-# 📱 正在监控社交媒体平台...
-# ✅ 内容已发布到twitter
-# ✅ 内容已发布到linkedin
+# 或构建后运行
+npm run build
+npm start
 ```
 
-### **测试功能**
+## 🎉 **预期输出**
 
-1. **监控提及**: 智能体将自动检测提及
-2. **自动回复**: 将自动发送回复
-3. **内容发布**: 计划的帖子将被发布
-4. **错误处理**: 检查日志中的任何问题
+运行成功后，您应该看到类似输出：
+```
+🚀 启动MPLP应用...
+✅ 应用初始化成功
+✅ 应用启动成功
+🤖 执行问候工作流...
+问候: 你好，MPLP开发者！欢迎使用MPLP！
+处理完成，准备告别...
+告别: 再见，MPLP开发者！感谢使用MPLP！
+🎉 工作流执行完成: { farewell: '再见，MPLP开发者！感谢使用MPLP！' }
+✅ 应用已停止
+```
 
-### **运行测试**
+## 🔧 **扩展应用**
 
+### **添加更多Agent**
+```typescript
+// 创建计算Agent
+const mathAgent = new AgentBuilder('MathAgent')
+  .withCapability('add', (a: number, b: number) => a + b)
+  .withCapability('multiply', (a: number, b: number) => a * b)
+  .build();
+```
+
+### **添加平台集成**
 ```bash
-# 运行单元测试
-npm test
+# 安装Twitter适配器
+npm install @mplp/adapter-twitter
 
-# 运行集成测试
-npm run test:integration
+# 在代码中使用
+import { TwitterAdapter } from '@mplp/adapter-twitter';
 
-# 检查测试覆盖率
-npm run test:coverage
+const twitterAgent = new AgentBuilder('TwitterBot')
+  .withPlatform(new TwitterAdapter({
+    apiKey: process.env.TWITTER_API_KEY,
+    apiSecret: process.env.TWITTER_API_SECRET
+  }))
+  .build();
 ```
 
-## 🎉 **恭喜！**
+## 📚 **下一步**
 
-您已成功创建了您的第一个MPLP多智能体应用！您的社交媒体管理智能体现在可以：
+恭喜！您已经成功创建了第一个MPLP应用。接下来可以：
 
-- ✅ 监控多个社交媒体平台
-- ✅ 自动回复提及和消息
-- ✅ 跨平台发布内容
-- ✅ 优雅地处理错误
+1. **深入学习**: [创建第一个Agent](first-agent.md)
+2. **查看示例**: [示例应用](../examples/)
+3. **阅读指南**: [开发指南](../guides/)
+4. **API参考**: [API文档](../api-reference/)
 
-## 🚀 **下一步**
+## 🆘 **遇到问题？**
 
-### **增强您的智能体**
-
-1. **添加AI集成**:
-   ```bash
-   npm install @mplp/ai-services
-   ```
-
-2. **添加更多平台**:
-   ```bash
-   npm install @mplp/adapters-extended
-   ```
-
-3. **添加分析**:
-   ```bash
-   npm install @mplp/analytics
-   ```
-
-### **高级功能**
-
-- **多智能体工作流 (开发中)** - 协调多个智能体
-- **[自定义适配器](../guides/custom-adapters.md)** - 构建您自己的平台集成
-- **AI集成 (开发中)** - 添加智能回复
-- **[部署指南](../guides/deployment.md)** - 部署到生产环境
-
-### **学习资源**
-
-- **API参考 (开发中)** - 完整的API文档
-- **示例 (开发中)** - 更多示例应用
-- **[最佳实践](../guides/best-practices.md)** - 开发最佳实践
-- **[社区](../../community/README.md)** - 加入MPLP社区
-
-## 🆘 **需要帮助？**
-
-- **文档**: [MPLP文档](../../README.md)
-- **社区**: [Discord服务器](https://discord.gg/mplp)
-- **问题**: [GitHub Issues](https://github.com/mplp-org/mplp/issues)
-- **支持**: support@mplp.dev
+- 查看[故障排除指南](../guides/troubleshooting.md)
+- 访问[社区讨论](https://github.com/mplp-org/mplp/discussions)
+- 提交[问题反馈](https://github.com/mplp-org/mplp/issues)
 
 ---
 
-**🎯 教程完成！** 您已经在30分钟内构建了一个可工作的多智能体应用。欢迎来到MPLP开发的世界！
-
-**下一个教程**: 构建多智能体工作流 (开发中)
+**恭喜您完成了MPLP SDK快速开始！** 🎉

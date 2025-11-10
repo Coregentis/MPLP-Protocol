@@ -94,7 +94,7 @@ gh workflow run public-release.yml \
 #### 3.2 手动发布
 ```bash
 # 克隆开源仓库
-git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
+git clone https://github.com/Coregentis/MPLP-Protocol.git
 cd MPLP-Protocol
 
 # 复制构建结果
@@ -258,8 +258,8 @@ v1.0.0-alpha.1: 预览版本
 - **电话**: [紧急联系电话]
 
 ### 相关链接
-- [开发仓库](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev)
-- [开源仓库](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev)
+- [开发仓库](https://github.com/Coregentis/MPLP-Protocol)
+- [开源仓库](https://github.com/Coregentis/MPLP-Protocol)
 - [npm包](https://www.npmjs.com/package/mplp)
 - [文档网站](https://mplp.dev)
 

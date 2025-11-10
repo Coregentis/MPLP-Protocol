@@ -9,7 +9,7 @@
 [![Deployment](https://img.shields.io/badge/deployment-Enterprise%20Ready-brightgreen.svg)](./README.md)
 [![Container](https://img.shields.io/badge/container-Production%20Validated-brightgreen.svg)](./server-implementation.md)
 [![Infrastructure](https://img.shields.io/badge/infrastructure-100%25%20Complete-brightgreen.svg)](./performance-requirements.md)
-[![Quality](https://img.shields.io/badge/tests-2869%2F2869%20Pass-brightgreen.svg)](./security-requirements.md)
+[![Quality](https://img.shields.io/badge/tests-2902%2F2902%20Pass-brightgreen.svg)](./security-requirements.md)
 [![Language](https://img.shields.io/badge/language-English-blue.svg)](../zh-CN/implementation/deployment-models.md)
 
 ---
@@ -193,9 +193,9 @@ keywords:
   - multi-agent
   - protocol
   - platform
-home: https://github.com/mplp/mplp-platform
+home: https://github.com/Coregentis/MPLP-Protocol-platform
 sources:
-  - https://github.com/mplp/mplp-platform
+  - https://github.com/Coregentis/MPLP-Protocol-platform
 maintainers:
   - name: MPLP Team
     email: team@mplp.dev

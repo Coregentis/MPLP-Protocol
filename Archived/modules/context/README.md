@@ -437,7 +437,7 @@ CONTEXT_QUALITY_GRADE=A+
 ```bash
 # 重构后的开发流程
 git clone https://github.com/your-org/mplp.git
-cd mplp
+cd MPLP-Protocol
 
 # 安装依赖
 npm install

@@ -309,8 +309,9 @@ export class MemoryNetworkRepository implements INetworkRepository {
         results = results.filter(n => n.status === filters.status);
       }
       if (filters.tags && filters.tags.length > 0) {
-        results = results.filter(n => 
-          filters.tags!.some(tag => n.searchMetadata.tags.includes(tag))
+        const tags = filters.tags;
+        results = results.filter(n =>
+          tags.some(tag => n.searchMetadata.tags.includes(tag))
         );
       }
     }

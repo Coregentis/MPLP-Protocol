@@ -15,7 +15,7 @@
 
 ## 🎉 Welcome to MPLP Examples!
 
-Welcome to the **first production-ready multi-agent protocol platform** example collection! These examples demonstrate the full capabilities of MPLP v1.0 Alpha, which has achieved **100% module completion** and **2,869/2,869 tests passing**. Each example is production-ready and showcases enterprise-grade multi-agent system development.
+Welcome to the **first production-ready multi-agent protocol platform** example collection! These examples demonstrate the full capabilities of MPLP v1.0 Alpha, which has achieved **100% module completion** and **2,902/2,902 tests passing**. Each example is production-ready and showcases enterprise-grade multi-agent system development.
 
 ### **🏆 Example Quality Standards**
 
@@ -157,8 +157,8 @@ Select an example based on your experience level and use case:
 ### **2. Set Up the Environment**
 ```bash
 # Clone the repository
-git clone https://github.com/mplp/mplp.git
-cd mplp/docs/examples
+git clone https://github.com/Coregentis/MPLP-Protocol.git
+cd MPLP-Protocol/docs/examples
 
 # Choose your example
 cd basic-coordination
@@ -383,10 +383,10 @@ Each example includes:
 - [Best Practices](../guides/best-practices.md)
 
 ### **Community Support**
-- **GitHub Discussions**: [Ask questions and share experiences](https://github.com/mplp/mplp/discussions)
+- **GitHub Discussions**: [Ask questions and share experiences](https://github.com/Coregentis/MPLP-Protocol/discussions)
 - **Discord Community**: [Real-time chat and support](https://discord.gg/mplp)
 - **Stack Overflow**: Tag your questions with `mplp`
-- **Documentation Issues**: [Report documentation problems](https://github.com/mplp/mplp/issues)
+- **Documentation Issues**: [Report documentation problems](https://github.com/Coregentis/MPLP-Protocol/issues)
 
 ---
 
@@ -425,7 +425,7 @@ Congratulations! You've just explored examples from the **first production-ready
 
 #### **Perfect Quality Examples**
 - **100% Module Coverage**: Examples demonstrate all 10 L2 coordination modules
-- **Perfect Test Results**: All examples verified with 2,869/2,869 tests passing
+- **Perfect Test Results**: All examples verified with 2,902/2,902 tests passing
 - **Zero Technical Debt**: Clean, maintainable example code with complete documentation
 - **Enterprise Standards**: Examples follow enterprise-grade development practices
 

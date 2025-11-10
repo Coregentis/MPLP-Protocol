@@ -1,30 +1,40 @@
 "use strict";
 /**
- * @fileoverview Type definitions for Agent Orchestrator Platform
- * @version 1.1.0-beta
+ * AI Coordination Example - Type Definitions
+ * Comprehensive type system for multi-agent AI coordination
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ExecutionMode = exports.DeploymentStrategy = exports.MPLPLogger = void 0;
-var core_1 = require("@mplp/core");
-Object.defineProperty(exports, "MPLPLogger", { enumerable: true, get: function () { return core_1.Logger; } });
-/**
- * Agent deployment strategy
- */
-var DeploymentStrategy;
-(function (DeploymentStrategy) {
-    DeploymentStrategy["SINGLE"] = "single";
-    DeploymentStrategy["REPLICATED"] = "replicated";
-    DeploymentStrategy["DISTRIBUTED"] = "distributed";
-    DeploymentStrategy["LOAD_BALANCED"] = "load_balanced";
-})(DeploymentStrategy || (exports.DeploymentStrategy = DeploymentStrategy = {}));
-/**
- * Workflow execution mode
- */
-var ExecutionMode;
-(function (ExecutionMode) {
-    ExecutionMode["SEQUENTIAL"] = "sequential";
-    ExecutionMode["PARALLEL"] = "parallel";
-    ExecutionMode["CONDITIONAL"] = "conditional";
-    ExecutionMode["EVENT_DRIVEN"] = "event_driven";
-})(ExecutionMode || (exports.ExecutionMode = ExecutionMode = {}));
+exports.DecisionError = exports.AgentError = exports.CoordinationError = void 0;
+// ============================================================================
+// Error Types
+// ============================================================================
+class CoordinationError extends Error {
+    constructor(message, code, details) {
+        super(message);
+        this.code = code;
+        this.details = details;
+        this.name = 'CoordinationError';
+    }
+}
+exports.CoordinationError = CoordinationError;
+class AgentError extends Error {
+    constructor(message, agentId, code, details) {
+        super(message);
+        this.agentId = agentId;
+        this.code = code;
+        this.details = details;
+        this.name = 'AgentError';
+    }
+}
+exports.AgentError = AgentError;
+class DecisionError extends Error {
+    constructor(message, decisionId, code, details) {
+        super(message);
+        this.decisionId = decisionId;
+        this.code = code;
+        this.details = details;
+        this.name = 'DecisionError';
+    }
+}
+exports.DecisionError = DecisionError;
 //# sourceMappingURL=index.js.map

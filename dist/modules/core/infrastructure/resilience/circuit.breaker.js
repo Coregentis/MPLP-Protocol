@@ -155,7 +155,10 @@ class CircuitBreaker {
         if (!this.eventListeners.has(eventType)) {
             this.eventListeners.set(eventType, []);
         }
-        this.eventListeners.get(eventType).push(listener);
+        const listeners = this.eventListeners.get(eventType);
+        if (listeners) {
+            listeners.push(listener);
+        }
     }
     /**
      * 移除事件监听器
@@ -232,7 +235,8 @@ class CircuitBreaker {
                 await new Promise(resolve => setTimeout(resolve, delay));
             }
         }
-        throw lastError;
+        // 这个分支理论上不会到达，但为了类型安全
+        throw lastError || new Error('Retry failed with unknown error');
     }
     createTimeoutPromise(timeoutConfig) {
         return new Promise((_, reject) => {
@@ -442,7 +446,11 @@ class CircuitBreakerManager {
             const mergedConfig = { ...this.globalConfig, ...config, name };
             this.circuitBreakers.set(name, new CircuitBreaker(mergedConfig));
         }
-        return this.circuitBreakers.get(name);
+        const circuitBreaker = this.circuitBreakers.get(name);
+        if (!circuitBreaker) {
+            throw new Error(`Circuit breaker ${name} not found`);
+        }
+        return circuitBreaker;
     }
     /**
      * 获取所有熔断器状态

@@ -121,8 +121,12 @@ export interface IAnalyticsEngine {
 export class ConfirmAnalyticsService {
   constructor(
     private readonly confirmRepository: IConfirmRepository,
+    // Reserved for future analytics engine integration
     private readonly _analyticsEngine: IAnalyticsEngine
-  ) {}
+  ) {
+    // Explicitly mark as intentionally unused - Reserved for future analytics engine integration
+    void this._analyticsEngine;
+  }
 
   /**
    * 分析确认请求 - 基于Schema confirm_id字段
@@ -292,7 +296,8 @@ export class ConfirmAnalyticsService {
    */
   private calculateProcessingTime(request: ConfirmEntity, history: ApprovalHistoryEntry[]): number {
     if (history.length === 0) return 0;
-    const lastEntry = history[history.length - 1]!;
+    const lastEntry = history[history.length - 1];
+    if (!lastEntry) return 0;
     return lastEntry.timestamp.getTime() - request.timestamp.getTime();
   }
 

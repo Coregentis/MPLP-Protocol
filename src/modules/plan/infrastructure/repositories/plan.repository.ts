@@ -27,12 +27,12 @@ export class PlanRepository implements IPlanRepository {
   // ===== 基础CRUD操作 =====
 
   async findById(planId: UUID): Promise<PlanEntity | null> {
-    const planMap = this.transactionActive ? this.transactionPlans! : this.plans;
+    const planMap = this.transactionActive && this.transactionPlans ? this.transactionPlans : this.plans;
     return planMap.get(planId) || null;
   }
 
   async findByName(name: string): Promise<PlanEntity | null> {
-    const planMap = this.transactionActive ? this.transactionPlans! : this.plans;
+    const planMap = this.transactionActive && this.transactionPlans ? this.transactionPlans : this.plans;
     for (const plan of planMap.values()) {
       if (plan.name === name) {
         return plan;
@@ -42,13 +42,13 @@ export class PlanRepository implements IPlanRepository {
   }
 
   async save(plan: PlanEntity): Promise<PlanEntity> {
-    const planMap = this.transactionActive ? this.transactionPlans! : this.plans;
+    const planMap = this.transactionActive && this.transactionPlans ? this.transactionPlans : this.plans;
     planMap.set(plan.planId, plan);
     return plan;
   }
 
   async update(plan: PlanEntity): Promise<PlanEntity> {
-    const planMap = this.transactionActive ? this.transactionPlans! : this.plans;
+    const planMap = this.transactionActive && this.transactionPlans ? this.transactionPlans : this.plans;
     if (!planMap.has(plan.planId)) {
       throw new Error(`Plan with ID ${plan.planId} not found`);
     }
@@ -57,19 +57,19 @@ export class PlanRepository implements IPlanRepository {
   }
 
   async delete(planId: UUID): Promise<boolean> {
-    const planMap = this.transactionActive ? this.transactionPlans! : this.plans;
+    const planMap = this.transactionActive && this.transactionPlans ? this.transactionPlans : this.plans;
     return planMap.delete(planId);
   }
 
   async exists(planId: UUID): Promise<boolean> {
-    const planMap = this.transactionActive ? this.transactionPlans! : this.plans;
+    const planMap = this.transactionActive && this.transactionPlans ? this.transactionPlans : this.plans;
     return planMap.has(planId);
   }
 
   // ===== 查询操作 =====
 
   async findAll(pagination?: PaginationParams): Promise<PaginatedResult<PlanEntity>> {
-    const planMap = this.transactionActive ? this.transactionPlans! : this.plans;
+    const planMap = this.transactionActive && this.transactionPlans ? this.transactionPlans : this.plans;
     const allPlans = Array.from(planMap.values());
     return this.paginateResults(allPlans, pagination);
   }
@@ -78,7 +78,7 @@ export class PlanRepository implements IPlanRepository {
     filter: PlanQueryFilter, 
     pagination?: PaginationParams
   ): Promise<PaginatedResult<PlanEntity>> {
-    const planMap = this.transactionActive ? this.transactionPlans! : this.plans;
+    const planMap = this.transactionActive && this.transactionPlans ? this.transactionPlans : this.plans;
     let filteredPlans = Array.from(planMap.values());
 
     // 应用过滤条件
@@ -105,26 +105,30 @@ export class PlanRepository implements IPlanRepository {
     }
 
     if (filter.createdAfter) {
-      filteredPlans = filteredPlans.filter(plan => 
-        plan.createdAt && plan.createdAt >= filter.createdAfter!
+      const createdAfter = filter.createdAfter;
+      filteredPlans = filteredPlans.filter(plan =>
+        plan.createdAt && plan.createdAt >= createdAfter
       );
     }
 
     if (filter.createdBefore) {
-      filteredPlans = filteredPlans.filter(plan => 
-        plan.createdAt && plan.createdAt <= filter.createdBefore!
+      const createdBefore = filter.createdBefore;
+      filteredPlans = filteredPlans.filter(plan =>
+        plan.createdAt && plan.createdAt <= createdBefore
       );
     }
 
     if (filter.updatedAfter) {
-      filteredPlans = filteredPlans.filter(plan => 
-        plan.updatedAt && plan.updatedAt >= filter.updatedAfter!
+      const updatedAfter = filter.updatedAfter;
+      filteredPlans = filteredPlans.filter(plan =>
+        plan.updatedAt && plan.updatedAt >= updatedAfter
       );
     }
 
     if (filter.updatedBefore) {
-      filteredPlans = filteredPlans.filter(plan => 
-        plan.updatedAt && plan.updatedAt <= filter.updatedBefore!
+      const updatedBefore = filter.updatedBefore;
+      filteredPlans = filteredPlans.filter(plan =>
+        plan.updatedAt && plan.updatedAt <= updatedBefore
       );
     }
 
@@ -150,11 +154,13 @@ export class PlanRepository implements IPlanRepository {
     }
 
     if (filter.progressMin !== undefined) {
-      filteredPlans = filteredPlans.filter(plan => plan.getProgress() >= filter.progressMin!);
+      const progressMin = filter.progressMin;
+      filteredPlans = filteredPlans.filter(plan => plan.getProgress() >= progressMin);
     }
 
     if (filter.progressMax !== undefined) {
-      filteredPlans = filteredPlans.filter(plan => plan.getProgress() <= filter.progressMax!);
+      const progressMax = filter.progressMax;
+      filteredPlans = filteredPlans.filter(plan => plan.getProgress() <= progressMax);
     }
 
     return this.paginateResults(filteredPlans, pagination);
@@ -205,7 +211,7 @@ export class PlanRepository implements IPlanRepository {
   // ===== 统计操作 =====
 
   async count(): Promise<number> {
-    const planMap = this.transactionActive ? this.transactionPlans! : this.plans;
+    const planMap = this.transactionActive && this.transactionPlans ? this.transactionPlans : this.plans;
     return planMap.size;
   }
 
@@ -249,30 +255,32 @@ export class PlanRepository implements IPlanRepository {
 
   async findOverduePlans(pagination?: PaginationParams): Promise<PaginatedResult<PlanEntity>> {
     const now = new Date();
-    const planMap = this.transactionActive ? this.transactionPlans! : this.plans;
+    const planMap = this.transactionActive && this.transactionPlans ? this.transactionPlans : this.plans;
     const overduePlans = Array.from(planMap.values()).filter(plan => {
-      if (!plan.toData().timeline?.endDate) return false;
-      const endDate = new Date(plan.toData().timeline!.endDate!);
+      const timeline = plan.toData().timeline;
+      if (!timeline?.endDate) return false;
+      const endDate = new Date(timeline.endDate);
       return endDate < now && plan.status !== 'completed' && plan.status !== 'cancelled';
     });
-    
+
     return this.paginateResults(overduePlans, pagination);
   }
 
   async findUpcomingDeadlinePlans(
-    daysAhead: number, 
+    daysAhead: number,
     pagination?: PaginationParams
   ): Promise<PaginatedResult<PlanEntity>> {
     const now = new Date();
     const futureDate = new Date(now.getTime() + daysAhead * 24 * 60 * 60 * 1000);
-    const planMap = this.transactionActive ? this.transactionPlans! : this.plans;
+    const planMap = this.transactionActive && this.transactionPlans ? this.transactionPlans : this.plans;
     
     const upcomingPlans = Array.from(planMap.values()).filter(plan => {
-      if (!plan.toData().timeline?.endDate) return false;
-      const endDate = new Date(plan.toData().timeline!.endDate!);
+      const timeline = plan.toData().timeline;
+      if (!timeline?.endDate) return false;
+      const endDate = new Date(timeline.endDate);
       return endDate >= now && endDate <= futureDate && plan.status !== 'completed' && plan.status !== 'cancelled';
     });
-    
+
     return this.paginateResults(upcomingPlans, pagination);
   }
 
@@ -288,7 +296,7 @@ export class PlanRepository implements IPlanRepository {
     taskStatus: 'pending' | 'ready' | 'running' | 'blocked' | 'completed' | 'failed' | 'skipped',
     pagination?: PaginationParams
   ): Promise<PaginatedResult<PlanEntity>> {
-    const planMap = this.transactionActive ? this.transactionPlans! : this.plans;
+    const planMap = this.transactionActive && this.transactionPlans ? this.transactionPlans : this.plans;
     const filteredPlans = Array.from(planMap.values()).filter(plan =>
       plan.tasks.some(task => task.status === taskStatus)
     );
@@ -329,7 +337,7 @@ export class PlanRepository implements IPlanRepository {
     status: 'draft' | 'approved' | 'active' | 'paused' | 'completed' | 'cancelled' | 'failed'
   ): Promise<number> {
     let updatedCount = 0;
-    const planMap = this.transactionActive ? this.transactionPlans! : this.plans;
+    const planMap = this.transactionActive && this.transactionPlans ? this.transactionPlans : this.plans;
 
     for (const planId of planIds) {
       const plan = planMap.get(planId);
@@ -367,7 +375,9 @@ export class PlanRepository implements IPlanRepository {
     if (!this.transactionActive) {
       throw new Error('No active transaction');
     }
-    this.plans = this.transactionPlans!;
+    if (this.transactionPlans) {
+      this.plans = this.transactionPlans;
+    }
     this.transactionActive = false;
     this.transactionPlans = null;
   }

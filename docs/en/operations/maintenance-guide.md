@@ -9,7 +9,7 @@
 [![Maintenance](https://img.shields.io/badge/maintenance-Zero%20Downtime-brightgreen.svg)](./README.md)
 [![Uptime](https://img.shields.io/badge/uptime-99.9%25%20Target-brightgreen.svg)](./monitoring-guide.md)
 [![Reliability](https://img.shields.io/badge/reliability-Enterprise%20Grade-brightgreen.svg)](./scaling-guide.md)
-[![Quality](https://img.shields.io/badge/tests-2869%2F2869%20Pass-brightgreen.svg)](./deployment-guide.md)
+[![Quality](https://img.shields.io/badge/tests-2902%2F2902%20Pass-brightgreen.svg)](./deployment-guide.md)
 [![Language](https://img.shields.io/badge/language-English-blue.svg)](../../zh-CN/operations/maintenance-guide.md)
 
 ---

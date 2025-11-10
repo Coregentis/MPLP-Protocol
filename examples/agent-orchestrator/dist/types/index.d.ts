@@ -1,600 +1,287 @@
 /**
- * @fileoverview Type definitions for Agent Orchestrator Platform
- * @version 1.1.0-beta
+ * AI Coordination Example - Type Definitions
+ * Comprehensive type system for multi-agent AI coordination
  */
-export type { ApplicationConfig } from '@mplp/core';
-export { Logger as MPLPLogger } from '@mplp/core';
-export type { IAgent, AgentStatus, AgentCapability } from '@mplp/agent-builder';
-export interface AgentConfig {
-    name: string;
-    capabilities: string[];
-    [key: string]: unknown;
+export interface IAgent {
+    readonly id: string;
+    readonly name: string;
+    readonly type: AgentType;
+    readonly capabilities: AgentCapability[];
+    readonly status: AgentStatus;
+    initialize(): Promise<void>;
+    process(task: Task): Promise<TaskResult>;
+    communicate(message: AgentMessage): Promise<AgentResponse>;
+    shutdown(): Promise<void>;
+    on(event: string, listener: (...args: any[]) => void): void;
+    removeAllListeners(event?: string): void;
 }
-export type { WorkflowDefinition, WorkflowStatus } from '@mplp/orchestrator';
-/**
- * Orchestrator platform status
- */
-export type OrchestratorStatus = 'stopped' | 'initializing' | 'initialized' | 'starting' | 'running' | 'stopping' | 'error';
-/**
- * Agent deployment strategy
- */
-export declare enum DeploymentStrategy {
-    SINGLE = "single",
-    REPLICATED = "replicated",
-    DISTRIBUTED = "distributed",
-    LOAD_BALANCED = "load_balanced"
+export type AgentType = 'planner' | 'creator' | 'reviewer' | 'publisher' | 'coordinator';
+export type AgentCapability = 'content_planning' | 'content_creation' | 'content_review' | 'content_publishing' | 'task_coordination' | 'decision_making' | 'conflict_resolution' | 'quality_assessment' | 'multi_language' | 'ai_integration';
+export type AgentStatus = 'initializing' | 'ready' | 'busy' | 'error' | 'shutdown';
+export interface Task {
+    readonly id: string;
+    readonly type: TaskType;
+    readonly priority: TaskPriority;
+    readonly requirements: TaskRequirements;
+    readonly context: TaskContext;
+    readonly deadline?: Date;
+    readonly dependencies?: string[];
 }
-/**
- * Workflow execution mode
- */
-export declare enum ExecutionMode {
-    SEQUENTIAL = "sequential",
-    PARALLEL = "parallel",
-    CONDITIONAL = "conditional",
-    EVENT_DRIVEN = "event_driven"
+export type TaskType = 'content_creation' | 'content_review' | 'content_publishing' | 'decision_making' | 'conflict_resolution' | 'quality_assessment';
+export type TaskPriority = 'low' | 'medium' | 'high' | 'critical';
+export interface TaskRequirements {
+    readonly topic?: string;
+    readonly length?: number;
+    readonly style?: ContentStyle;
+    readonly languages?: string[];
+    readonly channels?: PublishingChannel[];
+    readonly quality_threshold?: number;
+    readonly custom_requirements?: Record<string, unknown>;
 }
-/**
- * Agent orchestrator configuration
- */
-export interface AgentOrchestratorConfig {
-    name: string;
-    version: string;
-    description?: string;
-    agents: AgentDeploymentConfig[];
-    workflows: WorkflowConfig[];
-    orchestration: OrchestrationConfig;
-    monitoring: MonitoringConfig;
-    scaling: ScalingConfig;
-    security: SecurityConfig;
+export type ContentStyle = 'professional' | 'casual' | 'technical' | 'creative' | 'formal' | 'conversational';
+export type PublishingChannel = 'blog' | 'social_media' | 'newsletter' | 'documentation' | 'marketing' | 'internal';
+export interface TaskContext {
+    readonly user_id?: string;
+    readonly session_id?: string;
+    readonly workflow_id?: string;
+    readonly metadata?: Record<string, unknown>;
 }
-/**
- * Agent deployment configuration
- */
-export interface AgentDeploymentConfig {
-    id: string;
-    name: string;
-    type: string;
-    strategy: DeploymentStrategy;
-    replicas: number;
-    config: AgentConfig;
-    resources: ResourceConfig;
-    healthCheck: HealthCheckConfig;
-    dependencies: string[];
+export interface TaskResult {
+    readonly task_id: string;
+    readonly agent_id: string;
+    readonly status: TaskResultStatus;
+    readonly output?: unknown;
+    readonly quality_score?: number;
+    readonly execution_time?: number;
+    readonly error?: string;
+    readonly metadata?: Record<string, unknown>;
+    readonly execution_metadata?: {
+        readonly total_execution_time: number;
+        readonly coordination_rounds: number;
+    };
+    readonly coordination_metrics?: {
+        readonly quality_score: number;
+        readonly workflow_efficiency: number;
+    };
 }
-/**
- * Resource configuration
- */
-export interface ResourceConfig {
-    cpu: number;
-    memory: number;
-    storage: number;
-    network: NetworkConfig;
+export type TaskResultStatus = 'success' | 'partial_success' | 'failure' | 'timeout' | 'cancelled';
+export interface AgentMessage {
+    readonly id: string;
+    readonly from: string;
+    readonly to: string | string[];
+    readonly type: MessageType;
+    readonly content: unknown;
+    readonly timestamp: Date;
+    readonly priority: MessagePriority;
+    readonly requires_response?: boolean;
 }
-/**
- * Network configuration
- */
-export interface NetworkConfig {
-    ports: PortConfig[];
-    protocols: string[];
-    security: NetworkSecurityConfig;
+export type MessageType = 'task_assignment' | 'task_result' | 'decision_request' | 'decision_response' | 'conflict_notification' | 'status_update' | 'coordination_request' | 'information_sharing';
+export type MessagePriority = 'low' | 'medium' | 'high' | 'urgent';
+export interface AgentResponse {
+    readonly message_id: string;
+    readonly agent_id: string;
+    readonly content: unknown;
+    readonly timestamp: Date;
+    readonly status: ResponseStatus;
 }
-/**
- * Port configuration
- */
-export interface PortConfig {
-    name: string;
-    port: number;
-    protocol: 'tcp' | 'udp' | 'http' | 'https';
-    exposed: boolean;
+export type ResponseStatus = 'success' | 'error' | 'timeout' | 'rejected';
+export interface DecisionRequest {
+    readonly id: string;
+    readonly question: string;
+    readonly options: DecisionOption[];
+    readonly participants: string[];
+    readonly criteria: DecisionCriteria;
+    readonly timeout?: number;
+    readonly strategy: DecisionStrategy;
 }
-/**
- * Network security configuration
- */
-export interface NetworkSecurityConfig {
-    encryption: boolean;
-    authentication: boolean;
-    authorization: boolean;
-    firewall: FirewallConfig;
+export interface DecisionOption {
+    readonly id: string;
+    readonly label: string;
+    readonly description?: string;
+    readonly metadata?: Record<string, unknown>;
 }
-/**
- * Firewall configuration
- */
-export interface FirewallConfig {
-    enabled: boolean;
-    rules: FirewallRule[];
+export interface DecisionCriteria {
+    readonly [criterion: string]: number;
 }
-/**
- * Firewall rule
- */
-export interface FirewallRule {
-    name: string;
-    action: 'allow' | 'deny';
-    source: string;
-    destination: string;
-    port?: number;
-    protocol?: string;
+export type DecisionStrategy = 'consensus' | 'majority' | 'weighted' | 'expertise_based' | 'unanimous';
+export interface DecisionResult {
+    readonly decision_id: string;
+    readonly chosen_option: string;
+    readonly confidence: number;
+    readonly reasoning: string;
+    readonly votes: Record<string, string>;
+    readonly execution_time: number;
 }
-/**
- * Health check configuration
- */
-export interface HealthCheckConfig {
-    enabled: boolean;
-    interval: number;
-    timeout: number;
-    retries: number;
-    endpoint?: string;
-    command?: string;
+export interface MemoryEntry {
+    readonly id: string;
+    readonly key: string;
+    readonly value: unknown;
+    readonly type: MemoryType;
+    readonly timestamp: Date;
+    readonly ttl?: number;
+    readonly tags?: string[];
+    readonly metadata?: Record<string, unknown>;
 }
-/**
- * Workflow configuration
- */
-export interface WorkflowConfig {
-    id: string;
-    name: string;
-    description?: string;
-    mode: ExecutionMode;
-    steps: WorkflowStep[];
-    triggers: WorkflowTrigger[];
-    conditions: WorkflowCondition[];
-    timeout: number;
-    retries: number;
+export type MemoryType = 'knowledge' | 'context' | 'preference' | 'history' | 'cache' | 'temporary';
+export interface KnowledgeGraph {
+    readonly nodes: KnowledgeNode[];
+    readonly edges: KnowledgeEdge[];
 }
-/**
- * Workflow step
- */
-export interface WorkflowStep {
-    id: string;
-    name: string;
-    agentId: string;
-    action: string;
-    parameters: Record<string, unknown>;
-    timeout: number;
-    retries: number;
-    onSuccess?: string;
-    onFailure?: string;
-    conditions?: WorkflowCondition[];
+export interface KnowledgeNode {
+    readonly id: string;
+    readonly type: string;
+    readonly properties: Record<string, unknown>;
 }
-/**
- * Workflow trigger
- */
-export interface WorkflowTrigger {
-    id: string;
-    name: string;
-    type: 'event' | 'schedule' | 'manual' | 'webhook';
-    config: TriggerConfig;
-    enabled: boolean;
+export interface KnowledgeEdge {
+    readonly from: string;
+    readonly to: string;
+    readonly type: string;
+    readonly weight?: number;
+    readonly properties?: Record<string, unknown>;
 }
-/**
- * Trigger configuration
- */
-export interface TriggerConfig {
-    event?: string;
-    schedule?: string;
-    webhook?: WebhookConfig;
-    conditions?: WorkflowCondition[];
+export interface CoordinationConfig {
+    readonly decision_engine: DecisionEngineConfig;
+    readonly consensus_manager: ConsensusManagerConfig;
+    readonly conflict_resolver: ConflictResolverConfig;
+    readonly shared_memory: SharedMemoryConfig;
+    readonly communication: CommunicationConfig;
 }
-/**
- * Webhook configuration
- */
-export interface WebhookConfig {
-    url: string;
-    method: 'GET' | 'POST' | 'PUT' | 'DELETE';
-    headers: Record<string, string>;
-    authentication?: WebhookAuth;
+export interface DecisionEngineConfig {
+    readonly strategy: DecisionStrategy;
+    readonly timeout: number;
+    readonly min_agreement: number;
+    readonly max_iterations: number;
 }
-/**
- * Webhook authentication
- */
-export interface WebhookAuth {
-    type: 'basic' | 'bearer' | 'api_key';
-    credentials: Record<string, string>;
+export interface ConsensusManagerConfig {
+    readonly threshold: number;
+    readonly max_rounds: number;
+    readonly convergence_criteria: number;
 }
-/**
- * Workflow condition
- */
-export interface WorkflowCondition {
-    field: string;
-    operator: 'equals' | 'not_equals' | 'greater_than' | 'less_than' | 'contains' | 'exists';
-    value: unknown;
-    logicalOperator?: 'and' | 'or';
+export interface ConflictResolverConfig {
+    readonly strategies: string[];
+    readonly escalation_threshold: number;
+    readonly escalation_handler: string;
 }
-/**
- * Orchestration configuration
- */
-export interface OrchestrationConfig {
-    maxConcurrentWorkflows: number;
-    maxConcurrentAgents: number;
-    resourceAllocation: ResourceAllocationConfig;
-    failureHandling: FailureHandlingConfig;
-    communication: CommunicationConfig;
+export interface SharedMemoryConfig {
+    readonly persistence: boolean;
+    readonly sync_interval: number;
+    readonly conflict_resolution: string;
+    readonly max_entries: number;
 }
-/**
- * Resource allocation configuration
- */
-export interface ResourceAllocationConfig {
-    strategy: 'fair' | 'priority' | 'resource_based' | 'custom';
-    priorities: Record<string, number>;
-    limits: ResourceLimits;
-}
-/**
- * Resource limits
- */
-export interface ResourceLimits {
-    cpu: number;
-    memory: number;
-    storage: number;
-    network: number;
-}
-/**
- * Failure handling configuration
- */
-export interface FailureHandlingConfig {
-    strategy: 'retry' | 'failover' | 'circuit_breaker' | 'custom';
-    retryPolicy: RetryPolicy;
-    circuitBreaker: CircuitBreakerConfig;
-    failover: FailoverConfig;
-}
-/**
- * Retry policy
- */
-export interface RetryPolicy {
-    maxRetries: number;
-    backoffStrategy: 'linear' | 'exponential' | 'fixed';
-    baseDelay: number;
-    maxDelay: number;
-    jitter: boolean;
-}
-/**
- * Circuit breaker configuration
- */
-export interface CircuitBreakerConfig {
-    enabled: boolean;
-    failureThreshold: number;
-    recoveryTimeout: number;
-    halfOpenMaxCalls: number;
-}
-/**
- * Failover configuration
- */
-export interface FailoverConfig {
-    enabled: boolean;
-    strategy: 'active_passive' | 'active_active' | 'round_robin';
-    healthCheckInterval: number;
-    switchoverTimeout: number;
-}
-/**
- * Communication configuration
- */
 export interface CommunicationConfig {
-    protocol: 'http' | 'grpc' | 'websocket' | 'message_queue';
-    serialization: 'json' | 'protobuf' | 'avro';
-    compression: boolean;
-    encryption: boolean;
-    messageQueue: MessageQueueConfig;
+    readonly message_bus_type: string;
+    readonly event_dispatcher_async: boolean;
+    readonly protocol_handler_timeout: number;
+    readonly max_message_size: number;
 }
-/**
- * Message queue configuration
- */
-export interface MessageQueueConfig {
-    type: 'redis' | 'rabbitmq' | 'kafka' | 'sqs';
-    connection: Record<string, unknown>;
-    topics: TopicConfig[];
+export interface CoordinationEvent {
+    readonly type: CoordinationEventType;
+    readonly source: string;
+    readonly data: unknown;
+    readonly timestamp: Date;
 }
-/**
- * Topic configuration
- */
-export interface TopicConfig {
-    name: string;
-    partitions: number;
-    replication: number;
-    retention: number;
+export type CoordinationEventType = 'agent_registered' | 'agent_unregistered' | 'task_started' | 'task_completed' | 'decision_requested' | 'decision_made' | 'conflict_detected' | 'conflict_resolved' | 'consensus_reached' | 'coordination_failed';
+export interface Metrics {
+    readonly consensus_rate: number;
+    readonly decision_time: number;
+    readonly conflict_resolution_rate: number;
+    readonly task_completion_rate: number;
+    readonly quality_score: number;
 }
-/**
- * Monitoring configuration
- */
-export interface MonitoringConfig {
-    enabled: boolean;
-    metrics: MetricsConfig;
-    logging: LoggingConfig;
-    alerting: AlertingConfig;
-    tracing: TracingConfig;
-}
-/**
- * Metrics configuration
- */
-export interface MetricsConfig {
-    enabled: boolean;
-    interval: number;
-    retention: number;
-    exporters: MetricsExporter[];
-}
-/**
- * Metrics exporter
- */
-export interface MetricsExporter {
-    type: 'prometheus' | 'influxdb' | 'datadog' | 'custom';
-    config: Record<string, unknown>;
-}
-/**
- * Logging configuration
- */
-export interface LoggingConfig {
-    level: 'debug' | 'info' | 'warn' | 'error';
-    format: 'json' | 'text';
-    outputs: LogOutput[];
-    rotation: LogRotationConfig;
-}
-/**
- * Log output
- */
-export interface LogOutput {
-    type: 'console' | 'file' | 'syslog' | 'elasticsearch';
-    config: Record<string, unknown>;
-}
-/**
- * Log rotation configuration
- */
-export interface LogRotationConfig {
-    enabled: boolean;
-    maxSize: number;
-    maxFiles: number;
-    maxAge: number;
-}
-/**
- * Alerting configuration
- */
-export interface AlertingConfig {
-    enabled: boolean;
-    rules: AlertRule[];
-    channels: AlertChannel[];
-}
-/**
- * Alert rule
- */
-export interface AlertRule {
-    name: string;
-    condition: string;
-    severity: 'low' | 'medium' | 'high' | 'critical';
-    threshold: number;
-    duration: number;
-    channels: string[];
-}
-/**
- * Alert channel
- */
-export interface AlertChannel {
-    name: string;
-    type: 'email' | 'slack' | 'webhook' | 'sms';
-    config: Record<string, unknown>;
-}
-/**
- * Tracing configuration
- */
-export interface TracingConfig {
-    enabled: boolean;
-    sampler: TracingSampler;
-    exporters: TracingExporter[];
-}
-/**
- * Tracing sampler
- */
-export interface TracingSampler {
-    type: 'always' | 'never' | 'probability' | 'rate_limiting';
-    config: Record<string, unknown>;
-}
-/**
- * Tracing exporter
- */
-export interface TracingExporter {
-    type: 'jaeger' | 'zipkin' | 'otlp';
-    config: Record<string, unknown>;
-}
-/**
- * Scaling configuration
- */
-export interface ScalingConfig {
-    enabled: boolean;
-    strategy: 'manual' | 'horizontal' | 'vertical' | 'predictive';
-    horizontal: HorizontalScalingConfig;
-    vertical: VerticalScalingConfig;
-    predictive: PredictiveScalingConfig;
-}
-/**
- * Horizontal scaling configuration
- */
-export interface HorizontalScalingConfig {
-    minReplicas: number;
-    maxReplicas: number;
-    targetCPU: number;
-    targetMemory: number;
-    scaleUpCooldown: number;
-    scaleDownCooldown: number;
-}
-/**
- * Vertical scaling configuration
- */
-export interface VerticalScalingConfig {
-    minCPU: number;
-    maxCPU: number;
-    minMemory: number;
-    maxMemory: number;
-    scalingFactor: number;
-}
-/**
- * Predictive scaling configuration
- */
-export interface PredictiveScalingConfig {
-    algorithm: 'linear_regression' | 'arima' | 'neural_network';
-    lookbackPeriod: number;
-    forecastPeriod: number;
-    confidence: number;
-}
-/**
- * Security configuration
- */
-export interface SecurityConfig {
-    authentication: AuthenticationConfig;
-    authorization: AuthorizationConfig;
-    encryption: EncryptionConfig;
-    audit: AuditConfig;
-}
-/**
- * Authentication configuration
- */
-export interface AuthenticationConfig {
-    enabled: boolean;
-    providers: AuthProvider[];
-    tokenExpiry: number;
-    refreshTokens: boolean;
-}
-/**
- * Authentication provider
- */
-export interface AuthProvider {
-    name: string;
-    type: 'local' | 'oauth2' | 'saml' | 'ldap';
-    config: Record<string, unknown>;
-}
-/**
- * Authorization configuration
- */
-export interface AuthorizationConfig {
-    enabled: boolean;
-    model: 'rbac' | 'abac' | 'custom';
-    roles: Role[];
-    policies: Policy[];
-}
-/**
- * Role definition
- */
-export interface Role {
-    name: string;
-    permissions: string[];
-    inherits?: string[];
-}
-/**
- * Policy definition
- */
-export interface Policy {
-    name: string;
-    effect: 'allow' | 'deny';
-    actions: string[];
-    resources: string[];
-    conditions?: PolicyCondition[];
-}
-/**
- * Policy condition
- */
-export interface PolicyCondition {
-    field: string;
-    operator: string;
-    value: unknown;
-}
-/**
- * Encryption configuration
- */
-export interface EncryptionConfig {
-    enabled: boolean;
-    algorithm: string;
-    keyManagement: KeyManagementConfig;
-    dataEncryption: DataEncryptionConfig;
-}
-/**
- * Key management configuration
- */
-export interface KeyManagementConfig {
-    provider: 'local' | 'aws_kms' | 'azure_kv' | 'hashicorp_vault';
-    rotation: boolean;
-    rotationInterval: number;
-}
-/**
- * Data encryption configuration
- */
-export interface DataEncryptionConfig {
-    atRest: boolean;
-    inTransit: boolean;
-    inMemory: boolean;
-}
-/**
- * Audit configuration
- */
-export interface AuditConfig {
-    enabled: boolean;
-    events: string[];
-    storage: AuditStorageConfig;
-    retention: number;
-}
-/**
- * Audit storage configuration
- */
-export interface AuditStorageConfig {
-    type: 'file' | 'database' | 'elasticsearch' | 's3';
-    config: Record<string, unknown>;
-}
-/**
- * System metrics
- */
-export interface SystemMetrics {
-    agents: AgentMetrics;
-    workflows: WorkflowMetrics;
-    resources: ResourceMetrics;
-    performance: PerformanceMetrics;
-    timestamp: string;
-}
-/**
- * Agent metrics
- */
-export interface AgentMetrics {
-    total: number;
-    running: number;
-    stopped: number;
-    error: number;
-    deployments: Record<string, number>;
-}
-/**
- * Workflow metrics
- */
-export interface WorkflowMetrics {
-    total: number;
-    running: number;
-    completed: number;
-    failed: number;
-    averageExecutionTime: number;
-}
-/**
- * Resource metrics
- */
-export interface ResourceMetrics {
-    cpu: ResourceUsage;
-    memory: ResourceUsage;
-    storage: ResourceUsage;
-    network: NetworkUsage;
-}
-/**
- * Resource usage
- */
-export interface ResourceUsage {
-    used: number;
-    available: number;
-    percentage: number;
-}
-/**
- * Network usage
- */
-export interface NetworkUsage {
-    bytesIn: number;
-    bytesOut: number;
-    packetsIn: number;
-    packetsOut: number;
-    errors: number;
-}
-/**
- * Performance metrics
- */
 export interface PerformanceMetrics {
-    uptime: number;
-    responseTime: number;
-    throughput: number;
-    errorRate: number;
+    readonly total_tasks: number;
+    readonly successful_tasks: number;
+    readonly failed_tasks: number;
+    readonly average_execution_time: number;
+    readonly peak_memory_usage: number;
+    readonly cpu_usage: number;
+}
+export declare class CoordinationError extends Error {
+    readonly code: string;
+    readonly details?: Record<string, unknown>;
+    constructor(message: string, code: string, details?: Record<string, unknown>);
+}
+export declare class AgentError extends Error {
+    readonly agentId: string;
+    readonly code: string;
+    readonly details?: Record<string, unknown>;
+    constructor(message: string, agentId: string, code: string, details?: Record<string, unknown>);
+}
+export declare class DecisionError extends Error {
+    readonly decisionId: string;
+    readonly code: string;
+    readonly details?: Record<string, unknown>;
+    constructor(message: string, decisionId: string, code: string, details?: Record<string, unknown>);
+}
+export interface OrchestrationMetrics {
+    totalAgents: number;
+    activeWorkflows: number;
+    completedTasks: number;
+    averageExecutionTime: number;
+    successRate: number;
+    resourceUtilization: number;
+}
+export interface WorkflowDefinition {
+    readonly id: string;
+    readonly name: string;
+    readonly description: string;
+    readonly steps: WorkflowStep[];
+    readonly triggers: WorkflowTrigger[];
+    readonly metadata?: Record<string, unknown>;
+}
+export interface WorkflowStep {
+    readonly id: string;
+    readonly name: string;
+    readonly agentType: AgentType;
+    readonly action: string;
+    readonly inputs: Record<string, unknown>;
+    readonly outputs: Record<string, unknown>;
+    readonly dependencies?: string[];
+    readonly timeout?: number;
+}
+export interface WorkflowTrigger {
+    readonly type: 'event' | 'schedule' | 'manual';
+    readonly condition: string;
+    readonly parameters?: Record<string, unknown>;
+}
+export interface DistributedDeployment {
+    readonly nodeId: string;
+    readonly nodeType: 'coordinator' | 'worker' | 'hybrid';
+    readonly capacity: number;
+    readonly currentLoad: number;
+    readonly status: 'online' | 'offline' | 'maintenance';
+    readonly lastHeartbeat: Date;
+}
+export interface MonitoringData {
+    readonly timestamp: Date;
+    readonly agentMetrics: Map<string, AgentMetrics>;
+    readonly systemMetrics: SystemMetrics;
+    readonly workflowMetrics: WorkflowMetrics;
+}
+export interface AgentMetrics {
+    readonly agentId: string;
+    readonly tasksProcessed: number;
+    readonly averageResponseTime: number;
+    readonly errorRate: number;
+    readonly resourceUsage: ResourceUsage;
+}
+export interface SystemMetrics {
+    readonly cpuUsage: number;
+    readonly memoryUsage: number;
+    readonly networkLatency: number;
+    readonly diskUsage: number;
+}
+export interface WorkflowMetrics {
+    readonly workflowId: string;
+    readonly executionTime: number;
+    readonly stepsCompleted: number;
+    readonly stepsTotal: number;
+    readonly successRate: number;
+}
+export interface ResourceUsage {
+    readonly cpu: number;
+    readonly memory: number;
+    readonly network: number;
+    readonly storage: number;
 }
 //# sourceMappingURL=index.d.ts.map

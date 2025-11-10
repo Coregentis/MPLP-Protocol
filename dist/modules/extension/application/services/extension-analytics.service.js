@@ -199,7 +199,10 @@ class ExtensionAnalyticsService {
         // 简化实现，实际应该基于多个指标计算排名
         const rankings = [];
         for (let i = 0; i < extensionIds.length; i++) {
-            const extensionId = extensionIds[i]; // 非空断言：i < extensionIds.length
+            const extensionId = extensionIds[i];
+            if (!extensionId) {
+                continue; // 跳过undefined元素
+            }
             const extension = await this.extensionRepository.findById(extensionId);
             if (extension) {
                 rankings.push({

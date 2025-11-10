@@ -238,7 +238,11 @@ export class CoreController {
     private readonly coreOrchestrationService: CoreOrchestrationService,
     private readonly _coreResourceService: CoreResourceService,
     private readonly _coreMonitoringService: CoreMonitoringService
-  ) {}
+  ) {
+    // Explicitly mark services as intentionally unused - Reserved for future API endpoints
+    void this._coreResourceService;
+    void this._coreMonitoringService;
+  }
 
   // ===== 工作流管理API =====
 

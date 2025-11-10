@@ -9,16 +9,34 @@
  * @architecture L1-L3 Protocol Stack
  * @status Production Ready
  * @created 2025-07-28
- * @updated 2025-10-16
+ * @updated 2025-10-21
  *
  * 使用说明:
- * - 主包导出: import { MPLP_VERSION } from 'mplp'
+ * - 主类导入: import { MPLP } from 'mplp'
+ * - 工厂函数: import { createMPLP, quickStart } from 'mplp'
+ * - 版本信息: import { MPLP_VERSION } from 'mplp'
  * - 模块导出: import { ContextManager } from 'mplp/context'
  * - 类型导出: import type { UUID } from 'mplp/types'
  * - 工具导出: import { generateUUID } from 'mplp/utils'
+ *
+ * 快速开始:
+ * ```typescript
+ * import { quickStart } from 'mplp';
+ *
+ * const mplp = await quickStart();
+ * const contextModule = mplp.getModule('context');
+ * ```
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.VERSION_INFO = exports.MPLP_INFO = exports.MPLP_CAPABILITIES = exports.MPLP_PROJECT_NAME = exports.MPLP_STATUS = exports.MPLP_PROTOCOL_VERSION = exports.MPLP_VERSION = void 0;
+exports.VERSION_INFO = exports.MPLP_INFO = exports.MPLP_CAPABILITIES = exports.MPLP_PROJECT_NAME = exports.MPLP_STATUS = exports.MPLP_PROTOCOL_VERSION = exports.MPLP_VERSION = exports.createTestMPLP = exports.createProductionMPLP = exports.quickStart = exports.createMPLP = exports.MPLP = void 0;
+// ===== 主类和工厂函数导出 =====
+var mplp_1 = require("./core/mplp");
+Object.defineProperty(exports, "MPLP", { enumerable: true, get: function () { return mplp_1.MPLP; } });
+var factory_1 = require("./core/factory");
+Object.defineProperty(exports, "createMPLP", { enumerable: true, get: function () { return factory_1.createMPLP; } });
+Object.defineProperty(exports, "quickStart", { enumerable: true, get: function () { return factory_1.quickStart; } });
+Object.defineProperty(exports, "createProductionMPLP", { enumerable: true, get: function () { return factory_1.createProductionMPLP; } });
+Object.defineProperty(exports, "createTestMPLP", { enumerable: true, get: function () { return factory_1.createTestMPLP; } });
 // ===== 版本信息 =====
 exports.MPLP_VERSION = '1.1.0-beta';
 exports.MPLP_PROTOCOL_VERSION = 'L1-L3';

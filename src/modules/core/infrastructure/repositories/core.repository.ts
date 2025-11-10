@@ -122,17 +122,19 @@ export class MemoryCoreRepository implements ICoreRepository {
 
     // 按开始日期过滤
     if (criteria.startDate) {
+      const startDate = criteria.startDate;
       results = results.filter(entity => {
         const entityDate = new Date(entity.timestamp);
-        return entityDate >= criteria.startDate!;
+        return entityDate >= startDate;
       });
     }
 
     // 按结束日期过滤
     if (criteria.endDate) {
+      const endDate = criteria.endDate;
       results = results.filter(entity => {
         const entityDate = new Date(entity.timestamp);
-        return entityDate <= criteria.endDate!;
+        return entityDate <= endDate;
       });
     }
 
@@ -290,15 +292,22 @@ export class MemoryCoreRepository implements ICoreRepository {
         new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
       );
 
-      oldestEntity = {
-        workflowId: sortedByTime[0]!.workflowId,
-        timestamp: sortedByTime[0]!.timestamp
-      };
+      const firstEntity = sortedByTime[0];
+      const lastEntity = sortedByTime[sortedByTime.length - 1];
 
-      newestEntity = {
-        workflowId: sortedByTime[sortedByTime.length - 1]!.workflowId,
-        timestamp: sortedByTime[sortedByTime.length - 1]!.timestamp
-      };
+      if (firstEntity) {
+        oldestEntity = {
+          workflowId: firstEntity.workflowId,
+          timestamp: firstEntity.timestamp
+        };
+      }
+
+      if (lastEntity) {
+        newestEntity = {
+          workflowId: lastEntity.workflowId,
+          timestamp: lastEntity.timestamp
+        };
+      }
     }
 
     return {

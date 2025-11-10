@@ -90,16 +90,19 @@ export class MLPPStateSyncManager {
   ): void {
     // TODO: 等待CoreOrchestrator激活 - 实现状态订阅逻辑
     const fullKey = `${_module}.${_stateKey}`;
-    
+
     if (!this.subscribers.has(fullKey)) {
       this.subscribers.set(fullKey, []);
     }
 
-    this.subscribers.get(fullKey)!.push({
-      module: _module,
-      stateKey: _stateKey,
-      callback: _callback
-    });
+    const subscriberList = this.subscribers.get(fullKey);
+    if (subscriberList) {
+      subscriberList.push({
+        module: _module,
+        stateKey: _stateKey,
+        callback: _callback
+      });
+    }
   }
 
   /**

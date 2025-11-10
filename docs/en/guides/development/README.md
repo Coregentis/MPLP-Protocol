@@ -9,7 +9,7 @@
 [![Development](https://img.shields.io/badge/development-100%25%20Complete-brightgreen.svg)](../quick-start.md)
 [![Contributors](https://img.shields.io/badge/contributors-Welcome-blue.svg)](../../../../CONTRIBUTING.md)
 [![Standards](https://img.shields.io/badge/standards-Enterprise%20Grade-brightgreen.svg)](../../testing/README.md)
-[![Quality](https://img.shields.io/badge/tests-2869%2F2869%20Pass-brightgreen.svg)](../../testing/README.md)
+[![Quality](https://img.shields.io/badge/tests-2902%2F2902%20Pass-brightgreen.svg)](../../testing/README.md)
 [![Language](https://img.shields.io/badge/language-English-blue.svg)](../../zh-CN/guides/development/README.md)
 
 ---

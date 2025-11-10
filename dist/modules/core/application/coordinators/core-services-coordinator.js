@@ -22,6 +22,8 @@ class CoreServicesCoordinator {
         this.resourceService = resourceService;
         this.coreRepository = coreRepository;
         this.logger = logger;
+        // Explicitly mark repository as intentionally unused - Reserved for future persistence operations
+        void this.coreRepository;
     }
     /**
      * 协调创建工作流 - 完整生命周期管理

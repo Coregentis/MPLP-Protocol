@@ -36,7 +36,7 @@
 
 **What's Perfect** (10/10):
 - ✅ All 10 L2 modules complete
-- ✅ 3,165 tests passing (100%)
+- ✅ 2,902 tests passing (100%)
 - ✅ Zero technical debt
 - ✅ Pre-built dist/ artifacts
 - ✅ All imports working
@@ -285,7 +285,7 @@ Platform Breakdown:
 **Developer Journey**:
 ```
 1. Clone MPLP (2 min)
-   git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
+   git clone https://github.com/Coregentis/MPLP-Protocol.git
 
 2. Create Project (3 min)
    mkdir my-app && cd my-app
@@ -348,7 +348,7 @@ Because MPLP has **perfect technical implementation** (10/10) but **room for pol
 
 **Key Points**:
 - ✅ All 10 modules complete
-- ✅ 3,165 tests passing (100%)
+- ✅ 2,902 tests passing (100%)
 - ✅ Zero technical debt
 - ✅ Real applications buildable
 - ✅ Enterprise-grade quality

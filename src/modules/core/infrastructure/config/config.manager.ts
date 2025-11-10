@@ -18,7 +18,7 @@ export interface ConfigManagerConfig {
 
 export interface ConfigValue {
   key: string;
-  value: any;
+  value: unknown;
   version: number;
   timestamp: number;
   encrypted: boolean;
@@ -26,8 +26,8 @@ export interface ConfigValue {
 
 export interface ConfigChangeEvent {
   key: string;
-  oldValue: any;
-  newValue: any;
+  oldValue: unknown;
+  newValue: unknown;
   timestamp: number;
   changeType?: 'create' | 'update' | 'delete';
 }
@@ -41,7 +41,7 @@ export class ConfigManager {
   private config: ConfigManagerConfig;
   private configStore: Map<string, ConfigValue>;
   private listeners: Map<string, Set<ConfigChangeListener>>;
-  private cache: Map<string, { value: any; expiry: number }>;
+  private cache: Map<string, { value: unknown; expiry: number }>;
   private version: number;
   private versionHistory: Map<string, ConfigValue[]>;
   private patternWatchers: Map<string, { pattern: RegExp; listener: ConfigChangeListener }>;
@@ -87,7 +87,7 @@ export class ConfigManager {
   /**
    * 获取配置值
    */
-  async get<T = any>(key: string): Promise<T | undefined> {
+  async get<T = unknown>(key: string): Promise<T | undefined> {
     // 检查缓存
     if (this.config.cacheEnabled) {
       const cached = this.cache.get(key);
@@ -106,7 +106,7 @@ export class ConfigManager {
 
     // 解密（如果需要）
     if (configValue.encrypted && this.config.encryptionEnabled) {
-      value = this.decrypt(value);
+      value = this.decrypt(value as string);
     }
 
     // 更新缓存
@@ -123,7 +123,7 @@ export class ConfigManager {
   /**
    * 设置配置值
    */
-  async set(key: string, value: any, encrypted: boolean = false): Promise<void> {
+  async set(key: string, value: unknown, encrypted: boolean = false): Promise<void> {
     const oldValue = this.configStore.get(key);
 
     let finalValue = value;
@@ -149,7 +149,10 @@ export class ConfigManager {
     if (!this.versionHistory.has(key)) {
       this.versionHistory.set(key, []);
     }
-    this.versionHistory.get(key)!.push(configValue);
+    const history = this.versionHistory.get(key);
+    if (history) {
+      history.push(configValue);
+    }
 
     // 清除缓存
     if (this.config.cacheEnabled) {
@@ -206,7 +209,10 @@ export class ConfigManager {
     if (!this.listeners.has(key)) {
       this.listeners.set(key, new Set());
     }
-    this.listeners.get(key)!.add(listener);
+    const listenerSet = this.listeners.get(key);
+    if (listenerSet) {
+      listenerSet.add(listener);
+    }
   }
 
   /**
@@ -279,7 +285,7 @@ export class ConfigManager {
   /**
    * 设置权限配置
    */
-  setPermission(permission: any): void {
+  setPermission(permission: Record<string, unknown> & { userId: string }): void {
     const key = `permission:${permission.userId}`;
     this.configStore.set(key, {
       key,
@@ -293,7 +299,7 @@ export class ConfigManager {
   /**
    * 设置配置（带用户ID）
    */
-  async setConfig(key: string, value: any, _userId?: string): Promise<void> {
+  async setConfig(key: string, value: unknown, _userId?: string): Promise<void> {
     // Note: userId reserved for future user audit logging
     await this.set(key, value, false);
   }
@@ -301,7 +307,7 @@ export class ConfigManager {
   /**
    * 获取配置（带用户ID）
    */
-  async getConfig(key: string, _userId?: string): Promise<any> {
+  async getConfig(key: string, _userId?: string): Promise<unknown> {
     // Note: userId reserved for future user audit logging
     return await this.get(key);
   }
@@ -415,7 +421,7 @@ export class ConfigManager {
   /**
    * 加密配置值
    */
-  private encrypt(value: any): string {
+  private encrypt(value: unknown): string {
     // 简化实现：实际应使用真实的加密算法
     return Buffer.from(JSON.stringify(value)).toString('base64');
   }
@@ -423,7 +429,7 @@ export class ConfigManager {
   /**
    * 解密配置值
    */
-  private decrypt(encrypted: string): any {
+  private decrypt(encrypted: string): unknown {
     // 简化实现：实际应使用真实的解密算法
     try {
       return JSON.parse(Buffer.from(encrypted, 'base64').toString());
@@ -435,7 +441,7 @@ export class ConfigManager {
   /**
    * 通知监听器
    */
-  private notifyListeners(key: string, oldValue: any, newValue: any): void {
+  private notifyListeners(key: string, oldValue: unknown, newValue: unknown): void {
     // 确定变更类型
     let changeType: 'create' | 'update' | 'delete';
     if (oldValue === undefined && newValue !== undefined) {
@@ -481,7 +487,7 @@ export class ConfigManager {
   /**
    * 审计日志
    */
-  private auditLog(operation: string, key: string, _value: any): void {
+  private auditLog(operation: string, key: string, _value: unknown): void {
     // 简化实现：实际应写入审计日志系统
     // Note: value reserved for future detailed audit logging
     console.log(`[ConfigManager Audit] ${operation} ${key} at ${new Date().toISOString()}`);

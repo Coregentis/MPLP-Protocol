@@ -9,7 +9,7 @@
 [![服务器](https://img.shields.io/badge/server-企业级完成-brightgreen.svg)](./README.md)
 [![框架](https://img.shields.io/badge/framework-10个模块就绪-brightgreen.svg)](./client-implementation.md)
 [![实现](https://img.shields.io/badge/implementation-100%25%20完成-brightgreen.svg)](./deployment-models.md)
-[![质量](https://img.shields.io/badge/tests-2869%2F2869%20通过-brightgreen.svg)](./performance-requirements.md)
+[![质量](https://img.shields.io/badge/tests-2902%2F2902%20通过-brightgreen.svg)](./performance-requirements.md)
 [![语言](https://img.shields.io/badge/language-中文-blue.svg)](../en/implementation/server-implementation.md)
 
 ---

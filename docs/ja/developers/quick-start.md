@@ -67,7 +67,7 @@ node -e "const mplp = require('mplp'); console.log('MPLPバージョン:', mplp.
 #### **オプションB：ソースからクローンしてビルド**
 ```bash
 # MPLPリポジトリをクローン
-git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
+git clone https://github.com/Coregentis/MPLP-Protocol.git
 cd MPLP-Protocol
 
 # 依存関係をインストール
@@ -534,7 +534,7 @@ const contextId = `ctx-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
 ```
 
 ### **サポートチャンネル**
-- **[GitHub Issues](https://github.com/mplp/mplp-platform/issues)** - バグレポートと機能リクエスト
+- **[GitHub Issues](https://github.com/Coregentis/MPLP-Protocol-platform/issues)** - バグレポートと機能リクエスト
 - **[Discordコミュニティ](https://discord.gg/mplp)** - リアルタイムヘルプとディスカッション
 - **[Stack Overflow](https://stackoverflow.com/questions/tagged/mplp)** - 技術的なQ&A
 - **[コミュニティフォーラム](https://community.mplp.dev)** - 長文のディスカッション
@@ -559,7 +559,7 @@ const contextId = `ctx-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
 
 #### **完璧な品質メトリクス**
 - **100%モジュール完了**: すべての10のL2調整モジュールがエンタープライズグレード標準を達成
-- **完璧なテスト結果**: 2,869/2,869テスト合格（100%合格率）、197/197テストスイート合格
+- **優秀なテスト結果**: 2,902テスト（2,899合格、3失敗）= 99.9%合格率、199テストスイート（197合格、2失敗）
 - **技術的負債ゼロ**: すべてのモジュールで技術的負債ゼロの完全なコードベース
 - **エンタープライズパフォーマンス**: 99.8%パフォーマンススコア、100%セキュリティテスト合格
 

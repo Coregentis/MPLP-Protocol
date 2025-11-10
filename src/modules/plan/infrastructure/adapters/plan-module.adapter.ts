@@ -15,6 +15,9 @@ import { PlanProtocol } from '../protocols/plan.protocol';
 import { PlanEntityData } from '../../api/mappers/plan.mapper';
 import { UUID } from '../../../../shared/types';
 import { AIServiceAdapter } from './ai-service.adapter';
+import { PlanProtocolService } from '../../application/services/plan-protocol.service';
+import { PlanIntegrationService } from '../../application/services/plan-integration.service';
+import { PlanValidationService } from '../../application/services/plan-validation.service';
 
 // ===== L3横切关注点管理器导入 =====
 import {
@@ -212,14 +215,13 @@ export class PlanModuleAdapter {
       httpClient
     );
 
-    // 创建Plan仓储 (简化版本)
-    const planRepository = {
-      savePlanRequest: async (request: Record<string, unknown>) => ({
+    // 创建协议服务专用的仓储适配器
+    const protocolRepository = {
+      savePlanRequest: async (request: { requestId: string; planType: string; parameters: Record<string, unknown>; constraints?: Record<string, unknown>; status: 'pending' | 'processing' | 'completed' | 'failed' | 'cancelled'; createdAt: Date }) => ({
         ...request,
-        requestId: `plan-req-${Date.now()}`,
-        parameters: request.parameters || {},
-        constraints: request.constraints || {},
-        createdAt: new Date()
+        requestId: request.requestId || `plan-req-${Date.now()}`,
+        status: request.status as 'pending' | 'processing' | 'completed' | 'failed' | 'cancelled',
+        createdAt: request.createdAt || new Date()
       }),
       findPlanRequest: async (requestId: string) => ({
         requestId,
@@ -230,14 +232,11 @@ export class PlanModuleAdapter {
         createdAt: new Date()
       }),
       updatePlanRequestStatus: async () => undefined,
-      savePlanResult: async (result: Record<string, unknown>) => ({
+      savePlanResult: async (result: { requestId: string; resultId: string; planData: Record<string, unknown>; confidence: number; metadata: { processingTime: number }; status: 'completed' | 'failed' | 'partial'; createdAt: Date }) => ({
         ...result,
-        resultId: `plan-res-${Date.now()}`,
-        planData: result.planData || {},
-        confidence: result.confidence || 0.8,
-        metadata: result.metadata || { processingTime: 100 },
-        status: result.status || 'completed' as const,
-        createdAt: new Date()
+        resultId: result.resultId || `plan-res-${Date.now()}`,
+        status: result.status as 'completed' | 'failed' | 'partial',
+        createdAt: result.createdAt || new Date()
       }),
       findPlanResult: async (requestId: string) => ({
         requestId,
@@ -247,16 +246,20 @@ export class PlanModuleAdapter {
         metadata: { processingTime: 100 },
         status: 'completed' as const,
         createdAt: new Date()
-      }),
-      findById: async () => null,
+      })
+    };
+
+    // 创建集成服务专用的仓储适配器
+    const integrationRepository = {
+      findById: async () => null as Record<string, unknown> | null,
       save: async (entity: Record<string, unknown>) => entity,
       update: async (entity: Record<string, unknown>) => entity
     };
 
-    // 创建3个企业级服务 (使用直接导入)
-    const planProtocolService = new (require('../../application/services/plan-protocol.service')).PlanProtocolService(planRepository, aiServiceAdapter, logger);
-    const planIntegrationService = new (require('../../application/services/plan-integration.service')).PlanIntegrationService(planRepository, { coordinateOperation: async () => ({}), healthCheck: async () => true }, logger);
-    const planValidationService = new (require('../../application/services/plan-validation.service')).PlanValidationService({ validatePlanType: () => true, validateParameters: () => ({ isValid: true, errors: [], warnings: [] }), validateConstraints: () => ({ isValid: true, errors: [], warnings: [] }) }, { checkPlanQuality: async () => ({ score: 0.85, issues: [] }), checkDataIntegrity: async () => ({ isValid: true, issues: [] }) }, logger);
+    // 创建3个企业级服务 (使用ES6导入)
+    const planProtocolService = new PlanProtocolService(protocolRepository, aiServiceAdapter, logger);
+    const planIntegrationService = new PlanIntegrationService(integrationRepository, { coordinateOperation: async () => ({}), healthCheck: async () => true }, logger);
+    const planValidationService = new PlanValidationService({ validatePlanType: () => true, validateParameters: () => ({ isValid: true, errors: [], warnings: [] }), validateConstraints: () => ({ isValid: true, errors: [], warnings: [] }) }, { checkPlanQuality: async () => ({ score: 0.85, issues: [] }), checkDataIntegrity: async () => ({ isValid: true, issues: [] }) }, logger);
 
     // 创建协议 (集成3个企业级服务)
     this.protocol = new PlanProtocol(

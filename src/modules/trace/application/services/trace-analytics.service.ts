@@ -50,7 +50,10 @@ export class TraceAnalyticsService {
     private readonly traceRepository: ITraceRepository,
     private readonly _analyticsEngine?: IAnalyticsEngine,
     private readonly _anomalyDetector?: IAnomalyDetector
-  ) {}
+  ) {
+    // Explicitly mark engines as intentionally unused - Reserved for future analytics integration
+    void this._analyticsEngine;
+  }
 
   /**
    * 分析追踪性能

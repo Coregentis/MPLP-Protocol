@@ -32,6 +32,21 @@ class PlanManagementService {
         this.transactionManager = transactionManager;
         this.protocolVersionManager = protocolVersionManager;
         this.aiServiceAdapter = aiServiceAdapter;
+        // Explicitly mark L3 managers as intentionally unused - Reserved for CoreOrchestrator activation
+        void this.securityManager;
+        void this.performanceMonitor;
+        void this.eventBusManager;
+        void this.errorHandler;
+        void this.coordinationManager;
+        void this.orchestrationManager;
+        void this.stateSyncManager;
+        void this.transactionManager;
+        void this.protocolVersionManager;
+        // Explicitly mark reserved coordination methods as intentionally unused
+        void this.validatePlanCoordinationPermission;
+        void this.getPlanCoordinationContext;
+        void this.recordPlanCoordinationMetrics;
+        void this.managePlanExtensionCoordination;
     }
     // ===== 核心业务逻辑方法 =====
     /**
@@ -269,6 +284,7 @@ class PlanManagementService {
      * @returns Promise<boolean> - Whether coordination is permitted
      * @reserved Reserved for CoreOrchestrator activation
      */
+    // Reserved for CoreOrchestrator activation - Role module integration
     async validatePlanCoordinationPermission(_userId, _planId, _coordinationContext) {
         // TODO: Wait for CoreOrchestrator activation Role module coordination permission validation
         // Integration with security cross-cutting concern
@@ -283,6 +299,7 @@ class PlanManagementService {
      * @returns Promise<Record<string, unknown>> - Coordination context data
      * @reserved Reserved for CoreOrchestrator activation
      */
+    // Reserved for CoreOrchestrator activation - Context module integration
     async getPlanCoordinationContext(_contextId, _planType) {
         // TODO: Wait for CoreOrchestrator activation Context module coordination environment retrieval
         // Integration with coordination cross-cutting concern
@@ -303,6 +320,7 @@ class PlanManagementService {
      * @returns Promise<void> - Metrics recording completion
      * @reserved Reserved for CoreOrchestrator activation
      */
+    // Reserved for CoreOrchestrator activation - Trace module integration
     async recordPlanCoordinationMetrics(_planId, _metrics) {
         // TODO: Wait for CoreOrchestrator activation Trace module coordination monitoring recording
         // Integration with performance cross-cutting concern
@@ -317,6 +335,7 @@ class PlanManagementService {
      * @returns Promise<boolean> - Whether extension coordination succeeded
      * @reserved Reserved for CoreOrchestrator activation
      */
+    // Reserved for CoreOrchestrator activation - Extension module integration
     async managePlanExtensionCoordination(_planId, _extensions) {
         // TODO: Wait for CoreOrchestrator activation Extension module coordination management
         // Integration with orchestration cross-cutting concern

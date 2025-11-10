@@ -131,7 +131,7 @@ async function projectWorkflow() {
 ```bash
 # Clone the repository
 git clone https://github.com/your-org/mplp.git
-cd mplp/docs/examples
+cd MPLP-Protocol/docs/examples
 
 # Install dependencies
 npm install

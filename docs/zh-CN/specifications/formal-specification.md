@@ -9,7 +9,7 @@
 [![正式规范](https://img.shields.io/badge/formal%20spec-生产就绪-brightgreen.svg)](./README.md)
 [![协议](https://img.shields.io/badge/protocol-100%25%20完成-brightgreen.svg)](../protocol-foundation/protocol-specification.md)
 [![实现](https://img.shields.io/badge/implementation-企业级-brightgreen.svg)](../testing/protocol-compliance-testing.md)
-[![测试](https://img.shields.io/badge/tests-2869%2F2869%20通过-brightgreen.svg)](../testing/protocol-compliance-testing.md)
+[![测试](https://img.shields.io/badge/tests-2902%2F2902%20通过-brightgreen.svg)](../testing/protocol-compliance-testing.md)
 [![合规](https://img.shields.io/badge/compliance-完全验证-brightgreen.svg)](../testing/protocol-compliance-testing.md)
 [![语言](https://img.shields.io/badge/language-中文-blue.svg)](../../en/specifications/formal-specification.md)
 

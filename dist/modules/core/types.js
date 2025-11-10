@@ -5,7 +5,7 @@
  * 遵循双重命名约定：Schema(snake_case) ↔ TypeScript(camelCase)
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.StageStatus = exports.WorkflowStatus = exports.WorkflowStage = exports.ExecutionMode = exports.Priority = void 0;
+exports.StageStatus = exports.WorkflowStatusAlias = exports.WorkflowStatus = exports.WorkflowStage = exports.ExecutionMode = exports.Priority = void 0;
 // 枚举定义（用于测试和代码中的常量访问）
 var Priority;
 (function (Priority) {
@@ -38,12 +38,16 @@ var WorkflowStatus;
 (function (WorkflowStatus) {
     WorkflowStatus["CREATED"] = "created";
     WorkflowStatus["IN_PROGRESS"] = "in_progress";
-    WorkflowStatus["RUNNING"] = "in_progress";
     WorkflowStatus["COMPLETED"] = "completed";
     WorkflowStatus["FAILED"] = "failed";
     WorkflowStatus["CANCELLED"] = "cancelled";
     WorkflowStatus["PAUSED"] = "paused";
 })(WorkflowStatus || (exports.WorkflowStatus = WorkflowStatus = {}));
+// 向后兼容的类型别名
+exports.WorkflowStatusAlias = {
+    ...WorkflowStatus,
+    RUNNING: WorkflowStatus.IN_PROGRESS
+};
 var StageStatus;
 (function (StageStatus) {
     StageStatus["PENDING"] = "pending";

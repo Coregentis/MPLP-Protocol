@@ -214,6 +214,6 @@ A: MPLP经过性能优化，支持高并发场景。详见[性能测试报告](.
 
 ## 🆘 **获取帮助**
 
-- [问题反馈](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/issues)
-- [讨论区](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/discussions)
-- [文档问题](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/issues/new?template=documentation.md)
+- [问题反馈](https://github.com/Coregentis/MPLP-Protocol/issues)
+- [讨论区](https://github.com/Coregentis/MPLP-Protocol/discussions)
+- [文档问题](https://github.com/Coregentis/MPLP-Protocol/issues/new?template=documentation.md)

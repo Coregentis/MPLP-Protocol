@@ -671,7 +671,7 @@ export class ExtensionManagementService {
             status: 'operational',
             extensionCount: stats.totalExtensions,
             activeExtensions: stats.activeExtensions,
-            lastOperation: recentExtensions.length > 0 ? recentExtensions[0]!.timestamp : 'none'
+            lastOperation: recentExtensions.length > 0 && recentExtensions[0] ? recentExtensions[0].timestamp : 'none'
           },
           performance: {
             averageResponseTime: stats.averagePerformanceMetrics.responseTime,

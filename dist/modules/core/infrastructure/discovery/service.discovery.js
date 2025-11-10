@@ -400,11 +400,22 @@ class LoadBalancer {
         }
     }
     roundRobinSelect(instances) {
-        const serviceName = instances[0].serviceName;
+        if (instances.length === 0) {
+            throw new Error('Cannot select from empty instances array');
+        }
+        const firstInstance = instances[0];
+        if (!firstInstance) {
+            throw new Error('Cannot select from empty instances array');
+        }
+        const serviceName = firstInstance.serviceName;
         const counter = this.roundRobinCounters.get(serviceName) || 0;
         const selectedIndex = counter % instances.length;
         this.roundRobinCounters.set(serviceName, counter + 1);
-        return instances[selectedIndex];
+        const selectedInstance = instances[selectedIndex];
+        if (!selectedInstance) {
+            throw new Error(`Instance at index ${selectedIndex} not found`);
+        }
+        return selectedInstance;
     }
     weightedRoundRobinSelect(instances) {
         // 简化实现：基于权重选择
@@ -417,15 +428,28 @@ class LoadBalancer {
                 return instance;
             }
         }
-        return instances[0];
+        // Fallback: 返回第一个实例
+        const firstInstance = instances[0];
+        if (!firstInstance) {
+            throw new Error('No instances available for weighted selection');
+        }
+        return firstInstance;
     }
     randomSelect(instances) {
         const randomIndex = Math.floor(Math.random() * instances.length);
-        return instances[randomIndex];
+        const selectedInstance = instances[randomIndex];
+        if (!selectedInstance) {
+            throw new Error(`Instance at index ${randomIndex} not found`);
+        }
+        return selectedInstance;
     }
     leastConnectionsSelect(instances) {
         // 简化实现：返回第一个实例
-        return instances[0];
+        const firstInstance = instances[0];
+        if (!firstInstance) {
+            throw new Error('No instances available for least connections selection');
+        }
+        return firstInstance;
     }
 }
 exports.LoadBalancer = LoadBalancer;

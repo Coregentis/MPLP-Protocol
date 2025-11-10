@@ -231,7 +231,7 @@ Maintainability: High
 **Setup Time**: 5 minutes
 ```bash
 # 1. Clone MPLP
-git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
+git clone https://github.com/Coregentis/MPLP-Protocol.git
 
 # 2. Create project
 mkdir social-media-auto-publisher

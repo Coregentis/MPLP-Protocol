@@ -645,12 +645,12 @@ public class BasicJavaExample {
 ### **インストール**
 ```bash
 # Go SDKをインストール
-go get github.com/mplp/mplp-sdk-go
+go get github.com/Coregentis/MPLP-Protocol-sdk-go
 
 # 特定のモジュールをインストール
-go get github.com/mplp/mplp-context-go
-go get github.com/mplp/mplp-plan-go
-go get github.com/mplp/mplp-role-go
+go get github.com/Coregentis/MPLP-Protocol-context-go
+go get github.com/Coregentis/MPLP-Protocol-plan-go
+go get github.com/Coregentis/MPLP-Protocol-role-go
 ```
 
 ### **基本的な使用方法**
@@ -664,11 +664,11 @@ import (
     "log"
     "time"
 
-    "github.com/mplp/mplp-sdk-go/client"
-    "github.com/mplp/mplp-sdk-go/config"
-    "github.com/mplp/mplp-context-go"
-    "github.com/mplp/mplp-plan-go"
-    "github.com/mplp/mplp-role-go"
+    "github.com/Coregentis/MPLP-Protocol-sdk-go/client"
+    "github.com/Coregentis/MPLP-Protocol-sdk-go/config"
+    "github.com/Coregentis/MPLP-Protocol-context-go"
+    "github.com/Coregentis/MPLP-Protocol-plan-go"
+    "github.com/Coregentis/MPLP-Protocol-role-go"
 )
 
 func main() {

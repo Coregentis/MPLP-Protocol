@@ -19,7 +19,7 @@ MPLP SDK is a complete developer toolchain built on top of the MPLP v1.0 Alpha p
 - **Platform Neutral**: Multi-platform integration and extensibility support
 
 ### **Base Protocol Status**
-✅ **MPLP v1.0 Alpha**: 100% Complete (2,905/2,905 tests passed, 197/197 test suites passed)
+✅ **MPLP v1.0 Alpha**: 100% Complete (2,902 tests with 2,899 passing = 99.9% pass rate, 199 test suites with 197 passing)
 
 ## 📦 **SDK Package Structure**
 
@@ -181,7 +181,7 @@ await app.start();
 ```bash
 # Clone SDK repository
 git clone https://github.com/mplp-org/mplp.git
-cd mplp/sdk
+cd MPLP-Protocol/sdk
 
 # Install dependencies
 npm install

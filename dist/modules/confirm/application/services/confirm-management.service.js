@@ -17,6 +17,16 @@ const confirm_entity_1 = require("../../domain/entities/confirm.entity");
 class ConfirmManagementService {
     constructor(repository) {
         this.repository = repository;
+        // Explicitly mark reserved coordination methods as intentionally unused
+        // These methods are reserved for CoreOrchestrator activation
+        void this.validateConfirmCoordinationPermission;
+        void this.getConfirmCoordinationContext;
+        void this.recordConfirmCoordinationMetrics;
+        void this.manageConfirmExtensionCoordination;
+        void this.requestConfirmPlanCoordination;
+        void this.coordinateCollabConfirmManagement;
+        void this.enableDialogDrivenConfirmCoordination;
+        void this.coordinateConfirmAcrossNetwork;
     }
     /**
      * 创建确认
@@ -292,6 +302,7 @@ class ConfirmManagementService {
      * @returns Promise<boolean> - Whether coordination is permitted
      * @reserved Reserved for CoreOrchestrator activation
      */
+    // Reserved for CoreOrchestrator activation - Role module integration
     async validateConfirmCoordinationPermission(_userId, _confirmId, _coordinationContext) {
         // TODO: Wait for CoreOrchestrator activation Role module coordination permission validation
         // Integration with security cross-cutting concern
@@ -306,6 +317,7 @@ class ConfirmManagementService {
      * @returns Promise<Record<string, unknown>> - Coordination context data
      * @reserved Reserved for CoreOrchestrator activation
      */
+    // Reserved for CoreOrchestrator activation - Context module integration
     async getConfirmCoordinationContext(_contextId, _confirmType) {
         // TODO: Wait for CoreOrchestrator activation Context module coordination environment retrieval
         // Integration with coordination cross-cutting concern
@@ -326,6 +338,7 @@ class ConfirmManagementService {
      * @returns Promise<void> - Metrics recording completion
      * @reserved Reserved for CoreOrchestrator activation
      */
+    // Reserved for CoreOrchestrator activation - Trace module integration
     async recordConfirmCoordinationMetrics(_confirmId, _metrics) {
         // TODO: Wait for CoreOrchestrator activation Trace module coordination monitoring recording
         // Integration with performance cross-cutting concern
@@ -340,6 +353,7 @@ class ConfirmManagementService {
      * @returns Promise<boolean> - Whether extension coordination succeeded
      * @reserved Reserved for CoreOrchestrator activation
      */
+    // Reserved for CoreOrchestrator activation - Extension module integration
     async manageConfirmExtensionCoordination(_confirmId, _extensions) {
         // TODO: Wait for CoreOrchestrator activation Extension module coordination management
         // Integration with orchestration cross-cutting concern
@@ -358,6 +372,7 @@ class ConfirmManagementService {
      * @returns Promise<boolean> - Whether plan coordination was successful
      * @reserved Reserved for CoreOrchestrator activation
      */
+    // Reserved for CoreOrchestrator activation - Plan module integration
     async requestConfirmPlanCoordination(_planId, _confirmConfig) {
         // TODO: Wait for CoreOrchestrator activation Plan module planning coordination
         // Integration with event bus cross-cutting concern
@@ -372,6 +387,7 @@ class ConfirmManagementService {
      * @returns Promise<boolean> - Whether collaboration coordination succeeded
      * @reserved Reserved for CoreOrchestrator activation
      */
+    // Reserved for CoreOrchestrator activation - Collab module integration
     async coordinateCollabConfirmManagement(_collabId, _confirmConfig) {
         // TODO: Wait for CoreOrchestrator activation Collab module collaboration coordination
         // Integration with state sync cross-cutting concern
@@ -386,6 +402,7 @@ class ConfirmManagementService {
      * @returns Promise<boolean> - Whether dialog coordination succeeded
      * @reserved Reserved for CoreOrchestrator activation
      */
+    // Reserved for CoreOrchestrator activation - Dialog module integration
     async enableDialogDrivenConfirmCoordination(_dialogId, _confirmParticipants) {
         // TODO: Wait for CoreOrchestrator activation Dialog module conversation coordination
         // Integration with event bus cross-cutting concern
@@ -400,6 +417,7 @@ class ConfirmManagementService {
      * @returns Promise<boolean> - Whether network coordination succeeded
      * @reserved Reserved for CoreOrchestrator activation
      */
+    // Reserved for CoreOrchestrator activation - Network module integration
     async coordinateConfirmAcrossNetwork(_networkId, _confirmConfig) {
         // TODO: Wait for CoreOrchestrator activation Network module distributed coordination
         // Integration with transaction cross-cutting concern

@@ -32,7 +32,7 @@ export class Logger {
   /**
    * Logs an error message
    */
-  error(message: string, ...args: any[]): void {
+  error(message: string, ...args: unknown[]): void {
     if (this.level >= LogLevel.ERROR) {
       console.error(`[${this.name}] ERROR:`, message, ...args);
     }
@@ -41,7 +41,7 @@ export class Logger {
   /**
    * Logs a warning message
    */
-  warn(message: string, ...args: any[]): void {
+  warn(message: string, ...args: unknown[]): void {
     if (this.level >= LogLevel.WARN) {
       console.warn(`[${this.name}] WARN:`, message, ...args);
     }
@@ -50,7 +50,7 @@ export class Logger {
   /**
    * Logs an info message
    */
-  info(message: string, ...args: any[]): void {
+  info(message: string, ...args: unknown[]): void {
     if (this.level >= LogLevel.INFO) {
       console.info(`[${this.name}] INFO:`, message, ...args);
     }
@@ -59,7 +59,7 @@ export class Logger {
   /**
    * Logs a debug message
    */
-  debug(message: string, ...args: any[]): void {
+  debug(message: string, ...args: unknown[]): void {
     if (this.level >= LogLevel.DEBUG) {
       console.log(`[${this.name}] DEBUG:`, message, ...args);
     }
@@ -68,7 +68,7 @@ export class Logger {
   /**
    * Logs a verbose message
    */
-  verbose(message: string, ...args: any[]): void {
+  verbose(message: string, ...args: unknown[]): void {
     if (this.level >= LogLevel.VERBOSE) {
       console.log(`[${this.name}] VERBOSE:`, message, ...args);
     }

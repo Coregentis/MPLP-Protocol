@@ -86,7 +86,7 @@ git push origin main:main
 ```
 
 **推送结果**:
-- **目标**: origin (https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev.git)
+- **目标**: origin (https://github.com/Coregentis/MPLP-Protocol.git)
 - **提交**: 6e0ef812
 - **状态**: ✅ **推送成功**
 
@@ -101,7 +101,7 @@ git push release 30488e5:main --force
 ```
 
 **回滚结果**:
-- **目标**: release (https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git)
+- **目标**: release (https://github.com/Coregentis/MPLP-Protocol.git)
 - **回滚到**: 30488e56 (最后一个正确的公开版本)
 - **状态**: ✅ **回滚成功**
 
@@ -144,13 +144,13 @@ bash push-clean-public-release.sh
 ### **远程仓库状态**
 
 #### **开发仓库 (origin)**
-- **URL**: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev.git
+- **URL**: https://github.com/Coregentis/MPLP-Protocol.git
 - **分支**: main
 - **最新提交**: 6e0ef812
 - **内容**: ✅ **完整版本**（包含所有内部文件）
 
 #### **公开仓库 (release)**
-- **URL**: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
+- **URL**: https://github.com/Coregentis/MPLP-Protocol.git
 - **分支**: main
 - **最新提交**: 1e6eecf7
 - **内容**: ✅ **纯净版本**（仅公开文件）

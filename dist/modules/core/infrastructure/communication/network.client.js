@@ -296,9 +296,9 @@ class NetworkClient {
     async applyErrorInterceptors(error) {
         let processedError = error;
         for (const interceptor of this.interceptors.error) {
-            processedError = await interceptor(processedError);
             if (!processedError)
                 break;
+            processedError = await interceptor(processedError);
         }
         return processedError;
     }

@@ -26,8 +26,9 @@ class DialogManagementService {
         this._flowEngine = flowEngine || new dialog_flow_engine_1.DialogFlowEngine();
         this.stateManager = stateManager || new dialog_state_manager_1.DialogStateManager();
         this.nlpProcessor = nlpProcessor || new nlp_processor_1.NLPProcessor();
-        // Mark _flowEngine as intentionally unused (reserved for future dialog flow management)
+        // Explicitly mark as intentionally unused - Reserved for future integration
         void this._flowEngine;
+        void this.crossCuttingConcerns;
     }
     // ===== 核心业务方法 =====
     /**
@@ -227,10 +228,12 @@ class DialogManagementService {
             // 应用过滤条件
             let filteredMessages = messages;
             if (options.fromDate) {
-                filteredMessages = filteredMessages.filter(msg => msg.timestamp >= options.fromDate);
+                const fromDate = options.fromDate;
+                filteredMessages = filteredMessages.filter(msg => msg.timestamp >= fromDate);
             }
             if (options.toDate) {
-                filteredMessages = filteredMessages.filter(msg => msg.timestamp <= options.toDate);
+                const toDate = options.toDate;
+                filteredMessages = filteredMessages.filter(msg => msg.timestamp <= toDate);
             }
             if (options.messageType) {
                 filteredMessages = filteredMessages.filter(msg => msg.type === options.messageType);

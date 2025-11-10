@@ -66,7 +66,7 @@ Contributors are recognized in the following ways:
 - **Total Commits**: 1,000+
 - **Total Contributors**: Growing community
 - **Lines of Code**: 50,000+
-- **Test Coverage**: 100% (2,905/2,905 tests passing)
+- **Test Coverage**: 99.9% (2,899/2,902 tests passing)
 - **Documentation Pages**: 200+
 
 ### **Project Milestones**
@@ -84,8 +84,8 @@ MPLP has contributors and users from around the world:
 
 ## 💬 Join Our Community
 
-- **GitHub Discussions**: [Join the conversation](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/discussions)
-- **GitHub Issues**: [Report bugs or request features](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/issues)
+- **GitHub Discussions**: [Join the conversation](https://github.com/Coregentis/MPLP-Protocol/discussions)
+- **GitHub Issues**: [Report bugs or request features](https://github.com/Coregentis/MPLP-Protocol/issues)
 - **Documentation**: [Read the docs](./docs/README.md)
 
 ## 📄 License

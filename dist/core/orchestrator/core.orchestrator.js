@@ -13,7 +13,9 @@ exports.CoreOrchestrator = void 0;
 class CoreOrchestrator {
     constructor(orchestrationService, resourceService, monitoringService, 
     // 9个L3管理器注入
-    securityManager, performanceMonitor, eventBusManager, errorHandler, coordinationManager, orchestrationManager, stateSyncManager, transactionManager, _protocolVersionManager) {
+    securityManager, performanceMonitor, eventBusManager, errorHandler, coordinationManager, orchestrationManager, stateSyncManager, transactionManager, 
+    // Reserved for CoreOrchestrator activation - Protocol version management across all modules
+    _protocolVersionManager) {
         this.orchestrationService = orchestrationService;
         this.resourceService = resourceService;
         this.monitoringService = monitoringService;
@@ -27,6 +29,8 @@ class CoreOrchestrator {
         this.transactionManager = transactionManager;
         this._protocolVersionManager = _protocolVersionManager;
         this.startTime = Date.now();
+        // Explicitly mark as intentionally unused - Reserved for CoreOrchestrator activation
+        void this._protocolVersionManager;
     }
     /**
      * 执行完整工作流

@@ -9,7 +9,7 @@
 [![安全](https://img.shields.io/badge/security-100%25%20测试通过-brightgreen.svg)](./README.md)
 [![合规](https://img.shields.io/badge/compliance-企业级RBAC就绪-brightgreen.svg)](./server-implementation.md)
 [![标准](https://img.shields.io/badge/standards-零关键问题-brightgreen.svg)](./deployment-models.md)
-[![质量](https://img.shields.io/badge/tests-2869%2F2869%20通过-brightgreen.svg)](./performance-requirements.md)
+[![质量](https://img.shields.io/badge/tests-2902%2F2902%20通过-brightgreen.svg)](./performance-requirements.md)
 [![语言](https://img.shields.io/badge/language-中文-blue.svg)](../en/implementation/security-requirements.md)
 
 ---

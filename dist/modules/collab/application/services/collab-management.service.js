@@ -393,6 +393,9 @@ class CollabManagementService {
             throw new Error(`Task ${taskId} not found in collaboration ${collaborationId}`);
         }
         const task = collabWithTasks.tasks[taskIndex];
+        if (!task) {
+            throw new Error(`Task at index ${taskIndex} is undefined`);
+        }
         // ===== STEP 4: VALIDATE STATUS TRANSITION =====
         const validTransitions = {
             'pending': ['assigned', 'cancelled'],
@@ -402,7 +405,8 @@ class CollabManagementService {
             'failed': ['assigned'], // Can be reassigned
             'cancelled': [] // Terminal state
         };
-        if (!validTransitions[task.status] || !validTransitions[task.status].includes(status)) {
+        const allowedTransitions = validTransitions[task.status];
+        if (!allowedTransitions || !allowedTransitions.includes(status)) {
             throw new Error(`Invalid status transition from ${task.status} to ${status}`);
         }
         // ===== STEP 5: UPDATE TASK STATUS =====

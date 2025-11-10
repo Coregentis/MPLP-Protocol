@@ -1,30 +1,22 @@
 # MPLP SDK 安装指南
 
-> **🌐 语言导航**: [English](../../../en/sdk/getting-started/installation.md) | [中文](installation.md)
+## 🎯 **系统要求**
 
+### **必需环境**
+- **Node.js**: 18.0.0 或更高版本
+- **npm**: 8.0.0 或更高版本（或 yarn 1.22.0+）
+- **TypeScript**: 5.0.0 或更高版本
+- **操作系统**: Windows 10+, macOS 10.15+, Linux (Ubuntu 18.04+)
 
-> **SDK版本**: v1.1.0-beta  
-> **基础协议**: MPLP v1.0 Alpha  
-> **更新时间**: 2025-09-20  
+### **推荐环境**
+- **IDE**: Visual Studio Code 1.70+
+- **Git**: 2.30.0 或更高版本
+- **内存**: 4GB RAM 或更多
+- **存储**: 1GB 可用空间
 
-## 🎯 **安装概览**
+## 📦 **安装方式**
 
-MPLP SDK提供了构建多智能体应用的完整开发环境。本指南将引导您完成安装过程并帮助您设置开发环境。
-
-### **系统要求**
-- **Node.js**: 18.0.0或更高版本
-- **npm**: 8.0.0或更高版本（或yarn 1.22.0+）
-- **TypeScript**: 5.0.0或更高版本
-- **Git**: 2.0.0或更高版本
-
-### **支持的平台**
-- ✅ **Windows**: Windows 10/11 (x64)
-- ✅ **macOS**: macOS 10.15+ (Intel/Apple Silicon)
-- ✅ **Linux**: Ubuntu 18.04+, CentOS 7+, Debian 10+
-
-## 📦 **安装方法**
-
-### **方法1: 安装MPLP核心包（推荐）** ⚡
+### **方式1: 安装MPLP核心包（推荐）** ⚡
 
 安装包含所有核心功能的主MPLP包：
 
@@ -49,23 +41,21 @@ node -e "const mplp = require('mplp'); console.log('MPLP版本:', mplp.MPLP_VERS
 - ✅ TypeScript类型定义
 - ✅ 生产就绪构建
 
-### **方法2: 安装CLI工具**
+### **方式2: 使用CLI脚手架**
 
-用于项目脚手架和开发工具：
+使用MPLP CLI快速创建项目：
 
 ```bash
 # 安装MPLP核心包
 npm install mplp@beta
 
-# 全局安装MPLP CLI（可选，用于项目脚手架）
+# 全局安装CLI（可选，用于项目脚手架）
 npm install -g @mplp/cli
 
-# 验证CLI安装
-mplp --version
-# 预期输出: @mplp/cli/1.1.0-beta
-
-# 创建您的第一个项目
+# 创建新项目
 mplp create my-agent-app
+
+# 进入项目目录
 cd my-agent-app
 
 # 安装依赖
@@ -75,308 +65,200 @@ npm install
 npm run dev
 ```
 
-### **方法3: 安装SDK包**
+### **方式3: 安装SDK包（高级用例）**
 
-为高级用例安装单个SDK包：
+根据需要安装特定的SDK包：
 
+**完整SDK安装**：
 ```bash
-# 核心SDK包（如果您需要SDK特定功能）
-npm install @mplp/sdk-core @mplp/agent-builder @mplp/orchestrator
-
-# 开发工具
-npm install -D @mplp/dev-tools
-
-# 平台适配器（选择您需要的）
-npm install @mplp/adapters
-
-# 注意：对于大多数用户，'npm install mplp@beta'就足够了
+npm install @mplp/sdk-core @mplp/agent-builder @mplp/orchestrator @mplp/cli @mplp/dev-tools
 ```
 
-### **方法4: 开发安装**
+**按需安装**：
 
-适用于贡献者和高级用户：
-
-```bash
-# 克隆仓库
-git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
-cd MPLP-Protocol
-
-# 安装依赖
-npm install
-
-# 构建所有包
-npm run build
-
-# 本地链接包
-npm link
-
-# 运行测试
-npm test
-```
-
-## 🔧 **包详情**
-
-### **核心包**
-
-#### **@mplp/sdk-core**
-所有MPLP应用的基础。
-
+**核心应用框架**：
 ```bash
 npm install @mplp/sdk-core
 ```
 
-**功能特性:**
-- 应用框架和生命周期管理
-- 事件系统和配置管理
-- 健康监控和错误处理
-- 模块注册和依赖注入
-
-#### **@mplp/agent-builder**
-创建和配置智能体的工具。
-
+**Agent构建器**：
 ```bash
 npm install @mplp/agent-builder
 ```
 
-**功能特性:**
-- 智能体创建的流式API
-- 智能体模板和预设
-- 生命周期管理
-- 平台适配器集成
-
-#### **@mplp/orchestrator**
-多智能体协调和工作流管理。
-
+**多Agent编排器**：
 ```bash
 npm install @mplp/orchestrator
 ```
 
-**功能特性:**
-- 工作流引擎和任务调度
-- 资源管理和监控
-- 多智能体协调
-- 性能优化
-
-### **开发工具**
-
-#### **@mplp/cli**
-项目管理的命令行界面。
-
+**CLI开发工具**：
 ```bash
 npm install -g @mplp/cli
 ```
 
-**命令:**
-- `mplp create <name>` - 创建新项目
-- `mplp dev` - 启动开发服务器
-- `mplp build` - 构建生产版本
-- `mplp test` - 运行测试
-- `mplp deploy` - 部署到云端
-
-#### **@mplp/dev-tools**
-开发和调试实用工具。
-
+**开发调试工具**：
 ```bash
-npm install -D @mplp/dev-tools
+npm install --save-dev @mplp/dev-tools
 ```
 
-**功能特性:**
-- 实时调试界面
-- 性能监控和分析
-- 日志聚合和分析
-- 支持热重载的开发服务器
+**注意**: 对于大多数用户，`npm install mplp@beta`就足够了。SDK包适用于需要特定SDK功能的高级场景。
 
-### **平台适配器**
+## 🔧 **平台适配器安装**
 
-#### **@mplp/adapters**
-完整的平台集成生态系统。
+根据需要集成的平台安装对应适配器：
 
 ```bash
-npm install @mplp/adapters
+# Twitter集成
+npm install @mplp/adapter-twitter
+
+# LinkedIn集成
+npm install @mplp/adapter-linkedin
+
+# GitHub集成
+npm install @mplp/adapter-github
+
+# Discord集成
+npm install @mplp/adapter-discord
+
+# Slack集成
+npm install @mplp/adapter-slack
+
+# Reddit集成
+npm install @mplp/adapter-reddit
+
+# Medium集成
+npm install @mplp/adapter-medium
 ```
 
-**包含的适配器:**
-- **Twitter**: 社交媒体自动化
-- **LinkedIn**: 专业网络
-- **GitHub**: 代码协作
-- **Discord**: 社区管理
-- **Slack**: 团队沟通
-- **Reddit**: 社区参与
-- **Medium**: 内容发布
+## ✅ **安装验证**
 
-## 🚀 **验证**
+### **验证安装**
+创建测试文件 `test-installation.js`：
 
-### **安装验证**
+```javascript
+const { MPLPApplication } = require('@mplp/sdk-core');
+const { AgentBuilder } = require('@mplp/agent-builder');
 
-使用这些命令验证您的安装：
+console.log('MPLP SDK 安装验证...');
 
+try {
+  // 创建应用实例
+  const app = new MPLPApplication('TestApp');
+  console.log('✅ @mplp/sdk-core 安装成功');
+
+  // 创建Agent构建器
+  const builder = new AgentBuilder('TestAgent');
+  console.log('✅ @mplp/agent-builder 安装成功');
+
+  console.log('🎉 MPLP SDK 安装验证通过！');
+} catch (error) {
+  console.error('❌ 安装验证失败:', error.message);
+  process.exit(1);
+}
+```
+
+运行验证：
+```bash
+node test-installation.js
+```
+
+### **CLI验证**
+```bash
+# 检查CLI版本
+mplp --version
+
+# 查看可用命令
+mplp --help
+
+# 检查项目状态
+mplp status
+```
+
+## 🚨 **常见问题**
+
+### **Node.js版本问题**
 ```bash
 # 检查Node.js版本
 node --version
-# 应该是18.0.0或更高版本
 
-# 检查npm版本
-npm --version
-# 应该是8.0.0或更高版本
-
-# 检查MPLP CLI
-mplp --version
-# 应该显示@mplp/cli/1.1.0-beta
-
-# 检查TypeScript（如果全局安装）
-tsc --version
-# 应该是5.0.0或更高版本
-```
-
-### **快速测试**
-
-创建并运行一个简单的测试应用：
-
-```bash
-# 创建测试项目
-mplp create test-app --template minimal
-cd test-app
-
-# 安装依赖
-npm install
-
-# 运行测试
-npm test
-# 应该显示所有测试通过
-
-# 启动开发服务器
-npm run dev
-# 应该在http://localhost:3000启动服务器
-```
-
-## 🛠️ **开发环境设置**
-
-### **IDE配置**
-
-#### **Visual Studio Code（推荐）**
-
-安装MPLP扩展包：
-
-```bash
-# 安装VS Code扩展
-code --install-extension mplp.mplp-extension-pack
-```
-
-**包含的扩展:**
-- MPLP语言支持
-- TypeScript和JavaScript
-- ESLint和Prettier
-- GitLens和Git Graph
-- REST Client用于API测试
-
-#### **WebStorm/IntelliJ IDEA**
-
-配置TypeScript和Node.js支持：
-
-1. 启用TypeScript服务
-2. 配置Node.js解释器
-3. 从市场安装MPLP插件
-4. 设置ESLint和Prettier
-
-### **环境变量**
-
-在项目根目录创建`.env`文件：
-
-```bash
-# 开发环境
-NODE_ENV=development
-MPLP_LOG_LEVEL=debug
-
-# API密钥（替换为您的实际密钥）
-TWITTER_API_KEY=your_twitter_api_key
-TWITTER_API_SECRET=your_twitter_api_secret
-LINKEDIN_CLIENT_ID=your_linkedin_client_id
-GITHUB_TOKEN=your_github_token
-
-# 数据库（如果使用）
-DATABASE_URL=postgresql://localhost:5432/mplp_dev
-
-# Redis（用于缓存）
-REDIS_URL=redis://localhost:6379
-```
-
-### **Docker设置（可选）**
-
-使用Docker获得一致的开发环境：
-
-```bash
-# 拉取MPLP开发镜像
-docker pull mplp/dev-environment:latest
-
-# 运行开发容器
-docker run -it -v $(pwd):/workspace mplp/dev-environment:latest
-
-# 或使用docker-compose
-docker-compose up -d
-```
-
-## 🔍 **故障排除**
-
-### **常见问题**
-
-#### **Node.js版本问题**
-```bash
-# 错误: Node.js版本过旧
-# 解决方案: 更新Node.js
+# 如果版本过低，请升级Node.js
+# 推荐使用nvm管理Node.js版本
 nvm install 18
 nvm use 18
 ```
 
-#### **权限问题（macOS/Linux）**
+### **权限问题（Linux/macOS）**
 ```bash
-# 错误: EACCES权限被拒绝
-# 解决方案: 修复npm权限
-sudo chown -R $(whoami) ~/.npm
+# 如果遇到权限问题，使用sudo
+sudo npm install -g @mplp/cli
+
+# 或配置npm全局目录
+npm config set prefix ~/.npm-global
+export PATH=~/.npm-global/bin:$PATH
 ```
 
-#### **Windows路径问题**
+### **网络问题**
 ```bash
-# 错误: 找不到命令
-# 解决方案: 添加到PATH或使用完整路径
-npm config set prefix %APPDATA%\npm
+# 使用国内镜像源
+npm config set registry https://registry.npmmirror.com
+
+# 或使用yarn
+yarn config set registry https://registry.npmmirror.com
 ```
 
-#### **TypeScript编译错误**
-```bash
-# 错误: TypeScript编译失败
-# 解决方案: 检查TypeScript版本和配置
-npm install -D typescript@^5.0.0
-npx tsc --init
+### **TypeScript配置**
+确保项目根目录有 `tsconfig.json`：
+```json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "lib": ["ES2020"],
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
 ```
 
-### **获取帮助**
+## 🔄 **更新SDK**
 
-如果遇到问题：
+### **检查更新**
+```bash
+# 检查过时的包
+npm outdated
 
-1. **查看文档**: [MPLP文档](../../README.md)
-2. **搜索问题**: [GitHub Issues](https://github.com/mplp-org/mplp/issues)
-3. **社区支持**: [Discord服务器](https://discord.gg/mplp)
-4. **专业支持**: support@mplp.dev
+# 或使用CLI检查
+mplp check-updates
+```
 
-## 📚 **下一步**
+### **更新到最新版本**
+```bash
+# 更新所有MPLP包
+npm update @mplp/sdk-core @mplp/agent-builder @mplp/orchestrator @mplp/cli @mplp/dev-tools
 
-成功安装后：
+# 或使用CLI更新
+mplp update
+```
 
-1. **[快速开始教程](quick-start.md)** - 30分钟构建您的第一个智能体
-2. **[第一个智能体指南](first-agent.md)** - 详细的智能体创建演练
-3. **API参考 (开发中)** - 完整的API文档
-4. **示例 (开发中)** - 示例应用和用例
+## 📞 **获取帮助**
 
-## 🔗 **相关资源**
+如果遇到安装问题：
 
-- [MPLP协议文档](../../protocol/README.md)
-- [SDK架构指南](../guides/architecture.md)
-- [最佳实践](../guides/best-practices.md)
-- [性能指南](../guides/performance.md)
+1. **查看文档**: [故障排除指南](../guides/troubleshooting.md)
+2. **社区讨论**: [GitHub Discussions](https://github.com/mplp-org/mplp/discussions)
+3. **问题反馈**: [GitHub Issues](https://github.com/mplp-org/mplp/issues)
+4. **官方支持**: support@mplp.org
 
 ---
 
-**安装支持**: installation-support@mplp.dev  
-**文档团队**: MPLP SDK团队  
-**最后更新**: 2025-09-20  
-**下次审查**: 2025-10-20
+**下一步**: [快速开始](quick-start.md) | [创建第一个Agent](first-agent.md)

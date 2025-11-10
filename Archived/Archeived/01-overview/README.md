@@ -106,8 +106,8 @@ MIT License - 详见 [LICENSE](../../LICENSE) 文件
 
 ## 🔗 **相关链接**
 
-- [GitHub仓库](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev)
-- [问题反馈](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/issues)
+- [GitHub仓库](https://github.com/Coregentis/MPLP-Protocol)
+- [问题反馈](https://github.com/Coregentis/MPLP-Protocol/issues)
 - [变更日志](./CHANGELOG.md)
 - [发展路线图](./ROADMAP.md)
 

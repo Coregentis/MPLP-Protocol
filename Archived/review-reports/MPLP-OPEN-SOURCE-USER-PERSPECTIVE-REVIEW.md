@@ -2,7 +2,7 @@
 ## **基于SCTM+GLFB+ITCM+RBCT增强框架的全面评估**
 
 **审查日期**: October 16, 2025  
-**审查对象**: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev  
+**审查对象**: https://github.com/Coregentis/MPLP-Protocol  
 **审查视角**: 潜在用户 - 希望基于MPLP构建独立多Agent应用  
 **审查框架**: SCTM+GLFB+ITCM+RBCT Enhanced Framework  
 **审查结论**: ⚠️ **严重问题 - 无法直接使用**
@@ -115,7 +115,7 @@
 1. npm install mplp@alpha
    ❌ 失败: 包不存在
    
-2. git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
+2. git clone https://github.com/Coregentis/MPLP-Protocol.git
    ✅ 成功
    
 3. npm install
@@ -216,7 +216,7 @@ MPLP主包 (mplp)
 **声明3**: "Production Ready"
 - **验证结果**: ❌ **虚假** - 无法安装使用的项目不是生产就绪
 
-**声明4**: "3,165 tests passing (100% pass rate)"
+**声明4**: "2,902 tests passing (100% pass rate)"
 - **验证结果**: ⚠️ **无法验证** - 用户无法运行测试
 
 #### **5.2 RBCT规则验证**
@@ -613,7 +613,7 @@ npm install @mplp/core@beta @mplp/agent-builder@beta @mplp/orchestrator@beta
 
 ```bash
 # Clone the repository
-git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
+git clone https://github.com/Coregentis/MPLP-Protocol.git
 cd MPLP-Protocol
 
 # Install dependencies
@@ -704,7 +704,7 @@ node my-first-agent.js
 
 - Explore [Examples](./examples/)
 - Read [API Documentation](./docs/en/api/)
-- Join [Community Discussions](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/discussions)
+- Join [Community Discussions](https://github.com/Coregentis/MPLP-Protocol/discussions)
 ```
 
 ---

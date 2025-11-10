@@ -93,15 +93,18 @@ export class MemoryConfirmRepository implements IConfirmRepository {
 
     // 应用过滤器
     if (filter.confirmationType && filter.confirmationType.length > 0) {
-      results = results.filter(confirm => filter.confirmationType!.includes(confirm.confirmationType));
+      const confirmationType = filter.confirmationType;
+      results = results.filter(confirm => confirmationType.includes(confirm.confirmationType));
     }
 
     if (filter.status && filter.status.length > 0) {
-      results = results.filter(confirm => filter.status!.includes(confirm.status));
+      const status = filter.status;
+      results = results.filter(confirm => status.includes(confirm.status));
     }
 
     if (filter.priority && filter.priority.length > 0) {
-      results = results.filter(confirm => filter.priority!.includes(confirm.priority));
+      const priority = filter.priority;
+      results = results.filter(confirm => priority.includes(confirm.priority));
     }
 
     if (filter.requesterId) {
@@ -123,19 +126,23 @@ export class MemoryConfirmRepository implements IConfirmRepository {
     }
 
     if (filter.createdAfter) {
-      results = results.filter(confirm => confirm.timestamp >= filter.createdAfter!);
+      const createdAfter = filter.createdAfter;
+      results = results.filter(confirm => confirm.timestamp >= createdAfter);
     }
 
     if (filter.createdBefore) {
-      results = results.filter(confirm => confirm.timestamp <= filter.createdBefore!);
+      const createdBefore = filter.createdBefore;
+      results = results.filter(confirm => confirm.timestamp <= createdBefore);
     }
 
     if (filter.riskLevel && filter.riskLevel.length > 0) {
-      results = results.filter(confirm => filter.riskLevel!.includes(confirm.riskAssessment.overallRiskLevel));
+      const riskLevel = filter.riskLevel;
+      results = results.filter(confirm => riskLevel.includes(confirm.riskAssessment.overallRiskLevel));
     }
 
     if (filter.workflowType && filter.workflowType.length > 0) {
-      results = results.filter(confirm => filter.workflowType!.includes(confirm.approvalWorkflow.workflowType));
+      const workflowType = filter.workflowType;
+      results = results.filter(confirm => workflowType.includes(confirm.approvalWorkflow.workflowType));
     }
 
     return this.paginateResults(results, pagination);

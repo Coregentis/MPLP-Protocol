@@ -9,7 +9,7 @@
 [![开发状态](https://img.shields.io/badge/development-100%25%20完成-brightgreen.svg)](../quick-start.md)
 [![贡献者](https://img.shields.io/badge/contributors-欢迎-blue.svg)](../../../../CONTRIBUTING.md)
 [![标准](https://img.shields.io/badge/standards-企业级-brightgreen.svg)](../../testing/README.md)
-[![质量](https://img.shields.io/badge/tests-2869%2F2869%20通过-brightgreen.svg)](../../testing/README.md)
+[![质量](https://img.shields.io/badge/tests-2902%2F2902%20通过-brightgreen.svg)](../../testing/README.md)
 [![语言](https://img.shields.io/badge/language-中文-blue.svg)](../../en/guides/development/README.md)
 
 ---
@@ -119,7 +119,7 @@ npm run test:performance
 ✅ Core Module: 584/584 tests passing (100% pass rate)
 ✅ Network Module: 190/190 tests passing (100% pass rate)
 
-总计: 2,869/2,869 tests passing (100%)
+总计: 2,902/2,902 tests passing (100%)
 ```
 
 ## 📝 **编码标准**

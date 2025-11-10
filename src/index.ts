@@ -8,14 +8,33 @@
  * @architecture L1-L3 Protocol Stack
  * @status Production Ready
  * @created 2025-07-28
- * @updated 2025-10-16
+ * @updated 2025-10-21
  *
  * 使用说明:
- * - 主包导出: import { MPLP_VERSION } from 'mplp'
+ * - 主类导入: import { MPLP } from 'mplp'
+ * - 工厂函数: import { createMPLP, quickStart } from 'mplp'
+ * - 版本信息: import { MPLP_VERSION } from 'mplp'
  * - 模块导出: import { ContextManager } from 'mplp/context'
  * - 类型导出: import type { UUID } from 'mplp/types'
  * - 工具导出: import { generateUUID } from 'mplp/utils'
+ *
+ * 快速开始:
+ * ```typescript
+ * import { quickStart } from 'mplp';
+ *
+ * const mplp = await quickStart();
+ * const contextModule = mplp.getModule('context');
+ * ```
  */
+
+// ===== 主类和工厂函数导出 =====
+export { MPLP, MPLPConfig } from './core/mplp';
+export {
+  createMPLP,
+  quickStart,
+  createProductionMPLP,
+  createTestMPLP
+} from './core/factory';
 
 // ===== 版本信息 =====
 export const MPLP_VERSION = '1.1.0-beta';

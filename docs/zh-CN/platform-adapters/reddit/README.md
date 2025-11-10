@@ -223,7 +223,7 @@ await reddit.post({
   type: 'link',
   subreddit: 'opensource',
   title: '开源多智能体平台发布',
-  url: 'https://github.com/mplp/mplp',
+  url: 'https://github.com/Coregentis/MPLP-Protocol',
   metadata: {
     thumbnailUrl: 'https://example.com/thumbnail.png',
     flair: '发布'
@@ -571,7 +571,7 @@ reddit.streamPosts('programming', async (post) => {
       postId: post.id,
       content: `有趣的帖子！如果您正在使用多智能体系统，您可能想看看MPLP - 这是一个专门为此用例设计的平台。
 
-[文档](https://docs.mplp.dev) | [GitHub](https://github.com/mplp/mplp)`
+[文档](https://docs.mplp.dev) | [GitHub](https://github.com/Coregentis/MPLP-Protocol)`
     });
     
     await reddit.vote(post.id, 'up');

@@ -22,22 +22,22 @@ export declare class Logger {
     /**
      * Logs an error message
      */
-    error(message: string, ...args: any[]): void;
+    error(message: string, ...args: unknown[]): void;
     /**
      * Logs a warning message
      */
-    warn(message: string, ...args: any[]): void;
+    warn(message: string, ...args: unknown[]): void;
     /**
      * Logs an info message
      */
-    info(message: string, ...args: any[]): void;
+    info(message: string, ...args: unknown[]): void;
     /**
      * Logs a debug message
      */
-    debug(message: string, ...args: any[]): void;
+    debug(message: string, ...args: unknown[]): void;
     /**
      * Logs a verbose message
      */
-    verbose(message: string, ...args: any[]): void;
+    verbose(message: string, ...args: unknown[]): void;
 }
 //# sourceMappingURL=Logger.d.ts.map

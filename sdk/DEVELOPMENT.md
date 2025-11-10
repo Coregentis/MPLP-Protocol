@@ -12,7 +12,7 @@
 ```bash
 # 1. 克隆项目
 git clone <repository-url>
-cd mplp-v1.0/sdk
+cd MPLP-Protocol-v1.0/sdk
 
 # 2. 安装依赖
 npm install

@@ -59,6 +59,8 @@ export class DatabaseRoleRepository implements IRoleRepository {
     private readonly dbClient: IDatabaseClient,
     private readonly config: DatabaseConfig
   ) {
+    // Explicitly mark as intentionally unused - Reserved for future database configuration
+    void this.config;
     // Mark table names as intentionally unused (reserved for future multi-table operations)
     void this.inheritanceTableName;
     void this.delegationTableName;

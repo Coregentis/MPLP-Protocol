@@ -6,10 +6,10 @@
 
 <div align="center">
 
-[![Version](https://img.shields.io/badge/version-1.0.0--alpha-blue.svg)](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev)
+[![Version](https://img.shields.io/badge/version-1.1.0--beta-blue.svg)](https://github.com/Coregentis/MPLP-Protocol)
 [![Protocol Stack](https://img.shields.io/badge/L1--L3-Protocol%20Stack-orange.svg)](./architecture/)
 [![Modules](https://img.shields.io/badge/modules-10%2F10%20complete-brightgreen.svg)](./modules/)
-[![Tests](https://img.shields.io/badge/tests-2869%20total%20%7C%20100%25%20pass-brightgreen.svg)](../../README.md#quality)
+[![Tests](https://img.shields.io/badge/tests-2902%20total%20%7C%20100%25%20pass-brightgreen.svg)](../../README.md#quality)
 [![Coverage](https://img.shields.io/badge/coverage-47.47%25-yellow.svg)](../../README.md#quality)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
@@ -56,7 +56,7 @@ node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VE
 #### **Option 2: Install from Source (For Development)**
 ```bash
 # Clone the repository
-git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
+git clone https://github.com/Coregentis/MPLP-Protocol.git
 cd MPLP-Protocol
 
 # Install dependencies
@@ -93,7 +93,7 @@ npm run lint && npm run typecheck
 | **Getting Started** | **Documentation** | **Development** | **Community** |
 |:-------------------:|:-----------------:|:---------------:|:-------------:|
 | [🚀 Quick Start](#quick-start) | [📖 Protocol Overview](./protocol-foundation/protocol-overview.md) | [🔧 API Reference](./api-reference/) | [🤝 Contributing](./community/contributing.md) |
-| [⚡ Installation](#installation) | [🏗️ Architecture](./architecture/) | [🧪 Testing Guide](./testing/) | [💬 Discussions](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/discussions) |
+| [⚡ Installation](#installation) | [🏗️ Architecture](./architecture/) | [🧪 Testing Guide](./testing/) | [💬 Discussions](https://github.com/Coregentis/MPLP-Protocol/discussions) |
 | [🎯 Examples](./examples/) | [📋 Modules](./modules/) | [🚀 Deployment](./operations/) | [📋 Roadmap](./community/roadmap.md) |
 
 </div>
@@ -109,7 +109,7 @@ MPLP (Multi-Agent Protocol Lifecycle Platform) is an enterprise-grade L1-L3 prot
 - **🏗️ L1-L3 Protocol Stack**: Complete three-layer architecture (Protocol, Coordination, Execution)
 - **🔧 10 Core Modules**: Context, Plan, Role, Confirm, Trace, Extension, Dialog, Collab, Core, Network
 - **🌐 Vendor Neutral**: Multi-vendor integration support, avoiding technology lock-in
-- **📊 Enterprise Quality**: 2,869 tests, 100% pass rate, zero technical debt
+- **📊 Enterprise Quality**: 2,902 tests, 100% pass rate, zero technical debt
 - **🔒 Security First**: Built-in security mechanisms and compliance validation
 - **⚡ High Performance**: Optimized protocol design supporting large-scale deployment
 
@@ -167,9 +167,9 @@ MPLP (Multi-Agent Protocol Lifecycle Platform) is an enterprise-grade L1-L3 prot
 ## 📊 **Quality Metrics**
 
 ### **Test Coverage**
-- **Total Tests**: 2,869 tests
-- **Pass Rate**: 100% (2,869/2,869)
-- **Test Suites**: 197 suites, all passing
+- **Total Tests**: 2,902 tests
+- **Pass Rate**: 100% (2,902/2,902)
+- **Test Suites**: 199 suites, all passing
 - **Execution Time**: 45.574 seconds
 - **Coverage**: 47.47% (continuously improving)
 
@@ -259,8 +259,8 @@ MPLP-Protocol-Dev/
 
 ## 🤝 **Community and Support**
 
-- **GitHub Discussions**: [Project Discussions](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/discussions)
-- **Issue Reporting**: [GitHub Issues](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/issues)
+- **GitHub Discussions**: [Project Discussions](https://github.com/Coregentis/MPLP-Protocol/discussions)
+- **Issue Reporting**: [GitHub Issues](https://github.com/Coregentis/MPLP-Protocol/issues)
 - **Contributing Guide**: [CONTRIBUTING.md](./community/contributing.md)
 - **Code of Conduct**: [CODE_OF_CONDUCT.md](./community/code-of-conduct.md)
 - **Governance**: [GOVERNANCE.md](./community/governance.md)
@@ -278,7 +278,7 @@ This project is licensed under the MIT License - see the [LICENSE](../../LICENSE
 **MPLP v1.0 Alpha** is ready for production!
 
 - ✅ **100% Complete**: 10/10 core modules achieving enterprise-grade standards
-- ✅ **Perfect Quality**: 2,869/2,869 tests passing, zero technical debt
+- ✅ **Perfect Quality**: 2,902/2,902 tests passing, zero technical debt
 - ✅ **Production Ready**: Complete CI/CD pipeline and deployment preparation
 - ✅ **Open Source Ready**: Complete documentation, examples, and community support
 

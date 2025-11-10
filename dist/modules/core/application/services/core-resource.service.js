@@ -15,6 +15,8 @@ class CoreResourceService {
         this.coreRepository = coreRepository;
         this.resourceAllocations = new Map();
         this.performanceHistory = [];
+        // Explicitly mark repository as intentionally unused - Reserved for future persistence operations
+        void this.coreRepository;
     }
     /**
      * 分配系统资源
@@ -282,7 +284,11 @@ class CoreResourceService {
         if (sortedNodes.length === 0) {
             throw new Error('No nodes available for allocation');
         }
-        const recommendedNode = sortedNodes[0][0];
+        const firstNode = sortedNodes[0];
+        if (!firstNode) {
+            throw new Error('No nodes available for allocation');
+        }
+        const recommendedNode = firstNode[0];
         const currentNodeLoad = nodeLoads[recommendedNode];
         const expectedImprovement = Math.max(0, 100 - currentNodeLoad);
         return { recommendedNode, expectedImprovement };

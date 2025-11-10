@@ -18,6 +18,9 @@ class CoreController {
         this.coreOrchestrationService = coreOrchestrationService;
         this._coreResourceService = _coreResourceService;
         this._coreMonitoringService = _coreMonitoringService;
+        // Explicitly mark services as intentionally unused - Reserved for future API endpoints
+        void this._coreResourceService;
+        void this._coreMonitoringService;
     }
     // ===== 工作流管理API =====
     /**

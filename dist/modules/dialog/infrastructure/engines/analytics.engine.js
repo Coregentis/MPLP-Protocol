@@ -267,8 +267,12 @@ class AnalyticsEngine {
                 return { outcome: 'medium', score: normalizedScore };
             return { outcome: 'low', score: normalizedScore };
         }
-        // 使用非空断言：outcomes数组在initializeModels中已初始化为非空
-        return { outcome: _model.outcomes[0], score: normalizedScore };
+        // 返回第一个outcome作为默认值
+        const firstOutcome = _model.outcomes[0];
+        if (!firstOutcome) {
+            return { outcome: 'unknown', score: normalizedScore };
+        }
+        return { outcome: firstOutcome, score: normalizedScore };
     }
     executeRegression(_model, features) {
         // 简化的回归逻辑
@@ -389,10 +393,18 @@ class AnalyticsEngine {
     calculateMedian(values) {
         const sorted = [...values].sort((a, b) => a - b);
         const mid = Math.floor(sorted.length / 2);
-        // 使用非空断言：sorted数组长度已验证 > 0
-        return sorted.length % 2 === 0
-            ? (sorted[mid - 1] + sorted[mid]) / 2
-            : sorted[mid];
+        if (sorted.length === 0) {
+            return 0;
+        }
+        if (sorted.length % 2 === 0) {
+            const val1 = sorted[mid - 1];
+            const val2 = sorted[mid];
+            return (val1 !== undefined && val2 !== undefined) ? (val1 + val2) / 2 : 0;
+        }
+        else {
+            const val = sorted[mid];
+            return val !== undefined ? val : 0;
+        }
     }
     calculateStandardDeviation(values, mean) {
         const variance = values.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / values.length;

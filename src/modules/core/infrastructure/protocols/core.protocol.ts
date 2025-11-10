@@ -84,7 +84,22 @@ export class CoreProtocol {
     private readonly _transactionManager: MLPPTransactionManager,
     private readonly _protocolVersionManager: MLPPProtocolVersionManager,
     private readonly config: CoreProtocolConfig = {}
-  ) {}
+  ) {
+    // Explicitly mark services and managers as intentionally unused - Reserved for CoreOrchestrator activation
+    void this._monitoringService;
+    void this._orchestrationService;
+    void this._resourceService;
+    void this._repository;
+    void this._securityManager;
+    void this._performanceMonitor;
+    void this._eventBusManager;
+    void this._errorHandler;
+    void this._orchestrationManager;
+    void this._stateSyncManager;
+    void this._transactionManager;
+    void this._protocolVersionManager;
+    void this.config;
+  }
 
   // ===== 核心协议操作 =====
 

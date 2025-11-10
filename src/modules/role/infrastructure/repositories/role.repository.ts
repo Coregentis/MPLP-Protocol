@@ -536,7 +536,7 @@ export class MemoryRoleRepository implements IRoleRepository {
       if (filter.name && !role.name.toLowerCase().includes(filter.name.toLowerCase())) return false;
       if (filter.contextId && role.contextId !== filter.contextId) return false;
       if (filter.department && role.attributes?.department !== filter.department) return false;
-      if (filter.securityClearance && !filter.securityClearance.includes(role.attributes?.securityClearance!)) return false;
+      if (filter.securityClearance && role.attributes?.securityClearance && !filter.securityClearance.includes(role.attributes.securityClearance)) return false;
       
       if (filter.hasPermission) {
         const { resourceType, resourceId, action } = filter.hasPermission;

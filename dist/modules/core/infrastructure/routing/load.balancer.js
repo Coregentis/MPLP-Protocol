@@ -230,11 +230,22 @@ class LoadBalancer {
     }
     // ===== 负载均衡算法实现 =====
     roundRobinSelect(instances) {
-        const serviceName = instances[0].serviceName;
+        if (instances.length === 0) {
+            throw new Error('Cannot select from empty instances array');
+        }
+        const firstInstance = instances[0];
+        if (!firstInstance) {
+            throw new Error('Cannot select from empty instances array');
+        }
+        const serviceName = firstInstance.serviceName;
         const counter = this.roundRobinCounters.get(serviceName) || 0;
         const selectedIndex = counter % instances.length;
         this.roundRobinCounters.set(serviceName, counter + 1);
-        return instances[selectedIndex];
+        const selectedInstance = instances[selectedIndex];
+        if (!selectedInstance) {
+            throw new Error(`Instance at index ${selectedIndex} not found`);
+        }
+        return selectedInstance;
     }
     weightedRoundRobinSelect(instances) {
         const totalWeight = instances.reduce((sum, instance) => sum + instance.weight, 0);
@@ -246,7 +257,12 @@ class LoadBalancer {
                 return instance;
             }
         }
-        return instances[0];
+        // Fallback: 返回第一个实例
+        const firstInstance = instances[0];
+        if (!firstInstance) {
+            throw new Error('No instances available for weighted selection');
+        }
+        return firstInstance;
     }
     leastConnectionsSelect(instances) {
         return instances.reduce((min, instance) => instance.metrics.activeConnections < min.metrics.activeConnections ? instance : min);
@@ -263,18 +279,30 @@ class LoadBalancer {
     }
     randomSelect(instances) {
         const randomIndex = Math.floor(Math.random() * instances.length);
-        return instances[randomIndex];
+        const selectedInstance = instances[randomIndex];
+        if (!selectedInstance) {
+            throw new Error(`Instance at index ${randomIndex} not found`);
+        }
+        return selectedInstance;
     }
     consistentHashSelect(instances, request) {
         // 简化的一致性哈希实现
         const hash = this.hashString(request.path + request.clientIp);
         const index = hash % instances.length;
-        return instances[index]; // 非空断言：instances.length > 0 已在调用方验证
+        const selectedInstance = instances[index];
+        if (!selectedInstance) {
+            throw new Error(`Instance at index ${index} not found`);
+        }
+        return selectedInstance;
     }
     ipHashSelect(instances, request) {
         const hash = this.hashString(request.clientIp);
         const index = hash % instances.length;
-        return instances[index]; // 非空断言：instances.length > 0 已在调用方验证
+        const selectedInstance = instances[index];
+        if (!selectedInstance) {
+            throw new Error(`Instance at index ${index} not found`);
+        }
+        return selectedInstance;
     }
     // ===== 辅助方法 =====
     getAvailableInstances(_path) {

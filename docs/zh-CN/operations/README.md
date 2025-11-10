@@ -9,7 +9,7 @@
 [![运维](https://img.shields.io/badge/operations-100%25%20完成-brightgreen.svg)](./deployment-guide.md)
 [![监控](https://img.shields.io/badge/monitoring-企业级就绪-brightgreen.svg)](./monitoring-guide.md)
 [![扩展](https://img.shields.io/badge/scalability-生产验证-brightgreen.svg)](./scaling-guide.md)
-[![质量](https://img.shields.io/badge/tests-2869%2F2869%20通过-brightgreen.svg)](./maintenance-guide.md)
+[![质量](https://img.shields.io/badge/tests-2902%2F2902%20通过-brightgreen.svg)](./maintenance-guide.md)
 [![语言](https://img.shields.io/badge/language-中文-blue.svg)](../../en/operations/README.md)
 
 ---
@@ -183,9 +183,9 @@ helm install mplp-monitoring mplp/monitoring \
 ### **外部资源**
 - **官方网站**: https://mplp.dev
 - **文档中心**: https://docs.mplp.dev
-- **GitHub仓库**: https://github.com/mplp/mplp
-- **社区讨论**: https://github.com/mplp/mplp/discussions
-- **问题报告**: https://github.com/mplp/mplp/issues
+- **GitHub仓库**: https://github.com/Coregentis/MPLP-Protocol
+- **社区讨论**: https://github.com/Coregentis/MPLP-Protocol/discussions
+- **问题报告**: https://github.com/Coregentis/MPLP-Protocol/issues
 
 ### **培训和认证**
 - **MPLP运维认证**: 企业级运维技能认证

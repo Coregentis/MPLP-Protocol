@@ -306,7 +306,8 @@ async function retry(fn, maxAttempts = 3, delay = 1000) {
             await new Promise(resolve => setTimeout(resolve, delay * attempt));
         }
     }
-    throw lastError;
+    // 这个分支理论上不会到达，但为了类型安全
+    throw lastError || new Error('Retry failed with unknown error');
 }
 // ===== 导出所有工具 =====
 // 注意：其他工具模块待实现

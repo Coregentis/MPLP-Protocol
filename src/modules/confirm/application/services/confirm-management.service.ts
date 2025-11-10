@@ -26,8 +26,19 @@ import {
  * @description 提供Confirm模块的核心业务逻辑，包括审批工作流管理
  */
 export class ConfirmManagementService {
-  
-  constructor(private readonly repository: IConfirmRepository) {}
+
+  constructor(private readonly repository: IConfirmRepository) {
+    // Explicitly mark reserved coordination methods as intentionally unused
+    // These methods are reserved for CoreOrchestrator activation
+    void this.validateConfirmCoordinationPermission;
+    void this.getConfirmCoordinationContext;
+    void this.recordConfirmCoordinationMetrics;
+    void this.manageConfirmExtensionCoordination;
+    void this.requestConfirmPlanCoordination;
+    void this.coordinateCollabConfirmManagement;
+    void this.enableDialogDrivenConfirmCoordination;
+    void this.coordinateConfirmAcrossNetwork;
+  }
 
   /**
    * 创建确认
@@ -352,6 +363,7 @@ export class ConfirmManagementService {
    * @returns Promise<boolean> - Whether coordination is permitted
    * @reserved Reserved for CoreOrchestrator activation
    */
+  // Reserved for CoreOrchestrator activation - Role module integration
   private async validateConfirmCoordinationPermission(
     _userId: UUID,
     _confirmId: UUID,
@@ -372,6 +384,7 @@ export class ConfirmManagementService {
    * @returns Promise<Record<string, unknown>> - Coordination context data
    * @reserved Reserved for CoreOrchestrator activation
    */
+  // Reserved for CoreOrchestrator activation - Context module integration
   private async getConfirmCoordinationContext(
     _contextId: UUID,
     _confirmType: string
@@ -397,6 +410,7 @@ export class ConfirmManagementService {
    * @returns Promise<void> - Metrics recording completion
    * @reserved Reserved for CoreOrchestrator activation
    */
+  // Reserved for CoreOrchestrator activation - Trace module integration
   private async recordConfirmCoordinationMetrics(
     _confirmId: UUID,
     _metrics: Record<string, unknown>
@@ -416,6 +430,7 @@ export class ConfirmManagementService {
    * @returns Promise<boolean> - Whether extension coordination succeeded
    * @reserved Reserved for CoreOrchestrator activation
    */
+  // Reserved for CoreOrchestrator activation - Extension module integration
   private async manageConfirmExtensionCoordination(
     _confirmId: UUID,
     _extensions: Record<string, unknown>
@@ -440,6 +455,7 @@ export class ConfirmManagementService {
    * @returns Promise<boolean> - Whether plan coordination was successful
    * @reserved Reserved for CoreOrchestrator activation
    */
+  // Reserved for CoreOrchestrator activation - Plan module integration
   private async requestConfirmPlanCoordination(
     _planId: UUID,
     _confirmConfig: Record<string, unknown>
@@ -459,6 +475,7 @@ export class ConfirmManagementService {
    * @returns Promise<boolean> - Whether collaboration coordination succeeded
    * @reserved Reserved for CoreOrchestrator activation
    */
+  // Reserved for CoreOrchestrator activation - Collab module integration
   private async coordinateCollabConfirmManagement(
     _collabId: UUID,
     _confirmConfig: Record<string, unknown>
@@ -478,6 +495,7 @@ export class ConfirmManagementService {
    * @returns Promise<boolean> - Whether dialog coordination succeeded
    * @reserved Reserved for CoreOrchestrator activation
    */
+  // Reserved for CoreOrchestrator activation - Dialog module integration
   private async enableDialogDrivenConfirmCoordination(
     _dialogId: UUID,
     _confirmParticipants: Record<string, unknown>
@@ -497,6 +515,7 @@ export class ConfirmManagementService {
    * @returns Promise<boolean> - Whether network coordination succeeded
    * @reserved Reserved for CoreOrchestrator activation
    */
+  // Reserved for CoreOrchestrator activation - Network module integration
   private async coordinateConfirmAcrossNetwork(
     _networkId: UUID,
     _confirmConfig: Record<string, unknown>

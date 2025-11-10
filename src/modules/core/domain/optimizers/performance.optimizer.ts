@@ -115,7 +115,10 @@ export class PerformanceOptimizer {
   constructor(
     private readonly resourceService: CoreResourceService,
     private readonly monitoringService: CoreMonitoringService
-  ) {}
+  ) {
+    // Explicitly mark monitoring service as intentionally unused - Reserved for future performance monitoring integration
+    void this.monitoringService;
+  }
 
   /**
    * 执行性能分析
@@ -300,8 +303,20 @@ export class PerformanceOptimizer {
       };
     }
 
-    const latest = recentAnalyses[recentAnalyses.length - 1]!;
-    const earliest = recentAnalyses[0]!;
+    const latest = recentAnalyses[recentAnalyses.length - 1];
+    const earliest = recentAnalyses[0];
+
+    if (!latest || !earliest) {
+      return {
+        trend: 'stable',
+        trendScore: 0,
+        keyMetrics: {
+          cpu: { current: 0, trend: 0 },
+          memory: { current: 0, trend: 0 },
+          workflow: { current: 0, trend: 0 }
+        }
+      };
+    }
 
     // 计算趋势
     const scoreTrend = latest.overallScore - earliest.overallScore;

@@ -8,7 +8,7 @@
 
 [![Implementation](https://img.shields.io/badge/implementation-Production%20Ready-brightgreen.svg)](./protocol-specification.md)
 [![Reference](https://img.shields.io/badge/reference-TypeScript%20Complete-brightgreen.svg)](./interoperability.md)
-[![Tests](https://img.shields.io/badge/tests-2869%2F2869%20Pass-brightgreen.svg)](./compliance-testing.md)
+[![Tests](https://img.shields.io/badge/tests-2902%2F2902%20Pass-brightgreen.svg)](./compliance-testing.md)
 [![Quality](https://img.shields.io/badge/quality-Enterprise%20Grade-brightgreen.svg)](./compliance-testing.md)
 [![Language](https://img.shields.io/badge/language-English-blue.svg)](../../zh-CN/protocol-foundation/implementation-guide.md)
 
@@ -16,7 +16,7 @@
 
 ## Abstract
 
-This comprehensive implementation guide provides step-by-step instructions for building MPLP (Multi-Agent Protocol Lifecycle Platform) compliant implementations based on the **fully completed** v1.0.0-alpha specification. With all 10 modules implemented and 2,869/2,869 tests passing, this guide covers proven architecture patterns, validated best practices, and provides production-ready examples for different programming languages and deployment scenarios.
+This comprehensive implementation guide provides step-by-step instructions for building MPLP (Multi-Agent Protocol Lifecycle Platform) compliant implementations based on the **fully completed** v1.0.0-alpha specification. With all 10 modules implemented and 2,902/2,902 tests passing, this guide covers proven architecture patterns, validated best practices, and provides production-ready examples for different programming languages and deployment scenarios.
 
 ---
 
@@ -1168,7 +1168,7 @@ class MessageProcessor {
 
 #### **Resources**
 - **Documentation**: [https://docs.mplp.org](https://docs.mplp.org)
-- **GitHub Issues**: [https://github.com/mplp/mplp/issues](https://github.com/mplp/mplp/issues)
+- **GitHub Issues**: [https://github.com/Coregentis/MPLP-Protocol/issues](https://github.com/Coregentis/MPLP-Protocol/issues)
 - **Community Forum**: [https://community.mplp.org](https://community.mplp.org)
 - **Discord**: [https://discord.gg/mplp](https://discord.gg/mplp)
 

@@ -23,6 +23,8 @@ class TraceManagementService {
         this._repository = _repository;
         this._dataCollector = _dataCollector;
         this._logger = _logger;
+        // Explicitly mark logger as intentionally unused - Reserved for future logging integration
+        void this._logger;
     }
     // ===== 核心追踪管理功能 =====
     /**

@@ -9,7 +9,7 @@
 [![映射](https://img.shields.io/badge/mapping-生产验证-brightgreen.svg)](./dual-naming-guide.md)
 [![覆盖](https://img.shields.io/badge/coverage-企业级完整-brightgreen.svg)](./validation-rules.md)
 [![模块](https://img.shields.io/badge/modules-10%2F10%20完成-brightgreen.svg)](../modules/)
-[![测试](https://img.shields.io/badge/tests-2869%2F2869%20通过-brightgreen.svg)](./validation-rules.md)
+[![测试](https://img.shields.io/badge/tests-2902%2F2902%20通过-brightgreen.svg)](./validation-rules.md)
 [![语言](https://img.shields.io/badge/language-中文-blue.svg)](../../en/schemas/field-mapping-reference.md)
 
 ---

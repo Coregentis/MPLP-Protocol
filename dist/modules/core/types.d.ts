@@ -34,12 +34,20 @@ export declare enum WorkflowStage {
 export declare enum WorkflowStatus {
     CREATED = "created",
     IN_PROGRESS = "in_progress",
-    RUNNING = "in_progress",// 别名，用于向后兼容
     COMPLETED = "completed",
     FAILED = "failed",
     CANCELLED = "cancelled",
     PAUSED = "paused"
 }
+export declare const WorkflowStatusAlias: {
+    readonly RUNNING: WorkflowStatus.IN_PROGRESS;
+    readonly CREATED: WorkflowStatus.CREATED;
+    readonly IN_PROGRESS: WorkflowStatus.IN_PROGRESS;
+    readonly COMPLETED: WorkflowStatus.COMPLETED;
+    readonly FAILED: WorkflowStatus.FAILED;
+    readonly CANCELLED: WorkflowStatus.CANCELLED;
+    readonly PAUSED: WorkflowStatus.PAUSED;
+};
 export declare enum StageStatus {
     PENDING = "pending",
     RUNNING = "running",

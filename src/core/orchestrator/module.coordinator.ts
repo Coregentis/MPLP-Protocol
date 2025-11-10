@@ -191,6 +191,7 @@ export class ModuleCoordinator {
   private failedOperations = new Map<UUID, FailedOperation>();
 
   constructor(
+    // Reserved for future connection timeout configuration
     private _connectionTimeout: number = 5000,
     private defaultRetryPolicy: RetryPolicy = {
       maxRetries: 3,
@@ -198,7 +199,10 @@ export class ModuleCoordinator {
       backoffStrategy: 'exponential',
       retryableErrors: ['timeout', 'network', 'temporary']
     }
-  ) {}
+  ) {
+    // Explicitly mark as intentionally unused - Reserved for future connection timeout configuration
+    void this._connectionTimeout;
+  }
 
   /**
    * 注册模块

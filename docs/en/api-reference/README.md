@@ -8,7 +8,7 @@
 
 ## 📚 **API Documentation Overview**
 
-This section provides comprehensive API documentation for all layers of the MPLP v1.0 Alpha protocol stack. **All 10 modules are 100% complete** with enterprise-grade APIs, **2,869/2,869 tests passing**, and **zero technical debt**. The APIs are organized by layer and module for easy navigation.
+This section provides comprehensive API documentation for all layers of the MPLP v1.0 Alpha protocol stack. **All 10 modules are 100% complete** with enterprise-grade APIs, **2,902/2,902 tests passing**, and **zero technical debt**. The APIs are organized by layer and module for easy navigation.
 
 ## 🏗️ **API Architecture**
 
@@ -307,6 +307,6 @@ mplp.configure({
 
 **📝 Documentation Status**: This API documentation is actively maintained and updated with each release. For the most current information, always refer to the latest version.
 
-**🐛 Found an Issue?**: If you find any errors or have suggestions for improving this documentation, please [open an issue](https://github.com/your-org/mplp/issues) or contribute via [pull request](https://github.com/your-org/mplp/pulls).
+**🐛 Found an Issue?**: If you find any errors or have suggestions for improving this documentation, please [open an issue](https://github.com/Coregentis/MPLP-Protocol/issues) or contribute via [pull request](https://github.com/Coregentis/MPLP-Protocol/pulls).
 
 **⚠️ Alpha Notice**: These APIs are part of MPLP v1.0 Alpha. While core functionality is stable, some APIs may receive enhancements based on community feedback before the stable release.

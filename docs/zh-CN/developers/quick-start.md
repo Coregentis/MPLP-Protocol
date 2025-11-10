@@ -67,7 +67,7 @@ node -e "const mplp = require('mplp'); console.log('MPLP版本:', mplp.MPLP_VERS
 #### **选项B：从源码安装**
 ```bash
 # 克隆MPLP仓库
-git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
+git clone https://github.com/Coregentis/MPLP-Protocol.git
 cd MPLP-Protocol
 
 # 安装依赖
@@ -89,184 +89,143 @@ npm link mplp
 创建 `src/index.ts` 文件：
 
 ```typescript
-import { MPLPCore } from '@mplp/core';
-import { ContextModule } from '@mplp/context';
-import { PlanModule } from '@mplp/plan';
-import { TraceModule } from '@mplp/trace';
+import { quickStart } from 'mplp';
 
 async function main() {
-  // 初始化MPLP核心
-  const mplp = new MPLPCore({
-    modules: ['context', 'plan', 'trace'],
-    environment: 'development'
-  });
+  console.log('🚀 启动MPLP快速开始示例...');
 
-  await mplp.initialize();
-  console.log('🚀 MPLP已初始化');
+  // 步骤1：初始化MPLP
+  const mplp = await quickStart();
+  console.log('✅ MPLP v1.1.0-beta 已初始化成功！');
 
-  // 获取模块实例
-  const contextModule = mplp.getModule<ContextModule>('context');
-  const planModule = mplp.getModule<PlanModule>('plan');
-  const traceModule = mplp.getModule<TraceModule>('trace');
+  // 步骤2：检查可用模块
+  const modules = mplp.getAvailableModules();
+  console.log('📦 可用模块:', modules);
+  console.log(`   总共加载模块数: ${modules.length}`);
 
-  // 创建协作上下文
-  const context = await contextModule.createContext({
-    name: '我的第一个MPLP应用',
-    type: 'project',
-    participants: ['agent-1', 'agent-2'],
-    goals: [
-      {
-        name: '完成示例任务',
-        priority: 'high',
-        status: 'pending'
-      }
-    ]
-  });
+  // 步骤3：获取Context模块
+  const contextModule = mplp.getModule('context');
+  console.log('📋 Context模块已加载');
 
-  console.log('📋 上下文已创建:', context.name);
+  // 步骤4：获取Plan模块
+  const planModule = mplp.getModule('plan');
+  console.log('📝 Plan模块已加载');
 
-  // 创建执行计划
-  const plan = await planModule.createPlan({
-    contextId: context.id,
-    name: '示例执行计划',
-    tasks: [
-      {
-        id: 'task-1',
-        name: '初始化任务',
-        type: 'setup',
-        assignedTo: 'agent-1',
-        dependencies: []
-      },
-      {
-        id: 'task-2',
-        name: '处理数据',
-        type: 'process',
-        assignedTo: 'agent-2',
-        dependencies: ['task-1']
-      },
-      {
-        id: 'task-3',
-        name: '完成任务',
-        type: 'finalize',
-        assignedTo: 'agent-1',
-        dependencies: ['task-2']
-      }
-    ]
-  });
+  // 步骤5：获取Trace模块
+  const traceModule = mplp.getModule('trace');
+  console.log('🔍 Trace模块已加载');
 
-  console.log('📝 计划已创建:', plan.name);
+  // 步骤6：显示配置信息
+  const config = mplp.getConfig();
+  console.log('⚙️  配置信息:');
+  console.log(`   - 环境: ${config.environment}`);
+  console.log(`   - 日志级别: ${config.logLevel}`);
+  console.log(`   - 协议版本: ${config.protocolVersion}`);
 
-  // 开始执行跟踪
-  const trace = await traceModule.startTrace({
-    contextId: context.id,
-    planId: plan.id,
-    name: '执行跟踪'
-  });
+  // 步骤7：模拟简单的工作流
+  console.log('\n⚡ 模拟多智能体工作流...');
 
-  console.log('🔍 跟踪已开始:', trace.id);
+  const executionStart = Date.now();
 
   // 模拟任务执行
-  for (const task of plan.tasks) {
-    console.log(`⚡ 执行任务: ${task.name}`);
-    
-    // 记录任务开始
-    await traceModule.recordEvent({
-      traceId: trace.id,
-      event: 'task_started',
-      data: { taskId: task.id, taskName: task.name }
-    });
-
-    // 模拟任务执行时间
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    // 记录任务完成
-    await traceModule.recordEvent({
-      traceId: trace.id,
-      event: 'task_completed',
-      data: { taskId: task.id, duration: 1000 }
-    });
-
-    console.log(`✅ 任务完成: ${task.name}`);
+  for (let i = 0; i < 3; i++) {
+    console.log(`   ⏳ 执行任务 ${i + 1}/3...`);
+    await new Promise(resolve => setTimeout(resolve, 1000)); // 模拟工作
+    console.log(`   ✅ 任务 ${i + 1} 已完成`);
   }
 
-  // 完成跟踪
-  await traceModule.endTrace(trace.id);
-  console.log('🎉 所有任务已完成！');
+  const executionDuration = Date.now() - executionStart;
 
-  // 获取执行统计
-  const stats = await traceModule.getTraceStats(trace.id);
-  console.log('📊 执行统计:', {
-    总任务数: stats.totalEvents,
-    执行时间: `${stats.duration}ms`,
-    成功率: `${stats.successRate}%`
-  });
+  // 显示结果
+  console.log('\n🎉 工作流执行成功！');
+  console.log('📊 执行摘要:');
+  console.log(`   - 已完成任务: 3/3`);
+  console.log(`   - 总耗时: ${executionDuration}ms`);
+  console.log(`   - 成功率: 100%`);
 
-  // 关闭MPLP
-  await mplp.shutdown();
+  console.log('\n✨ 快速开始完成！');
+  console.log('🔗 下一步: 查看完整文档和示例！');
 }
 
 // 运行应用
 main().catch(console.error);
 ```
 
-### **步骤3：配置TypeScript (30秒)**
+**备选方案：使用构造函数**
+```typescript
+import { MPLP } from 'mplp';
 
-创建 `tsconfig.json` 文件：
+async function main() {
+  // 使用自定义配置创建MPLP实例
+  const mplp = new MPLP({
+    protocolVersion: '1.1.0-beta',
+    environment: 'development',
+    logLevel: 'info'
+  });
 
-```json
-{
-  "compilerOptions": {
-    "target": "ES2020",
-    "module": "commonjs",
-    "lib": ["ES2020"],
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true
-  },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  // 初始化平台
+  await mplp.initialize();
+  console.log('✅ MPLP已初始化成功！');
+
+  // 使用模块...
 }
+
+main().catch(console.error);
 ```
 
-### **步骤4：运行应用 (30秒)**
+**注意**: 这个简化示例演示了MPLP的初始化和模块访问。要了解完整的多智能体工作流（包括上下文创建、计划执行和跟踪），请参阅[高级示例](./examples.md)部分。
+
+### **步骤3：运行应用 (30秒)**
 
 ```bash
-# 编译并运行
+# 编译并运行TypeScript
 npx ts-node src/index.ts
+
+# 或使用JavaScript
+node src/index.js
 ```
 
 **预期输出：**
 ```
-🚀 MPLP已初始化
-📋 上下文已创建: 我的第一个MPLP应用
-📝 计划已创建: 示例执行计划
-🔍 跟踪已开始: trace-abc123
-⚡ 执行任务: 初始化任务
-✅ 任务完成: 初始化任务
-⚡ 执行任务: 处理数据
-✅ 任务完成: 处理数据
-⚡ 执行任务: 完成任务
-✅ 任务完成: 完成任务
-🎉 所有任务已完成！
-📊 执行统计: { 总任务数: 6, 执行时间: '3045ms', 成功率: '100%' }
+🚀 启动MPLP快速开始示例...
+✅ MPLP v1.1.0-beta 已初始化成功！
+📦 可用模块: [ 'context', 'plan', 'role', 'confirm', 'trace', 'extension', 'dialog', 'collab', 'core', 'network' ]
+   总共加载模块数: 10
+📋 Context模块已加载
+📝 Plan模块已加载
+🔍 Trace模块已加载
+⚙️  配置信息:
+   - 环境: development
+   - 日志级别: info
+   - 协议版本: 1.1.0-beta
+
+⚡ 模拟多智能体工作流...
+   ⏳ 执行任务 1/3...
+   ✅ 任务 1 已完成
+   ⏳ 执行任务 2/3...
+   ✅ 任务 2 已完成
+   ⏳ 执行任务 3/3...
+   ✅ 任务 3 已完成
+
+🎉 工作流执行成功！
+📊 执行摘要:
+   - 已完成任务: 3/3
+   - 总耗时: 3045ms
+   - 成功率: 100%
+
+✨ 快速开始完成！
+🔗 下一步: 查看完整文档和示例！
 ```
 
-### **步骤5：探索结果 (1分钟)**
+### **步骤4：理解发生了什么 (1分钟)**
 
 恭喜！您刚刚创建了第一个MPLP应用。您已经：
 
-✅ **初始化了MPLP系统** - 设置了核心协议栈  
-✅ **创建了协作上下文** - 定义了智能体协作环境  
-✅ **制定了执行计划** - 组织了任务和依赖关系  
-✅ **实现了实时跟踪** - 监控了执行过程和性能  
-✅ **获得了执行洞察** - 收集了统计数据和指标  
+✅ **初始化了MPLP系统** - 使用quickStart()快速启动
+✅ **加载了所有模块** - 10个L2协调模块全部可用
+✅ **访问了模块功能** - 通过getModule()获取模块
+✅ **查看了配置信息** - 了解当前运行环境
+✅ **模拟了工作流** - 演示了基本的任务执行
 
 ---
 
@@ -274,43 +233,56 @@ npx ts-node src/index.ts
 
 ### **扩展您的应用**
 
-#### **添加更多模块**
-```bash
-# 安装额外模块
-npm install @mplp/role @mplp/confirm @mplp/dialog
+#### **探索不同的初始化方法**
+```typescript
+// 生产环境
+import { createProductionMPLP } from 'mplp';
+const mplp = await createProductionMPLP();
 
-# 在代码中使用
-const roleModule = mplp.getModule('role');
-const confirmModule = mplp.getModule('confirm');
-const dialogModule = mplp.getModule('dialog');
+// 测试环境
+import { createTestMPLP } from 'mplp';
+const mplp = await createTestMPLP();
+
+// 自定义模块选择
+import { createMPLP } from 'mplp';
+const mplp = await createMPLP({
+  modules: ['context', 'plan', 'role']  // 只加载特定模块
+});
 ```
 
-#### **实现角色管理**
+#### **检查初始化状态**
 ```typescript
-// 创建角色
-const adminRole = await roleModule.createRole({
-  name: 'admin',
-  permissions: ['create', 'read', 'update', 'delete'],
-  capabilities: ['planning', 'execution', 'monitoring']
-});
+import { MPLP } from 'mplp';
 
-// 分配角色
-await roleModule.assignRole('agent-1', adminRole.id);
+const mplp = new MPLP();
+
+// 检查是否已初始化
+if (mplp.isInitialized()) {
+  console.log('MPLP已准备就绪');
+} else {
+  console.log('MPLP需要初始化');
+  await mplp.initialize();
+}
 ```
 
-#### **添加审批流程**
+#### **添加错误处理**
 ```typescript
-// 创建审批请求
-const approval = await confirmModule.createApproval({
-  contextId: context.id,
-  title: '执行计划审批',
-  description: '请审批执行计划',
-  approvers: ['manager-1', 'manager-2'],
-  requiredApprovals: 2
-});
+import { quickStart } from 'mplp';
 
-// 等待审批
-await confirmModule.waitForApproval(approval.id);
+try {
+  const mplp = await quickStart();
+  const contextModule = mplp.getModule('context');
+  console.log('成功:', contextModule);
+} catch (error) {
+  console.error('初始化失败:', error);
+
+  // 处理特定错误
+  if (error.message.includes('not initialized')) {
+    console.error('请先调用initialize()');
+  } else if (error.message.includes('not found')) {
+    console.error('模块不可用');
+  }
+}
 ```
 
 ### **学习更多**
@@ -338,35 +310,44 @@ await confirmModule.waitForApproval(approval.id);
 
 #### **安装问题**
 ```bash
-# 清理npm缓存
-npm cache clean --force
+# 错误: Cannot find module 'mplp'
+# 解决方案: 安装MPLP包
+npm install mplp@beta
 
-# 重新安装依赖
-rm -rf node_modules package-lock.json
-npm install
+# 或从源码安装
+git clone https://github.com/Coregentis/MPLP-Protocol.git
+cd MPLP-Protocol
+npm install && npm run build && npm link
 ```
 
-#### **TypeScript错误**
-```bash
-# 检查TypeScript版本
-npx tsc --version
-
-# 重新生成类型定义
-npm run build
-```
-
-#### **模块加载失败**
+#### **MPLP未初始化**
 ```typescript
-// 检查模块是否正确安装
-console.log(mplp.getLoadedModules());
+// 错误: MPLP not initialized. Call initialize() first
+// 解决方案: 使用前必须初始化
+import { MPLP } from 'mplp';
 
-// 验证模块配置
-console.log(mplp.getConfig());
+const mplp = new MPLP();
+await mplp.initialize();  // 不要忘记这一步！
+
+// 或使用quickStart()自动初始化
+import { quickStart } from 'mplp';
+const mplp = await quickStart();  // 已经初始化
+```
+
+#### **模块未找到**
+```typescript
+// 错误: Module 'invalid-module' not found
+// 解决方案: 先检查可用模块
+const modules = mplp.getAvailableModules();
+console.log('可用模块:', modules);
+
+// 使用正确的模块名称
+const contextModule = mplp.getModule('context');  // 正确
 ```
 
 ### **获取帮助**
-- **[GitHub Issues](https://github.com/mplp/mplp/issues)** - 报告问题
-- **[GitHub Discussions](https://github.com/mplp/mplp/discussions)** - 社区讨论
+- **[GitHub Issues](https://github.com/Coregentis/MPLP-Protocol/issues)** - 报告问题
+- **[GitHub Discussions](https://github.com/Coregentis/MPLP-Protocol/discussions)** - 社区讨论
 - **[文档](../README.md)** - 完整文档
 - **示例代码 (开发中)** - 更多示例
 
@@ -394,7 +375,7 @@ console.log(mplp.getConfig());
 
 #### **完美质量指标**
 - **100%模块完成**: 所有10个L2协调模块达到企业级标准
-- **完美测试结果**: 2,869/2,869测试通过（100%通过率），197/197测试套件通过
+- **优秀测试结果**: 2,902测试（2,899通过，3失败）= 99.9%通过率，199测试套件（197通过，2失败）
 - **零技术债务**: 所有模块完整代码库零技术债务
 - **企业性能**: 99.8%性能得分，100%安全测试通过
 

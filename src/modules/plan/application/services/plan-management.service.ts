@@ -85,7 +85,24 @@ export class PlanManagementService {
 
     // AI服务适配器 (AI算法外置)
     private readonly aiServiceAdapter?: IAIServiceAdapter
-  ) {}
+  ) {
+    // Explicitly mark L3 managers as intentionally unused - Reserved for CoreOrchestrator activation
+    void this.securityManager;
+    void this.performanceMonitor;
+    void this.eventBusManager;
+    void this.errorHandler;
+    void this.coordinationManager;
+    void this.orchestrationManager;
+    void this.stateSyncManager;
+    void this.transactionManager;
+    void this.protocolVersionManager;
+
+    // Explicitly mark reserved coordination methods as intentionally unused
+    void this.validatePlanCoordinationPermission;
+    void this.getPlanCoordinationContext;
+    void this.recordPlanCoordinationMetrics;
+    void this.managePlanExtensionCoordination;
+  }
 
   // ===== 核心业务逻辑方法 =====
 
@@ -353,6 +370,7 @@ export class PlanManagementService {
    * @returns Promise<boolean> - Whether coordination is permitted
    * @reserved Reserved for CoreOrchestrator activation
    */
+  // Reserved for CoreOrchestrator activation - Role module integration
   private async validatePlanCoordinationPermission(
     _userId: UUID,
     _planId: UUID,
@@ -373,6 +391,7 @@ export class PlanManagementService {
    * @returns Promise<Record<string, unknown>> - Coordination context data
    * @reserved Reserved for CoreOrchestrator activation
    */
+  // Reserved for CoreOrchestrator activation - Context module integration
   private async getPlanCoordinationContext(
     _contextId: UUID,
     _planType: string
@@ -398,6 +417,7 @@ export class PlanManagementService {
    * @returns Promise<void> - Metrics recording completion
    * @reserved Reserved for CoreOrchestrator activation
    */
+  // Reserved for CoreOrchestrator activation - Trace module integration
   private async recordPlanCoordinationMetrics(
     _planId: UUID,
     _metrics: Record<string, unknown>
@@ -417,6 +437,7 @@ export class PlanManagementService {
    * @returns Promise<boolean> - Whether extension coordination succeeded
    * @reserved Reserved for CoreOrchestrator activation
    */
+  // Reserved for CoreOrchestrator activation - Extension module integration
   private async managePlanExtensionCoordination(
     _planId: UUID,
     _extensions: Record<string, unknown>

@@ -183,8 +183,12 @@ export class CoreOrchestrator {
     private readonly orchestrationManager: OrchestrationManager,
     private readonly stateSyncManager: StateSyncManager,
     private readonly transactionManager: TransactionManager,
+    // Reserved for CoreOrchestrator activation - Protocol version management across all modules
     private readonly _protocolVersionManager: ProtocolVersionManager
-  ) {}
+  ) {
+    // Explicitly mark as intentionally unused - Reserved for CoreOrchestrator activation
+    void this._protocolVersionManager;
+  }
 
   /**
    * 执行完整工作流

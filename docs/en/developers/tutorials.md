@@ -60,7 +60,7 @@ graph TD
 ```bash
 # Create new project
 mkdir mplp-task-manager
-cd mplp-task-manager
+cd MPLP-Protocol-task-manager
 
 # Initialize project
 npm init -y

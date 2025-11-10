@@ -20,6 +20,8 @@ class TraceAnalyticsService {
         this.traceRepository = traceRepository;
         this._analyticsEngine = _analyticsEngine;
         this._anomalyDetector = _anomalyDetector;
+        // Explicitly mark engines as intentionally unused - Reserved for future analytics integration
+        void this._analyticsEngine;
     }
     /**
      * 分析追踪性能

@@ -108,7 +108,10 @@ class NetworkMonitoringService {
         const alerts = this.activeAlerts.get(networkId) || [];
         const alertIndex = alerts.findIndex(a => a.id === alertId);
         if (alertIndex >= 0) {
-            alerts[alertIndex].resolvedAt = new Date().toISOString(); // 非空断言：alertIndex >= 0
+            const alert = alerts[alertIndex];
+            if (alert) {
+                alert.resolvedAt = new Date().toISOString();
+            }
             alerts.splice(alertIndex, 1);
         }
     }
@@ -202,7 +205,10 @@ class NetworkMonitoringService {
         const history = this.getMetricsHistory(networkId, 1);
         const trends = [];
         if (history.length > 1) {
-            const previous = history[history.length - 2]; // 非空断言：history.length > 1
+            const previous = history[history.length - 2];
+            if (!previous) {
+                return trends;
+            }
             // 分析延迟趋势
             const latencyTrend = this.calculateTrend(previous.realTime.averageLatency, realTime.averageLatency, 200 // 阈值
             );

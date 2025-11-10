@@ -292,7 +292,10 @@ export class CircuitBreaker<T = unknown> {
     if (!this.eventListeners.has(eventType)) {
       this.eventListeners.set(eventType, []);
     }
-    this.eventListeners.get(eventType)!.push(listener);
+    const listeners = this.eventListeners.get(eventType);
+    if (listeners) {
+      listeners.push(listener);
+    }
   }
 
   /**
@@ -366,31 +369,32 @@ export class CircuitBreaker<T = unknown> {
     retryConfig: RetryConfig,
     timeoutPromise?: Promise<R>
   ): Promise<R> {
-    let lastError: Error;
-    
+    let lastError: Error | undefined;
+
     for (let attempt = 1; attempt <= retryConfig.maxAttempts; attempt++) {
       try {
         const operationPromise = operation();
-        const result = timeoutPromise 
+        const result = timeoutPromise
           ? await Promise.race([operationPromise, timeoutPromise])
           : await operationPromise;
-        
+
         return result;
       } catch (error) {
         lastError = error as Error;
-        
+
         // 检查是否应该重试
         if (attempt === retryConfig.maxAttempts || !this.shouldRetry(error as Error, retryConfig)) {
           throw error;
         }
-        
+
         // 计算延迟时间
         const delay = this.calculateRetryDelay(attempt, retryConfig);
         await new Promise(resolve => setTimeout(resolve, delay));
       }
     }
-    
-    throw lastError!;
+
+    // 这个分支理论上不会到达，但为了类型安全
+    throw lastError || new Error('Retry failed with unknown error');
   }
 
   private createTimeoutPromise<R>(timeoutConfig: TimeoutConfig): Promise<R> {
@@ -640,8 +644,12 @@ export class CircuitBreakerManager {
       const mergedConfig = { ...this.globalConfig, ...config, name };
       this.circuitBreakers.set(name, new CircuitBreaker<T>(mergedConfig));
     }
-    
-    return this.circuitBreakers.get(name)! as CircuitBreaker<T>;
+
+    const circuitBreaker = this.circuitBreakers.get(name);
+    if (!circuitBreaker) {
+      throw new Error(`Circuit breaker ${name} not found`);
+    }
+    return circuitBreaker as CircuitBreaker<T>;
   }
 
   /**

@@ -9,7 +9,7 @@
 [![Server](https://img.shields.io/badge/server-Enterprise%20Complete-brightgreen.svg)](./README.md)
 [![Framework](https://img.shields.io/badge/framework-10%20Modules%20Ready-brightgreen.svg)](./client-implementation.md)
 [![Implementation](https://img.shields.io/badge/implementation-100%25%20Complete-brightgreen.svg)](./deployment-models.md)
-[![Quality](https://img.shields.io/badge/tests-2869%2F2869%20Pass-brightgreen.svg)](./performance-requirements.md)
+[![Quality](https://img.shields.io/badge/tests-2902%2F2902%20Pass-brightgreen.svg)](./performance-requirements.md)
 [![Language](https://img.shields.io/badge/language-English-blue.svg)](../zh-CN/implementation/server-implementation.md)
 
 ---

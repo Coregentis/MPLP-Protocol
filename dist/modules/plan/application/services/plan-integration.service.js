@@ -23,6 +23,8 @@ class PlanIntegrationService {
         this._planRepository = _planRepository;
         this.coordinationManager = coordinationManager;
         this.logger = logger;
+        // Explicitly mark repository as intentionally unused - Reserved for future persistence operations
+        void this._planRepository;
     }
     // ===== MPLP模块预留接口（等待CoreOrchestrator激活）=====
     /**

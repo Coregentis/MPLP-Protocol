@@ -56,8 +56,9 @@ export class DialogManagementService {
     this._flowEngine = flowEngine || new DialogFlowEngine();
     this.stateManager = stateManager || new DialogStateManager();
     this.nlpProcessor = nlpProcessor || new NLPProcessor();
-    // Mark _flowEngine as intentionally unused (reserved for future dialog flow management)
+    // Explicitly mark as intentionally unused - Reserved for future integration
     void this._flowEngine;
+    void this.crossCuttingConcerns;
   }
 
   // ===== 核心业务方法 =====
@@ -313,11 +314,13 @@ export class DialogManagementService {
       let filteredMessages = messages;
 
       if (options.fromDate) {
-        filteredMessages = filteredMessages.filter(msg => msg.timestamp >= options.fromDate!);
+        const fromDate = options.fromDate;
+        filteredMessages = filteredMessages.filter(msg => msg.timestamp >= fromDate);
       }
 
       if (options.toDate) {
-        filteredMessages = filteredMessages.filter(msg => msg.timestamp <= options.toDate!);
+        const toDate = options.toDate;
+        filteredMessages = filteredMessages.filter(msg => msg.timestamp <= toDate);
       }
 
       if (options.messageType) {

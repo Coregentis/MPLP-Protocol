@@ -40,7 +40,7 @@ node -e "const mplp = require('mplp'); console.log('MPLP版本:', mplp.MPLP_VERS
 - **🛠️ MPLP v1.1.0-beta**: 完整SDK生态系统，开发者工具链
 
 ### **核心特性**
-- ✅ **企业级质量**: 2,905/2,905测试通过，零技术债务
+- ✅ **企业级质量**: 2,902测试（2,899通过，3失败）= 99.9%通过率，零技术债务
 - ✅ **完整生态**: 协议 + SDK + CLI + Studio + 适配器
 - ✅ **厂商中立**: 支持多平台集成，避免供应商锁定
 - ✅ **开发者友好**: 30分钟构建第一个多智能体应用
@@ -92,7 +92,7 @@ Contribute to MPLP development | 参与MPLP开发
 |:-------:|:----:|
 | [🤝 Contributing](./en/community/contributing.md) | [🤝 贡献指南](./zh-CN/community/contributing.md) |
 | [📋 Roadmap](./en/community/roadmap.md) | [📋 发展路线](./zh-CN/community/roadmap.md) |
-| [💬 Discussions](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/discussions) | [💬 讨论区](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/discussions) |
+| [💬 Discussions](https://github.com/Coregentis/MPLP-Protocol/discussions) | [💬 讨论区](https://github.com/Coregentis/MPLP-Protocol/discussions) |
 
 </div>
 
@@ -121,8 +121,8 @@ Contribute to MPLP development | 参与MPLP开发
 
 | **Resource 资源** | **English** | **中文** |
 |:-----------------:|:-----------:|:--------:|
-| **GitHub Issues** | [🐛 Bug Reports](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/issues) | [🐛 问题报告](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/issues) |
-| **GitHub Discussions** | [💬 Community Q&A](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/discussions) | [💬 社区问答](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev/discussions) |
+| **GitHub Issues** | [🐛 Bug Reports](https://github.com/Coregentis/MPLP-Protocol/issues) | [🐛 问题报告](https://github.com/Coregentis/MPLP-Protocol/issues) |
+| **GitHub Discussions** | [💬 Community Q&A](https://github.com/Coregentis/MPLP-Protocol/discussions) | [💬 社区问答](https://github.com/Coregentis/MPLP-Protocol/discussions) |
 | **Contributing** | [🤝 Contributing Guide](../CONTRIBUTING.md) | [🤝 贡献指南](../CONTRIBUTING.md) |
 | **Roadmap** | [📋 Future Plans](../ROADMAP.md) | [📋 发展规划](../ROADMAP.md) |
 

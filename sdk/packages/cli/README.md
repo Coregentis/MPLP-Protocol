@@ -237,7 +237,7 @@ The CLI can be configured through:
 
 ```bash
 git clone https://github.com/mplp-org/mplp.git
-cd mplp/sdk/packages/cli
+cd MPLP-Protocol/sdk/packages/cli
 npm install
 npm run build
 ```

@@ -18,6 +18,16 @@ const crypto_1 = require("crypto");
 class RoleManagementService {
     constructor(repository) {
         this.repository = repository;
+        // Explicitly mark reserved coordination methods as intentionally unused
+        // These methods are reserved for CoreOrchestrator activation
+        void this.validateRoleCoordinationPermission;
+        void this.getRoleCoordinationContext;
+        void this.recordRoleCoordinationMetrics;
+        void this.manageRoleExtensionCoordination;
+        void this.requestRoleChangeCoordination;
+        void this.coordinateCollabRoleManagement;
+        void this.enableDialogDrivenRoleCoordination;
+        void this.coordinateRoleAcrossNetwork;
     }
     // ===== 角色CRUD操作 =====
     /**
@@ -419,6 +429,7 @@ class RoleManagementService {
      * @returns Promise<boolean> - Whether coordination is permitted
      * @reserved Reserved for CoreOrchestrator activation
      */
+    // Reserved for CoreOrchestrator activation - Cross-module permission validation
     async validateRoleCoordinationPermission(_userId, _roleId, _coordinationContext) {
         // TODO: Wait for CoreOrchestrator activation cross-module permission validation
         // Integration with security cross-cutting concern
@@ -433,6 +444,7 @@ class RoleManagementService {
      * @returns Promise<Record<string, unknown>> - Coordination context data
      * @reserved Reserved for CoreOrchestrator activation
      */
+    // Reserved for CoreOrchestrator activation - Context module integration
     async getRoleCoordinationContext(_contextId, _roleType) {
         // TODO: Wait for CoreOrchestrator activation Context module coordination environment retrieval
         // Integration with coordination cross-cutting concern
@@ -453,6 +465,7 @@ class RoleManagementService {
      * @returns Promise<void> - Metrics recording completion
      * @reserved Reserved for CoreOrchestrator activation
      */
+    // Reserved for CoreOrchestrator activation - Trace module integration
     async recordRoleCoordinationMetrics(_roleId, _metrics) {
         // TODO: Wait for CoreOrchestrator activation Trace module coordination monitoring recording
         // Integration with performance cross-cutting concern
@@ -467,6 +480,7 @@ class RoleManagementService {
      * @returns Promise<boolean> - Whether extension coordination succeeded
      * @reserved Reserved for CoreOrchestrator activation
      */
+    // Reserved for CoreOrchestrator activation - Extension module integration
     async manageRoleExtensionCoordination(_roleId, _extensions) {
         // TODO: Wait for CoreOrchestrator activation Extension module coordination management
         // Integration with orchestration cross-cutting concern
@@ -485,6 +499,7 @@ class RoleManagementService {
      * @returns Promise<boolean> - Whether change coordination was approved
      * @reserved Reserved for CoreOrchestrator activation
      */
+    // Reserved for CoreOrchestrator activation - Confirm module integration
     async requestRoleChangeCoordination(_roleId, _change) {
         // TODO: Wait for CoreOrchestrator activation Confirm module change coordination
         // Integration with event bus cross-cutting concern
@@ -499,6 +514,7 @@ class RoleManagementService {
      * @returns Promise<boolean> - Whether collaboration coordination succeeded
      * @reserved Reserved for CoreOrchestrator activation
      */
+    // Reserved for CoreOrchestrator activation - Collab module integration
     async coordinateCollabRoleManagement(_collabId, _roleConfig) {
         // TODO: Wait for CoreOrchestrator activation Collab module collaboration coordination
         // Integration with state sync cross-cutting concern
@@ -513,6 +529,7 @@ class RoleManagementService {
      * @returns Promise<boolean> - Whether dialog coordination succeeded
      * @reserved Reserved for CoreOrchestrator activation
      */
+    // Reserved for CoreOrchestrator activation - Dialog module integration
     async enableDialogDrivenRoleCoordination(_dialogId, _roleParticipants) {
         // TODO: Wait for CoreOrchestrator activation Dialog module conversation coordination
         // Integration with event bus cross-cutting concern
@@ -527,6 +544,7 @@ class RoleManagementService {
      * @returns Promise<boolean> - Whether network coordination succeeded
      * @reserved Reserved for CoreOrchestrator activation
      */
+    // Reserved for CoreOrchestrator activation - Network module integration
     async coordinateRoleAcrossNetwork(_networkId, _roleConfig) {
         // TODO: Wait for CoreOrchestrator activation Network module distributed coordination
         // Integration with transaction cross-cutting concern

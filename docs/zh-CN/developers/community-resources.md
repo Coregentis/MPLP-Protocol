@@ -32,7 +32,7 @@
 ### **GitHub社区**
 
 #### **主要仓库**
-- **[MPLP核心仓库](https://github.com/mplp/mplp)**: 主要代码仓库和问题跟踪
+- **[MPLP核心仓库](https://github.com/Coregentis/MPLP-Protocol)**: 主要代码仓库和问题跟踪
 - **[MPLP示例](https://github.com/mplp/examples)**: 官方示例和模板
 - **[MPLP工具](https://github.com/mplp/tools)**: 开发工具和实用程序
 - **[MPLP文档](https://github.com/mplp/docs)**: 文档源码和贡献
@@ -53,10 +53,10 @@ git commit -m "feat: 添加新功能"
 ```
 
 #### **GitHub讨论区**
-- **[技术讨论](https://github.com/mplp/mplp/discussions/categories/technical)**: 技术问题和解决方案
-- **[功能请求](https://github.com/mplp/mplp/discussions/categories/feature-requests)**: 新功能建议和讨论
-- **[展示项目](https://github.com/mplp/mplp/discussions/categories/show-and-tell)**: 分享你的MPLP项目
-- **[问答社区](https://github.com/mplp/mplp/discussions/categories/q-a)**: 快速问答和帮助
+- **[技术讨论](https://github.com/Coregentis/MPLP-Protocol/discussions/categories/technical)**: 技术问题和解决方案
+- **[功能请求](https://github.com/Coregentis/MPLP-Protocol/discussions/categories/feature-requests)**: 新功能建议和讨论
+- **[展示项目](https://github.com/Coregentis/MPLP-Protocol/discussions/categories/show-and-tell)**: 分享你的MPLP项目
+- **[问答社区](https://github.com/Coregentis/MPLP-Protocol/discussions/categories/q-a)**: 快速问答和帮助
 
 ### **Discord服务器**
 

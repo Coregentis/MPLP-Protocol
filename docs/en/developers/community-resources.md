@@ -56,7 +56,7 @@ Welcome to the MPLP community! We're building the future of multi-agent systems 
 - `#feedback` - Product feedback and suggestions
 
 #### **GitHub Discussions**
-[![GitHub Discussions](https://img.shields.io/github/discussions/mplp/mplp-platform)](https://github.com/mplp/mplp-platform/discussions)
+[![GitHub Discussions](https://img.shields.io/github/discussions/mplp/mplp-platform)](https://github.com/Coregentis/MPLP-Protocol-platform/discussions)
 
 **Use GitHub Discussions for:**
 - Long-form technical discussions
@@ -75,7 +75,7 @@ Welcome to the MPLP community! We're building the future of multi-agent systems 
 - Integration and deployment issues
 
 #### **GitHub Issues**
-[![GitHub Issues](https://img.shields.io/github/issues/mplp/mplp-platform)](https://github.com/mplp/mplp-platform/issues)
+[![GitHub Issues](https://img.shields.io/github/issues/mplp/mplp-platform)](https://github.com/Coregentis/MPLP-Protocol-platform/issues)
 
 **Use GitHub Issues for:**
 - Bug reports and reproducible issues
@@ -99,7 +99,7 @@ Welcome to the MPLP community! We're building the future of multi-agent systems 
 ```bash
 # Fork and clone the repository
 git clone https://github.com/your-username/mplp-platform.git
-cd mplp-platform
+cd MPLP-Protocol-platform
 
 # Create a feature branch
 git checkout -b feature/your-feature-name

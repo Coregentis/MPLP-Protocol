@@ -1,6 +1,6 @@
 # Trace Module - MPLP v1.0
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev)
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/Coregentis/MPLP-Protocol)
 [![Status](https://img.shields.io/badge/status-Production%20Ready-brightgreen.svg)](./completion-report.md)
 [![Tests](https://img.shields.io/badge/tests-212%2F212%20pass-brightgreen.svg)](./testing-guide.md)
 [![Coverage](https://img.shields.io/badge/coverage-95%25+-brightgreen.svg)](./quality-report.md)

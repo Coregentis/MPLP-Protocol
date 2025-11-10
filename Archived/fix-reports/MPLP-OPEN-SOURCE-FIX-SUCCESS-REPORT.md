@@ -174,7 +174,7 @@
 ### **What Users Can Do Now**
 1. **Clone and Use Immediately**:
    ```bash
-   git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
+   git clone https://github.com/Coregentis/MPLP-Protocol.git
    cd MPLP-Protocol
    node -e "const mplp = require('./dist/index.js'); console.log(mplp.MPLP_VERSION);"
    # Output: 1.1.0-beta

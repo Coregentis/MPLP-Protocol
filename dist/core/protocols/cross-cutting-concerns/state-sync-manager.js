@@ -60,11 +60,14 @@ class MLPPStateSyncManager {
         if (!this.subscribers.has(fullKey)) {
             this.subscribers.set(fullKey, []);
         }
-        this.subscribers.get(fullKey).push({
-            module: _module,
-            stateKey: _stateKey,
-            callback: _callback
-        });
+        const subscriberList = this.subscribers.get(fullKey);
+        if (subscriberList) {
+            subscriberList.push({
+                module: _module,
+                stateKey: _stateKey,
+                callback: _callback
+            });
+        }
     }
     /**
      * 获取同步事件历史

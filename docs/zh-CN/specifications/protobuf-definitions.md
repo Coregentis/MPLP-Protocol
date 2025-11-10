@@ -9,7 +9,7 @@
 [![Protocol Buffers](https://img.shields.io/badge/protobuf-生产就绪-brightgreen.svg)](./README.md)
 [![序列化](https://img.shields.io/badge/serialization-企业级-brightgreen.svg)](./formal-specification.md)
 [![实现](https://img.shields.io/badge/implementation-100%25%20完成-brightgreen.svg)](./formal-specification.md)
-[![测试](https://img.shields.io/badge/tests-2869%2F2869%20通过-brightgreen.svg)](./formal-specification.md)
+[![测试](https://img.shields.io/badge/tests-2902%2F2902%20通过-brightgreen.svg)](./formal-specification.md)
 [![跨平台](https://img.shields.io/badge/cross%20platform-验证-brightgreen.svg)](../implementation/multi-language-support.md)
 [![语言](https://img.shields.io/badge/language-中文-blue.svg)](../../en/specifications/protobuf-definitions.md)
 

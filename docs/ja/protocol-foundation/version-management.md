@@ -6,7 +6,7 @@
 
 **プロトコルバージョン管理と互換性戦略**
 
-[![Current Version](https://img.shields.io/badge/version-1.0.0--alpha-brightgreen.svg)](https://semver.org/)
+[![Current Version](https://img.shields.io/badge/version-1.1.0--beta-brightgreen.svg)](https://semver.org/)
 [![Status](https://img.shields.io/badge/status-Production%20Ready-brightgreen.svg)](./interoperability.md)
 [![Compatibility](https://img.shields.io/badge/compatibility-Enterprise%20Validated-brightgreen.svg)](./implementation-guide.md)
 [![Migration](https://img.shields.io/badge/migration-Zero%20Downtime-brightgreen.svg)](./implementation-guide.md)

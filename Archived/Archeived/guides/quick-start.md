@@ -18,7 +18,7 @@ npm install mplp
 ### Option 2: From Source
 ```bash
 git clone https://github.com/your-org/mplp.git
-cd mplp
+cd MPLP-Protocol
 npm install
 npm run build
 ```

@@ -194,7 +194,15 @@ export class NLPProcessor implements INLPProcessor {
 
     // 排序并获取最高分
     scores.sort((a, b) => b.confidence - a.confidence);
-    const primary = scores[0]!; // 非空断言：scores数组至少包含一个元素（默认'en'）
+    const primary = scores[0];
+    if (!primary) {
+      // Fallback: 默认返回英语
+      return {
+        language: 'en',
+        confidence: 0,
+        alternativeLanguages: []
+      };
+    }
     const alternatives = scores.slice(1, 3).filter(s => s.confidence > 0.1);
 
     return {
@@ -284,15 +292,23 @@ export class NLPProcessor implements INLPProcessor {
   private isLikelyNounPhrase(phrase: string): boolean {
     // 简单的名词短语识别
     const nounIndicators = ['the', 'a', 'an', 'this', 'that', 'these', 'those'];
-    const firstWord = phrase.split(' ')[0]!.toLowerCase(); // 非空断言：phrase非空字符串
-    return nounIndicators.includes(firstWord) || /^[A-Z]/.test(phrase);
+    const words = phrase.split(' ');
+    const firstWord = words[0];
+    if (!firstWord) {
+      return false;
+    }
+    return nounIndicators.includes(firstWord.toLowerCase()) || /^[A-Z]/.test(phrase);
   }
 
   private isLikelyVerbPhrase(phrase: string): boolean {
     // 简单的动词短语识别
     const verbIndicators = ['is', 'are', 'was', 'were', 'have', 'has', 'had', 'will', 'would', 'can', 'could'];
-    const firstWord = phrase.split(' ')[0]!.toLowerCase(); // 非空断言：phrase非空字符串
-    return verbIndicators.includes(firstWord);
+    const words = phrase.split(' ');
+    const firstWord = words[0];
+    if (!firstWord) {
+      return false;
+    }
+    return verbIndicators.includes(firstWord.toLowerCase());
   }
 
   private calculateAverageSyllables(words: string[]): number {

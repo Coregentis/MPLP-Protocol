@@ -1,6 +1,6 @@
-# MPLP SDK v1.1.0-beta Example Applications
+# MPLP Examples
 
-> 🚀 **Complete example applications showcasing MPLP SDK v1.1.0-beta enterprise capabilities**
+> 🚀 **Example applications for MPLP v1.1.0-beta - From beginner to advanced**
 
 [![MPLP](https://img.shields.io/badge/MPLP-v1.1.0--beta-purple.svg)](https://mplp.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
@@ -9,44 +9,91 @@
 
 ## 🌟 Overview
 
-This directory contains complete, production-ready example applications built with MPLP SDK v1.1.0-beta. Each example demonstrates different aspects of the MPLP ecosystem and showcases enterprise-grade multi-agent system development.
+This directory contains example applications demonstrating different aspects of the MPLP platform, from simple "Hello World" examples using the core MPLP API to advanced enterprise applications using the full MPLP SDK.
 
-**All examples have been completely rewritten** to leverage the latest MPLP SDK v1.1.0-beta architecture, featuring:
-- ✅ **Enterprise-grade quality standards**
-- ✅ **Complete MPLP SDK integration**
-- ✅ **Production-ready architecture**
-- ✅ **Comprehensive documentation**
-- ✅ **Full test coverage**
-- ✅ **Docker and Kubernetes support**
+**Two types of examples**:
+- ✅ **Core API Examples** - Simple, beginner-friendly examples using MPLP core API
+- 🚧 **SDK Examples** - Advanced enterprise applications using MPLP SDK packages
+
+## 🎯 **Quick Start - Recommended for Beginners**
+
+**Start with Hello World** (5 minutes):
+```bash
+cd examples/hello-world
+npm install
+npm run dev
+```
+
+This will run the simplest MPLP example and show you the basics!
 
 ## 📁 Example Applications
 
-### 1. [CoregentisBot v2](./coregentis-bot-v2/) - Social Media Automation
-> **Enterprise multi-platform social media automation bot**
+### ✅ **1. Hello World** - Core API (READY TO USE)
 
-**What it demonstrates:**
-- Multi-platform content publishing (Twitter, LinkedIn, GitHub, Discord, Slack, Reddit, Medium)
-- Intelligent content management and optimization
-- Real-time interaction monitoring and automated responses
-- Comprehensive analytics and performance tracking
-- Enterprise security and configuration management
+**Location**: `examples/hello-world/`
+**Difficulty**: ⭐ Beginner
+**Time**: 5 minutes
+**Type**: Core MPLP API
 
-**Key MPLP Features:**
-- `@mplp/agent-builder` - Creating specialized social media agents
-- `@mplp/orchestrator` - Coordinating multi-platform workflows
-- `@mplp/adapters` - Platform-specific integrations
-- `@mplp/studio` - Visual workflow design
+The simplest way to get started with MPLP. Perfect for learning the basics.
 
-**Use Cases:**
-- Corporate social media management
-- Brand monitoring and engagement
-- Content marketing automation
-- Community management
+**What you'll learn**:
+- How to initialize MPLP with `quickStart()`
+- How to access modules with `getModule()`
+- How to check available modules
+- How to configure MPLP for different environments
+
+**Quick Start**:
+```bash
+cd examples/hello-world
+npm install
+npm run dev                  # Main example
+npm run example:modules      # Module access patterns
+npm run example:config       # Configuration options
+```
+
+**Perfect for**: First-time users, learning basics, quick prototyping
 
 ---
 
-### 2. [Marketing Workflow](./marketing-workflow/) - Campaign Automation
-> **Multi-platform marketing workflow automation platform**
+### ✅ **2. Agent Orchestrator** - SDK Application (READY TO USE)
+
+**Location**: `examples/agent-orchestrator/`
+**Difficulty**: ⭐⭐⭐ Advanced
+**Time**: 30 minutes
+**Type**: MPLP SDK
+
+Enterprise-grade multi-agent orchestration platform built with MPLP SDK v1.1.0-beta.
+
+**What you'll learn**:
+- Multi-agent coordination patterns
+- Workflow orchestration
+- Agent lifecycle management
+- Enterprise-grade architecture
+
+**Quick Start**:
+```bash
+cd examples/agent-orchestrator
+npm install
+npm run build
+npm run dev
+```
+
+**Features**:
+- 5 specialized agents (Planner, Creator, Reviewer, Publisher, Coordinator)
+- Enterprise content creation workflow
+- Multi-language content support
+- Quality review workflow
+
+**Perfect for**: Enterprise developers, complex multi-agent systems
+
+---
+
+### 🚧 **3. Marketing Automation** - SDK Application (ADVANCED)
+
+**Location**: `examples/marketing-automation/`
+**Difficulty**: ⭐⭐⭐ Advanced
+**Type**: MPLP SDK
 
 **What it demonstrates:**
 - End-to-end marketing campaign management
@@ -123,7 +170,7 @@ node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VE
 ```bash
 # Clone the repository
 git clone https://github.com/coregentis/mplp.git
-cd mplp/examples
+cd MPLP-Protocol/examples
 
 # Choose an example (replace with desired example)
 cd coregentis-bot-v2
@@ -199,7 +246,7 @@ mplp create my-project --template=coregentis-bot-v2
 
 # Or clone and modify existing example
 git clone https://github.com/coregentis/mplp.git
-cd mplp/examples/coregentis-bot-v2
+cd MPLP-Protocol/examples/coregentis-bot-v2
 npm install
 npm run dev
 ```

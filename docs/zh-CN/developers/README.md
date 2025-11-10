@@ -165,7 +165,7 @@ MPLP提供完整的三层协议栈：
 ### **平台指标**
 - **模块**: 10/10企业级模块完成
 - **测试**: 2,869/2,869测试通过（100%通过率）
-- **测试套件**: 197/197测试套件通过
+- **测试套件**: 199测试套件（197通过，2失败）
 - **性能**: 99.8%整体性能得分
 - **安全**: 100%安全测试通过
 - **文档**: 所有模块100%完整
@@ -184,7 +184,7 @@ MPLP提供完整的三层协议栈：
 ### **获取帮助**
 
 #### **社区渠道**
-- **[GitHub讨论](https://github.com/mplp/mplp/discussions)**: 社区问答和讨论
+- **[GitHub讨论](https://github.com/Coregentis/MPLP-Protocol/discussions)**: 社区问答和讨论
 - **[Discord服务器](https://discord.gg/mplp)**: 实时聊天和支持
 - **[Stack Overflow](https://stackoverflow.com/questions/tagged/mplp)**: 技术问题和答案
 - **[社区论坛](https://forum.mplp.org)**: 长篇讨论和教程
@@ -200,9 +200,9 @@ MPLP提供完整的三层协议栈：
 我们欢迎所有技能水平的开发者贡献：
 
 - **[贡献指南](../community/contributing.md)**: 如何为MPLP做贡献
-- **[新手友好问题](https://github.com/mplp/mplp/labels/good%20first%20issue)**: 适合初学者的问题
-- **[功能请求](https://github.com/mplp/mplp/issues/new?template=feature_request.md)**: 建议新功能
-- **[错误报告](https://github.com/mplp/mplp/issues/new?template=bug_report.md)**: 报告错误和问题
+- **[新手友好问题](https://github.com/Coregentis/MPLP-Protocol/labels/good%20first%20issue)**: 适合初学者的问题
+- **[功能请求](https://github.com/Coregentis/MPLP-Protocol/issues/new?template=feature_request.md)**: 建议新功能
+- **[错误报告](https://github.com/Coregentis/MPLP-Protocol/issues/new?template=bug_report.md)**: 报告错误和问题
 
 ---
 

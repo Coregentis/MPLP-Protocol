@@ -135,7 +135,10 @@ class MLPPPerformanceMonitor {
             if (!groups[metric.name]) {
                 groups[metric.name] = [];
             }
-            groups[metric.name].push(metric.value);
+            const group = groups[metric.name];
+            if (group) {
+                group.push(metric.value);
+            }
             return groups;
         }, {});
         Object.entries(metricGroups).forEach(([name, values]) => {
@@ -267,7 +270,10 @@ class MLPPPerformanceMonitor {
             if (!groups[metric.name]) {
                 groups[metric.name] = [];
             }
-            groups[metric.name].push(metric);
+            const group = groups[metric.name];
+            if (group) {
+                group.push(metric);
+            }
             return groups;
         }, {});
         Object.entries(metricGroups).forEach(([name, metrics]) => {

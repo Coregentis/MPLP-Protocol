@@ -176,6 +176,9 @@ class TraceEntity {
      */
     initializeData(data) {
         const now = new Date().toISOString();
+        if (!data.contextId) {
+            throw new Error('contextId is required for TraceEntity');
+        }
         return {
             protocolVersion: '1.0.0',
             timestamp: now,

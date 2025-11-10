@@ -45,7 +45,10 @@ export class TraceManagementService {
     private readonly _repository: ITraceRepository,
     private readonly _dataCollector?: IDataCollector,
     private readonly _logger?: ILogger
-  ) {}
+  ) {
+    // Explicitly mark logger as intentionally unused - Reserved for future logging integration
+    void this._logger;
+  }
 
   // ===== 核心追踪管理功能 =====
 

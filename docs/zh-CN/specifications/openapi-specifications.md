@@ -9,7 +9,7 @@
 [![OpenAPI](https://img.shields.io/badge/openapi-生产就绪-brightgreen.svg)](./README.md)
 [![REST API](https://img.shields.io/badge/rest%20api-企业级-brightgreen.svg)](./formal-specification.md)
 [![实现](https://img.shields.io/badge/implementation-100%25%20完成-brightgreen.svg)](./formal-specification.md)
-[![测试](https://img.shields.io/badge/tests-2869%2F2869%20通过-brightgreen.svg)](./formal-specification.md)
+[![测试](https://img.shields.io/badge/tests-2902%2F2902%20通过-brightgreen.svg)](./formal-specification.md)
 [![交互式](https://img.shields.io/badge/interactive-Swagger%20UI-brightgreen.svg)](https://swagger.io/)
 [![语言](https://img.shields.io/badge/language-中文-blue.svg)](../../en/specifications/openapi-specifications.md)
 

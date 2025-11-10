@@ -386,7 +386,11 @@ export class PlanCoordinationService {
     }
 
     // 简单的匹配算法：选择能力匹配度最高且负载最低的智能体
-    let bestAgent = availableAgents[0]!; // 非空断言：availableAgents.length > 0
+    const firstAgent = availableAgents[0];
+    if (!firstAgent) {
+      return null;
+    }
+    let bestAgent = firstAgent;
     let bestScore = this.calculateAgentScore(bestAgent, requirements);
 
     for (const agent of availableAgents.slice(1)) {

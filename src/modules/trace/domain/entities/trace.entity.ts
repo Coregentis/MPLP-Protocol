@@ -228,12 +228,16 @@ export class TraceEntity {
    */
   private initializeData(data: Partial<TraceEntityData>): TraceEntityData {
     const now = new Date().toISOString();
-    
+
+    if (!data.contextId) {
+      throw new Error('contextId is required for TraceEntity');
+    }
+
     return {
       protocolVersion: '1.0.0',
       timestamp: now,
       traceId: data.traceId || this.generateTraceId(),
-      contextId: data.contextId!,
+      contextId: data.contextId,
       traceType: data.traceType || 'execution',
       severity: data.severity || 'info',
       event: data.event || this.createDefaultEvent(),

@@ -314,7 +314,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/mplp/mplp-helm
+    repoURL: https://github.com/Coregentis/MPLP-Protocol-helm
     targetRevision: HEAD
     path: charts/mplp-global
     helm:

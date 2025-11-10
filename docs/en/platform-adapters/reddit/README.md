@@ -223,7 +223,7 @@ await reddit.post({
   type: 'link',
   subreddit: 'opensource',
   title: 'Open Source Multi-Agent Platform Released',
-  url: 'https://github.com/mplp/mplp',
+  url: 'https://github.com/Coregentis/MPLP-Protocol',
   metadata: {
     thumbnailUrl: 'https://example.com/thumbnail.png',
     flair: 'Release'
@@ -571,7 +571,7 @@ reddit.streamPosts('programming', async (post) => {
       postId: post.id,
       content: `Interesting post! If you're working with multi-agent systems, you might want to check out MPLP - it's a platform specifically designed for this use case.
 
-[Documentation](https://docs.mplp.dev) | [GitHub](https://github.com/mplp/mplp)`
+[Documentation](https://docs.mplp.dev) | [GitHub](https://github.com/Coregentis/MPLP-Protocol)`
     });
     
     await reddit.vote(post.id, 'up');

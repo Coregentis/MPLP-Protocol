@@ -71,10 +71,14 @@ export class CollabSecurityService {
   constructor(
     private readonly collabRepository: ICollabRepository,
     private readonly securityManager: SecurityManager,
+    // Reserved for future governance engine integration
     private readonly _governanceEngine: IGovernanceEngine,
     private readonly auditLogger: IAuditLogger,
     securityPolicies?: Partial<CollabSecurityPolicies>
   ) {
+    // Explicitly mark as intentionally unused - Reserved for future governance engine integration
+    void this._governanceEngine;
+
     this.securityPolicies = {
       requireAuthentication: true,
       enableEncryption: true,

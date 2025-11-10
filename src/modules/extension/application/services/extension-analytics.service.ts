@@ -386,7 +386,10 @@ export class ExtensionAnalyticsService {
     const rankings: ExtensionRanking[] = [];
     
     for (let i = 0; i < extensionIds.length; i++) {
-      const extensionId = extensionIds[i]!; // 非空断言：i < extensionIds.length
+      const extensionId = extensionIds[i];
+      if (!extensionId) {
+        continue; // 跳过undefined元素
+      }
       const extension = await this.extensionRepository.findById(extensionId);
 
       if (extension) {

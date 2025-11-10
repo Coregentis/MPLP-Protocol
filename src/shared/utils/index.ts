@@ -323,23 +323,24 @@ export async function retry<T>(
   maxAttempts: number = 3,
   delay: number = 1000
 ): Promise<T> {
-  let lastError: Error;
-  
+  let lastError: Error | undefined;
+
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
       return await fn();
     } catch (error) {
       lastError = error instanceof Error ? error : new Error(String(error));
-      
+
       if (attempt === maxAttempts) {
         throw lastError;
       }
-      
+
       await new Promise(resolve => setTimeout(resolve, delay * attempt));
     }
   }
-  
-  throw lastError!;
+
+  // 这个分支理论上不会到达，但为了类型安全
+  throw lastError || new Error('Retry failed with unknown error');
 }
 
 // ===== 导出所有工具 =====

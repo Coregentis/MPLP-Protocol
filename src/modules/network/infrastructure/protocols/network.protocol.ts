@@ -193,6 +193,14 @@ export class NetworkProtocol implements IMLPPProtocol {
     private readonly transactionManager: MLPPTransactionManager,
     private readonly protocolVersionManager: MLPPProtocolVersionManager
   ) {
+    // Explicitly mark L3 managers as intentionally unused - Reserved for CoreOrchestrator activation
+    void this.securityManager;
+    void this.errorHandler;
+    void this.coordinationManager;
+    void this.orchestrationManager;
+    void this.stateSyncManager;
+    void this.transactionManager;
+    void this.protocolVersionManager;
 
     this.protocolName = 'network';
     this.protocolVersion = '1.0.0';
@@ -1317,8 +1325,11 @@ export class NetworkProtocol implements IMLPPProtocol {
     const totalCost = distances.get(target) || 0;
 
     for (let i = 0; i < path.length - 1; i++) {
-      const currentNode = path[i]!; // 非空断言：i < path.length - 1
-      const nextNode = path[i + 1]!; // 非空断言：i + 1 < path.length
+      const currentNode = path[i];
+      const nextNode = path[i + 1];
+      if (!currentNode || !nextNode) {
+        continue;
+      }
       const connections = graph.get(currentNode) || [];
       const connection = connections.find(c => c.nodeId === nextNode);
 
@@ -1476,9 +1487,17 @@ export class NetworkProtocol implements IMLPPProtocol {
       return null; // 没有足够的低负载节点
     }
 
+    if (originalRoute.path.length === 0) {
+      return null; // 路径为空
+    }
+
     const graph = this.buildNetworkGraph(filteredNetwork);
-    const source = originalRoute.path[0]!; // 非空断言：path非空数组
-    const target = originalRoute.path[originalRoute.path.length - 1]!; // 非空断言：path非空数组
+    const source = originalRoute.path[0];
+    const target = originalRoute.path[originalRoute.path.length - 1];
+
+    if (!source || !target) {
+      return null; // 源或目标节点不存在
+    }
 
     try {
       return this.dijkstraShortestPath(graph, source, target);

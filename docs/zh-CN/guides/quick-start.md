@@ -199,9 +199,9 @@ npx ts-node src/main.ts
 - 探索企业级功能和配置选项
 
 ### **社区资源**
-- GitHub: https://github.com/mplp/mplp
+- GitHub: https://github.com/Coregentis/MPLP-Protocol
 - 文档: https://docs.mplp.dev
-- 讨论: https://github.com/mplp/mplp/discussions
+- 讨论: https://github.com/Coregentis/MPLP-Protocol/discussions
 
 ### **获得帮助**
 - 查看常见问题解答

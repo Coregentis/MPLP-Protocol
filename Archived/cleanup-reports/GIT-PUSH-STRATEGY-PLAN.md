@@ -21,8 +21,8 @@
 - 分支状态: 已分叉
 
 **远程仓库**:
-- `origin`: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev.git (开发仓库)
-- `release`: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git (发布仓库/开源仓库)
+- `origin`: https://github.com/Coregentis/MPLP-Protocol.git (开发仓库)
+- `release`: https://github.com/Coregentis/MPLP-Protocol.git (发布仓库/开源仓库)
 
 ---
 
@@ -292,7 +292,7 @@ git push origin main:main
    - 应显示"Your branch is up to date with 'release/main'"
 
 3. ✅ **远程仓库**
-   - 访问 https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
+   - 访问 https://github.com/Coregentis/MPLP-Protocol.git
    - 验证最新提交
    - 确认所有文件已更新
 
@@ -433,7 +433,7 @@ git merge release/main --no-edit
 **远程响应**:
 - ✅ 推送成功
 - ⚠️ GitHub发现2个依赖漏洞（1个高危，1个中等）
-- 📋 建议查看: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/security/dependabot
+- 📋 建议查看: https://github.com/Coregentis/MPLP-Protocol/security/dependabot
 
 **提交范围**: `30488e5..e2469e5`
 
@@ -542,8 +542,8 @@ git merge release/main --no-edit
    - 接受了远程的.gitignore过滤
 
 3. ✅ **同步到两个远程仓库**
-   - release: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git ✅
-   - origin: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev-Dev.git ✅
+   - release: https://github.com/Coregentis/MPLP-Protocol.git ✅
+   - origin: https://github.com/Coregentis/MPLP-Protocol.git ✅
 
 4. ✅ **验证推送成功**
    - 本地和远程完全同步
@@ -566,7 +566,7 @@ GitHub Dependabot发现2个依赖漏洞：
 - 🟡 1个中等漏洞
 
 **建议**:
-1. 访问: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/security/dependabot
+1. 访问: https://github.com/Coregentis/MPLP-Protocol/security/dependabot
 2. 查看漏洞详情
 3. 更新受影响的依赖
 4. 重新测试和推送

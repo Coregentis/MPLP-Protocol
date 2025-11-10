@@ -142,8 +142,8 @@ MPLP undergoes rigorous security testing:
 
 ### **Security Test Results**
 
-- ✅ **2,905/2,905 tests passing** (100% pass rate)
-- ✅ **197/197 test suites passing** (100% pass rate)
+- ✅ **2,902/2,902 tests passing** (100% pass rate)
+- ✅ **199/199 test suites passing** (100% pass rate)
 - ✅ **Zero critical vulnerabilities**
 - ✅ **Zero high-risk security issues**
 - ✅ **100% security compliance**
@@ -179,8 +179,8 @@ We appreciate security researchers who help us keep MPLP secure:
 For security-related questions or concerns:
 
 - **Email**: security@mplp.dev
-- **GitHub Security Advisories**: [Create a private security advisory](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/security/advisories/new)
-- **General Issues**: [GitHub Issues](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/issues) (for non-security issues only)
+- **GitHub Security Advisories**: [Create a private security advisory](https://github.com/Coregentis/MPLP-Protocol/security/advisories/new)
+- **General Issues**: [GitHub Issues](https://github.com/Coregentis/MPLP-Protocol/issues) (for non-security issues only)
 
 ## 📄 Additional Resources
 

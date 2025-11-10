@@ -537,12 +537,12 @@ export class NetworkClient {
 
   private async applyErrorInterceptors(error: NetworkError): Promise<NetworkError | null> {
     let processedError: NetworkError | null = error;
-    
+
     for (const interceptor of this.interceptors.error) {
-      processedError = await interceptor(processedError!);
       if (!processedError) break;
+      processedError = await interceptor(processedError);
     }
-    
+
     return processedError;
   }
 

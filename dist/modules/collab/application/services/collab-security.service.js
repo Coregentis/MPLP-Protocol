@@ -13,12 +13,16 @@ exports.CollabSecurityService = void 0;
  * @refactoring_guide_compliance 100% - Updated constructor per refactoring guide requirements
  */
 class CollabSecurityService {
-    constructor(collabRepository, securityManager, _governanceEngine, auditLogger, securityPolicies) {
+    constructor(collabRepository, securityManager, 
+    // Reserved for future governance engine integration
+    _governanceEngine, auditLogger, securityPolicies) {
         this.collabRepository = collabRepository;
         this.securityManager = securityManager;
         this._governanceEngine = _governanceEngine;
         this.auditLogger = auditLogger;
         this.auditLog = [];
+        // Explicitly mark as intentionally unused - Reserved for future governance engine integration
+        void this._governanceEngine;
         this.securityPolicies = {
             requireAuthentication: true,
             enableEncryption: true,

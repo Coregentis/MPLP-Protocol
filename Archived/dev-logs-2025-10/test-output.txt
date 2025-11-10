@@ -1,0 +1,88 @@
+
+> mplp@1.1.0-beta pretest
+> npm run typecheck
+
+
+> mplp@1.1.0-beta typecheck
+> tsc --noEmit
+
+src/core/orchestrator/core.orchestrator.ts(186,22): error TS6138: Property '_protocolVersionManager' is declared but its value is never read.
+src/core/orchestrator/module.coordinator.ts(194,13): error TS6138: Property '_connectionTimeout' is declared but its value is never read.
+src/modules/collab/application/services/collab-security.service.ts(74,22): error TS6138: Property '_governanceEngine' is declared but its value is never read.
+src/modules/confirm/application/services/confirm-analytics.service.ts(124,22): error TS6138: Property '_analyticsEngine' is declared but its value is never read.
+src/modules/confirm/application/services/confirm-management.service.ts(355,17): error TS6133: 'validateConfirmCoordinationPermission' is declared but its value is never read.
+src/modules/confirm/application/services/confirm-management.service.ts(375,17): error TS6133: 'getConfirmCoordinationContext' is declared but its value is never read.
+src/modules/confirm/application/services/confirm-management.service.ts(400,17): error TS6133: 'recordConfirmCoordinationMetrics' is declared but its value is never read.
+src/modules/confirm/application/services/confirm-management.service.ts(419,17): error TS6133: 'manageConfirmExtensionCoordination' is declared but its value is never read.
+src/modules/confirm/application/services/confirm-management.service.ts(443,17): error TS6133: 'requestConfirmPlanCoordination' is declared but its value is never read.
+src/modules/confirm/application/services/confirm-management.service.ts(462,17): error TS6133: 'coordinateCollabConfirmManagement' is declared but its value is never read.
+src/modules/confirm/application/services/confirm-management.service.ts(481,17): error TS6133: 'enableDialogDrivenConfirmCoordination' is declared but its value is never read.
+src/modules/confirm/application/services/confirm-management.service.ts(500,17): error TS6133: 'coordinateConfirmAcrossNetwork' is declared but its value is never read.
+src/modules/confirm/infrastructure/protocols/confirm.protocol.ts(53,22): error TS6138: Property '_securityManager' is declared but its value is never read.
+src/modules/confirm/infrastructure/protocols/confirm.protocol.ts(54,22): error TS6138: Property '_performanceMonitor' is declared but its value is never read.
+src/modules/confirm/infrastructure/protocols/confirm.protocol.ts(55,22): error TS6138: Property '_eventBusManager' is declared but its value is never read.
+src/modules/confirm/infrastructure/protocols/confirm.protocol.ts(56,22): error TS6138: Property '_errorHandler' is declared but its value is never read.
+src/modules/confirm/infrastructure/protocols/confirm.protocol.ts(57,22): error TS6138: Property '_coordinationManager' is declared but its value is never read.
+src/modules/confirm/infrastructure/protocols/confirm.protocol.ts(58,22): error TS6138: Property '_orchestrationManager' is declared but its value is never read.
+src/modules/confirm/infrastructure/protocols/confirm.protocol.ts(59,22): error TS6138: Property '_stateSyncManager' is declared but its value is never read.
+src/modules/confirm/infrastructure/protocols/confirm.protocol.ts(60,22): error TS6138: Property '_transactionManager' is declared but its value is never read.
+src/modules/confirm/infrastructure/protocols/confirm.protocol.ts(61,22): error TS6138: Property '_protocolVersionManager' is declared but its value is never read.
+src/modules/core/api/controllers/core.controller.ts(239,22): error TS6138: Property '_coreResourceService' is declared but its value is never read.
+src/modules/core/api/controllers/core.controller.ts(240,22): error TS6138: Property '_coreMonitoringService' is declared but its value is never read.
+src/modules/core/application/coordinators/core-services-coordinator.ts(65,22): error TS6138: Property 'coreRepository' is declared but its value is never read.
+src/modules/core/application/services/core-resource.service.ts(78,22): error TS6138: Property 'coreRepository' is declared but its value is never read.
+src/modules/core/domain/optimizers/performance.optimizer.ts(117,22): error TS6138: Property 'monitoringService' is declared but its value is never read.
+src/modules/core/infrastructure/protocols/core.protocol.ts(73,22): error TS6138: Property '_monitoringService' is declared but its value is never read.
+src/modules/core/infrastructure/protocols/core.protocol.ts(74,22): error TS6138: Property '_orchestrationService' is declared but its value is never read.
+src/modules/core/infrastructure/protocols/core.protocol.ts(75,22): error TS6138: Property '_resourceService' is declared but its value is never read.
+src/modules/core/infrastructure/protocols/core.protocol.ts(77,22): error TS6138: Property '_securityManager' is declared but its value is never read.
+src/modules/core/infrastructure/protocols/core.protocol.ts(78,22): error TS6138: Property '_performanceMonitor' is declared but its value is never read.
+src/modules/core/infrastructure/protocols/core.protocol.ts(79,22): error TS6138: Property '_eventBusManager' is declared but its value is never read.
+src/modules/core/infrastructure/protocols/core.protocol.ts(80,22): error TS6138: Property '_errorHandler' is declared but its value is never read.
+src/modules/core/infrastructure/protocols/core.protocol.ts(82,22): error TS6138: Property '_orchestrationManager' is declared but its value is never read.
+src/modules/core/infrastructure/protocols/core.protocol.ts(83,22): error TS6138: Property '_stateSyncManager' is declared but its value is never read.
+src/modules/core/infrastructure/protocols/core.protocol.ts(84,22): error TS6138: Property '_transactionManager' is declared but its value is never read.
+src/modules/core/infrastructure/protocols/core.protocol.ts(85,22): error TS6138: Property '_protocolVersionManager' is declared but its value is never read.
+src/modules/core/infrastructure/protocols/core.protocol.ts(86,22): error TS6138: Property 'config' is declared but its value is never read.
+src/modules/dialog/application/services/dialog-management.service.ts(50,22): error TS6138: Property 'crossCuttingConcerns' is declared but its value is never read.
+src/modules/network/infrastructure/protocols/network.protocol.ts(186,22): error TS6138: Property 'securityManager' is declared but its value is never read.
+src/modules/network/infrastructure/protocols/network.protocol.ts(189,22): error TS6138: Property 'errorHandler' is declared but its value is never read.
+src/modules/network/infrastructure/protocols/network.protocol.ts(190,22): error TS6138: Property 'coordinationManager' is declared but its value is never read.
+src/modules/network/infrastructure/protocols/network.protocol.ts(191,22): error TS6138: Property 'orchestrationManager' is declared but its value is never read.
+src/modules/network/infrastructure/protocols/network.protocol.ts(192,22): error TS6138: Property 'stateSyncManager' is declared but its value is never read.
+src/modules/network/infrastructure/protocols/network.protocol.ts(193,22): error TS6138: Property 'transactionManager' is declared but its value is never read.
+src/modules/network/infrastructure/protocols/network.protocol.ts(194,22): error TS6138: Property 'protocolVersionManager' is declared but its value is never read.
+src/modules/plan/application/services/plan-integration.service.ts(70,22): error TS6138: Property '_planRepository' is declared but its value is never read.
+src/modules/plan/application/services/plan-management.service.ts(76,22): error TS6138: Property 'securityManager' is declared but its value is never read.
+src/modules/plan/application/services/plan-management.service.ts(77,22): error TS6138: Property 'performanceMonitor' is declared but its value is never read.
+src/modules/plan/application/services/plan-management.service.ts(78,22): error TS6138: Property 'eventBusManager' is declared but its value is never read.
+src/modules/plan/application/services/plan-management.service.ts(79,22): error TS6138: Property 'errorHandler' is declared but its value is never read.
+src/modules/plan/application/services/plan-management.service.ts(80,22): error TS6138: Property 'coordinationManager' is declared but its value is never read.
+src/modules/plan/application/services/plan-management.service.ts(81,22): error TS6138: Property 'orchestrationManager' is declared but its value is never read.
+src/modules/plan/application/services/plan-management.service.ts(82,22): error TS6138: Property 'stateSyncManager' is declared but its value is never read.
+src/modules/plan/application/services/plan-management.service.ts(83,22): error TS6138: Property 'transactionManager' is declared but its value is never read.
+src/modules/plan/application/services/plan-management.service.ts(84,22): error TS6138: Property 'protocolVersionManager' is declared but its value is never read.
+src/modules/plan/application/services/plan-management.service.ts(356,17): error TS6133: 'validatePlanCoordinationPermission' is declared but its value is never read.
+src/modules/plan/application/services/plan-management.service.ts(376,17): error TS6133: 'getPlanCoordinationContext' is declared but its value is never read.
+src/modules/plan/application/services/plan-management.service.ts(401,17): error TS6133: 'recordPlanCoordinationMetrics' is declared but its value is never read.
+src/modules/plan/application/services/plan-management.service.ts(420,17): error TS6133: 'managePlanExtensionCoordination' is declared but its value is never read.
+src/modules/role/application/services/role-management.service.ts(589,17): error TS6133: 'validateRoleCoordinationPermission' is declared but its value is never read.
+src/modules/role/application/services/role-management.service.ts(609,17): error TS6133: 'getRoleCoordinationContext' is declared but its value is never read.
+src/modules/role/application/services/role-management.service.ts(634,17): error TS6133: 'recordRoleCoordinationMetrics' is declared but its value is never read.
+src/modules/role/application/services/role-management.service.ts(653,17): error TS6133: 'manageRoleExtensionCoordination' is declared but its value is never read.
+src/modules/role/application/services/role-management.service.ts(677,17): error TS6133: 'requestRoleChangeCoordination' is declared but its value is never read.
+src/modules/role/application/services/role-management.service.ts(696,17): error TS6133: 'coordinateCollabRoleManagement' is declared but its value is never read.
+src/modules/role/application/services/role-management.service.ts(715,17): error TS6133: 'enableDialogDrivenRoleCoordination' is declared but its value is never read.
+src/modules/role/application/services/role-management.service.ts(734,17): error TS6133: 'coordinateRoleAcrossNetwork' is declared but its value is never read.
+src/modules/role/infrastructure/protocols/role.protocol.ts(51,22): error TS6138: Property '_securityManager' is declared but its value is never read.
+src/modules/role/infrastructure/protocols/role.protocol.ts(52,22): error TS6138: Property '_performanceMonitor' is declared but its value is never read.
+src/modules/role/infrastructure/protocols/role.protocol.ts(53,22): error TS6138: Property '_eventBusManager' is declared but its value is never read.
+src/modules/role/infrastructure/protocols/role.protocol.ts(54,22): error TS6138: Property '_errorHandler' is declared but its value is never read.
+src/modules/role/infrastructure/protocols/role.protocol.ts(55,22): error TS6138: Property '_coordinationManager' is declared but its value is never read.
+src/modules/role/infrastructure/protocols/role.protocol.ts(56,22): error TS6138: Property '_orchestrationManager' is declared but its value is never read.
+src/modules/role/infrastructure/protocols/role.protocol.ts(57,22): error TS6138: Property '_stateSyncManager' is declared but its value is never read.
+src/modules/role/infrastructure/protocols/role.protocol.ts(58,22): error TS6138: Property '_transactionManager' is declared but its value is never read.
+src/modules/role/infrastructure/protocols/role.protocol.ts(59,22): error TS6138: Property '_protocolVersionManager' is declared but its value is never read.
+src/modules/role/infrastructure/repositories/database-role.repository.ts(60,22): error TS6138: Property 'config' is declared but its value is never read.
+src/modules/trace/application/services/trace-analytics.service.ts(51,22): error TS6138: Property '_analyticsEngine' is declared but its value is never read.
+src/modules/trace/application/services/trace-management.service.ts(47,22): error TS6138: Property '_logger' is declared but its value is never read.

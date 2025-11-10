@@ -4,7 +4,7 @@
 
 **Reviewer Role**: New user attempting to build a multi-agent application using MPLP  
 **Review Date**: October 17, 2025  
-**Repository**: https://github.com/Coregentis/MPLP-Protocol-Dev-Dev  
+**Repository**: https://github.com/Coregentis/MPLP-Protocol  
 **Framework**: SCTM+GLFB+ITCM+RBCT Enhanced Methodology  
 **Status**: ✅ **CRITICAL FIX APPLIED AND VERIFIED**
 
@@ -34,7 +34,7 @@ As a new user, evaluate whether MPLP open source project is ready for building m
 ```bash
 # Fresh clone as a new user
 cd /tmp
-git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
+git clone https://github.com/Coregentis/MPLP-Protocol.git
 cd MPLP-Protocol
 ```
 
@@ -118,7 +118,7 @@ dist/modules/core/index.js  // ✅ CORRECT
 #### **Rule 1: Can User Clone and Use Immediately?**
 **Test**:
 ```bash
-git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
+git clone https://github.com/Coregentis/MPLP-Protocol.git
 cd MPLP-Protocol
 grep '"./core"' package.json
 ```
@@ -207,7 +207,7 @@ grep -A 3 '"./utils"' package.json
 
 1. ✅ **Clone and Use Immediately**:
    ```bash
-   git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
+   git clone https://github.com/Coregentis/MPLP-Protocol.git
    cd MPLP-Protocol
    ```
 
@@ -295,7 +295,7 @@ grep -A 3 '"./utils"' package.json
 #### **Step 1: Get Started (5 minutes)**
 ```bash
 # Clone repository
-git clone https://github.com/Coregentis/MPLP-Protocol-Dev-Dev.git
+git clone https://github.com/Coregentis/MPLP-Protocol.git
 cd MPLP-Protocol
 
 # Verify installation
@@ -326,7 +326,7 @@ console.log('Context Manager initialized!');
 
 #### **Step 4: Deploy to Production** (when ready)
 - All modules production-ready
-- 3,165 tests passing (100%)
+- 2,902 tests passing (100%)
 - Zero technical debt
 - Enterprise-grade quality
 
@@ -353,10 +353,10 @@ console.log('Context Manager initialized!');
 ## 📚 **Documentation References**
 
 ### **User-Facing Documentation**
-- [README.md](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/blob/main/README.md) - Project overview
-- [QUICK_START.md](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/blob/main/QUICK_START.md) - 15-30 minute tutorial
-- [TROUBLESHOOTING.md](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/blob/main/TROUBLESHOOTING.md) - Troubleshooting guide
-- [docs/](https://github.com/Coregentis/MPLP-Protocol-Dev-Dev/tree/main/docs) - Comprehensive documentation
+- [README.md](https://github.com/Coregentis/MPLP-Protocol/blob/main/README.md) - Project overview
+- [QUICK_START.md](https://github.com/Coregentis/MPLP-Protocol/blob/main/QUICK_START.md) - 15-30 minute tutorial
+- [TROUBLESHOOTING.md](https://github.com/Coregentis/MPLP-Protocol/blob/main/TROUBLESHOOTING.md) - Troubleshooting guide
+- [docs/](https://github.com/Coregentis/MPLP-Protocol/tree/main/docs) - Comprehensive documentation
 
 ### **Internal Review Reports**
 - MPLP-OPEN-SOURCE-FINAL-USER-REVIEW.md - Initial review findings

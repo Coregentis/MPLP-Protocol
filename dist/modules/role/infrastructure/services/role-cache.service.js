@@ -352,9 +352,12 @@ class RoleCacheService {
     async evictRandom() {
         const keys = Array.from(this.cache.keys());
         if (keys.length > 0) {
-            const randomKey = keys[Math.floor(Math.random() * keys.length)]; // 非空断言：keys.length > 0
-            await this.delete(randomKey);
-            this.recordEviction(randomKey, 'random');
+            const randomIndex = Math.floor(Math.random() * keys.length);
+            const randomKey = keys[randomIndex];
+            if (randomKey) {
+                await this.delete(randomKey);
+                this.recordEviction(randomKey, 'random');
+            }
         }
     }
     /**

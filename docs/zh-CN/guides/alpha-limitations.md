@@ -128,8 +128,8 @@ const trace = await mplp.trace.startTrace({
 
 ### **获得帮助**
 - **文档**: https://docs.mplp.dev
-- **GitHub Issues**: https://github.com/mplp/mplp/issues
-- **社区讨论**: https://github.com/mplp/mplp/discussions
+- **GitHub Issues**: https://github.com/Coregentis/MPLP-Protocol/issues
+- **社区讨论**: https://github.com/Coregentis/MPLP-Protocol/discussions
 - **示例代码**: `docs/zh-CN/examples/`
 
 ### **贡献**

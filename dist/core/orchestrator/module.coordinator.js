@@ -10,7 +10,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ModuleCoordinator = void 0;
 // ===== 模块协调器实现 =====
 class ModuleCoordinator {
-    constructor(_connectionTimeout = 5000, defaultRetryPolicy = {
+    constructor(
+    // Reserved for future connection timeout configuration
+    _connectionTimeout = 5000, defaultRetryPolicy = {
         maxRetries: 3,
         retryDelay: 1000,
         backoffStrategy: 'exponential',
@@ -22,6 +24,8 @@ class ModuleCoordinator {
         this.activeConnections = new Map();
         this.pendingRequests = new Map();
         this.failedOperations = new Map();
+        // Explicitly mark as intentionally unused - Reserved for future connection timeout configuration
+        void this._connectionTimeout;
     }
     /**
      * 注册模块

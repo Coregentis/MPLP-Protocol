@@ -232,7 +232,7 @@ CONFIRM_WEBHOOK_TIMEOUT=30000
 ```bash
 # Clone the repository
 git clone https://github.com/your-org/mplp.git
-cd mplp
+cd MPLP-Protocol
 
 # Install dependencies
 npm install

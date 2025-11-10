@@ -70,7 +70,10 @@ export class PlanIntegrationService {
     private readonly _planRepository: IPlanRepository,
     private readonly coordinationManager: CoordinationManager,
     private readonly logger: ILogger
-  ) {}
+  ) {
+    // Explicitly mark repository as intentionally unused - Reserved for future persistence operations
+    void this._planRepository;
+  }
 
   // ===== MPLP模块预留接口（等待CoreOrchestrator激活）=====
 

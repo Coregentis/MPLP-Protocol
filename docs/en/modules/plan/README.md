@@ -16,22 +16,24 @@
 
 ## 🎯 Overview
 
-The Plan Module serves as the intelligent planning and task scheduling system for MPLP, providing AI-driven planning algorithms, resource allocation, timeline management, and collaborative planning capabilities. It enables multi-agent systems to create, execute, and adapt complex plans dynamically.
+The Plan Module serves as the **planning coordination and task scheduling protocol** for MPLP, providing standardized interfaces for plan management, task coordination, resource allocation, and timeline management. It enables multi-agent systems to create, execute, and adapt complex plans through vendor-neutral protocol interfaces.
+
+**⚠️ Important**: This module provides the **protocol infrastructure** for planning, not AI planning algorithms themselves. AI planning algorithms are implemented in the L4 Agent layer through the AI Service Adapter interface.
 
 ### **Primary Responsibilities**
-- **AI-Driven Planning**: Generate optimal plans using advanced planning algorithms
-- **Task Scheduling**: Schedule and coordinate tasks across multiple agents
-- **Resource Allocation**: Optimize resource allocation for plan execution
-- **Timeline Management**: Manage project timelines and dependencies
-- **Collaborative Planning**: Enable multiple agents to collaborate on plan creation
-- **Plan Adaptation**: Dynamically adapt plans based on changing conditions
+- **Plan Protocol Management**: Standardized plan data structures and lifecycle management
+- **Task Coordination Protocol**: Protocol interfaces for task scheduling and coordination
+- **Resource Allocation Protocol**: Standardized resource allocation and tracking interfaces
+- **Timeline Management Protocol**: Protocol for managing project timelines and dependencies
+- **Collaborative Planning Protocol**: Enable multiple agents to collaborate on plan creation
+- **AI Service Integration**: Vendor-neutral interfaces for integrating external AI planning services
 
 ### **Key Features**
-- **Intelligent Planning Algorithms**: Advanced AI algorithms for optimal plan generation
+- **Vendor-Neutral Design**: No dependency on specific AI planning algorithms or vendors
+- **AI Service Adapter**: Pluggable interface for integrating external AI planning services
 - **Multi-Agent Coordination**: Coordinate planning across multiple intelligent agents
-- **Resource Optimization**: Intelligent resource allocation and optimization
+- **Protocol-First Approach**: Standardized protocol interfaces for planning operations
 - **Dependency Management**: Handle complex task dependencies and constraints
-- **Real-time Adaptation**: Dynamic plan adaptation based on execution feedback
 - **Performance Analytics**: Comprehensive planning performance analysis and optimization
 
 ---
@@ -70,60 +72,71 @@ The Plan Module serves as the intelligent planning and task scheduling system fo
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### **Planning Algorithms and Strategies**
+### **AI Service Integration Architecture**
 
-The Plan Module supports multiple planning algorithms optimized for different scenarios:
+The Plan Module provides a **vendor-neutral AI Service Adapter** interface that allows integration with external AI planning services. Planning algorithms are implemented in the L4 Agent layer, not in the L1-L3 protocol layer.
 
 ```typescript
-enum PlanningAlgorithm {
-  HIERARCHICAL_TASK_NETWORK = 'htn',           // HTN planning
-  FORWARD_STATE_SPACE = 'forward_search',      // Forward state-space search
-  BACKWARD_STATE_SPACE = 'backward_search',    // Backward state-space search
-  PARTIAL_ORDER_SCHEDULING = 'pos',            // Partial-order scheduling
-  CONSTRAINT_SATISFACTION = 'csp',             // Constraint satisfaction
-  REINFORCEMENT_LEARNING = 'rl',               // RL-based planning
-  MULTI_AGENT_PLANNING = 'map',                // Multi-agent planning
-  CONTINUOUS_PLANNING = 'continuous'           // Continuous planning
+// AI Service Adapter Interface (L1-L3 Protocol Layer)
+interface IAIServiceAdapter {
+  // Request AI planning service (algorithm implementation is external)
+  executePlanning(request: AIServiceRequest): Promise<AIServiceResponse>;
+  optimizePlan(request: AIServiceRequest): Promise<AIServiceResponse>;
+  validatePlan(request: AIServiceRequest): Promise<ValidationResponse>;
+
+  // Service information
+  getServiceInfo(): Promise<AIServiceInfo>;
+  healthCheck(): Promise<HealthStatus>;
 }
+
+// Planning algorithms are implemented in L4 Agent layer
+// Examples of algorithms that can be integrated:
+// - Hierarchical Task Network (HTN) planning
+// - Forward/Backward state-space search
+// - Partial-order scheduling
+// - Constraint satisfaction
+// - Reinforcement learning-based planning
+// - Multi-agent planning algorithms
 ```
 
 ---
 
 ## 🔧 Core Services
 
-### **1. AI Planning Service**
+### **1. Plan Management Service**
 
-The core intelligent planning service that generates optimal plans using advanced AI algorithms.
+The core plan management service that provides protocol interfaces for plan lifecycle management and AI service integration.
+
+**⚠️ Architecture Boundary**: This service provides **protocol interfaces** for plan management, not AI planning algorithms. AI planning is delegated to external services through the AI Service Adapter.
 
 #### **Key Capabilities**
-- **Plan Generation**: Generate optimal plans based on objectives and constraints
-- **Algorithm Selection**: Automatically select the best planning algorithm for each scenario
-- **Optimization**: Optimize plans for multiple criteria (time, cost, resources, quality)
-- **Constraint Handling**: Handle complex constraints and requirements
-- **Uncertainty Management**: Plan under uncertainty and incomplete information
+- **Plan Lifecycle Management**: Create, update, activate, pause, complete, and cancel plans
+- **AI Service Integration**: Integrate with external AI planning services through adapter interface
+- **Plan Validation**: Validate plan structure, dependencies, and constraints
+- **Plan Coordination**: Coordinate plan execution across multiple agents
+- **Plan Versioning**: Track plan versions and changes over time
 
 #### **API Interface**
 ```typescript
-interface AIPlanningService {
-  // Plan generation
-  generatePlan(request: PlanGenerationRequest): Promise<Plan>;
-  optimizePlan(planId: string, criteria: OptimizationCriteria): Promise<Plan>;
-  validatePlan(planId: string, constraints: Constraint[]): Promise<ValidationResult>;
-  
-  // Algorithm management
-  selectAlgorithm(problem: PlanningProblem): Promise<PlanningAlgorithm>;
-  configureAlgorithm(algorithm: PlanningAlgorithm, config: AlgorithmConfig): Promise<void>;
-  benchmarkAlgorithms(problem: PlanningProblem): Promise<BenchmarkResult>;
-  
-  // Plan analysis
-  analyzePlan(planId: string): Promise<PlanAnalysis>;
-  comparePlans(planIds: string[]): Promise<PlanComparison>;
-  estimateExecution(planId: string): Promise<ExecutionEstimate>;
-  
-  // Learning and adaptation
-  learnFromExecution(planId: string, executionData: ExecutionData): Promise<void>;
-  updatePlanningModel(trainingData: TrainingData): Promise<void>;
-  getPlanningInsights(): Promise<PlanningInsights>;
+interface PlanManagementService {
+  // Plan lifecycle management (L1-L3 Protocol Layer)
+  createPlan(params: PlanCreationParams): Promise<PlanEntityData>;
+  updatePlan(params: PlanUpdateParams): Promise<PlanEntityData>;
+  getPlan(planId: UUID): Promise<PlanEntityData | null>;
+  deletePlan(planId: UUID): Promise<boolean>;
+
+  // Plan state management
+  activatePlan(planId: UUID): Promise<boolean>;
+  pausePlan(planId: UUID): Promise<boolean>;
+  completePlan(planId: UUID): Promise<boolean>;
+
+  // AI service integration (delegates to L4 Agent layer)
+  requestAIPlanning(planId: UUID, params: PlanOptimizationParams): Promise<AIServiceResponse>;
+  optimizePlanWithAI(planId: UUID, criteria: OptimizationCriteria): Promise<AIServiceResponse>;
+
+  // Plan validation and analysis
+  validatePlan(planId: UUID): Promise<ValidationResult>;
+  analyzePlanStructure(planId: UUID): Promise<PlanAnalysis>;
 }
 ```
 

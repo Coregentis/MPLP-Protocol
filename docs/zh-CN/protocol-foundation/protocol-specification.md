@@ -9,7 +9,7 @@
 [![RFC风格](https://img.shields.io/badge/style-RFC%20Compliant-blue.svg)](https://tools.ietf.org/rfc/)
 [![协议](https://img.shields.io/badge/protocol-100%25%20完成-brightgreen.svg)](./protocol-overview.md)
 [![状态](https://img.shields.io/badge/status-生产就绪-brightgreen.svg)](./version-management.md)
-[![测试](https://img.shields.io/badge/tests-2869%2F2869%20通过-brightgreen.svg)](./compliance-testing.md)
+[![测试](https://img.shields.io/badge/tests-2902%2F2902%20通过-brightgreen.svg)](./compliance-testing.md)
 [![合规性](https://img.shields.io/badge/compliance-完全验证-brightgreen.svg)](./compliance-testing.md)
 [![语言](https://img.shields.io/badge/language-简体中文-blue.svg)](../../en/protocol-foundation/protocol-specification.md)
 

@@ -45,12 +45,17 @@ export enum WorkflowStage {
 export enum WorkflowStatus {
   CREATED = 'created',
   IN_PROGRESS = 'in_progress',
-  RUNNING = 'in_progress', // 别名，用于向后兼容
   COMPLETED = 'completed',
   FAILED = 'failed',
   CANCELLED = 'cancelled',
   PAUSED = 'paused'
 }
+
+// 向后兼容的类型别名
+export const WorkflowStatusAlias = {
+  ...WorkflowStatus,
+  RUNNING: WorkflowStatus.IN_PROGRESS
+} as const;
 
 export enum StageStatus {
   PENDING = 'pending',

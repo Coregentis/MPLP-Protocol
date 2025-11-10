@@ -64,7 +64,10 @@ export class CoreServicesCoordinator {
     private readonly resourceService: CoreResourceService,
     private readonly coreRepository: ICoreRepository,
     private readonly logger?: { info: (msg: string, meta?: Record<string, unknown>) => void; error: (msg: string, meta?: Record<string, unknown>) => void }
-  ) {}
+  ) {
+    // Explicitly mark repository as intentionally unused - Reserved for future persistence operations
+    void this.coreRepository;
+  }
 
   /**
    * 协调创建工作流 - 完整生命周期管理

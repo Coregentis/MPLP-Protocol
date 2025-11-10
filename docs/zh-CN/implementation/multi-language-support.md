@@ -9,7 +9,7 @@
 [![多语言](https://img.shields.io/badge/languages-TypeScript完成-brightgreen.svg)](./README.md)
 [![协议](https://img.shields.io/badge/protocol-10个模块就绪-brightgreen.svg)](./server-implementation.md)
 [![实现](https://img.shields.io/badge/implementation-100%25%20完成-brightgreen.svg)](./deployment-models.md)
-[![质量](https://img.shields.io/badge/tests-2869%2F2869%20通过-brightgreen.svg)](./performance-requirements.md)
+[![质量](https://img.shields.io/badge/tests-2902%2F2902%20通过-brightgreen.svg)](./performance-requirements.md)
 [![语言](https://img.shields.io/badge/language-中文-blue.svg)](../en/implementation/multi-language-support.md)
 
 ---
@@ -586,7 +586,7 @@ syntax = "proto3";
 
 package mplp.v1;
 
-option go_package = "github.com/mplp/mplp-go/pkg/proto";
+option go_package = "github.com/Coregentis/MPLP-Protocol-go/pkg/proto";
 option java_package = "dev.mplp.proto";
 option java_outer_classname = "MPLPProto";
 

@@ -30,6 +30,16 @@ class ConfirmProtocol {
         this._stateSyncManager = _stateSyncManager;
         this._transactionManager = _transactionManager;
         this._protocolVersionManager = _protocolVersionManager;
+        // Explicitly mark L3 managers as intentionally unused - Reserved for CoreOrchestrator activation
+        void this._securityManager;
+        void this._performanceMonitor;
+        void this._eventBusManager;
+        void this._errorHandler;
+        void this._coordinationManager;
+        void this._orchestrationManager;
+        void this._stateSyncManager;
+        void this._transactionManager;
+        void this._protocolVersionManager;
     }
     /**
      * 实现IMLPPProtocol标准接口：执行协议操作

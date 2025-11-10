@@ -165,7 +165,7 @@ MPLPは完全な3層プロトコルスタックを提供します：
 ### **プラットフォームメトリクス**
 - **モジュール**: 10/10エンタープライズグレードモジュール完了
 - **テスト**: 2,869/2,869テスト合格（100%合格率）
-- **テストスイート**: 197/197テストスイート合格
+- **テストスイート**: 199テストスイート（197合格、2失敗）
 - **パフォーマンス**: 99.8%総合パフォーマンススコア
 - **セキュリティ**: 100%セキュリティテスト合格
 - **ドキュメント**: すべてのモジュールで100%完了
@@ -184,7 +184,7 @@ MPLPは完全な3層プロトコルスタックを提供します：
 ### **ヘルプを得る**
 
 #### **コミュニティチャンネル**
-- **[GitHubディスカッション](https://github.com/mplp/mplp/discussions)**: コミュニティQ&Aとディスカッション
+- **[GitHubディスカッション](https://github.com/Coregentis/MPLP-Protocol/discussions)**: コミュニティQ&Aとディスカッション
 - **[Discordサーバー](https://discord.gg/mplp)**: リアルタイムチャットとサポート
 - **[Stack Overflow](https://stackoverflow.com/questions/tagged/mplp)**: 技術的な質問と回答
 - **[コミュニティフォーラム](https://forum.mplp.org)**: 長文のディスカッションとチュートリアル
@@ -200,9 +200,9 @@ MPLPは完全な3層プロトコルスタックを提供します：
 すべてのスキルレベルの開発者からの貢献を歓迎します：
 
 - **[貢献ガイド](../community/contributing.md)**: MPLPへの貢献方法
-- **[初心者向けイシュー](https://github.com/mplp/mplp/labels/good%20first%20issue)**: 初心者向けのイシュー
-- **[機能リクエスト](https://github.com/mplp/mplp/issues/new?template=feature_request.md)**: 新機能を提案
-- **[バグレポート](https://github.com/mplp/mplp/issues/new?template=bug_report.md)**: バグと問題を報告
+- **[初心者向けイシュー](https://github.com/Coregentis/MPLP-Protocol/labels/good%20first%20issue)**: 初心者向けのイシュー
+- **[機能リクエスト](https://github.com/Coregentis/MPLP-Protocol/issues/new?template=feature_request.md)**: 新機能を提案
+- **[バグレポート](https://github.com/Coregentis/MPLP-Protocol/issues/new?template=bug_report.md)**: バグと問題を報告
 
 ---
 
