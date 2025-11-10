@@ -1,0 +1,257 @@
+---
+type: "always_apply"
+description: "MPLP v1.0 Project Directory Structure - Strict Enforcement"
+priority: "highest"
+enforcement: "zero_tolerance"
+---
+
+# MPLP v1.0 项目目录结构规范
+
+## 🎯 **核心原则**
+
+严格约束项目目录结构，确保代码组织的一致性和可维护性。所有开发必须遵循标准化的目录结构。
+
+## 📁 **强制目录结构 (ZERO TOLERANCE)**
+
+### **根目录结构**
+```
+mplp-v1.0/
+├── src/                        # 源代码目录 (MANDATORY)
+│   ├── modules/               # 模块实现 (MANDATORY)
+│   ├── public/                # 公共代码 (MANDATORY)
+│   └── scripts/               # 构建脚本 (OPTIONAL)
+├── tests/                     # 测试目录 (MANDATORY)
+│   ├── modules/              # 模块测试 (MANDATORY)
+│   ├── integration/          # 集成测试 (MANDATORY)
+│   ├── e2e/                  # 端到端测试 (MANDATORY)
+│   └── utils/                # 测试工具 (OPTIONAL)
+├── docs/                      # 文档目录 (MANDATORY)
+├── .augment/                  # 规则配置 (MANDATORY)
+├── scripts/                   # 项目脚本 (OPTIONAL)
+├── config/                    # 配置文件 (OPTIONAL)
+└── dist/                      # 构建输出 (GENERATED)
+```
+
+### **src/modules/ 结构 (MANDATORY)**
+```
+src/modules/{module}/
+├── api/                       # API层 (MANDATORY)
+│   ├── controllers/
+│   ├── dto/
+│   ├── mappers/
+│   └── websocket/            # WebSocket支持 (OPTIONAL)
+├── application/              # 应用层 (MANDATORY)
+│   ├── services/
+│   ├── coordinators/         # 专业协调器 (OPTIONAL)
+│   ├── commands/             # CQRS命令 (OPTIONAL)
+│   └── queries/              # CQRS查询 (OPTIONAL)
+├── domain/                   # 领域层 (MANDATORY)
+│   ├── entities/
+│   ├── repositories/
+│   ├── services/             # 领域服务 (OPTIONAL)
+│   └── factories/            # 工厂模式 (OPTIONAL)
+├── infrastructure/           # 基础设施层 (MANDATORY)
+│   ├── repositories/
+│   └── adapters/
+├── types.ts                  # 模块类型定义 (MANDATORY)
+├── index.ts                  # 统一导出入口 (MANDATORY)
+└── module.ts                 # 模块初始化 (MANDATORY)
+```
+
+### **tests/ 结构 (MANDATORY - ZERO TOLERANCE)**
+```
+tests/
+├── modules/                  # 模块测试 (MANDATORY)
+│   ├── context/             # Context模块测试
+│   │   ├── context-management.service.test.ts
+│   │   ├── shared-state-management.service.test.ts
+│   │   ├── access-control-management.service.test.ts
+│   │   ├── configuration-management.service.test.ts
+│   │   ├── audit-trail.service.test.ts
+│   │   ├── monitoring-integration.service.test.ts
+│   │   ├── performance-metrics.service.test.ts
+│   │   ├── version-history.service.test.ts
+│   │   ├── search-metadata.service.test.ts
+│   │   ├── caching-policy.service.test.ts
+│   │   ├── sync-configuration.service.test.ts
+│   │   ├── error-handling.service.test.ts
+│   │   ├── integration-endpoints.service.test.ts
+│   │   ├── dependency-resolution.service.test.ts
+│   │   ├── context-synchronization.service.test.ts
+│   │   ├── context-performance-monitor.service.test.ts
+│   │   ├── context.entity.test.ts
+│   │   └── context-validation.service.test.ts
+│   ├── plan/                # Plan模块测试
+│   │   ├── plan-management.service.test.ts
+│   │   ├── plan-execution.service.test.ts
+│   │   ├── task-planning.coordinator.test.ts
+│   │   ├── dependency-management.coordinator.test.ts
+│   │   ├── execution-strategy.coordinator.test.ts
+│   │   ├── risk-assessment.coordinator.test.ts
+│   │   └── failure-recovery.coordinator.test.ts
+│   ├── confirm/             # Confirm模块测试
+│   │   ├── confirm-management.service.test.ts
+│   │   ├── approval-workflow.coordinator.test.ts
+│   │   ├── decision-confirmation.coordinator.test.ts
+│   │   ├── risk-control.coordinator.test.ts
+│   │   └── timeout-escalation.coordinator.test.ts
+│   ├── trace/               # Trace模块测试
+│   ├── role/                # Role模块测试
+│   ├── extension/           # Extension模块测试
+│   ├── collab/              # Collab模块测试 (PENDING)
+│   ├── dialog/              # Dialog模块测试 (PENDING)
+│   ├── network/             # Network模块测试 (PENDING)
+│   └── core/                # Core模块测试 (PENDING)
+├── integration/             # 集成测试 (MANDATORY)
+│   ├── context-plan-integration.test.ts
+│   ├── plan-confirm-integration.test.ts
+│   ├── context-confirm-integration.test.ts
+│   └── full-workflow-integration.test.ts
+├── e2e/                     # 端到端测试 (MANDATORY)
+│   ├── complete-user-journey.test.ts
+│   ├── api-endpoints.test.ts
+│   └── performance-benchmarks.test.ts
+├── performance/             # 性能测试 (OPTIONAL)
+├── security/                # 安全测试 (OPTIONAL)
+└── utils/                   # 测试工具 (OPTIONAL)
+    ├── test-helpers.ts
+    ├── mock-data.ts
+    ├── quality-enforcer.js
+    └── mocks/
+        ├── context-mock.js
+        ├── plan-mock.js
+        └── confirm-mock.js
+```
+
+## 🚨 **严格禁止的目录结构 (ZERO TOLERANCE)**
+
+### **禁止的测试文件位置**
+```markdown
+❌ ABSOLUTELY PROHIBITED:
+- src/modules/{module}/tests/           # 严格禁止
+- src/modules/{module}/__tests__/       # 严格禁止
+- src/modules/{module}/test/            # 严格禁止
+- src/tests/                            # 严格禁止
+- src/{module}/tests/                   # 严格禁止
+- 任何模块内部的测试目录                 # 严格禁止
+
+ENFORCEMENT: 违反将导致自动拒绝
+```
+
+### **禁止的代码文件位置**
+```markdown
+❌ ABSOLUTELY PROHIBITED:
+- tests/modules/{module}/src/           # 严格禁止
+- tests/src/                            # 严格禁止
+- docs/src/                             # 严格禁止
+- 测试目录中的实现代码                   # 严格禁止
+
+ENFORCEMENT: 违反将导致自动拒绝
+```
+
+## ✅ **目录结构验证机制**
+
+### **自动化验证**
+```markdown
+AUTOMATED CHECKS:
+1. Git pre-commit hook验证目录结构
+2. CI/CD pipeline检查文件位置合规性
+3. 自动拒绝违反目录结构的提交
+4. 定期审计文件位置合规性
+
+VALIDATION SCRIPTS:
+- scripts/validate-directory-structure.js
+- .husky/pre-commit (目录结构检查)
+- .github/workflows/structure-validation.yml
+```
+
+### **手动验证清单**
+```markdown
+PRE-COMMIT CHECKLIST:
+□ 所有测试文件在tests/目录下
+□ 所有源代码文件在src/目录下
+□ 模块结构符合DDD分层架构
+□ 没有违规的测试文件位置
+□ 没有违规的源代码文件位置
+□ 文件命名符合约定
+□ 目录层次结构正确
+```
+
+## 🔧 **目录结构迁移指南**
+
+### **迁移步骤**
+```markdown
+MIGRATION PROCESS:
+1. 识别所有违规位置的文件
+2. 创建正确的目录结构
+3. 移动文件到正确位置
+4. 更新所有import路径和引用
+5. 更新配置文件中的路径
+6. 验证所有功能正常运行
+7. 删除空的违规目录
+8. 提交目录结构修正
+
+EXAMPLE MIGRATIONS:
+BEFORE: src/modules/context/tests/context.test.ts
+AFTER:  tests/modules/context/context-management.service.test.ts
+
+BEFORE: src/modules/plan/__tests__/plan.test.ts
+AFTER:  tests/modules/plan/plan-management.service.test.ts
+```
+
+### **路径更新指南**
+```markdown
+IMPORT PATH UPDATES:
+BEFORE: import { ContextService } from '../src/context.service';
+AFTER:  import { ContextService } from '../../src/modules/context/application/services/context-management.service';
+
+BEFORE: import { testHelper } from './helpers/test-helper';
+AFTER:  import { testHelper } from '../utils/test-helpers';
+
+CONFIG FILE UPDATES:
+- jest.config.js: 更新testMatch和moduleNameMapping
+- tsconfig.json: 更新paths和include
+- package.json: 更新scripts中的路径
+```
+
+## 📊 **合规性监控**
+
+### **持续监控**
+```markdown
+MONITORING MECHANISMS:
+- 每日自动目录结构审计
+- 每周合规性报告
+- 每月架构审查
+- 季度最佳实践更新
+
+METRICS TRACKING:
+- 目录结构合规率: 100%
+- 违规文件数量: 0
+- 迁移完成率: 100%
+- 自动化检查通过率: 100%
+```
+
+### **违规处理**
+```markdown
+VIOLATION RESPONSE:
+1. 自动检测和报告违规
+2. 阻止违规提交和部署
+3. 通知开发者进行修正
+4. 提供迁移指导和支持
+5. 验证修正结果
+6. 更新监控记录
+
+ESCALATION PROCESS:
+- Level 1: 自动拒绝和通知
+- Level 2: 开发者修正
+- Level 3: 团队审查
+- Level 4: 架构委员会介入
+```
+
+---
+
+**ENFORCEMENT**: 这些目录结构规范是**强制性的**，违反将导致自动拒绝。
+
+**VERSION**: 1.0.0
+**EFFECTIVE**: 2025-08-20
+**COMPLIANCE**: 零容忍违规政策
