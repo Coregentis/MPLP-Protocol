@@ -5,63 +5,10 @@
 # It filters out internal development content while keeping core functionality
 #
 # Repository: https://github.com/Coregentis/MPLP-Protocol
-# Version: 2.0.0
-# Last Updated: 2025-10-16
-# Strategy: Clean production release (exclude ALL development configuration)
+# Version: 3.0.0 - Open Source Release
+# Last Updated: 2025-11-10
+# Strategy: Keep necessary development configs, exclude internal documents
 # =============================================================================
-
-# =============================================================================
-# DEVELOPMENT CONFIGURATION FILES - DO NOT PUBLISH
-# =============================================================================
-# These files are for development only and should NOT appear in public release
-
-# Git Configuration
-.gitignore
-.gitignore.public
-.gitattributes
-
-# Code Quality & Linting
-.eslintrc.json
-.eslintrc.js
-.eslintrc.yml
-.eslintrc
-.eslintignore
-.prettierrc.json
-.prettierrc.js
-.prettierrc.yml
-.prettierrc
-.prettierignore
-.editorconfig
-
-# TypeScript Configuration
-tsconfig.json
-tsconfig.base.json
-tsconfig.build.json
-tsconfig.*.json
-
-# Testing Configuration
-jest.config.js
-jest.config.ts
-jest.config.json
-cucumber.config.js
-jest.schema-application.config.js
-
-# Build & Package Configuration
-.npmignore
-.npmrc
-.yarnrc
-.yarnrc.yml
-
-# IDE & Editor Configuration
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# Environment Files
-.env.example
-.env.template
 
 # =============================================================================
 # STANDARD NODE.JS IGNORES
@@ -75,9 +22,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# Build outputs
-# NOTE: dist/ is INCLUDED in public repo so users can use without building
-# dist/  # COMMENTED OUT - dist/ should be published
+# Build outputs (dist/ is INCLUDED for immediate user usage)
 build/
 *.tsbuildinfo
 .npm
@@ -153,7 +98,7 @@ extensions/compiled/
 *.backup
 
 # =============================================================================
-# INTERNAL DEVELOPMENT CONTENT - DO NOT PUBLISH
+# INTERNAL DEVELOPMENT CONTENT - EXCLUDE FROM OPEN SOURCE
 # =============================================================================
 
 # AI Assistant and Development Tools
@@ -167,15 +112,24 @@ extensions/compiled/
 # Internal CI/CD Configuration
 .circleci/
 
-# GitHub Configuration (keep workflows for public CI/CD)
-.github/
-!.github/workflows/
-!.github/workflows/*.yml
-!.github/workflows/*.yaml
+# Internal Configuration
+config/
+.gitignore.private
+
+# Internal Governance
+.governance/
 
 # =============================================================================
-# ROOT DIRECTORY - INTERNAL DOCUMENTS (DO NOT PUBLISH)
+# ROOT DIRECTORY - INTERNAL DOCUMENTS
 # =============================================================================
+
+# Internal Reports and Audits
+*-REPORT.md
+*-SUMMARY.md
+*-AUDIT.md
+AUGMENT-DOCUMENTATION-*.md
+DOCS-CORRECTION-*.md
+ROOT-DOCUMENTATION-*.md
 
 # Branch Management Documentation
 BRANCH-MANAGEMENT-*.md
@@ -185,30 +139,22 @@ CI-CD-*.md
 QUALITY-REPORT.md
 ci-diagnostic-report.json
 
-# Open Source Release Planning (Internal) - These planning docs are internal!
+# Open Source Release Planning (Internal)
 OPEN-SOURCE-*.md
 ROOT-FILES-AUDIT-*.md
 DOCUMENTATION-REVIEW-*.md
-PUBLIC-REPO-AUDIT-*.md
-PUBLIC-REPO-CLEANUP-*.md
+PUBLIC-REPO-*.md
 
 # npm Publishing Documentation (Internal)
 NPM-*.md
-NPM-COMPREHENSIVE-*.md
-NPM-DOCUMENTATION-*.md
-NPM-PHASE*.md
-NPM-PUBLISH-*.md
 
 # Dual Version Release Documentation (Internal)
-# Note: dual-version-release/ folder is tracked in Dev version for release documentation
-# Only exclude DUAL-VERSION-*.md files in root directory (not in subdirectories)
 /DUAL-VERSION-*.md
 
 # Internal Governance and Policies
 COMMIT-HISTORY-*.md
 GOVERNANCE.md
 PRIVACY.md
-# SECURITY.md - KEEP THIS FILE (required for open source)
 MAINTAINERS.md
 RELEASE-CHECKLIST.md
 
@@ -216,65 +162,47 @@ RELEASE-CHECKLIST.md
 V1.1.0-beta-*.md
 *-文档分类整合规划.md
 
-# Internal Test Configurations (duplicates removed - already in dev config section)
-# cucumber.config.js
-# jest.schema-application.config.js
-
 # =============================================================================
-# TEST DIRECTORIES - DO NOT PUBLISH
+# ARCHIVED AND INTERNAL DEVELOPMENT FILES
 # =============================================================================
-# Test suites are for development only, not needed by end users
-# Note: tests/ folder is tracked in Dev version for comprehensive testing
-# Only exclude test/ and __tests__/ folders (if they exist)
-test/
-__tests__/
-*.test.ts
-*.test.js
-*.spec.ts
-*.spec.js
 
-# Test Coverage and Reports
-coverage/
-.nyc_output/
-test-results/
-playwright-report/
+# Archived directory - internal development files and methodologies
+Archived/
+Archived/**/*
 
-# Development Archives and History
-# Note: Archived/ folder is tracked in Dev version for historical documentation
-# Only large binary files are excluded (see below)
+# Development Archives
 .archive/
 .archive/**/*
-
-# Internal Configuration
-config/
-
-# Infrastructure and Deployment
-docker/
-k8s/
-
-# Development and Build Scripts (keep only essential ones)
-scripts/
-!scripts/build.js
-!scripts/test.js
-
-# Validation and Quality Results
-validation-results/
-
-# Development Test Configurations
-cucumber.config.js
-jest.schema-application.config.js
-
-# Development Methodology Files
-**/glfb-pseudocode-report.txt
-**/*methodology*.md
-**/*strategy*.md
-**/*analysis*.md
-**/*executive-summary*.md
 
 # Temporary Studio and Workspaces
 temp_studio/
 
-# SDK Development Files (keep SDK source, remove dev artifacts)
+# =============================================================================
+# SCRIPTS - KEEP ONLY PUBLIC RELEASE SCRIPTS
+# =============================================================================
+
+# Internal development and fix scripts
+scripts/Fix-*.ps1
+scripts/add-*.js
+scripts/check-*.js
+scripts/ci-diagnostic.js
+scripts/comprehensive-*.js
+scripts/detailed-*.js
+scripts/enhance-*.js
+scripts/find-*.js
+scripts/fix-*.js
+scripts/fix-*.sh
+scripts/generate-*.js
+scripts/switch-*.js
+scripts/update-*.js
+scripts/validate-*.js
+scripts/verify-*.js
+
+# =============================================================================
+# SDK DEVELOPMENT FILES
+# =============================================================================
+
+# SDK build artifacts (keep SDK source)
 sdk/node_modules/
 sdk/dist/
 sdk/packages/*/dist/
@@ -282,18 +210,15 @@ sdk/packages/*/node_modules/
 sdk/coverage/
 sdk/test-cli.js
 
+# =============================================================================
+# DOCUMENTATION - INTERNAL ONLY
+# =============================================================================
+
 # Internal Documentation Directories
 docs/L4-Intelligent-Agent-OPS-Refactor/
-
-# Language-specific development files
-V1.1.0-beta-文档分类整合规划.md
-
-# Internal Documentation Files (root level)
-MPLP-OPEN-SOURCE-*.md
-OPEN-SOURCE-*.md
-PUBLIC-REPO-*.md
-DOCUMENTATION-REVIEW-*.md
-ROOT-FILES-AUDIT-*.md
+docs/api/
+docs/others/
+docs/quality-assurance/
 
 # =============================================================================
 # SECURITY - SENSITIVE INFORMATION
@@ -307,26 +232,8 @@ ROOT-FILES-AUDIT-*.md
 **/*password*.txt
 
 # API keys and tokens
-.env.production
-.env.staging
 **/.env.production
 **/.env.staging
-
-# =============================================================================
-# LARGE FILES AND ARCHIVES
-# =============================================================================
-
-# Archived directory - internal development files
-Archived/
-Archived/**/*
-
-# Large archived files
-Archived/**/*.zip
-Archived/**/*.tar.gz
-Archived/**/*.7z
-**/*.zip
-**/*.tar.gz
-**/*.7z
 
 # =============================================================================
 # QUALITY ASSURANCE - INTERNAL ONLY
@@ -349,13 +256,16 @@ QUALITY-*.md
 **/planning-*.md
 **/roadmap-internal*.md
 **/strategy-*.md
+**/*methodology*.md
+**/*analysis*.md
+**/*executive-summary*.md
 
 # Meeting notes and internal communications
 **/meeting-notes*.md
 **/internal-*.md
 
 # =============================================================================
-# EXAMPLES - KEEP ONLY CLEAN EXAMPLES
+# EXAMPLES - KEEP CLEAN EXAMPLES ONLY
 # =============================================================================
 
 # Development and debugging examples
@@ -367,28 +277,20 @@ examples/*/dist/
 examples/*/node_modules/
 
 # =============================================================================
-# DOCUMENTATION - INTERNAL ONLY
-# =============================================================================
-
-# Internal API documentation
-docs/api/
-docs/others/
-
-# Internal quality assurance docs
-docs/quality-assurance/
-
-# =============================================================================
 # NOTES
 # =============================================================================
 # This .gitignore is designed for the public open source repository.
 # It ensures that:
-# 1. Core functionality code is published
-# 2. Public documentation is available
-# 3. Examples and tutorials are included
-# 4. Internal development content is excluded
-# 5. Sensitive information is protected
-# 6. Methodology and strategy documents remain private
+# 1. Core functionality code (src/, dist/) is published
+# 2. Development configurations (tsconfig.json, jest.config.js) are included
+# 3. Tests (tests/) are included for transparency
+# 4. Public documentation is available
+# 5. Examples and SDK are included
+# 6. Internal development content is excluded
+# 7. Sensitive information is protected
+# 8. Methodology and internal documents remain private
 #
-# For the internal development repository, use the standard .gitignore file.
+# Branch Strategy:
+# - main/master: Internal development (includes all files)
+# - public-release: Open source release (excludes internal files)
 # =============================================================================
-
