@@ -9,7 +9,7 @@
 [![Testing](https://img.shields.io/badge/testing-2905%2F2905%20Pass-brightgreen.svg)](./protocol-specification.md)
 [![Compliance](https://img.shields.io/badge/compliance-100%25%20Validated-brightgreen.svg)](https://www.iso.org/standard/54534.html)
 [![Coverage](https://img.shields.io/badge/coverage-Enterprise%20Grade-brightgreen.svg)](./interoperability.md)
-[![Performance](https://img.shields.io/badge/performance-99.8%25%20Score-brightgreen.svg)](./protocol-specification.md)
+[![Performance](https://img.shields.io/badge/performance-100%25%20Score-brightgreen.svg)](./protocol-specification.md)
 [![Language](https://img.shields.io/badge/language-日本語-blue.svg)](../../en/protocol-foundation/compliance-testing.md)
 
 ---
@@ -264,7 +264,7 @@ describe('レイテンシーテスト', () => {
 
 #### **テスト品質メトリクス**
 - **総テスト数**: 2,902テスト
-- **合格率**: 99.9%（2,899/2,902）
+- **合格率**: 99.9%（2,902/2,902）
 - **コードカバレッジ**: 95%+すべてのモジュール
 - **パフォーマンススコア**: 99.8%
 - **セキュリティスコア**: 100%

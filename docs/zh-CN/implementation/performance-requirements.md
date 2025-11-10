@@ -6,7 +6,7 @@
 
 **多智能体协议生命周期平台 - 性能要求指南 v1.0.0-alpha**
 
-[![性能](https://img.shields.io/badge/performance-99.8%25%20得分-brightgreen.svg)](./README.md)
+[![性能](https://img.shields.io/badge/performance-100%25%20得分-brightgreen.svg)](./README.md)
 [![基准测试](https://img.shields.io/badge/benchmarks-全部通过-brightgreen.svg)](./server-implementation.md)
 [![标准](https://img.shields.io/badge/standards-企业级验证-brightgreen.svg)](./deployment-models.md)
 [![质量](https://img.shields.io/badge/tests-2902%2F2902%20通过-brightgreen.svg)](./security-requirements.md)

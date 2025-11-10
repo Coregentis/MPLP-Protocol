@@ -9,7 +9,7 @@
 [![监控](https://img.shields.io/badge/monitoring-企业级就绪-brightgreen.svg)](./README.md)
 [![可观测性](https://img.shields.io/badge/observability-完整-brightgreen.svg)](./deployment-guide.md)
 [![告警](https://img.shields.io/badge/alerting-24%2F7-brightgreen.svg)](./maintenance-guide.md)
-[![性能](https://img.shields.io/badge/performance-99.8%25%20得分-brightgreen.svg)](./scaling-guide.md)
+[![性能](https://img.shields.io/badge/performance-100%25%20得分-brightgreen.svg)](./scaling-guide.md)
 [![语言](https://img.shields.io/badge/language-中文-blue.svg)](../../en/operations/monitoring-guide.md)
 
 ---

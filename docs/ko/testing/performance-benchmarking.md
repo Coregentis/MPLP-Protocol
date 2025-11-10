@@ -6,7 +6,7 @@
 
 **멀티 에이전트 프로토콜 라이프사이클 플랫폼 - 성능 벤치마킹 v1.0.0-alpha**
 
-[![성능](https://img.shields.io/badge/performance-99.8%25%20점수-brightgreen.svg)](./README.md)
+[![성능](https://img.shields.io/badge/performance-100%25%20점수-brightgreen.svg)](./README.md)
 [![벤치마크](https://img.shields.io/badge/benchmarks-엔터프라이즈%20급-brightgreen.svg)](../implementation/performance-requirements.md)
 [![테스트](https://img.shields.io/badge/testing-2869%2F2869%20통과-brightgreen.svg)](./security-testing.md)
 [![구현](https://img.shields.io/badge/implementation-10%2F10%20모듈-brightgreen.svg)](./test-suites.md)

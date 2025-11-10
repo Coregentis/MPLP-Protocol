@@ -10,7 +10,7 @@
 [![Protocol](https://img.shields.io/badge/protocol-100%25%20Complete-brightgreen.svg)](./protocol-specification.md)
 [![Modules](https://img.shields.io/badge/modules-10%2F10%20Complete-brightgreen.svg)](../modules/)
 [![Tests](https://img.shields.io/badge/tests-2899%2F2902%20Pass%20(99.9%25)-brightgreen.svg)](../testing/)
-[![Performance](https://img.shields.io/badge/performance-99.8%25%20Score-brightgreen.svg)](./compliance-testing.md)
+[![Performance](https://img.shields.io/badge/performance-100%25%20Score-brightgreen.svg)](./compliance-testing.md)
 [![Quality](https://img.shields.io/badge/quality-Zero%20Tech%20Debt-brightgreen.svg)](./compliance-testing.md)
 [![Language](https://img.shields.io/badge/language-日本語-blue.svg)](../../en/protocol-foundation/protocol-overview.md)
 

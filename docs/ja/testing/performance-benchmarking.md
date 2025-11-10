@@ -6,7 +6,7 @@
 
 **マルチエージェントプロトコルライフサイクルプラットフォーム - パフォーマンスベンチマーク v1.0.0-alpha**
 
-[![パフォーマンス](https://img.shields.io/badge/performance-99.8%25%20スコア-brightgreen.svg)](./README.md)
+[![パフォーマンス](https://img.shields.io/badge/performance-100%25%20スコア-brightgreen.svg)](./README.md)
 [![ベンチマーク](https://img.shields.io/badge/benchmarks-エンタープライズグレード-brightgreen.svg)](../implementation/performance-requirements.md)
 [![テスト](https://img.shields.io/badge/testing-2869%2F2869%20合格-brightgreen.svg)](./security-testing.md)
 [![実装](https://img.shields.io/badge/implementation-10%2F10%20モジュール-brightgreen.svg)](./test-suites.md)

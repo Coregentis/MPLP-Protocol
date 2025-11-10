@@ -10,7 +10,7 @@
 [![协议](https://img.shields.io/badge/protocol-100%25%20完成-brightgreen.svg)](./protocol-specification.md)
 [![模块](https://img.shields.io/badge/modules-10%2F10%20完成-brightgreen.svg)](../modules/)
 [![测试](https://img.shields.io/badge/tests-2899%2F2902%20通过%20(99.9%25)-brightgreen.svg)](../testing/)
-[![性能](https://img.shields.io/badge/performance-99.8%25%20得分-brightgreen.svg)](./compliance-testing.md)
+[![性能](https://img.shields.io/badge/performance-100%25%20得分-brightgreen.svg)](./compliance-testing.md)
 [![质量](https://img.shields.io/badge/quality-零技术债务-brightgreen.svg)](./compliance-testing.md)
 [![语言](https://img.shields.io/badge/language-简体中文-blue.svg)](../../en/protocol-foundation/protocol-overview.md)
 

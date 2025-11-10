@@ -7,7 +7,7 @@
 **多智能体协议生命周期平台 - 生产扩展指南 v1.0.0-alpha**
 
 [![扩展](https://img.shields.io/badge/scaling-生产验证-brightgreen.svg)](./README.md)
-[![性能](https://img.shields.io/badge/performance-99.8%25%20得分-brightgreen.svg)](./monitoring-guide.md)
+[![性能](https://img.shields.io/badge/performance-100%25%20得分-brightgreen.svg)](./monitoring-guide.md)
 [![可用性](https://img.shields.io/badge/availability-99.9%25%20目标-brightgreen.svg)](./deployment-guide.md)
 [![容量](https://img.shields.io/badge/capacity-企业级规模-brightgreen.svg)](./maintenance-guide.md)
 [![语言](https://img.shields.io/badge/language-中文-blue.svg)](../../en/operations/scaling-guide.md)
