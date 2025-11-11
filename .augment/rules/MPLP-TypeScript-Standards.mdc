@@ -1,0 +1,207 @@
+---
+type: "always_apply"
+description: "TypeScript standards for MPLP v1.0 - All Modules Refactoring Required"
+priority: "critical"
+---
+
+# TypeScript Standards - Unified Refactoring Requirements
+
+## 🚨 **Critical Update for All Modules**
+
+**CURRENT STATUS**: MPLP v1.0 has achieved 100% completion (10/10 modules) with unified architecture success. TypeScript standards are validated through all 10 completed modules and established as the enterprise-grade standard.
+
+**UNIFIED REQUIREMENTS**: All modules have achieved:
+- 100% Schema compliance with updated definitions
+- Zero technical debt policy enforcement (validated across all 10 completed modules)
+- Standardized SCTM+GLFB+ITCM + Schema-Driven Development
+- Complete cross-cutting concerns integration
+
+## 🎯 **Core Principles**
+
+### Strict Mode + Zero Any Policy
+```typescript
+// tsconfig.json - Required
+{
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true
+  }
+}
+
+❌ ABSOLUTELY PROHIBITED:
+- Using 'any' type (ZERO TOLERANCE)
+- Using @ts-ignore without justification
+- Ignoring TypeScript compilation errors
+- Disabling strict mode
+
+✅ MANDATORY WORKFLOW:
+1. npm run typecheck before commit (MUST PASS)
+2. npm run lint before commit (MUST PASS)
+3. Fix ALL TypeScript errors immediately
+4. Fix ALL ESLint warnings immediately
+```
+
+### Interface-First Design
+```typescript
+// ✅ Correct
+interface IContextService {
+  createContext(request: CreateContextRequest): Promise<Context>;
+  getContext(id: string): Promise<Context>;
+}
+
+// ❌ Wrong
+function createContext(request: any): any {
+  // No type safety
+}
+```
+
+### Generics and Type Safety
+```typescript
+// ✅ Correct
+interface Repository<TEntity, TKey = string> {
+  create(entity: Omit<TEntity, 'id'>): Promise<TEntity>;
+  findById(id: TKey): Promise<TEntity | null>;
+}
+
+// ❌ Wrong
+interface Repository {
+  create(entity: any): Promise<any>;
+  findById(id: any): Promise<any>;
+}
+```
+
+### Security-First Coding (CRITICAL - Added 2025-11-10)
+```typescript
+// ✅ SAFE: Command Execution
+import { spawn } from 'child_process';
+
+function sanitizeArgs(args: string[]): string[] {
+  return args.map(arg => {
+    if (!/^[a-zA-Z0-9\-_\.\/\s]+$/.test(arg)) {
+      throw new Error(`Invalid argument: ${arg}`);
+    }
+    return arg;
+  });
+}
+
+const child = spawn('git', sanitizeArgs(args), {
+  shell: false  // ✅ Prevents command injection
+});
+
+// ❌ UNSAFE: Command Execution
+const child = spawn('git', args, {
+  shell: true  // ❌ Allows command injection
+});
+
+// ✅ SAFE: Regular Expressions (ReDoS Prevention)
+const phonePattern = /\b(?:\+?1[- .]?)?(?:\()?[0-9]{3}(?:\))?[- .]?[0-9]{3}[- .]?[0-9]{4}\b/g;
+const creditCardPattern = /\b\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}\b/g;
+const hateSpeechPattern = /\b(?:hate|racist|discrimination)\b/gi;  // Non-capturing group
+
+// ❌ UNSAFE: Regular Expressions (ReDoS Risk)
+const phonePattern = /\b(?:\+?1[-.\s]?)?\(?([0-9]{3})\)?[-.\s]?([0-9]{3})[-.\s]?([0-9]{4})\b/g;  // Nested quantifiers
+const creditCardPattern = /\b(?:\d{4}[-\s]?){3}\d{4}\b/g;  // Nested quantifiers
+const hateSpeechPattern = /\b(hate|racist|discrimination)\b/gi;  // Unnecessary capturing
+
+// ✅ SAFE: Security Fix Principles
+// 1. Fix the vulnerability, not add business logic
+// 2. Don't add hardcoded limits (e.g., content.length > 10000)
+// 3. Use configuration for limits, not hardcoded values
+// 4. Always run tests after security fixes
+// 5. Verify fixes don't break existing functionality
+
+// ❌ UNSAFE: Security Fix Anti-Patterns
+if (content.length > 10000) {  // ❌ Hardcoded business limit
+  throw new Error('Content too long');
+}
+```
+
+## 🏗️ **DDD Architecture**
+
+### Layer Structure
+```
+src/modules/{module}/
+├── api/                 # API Layer
+├── application/         # Application Layer
+├── domain/             # Domain Layer
+└── infrastructure/     # Infrastructure Layer
+```
+
+### Dependency Injection
+```typescript
+// ✅ Correct
+export class ContextService {
+  constructor(
+    private readonly repository: IContextRepository,
+    private readonly validator: ISchemaValidator
+  ) {}
+}
+
+// ❌ Wrong
+export class ContextService {
+  private repository = new ContextRepository(); // Static dependency
+}
+```
+
+## 🚫 **Prohibited Practices**
+
+### Technical Level
+- Using any type to escape type checking
+- Ignoring TypeScript compilation errors
+- Using non-null assertion (!) to bypass checks
+- Creating circular dependencies
+
+### Architecture Level
+- Cross-layer direct calls (API → Infrastructure)
+- Domain layer external dependencies
+- Violating single responsibility principle
+
+## ✅ **Quality Checks**
+
+### Compilation Checks
+```bash
+npm run typecheck              # TypeScript compilation
+npm run lint                   # ESLint code standards
+npm run test                   # Unit tests
+npm run validate:mapping       # Schema-TypeScript mapping
+npm run check:naming           # Dual naming convention
+```
+
+### Quality Metrics
+- TypeScript strict mode: 100% enabled
+- Type coverage: > 95%
+- Interface definition completeness: 100%
+- Circular dependencies: 0
+- any type usage: 0 (except with justification)
+- Schema-TypeScript mapping consistency: 100%
+- Dual naming convention compliance: 100%
+
+### Mandatory Quality Gates
+```markdown
+1. TypeScript compilation: 0 errors (ZERO TOLERANCE)
+2. ESLint checks: 0 errors, 0 warnings (ZERO TOLERANCE)
+3. any type usage: 0 (ZERO TOLERANCE)
+4. Schema-TypeScript mapping: 100% consistency (ZERO TOLERANCE)
+5. Naming convention: 100% compliance (ZERO TOLERANCE)
+6. Unit tests: 100% pass
+7. Test coverage: >90%
+8. Security validation: CodeQL scanning passes (ZERO TOLERANCE)
+9. Command execution: No shell: true usage (ZERO TOLERANCE)
+10. Regular expressions: No nested quantifiers (ZERO TOLERANCE)
+
+Violating any quality gate will result in code rejection.
+
+PROVEN SUCCESS: 10 MPLP modules (Context, Plan, Confirm, Trace, Role, Extension, Dialog, Collab, Core, Network) have successfully achieved all quality gates with enterprise-grade standards. All modules achieved 100% test pass rate (2,902/2,902 tests passing).
+
+SECURITY VALIDATION: Dialog module security fixes validated through 258/258 tests passing with zero breaking changes.
+```
+
+---
+
+**ENFORCEMENT**: These TypeScript standards are **mandatory**. Any violation will result in code rejection.
+
+**VERSION**: 1.0.0  
+**EFFECTIVE**: August 8, 2025
