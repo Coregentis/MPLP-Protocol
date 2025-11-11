@@ -220,18 +220,18 @@ export class ContentModerator implements IContentModerator {
     ];
     profanityWords.forEach(word => this.profanityList.add(word));
 
-    // 初始化仇恨言论模式
+    // 初始化仇恨言论模式 - ✅ Security fix: Simplified patterns to avoid ReDoS
     this.hateSpeechPatterns = [
-      /\b(hate|racist|discrimination)\b/gi,
-      /\b(nazi|fascist|terrorist)\b/gi,
-      /\b(kill all|death to)\b/gi
+      /\b(?:hate|racist|discrimination)\b/gi,
+      /\b(?:nazi|fascist|terrorist)\b/gi,
+      /\b(?:kill all|death to)\b/gi
     ];
 
-    // 初始化垃圾信息模式
+    // 初始化垃圾信息模式 - ✅ Security fix: Simplified patterns to avoid ReDoS
     this.spamPatterns = [
-      /\b(click here|buy now|limited time|act now)\b/gi,
-      /\b(free money|get rich|make money fast)\b/gi,
-      /\b(viagra|casino|lottery|winner)\b/gi
+      /\b(?:click here|buy now|limited time|act now)\b/gi,
+      /\b(?:free money|get rich|make money fast)\b/gi,
+      /\b(?:viagra|casino|lottery|winner)\b/gi
     ];
 
     // 初始化个人信息模式

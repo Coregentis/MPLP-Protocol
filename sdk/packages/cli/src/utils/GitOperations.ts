@@ -255,15 +255,18 @@ export class GitOperations implements IGitOperations {
    * Run a Git command
    */
   private async runGitCommand(
-    cwd: string, 
-    args: string[], 
+    cwd: string,
+    args: string[],
     captureOutput: boolean = false
   ): Promise<string> {
+    // Sanitize git arguments to prevent command injection
+    const sanitizedArgs = this.sanitizeGitArgs(args);
+
     return new Promise((resolve, reject) => {
-      const child = spawn('git', args, {
+      const child = spawn('git', sanitizedArgs, {
         cwd,
         stdio: captureOutput ? 'pipe' : 'inherit',
-        shell: true
+        shell: false  // ✅ Security fix: Disable shell to prevent command injection
       });
 
       let output = '';
@@ -291,6 +294,19 @@ export class GitOperations implements IGitOperations {
       child.on('error', (err) => {
         reject(new Error(`Failed to run git command: ${err.message}`));
       });
+    });
+  }
+
+  /**
+   * Sanitize git arguments to prevent command injection
+   */
+  private sanitizeGitArgs(args: string[]): string[] {
+    return args.map(arg => {
+      // Allow only safe characters: alphanumeric, dash, underscore, dot, slash, space
+      if (!/^[a-zA-Z0-9\-_\.\/\s]+$/.test(arg)) {
+        throw new Error(`Invalid git argument: ${arg}`);
+      }
+      return arg;
     });
   }
 }

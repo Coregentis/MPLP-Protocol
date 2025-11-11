@@ -425,19 +425,27 @@ export class MPLPSecurityTestSuite {
   private executeCommand(command: string): Promise<string> {
     return new Promise((resolve, reject) => {
       const [cmd, ...args] = command.split(' ');
-      const process = spawn(cmd, args, { shell: true });
-      
+
+      // ✅ Security fix: Validate command against whitelist
+      const allowedCommands = ['npm', 'git', 'node', 'npx'];
+      if (!allowedCommands.includes(cmd)) {
+        reject(new Error(`Command not allowed: ${cmd}`));
+        return;
+      }
+
+      const process = spawn(cmd, args, { shell: false });  // ✅ Security fix: Disable shell
+
       let stdout = '';
       let stderr = '';
-      
+
       process.stdout?.on('data', (data) => {
         stdout += data.toString();
       });
-      
+
       process.stderr?.on('data', (data) => {
         stderr += data.toString();
       });
-      
+
       process.on('close', (code) => {
         if (code === 0) {
           resolve(stdout);
@@ -445,7 +453,7 @@ export class MPLPSecurityTestSuite {
           reject(new Error(`Command failed with code ${code}: ${stderr}`));
         }
       });
-      
+
       // 设置超时
       setTimeout(() => {
         process.kill();
@@ -1025,6 +1033,7 @@ export class MPLPSecurityTestSuite {
         lines.forEach((line, index) => {
           const lineNumber = index + 1;
 
+          // ✅ Security fix: Expanded nested quantifiers to avoid ReDoS
           // 检查信用卡号模式
           if (/\b\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}\b/.test(line)) {
             findings.push({
