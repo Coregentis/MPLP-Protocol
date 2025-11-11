@@ -356,12 +356,14 @@ export class FileWatcher extends EventEmitter implements IFileWatcher {
    */
   private globToRegex(pattern: string): RegExp {
     // Simple glob to regex conversion
+    // First escape all regex special characters except * and ?
     let regexPattern = pattern
-      .replace(/\./g, '\\.')
-      .replace(/\*\*/g, '.*')
-      .replace(/\*/g, '[^/]*')
-      .replace(/\?/g, '[^/]');
-    
+      .replace(/[.+^${}()|[\]\\]/g, '\\$&')  // 转义所有正则特殊字符（除了*和?）
+      .replace(/\*\*/g, '\x00')  // 临时标记**
+      .replace(/\*/g, '[^/]*')   // 将*转换为[^/]*（匹配除/外的任意字符）
+      .replace(/\x00/g, '.*')    // 将**转换为.*（匹配任意字符包括/）
+      .replace(/\?/g, '[^/]');   // 将?转换为[^/]（匹配除/外的单个字符）
+
     return new RegExp(`^${regexPattern}$`);
   }
 

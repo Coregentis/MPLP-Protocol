@@ -319,7 +319,12 @@ export class ConfigManager {
     const watcherId = `watcher_${Date.now()}_${Math.random()}`;
 
     // 将通配符模式转换为正则表达式
-    const regex = new RegExp('^' + pattern.replace(/\./g, '\\.').replace(/\*/g, '.*') + '$');
+    // 先转义所有正则表达式特殊字符，然后将通配符*转换为.*
+    const escapedPattern = pattern
+      .replace(/[.+?^${}()|[\]\\]/g, '\\$&')  // 转义所有正则特殊字符（除了*）
+      .replace(/\*/g, '.*');  // 将*转换为.*（匹配任意字符）
+
+    const regex = new RegExp('^' + escapedPattern + '$');
 
     // 保存模式监听器
     this.patternWatchers.set(watcherId, { pattern: regex, listener });
