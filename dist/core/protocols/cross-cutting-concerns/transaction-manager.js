@@ -8,6 +8,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MLPPTransactionManager = void 0;
+const crypto_1 = require("crypto");
 /**
  * MPLP事务管理器
  *
@@ -22,7 +23,7 @@ class MLPPTransactionManager {
      */
     async beginTransaction(_timeout) {
         // TODO: 等待CoreOrchestrator激活 - 实现事务开始逻辑
-        const transactionId = `tx-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+        const transactionId = `tx-${Date.now()}-${(0, crypto_1.randomBytes)(6).toString('hex')}`; // CWE-330 修复
         const transaction = {
             id: transactionId,
             status: 'active',
@@ -43,7 +44,7 @@ class MLPPTransactionManager {
             return false;
         }
         const operation = {
-            id: `op-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
+            id: `op-${Date.now()}-${(0, crypto_1.randomBytes)(6).toString('hex')}`, // CWE-330 修复
             ..._operation
         };
         transaction.operations.push(operation);

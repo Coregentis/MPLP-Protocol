@@ -6,6 +6,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CoreResourceService = void 0;
+const crypto_1 = require("crypto");
 /**
  * 资源管理服务类
  * 提供系统资源的智能分配和管理
@@ -198,7 +199,7 @@ class CoreResourceService {
         if (!availability.available) {
             throw new Error('Insufficient resources available');
         }
-        const allocationId = `alloc-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+        const allocationId = `alloc-${Date.now()}-${(0, crypto_1.randomBytes)(6).toString('hex')}`; // CWE-330 修复
         const allocationTime = new Date().toISOString();
         const allocation = {
             allocationId,
@@ -297,7 +298,7 @@ class CoreResourceService {
      * 执行负载重分配
      */
     async performLoadBalancing(workloadData, optimalAllocation) {
-        const balancingId = `balance-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+        const balancingId = `balance-${Date.now()}-${(0, crypto_1.randomBytes)(6).toString('hex')}`; // CWE-330 修复
         return {
             balancingId,
             workflowId: workloadData.workflowId,

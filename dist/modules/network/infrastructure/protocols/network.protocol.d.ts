@@ -121,7 +121,7 @@ export declare class NetworkProtocol implements IMLPPProtocol {
             active: boolean;
             errorCount: number;
             maxErrors: number;
-            lastHealthCheck: string;
+            lastHealthCheck: string | null;
         };
         metrics: {
             uptime: number;
@@ -131,11 +131,11 @@ export declare class NetworkProtocol implements IMLPPProtocol {
             lastOperationTime: string | null;
         };
         config: {
-            enableLogging: unknown;
-            enableMetrics: unknown;
-            enableCaching: unknown;
-            networkTimeout: unknown;
-            maxConnections: unknown;
+            enableLogging: {};
+            enableMetrics: {};
+            enableCaching: {};
+            networkTimeout: {};
+            maxConnections: {};
         };
         supportedOperations: string[];
         timestamp: string;
@@ -178,18 +178,18 @@ export declare class NetworkProtocol implements IMLPPProtocol {
         nodeCount: number;
         edgeCount: number;
         name: string;
-        description: string;
+        description: string | undefined;
         createdAt: Date;
-        updatedAt: Date;
+        updatedAt: Date | undefined;
     }>;
     updateNetwork(params: Record<string, unknown>): Promise<{
         networkId: string;
         status: string;
         updatedFields: string[];
-        name: string;
-        description: string;
-        topology: NetworkTopology;
-        updatedAt: Date;
+        name: string | undefined;
+        description: string | undefined;
+        topology: NetworkTopology | undefined;
+        updatedAt: Date | undefined;
     }>;
     deleteNetwork(params: Record<string, unknown>): Promise<{
         networkId: string;
@@ -242,7 +242,7 @@ export declare class NetworkProtocol implements IMLPPProtocol {
     }>;
     discoverNodes(params: Record<string, unknown>): Promise<{
         networkId: unknown;
-        nodes: any[];
+        nodes: never[];
     }>;
     routeMessage(params: Record<string, unknown>): Promise<{
         messageId: string;

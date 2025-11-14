@@ -52,7 +52,7 @@ export declare class CoreServicesCoordinator {
     constructor(managementService: CoreManagementService, monitoringService: CoreMonitoringService, orchestrationService: CoreOrchestrationService, resourceService: CoreResourceService, coreRepository: ICoreRepository, logger?: {
         info: (msg: string, meta?: Record<string, unknown>) => void;
         error: (msg: string, meta?: Record<string, unknown>) => void;
-    });
+    } | undefined);
     /**
      * 协调创建工作流 - 完整生命周期管理
      * 整合：管理服务创建 + 监控服务启动 + 资源服务分配 + 编排服务激活

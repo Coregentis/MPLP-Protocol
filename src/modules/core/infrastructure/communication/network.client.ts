@@ -759,13 +759,14 @@ export class DataSerializer {
       case 'protobuf':
       case 'msgpack':
       case 'avro':
-      case 'xml':
+      case 'xml': {
         const parsed = JSON.parse(data);
         // 验证解析结果 (CWE-502 修复)
         if (parsed === null || parsed === undefined) {
           throw new Error('Deserialization resulted in null or undefined');
         }
         return parsed;
+      }
       default:
         throw new Error(`Unsupported serialization format: ${this.config.format}`);
     }

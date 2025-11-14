@@ -33,7 +33,7 @@ export declare class TraceAnalyticsService {
     private readonly traceRepository;
     private readonly _analyticsEngine?;
     private readonly _anomalyDetector?;
-    constructor(traceRepository: ITraceRepository, _analyticsEngine?: IAnalyticsEngine, _anomalyDetector?: IAnomalyDetector);
+    constructor(traceRepository: ITraceRepository, _analyticsEngine?: IAnalyticsEngine | undefined, _anomalyDetector?: IAnomalyDetector | undefined);
     /**
      * 分析追踪性能
      */

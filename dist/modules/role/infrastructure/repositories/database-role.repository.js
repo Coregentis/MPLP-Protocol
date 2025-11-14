@@ -215,22 +215,38 @@ class DatabaseRoleRepository {
             description: row.description,
             role_type: row.role_type,
             status: row.status,
-            scope: row.scope_data ? JSON.parse(row.scope_data) : undefined,
-            permissions: row.permissions_data ? JSON.parse(row.permissions_data) : [],
-            inheritance: row.inheritance_data ? JSON.parse(row.inheritance_data) : undefined,
-            delegation: row.delegation_data ? JSON.parse(row.delegation_data) : undefined,
-            attributes: row.attributes_data ? JSON.parse(row.attributes_data) : undefined,
-            validation_rules: row.validation_rules_data ? JSON.parse(row.validation_rules_data) : undefined,
-            audit_settings: row.audit_settings_data ? JSON.parse(row.audit_settings_data) : undefined,
-            agents: row.agents_data ? JSON.parse(row.agents_data) : [],
-            team_configuration: row.team_configuration_data ? JSON.parse(row.team_configuration_data) : undefined,
-            performance_metrics: JSON.parse(row.performance_metrics_data),
-            monitoring_integration: JSON.parse(row.monitoring_integration_data),
-            version_history: JSON.parse(row.version_history_data),
-            search_metadata: JSON.parse(row.search_metadata_data),
+            // 安全解析JSON字段 (CWE-502 修复)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            scope: row.scope_data ? this.safeJsonParse(row.scope_data) : undefined,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            permissions: row.permissions_data ? this.safeJsonParse(row.permissions_data, []) : [],
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            inheritance: row.inheritance_data ? this.safeJsonParse(row.inheritance_data) : undefined,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            delegation: row.delegation_data ? this.safeJsonParse(row.delegation_data) : undefined,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            attributes: row.attributes_data ? this.safeJsonParse(row.attributes_data) : undefined,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            validation_rules: row.validation_rules_data ? this.safeJsonParse(row.validation_rules_data) : undefined,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            audit_settings: row.audit_settings_data ? this.safeJsonParse(row.audit_settings_data) : undefined,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            agents: row.agents_data ? this.safeJsonParse(row.agents_data, []) : [],
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            team_configuration: row.team_configuration_data ? this.safeJsonParse(row.team_configuration_data) : undefined,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            performance_metrics: this.safeJsonParse(row.performance_metrics_data, {}),
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            monitoring_integration: this.safeJsonParse(row.monitoring_integration_data, {}),
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            version_history: this.safeJsonParse(row.version_history_data, []),
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            search_metadata: this.safeJsonParse(row.search_metadata_data, {}),
             role_operation: row.role_operation,
-            event_integration: JSON.parse(row.event_integration_data),
-            audit_trail: JSON.parse(row.audit_trail_data),
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            event_integration: this.safeJsonParse(row.event_integration_data, {}),
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            audit_trail: this.safeJsonParse(row.audit_trail_data, []),
             protocol_version: row.protocol_version,
             timestamp: row.timestamp
         };
@@ -417,6 +433,21 @@ class DatabaseRoleRepository {
             totalPermissions: 0,
             totalAgents: 0
         };
+    }
+    /**
+     * 安全的JSON解析辅助方法 (CWE-502 修复)
+     */
+    safeJsonParse(jsonString, defaultValue) {
+        try {
+            const parsed = JSON.parse(jsonString);
+            if (parsed === null || parsed === undefined) {
+                return defaultValue;
+            }
+            return parsed;
+        }
+        catch {
+            return defaultValue;
+        }
     }
 }
 exports.DatabaseRoleRepository = DatabaseRoleRepository;

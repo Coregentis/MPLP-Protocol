@@ -22,7 +22,7 @@ export declare class TraceManagementService {
     private readonly _repository;
     private readonly _dataCollector?;
     private readonly _logger?;
-    constructor(_repository: ITraceRepository, _dataCollector?: IDataCollector, _logger?: ILogger);
+    constructor(_repository: ITraceRepository, _dataCollector?: IDataCollector | undefined, _logger?: ILogger | undefined);
     /**
      * 开始追踪
      */

@@ -9,6 +9,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CoreProtocol = void 0;
+const crypto_1 = require("crypto");
 /**
  * Core协议实现
  *
@@ -229,7 +230,7 @@ class CoreProtocol {
      * 生成操作ID
      */
     generateOperationId() {
-        return `core-op-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+        return `core-op-${Date.now()}-${(0, crypto_1.randomBytes)(6).toString('hex')}`; // CWE-330 修复
     }
     /**
      * 检查仓库健康状态

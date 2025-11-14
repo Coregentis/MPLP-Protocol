@@ -9,6 +9,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ExtensionSecurityService = void 0;
+const crypto_1 = require("crypto");
 /**
  * Extension安全服务实现
  */
@@ -198,13 +199,13 @@ class ExtensionSecurityService {
     }
     // ===== 私有辅助方法 =====
     generateScanId() {
-        return `scan-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+        return `scan-${Date.now()}-${(0, crypto_1.randomBytes)(6).toString('hex')}`; // CWE-330 修复
     }
     generateEventId() {
-        return `event-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+        return `event-${Date.now()}-${(0, crypto_1.randomBytes)(6).toString('hex')}`; // CWE-330 修复
     }
     generateReportId() {
-        return `report-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+        return `report-${Date.now()}-${(0, crypto_1.randomBytes)(6).toString('hex')}`; // CWE-330 修复
     }
     async auditExtensionPermissions(extension) {
         return await this.permissionManager.validatePermissions(extension.extensionId, extension.security.permissions);

@@ -3,13 +3,10 @@
  */
 module.exports = {
   moduleNameMapper: {
-    '^@public/(.*)$': '<rootDir>/src/public/$1',
-    '^@internal/(.*)$': '<rootDir>/src/internal/$1',
-    '^@core/(.*)$': '<rootDir>/src/public/modules/core/$1',
-    '^@performance/(.*)$': '<rootDir>/src/public/performance/$1',
-    '^@shared/(.*)$': '<rootDir>/src/public/shared/$1',
-    '^@utils/(.*)$': '<rootDir>/src/public/utils/$1',
-    '^@tests/(.*)$': '<rootDir>/tests/public/$1'
+    '^@/(.*)$': '<rootDir>/src/$1',
+    '^@core/(.*)$': '<rootDir>/src/core/$1',
+    '^@modules/(.*)$': '<rootDir>/src/modules/$1',
+    '^@shared/(.*)$': '<rootDir>/src/shared/$1'
   },
   preset: 'ts-jest',
   testEnvironment: 'node',

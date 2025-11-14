@@ -8,6 +8,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MLPPCoordinationManager = void 0;
+const crypto_1 = require("crypto");
 /**
  * MPLP协调管理器
  *
@@ -22,7 +23,7 @@ class MLPPCoordinationManager {
      */
     async coordinateOperation(_sourceModule, _targetModule, _operation, _payload) {
         // TODO: 等待CoreOrchestrator激活 - 实现模块间协调逻辑
-        const requestId = `coord-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        const requestId = `coord-${Date.now()}-${(0, crypto_1.randomBytes)(6).toString('hex')}`; // CWE-330 修复
         const request = {
             id: requestId,
             sourceModule: _sourceModule,

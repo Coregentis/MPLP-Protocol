@@ -285,21 +285,36 @@ export class DatabaseRoleRepository implements IRoleRepository {
       role_type: row.role_type as RoleType,
       status: row.status as RoleStatus,
       // 安全解析JSON字段 (CWE-502 修复)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       scope: row.scope_data ? this.safeJsonParse<any>(row.scope_data as string) : undefined,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       permissions: row.permissions_data ? this.safeJsonParse<any>(row.permissions_data as string, []) : [],
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       inheritance: row.inheritance_data ? this.safeJsonParse<any>(row.inheritance_data as string) : undefined,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       delegation: row.delegation_data ? this.safeJsonParse<any>(row.delegation_data as string) : undefined,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       attributes: row.attributes_data ? this.safeJsonParse<any>(row.attributes_data as string) : undefined,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       validation_rules: row.validation_rules_data ? this.safeJsonParse<any>(row.validation_rules_data as string) : undefined,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       audit_settings: row.audit_settings_data ? this.safeJsonParse<any>(row.audit_settings_data as string) : undefined,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       agents: row.agents_data ? this.safeJsonParse<any>(row.agents_data as string, []) : [],
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       team_configuration: row.team_configuration_data ? this.safeJsonParse<any>(row.team_configuration_data as string) : undefined,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       performance_metrics: this.safeJsonParse<any>(row.performance_metrics_data as string, {}),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       monitoring_integration: this.safeJsonParse<any>(row.monitoring_integration_data as string, {}),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       version_history: this.safeJsonParse<any>(row.version_history_data as string, []),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       search_metadata: this.safeJsonParse<any>(row.search_metadata_data as string, {}),
       role_operation: row.role_operation as 'create' | 'assign' | 'revoke' | 'update' | 'delete',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       event_integration: this.safeJsonParse<any>(row.event_integration_data as string, {}),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       audit_trail: this.safeJsonParse<any>(row.audit_trail_data as string, []),
       protocol_version: row.protocol_version as string,
       timestamp: row.timestamp as string

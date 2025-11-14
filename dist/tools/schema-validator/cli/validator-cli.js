@@ -94,6 +94,11 @@ class SchemaValidator {
         try {
             const content = fs.readFileSync(file, 'utf8');
             const schema = JSON.parse(content);
+            // 验证解析结果 (CWE-502 修复)
+            if (!schema || typeof schema !== 'object') {
+                result.errors.push('无效的Schema格式');
+                return result;
+            }
             // 验证是否是有效的JSON Schema
             this.ajv.compile(schema);
             // 检查必需字段
@@ -126,6 +131,11 @@ class SchemaValidator {
         try {
             const content = fs.readFileSync(file, 'utf8');
             const schema = JSON.parse(content);
+            // 验证解析结果 (CWE-502 修复)
+            if (!schema || typeof schema !== 'object') {
+                result.errors.push('无效的Schema格式');
+                return result;
+            }
             // 检查Schema版本
             if (schema.$schema && !schema.$schema.includes('draft-07')) {
                 result.warnings.push('建议使用JSON Schema Draft-07');
@@ -156,6 +166,11 @@ class SchemaValidator {
         try {
             const content = fs.readFileSync(file, 'utf8');
             const schema = JSON.parse(content);
+            // 验证解析结果 (CWE-502 修复)
+            if (!schema || typeof schema !== 'object') {
+                result.errors.push('无效的Schema格式');
+                return result;
+            }
             // 检查企业级要求
             if (!schema.examples) {
                 result.warnings.push('建议提供examples字段');

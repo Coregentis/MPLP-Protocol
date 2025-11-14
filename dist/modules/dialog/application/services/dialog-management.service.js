@@ -8,6 +8,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DialogManagementService = void 0;
+const crypto_1 = require("crypto");
 const dialog_entity_1 = require("../../domain/entities/dialog.entity");
 const dialog_mapper_1 = require("../../api/mappers/dialog.mapper");
 const dialog_flow_engine_1 = require("../../infrastructure/engines/dialog-flow.engine");
@@ -154,8 +155,8 @@ class DialogManagementService {
             if (!dialog.participants.includes(senderId)) {
                 throw new Error(`Sender ${senderId} is not a participant in dialog ${dialogId}`);
             }
-            // 生成消息ID
-            const messageId = `msg-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+            // 生成消息ID (CWE-330 修复)
+            const messageId = `msg-${Date.now()}-${(0, crypto_1.randomBytes)(6).toString('hex')}`;
             // 内容安全检查 (预留接口)
             await this._validateMessageContent(message.content);
             // 使用NLP处理器分析消息内容
@@ -501,7 +502,7 @@ class DialogManagementService {
         // TODO: 等待L3管理器激活安全验证
     }
     async _generateDialogId() {
-        return `dialog-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+        return `dialog-${Date.now()}-${(0, crypto_1.randomBytes)(6).toString('hex')}`; // CWE-330 修复
     }
     async _publishEvent(_eventType, _data) {
         // TODO: 等待L3管理器激活事件发布

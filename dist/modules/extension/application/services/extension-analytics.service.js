@@ -9,6 +9,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ExtensionAnalyticsService = void 0;
+const crypto_1 = require("crypto");
 /**
  * Extension分析服务实现
  */
@@ -181,7 +182,7 @@ class ExtensionAnalyticsService {
     }
     // ===== 私有辅助方法 =====
     generateReportId() {
-        return `report-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+        return `report-${Date.now()}-${(0, crypto_1.randomBytes)(6).toString('hex')}`; // CWE-330 修复
     }
     async generateSummary(extensionIds, _usageAnalysis, performanceAnalysis, anomalyDetection) {
         const activeExtensions = await this.extensionRepository.findByFilter({

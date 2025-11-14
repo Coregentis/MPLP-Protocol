@@ -202,8 +202,21 @@ class RoleController {
                 page: parseInt(req.query.page, 10),
                 limit: parseInt(req.query.limit, 10) || 10
             } : undefined;
-            const filter = req.query.filter ? JSON.parse(req.query.filter) : undefined;
-            const sort = req.query.sort ? JSON.parse(req.query.sort) : undefined;
+            // 安全解析查询参数 (CWE-502 修复)
+            let filter;
+            let sort;
+            if (req.query.filter) {
+                const parsed = JSON.parse(req.query.filter);
+                if (parsed && typeof parsed === 'object') {
+                    filter = parsed;
+                }
+            }
+            if (req.query.sort) {
+                const parsed = JSON.parse(req.query.sort);
+                if (parsed && typeof parsed === 'object') {
+                    sort = parsed;
+                }
+            }
             const roles = await this.roleService.getAllRoles(pagination, filter, sort);
             // 返回完整的PaginatedResult格式
             res.status(200).json({

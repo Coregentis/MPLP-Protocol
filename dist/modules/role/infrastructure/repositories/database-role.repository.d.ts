@@ -146,5 +146,9 @@ export declare class DatabaseRoleRepository implements IRoleRepository {
         totalPermissions: number;
         totalAgents: number;
     }>;
+    /**
+     * 安全的JSON解析辅助方法 (CWE-502 修复)
+     */
+    private safeJsonParse;
 }
 //# sourceMappingURL=database-role.repository.d.ts.map

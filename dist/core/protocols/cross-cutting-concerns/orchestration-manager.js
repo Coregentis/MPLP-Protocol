@@ -8,6 +8,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MLPPOrchestrationManager = void 0;
+const crypto_1 = require("crypto");
 /**
  * MPLP编排管理器
  *
@@ -30,7 +31,7 @@ class MLPPOrchestrationManager {
      */
     async startWorkflow(_definitionId, _parameters) {
         // TODO: 等待CoreOrchestrator激活 - 实现工作流启动逻辑
-        const instanceId = `workflow-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        const instanceId = `workflow-${Date.now()}-${(0, crypto_1.randomBytes)(6).toString('hex')}`; // CWE-330 修复
         const instance = {
             id: instanceId,
             definitionId: _definitionId,
@@ -46,7 +47,7 @@ class MLPPOrchestrationManager {
     async createOrchestrationPlan(_workflowConfig, _context) {
         // TODO: 等待CoreOrchestrator激活 - 实现编排计划创建逻辑
         return {
-            planId: `plan-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            planId: `plan-${Date.now()}-${(0, crypto_1.randomBytes)(6).toString('hex')}`, // CWE-330 修复
             stages: _workflowConfig?.stages || [],
             executionOrder: 'sequential',
             estimatedDuration: 1000,
@@ -59,7 +60,7 @@ class MLPPOrchestrationManager {
     async executeOrchestrationPlan(_orchestrationPlan) {
         // TODO: 等待CoreOrchestrator激活 - 实现编排计划执行逻辑
         return {
-            executionId: `exec-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            executionId: `exec-${Date.now()}-${(0, crypto_1.randomBytes)(6).toString('hex')}`, // CWE-330 修复
             planId: _orchestrationPlan?.planId || 'unknown',
             status: 'completed',
             results: {

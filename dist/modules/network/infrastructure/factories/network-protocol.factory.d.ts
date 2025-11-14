@@ -26,7 +26,7 @@ export declare class NetworkProtocolFactory {
      * @param {string} instanceId 实例ID
      * @returns {NetworkProtocol|null} 协议实例
      */
-    getProtocol(instanceId?: string): NetworkProtocol;
+    getProtocol(instanceId?: string): NetworkProtocol | null;
     /**
      * 销毁协议实例
      * @param {string} instanceId 实例ID
@@ -48,7 +48,7 @@ export declare class NetworkProtocolFactory {
         initialized: boolean;
         active: boolean;
         errorCount: number;
-        lastHealthCheck: string;
+        lastHealthCheck: string | null;
         metrics: {
             operationsCount: number;
             averageResponseTime: number;
@@ -56,12 +56,25 @@ export declare class NetworkProtocolFactory {
             lastOperationTime: string | null;
         };
         timestamp: string;
-    };
+    } | null;
     /**
      * 获取所有协议实例状态
      * @returns {Array<Object>} 所有实例状态
      */
-    getAllProtocolStatus(): any[];
+    getAllProtocolStatus(): {
+        instanceId: string;
+        initialized: boolean;
+        active: boolean;
+        errorCount: number;
+        lastHealthCheck: string | null;
+        metrics: {
+            operationsCount: number;
+            averageResponseTime: number;
+            errorRate: number;
+            lastOperationTime: string | null;
+        };
+        timestamp: string;
+    }[];
     /**
      * 重启协议实例
      * @param {string} instanceId 实例ID

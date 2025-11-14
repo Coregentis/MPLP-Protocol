@@ -8,6 +8,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NetworkProtocolFactory = void 0;
+const crypto_1 = require("crypto");
 const network_protocol_1 = require("../protocols/network.protocol");
 const factory_1 = require("../../../../core/protocols/cross-cutting-concerns/factory");
 /**
@@ -189,7 +190,7 @@ class NetworkProtocolFactory {
         const errors = [];
         for (const config of configs) {
             try {
-                const instanceId = config.instanceId || `instance-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+                const instanceId = config.instanceId || `instance-${Date.now()}-${(0, crypto_1.randomBytes)(6).toString('hex')}`; // CWE-330 修复
                 const protocol = await this.createProtocol(instanceId, config);
                 if (protocol) {
                     protocols.push(protocol);

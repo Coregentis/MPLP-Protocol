@@ -15,9 +15,9 @@ export declare class NetworkNode {
     readonly nodeType: NodeType;
     status: NodeStatus;
     capabilities: NodeCapability[];
-    address?: NodeAddress;
+    address?: NodeAddress | undefined;
     metadata: NodeMetadata;
-    constructor(nodeId: string, agentId: string, nodeType: NodeType, status: NodeStatus, capabilities?: NodeCapability[], address?: NodeAddress, metadata?: NodeMetadata);
+    constructor(nodeId: string, agentId: string, nodeType: NodeType, status: NodeStatus, capabilities?: NodeCapability[], address?: NodeAddress | undefined, metadata?: NodeMetadata);
     /**
      * 更新节点状态
      */

@@ -10,6 +10,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ContextManagementService = void 0;
+const crypto_1 = require("crypto");
 const context_entity_1 = require("../../domain/entities/context.entity");
 /**
  * Context核心管理服务
@@ -468,7 +469,7 @@ class ContextManagementService {
      * 生成上下文ID
      */
     generateContextId() {
-        return `context-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+        return `context-${Date.now()}-${(0, crypto_1.randomBytes)(6).toString('hex')}`; // CWE-330 修复
     }
     /**
      * 验证创建数据

@@ -6,15 +6,7 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "removeComments": false,
-    /* Relax strict checks for build */
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "noImplicitReturns": false,
-    "noUncheckedIndexedAccess": false,
-    "strictNullChecks": false,
-    "strictPropertyInitialization": false,
-    "noImplicitAny": false
+    "removeComments": false
   },
   "include": [
     "src/**/*"

@@ -110,7 +110,7 @@ export declare class RolePerformanceService {
     private config;
     private metricsTimer?;
     private cleanupTimer?;
-    constructor(config?: Partial<RolePerformanceConfig>, mlppPerformanceMonitor?: MLPPPerformanceMonitor);
+    constructor(config?: Partial<RolePerformanceConfig>, mlppPerformanceMonitor?: MLPPPerformanceMonitor | undefined);
     /**
      * 开始操作追踪
      */

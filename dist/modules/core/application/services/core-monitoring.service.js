@@ -6,6 +6,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CoreMonitoringService = void 0;
+const crypto_1 = require("crypto");
 /**
  * 监控管理服务类
  * 提供系统监控、健康检查和告警管理功能
@@ -53,8 +54,8 @@ class CoreMonitoringService {
         await this.validateAlertData(alertData);
         // 2. 评估告警严重程度
         const severity = await this.assessAlertSeverity(alertData);
-        // 3. 生成告警ID
-        const alertId = alertData.alertId || `alert-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+        // 3. 生成告警ID (CWE-330 修复: 使用加密安全的随机数)
+        const alertId = alertData.alertId || `alert-${Date.now()}-${(0, crypto_1.randomBytes)(6).toString('hex')}`;
         // 4. 处理告警
         const processedAlert = {
             ...alertData,
@@ -331,7 +332,7 @@ class CoreMonitoringService {
                 break;
         }
         return {
-            alertId: alertData.alertId || `alert-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            alertId: alertData.alertId || `alert-${Date.now()}-${(0, crypto_1.randomBytes)(6).toString('hex')}`, // CWE-330 修复
             processed: true,
             actions,
             notifications,
@@ -389,7 +390,7 @@ class CoreMonitoringService {
      * 创建监控报告
      */
     async createMonitoringReport(data, trends, reportType, period) {
-        const reportId = `report-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+        const reportId = `report-${Date.now()}-${(0, crypto_1.randomBytes)(6).toString('hex')}`; // CWE-330 修复
         return {
             reportId,
             reportType,

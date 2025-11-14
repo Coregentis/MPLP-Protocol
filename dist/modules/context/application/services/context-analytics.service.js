@@ -10,6 +10,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ContextAnalyticsService = void 0;
+const crypto_1 = require("crypto");
 /**
  * Context分析服务
  *
@@ -203,7 +204,7 @@ class ContextAnalyticsService {
                     throw new Error(`Unsupported report type: ${reportType}`);
             }
             const report = {
-                reportId: `report-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+                reportId: `report-${Date.now()}-${(0, crypto_1.randomBytes)(6).toString('hex')}`, // CWE-330 修复
                 contextId,
                 reportType,
                 generatedAt: new Date(),

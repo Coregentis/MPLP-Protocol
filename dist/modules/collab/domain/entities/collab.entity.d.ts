@@ -12,8 +12,8 @@ export declare class CollabParticipant {
     status: 'active' | 'inactive' | 'pending' | 'suspended';
     readonly capabilities: string[];
     readonly joinedAt: Date;
-    lastActivity?: Date;
-    constructor(participantId: UUID, agentId: UUID, roleId: UUID, status: 'active' | 'inactive' | 'pending' | 'suspended', capabilities?: string[], joinedAt?: Date, lastActivity?: Date);
+    lastActivity?: Date | undefined;
+    constructor(participantId: UUID, agentId: UUID, roleId: UUID, status: 'active' | 'inactive' | 'pending' | 'suspended', capabilities?: string[], joinedAt?: Date, lastActivity?: Date | undefined);
     activate(): void;
     deactivate(): void;
     suspend(): void;
@@ -24,8 +24,8 @@ export declare class CollabParticipant {
 export declare class CollabCoordinationStrategy {
     type: 'centralized' | 'distributed' | 'hierarchical' | 'peer_to_peer';
     decisionMaking: 'consensus' | 'majority' | 'weighted' | 'coordinator';
-    coordinatorId?: UUID;
-    constructor(type: 'centralized' | 'distributed' | 'hierarchical' | 'peer_to_peer', decisionMaking: 'consensus' | 'majority' | 'weighted' | 'coordinator', coordinatorId?: UUID);
+    coordinatorId?: UUID | undefined;
+    constructor(type: 'centralized' | 'distributed' | 'hierarchical' | 'peer_to_peer', decisionMaking: 'consensus' | 'majority' | 'weighted' | 'coordinator', coordinatorId?: UUID | undefined);
     requiresCoordinator(): boolean;
     supportsDecisionMaking(mechanism: string): boolean;
     validateConfiguration(): boolean;

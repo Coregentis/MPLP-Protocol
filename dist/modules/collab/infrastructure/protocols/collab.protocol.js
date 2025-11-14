@@ -9,6 +9,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CollabProtocol = void 0;
+const crypto_1 = require("crypto");
 /**
  * Collab协议实现
  *
@@ -40,7 +41,7 @@ class CollabProtocol {
             this.validateRequest(request);
             // 将标准MLPPRequest转换为CollabProtocolRequest
             const collabRequest = {
-                requestId: request.requestId || `collab-req-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
+                requestId: request.requestId || `collab-req-${Date.now()}-${(0, crypto_1.randomBytes)(6).toString('hex')}`, // CWE-330 修复
                 timestamp: request.timestamp || new Date().toISOString(),
                 operation: request.operation,
                 payload: request.payload,
@@ -174,7 +175,7 @@ class CollabProtocol {
             }
             // ===== 5. 事件发布 (基于实际接口) =====
             await this.eventBusManager.publish({
-                id: `event-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
+                id: `event-${Date.now()}-${(0, crypto_1.randomBytes)(6).toString('hex')}`, // CWE-330 修复
                 type: `collab_${request.operation}_completed`,
                 source: 'collab_protocol',
                 payload: result.data || {},
@@ -381,7 +382,7 @@ class CollabProtocol {
         }
         // 发布错误事件 (基于实际接口)
         await this.eventBusManager.publish({
-            id: `error-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
+            id: `error-${Date.now()}-${(0, crypto_1.randomBytes)(6).toString('hex')}`, // CWE-330 修复
             type: `collab_${request.operation}_failed`,
             source: 'collab_protocol',
             payload: { error: error instanceof Error ? error.message : 'Unknown error' },

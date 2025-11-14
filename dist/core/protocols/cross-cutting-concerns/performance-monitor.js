@@ -8,6 +8,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MLPPPerformanceMonitor = void 0;
+const crypto_1 = require("crypto");
 /**
  * MPLP性能监控管理器
  *
@@ -57,7 +58,7 @@ class MLPPPerformanceMonitor {
      * 开始操作跟踪
      */
     startTrace(operationName, metadata) {
-        const operationId = `trace-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+        const operationId = `trace-${Date.now()}-${(0, crypto_1.randomBytes)(6).toString('hex')}`; // CWE-330 修复
         const trace = {
             operationId,
             operationName,

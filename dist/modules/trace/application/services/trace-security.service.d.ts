@@ -78,7 +78,7 @@ export declare class TraceSecurityService {
     private readonly securityManager?;
     private readonly auditLogger?;
     private readonly dataProtector?;
-    constructor(traceRepository: ITraceRepository, securityManager?: SecurityManager, auditLogger?: IAuditLogger, dataProtector?: IDataProtector);
+    constructor(traceRepository: ITraceRepository, securityManager?: SecurityManager | undefined, auditLogger?: IAuditLogger | undefined, dataProtector?: IDataProtector | undefined);
     /**
      * 验证追踪访问权限
      */

@@ -7,6 +7,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ConfirmSecurityService = void 0;
+const crypto_1 = require("crypto");
 /**
  * 确认安全服务
  * 基于重构指南第386-629行实现，严格遵循Schema驱动开发
@@ -177,7 +178,7 @@ class ConfirmSecurityService {
      * @returns 审计ID
      */
     generateAuditId() {
-        return `audit-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        return `audit-${Date.now()}-${(0, crypto_1.randomBytes)(6).toString('hex')}`; // CWE-330 修复
     }
     /**
      * 评估操作风险级别 - 基于Schema risk_assessment.overall_risk_level

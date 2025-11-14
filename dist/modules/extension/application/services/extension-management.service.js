@@ -9,6 +9,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ExtensionManagementService = void 0;
+const crypto_1 = require("crypto");
 const extension_entity_1 = require("../../domain/entities/extension.entity");
 /**
  * Extension管理服务类
@@ -519,7 +520,7 @@ class ExtensionManagementService {
      * 生成扩展ID
      */
     generateExtensionId() {
-        return `ext-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+        return `ext-${Date.now()}-${(0, crypto_1.randomBytes)(6).toString('hex')}`; // CWE-330 修复
     }
     /**
      * 准备扩展数据

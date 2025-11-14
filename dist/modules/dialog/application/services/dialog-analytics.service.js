@@ -8,6 +8,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DialogAnalyticsService = void 0;
+const crypto_1 = require("crypto");
 const analytics_engine_1 = require("../../infrastructure/engines/analytics.engine");
 const nlp_processor_1 = require("../../infrastructure/processors/nlp.processor");
 /**
@@ -400,7 +401,7 @@ class DialogAnalyticsService {
         }));
     }
     generateReportId() {
-        return `report-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+        return `report-${Date.now()}-${(0, crypto_1.randomBytes)(6).toString('hex')}`; // CWE-330 修复
     }
     // ===== 预测分析私有方法 =====
     generatePredictedValue(predictionType, dayOffset) {

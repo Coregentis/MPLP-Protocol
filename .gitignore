@@ -82,6 +82,10 @@ cache/
 test-results/
 playwright-report/
 
+# Audit reports
+audit-report.json
+npm-audit.json
+
 # =============================================================================
 # MPLP SPECIFIC - BUILD AND DISTRIBUTION
 # =============================================================================
