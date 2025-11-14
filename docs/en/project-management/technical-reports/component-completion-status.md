@@ -1,4 +1,4 @@
-# MPLP V1.1.0-beta Component Completion Status Update
+# MPLP V1.1.0 Component Completion Status Update
 
 > **🌐 Language Navigation**: [English](component-completion-status.md) | [中文](../../../zh-CN/project-management/technical-reports/component-completion-status.md)
 

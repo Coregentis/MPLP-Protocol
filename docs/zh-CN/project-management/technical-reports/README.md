@@ -3,18 +3,18 @@
 > **🌐 语言导航**: [English](../../../en/project-management/technical-reports/README.md) | [中文](README.md)
 
 
-> **报告集合**: V1.1.0-beta 技术架构报告  
+> **报告集合**: V1.1.0 技术架构报告  
 > **状态**: 完整技术分析  
 > **更新时间**: 2025-09-20  
 
 ## 🏗️ **技术报告概览**
 
-本节包含记录MPLP v1.1.0-beta SDK架构、兼容性和系统设计方面的综合技术报告。这些报告提供了技术成就、架构决策和系统能力的深入分析。
+本节包含记录MPLP v1.1.0 SDK架构、兼容性和系统设计方面的综合技术报告。这些报告提供了技术成就、架构决策和系统能力的深入分析。
 
 ### **报告分类**
 
 #### **🔧 架构和继承**
-- **[架构继承报告](architecture-inheritance.md)** - v1.1.0-beta SDK中v1.0 Alpha架构继承的验证
+- **[架构继承报告](architecture-inheritance.md)** - v1.1.0 SDK中v1.0 Alpha架构继承的验证
 - **[组件完成增强](component-completion-enhancement.md)** - 组件完成增强策略和实施
 - **[组件完成状态](component-completion-status.md)** - 所有SDK组件的当前状态
 - **[组件完成验证](component-completion-verification.md)** - 组件完成的验证结果

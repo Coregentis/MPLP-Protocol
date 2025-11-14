@@ -104,7 +104,7 @@ describe('SimpleAgent', () => {
     mockMPLP = {
       initialize: jest.fn().mockResolvedValue(undefined),
       getModule: jest.fn(),
-      getVersion: jest.fn().mockReturnValue('1.1.0-beta'),
+      getVersion: jest.fn().mockReturnValue('1.1.0'),
       getLoadedModules: jest.fn().mockReturnValue(['context', 'plan']),
       isInitialized: jest.fn().mockReturnValue(true),
       getConfig: jest.fn()
@@ -189,7 +189,7 @@ describe('SimpleAgent', () => {
       const status = agent.getStatus();
 
       expect(status.initialized).toBe(true);
-      expect(status.version).toBe('1.1.0-beta');
+      expect(status.version).toBe('1.1.0');
       expect(status.modules).toEqual(['context', 'plan']);
       expect(status.tasksExecuted).toBe(0);
     });
@@ -217,7 +217,7 @@ export function createMockMPLP(overrides?: Partial<MPLP>): jest.Mocked<MPLP> {
   return {
     initialize: jest.fn().mockResolvedValue(undefined),
     getModule: jest.fn(),
-    getVersion: jest.fn().mockReturnValue('1.1.0-beta'),
+    getVersion: jest.fn().mockReturnValue('1.1.0'),
     getLoadedModules: jest.fn().mockReturnValue([]),
     isInitialized: jest.fn().mockReturnValue(true),
     getConfig: jest.fn().mockReturnValue({}),
@@ -458,7 +458,7 @@ Following this guide will help you:
 
 ---
 
-**Version**: v1.1.0-beta  
+**Version**: v1.1.0  
 **Last Updated**: 2025-10-22  
 **Maintainer**: MPLP Team
 

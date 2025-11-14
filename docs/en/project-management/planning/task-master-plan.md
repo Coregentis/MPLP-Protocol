@@ -1,4 +1,4 @@
-# MPLP v1.1.0-beta Master Task Planning Document
+# MPLP v1.1.0 Master Task Planning Document
 
 > **🌐 Language Navigation**: [English](task-master-plan.md) | [中文](../../../zh-CN/project-management/planning/task-master-plan.md)
 
@@ -45,7 +45,7 @@ Milestone 1 (Week 4):  Core SDK Alpha Release
 Milestone 2 (Week 7):  CLI Tools Alpha Release  
 Milestone 3 (Week 10): Platform Adapters Alpha Release
 Milestone 4 (Week 12): Example Applications Alpha Release
-Milestone 5 (Week 16): v1.1.0-beta Official Release
+Milestone 5 (Week 16): v1.1.0 Official Release
 ```
 
 ## 🏗️ **Technical Architecture Planning**
@@ -53,20 +53,20 @@ Milestone 5 (Week 16): v1.1.0-beta Official Release
 ### **SDK Package Structure**
 ```
 @mplp/
-├── sdk-core@1.1.0-beta              # Core SDK
-├── agent-builder@1.1.0-beta         # Agent building tools
-├── orchestrator@1.1.0-beta          # Multi-agent orchestration
-├── cli@1.1.0-beta                   # Command-line tools
-├── studio@1.1.0-beta                # Visual development environment
-├── dev-tools@1.1.0-beta             # Development tools
+├── sdk-core@1.1.0              # Core SDK
+├── agent-builder@1.1.0         # Agent building tools
+├── orchestrator@1.1.0          # Multi-agent orchestration
+├── cli@1.1.0                   # Command-line tools
+├── studio@1.1.0                # Visual development environment
+├── dev-tools@1.1.0             # Development tools
 ├── platform-adapters/               # Platform adapters
-│   ├── twitter@1.1.0-beta
-│   ├── linkedin@1.1.0-beta
-│   ├── github@1.1.0-beta
-│   ├── discord@1.1.0-beta
-│   ├── slack@1.1.0-beta
-│   ├── reddit@1.1.0-beta
-│   └── medium@1.1.0-beta
+│   ├── twitter@1.1.0
+│   ├── linkedin@1.1.0
+│   ├── github@1.1.0
+│   ├── discord@1.1.0
+│   ├── slack@1.1.0
+│   ├── reddit@1.1.0
+│   └── medium@1.1.0
 └── examples/                        # Example applications
     ├── coregentis-bot@1.0.0
     ├── workflow-automation@1.0.0
@@ -295,7 +295,7 @@ mplp-v1.0/                           # Existing project root
 
 - [Phase Breakdown](phase-breakdown.md)
 - [Final Verification Report](final-verification-report.md)
-- [V1.1.0-beta Verification Report](v1-1-0-beta-verification-report.md)
+- [V1.1.0 Verification Report](v1-1-0-beta-verification-report.md)
 - [Project Management Overview](../README.md)
 
 ---

@@ -4,7 +4,7 @@
 
 
 > **Package**: @mplp/studio  
-> **Version**: v1.1.0-beta  
+> **Version**: v1.1.0  
 > **Last Updated**: 2025-09-20  
 > **Status**: ✅ Production Ready  
 
@@ -77,7 +77,7 @@ import { createStudioApplication, StudioConfig } from '@mplp/studio';
 
 // Create Studio application
 const config: StudioConfig = {
-  version: '1.1.0-beta',
+  version: '1.1.0',
   environment: 'development',
   server: {
     port: 3000,
@@ -517,7 +517,7 @@ import {
 
 // Create comprehensive Studio environment
 const studio = createStudioApplication({
-  version: '1.1.0-beta',
+  version: '1.1.0',
   environment: 'development',
   server: {
     port: 3000,
@@ -573,7 +573,7 @@ import { StudioApplication } from '@mplp/studio';
 
 // Enterprise Studio configuration
 const enterpriseStudio = new StudioApplication({
-  version: '1.1.0-beta',
+  version: '1.1.0',
   environment: 'production',
   server: {
     port: 443,

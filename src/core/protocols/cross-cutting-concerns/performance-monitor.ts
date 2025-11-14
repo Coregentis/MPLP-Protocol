@@ -1,10 +1,12 @@
 /**
  * MPLP性能监控管理器
- * 
+ *
  * @description L3层统一性能监控，提供指标收集、分析和告警功能
  * @version 1.0.0
  * @integration 与所有10个模块统一集成
  */
+
+import { randomBytes } from 'crypto';
 
 /**
  * 性能指标接口
@@ -113,8 +115,8 @@ export class MLPPPerformanceMonitor {
    * 开始操作跟踪
    */
   startTrace(operationName: string, metadata?: Record<string, unknown>): string {
-    const operationId = `trace-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
-    
+    const operationId = `trace-${Date.now()}-${randomBytes(6).toString('hex')}`; // CWE-330 修复
+
     const trace: OperationTrace = {
       operationId,
       operationName,

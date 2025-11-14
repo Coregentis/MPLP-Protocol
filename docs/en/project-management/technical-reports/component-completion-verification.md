@@ -1,4 +1,4 @@
-# MPLP V1.1.0-beta Component Completion Verification Report
+# MPLP V1.1.0 Component Completion Verification Report
 
 > **🌐 Language Navigation**: [English](component-completion-verification.md) | [中文](../../../zh-CN/project-management/technical-reports/component-completion-verification.md)
 

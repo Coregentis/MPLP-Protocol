@@ -5,7 +5,7 @@
 
 
 > **项目状态**: 🚀 **企业级发布就绪**
-> **当前版本**: v1.0 Alpha (协议) + v1.1.0-beta (SDK)
+> **当前版本**: v1.0 Alpha (协议) + v1.1.0 (SDK)
 > **更新时间**: 2025-09-20
 
 <div align="center">
@@ -32,12 +32,12 @@ npm install mplp@beta
 
 # 验证安装
 node -e "const mplp = require('mplp'); console.log('MPLP版本:', mplp.MPLP_VERSION);"
-# 预期输出: MPLP版本: 1.1.0-beta
+# 预期输出: MPLP版本: 1.1.0
 ```
 
 ### **双版本架构**
 - **🏗️ MPLP v1.0 Alpha**: L1-L3协议栈，10个企业级模块，100%完成
-- **🛠️ MPLP v1.1.0-beta**: 完整SDK生态系统，开发者工具链
+- **🛠️ MPLP v1.1.0**: 完整SDK生态系统，开发者工具链
 
 ### **核心特性**
 - ✅ **企业级质量**: 2,902测试（2,902通过，0失败）= 100%通过率，零技术债务
@@ -58,7 +58,7 @@ node -e "const mplp = require('mplp'); console.log('MPLP版本:', mplp.MPLP_VERS
 - [API参考](zh-CN/api-reference/README.md) - 10个核心模块API
 - [English Docs](en/modules/README.md) - Complete English Documentation
 
-### **🛠️ SDK文档 (v1.1.0-beta)**
+### **🛠️ SDK文档 (v1.1.0)**
 - [SDK概览](zh-CN/sdk/README.md) - SDK生态系统介绍
 - [API参考](zh-CN/sdk-api/README.md) - 完整API文档
 - [开发指南](zh-CN/guides/development/README.md) - 最佳实践和模式

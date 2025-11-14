@@ -377,15 +377,25 @@ export class PlanSecurityService {
    */
   async decryptSensitiveData(encryptedData: string): Promise<Record<string, unknown>> {
     if (!this.dataProtectionConfig.encryptionEnabled) {
-      return JSON.parse(encryptedData);
+      const parsed = JSON.parse(encryptedData);
+      // 验证解析结果 (CWE-502 修复)
+      if (!parsed || typeof parsed !== 'object') {
+        throw new Error('Invalid decrypted data format');
+      }
+      return parsed;
     }
 
     // 简化实现 - 实际应该使用真正的解密算法
     const decrypted = Buffer.from(encryptedData, 'base64').toString();
-    
+
     this.logger.debug('Data decrypted');
 
-    return JSON.parse(decrypted);
+    const parsed = JSON.parse(decrypted);
+    // 验证解析结果 (CWE-502 修复)
+    if (!parsed || typeof parsed !== 'object') {
+      throw new Error('Invalid decrypted data format');
+    }
+    return parsed;
   }
 
   // ===== 审计日志 =====

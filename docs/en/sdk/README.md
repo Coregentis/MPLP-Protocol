@@ -1,9 +1,9 @@
-# MPLP SDK v1.1.0-beta
+# MPLP SDK v1.1.0
 
 > **🌐 Language Navigation**: [English](README.md) | [中文](../../zh-CN/sdk/README.md)
 
 
-> **SDK Version**: v1.1.0-beta  
+> **SDK Version**: v1.1.0  
 > **Base Protocol**: MPLP v1.0 Alpha  
 > **Last Updated**: 2025-09-20  
 > **Status**: 🚀 Development Ready  

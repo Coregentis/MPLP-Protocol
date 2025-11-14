@@ -1,4 +1,4 @@
-# MPLP v1.1.0-beta 主任务规划文档
+# MPLP v1.1.0 主任务规划文档
 
 > **🌐 语言导航**: [English](../../../en/project-management/planning/task-master-plan.md) | [中文](task-master-plan.md)
 
@@ -45,7 +45,7 @@
 里程碑2 (第7周):  CLI工具Alpha发布  
 里程碑3 (第10周): 平台适配器Alpha发布
 里程碑4 (第12周): 示例应用Alpha发布
-里程碑5 (第16周): v1.1.0-beta正式发布
+里程碑5 (第16周): v1.1.0正式发布
 ```
 
 ## 🏗️ **技术架构规划**
@@ -53,20 +53,20 @@
 ### **SDK包结构**
 ```
 @mplp/
-├── sdk-core@1.1.0-beta              # 核心SDK
-├── agent-builder@1.1.0-beta         # Agent构建工具
-├── orchestrator@1.1.0-beta          # 多Agent编排
-├── cli@1.1.0-beta                   # 命令行工具
-├── studio@1.1.0-beta                # 可视化开发环境
-├── dev-tools@1.1.0-beta             # 开发工具
+├── sdk-core@1.1.0              # 核心SDK
+├── agent-builder@1.1.0         # Agent构建工具
+├── orchestrator@1.1.0          # 多Agent编排
+├── cli@1.1.0                   # 命令行工具
+├── studio@1.1.0                # 可视化开发环境
+├── dev-tools@1.1.0             # 开发工具
 ├── platform-adapters/               # 平台适配器
-│   ├── twitter@1.1.0-beta
-│   ├── linkedin@1.1.0-beta
-│   ├── github@1.1.0-beta
-│   ├── discord@1.1.0-beta
-│   ├── slack@1.1.0-beta
-│   ├── reddit@1.1.0-beta
-│   └── medium@1.1.0-beta
+│   ├── twitter@1.1.0
+│   ├── linkedin@1.1.0
+│   ├── github@1.1.0
+│   ├── discord@1.1.0
+│   ├── slack@1.1.0
+│   ├── reddit@1.1.0
+│   └── medium@1.1.0
 └── examples/                        # 示例应用
     ├── coregentis-bot@1.0.0
     ├── workflow-automation@1.0.0
@@ -295,7 +295,7 @@ mplp-v1.0/                           # 现有项目根目录
 
 - [阶段分解](phase-breakdown.md)
 - [最终验证报告](final-verification-report.md)
-- [V1.1.0-beta验证报告](v1-1-0-beta-verification-report.md)
+- [V1.1.0验证报告](v1-1-0-beta-verification-report.md)
 - [项目管理概览](../README.md)
 
 ---

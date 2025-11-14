@@ -44,11 +44,11 @@ cd my-mplp-app
 # 初始化npm项目
 npm init -y
 
-# 安装MPLP v1.1.0-beta
+# 安装MPLP v1.1.0
 npm install mplp@beta
 
 # 或安装指定版本
-npm install mplp@1.1.0-beta
+npm install mplp@1.1.0
 
 # 安装TypeScript用于开发（可选）
 npm install -D typescript @types/node ts-node
@@ -61,7 +61,7 @@ npx tsc --init
 ```bash
 # 检查MPLP版本
 node -e "const mplp = require('mplp'); console.log('MPLP版本:', mplp.MPLP_VERSION);"
-# 预期输出: MPLP版本: 1.1.0-beta
+# 预期输出: MPLP版本: 1.1.0
 ```
 
 #### **选项B：从源码安装**
@@ -96,7 +96,7 @@ async function main() {
 
   // 步骤1：初始化MPLP
   const mplp = await quickStart();
-  console.log('✅ MPLP v1.1.0-beta 已初始化成功！');
+  console.log('✅ MPLP v1.1.0 已初始化成功！');
 
   // 步骤2：检查可用模块
   const modules = mplp.getAvailableModules();
@@ -158,7 +158,7 @@ import { MPLP } from 'mplp';
 async function main() {
   // 使用自定义配置创建MPLP实例
   const mplp = new MPLP({
-    protocolVersion: '1.1.0-beta',
+    protocolVersion: '1.1.0',
     environment: 'development',
     logLevel: 'info'
   });
@@ -188,7 +188,7 @@ node src/index.js
 **预期输出：**
 ```
 🚀 启动MPLP快速开始示例...
-✅ MPLP v1.1.0-beta 已初始化成功！
+✅ MPLP v1.1.0 已初始化成功！
 📦 可用模块: [ 'context', 'plan', 'role', 'confirm', 'trace', 'extension', 'dialog', 'collab', 'core', 'network' ]
    总共加载模块数: 10
 📋 Context模块已加载
@@ -197,7 +197,7 @@ node src/index.js
 ⚙️  配置信息:
    - 环境: development
    - 日志级别: info
-   - 协议版本: 1.1.0-beta
+   - 协议版本: 1.1.0
 
 ⚡ 模拟多智能体工作流...
    ⏳ 执行任务 1/3...

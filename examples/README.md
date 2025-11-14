@@ -1,6 +1,6 @@
 # MPLP Examples
 
-> 🚀 **Example applications for MPLP v1.1.0-beta - From beginner to advanced**
+> 🚀 **Example applications for MPLP v1.1.0 - From beginner to advanced**
 
 [![MPLP](https://img.shields.io/badge/MPLP-v1.1.0--beta-purple.svg)](https://mplp.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
@@ -63,7 +63,7 @@ npm run example:config       # Configuration options
 **Time**: 30 minutes
 **Type**: MPLP SDK
 
-Enterprise-grade multi-agent orchestration platform built with MPLP SDK v1.1.0-beta.
+Enterprise-grade multi-agent orchestration platform built with MPLP SDK v1.1.0.
 
 **What you'll learn**:
 - Multi-agent coordination patterns
@@ -155,7 +155,7 @@ npm install mplp@beta
 
 # Verify installation
 node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VERSION);"
-# Expected output: MPLP Version: 1.1.0-beta
+# Expected output: MPLP Version: 1.1.0
 ```
 
 #### **System Prerequisites**
@@ -373,4 +373,4 @@ All examples are released under the MIT License - see [LICENSE](../LICENSE) file
 
 **Ready to build the future of multi-agent systems? Start with any example above! 🚀**
 
-**Built with ❤️ using MPLP SDK v1.1.0-beta**
+**Built with ❤️ using MPLP SDK v1.1.0**

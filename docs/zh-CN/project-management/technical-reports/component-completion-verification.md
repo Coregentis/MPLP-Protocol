@@ -1,4 +1,4 @@
-# MPLP V1.1.0-beta 组件完成度验证报告
+# MPLP V1.1.0 组件完成度验证报告
 
 > **🌐 语言导航**: [English](../../../en/project-management/technical-reports/component-completion-verification.md) | [中文](component-completion-verification.md)
 

@@ -75,7 +75,7 @@ METRICS_PORT=9090
 import { MPLPConfig } from 'mplp';
 
 export const productionConfig: MPLPConfig = {
-  protocolVersion: '1.1.0-beta',
+  protocolVersion: '1.1.0',
   environment: 'production',
   logLevel: 'warn',
   modules: ['context', 'plan', 'role', 'core'],
@@ -164,7 +164,7 @@ services:
 **构建和运行**:
 ```bash
 # 构建镜像
-docker build -t mplp-agent:1.1.0-beta .
+docker build -t mplp-agent:1.1.0 .
 
 # 运行容器
 docker run -d \
@@ -172,7 +172,7 @@ docker run -d \
   -p 3000:3000 \
   -p 9090:9090 \
   -e NODE_ENV=production \
-  mplp-agent:1.1.0-beta
+  mplp-agent:1.1.0
 
 # 使用docker-compose
 docker-compose up -d
@@ -251,7 +251,7 @@ spec:
     spec:
       containers:
       - name: mplp-agent
-        image: mplp-agent:1.1.0-beta
+        image: mplp-agent:1.1.0
         ports:
         - containerPort: 3000
         - containerPort: 9090
@@ -467,7 +467,7 @@ grep -c "ERROR" logs/combined.log
 
 ---
 
-**版本**: v1.1.0-beta  
+**版本**: v1.1.0  
 **更新时间**: 2025-10-22  
 **维护者**: MPLP Team
 

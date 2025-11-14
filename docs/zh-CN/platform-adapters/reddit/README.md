@@ -5,7 +5,7 @@
 
 > **平台**: Reddit  
 > **适配器**: @mplp/adapters - RedditAdapter  
-> **版本**: v1.1.0-beta  
+> **版本**: v1.1.0  
 > **更新时间**: 2025-09-20  
 > **状态**: ✅ 生产就绪  
 
@@ -311,7 +311,7 @@ await reddit.comment({
 // 带格式的评论
 await reddit.comment({
   postId: 't3_ghi789',
-  content: `**更新**: 我们刚刚发布了v1.1.0-beta，包含这些新功能：
+  content: `**更新**: 我们刚刚发布了v1.1.0，包含这些新功能：
 
 - ✅ 增强的Discord集成
 - ✅ 改进的错误处理

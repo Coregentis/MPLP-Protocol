@@ -4,6 +4,7 @@
  * 遵循DDD应用服务模式
  */
 
+import { randomBytes } from 'crypto';
 import { ICoreRepository } from '../../domain/repositories/core-repository.interface';
 import { UUID } from '../../types';
 
@@ -326,7 +327,7 @@ export class CoreResourceService {
       throw new Error('Insufficient resources available');
     }
 
-    const allocationId = `alloc-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+    const allocationId = `alloc-${Date.now()}-${randomBytes(6).toString('hex')}`; // CWE-330 修复
     const allocationTime = new Date().toISOString();
 
     const allocation: ResourceAllocation = {
@@ -462,7 +463,7 @@ export class CoreResourceService {
     workloadData: WorkloadData,
     optimalAllocation: { recommendedNode: string; expectedImprovement: number }
   ): Promise<BalancingResult> {
-    const balancingId = `balance-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+    const balancingId = `balance-${Date.now()}-${randomBytes(6).toString('hex')}`; // CWE-330 修复
 
     return {
       balancingId,

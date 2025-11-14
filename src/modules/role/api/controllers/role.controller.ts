@@ -237,8 +237,23 @@ export class RoleController {
         limit: parseInt(req.query.limit as string, 10) || 10
       } : undefined;
 
-      const filter = req.query.filter ? JSON.parse(req.query.filter as string) as RoleQueryFilter : undefined;
-      const sort = req.query.sort ? JSON.parse(req.query.sort as string) as RoleSortOptions : undefined;
+      // 安全解析查询参数 (CWE-502 修复)
+      let filter: RoleQueryFilter | undefined;
+      let sort: RoleSortOptions | undefined;
+
+      if (req.query.filter) {
+        const parsed = JSON.parse(req.query.filter as string);
+        if (parsed && typeof parsed === 'object') {
+          filter = parsed as RoleQueryFilter;
+        }
+      }
+
+      if (req.query.sort) {
+        const parsed = JSON.parse(req.query.sort as string);
+        if (parsed && typeof parsed === 'object') {
+          sort = parsed as RoleSortOptions;
+        }
+      }
 
       const roles = await this.roleService.getAllRoles(pagination, filter, sort);
 

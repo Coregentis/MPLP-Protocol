@@ -1,4 +1,4 @@
-# MPLP V1.1.0-beta 平台适配器生态系统报告
+# MPLP V1.1.0 平台适配器生态系统报告
 
 > **🌐 语言导航**: [English](../../../en/project-management/technical-reports/platform-adapters-ecosystem.md) | [中文](platform-adapters-ecosystem.md)
 

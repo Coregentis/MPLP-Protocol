@@ -1,4 +1,4 @@
-# MPLP v1.1.0-beta Phased Task Breakdown
+# MPLP v1.1.0 Phased Task Breakdown
 
 > **🌐 Language Navigation**: [English](phase-breakdown.md) | [中文](../../../zh-CN/project-management/planning/phase-breakdown.md)
 
@@ -233,7 +233,7 @@ Quality Metrics:
 
 ## 🔮 **Future Roadmap**
 
-### **Post-v1.1.0-beta Plans**
+### **Post-v1.1.0 Plans**
 ```markdown
 🚀 v1.2.0 Roadmap:
 - Enhanced AI integration capabilities
@@ -252,7 +252,7 @@ Quality Metrics:
 
 - [Task Master Plan](task-master-plan.md)
 - [Final Verification Report](final-verification-report.md)
-- [V1.1.0-beta Verification Report](v1-1-0-beta-verification-report.md)
+- [V1.1.0 Verification Report](v1-1-0-beta-verification-report.md)
 - [Project Management Overview](../README.md)
 
 ---

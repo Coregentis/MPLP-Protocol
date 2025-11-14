@@ -594,7 +594,7 @@ Following these best practices will help you:
 
 ---
 
-**Version**: v1.1.0-beta  
+**Version**: v1.1.0  
 **Last Updated**: 2025-10-22  
 **Maintainer**: MPLP Team
 

@@ -1,10 +1,12 @@
 /**
  * MPLP编排管理器
- * 
+ *
  * @description L3层统一编排管理，提供工作流编排和执行控制功能
  * @version 1.0.0
  * @integration 与所有10个模块统一集成
  */
+
+import { randomBytes } from 'crypto';
 
 /**
  * 工作流步骤接口
@@ -73,7 +75,7 @@ export class MLPPOrchestrationManager {
     _parameters?: Record<string, unknown>
   ): Promise<string> {
     // TODO: 等待CoreOrchestrator激活 - 实现工作流启动逻辑
-    const instanceId = `workflow-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const instanceId = `workflow-${Date.now()}-${randomBytes(6).toString('hex')}`; // CWE-330 修复
     
     const instance: WorkflowInstance = {
       id: instanceId,
@@ -95,7 +97,7 @@ export class MLPPOrchestrationManager {
   ): Promise<Record<string, unknown>> {
     // TODO: 等待CoreOrchestrator激活 - 实现编排计划创建逻辑
     return {
-      planId: `plan-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      planId: `plan-${Date.now()}-${randomBytes(6).toString('hex')}`, // CWE-330 修复
       stages: _workflowConfig?.stages || [],
       executionOrder: 'sequential',
       estimatedDuration: 1000,
@@ -109,7 +111,7 @@ export class MLPPOrchestrationManager {
   async executeOrchestrationPlan(_orchestrationPlan: Record<string, unknown>): Promise<Record<string, unknown>> {
     // TODO: 等待CoreOrchestrator激活 - 实现编排计划执行逻辑
     return {
-      executionId: `exec-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      executionId: `exec-${Date.now()}-${randomBytes(6).toString('hex')}`, // CWE-330 修复
       planId: _orchestrationPlan?.planId || 'unknown',
       status: 'completed',
       results: {

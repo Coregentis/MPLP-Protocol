@@ -1,6 +1,6 @@
 # MPLP SDK Core API 参考
 
-> **📚 版本**: v1.1.0-beta  
+> **📚 版本**: v1.1.0  
 > **🎯 目标**: 完整的SDK核心API文档  
 > **🌐 语言**: [English](../../docs-sdk-en/api-reference/sdk-core.md) | 中文
 
@@ -106,12 +106,12 @@ const planModule = mplp.getModule('plan');
 getVersion(): string
 ```
 
-**返回值**: 版本字符串 (例如: "1.1.0-beta")
+**返回值**: 版本字符串 (例如: "1.1.0")
 
 **示例**:
 ```typescript
 const version = mplp.getVersion();
-console.log('MPLP Version:', version); // "1.1.0-beta"
+console.log('MPLP Version:', version); // "1.1.0"
 ```
 
 ---
@@ -328,7 +328,7 @@ interface MPLPConfig {
 
 | 字段 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
-| `protocolVersion` | `string` | `'1.1.0-beta'` | MPLP协议版本 |
+| `protocolVersion` | `string` | `'1.1.0'` | MPLP协议版本 |
 | `environment` | `'development' \| 'production' \| 'test'` | `'development'` | 运行环境 |
 | `logLevel` | `'debug' \| 'info' \| 'warn' \| 'error'` | `'info'` | 日志级别 |
 | `modules` | `ModuleName[]` | 所有模块 | 要加载的模块列表 |
@@ -337,7 +337,7 @@ interface MPLPConfig {
 **示例**:
 ```typescript
 const config: MPLPConfig = {
-  protocolVersion: '1.1.0-beta',
+  protocolVersion: '1.1.0',
   environment: 'production',
   logLevel: 'warn',
   modules: ['context', 'plan', 'role', 'core'],
@@ -396,7 +396,7 @@ const roleModule = mplp.getModule('role');
 当前MPLP版本常量。
 
 ```typescript
-const MPLP_VERSION: string = "1.1.0-beta";
+const MPLP_VERSION: string = "1.1.0";
 ```
 
 **示例**:
@@ -414,7 +414,7 @@ console.log('MPLP Version:', MPLP_VERSION);
 ```typescript
 const MPLP_INFO: {
   readonly name: "MPLP";
-  readonly version: "1.1.0-beta";
+  readonly version: "1.1.0";
   readonly fullName: "Multi-Agent Protocol Lifecycle Platform";
   readonly description: string;
   readonly architecture: "L1-L3 Layered Architecture";
@@ -509,7 +509,7 @@ async function productionExample() {
 
 ---
 
-**版本**: v1.1.0-beta  
+**版本**: v1.1.0  
 **更新时间**: 2025-10-22  
 **维护者**: MPLP Team
 

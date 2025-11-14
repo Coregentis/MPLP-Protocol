@@ -1,0 +1,216 @@
+{
+  "version": "1.0.0",
+  "description": "MPLP Documentation Quality Assurance Rules",
+  "lastUpdated": "2025-09-20",
+  
+  "linkValidation": {
+    "enabled": true,
+    "rules": {
+      "checkInternalLinks": true,
+      "checkExternalLinks": true,
+      "checkAnchorLinks": true,
+      "allowedProtocols": ["http", "https", "mailto"],
+      "timeout": 10000,
+      "retries": 2
+    },
+    "whitelist": {
+      "domains": [
+        "github.com",
+        "npmjs.com",
+        "nodejs.org",
+        "typescript.org",
+        "jest.io",
+        "eslint.org",
+        "prettier.io"
+      ],
+      "patterns": [
+        "^https://api\\.",
+        "^https://docs\\.",
+        "^https://www\\.npmjs\\.com/package/"
+      ]
+    },
+    "blacklist": {
+      "domains": [
+        "example.com",
+        "test.com",
+        "localhost"
+      ],
+      "patterns": [
+        "^http://",
+        "\\.(tmp|temp)$"
+      ]
+    }
+  },
+  
+  "parityCheck": {
+    "enabled": true,
+    "rules": {
+      "requireBothLanguages": true,
+      "checkContentLength": true,
+      "checkStructure": true,
+      "checkNavigation": true,
+      "contentLengthThreshold": 0.3,
+      "structureMatchThreshold": 0.9
+    },
+    "languages": {
+      "primary": "en",
+      "secondary": "zh-CN",
+      "supported": ["en", "zh-CN", "ja", "ko", "es", "fr"]
+    },
+    "exceptions": {
+      "allowedMissingTranslations": [
+        "docs/en/README.md",
+        "docs/zh-CN/README.md",
+        "docs/LANGUAGE-GUIDE.md"
+      ],
+      "allowedContentDifferences": [
+        {
+          "pattern": "docs/**/examples/**",
+          "reason": "Examples may vary by language and culture"
+        },
+        {
+          "pattern": "docs/**/api-reference/**",
+          "reason": "API documentation may have language-specific details"
+        }
+      ]
+    }
+  },
+  
+  "navigationValidation": {
+    "enabled": true,
+    "rules": {
+      "requireLanguageNavigation": true,
+      "checkNavigationConsistency": true,
+      "checkBreadcrumbs": true,
+      "checkCrossReferences": true
+    },
+    "requiredElements": {
+      "languageNavigation": {
+        "pattern": "🌐.*Language Navigation.*:",
+        "requiredLanguages": ["English", "中文"],
+        "optionalLanguages": ["日本語", "한국어", "Español", "Français"]
+      },
+      "breadcrumbs": {
+        "pattern": "^>.*>.*",
+        "maxDepth": 5
+      }
+    },
+    "exceptions": {
+      "skipNavigationCheck": [
+        "docs/README.md",
+        "docs/LANGUAGE-GUIDE.md",
+        "docs/quality-assurance/README.md"
+      ]
+    }
+  },
+  
+  "contentValidation": {
+    "enabled": true,
+    "rules": {
+      "checkMarkdownSyntax": true,
+      "checkCodeBlocks": true,
+      "checkImages": true,
+      "checkTables": true,
+      "enforceHeadingStructure": true
+    },
+    "markdownRules": {
+      "maxLineLength": 120,
+      "requireEmptyLineBeforeHeading": true,
+      "requireEmptyLineAfterHeading": false,
+      "headingStyle": "atx",
+      "codeBlockStyle": "fenced"
+    },
+    "headingStructure": {
+      "enforceHierarchy": true,
+      "maxDepth": 6,
+      "requireH1": true,
+      "allowMultipleH1": false
+    }
+  },
+  
+  "qualityMetrics": {
+    "scoring": {
+      "linkValidation": {
+        "weight": 0.3,
+        "thresholds": {
+          "excellent": 0.99,
+          "good": 0.95,
+          "acceptable": 0.90,
+          "poor": 0.80
+        }
+      },
+      "parityCheck": {
+        "weight": 0.4,
+        "thresholds": {
+          "excellent": 0.98,
+          "good": 0.95,
+          "acceptable": 0.90,
+          "poor": 0.80
+        }
+      },
+      "navigationValidation": {
+        "weight": 0.2,
+        "thresholds": {
+          "excellent": 0.99,
+          "good": 0.95,
+          "acceptable": 0.90,
+          "poor": 0.80
+        }
+      },
+      "contentValidation": {
+        "weight": 0.1,
+        "thresholds": {
+          "excellent": 0.99,
+          "good": 0.95,
+          "acceptable": 0.90,
+          "poor": 0.80
+        }
+      }
+    },
+    "overallThresholds": {
+      "excellent": 0.98,
+      "good": 0.95,
+      "acceptable": 0.90,
+      "poor": 0.80
+    }
+  },
+  
+  "reporting": {
+    "formats": ["json", "html", "markdown"],
+    "includeDetails": true,
+    "includeSuggestions": true,
+    "groupByCategory": true,
+    "categories": [
+      "sdk-api",
+      "platform-adapters", 
+      "development-tools",
+      "project-management",
+      "architecture",
+      "guides",
+      "examples",
+      "specifications"
+    ]
+  },
+  
+  "automation": {
+    "ciIntegration": {
+      "enabled": true,
+      "failOnScore": 0.90,
+      "warnOnScore": 0.95,
+      "generateArtifacts": true
+    },
+    "scheduling": {
+      "enabled": false,
+      "frequency": "daily",
+      "time": "02:00"
+    },
+    "notifications": {
+      "enabled": false,
+      "channels": ["email", "slack"],
+      "thresholds": {
+        "critical": 0.80,
+        "warning": 0.90
+      }
+    }
+  }
+}

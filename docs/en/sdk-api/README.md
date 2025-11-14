@@ -1,16 +1,16 @@
-# MPLP SDK v1.1.0-beta API Reference
+# MPLP SDK v1.1.0 API Reference
 
 > **🌐 Language Navigation**: [English](README.md) | [中文](../../zh-CN/sdk-api/README.md)
 
 
 > **Documentation Category**: SDK API Reference  
-> **SDK Version**: v1.1.0-beta  
+> **SDK Version**: v1.1.0  
 > **Last Updated**: 2025-09-20  
 > **Status**: ✅ Complete SDK API Documentation Suite  
 
 ## 📚 **SDK API Documentation Overview**
 
-Welcome to the comprehensive API reference for the MPLP (Multi-Agent Protocol Lifecycle Platform) SDK v1.1.0-beta. This documentation provides detailed information about all classes, interfaces, methods, and types available in the MPLP SDK ecosystem built on top of the MPLP V1.0 Alpha protocol stack.
+Welcome to the comprehensive API reference for the MPLP (Multi-Agent Protocol Lifecycle Platform) SDK v1.1.0. This documentation provides detailed information about all classes, interfaces, methods, and types available in the MPLP SDK ecosystem built on top of the MPLP V1.0 Alpha protocol stack.
 
 ### **🎯 Documentation Purpose**
 

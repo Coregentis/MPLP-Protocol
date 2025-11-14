@@ -35,7 +35,7 @@ If applicable, add screenshots to help explain your problem.
 
 Please complete the following information:
 
-- **MPLP Version**: [e.g., 1.1.0-beta]
+- **MPLP Version**: [e.g., 1.1.0]
 - **Node.js Version**: [e.g., 18.17.0]
 - **npm Version**: [e.g., 9.6.7]
 - **Operating System**: [e.g., Ubuntu 22.04, Windows 11, macOS 13.0]

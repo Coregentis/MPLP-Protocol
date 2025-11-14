@@ -1,6 +1,6 @@
 # MPLP SDK Core API Reference
 
-> **📚 Version**: v1.1.0-beta  
+> **📚 Version**: v1.1.0  
 > **🎯 Goal**: Complete SDK Core API Documentation  
 > **🌐 Language**: English | [中文](../../docs-sdk/api-reference/sdk-core.md)
 
@@ -106,12 +106,12 @@ Get MPLP version information.
 getVersion(): string
 ```
 
-**Returns**: Version string (e.g., "1.1.0-beta")
+**Returns**: Version string (e.g., "1.1.0")
 
 **Example**:
 ```typescript
 const version = mplp.getVersion();
-console.log('MPLP Version:', version); // "1.1.0-beta"
+console.log('MPLP Version:', version); // "1.1.0"
 ```
 
 ---
@@ -328,7 +328,7 @@ interface MPLPConfig {
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `protocolVersion` | `string` | `'1.1.0-beta'` | MPLP protocol version |
+| `protocolVersion` | `string` | `'1.1.0'` | MPLP protocol version |
 | `environment` | `'development' \| 'production' \| 'test'` | `'development'` | Runtime environment |
 | `logLevel` | `'debug' \| 'info' \| 'warn' \| 'error'` | `'info'` | Log level |
 | `modules` | `ModuleName[]` | All modules | Modules to load |
@@ -337,7 +337,7 @@ interface MPLPConfig {
 **Example**:
 ```typescript
 const config: MPLPConfig = {
-  protocolVersion: '1.1.0-beta',
+  protocolVersion: '1.1.0',
   environment: 'production',
   logLevel: 'warn',
   modules: ['context', 'plan', 'role', 'core'],
@@ -396,7 +396,7 @@ const roleModule = mplp.getModule('role');
 Current MPLP version constant.
 
 ```typescript
-const MPLP_VERSION: string = "1.1.0-beta";
+const MPLP_VERSION: string = "1.1.0";
 ```
 
 **Example**:
@@ -414,7 +414,7 @@ Complete MPLP project information.
 ```typescript
 const MPLP_INFO: {
   readonly name: "MPLP";
-  readonly version: "1.1.0-beta";
+  readonly version: "1.1.0";
   readonly fullName: "Multi-Agent Protocol Lifecycle Platform";
   readonly description: string;
   readonly architecture: "L1-L3 Layered Architecture";
@@ -509,7 +509,7 @@ async function productionExample() {
 
 ---
 
-**Version**: v1.1.0-beta  
+**Version**: v1.1.0  
 **Last Updated**: 2025-10-22  
 **Maintainer**: MPLP Team
 

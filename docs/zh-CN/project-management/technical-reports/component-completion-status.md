@@ -1,4 +1,4 @@
-# MPLP V1.1.0-beta 组件完成度状态更新
+# MPLP V1.1.0 组件完成度状态更新
 
 > **🌐 语言导航**: [English](../../../en/project-management/technical-reports/component-completion-status.md) | [中文](component-completion-status.md)
 

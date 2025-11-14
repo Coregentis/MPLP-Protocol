@@ -1,11 +1,12 @@
 /**
  * DialogAnalyticsService
- * 
+ *
  * @description Dialog分析服务，提供对话数据分析和统计功能
  * @version 1.0.0
  * @layer 应用层 - 应用服务
  */
 
+import { randomBytes } from 'crypto';
 import {
   UUID,
   type IAnalyticsEngine,
@@ -647,7 +648,7 @@ export class DialogAnalyticsService {
   }
 
   private generateReportId(): UUID {
-    return `report-${Date.now()}-${Math.random().toString(36).substring(2, 11)}` as UUID;
+    return `report-${Date.now()}-${randomBytes(6).toString('hex')}` as UUID; // CWE-330 修复
   }
 
   // ===== 预测分析私有方法 =====

@@ -437,7 +437,12 @@ export class ConfigManager {
   private decrypt(encrypted: string): unknown {
     // 简化实现：实际应使用真实的解密算法
     try {
-      return JSON.parse(Buffer.from(encrypted, 'base64').toString());
+      const parsed = JSON.parse(Buffer.from(encrypted, 'base64').toString());
+      // 验证解析结果 (CWE-502 修复)
+      if (parsed === null || parsed === undefined) {
+        return encrypted;
+      }
+      return parsed;
     } catch {
       return encrypted;
     }

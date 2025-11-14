@@ -1,12 +1,13 @@
 /**
  * Collab协议实现
- * 
+ *
  * @description Collab模块的MPLP协议实现，基于其他6个已完成模块的企业级标准集成所有9个L3横切关注点管理器
  * @version 1.0.0
  * @layer 基础设施层 - 协议
  * @integration 统一L3管理器注入模式，与Context/Plan/Role/Confirm/Trace/Extension模块IDENTICAL架构
  */
 
+import { randomBytes } from 'crypto';
 import { CollabManagementService } from '../../application/services/collab-management.service';
 import { CollabEntity } from '../../domain/entities/collab.entity';
 // import { CollabEntityData } from '../../api/mappers/collab.mapper'; // Unused import
@@ -139,7 +140,7 @@ export class CollabProtocol implements IMLPPProtocol {
 
       // 将标准MLPPRequest转换为CollabProtocolRequest
       const collabRequest: CollabProtocolRequest = {
-        requestId: request.requestId || `collab-req-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
+        requestId: request.requestId || `collab-req-${Date.now()}-${randomBytes(6).toString('hex')}`, // CWE-330 修复
         timestamp: request.timestamp || new Date().toISOString(),
         operation: request.operation as CollabProtocolRequest['operation'],
         payload: request.payload as CollabProtocolRequest['payload'],
@@ -300,7 +301,7 @@ export class CollabProtocol implements IMLPPProtocol {
 
       // ===== 5. 事件发布 (基于实际接口) =====
       await this.eventBusManager.publish({
-        id: `event-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
+        id: `event-${Date.now()}-${randomBytes(6).toString('hex')}`, // CWE-330 修复
         type: `collab_${request.operation}_completed`,
         source: 'collab_protocol',
         payload: result.data || {},
@@ -549,7 +550,7 @@ export class CollabProtocol implements IMLPPProtocol {
 
     // 发布错误事件 (基于实际接口)
     await this.eventBusManager.publish({
-      id: `error-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
+      id: `error-${Date.now()}-${randomBytes(6).toString('hex')}`, // CWE-330 修复
       type: `collab_${request.operation}_failed`,
       source: 'collab_protocol',
       payload: { error: error instanceof Error ? error.message : 'Unknown error' },

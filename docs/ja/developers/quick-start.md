@@ -44,11 +44,11 @@ cd my-mplp-app
 # npmプロジェクトを初期化
 npm init -y
 
-# MPLP v1.1.0-betaをインストール
+# MPLP v1.1.0をインストール
 npm install mplp@beta
 
 # または特定のバージョンをインストール
-npm install mplp@1.1.0-beta
+npm install mplp@1.1.0
 
 # 開発用にTypeScriptをインストール（オプション）
 npm install -D typescript @types/node ts-node
@@ -61,7 +61,7 @@ npx tsc --init
 ```bash
 # MPLPバージョンを確認
 node -e "const mplp = require('mplp'); console.log('MPLPバージョン:', mplp.MPLP_VERSION);"
-# 期待される出力: MPLPバージョン: 1.1.0-beta
+# 期待される出力: MPLPバージョン: 1.1.0
 ```
 
 #### **オプションB：ソースからクローンしてビルド**

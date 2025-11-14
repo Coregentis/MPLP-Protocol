@@ -1,10 +1,12 @@
 /**
  * MPLP事务管理器
- * 
+ *
  * @description L3层统一事务管理，提供分布式事务和一致性保证
  * @version 1.0.0
  * @integration 与所有10个模块统一集成
  */
+
+import { randomBytes } from 'crypto';
 
 /**
  * 事务状态枚举
@@ -48,8 +50,8 @@ export class MLPPTransactionManager {
    */
   async beginTransaction(_timeout?: number): Promise<string> {
     // TODO: 等待CoreOrchestrator激活 - 实现事务开始逻辑
-    const transactionId = `tx-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
-    
+    const transactionId = `tx-${Date.now()}-${randomBytes(6).toString('hex')}`; // CWE-330 修复
+
     const transaction: Transaction = {
       id: transactionId,
       status: 'active',
@@ -76,7 +78,7 @@ export class MLPPTransactionManager {
     }
 
     const operation: TransactionOperation = {
-      id: `op-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
+      id: `op-${Date.now()}-${randomBytes(6).toString('hex')}`, // CWE-330 修复
       ..._operation
     };
 

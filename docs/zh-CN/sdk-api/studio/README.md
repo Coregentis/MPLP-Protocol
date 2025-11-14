@@ -4,7 +4,7 @@
 
 
 > **包名**: @mplp/studio  
-> **版本**: v1.1.0-beta  
+> **版本**: v1.1.0  
 > **更新时间**: 2025-09-20  
 > **状态**: ✅ 生产就绪  
 
@@ -77,7 +77,7 @@ import { createStudioApplication, StudioConfig } from '@mplp/studio';
 
 // 创建Studio应用程序
 const config: StudioConfig = {
-  version: '1.1.0-beta',
+  version: '1.1.0',
   environment: 'development',
   server: {
     port: 3000,
@@ -517,7 +517,7 @@ import {
 
 // 创建全面的Studio环境
 const studio = createStudioApplication({
-  version: '1.1.0-beta',
+  version: '1.1.0',
   environment: 'development',
   server: {
     port: 3000,
@@ -573,7 +573,7 @@ import { StudioApplication } from '@mplp/studio';
 
 // 企业Studio配置
 const enterpriseStudio = new StudioApplication({
-  version: '1.1.0-beta',
+  version: '1.1.0',
   environment: 'production',
   server: {
     port: 443,

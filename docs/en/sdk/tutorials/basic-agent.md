@@ -96,7 +96,7 @@ export interface TaskAgentConfig extends MPLPConfig {
 }
 
 export const defaultConfig: TaskAgentConfig = {
-  protocolVersion: '1.1.0-beta',
+  protocolVersion: '1.1.0',
   environment: 'development',
   logLevel: 'info',
   modules: ['context', 'plan', 'role', 'trace'],
@@ -544,7 +544,7 @@ You have learned:
 
 ---
 
-**Version**: v1.1.0-beta  
+**Version**: v1.1.0  
 **Last Updated**: 2025-10-22  
 **Author**: MPLP Team
 

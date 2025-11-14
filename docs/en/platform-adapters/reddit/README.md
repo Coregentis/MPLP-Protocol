@@ -5,7 +5,7 @@
 
 > **Platform**: Reddit  
 > **Adapter**: @mplp/adapters - RedditAdapter  
-> **Version**: v1.1.0-beta  
+> **Version**: v1.1.0  
 > **Last Updated**: 2025-09-20  
 > **Status**: ✅ Production Ready  
 
@@ -311,7 +311,7 @@ The key difference is that MPLP focuses on protocol standardization rather than 
 // Comment with formatting
 await reddit.comment({
   postId: 't3_ghi789',
-  content: `**Update**: We've just released v1.1.0-beta with these new features:
+  content: `**Update**: We've just released v1.1.0 with these new features:
 
 - ✅ Enhanced Discord integration
 - ✅ Improved error handling  

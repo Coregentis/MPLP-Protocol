@@ -1,4 +1,4 @@
-# MPLP v1.1.0-beta 风险管理计划
+# MPLP v1.1.0 风险管理计划
 
 > **🌐 语言导航**: [English](../../../en/project-management/compliance/risk-management.md) | [中文](risk-management.md)
 

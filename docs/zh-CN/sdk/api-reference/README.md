@@ -90,7 +90,7 @@ const contextModule = mplp.getModule('context');
 
 ## 📝 **版本信息**
 
-- **当前版本**: v1.1.0-beta
+- **当前版本**: v1.1.0
 - **协议版本**: L1-L3
 - **更新时间**: 2025-10-22
 

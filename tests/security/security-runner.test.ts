@@ -3,7 +3,7 @@
  * 基于SCTM+GLFB+ITCM增强框架设计的企业级安全测试执行器
  */
 
-import { MPLPSecurityTestSuite, SecurityTestResult } from './security-test-suite';
+import { MPLPSecurityTestSuite } from './security-test-suite';
 
 describe('MPLP安全测试套件执行', () => {
   let securitySuite: MPLPSecurityTestSuite;

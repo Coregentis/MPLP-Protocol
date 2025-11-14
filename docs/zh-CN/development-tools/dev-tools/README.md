@@ -4,7 +4,7 @@
 
 
 > **包名**: @mplp/dev-tools  
-> **版本**: v1.1.0-beta  
+> **版本**: v1.1.0  
 > **更新时间**: 2025-09-20  
 > **状态**: ✅ 生产就绪  
 
@@ -49,7 +49,7 @@ npm install mplp@beta
 
 # 验证安装
 node -e "const mplp = require('mplp'); console.log('MPLP版本:', mplp.MPLP_VERSION);"
-# 预期输出: MPLP版本: 1.1.0-beta
+# 预期输出: MPLP版本: 1.1.0
 ```
 
 #### **步骤2: 安装开发工具（可选）**

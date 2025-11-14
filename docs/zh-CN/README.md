@@ -43,14 +43,14 @@
 npm install mplp@beta
 
 # 或安装指定版本
-npm install mplp@1.1.0-beta
+npm install mplp@1.1.0
 ```
 
 **验证安装**:
 ```bash
 # 检查MPLP版本
 node -e "const mplp = require('mplp'); console.log('MPLP版本:', mplp.MPLP_VERSION);"
-# 预期输出: MPLP版本: 1.1.0-beta
+# 预期输出: MPLP版本: 1.1.0
 ```
 
 #### **选项2：从源码安装（用于开发）**

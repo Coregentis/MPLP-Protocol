@@ -1,6 +1,6 @@
 /**
  * Context分析服务 - 新增服务
- * 
+ *
  * @description 基于SCTM+GLFB+ITCM方法论设计的上下文分析和洞察服务
  * 整合原有17个服务中的分析相关功能：性能监控、搜索索引，新增：使用分析、趋势预测、优化建议
  * @version 2.0.0
@@ -8,6 +8,7 @@
  * @refactor 17→3服务简化，专注于分析和洞察功能
  */
 
+import { randomBytes } from 'crypto';
 import { ContextEntity } from '../../domain/entities/context.entity';
 import { IContextRepository } from '../../domain/repositories/context-repository.interface';
 import {
@@ -410,7 +411,7 @@ export class ContextAnalyticsService {
       }
 
       const report: AnalyticsReport = {
-        reportId: `report-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        reportId: `report-${Date.now()}-${randomBytes(6).toString('hex')}`, // CWE-330 修复
         contextId,
         reportType,
         generatedAt: new Date(),

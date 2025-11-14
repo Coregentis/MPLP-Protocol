@@ -1,12 +1,13 @@
 /**
  * Extension管理服务
- * 
+ *
  * @description Extension模块的核心应用服务，负责业务流程编排和用例实现
  * @version 1.0.0
  * @layer Application层 - 应用服务
  * @pattern 应用服务 + 用例编排 + 横切关注点集成
  */
 
+import { randomBytes } from 'crypto';
 import { UUID } from '../../../../shared/types';
 import { ExtensionEntity } from '../../domain/entities/extension.entity';
 import {
@@ -711,7 +712,7 @@ export class ExtensionManagementService {
    * 生成扩展ID
    */
   private generateExtensionId(): UUID {
-    return `ext-${Date.now()}-${Math.random().toString(36).substring(2, 11)}` as UUID;
+    return `ext-${Date.now()}-${randomBytes(6).toString('hex')}` as UUID; // CWE-330 修复
   }
 
   /**

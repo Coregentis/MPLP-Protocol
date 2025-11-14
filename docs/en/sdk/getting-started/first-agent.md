@@ -59,7 +59,7 @@ import { MPLPConfig } from 'mplp';
 
 export const agentConfig: MPLPConfig = {
   // Protocol version
-  protocolVersion: '1.1.0-beta',
+  protocolVersion: '1.1.0',
   
   // Runtime environment
   environment: 'development',
@@ -127,7 +127,7 @@ export class MyFirstAgent {
     }
 
     console.log(`👋 Hello, ${name}!`);
-    return `Hello, ${name}! I'm MyFirstAgent, powered by MPLP v1.1.0-beta`;
+    return `Hello, ${name}! I'm MyFirstAgent, powered by MPLP v1.1.0`;
   }
 
   /**
@@ -252,14 +252,14 @@ npm start
 📊 Agent Information:
 {
   "name": "MyFirstAgent",
-  "version": "1.1.0-beta",
+  "version": "1.1.0",
   "status": "ready",
   "modules": ["context", "plan", "role"]
 }
 
 👋 Executing Greeting:
 👋 Hello, Developer!
-Hello, Developer! I'm MyFirstAgent, powered by MPLP v1.1.0-beta
+Hello, Developer! I'm MyFirstAgent, powered by MPLP v1.1.0
 
 📋 Executing Task:
 📋 Executing task: Process user request
@@ -324,7 +324,7 @@ Congratulations! You've successfully created your first MPLP Agent. Next, you ca
 
 ---
 
-**Version**: v1.1.0-beta  
+**Version**: v1.1.0  
 **Last Updated**: 2025-10-22  
 **Author**: MPLP Team
 

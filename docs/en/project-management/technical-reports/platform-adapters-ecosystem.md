@@ -1,4 +1,4 @@
-# MPLP V1.1.0-beta Platform Adapters Ecosystem Report
+# MPLP V1.1.0 Platform Adapters Ecosystem Report
 
 > **🌐 Language Navigation**: [English](platform-adapters-ecosystem.md) | [中文](../../../zh-CN/project-management/technical-reports/platform-adapters-ecosystem.md)
 

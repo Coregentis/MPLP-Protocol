@@ -1,4 +1,4 @@
-# MPLP SDK v1.1.0-beta 文档
+# MPLP SDK v1.1.0 文档
 
 ## 🎯 **文档概览**
 
@@ -115,6 +115,6 @@ MPLP SDK 采用 MIT 许可证。详见 [LICENSE](../LICENSE) 文件。
 
 ---
 
-**版本**: v1.1.0-beta  
+**版本**: v1.1.0  
 **更新时间**: 2025年9月  
 **维护者**: MPLP Team

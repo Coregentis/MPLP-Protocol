@@ -4,7 +4,7 @@
 
 
 > **Package**: @mplp/dev-tools  
-> **Version**: v1.1.0-beta  
+> **Version**: v1.1.0  
 > **Last Updated**: 2025-09-20  
 > **Status**: ✅ Production Ready  
 
@@ -49,7 +49,7 @@ npm install mplp@beta
 
 # Verify installation
 node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VERSION);"
-# Expected output: MPLP Version: 1.1.0-beta
+# Expected output: MPLP Version: 1.1.0
 ```
 
 #### **Step 2: Install Dev Tools (Optional)**

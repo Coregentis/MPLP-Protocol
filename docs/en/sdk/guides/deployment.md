@@ -75,7 +75,7 @@ METRICS_PORT=9090
 import { MPLPConfig } from 'mplp';
 
 export const productionConfig: MPLPConfig = {
-  protocolVersion: '1.1.0-beta',
+  protocolVersion: '1.1.0',
   environment: 'production',
   logLevel: 'warn',
   modules: ['context', 'plan', 'role', 'core'],
@@ -164,7 +164,7 @@ services:
 **Build and Run**:
 ```bash
 # Build image
-docker build -t mplp-agent:1.1.0-beta .
+docker build -t mplp-agent:1.1.0 .
 
 # Run container
 docker run -d \
@@ -172,7 +172,7 @@ docker run -d \
   -p 3000:3000 \
   -p 9090:9090 \
   -e NODE_ENV=production \
-  mplp-agent:1.1.0-beta
+  mplp-agent:1.1.0
 
 # Using docker-compose
 docker-compose up -d
@@ -251,7 +251,7 @@ spec:
     spec:
       containers:
       - name: mplp-agent
-        image: mplp-agent:1.1.0-beta
+        image: mplp-agent:1.1.0
         ports:
         - containerPort: 3000
         - containerPort: 9090
@@ -467,7 +467,7 @@ Following this guide will help you:
 
 ---
 
-**Version**: v1.1.0-beta  
+**Version**: v1.1.0  
 **Last Updated**: 2025-10-22  
 **Maintainer**: MPLP Team
 

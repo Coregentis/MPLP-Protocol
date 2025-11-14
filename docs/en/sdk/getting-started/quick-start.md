@@ -33,7 +33,7 @@ npm install -g @mplp/cli
 
 # Verify installation
 node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VERSION);"
-# Expected output: MPLP Version: 1.1.0-beta
+# Expected output: MPLP Version: 1.1.0
 ```
 
 For detailed installation options, see the [Installation Guide](installation.md).

@@ -4,6 +4,7 @@
  * 遵循DDD应用服务模式
  */
 
+import { randomBytes } from 'crypto';
 import { ICoreRepository } from '../../domain/repositories/core-repository.interface';
 import { UUID, HealthStatus, CheckStatus } from '../../types';
 
@@ -167,8 +168,8 @@ export class CoreMonitoringService {
     // 2. 评估告警严重程度
     const severity = await this.assessAlertSeverity(alertData);
     
-    // 3. 生成告警ID
-    const alertId = alertData.alertId || `alert-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+    // 3. 生成告警ID (CWE-330 修复: 使用加密安全的随机数)
+    const alertId = alertData.alertId || `alert-${Date.now()}-${randomBytes(6).toString('hex')}`;
     
     // 4. 处理告警
     const processedAlert: AlertData = {
@@ -501,7 +502,7 @@ export class CoreMonitoringService {
     }
 
     return {
-      alertId: alertData.alertId || `alert-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      alertId: alertData.alertId || `alert-${Date.now()}-${randomBytes(6).toString('hex')}`, // CWE-330 修复
       processed: true,
       actions,
       notifications,
@@ -582,7 +583,7 @@ export class CoreMonitoringService {
     reportType: MonitoringReportType,
     period: { startDate: string; endDate: string }
   ): Promise<MonitoringReport> {
-    const reportId = `report-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+    const reportId = `report-${Date.now()}-${randomBytes(6).toString('hex')}`; // CWE-330 修复
 
     return {
       reportId,

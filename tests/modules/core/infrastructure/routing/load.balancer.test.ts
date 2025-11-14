@@ -302,17 +302,19 @@ describe('LoadBalancer测试', () => {
     it('应该过滤不健康的实例', async () => {
       const instance1 = createTestInstance('1', 3001);
       const instance2 = createTestInstance('2', 3002);
-      
+
       // 设置一个实例为不健康
       instance2.healthStatus.isHealthy = false;
-      
+
       loadBalancer.registerInstance(instance1);
       loadBalancer.registerInstance(instance2);
 
       const result = await loadBalancer.routeRequest(createTestRequest());
 
-      // 应该只选择健康的实例
-      expect(result.selectedInstance?.port).toBe(3001);
+      // 应该只选择健康的实例（验证选中的实例是健康的，而不是硬编码端口）
+      expect(result.selectedInstance).not.toBeNull();
+      expect(result.selectedInstance?.healthStatus.isHealthy).toBe(true);
+      expect(result.selectedInstance?.instanceId).toBe('instance-1'); // 只有instance-1是健康的
     });
 
     it('应该在没有健康实例时启用故障转移', async () => {

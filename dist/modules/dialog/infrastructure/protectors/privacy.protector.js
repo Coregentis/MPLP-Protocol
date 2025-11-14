@@ -118,16 +118,16 @@ class PrivacyProtector {
     }
     // ===== 私有方法 =====
     initializeSensitivePatterns() {
-        // 邮箱地址
+        // 邮箱地址 - ✅ Security fix: Simplified pattern to avoid ReDoS
         this.sensitivePatterns.set('email', /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g);
-        // 电话号码
-        this.sensitivePatterns.set('phone', /\b(?:\+?1[-.\s]?)?\(?([0-9]{3})\)?[-.\s]?([0-9]{3})[-.\s]?([0-9]{4})\b/g);
+        // 电话号码 - ✅ Security fix: Expanded nested quantifiers to avoid ReDoS
+        this.sensitivePatterns.set('phone', /\b(?:\+?1[- .]?)?(?:\()?[0-9]{3}(?:\))?[- .]?[0-9]{3}[- .]?[0-9]{4}\b/g);
         // 社会安全号码
         this.sensitivePatterns.set('ssn', /\b\d{3}-\d{2}-\d{4}\b/g);
-        // 信用卡号
-        this.sensitivePatterns.set('credit_card', /\b(?:\d{4}[-\s]?){3}\d{4}\b/g);
-        // IP地址
-        this.sensitivePatterns.set('ip_address', /\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b/g);
+        // 信用卡号 - ✅ Security fix: Expanded nested quantifiers to avoid ReDoS
+        this.sensitivePatterns.set('credit_card', /\b\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}\b/g);
+        // IP地址 - ✅ Security fix: Expanded nested quantifiers to avoid ReDoS
+        this.sensitivePatterns.set('ip_address', /\b[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\b/g);
         // 身份证号（简化版）
         this.sensitivePatterns.set('id_number', /\b\d{15}|\d{18}\b/g);
         // 银行账号

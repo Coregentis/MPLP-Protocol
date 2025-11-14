@@ -1,4 +1,4 @@
-# MPLP Studio v1.1.0-beta Enhancement Report
+# MPLP Studio v1.1.0 Enhancement Report
 
 > **🌐 Language Navigation**: [English](studio-enhancement.md) | [中文](../../../../zh-CN/project-management/component-reports/enhancements/studio-enhancement.md)
 
@@ -14,7 +14,7 @@ MPLP Studio is a visual development environment built on the MPLP V1.0 Alpha arc
 ### **Core Value Proposition**
 - **Visual Development**: Drag-and-drop interface that lowers development barriers
 - **Real-time Preview**: Instant design effects and code generation viewing
-- **Complete Integration**: Fully integrated with MPLP SDK v1.1.0-beta
+- **Complete Integration**: Fully integrated with MPLP SDK v1.1.0
 - **Enterprise-Grade**: Supports team collaboration and project management
 
 ## ✅ **Current Feature Status**

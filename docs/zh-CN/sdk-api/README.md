@@ -1,16 +1,16 @@
-# MPLP SDK v1.1.0-beta API参考文档
+# MPLP SDK v1.1.0 API参考文档
 
 > **🌐 语言导航**: [English](../../en/sdk-api/README.md) | [中文](README.md)
 
 
 > **文档类别**: SDK API参考  
-> **SDK版本**: v1.1.0-beta  
+> **SDK版本**: v1.1.0  
 > **更新时间**: 2025-09-20  
 > **状态**: ✅ 完整的SDK API文档套件  
 
 ## 📚 **SDK API文档概览**
 
-欢迎使用MPLP（多智能体协议生命周期平台）SDK v1.1.0-beta的全面API参考文档。本文档提供了基于MPLP V1.0 Alpha协议栈构建的MPLP SDK生态系统中所有类、接口、方法和类型的详细信息。
+欢迎使用MPLP（多智能体协议生命周期平台）SDK v1.1.0的全面API参考文档。本文档提供了基于MPLP V1.0 Alpha协议栈构建的MPLP SDK生态系统中所有类、接口、方法和类型的详细信息。
 
 ### **🎯 文档目的**
 

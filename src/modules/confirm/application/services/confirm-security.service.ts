@@ -5,6 +5,7 @@
  * @module ConfirmSecurityService
  */
 
+import { randomBytes } from 'crypto';
 import { IConfirmRepository } from '../../domain/repositories/confirm-repository.interface';
 import { ConfirmEntity } from '../../domain/entities/confirm.entity';
 import { UUID } from '../../types';
@@ -291,7 +292,7 @@ export class ConfirmSecurityService {
    * @returns 审计ID
    */
   private generateAuditId(): UUID {
-    return `audit-${Date.now()}-${Math.random().toString(36).substr(2, 9)}` as UUID;
+    return `audit-${Date.now()}-${randomBytes(6).toString('hex')}` as UUID; // CWE-330 修复
   }
 
   /**

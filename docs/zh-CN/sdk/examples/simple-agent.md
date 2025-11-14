@@ -43,7 +43,7 @@ simple-agent-example/
     "dev": "ts-node --watch src/index.ts"
   },
   "dependencies": {
-    "mplp": "^1.1.0-beta"
+    "mplp": "^1.1.0"
   },
   "devDependencies": {
     "@types/node": "^18.0.0",
@@ -347,18 +347,18 @@ node dist/index.js
 📊 Agent状态:
 {
   "initialized": true,
-  "version": "1.1.0-beta",
+  "version": "1.1.0",
   "modules": ["context", "plan", "role"],
   "tasksExecuted": 0
 }
 
 👋 问候: 开发者
 🔧 使用Context模块创建上下文
-💬 你好, 开发者! 我是SimpleAgent，基于MPLP v1.1.0-beta构建。
+💬 你好, 开发者! 我是SimpleAgent，基于MPLP v1.1.0构建。
 
 👋 问候: MPLP用户
 🔧 使用Context模块创建上下文
-💬 你好, MPLP用户! 我是SimpleAgent，基于MPLP v1.1.0-beta构建。
+💬 你好, MPLP用户! 我是SimpleAgent，基于MPLP v1.1.0构建。
 
 📋 执行任务 #1: 数据处理
 📝 使用Plan模块创建执行计划
@@ -405,7 +405,7 @@ node dist/index.js
 📊 最终状态:
 {
   "initialized": true,
-  "version": "1.1.0-beta",
+  "version": "1.1.0",
   "modules": ["context", "plan", "role"],
   "tasksExecuted": 3
 }
@@ -493,7 +493,7 @@ async saveTaskResult(result: TaskResult) {
 
 ---
 
-**版本**: v1.1.0-beta  
+**版本**: v1.1.0  
 **更新时间**: 2025-10-22  
 **作者**: MPLP Team
 

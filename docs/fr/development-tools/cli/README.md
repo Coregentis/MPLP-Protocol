@@ -4,7 +4,7 @@
 
 
 > **Package**: @mplp/cli  
-> **Version**: v1.1.0-beta  
+> **Version**: v1.1.0  
 > **Dernière Mise à Jour**: 2025-09-20  
 > **Statut**: ✅ Prêt pour la Production  
 

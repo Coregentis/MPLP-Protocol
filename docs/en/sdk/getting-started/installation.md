@@ -3,7 +3,7 @@
 > **🌐 Language Navigation**: [English](installation.md) | [中文](../../../zh-CN/sdk/getting-started/installation.md)
 
 
-> **SDK Version**: v1.1.0-beta  
+> **SDK Version**: v1.1.0  
 > **Base Protocol**: MPLP v1.0 Alpha  
 > **Last Updated**: 2025-09-20  
 
@@ -33,14 +33,14 @@ Install the main MPLP package with all core functionality:
 npm install mplp@beta
 
 # Or install a specific version
-npm install mplp@1.1.0-beta
+npm install mplp@1.1.0
 ```
 
 **Verify Installation**:
 ```bash
 # Check MPLP version
 node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VERSION);"
-# Expected output: MPLP Version: 1.1.0-beta
+# Expected output: MPLP Version: 1.1.0
 ```
 
 **What's Included**:
@@ -62,7 +62,7 @@ npm install -g @mplp/cli
 
 # Verify CLI installation
 mplp --version
-# Expected output: @mplp/cli/1.1.0-beta
+# Expected output: @mplp/cli/1.1.0
 
 # Create your first project
 mplp create my-agent-app
@@ -221,7 +221,7 @@ npm --version
 
 # Check MPLP CLI
 mplp --version
-# Should show @mplp/cli/1.1.0-beta
+# Should show @mplp/cli/1.1.0
 
 # Check TypeScript (if installed globally)
 tsc --version

@@ -2,7 +2,7 @@
 
 ## 🎯 **30分钟快速体验**
 
-这个示例展示了如何使用MPLP SDK v1.1.0-beta构建一个完整的营销自动化系统。**预计完成时间：30分钟**
+这个示例展示了如何使用MPLP SDK v1.1.0构建一个完整的营销自动化系统。**预计完成时间：30分钟**
 
 ### **业务场景**
 一个智能营销自动化系统，包含：
@@ -18,7 +18,7 @@
 4. **优化智能体** (OptimizationAgent) - 优化营销策略
 
 ### **技术栈**
-- **MPLP SDK**: v1.1.0-beta
+- **MPLP SDK**: v1.1.0
 - **Node.js**: 18+
 - **TypeScript**: 5.0+
 - **平台适配器**: Twitter, LinkedIn, GitHub
@@ -45,7 +45,7 @@ npm install mplp@beta
 
 # 验证安装
 node -e "const mplp = require('mplp'); console.log('MPLP版本:', mplp.MPLP_VERSION);"
-# 预期输出: MPLP版本: 1.1.0-beta
+# 预期输出: MPLP版本: 1.1.0
 ```
 
 ### **第1步: 环境准备（5分钟）**

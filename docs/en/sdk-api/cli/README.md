@@ -4,7 +4,7 @@
 
 
 > **Package**: @mplp/cli  
-> **Version**: v1.1.0-beta  
+> **Version**: v1.1.0  
 > **Last Updated**: 2025-09-20  
 > **Status**: ✅ Production Ready  
 
@@ -40,7 +40,7 @@ npm install mplp@beta
 
 # Verify installation
 node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VERSION);"
-# Expected output: MPLP Version: 1.1.0-beta
+# Expected output: MPLP Version: 1.1.0
 ```
 
 #### **Step 2: Install MPLP CLI (Optional)**
@@ -54,7 +54,7 @@ npm install @mplp/cli --save-dev
 
 # Verify CLI installation
 mplp --version
-# Expected output: @mplp/cli/1.1.0-beta
+# Expected output: @mplp/cli/1.1.0
 ```
 
 ### **🏗️ CLI Architecture**
@@ -409,7 +409,7 @@ import { CLIApplication, CLIConfig, CLIContext } from '@mplp/cli';
 
 const config: CLIConfig = {
   name: 'mplp',
-  version: '1.1.0-beta',
+  version: '1.1.0',
   description: 'MPLP CLI Tool'
 };
 

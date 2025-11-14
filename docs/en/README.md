@@ -43,14 +43,14 @@ Get MPLP up and running in 5 minutes:
 npm install mplp@beta
 
 # Or install a specific version
-npm install mplp@1.1.0-beta
+npm install mplp@1.1.0
 ```
 
 **Verify Installation**:
 ```bash
 # Check MPLP version
 node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VERSION);"
-# Expected output: MPLP Version: 1.1.0-beta
+# Expected output: MPLP Version: 1.1.0
 ```
 
 #### **Option 2: Install from Source (For Development)**

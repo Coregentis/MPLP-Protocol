@@ -1,11 +1,12 @@
 /**
  * Dialog管理服务
- * 
+ *
  * @description Dialog模块的核心应用服务，协调领域逻辑和基础设施
  * @version 1.0.0
  * @layer 应用层 - 服务
  */
 
+import { randomBytes } from 'crypto';
 import { DialogEntity } from '../../domain/entities/dialog.entity';
 import { type DialogRepository } from '../../domain/repositories/dialog.repository';
 import { DialogMapper } from '../../api/mappers/dialog.mapper';
@@ -208,8 +209,8 @@ export class DialogManagementService {
         throw new Error(`Sender ${senderId} is not a participant in dialog ${dialogId}`);
       }
 
-      // 生成消息ID
-      const messageId = `msg-${Date.now()}-${Math.random().toString(36).substring(2, 11)}` as UUID;
+      // 生成消息ID (CWE-330 修复)
+      const messageId = `msg-${Date.now()}-${randomBytes(6).toString('hex')}` as UUID;
 
       // 内容安全检查 (预留接口)
       await this._validateMessageContent(message.content);
@@ -690,7 +691,7 @@ export class DialogManagementService {
   }
 
   private async _generateDialogId(): Promise<UUID> {
-    return `dialog-${Date.now()}-${Math.random().toString(36).substring(2, 11)}` as UUID;
+    return `dialog-${Date.now()}-${randomBytes(6).toString('hex')}` as UUID; // CWE-330 修复
   }
 
   private async _publishEvent(_eventType: string, _data: DialogEntity): Promise<void> {

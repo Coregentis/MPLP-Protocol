@@ -44,11 +44,11 @@ cd my-mplp-app
 # Initialize npm project
 npm init -y
 
-# Install MPLP v1.1.0-beta
+# Install MPLP v1.1.0
 npm install mplp@beta
 
 # Or install a specific version
-npm install mplp@1.1.0-beta
+npm install mplp@1.1.0
 
 # Install TypeScript for development (optional)
 npm install -D typescript @types/node ts-node
@@ -61,7 +61,7 @@ npx tsc --init
 ```bash
 # Check MPLP version
 node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VERSION);"
-# Expected output: MPLP Version: 1.1.0-beta
+# Expected output: MPLP Version: 1.1.0
 ```
 
 #### **Option B: Clone and Build from Source**
@@ -106,7 +106,7 @@ async function initializeMPLP() {
   try {
     // Use quickStart() for the easiest initialization
     const mplp = await quickStart();
-    console.log('✅ MPLP v1.1.0-beta initialized successfully!');
+    console.log('✅ MPLP v1.1.0 initialized successfully!');
 
     // Get available modules
     const modules = mplp.getAvailableModules();
@@ -130,7 +130,7 @@ import { MPLP } from 'mplp';
 async function initializeMPLP() {
   // Create MPLP instance with custom configuration
   const mplp = new MPLP({
-    protocolVersion: '1.1.0-beta',
+    protocolVersion: '1.1.0',
     environment: 'development',
     logLevel: 'info'
   });
@@ -157,7 +157,7 @@ async function quickStartExample() {
 
   // Step 1: Initialize MPLP
   const mplp = await quickStart();
-  console.log('✅ MPLP v1.1.0-beta initialized successfully!');
+  console.log('✅ MPLP v1.1.0 initialized successfully!');
 
   // Step 2: Check available modules
   const modules = mplp.getAvailableModules();
@@ -225,7 +225,7 @@ node quickstart.js
 
 # Expected output:
 # 🚀 Starting MPLP Quick Start Example...
-# ✅ MPLP v1.1.0-beta initialized successfully!
+# ✅ MPLP v1.1.0 initialized successfully!
 # 📦 Available modules: [ 'context', 'plan', 'role', 'confirm', 'trace', 'extension', 'dialog', 'collab', 'core', 'network' ]
 #    Total modules loaded: 10
 # 📋 Context module loaded
@@ -234,7 +234,7 @@ node quickstart.js
 # ⚙️  Configuration:
 #    - Environment: development
 #    - Log Level: info
-#    - Protocol Version: 1.1.0-beta
+#    - Protocol Version: 1.1.0
 #
 # ⚡ Simulating multi-agent workflow...
 #    ⏳ Executing task 1/3...
@@ -267,7 +267,7 @@ const mplp = await quickStart();
 
 // Or with custom configuration
 const mplp = new MPLP({
-  protocolVersion: '1.1.0-beta',
+  protocolVersion: '1.1.0',
   environment: 'development',
   logLevel: 'info'
 });
@@ -306,7 +306,7 @@ const config = mplp.getConfig();
 
 console.log(config.environment);      // 'development'
 console.log(config.logLevel);         // 'info'
-console.log(config.protocolVersion);  // '1.1.0-beta'
+console.log(config.protocolVersion);  // '1.1.0'
 ```
 
 **Key Points:**

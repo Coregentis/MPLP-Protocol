@@ -4,7 +4,7 @@
 
 
 > **包名**: @mplp/cli  
-> **版本**: v1.1.0-beta  
+> **版本**: v1.1.0  
 > **更新时间**: 2025-09-20  
 > **状态**: ✅ 生产就绪  
 
@@ -40,7 +40,7 @@ npm install mplp@beta
 
 # 验证安装
 node -e "const mplp = require('mplp'); console.log('MPLP版本:', mplp.MPLP_VERSION);"
-# 预期输出: MPLP版本: 1.1.0-beta
+# 预期输出: MPLP版本: 1.1.0
 ```
 
 #### **步骤2: 安装MPLP CLI（可选）**
@@ -54,7 +54,7 @@ npm install @mplp/cli --save-dev
 
 # 验证CLI安装
 mplp --version
-# 预期输出: @mplp/cli/1.1.0-beta
+# 预期输出: @mplp/cli/1.1.0
 ```
 
 ### **🏗️ CLI架构**
@@ -409,7 +409,7 @@ import { CLIApplication, CLIConfig, CLIContext } from '@mplp/cli';
 
 const config: CLIConfig = {
   name: 'mplp',
-  version: '1.1.0-beta',
+  version: '1.1.0',
   description: 'MPLP CLI工具'
 };
 

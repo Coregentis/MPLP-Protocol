@@ -59,7 +59,7 @@ import { MPLPConfig } from 'mplp';
 
 export const agentConfig: MPLPConfig = {
   // 协议版本
-  protocolVersion: '1.1.0-beta',
+  protocolVersion: '1.1.0',
   
   // 运行环境
   environment: 'development',
@@ -127,7 +127,7 @@ export class MyFirstAgent {
     }
 
     console.log(`👋 你好, ${name}!`);
-    return `Hello, ${name}! I'm MyFirstAgent, powered by MPLP v1.1.0-beta`;
+    return `Hello, ${name}! I'm MyFirstAgent, powered by MPLP v1.1.0`;
   }
 
   /**
@@ -252,14 +252,14 @@ npm start
 📊 Agent信息:
 {
   "name": "MyFirstAgent",
-  "version": "1.1.0-beta",
+  "version": "1.1.0",
   "status": "ready",
   "modules": ["context", "plan", "role"]
 }
 
 👋 执行问候:
 👋 你好, 开发者!
-Hello, 开发者! I'm MyFirstAgent, powered by MPLP v1.1.0-beta
+Hello, 开发者! I'm MyFirstAgent, powered by MPLP v1.1.0
 
 📋 执行任务:
 📋 执行任务: 处理用户请求
@@ -324,7 +324,7 @@ async function quickDemo() {
 
 ---
 
-**版本**: v1.1.0-beta  
+**版本**: v1.1.0  
 **更新时间**: 2025-10-22  
 **作者**: MPLP Team
 

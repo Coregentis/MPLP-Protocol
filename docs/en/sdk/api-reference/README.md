@@ -90,7 +90,7 @@ See [Examples Documentation](../examples/) for more complete examples.
 
 ## 📝 **Version Information**
 
-- **Current Version**: v1.1.0-beta
+- **Current Version**: v1.1.0
 - **Protocol Version**: L1-L3
 - **Last Updated**: 2025-10-22
 

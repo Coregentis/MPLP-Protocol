@@ -1,4 +1,4 @@
-# MPLP V1.1.0-beta Component 100% Completion Enhancement Plan
+# MPLP V1.1.0 Component 100% Completion Enhancement Plan
 
 > **🌐 Language Navigation**: [English](component-completion-enhancement.md) | [中文](../../../zh-CN/project-management/technical-reports/component-completion-enhancement.md)
 

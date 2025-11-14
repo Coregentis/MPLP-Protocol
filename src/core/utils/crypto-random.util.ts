@@ -102,9 +102,15 @@ export function randomUUID(): string {
   const bytes = randomBytes(16);
 
   // Set version (4) and variant (RFC4122)
-  // TypeScript: randomBytes(16) always returns a Buffer of exactly 16 bytes
-  bytes[6] = (bytes[6]! & 0x0f) | 0x40;
-  bytes[8] = (bytes[8]! & 0x3f) | 0x80;
+  // randomBytes(16) always returns a Buffer of exactly 16 bytes
+  // Safe to access indices 6 and 8 without null checks
+  const byte6 = bytes[6];
+  const byte8 = bytes[8];
+
+  if (byte6 !== undefined && byte8 !== undefined) {
+    bytes[6] = (byte6 & 0x0f) | 0x40;
+    bytes[8] = (byte8 & 0x3f) | 0x80;
+  }
 
   const hex = bytes.toString('hex');
   return `${hex.substring(0, 8)}-${hex.substring(8, 12)}-${hex.substring(12, 16)}-${hex.substring(16, 20)}-${hex.substring(20, 32)}`;

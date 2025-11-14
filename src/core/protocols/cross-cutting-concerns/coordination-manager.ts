@@ -1,10 +1,12 @@
 /**
  * MPLP协调管理器
- * 
+ *
  * @description L3层统一协调管理，提供模块间协调和工作流编排功能
  * @version 1.0.0
  * @integration 与所有10个模块统一集成
  */
+
+import { randomBytes } from 'crypto';
 
 /**
  * 协调请求接口
@@ -47,8 +49,8 @@ export class MLPPCoordinationManager {
     _payload: Record<string, unknown>
   ): Promise<CoordinationResponse> {
     // TODO: 等待CoreOrchestrator激活 - 实现模块间协调逻辑
-    const requestId = `coord-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    
+    const requestId = `coord-${Date.now()}-${randomBytes(6).toString('hex')}`; // CWE-330 修复
+
     const request: CoordinationRequest = {
       id: requestId,
       sourceModule: _sourceModule,

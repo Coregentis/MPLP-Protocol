@@ -1,4 +1,4 @@
-# MPLP v1.1.0-beta 分阶段任务分解
+# MPLP v1.1.0 分阶段任务分解
 
 > **🌐 语言导航**: [English](../../../en/project-management/planning/phase-breakdown.md) | [中文](phase-breakdown.md)
 
@@ -233,7 +233,7 @@
 
 ## 🔮 **未来路线图**
 
-### **v1.1.0-beta后计划**
+### **v1.1.0后计划**
 ```markdown
 🚀 v1.2.0路线图:
 - 增强AI集成能力
@@ -252,7 +252,7 @@
 
 - [任务主计划](task-master-plan.md)
 - [最终验证报告](final-verification-report.md)
-- [V1.1.0-beta验证报告](v1-1-0-beta-verification-report.md)
+- [V1.1.0验证报告](v1-1-0-beta-verification-report.md)
 - [项目管理概览](../README.md)
 
 ---

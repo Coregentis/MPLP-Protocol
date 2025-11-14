@@ -1,4 +1,4 @@
-# MPLP Studio v1.1.0-beta 功能完善报告
+# MPLP Studio v1.1.0 功能完善报告
 
 > **🌐 语言导航**: [English](../../../../en/project-management/component-reports/enhancements/studio-enhancement.md) | [中文](studio-enhancement.md)
 
@@ -14,7 +14,7 @@ MPLP Studio是基于MPLP V1.0 Alpha架构构建的可视化开发环境，提供
 ### **核心价值主张**
 - **可视化开发**: 拖拽式界面，降低开发门槛
 - **实时预览**: 即时查看设计效果和代码生成
-- **完整集成**: 与MPLP SDK v1.1.0-beta完全集成
+- **完整集成**: 与MPLP SDK v1.1.0完全集成
 - **企业级**: 支持团队协作和项目管理
 
 ## ✅ **当前功能状态**

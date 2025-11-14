@@ -43,7 +43,7 @@ simple-agent-example/
     "dev": "ts-node --watch src/index.ts"
   },
   "dependencies": {
-    "mplp": "^1.1.0-beta"
+    "mplp": "^1.1.0"
   },
   "devDependencies": {
     "@types/node": "^18.0.0",
@@ -347,18 +347,18 @@ node dist/index.js
 📊 Agent Status:
 {
   "initialized": true,
-  "version": "1.1.0-beta",
+  "version": "1.1.0",
   "modules": ["context", "plan", "role"],
   "tasksExecuted": 0
 }
 
 👋 Greeting: Developer
 🔧 Using Context module to create context
-💬 Hello, Developer! I'm SimpleAgent, built on MPLP v1.1.0-beta.
+💬 Hello, Developer! I'm SimpleAgent, built on MPLP v1.1.0.
 
 👋 Greeting: MPLP User
 🔧 Using Context module to create context
-💬 Hello, MPLP User! I'm SimpleAgent, built on MPLP v1.1.0-beta.
+💬 Hello, MPLP User! I'm SimpleAgent, built on MPLP v1.1.0.
 
 📋 Executing task #1: Data Processing
 📝 Using Plan module to create execution plan
@@ -405,7 +405,7 @@ Task 3 Result: {
 📊 Final Status:
 {
   "initialized": true,
-  "version": "1.1.0-beta",
+  "version": "1.1.0",
   "modules": ["context", "plan", "role"],
   "tasksExecuted": 3
 }
@@ -493,7 +493,7 @@ async saveTaskResult(result: TaskResult) {
 
 ---
 
-**Version**: v1.1.0-beta  
+**Version**: v1.1.0  
 **Last Updated**: 2025-10-22  
 **Author**: MPLP Team
 

@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![MPLP SDK](https://img.shields.io/badge/MPLP%20SDK-v1.1.0--beta-orange.svg)](https://github.com/mplp/sdk)
 
-Enterprise-grade multi-agent orchestration platform built with **MPLP SDK v1.1.0-beta**. This example demonstrates advanced agent deployment, workflow orchestration, and system management capabilities using the MPLP (Multi-Agent Protocol Lifecycle Platform) framework.
+Enterprise-grade multi-agent orchestration platform built with **MPLP SDK v1.1.0**. This example demonstrates advanced agent deployment, workflow orchestration, and system management capabilities using the MPLP (Multi-Agent Protocol Lifecycle Platform) framework.
 
 ## 🚀 Features
 
@@ -52,7 +52,7 @@ npm install mplp@beta
 
 # Verify installation
 node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VERSION);"
-# Expected output: MPLP Version: 1.1.0-beta
+# Expected output: MPLP Version: 1.1.0
 ```
 
 ## 🛠️ Installation
@@ -105,7 +105,7 @@ import {
 
 const config: AgentOrchestratorConfig = {
   name: 'My Enterprise Orchestrator',
-  version: '1.1.0-beta',
+  version: '1.1.0',
   description: 'Custom enterprise orchestration platform',
   
   // Agent configurations
@@ -735,7 +735,7 @@ spec:
     spec:
       containers:
       - name: agent-orchestrator
-        image: mplp/agent-orchestrator:1.1.0-beta
+        image: mplp/agent-orchestrator:1.1.0
         ports:
         - containerPort: 8080
         - containerPort: 9090
@@ -869,12 +869,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Acknowledgments
 
 Built with ❤️ using:
-- **MPLP SDK v1.1.0-beta** - Multi-Agent Protocol Lifecycle Platform
+- **MPLP SDK v1.1.0** - Multi-Agent Protocol Lifecycle Platform
 - **TypeScript** - Type-safe JavaScript development
 - **Node.js** - JavaScript runtime environment
 - **Jest** - JavaScript testing framework
 
 ---
 
-**Agent Orchestrator v1.1.0-beta** - Enterprise Multi-Agent Orchestration Platform  
+**Agent Orchestrator v1.1.0** - Enterprise Multi-Agent Orchestration Platform  
 © 2025 MPLP Team. All rights reserved.

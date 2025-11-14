@@ -594,7 +594,7 @@ process.on('SIGINT', () => gracefulShutdown(agent));
 
 ---
 
-**版本**: v1.1.0-beta  
+**版本**: v1.1.0  
 **更新时间**: 2025-10-22  
 **维护者**: MPLP Team
 

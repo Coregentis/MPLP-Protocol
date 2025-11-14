@@ -1,0 +1,204 @@
+# =============================================================================
+# MPLP Open Source Repository - .gitignore
+# =============================================================================
+# This .gitignore is used for the public open source repository
+# It excludes internal development content and temporary files
+#
+# Repository: https://github.com/Coregentis/MPLP-Protocol
+# Version: 1.0.0
+# Last Updated: 2025-01-13
+# Strategy: Open source repository (exclude internal dev files)
+# =============================================================================
+
+# =============================================================================
+# STANDARD NODE.JS IGNORES
+# =============================================================================
+
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Build outputs
+dist/
+build/
+*.tsbuildinfo
+.npm
+.eslintcache
+
+# Coverage reports
+coverage/
+*.lcov
+.nyc_output
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.production
+.env.staging
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Temporary folders
+tmp/
+temp/
+cache/
+.cache/
+
+# Database files
+*.sqlite
+*.db
+*.sqlite3
+
+# Test artifacts
+test-results/
+playwright-report/
+
+# =============================================================================
+# MPLP SPECIFIC - BUILD AND DISTRIBUTION
+# =============================================================================
+
+# Compiled schemas and extensions
+schemas/compiled/
+extensions/compiled/
+
+# Build artifacts
+*.tgz
+*.tar.gz
+
+# Backup files
+*_backup.*
+*.backup
+
+# =============================================================================
+# INTERNAL DEVELOPMENT FILES - EXCLUDE FROM OPEN SOURCE
+# =============================================================================
+
+# Archived and internal directories
+Archived/
+.archived/
+.archive/
+.backup-configs/
+.governance/
+
+# Internal development tools
+.augment/
+.cursor/
+.husky/
+.pctd/
+.quality/
+
+# CodeQL internal files
+.codeql/
+.codeqlignore*
+
+# CodeQL temporary files and databases
+codeql-db/
+codeql-db-*/
+codeql-results/
+codeql-*.log
+codeql-*.pid
+security-queries.qls
+
+# Internal documentation (not for public)
+CODEQL_ANALYSIS_GUIDE.md
+CODEQL_EXECUTION_SUMMARY.md
+CODEQL_FINAL_REPORT.md
+CODEQL_VSCODE_WORKFLOW.md
+VSCODE_CODEQL_INSTRUCTIONS.md
+COMMIT_MESSAGE.md
+SECURITY-FIX-REPORT.md
+commit-and-push.sh
+PRE-RELEASE-CHECKLIST.md
+RELEASE-PREPARATION-REPORT.md
+.gitignore.private
+.npmignore
+
+# Internal scripts (not for public)
+scripts/auto-codeql-scan-and-fix.js
+scripts/codeql-fix-assistant.js
+scripts/codeql-scan.js
+scripts/fix-*.js
+scripts/fix-*.sh
+scripts/comprehensive-*.js
+scripts/detailed-*.js
+scripts/enhance-*.js
+scripts/find-*.js
+scripts/generate-report.js
+scripts/manual-security-scan.js
+scripts/run-codeql-*.js
+scripts/run-codeql-*.sh
+scripts/run-codeql-*.ps1
+scripts/security-scan.js
+scripts/switch-*.js
+scripts/update-package-repository.js
+
+# Internal CI/CD Configuration
+.circleci/
+
+# =============================================================================
+# SECURITY - SENSITIVE INFORMATION
+# =============================================================================
+
+# Actual secrets and production keys
+**/actual-secrets.*
+**/production-keys.*
+**/*secret*.json
+**/*credential*.json
+**/*password*.txt
+
+# API keys and tokens
+**/.env.production
+**/.env.staging
+
+# =============================================================================
+# LARGE FILES AND ARCHIVES
+# =============================================================================
+
+# Large archived files
+**/*.zip
+**/*.tar.gz
+**/*.7z
+
+# =============================================================================
+# NOTES
+# =============================================================================
+# This .gitignore is designed for the public open source repository.
+# It ensures that:
+# 1. Only user-facing content is published
+# 2. Internal development tools are excluded
+# 3. Temporary files are excluded
+# 4. Sensitive information is protected
+# 5. The repository remains clean and professional
+#
+# For the private development repository, use .gitignore.private
+# =============================================================================
+

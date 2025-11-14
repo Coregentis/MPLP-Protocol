@@ -8,6 +8,7 @@
  * @refactor 17→3服务简化，符合协议最小化原则
  */
 
+import { randomBytes } from 'crypto';
 import { ContextEntity } from '../../domain/entities/context.entity';
 import { IContextRepository } from '../../domain/repositories/context-repository.interface';
 import {
@@ -604,7 +605,7 @@ export class ContextManagementService {
    * 生成上下文ID
    */
   private generateContextId(): UUID {
-    return `context-${Date.now()}-${Math.random().toString(36).substring(2, 11)}` as UUID;
+    return `context-${Date.now()}-${randomBytes(6).toString('hex')}` as UUID; // CWE-330 修复
   }
 
   /**

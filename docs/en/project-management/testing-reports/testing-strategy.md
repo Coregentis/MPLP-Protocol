@@ -1,4 +1,4 @@
-# MPLP v1.1.0-beta Testing Strategy
+# MPLP v1.1.0 Testing Strategy
 
 > **🌐 Language Navigation**: [English](testing-strategy.md) | [中文](../../../zh-CN/project-management/testing-reports/testing-strategy.md)
 

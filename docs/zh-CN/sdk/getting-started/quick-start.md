@@ -21,7 +21,7 @@ npm install -g @mplp/cli
 
 # 验证安装
 node -e "const mplp = require('mplp'); console.log('MPLP版本:', mplp.MPLP_VERSION);"
-# 预期输出: MPLP版本: 1.1.0-beta
+# 预期输出: MPLP版本: 1.1.0
 ```
 
 详细的安装选项请参考[安装指南](installation.md)。

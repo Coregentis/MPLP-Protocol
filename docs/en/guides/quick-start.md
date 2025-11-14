@@ -36,7 +36,7 @@ MPLP v1.0 Alpha is **FULLY COMPLETED** with enterprise-grade quality:
 npm install mplp@beta
 
 # Or install a specific version
-npm install mplp@1.1.0-beta
+npm install mplp@1.1.0
 
 # Using yarn
 yarn add mplp@beta
@@ -51,7 +51,7 @@ pnpm add mplp@beta
 # Check version
 node -e "const mplp = require('mplp'); console.log('MPLP Version:', mplp.MPLP_VERSION);"
 
-# Expected output: MPLP Version: 1.1.0-beta
+# Expected output: MPLP Version: 1.1.0
 ```
 
 ## 🚀 **Basic Usage**

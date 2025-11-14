@@ -3,7 +3,7 @@
 > **🌐 Language Navigation**: [English](README.md) | [中文](../../zh-CN/versions/README.md)
 
 
-> **Current Versions**: v1.0 Alpha (Protocol) + v1.1.0-beta (SDK)  
+> **Current Versions**: v1.0 Alpha (Protocol) + v1.1.0 (SDK)  
 > **Status**: Dual Version Release Ready  
 > **Last Updated**: 2025-09-20  
 
@@ -13,11 +13,11 @@ MPLP follows a dual-version strategy to provide both stable protocol foundation 
 
 ### **Current Release Status**
 - **✅ MPLP v1.0 Alpha**: L1-L3 Protocol Stack (100% Complete, Enterprise Ready)
-- **✅ MPLP v1.1.0-beta SDK**: Complete SDK Ecosystem (100% Complete, Enterprise Ready)
+- **✅ MPLP v1.1.0 SDK**: Complete SDK Ecosystem (100% Complete, Enterprise Ready)
 
 ## 📊 **Version Comparison Matrix**
 
-| Feature Category | v1.0 Alpha | v1.1.0-beta SDK | Recommended For |
+| Feature Category | v1.0 Alpha | v1.1.0 SDK | Recommended For |
 |------------------|------------|-----------------|-----------------|
 | **Protocol Layer** | ✅ Complete L1-L3 | ✅ Enhanced L1-L3 | All Applications |
 | **Core Modules** | ✅ 10/10 Modules | ✅ 10/10 + Extensions | Production Systems |
@@ -71,7 +71,7 @@ MPLP follows a dual-version strategy to provide both stable protocol foundation 
 - Research and academic projects
 - Protocol compliance validation
 
-## 🛠️ **MPLP v1.1.0-beta SDK - Complete Development Ecosystem**
+## 🛠️ **MPLP v1.1.0 SDK - Complete Development Ecosystem**
 
 ### **Enhanced Capabilities**
 ```markdown
@@ -134,7 +134,7 @@ MPLP follows a dual-version strategy to provide both stable protocol foundation 
 ✅ You need enterprise-grade reliability
 ```
 
-### **Choose v1.1.0-beta SDK If:**
+### **Choose v1.1.0 SDK If:**
 ```markdown
 ✅ You want rapid application development
 ✅ You need platform integrations (Twitter, LinkedIn, etc.)
@@ -146,7 +146,7 @@ MPLP follows a dual-version strategy to provide both stable protocol foundation 
 
 ### **Migration Path**
 ```markdown
-🔄 v1.0 Alpha → v1.1.0-beta SDK:
+🔄 v1.0 Alpha → v1.1.0 SDK:
 - ✅ 100% backward compatibility maintained
 - ✅ All v1.0 Alpha features preserved
 - ✅ Enhanced with SDK capabilities
@@ -157,7 +157,7 @@ MPLP follows a dual-version strategy to provide both stable protocol foundation 
 ## 📋 **Feature Compatibility Matrix**
 
 ### **Core Protocol Features**
-| Feature | v1.0 Alpha | v1.1.0-beta | Notes |
+| Feature | v1.0 Alpha | v1.1.0 | Notes |
 |---------|------------|-------------|-------|
 | Context Management | ✅ Full | ✅ Enhanced | Additional context types in SDK |
 | Planning System | ✅ Full | ✅ Enhanced | AI integration helpers in SDK |
@@ -171,7 +171,7 @@ MPLP follows a dual-version strategy to provide both stable protocol foundation 
 | Network Communication | ✅ Full | ✅ Enhanced | Cloud deployment helpers in SDK |
 
 ### **Development Experience**
-| Aspect | v1.0 Alpha | v1.1.0-beta | Improvement |
+| Aspect | v1.0 Alpha | v1.1.0 | Improvement |
 |--------|------------|-------------|-------------|
 | Setup Time | 30-60 minutes | 5-10 minutes | 6x faster |
 | Learning Curve | Steep | Gentle | Comprehensive docs |
@@ -182,7 +182,7 @@ MPLP follows a dual-version strategy to provide both stable protocol foundation 
 
 ## 🔄 **Upgrade and Migration**
 
-### **Upgrading from v1.0 Alpha to v1.1.0-beta SDK**
+### **Upgrading from v1.0 Alpha to v1.1.0 SDK**
 
 #### **Automatic Migration**
 ```bash
@@ -190,10 +190,10 @@ MPLP follows a dual-version strategy to provide both stable protocol foundation 
 npm install -g @mplp/migration-tool
 
 # Run automatic migration
-mplp migrate --from v1.0-alpha --to v1.1.0-beta
+mplp migrate --from v1.0-alpha --to v1.1.0
 
 # Verify migration
-mplp verify --version v1.1.0-beta
+mplp verify --version v1.1.0
 ```
 
 #### **Manual Migration Steps**
@@ -236,7 +236,7 @@ mplp docs generate
 
 ### **Current Status (2025-09-20)**
 - **✅ v1.0 Alpha**: Released, Enterprise Ready
-- **✅ v1.1.0-beta SDK**: Released, Enterprise Ready
+- **✅ v1.1.0 SDK**: Released, Enterprise Ready
 
 ### **Planned Releases**
 ```markdown
@@ -263,12 +263,12 @@ mplp docs generate
 
 ### **Version-Specific Support**
 - **v1.0 Alpha Support**: protocol-support@mplp.dev
-- **v1.1.0-beta SDK Support**: sdk-support@mplp.dev
+- **v1.1.0 SDK Support**: sdk-support@mplp.dev
 - **Migration Support**: migration-support@mplp.dev
 
 ### **Documentation Resources**
 - **v1.0 Alpha Docs (开发中)** - Protocol documentation
-- **[v1.1.0-beta SDK Docs](../sdk/README.md)** - Complete SDK documentation
+- **[v1.1.0 SDK Docs](../sdk/README.md)** - Complete SDK documentation
 - **[Migration Guide](migration-guide.md)** - Detailed migration instructions
 - **[Version History](version-history.md)** - Complete version changelog
 

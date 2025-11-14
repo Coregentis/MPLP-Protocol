@@ -3,18 +3,18 @@
 > **🌐 Language Navigation**: [English](README.md) | [中文](../../../zh-CN/project-management/technical-reports/README.md)
 
 
-> **Report Collection**: V1.1.0-beta Technical Architecture Reports  
+> **Report Collection**: V1.1.0 Technical Architecture Reports  
 > **Status**: Complete Technical Analysis  
 > **Last Updated**: 2025-09-20  
 
 ## 🏗️ **Technical Reports Overview**
 
-This section contains comprehensive technical reports documenting the architecture, compatibility, and system design aspects of MPLP v1.1.0-beta SDK. These reports provide in-depth analysis of technical achievements, architectural decisions, and system capabilities.
+This section contains comprehensive technical reports documenting the architecture, compatibility, and system design aspects of MPLP v1.1.0 SDK. These reports provide in-depth analysis of technical achievements, architectural decisions, and system capabilities.
 
 ### **Report Categories**
 
 #### **🔧 Architecture and Inheritance**
-- **[Architecture Inheritance Report](architecture-inheritance.md)** - Verification of v1.0 Alpha architecture inheritance in v1.1.0-beta SDK
+- **[Architecture Inheritance Report](architecture-inheritance.md)** - Verification of v1.0 Alpha architecture inheritance in v1.1.0 SDK
 - **[Component Completion Enhancement](component-completion-enhancement.md)** - Component completion enhancement strategies and implementation
 - **[Component Completion Status](component-completion-status.md)** - Current status of all SDK components
 - **[Component Completion Verification](component-completion-verification.md)** - Verification results of component completion

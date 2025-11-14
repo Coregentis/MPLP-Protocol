@@ -231,6 +231,13 @@ export class MLPPSecurityManager {
     // TODO: 等待CoreOrchestrator激活 - 实现令牌验证
     try {
       const tokenData = JSON.parse(Buffer.from(_token, 'base64').toString('utf-8'));
+      // 验证数据结构 (CWE-502 修复)
+      if (!tokenData || typeof tokenData !== 'object') {
+        return null;
+      }
+      if (typeof tokenData.exp !== 'number' || !tokenData.payload) {
+        return null;
+      }
       if (tokenData.exp > Date.now()) {
         return tokenData.payload;
       }

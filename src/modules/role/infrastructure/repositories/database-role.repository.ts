@@ -284,22 +284,23 @@ export class DatabaseRoleRepository implements IRoleRepository {
       description: row.description as string | undefined,
       role_type: row.role_type as RoleType,
       status: row.status as RoleStatus,
-      scope: row.scope_data ? JSON.parse(row.scope_data as string) : undefined,
-      permissions: row.permissions_data ? JSON.parse(row.permissions_data as string) : [],
-      inheritance: row.inheritance_data ? JSON.parse(row.inheritance_data as string) : undefined,
-      delegation: row.delegation_data ? JSON.parse(row.delegation_data as string) : undefined,
-      attributes: row.attributes_data ? JSON.parse(row.attributes_data as string) : undefined,
-      validation_rules: row.validation_rules_data ? JSON.parse(row.validation_rules_data as string) : undefined,
-      audit_settings: row.audit_settings_data ? JSON.parse(row.audit_settings_data as string) : undefined,
-      agents: row.agents_data ? JSON.parse(row.agents_data as string) : [],
-      team_configuration: row.team_configuration_data ? JSON.parse(row.team_configuration_data as string) : undefined,
-      performance_metrics: JSON.parse(row.performance_metrics_data as string),
-      monitoring_integration: JSON.parse(row.monitoring_integration_data as string),
-      version_history: JSON.parse(row.version_history_data as string),
-      search_metadata: JSON.parse(row.search_metadata_data as string),
+      // 安全解析JSON字段 (CWE-502 修复)
+      scope: row.scope_data ? this.safeJsonParse<any>(row.scope_data as string) : undefined,
+      permissions: row.permissions_data ? this.safeJsonParse<any>(row.permissions_data as string, []) : [],
+      inheritance: row.inheritance_data ? this.safeJsonParse<any>(row.inheritance_data as string) : undefined,
+      delegation: row.delegation_data ? this.safeJsonParse<any>(row.delegation_data as string) : undefined,
+      attributes: row.attributes_data ? this.safeJsonParse<any>(row.attributes_data as string) : undefined,
+      validation_rules: row.validation_rules_data ? this.safeJsonParse<any>(row.validation_rules_data as string) : undefined,
+      audit_settings: row.audit_settings_data ? this.safeJsonParse<any>(row.audit_settings_data as string) : undefined,
+      agents: row.agents_data ? this.safeJsonParse<any>(row.agents_data as string, []) : [],
+      team_configuration: row.team_configuration_data ? this.safeJsonParse<any>(row.team_configuration_data as string) : undefined,
+      performance_metrics: this.safeJsonParse<any>(row.performance_metrics_data as string, {}),
+      monitoring_integration: this.safeJsonParse<any>(row.monitoring_integration_data as string, {}),
+      version_history: this.safeJsonParse<any>(row.version_history_data as string, []),
+      search_metadata: this.safeJsonParse<any>(row.search_metadata_data as string, {}),
       role_operation: row.role_operation as 'create' | 'assign' | 'revoke' | 'update' | 'delete',
-      event_integration: JSON.parse(row.event_integration_data as string),
-      audit_trail: JSON.parse(row.audit_trail_data as string),
+      event_integration: this.safeJsonParse<any>(row.event_integration_data as string, {}),
+      audit_trail: this.safeJsonParse<any>(row.audit_trail_data as string, []),
       protocol_version: row.protocol_version as string,
       timestamp: row.timestamp as string
     };
@@ -565,5 +566,20 @@ export class DatabaseRoleRepository implements IRoleRepository {
       totalPermissions: 0,
       totalAgents: 0
     };
+  }
+
+  /**
+   * 安全的JSON解析辅助方法 (CWE-502 修复)
+   */
+  private safeJsonParse<T>(jsonString: string, defaultValue?: T): T | undefined {
+    try {
+      const parsed = JSON.parse(jsonString);
+      if (parsed === null || parsed === undefined) {
+        return defaultValue;
+      }
+      return parsed as T;
+    } catch {
+      return defaultValue;
+    }
   }
 }

@@ -1,12 +1,13 @@
 /**
  * Extension分析服务
- * 
+ *
  * @description 扩展分析和监控服务，负责使用统计、性能监控、健康检查
  * @version 1.0.0
  * @layer Application层 - 应用服务
  * @pattern 基于重构指南的3服务架构设计
  */
 
+import { randomBytes } from 'crypto';
 import { UUID } from '../../../../shared/types';
 import { IExtensionRepository } from '../../domain/repositories/extension.repository.interface';
 import {
@@ -355,7 +356,7 @@ export class ExtensionAnalyticsService {
   // ===== 私有辅助方法 =====
 
   private generateReportId(): UUID {
-    return `report-${Date.now()}-${Math.random().toString(36).substring(2, 11)}` as UUID;
+    return `report-${Date.now()}-${randomBytes(6).toString('hex')}` as UUID; // CWE-330 修复
   }
 
   private async generateSummary(

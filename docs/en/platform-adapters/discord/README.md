@@ -5,7 +5,7 @@
 
 > **Platform**: Discord  
 > **Adapter**: @mplp/adapters - DiscordAdapter  
-> **Version**: v1.1.0-beta  
+> **Version**: v1.1.0  
 > **Last Updated**: 2025-09-20  
 > **Status**: ✅ Production Ready  
 

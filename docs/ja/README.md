@@ -43,14 +43,14 @@ MPLPを5分で起動して実行：
 npm install mplp@beta
 
 # または特定のバージョンをインストール
-npm install mplp@1.1.0-beta
+npm install mplp@1.1.0
 ```
 
 **インストールの確認**:
 ```bash
 # MPLPバージョンを確認
 node -e "const mplp = require('mplp'); console.log('MPLPバージョン:', mplp.MPLP_VERSION);"
-# 期待される出力: MPLPバージョン: 1.1.0-beta
+# 期待される出力: MPLPバージョン: 1.1.0
 ```
 
 #### **オプション2：ソースからインストール（開発用）**

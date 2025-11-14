@@ -1,11 +1,12 @@
 /**
  * Network协议工厂
- * 
+ *
  * @description Network模块的协议工厂，负责创建和管理协议实例
  * @version 1.0.0
  * @layer 基础设施层 - 工厂
  */
 
+import { randomBytes } from 'crypto';
 import { NetworkProtocol } from '../protocols/network.protocol';
 import { NetworkManagementService } from '../../application/services/network-management.service';
 import { NetworkAnalyticsService } from '../../application/services/network-analytics.service';
@@ -251,7 +252,7 @@ export class NetworkProtocolFactory {
 
     for (const config of configs) {
       try {
-        const instanceId = (config.instanceId as string) || `instance-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        const instanceId = (config.instanceId as string) || `instance-${Date.now()}-${randomBytes(6).toString('hex')}`; // CWE-330 修复
         const protocol = await this.createProtocol(instanceId, config as Record<string, unknown>);
         if (protocol) {
           protocols.push(protocol);

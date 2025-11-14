@@ -215,7 +215,7 @@ Phase 4 (8个月+): 基于框架快速开发更多应用
 **技术栈**:
 ```
 后端:
-├─ MPLP v1.1.0-beta（协议层）
+├─ MPLP v1.1.0（协议层）
 ├─ Node.js + TypeScript
 ├─ PostgreSQL（数据库）
 ├─ Redis（缓存）
@@ -488,7 +488,7 @@ Total: $800K-$1.8M
 **Day 3-4: 环境搭建**
 - [ ] 创建项目目录 `examples/killer-apps/ai-content-creator/`
 - [ ] 配置开发环境
-- [ ] 集成MPLP v1.1.0-beta
+- [ ] 集成MPLP v1.1.0
 - [ ] 配置数据库和Redis
 
 **Day 5-7: 第一个Agent**

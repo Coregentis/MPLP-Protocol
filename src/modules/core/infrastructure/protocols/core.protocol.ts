@@ -1,12 +1,13 @@
 /**
  * Core协议实现
- * 
+ *
  * @description 基于Context、Plan、Role、Confirm等模块的企业级标准，实现Core模块的MPLP协议
  * @version 1.0.0
  * @layer 基础设施层 - 协议实现
  * @pattern 与Context、Plan、Role等模块使用IDENTICAL的协议实现模式
  */
 
+import { randomBytes } from 'crypto';
 import { CoreEntity } from '../../domain/entities/core.entity';
 import { ICoreRepository } from '../../domain/repositories/core-repository.interface';
 import { CoreManagementService } from '../../application/services/core-management.service';
@@ -328,7 +329,7 @@ export class CoreProtocol {
    * 生成操作ID
    */
   private generateOperationId(): UUID {
-    return `core-op-${Date.now()}-${Math.random().toString(36).substring(2, 11)}` as UUID;
+    return `core-op-${Date.now()}-${randomBytes(6).toString('hex')}` as UUID; // CWE-330 修复
   }
 
   /**
