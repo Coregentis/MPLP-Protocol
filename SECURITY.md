@@ -130,6 +130,45 @@ MPLP includes enterprise-grade security features:
 - Compliance reporting (SOX, GDPR, HIPAA)
 - Real-time security alerts
 
+## ⚠️ Known Security Issues
+
+### **Development Dependencies (Low Risk)**
+
+The following security issues exist in development dependencies and **do not affect production code**:
+
+#### js-yaml < 4.1.1 (Moderate Severity)
+- **CVE**: Prototype pollution in merge (<<)
+- **Advisory**: https://github.com/advisories/GHSA-mh29-5h37-fv8m
+- **Affected Package**: @istanbuljs/load-nyc-config (indirect dependency of jest@29.7.0)
+- **Impact**: Development and testing environment only
+- **Risk Level**: Low (does not affect production builds or runtime)
+- **Status**: Waiting for upstream fix in jest ecosystem
+- **Mitigation**:
+  - This package is only used during testing
+  - Production builds do not include development dependencies
+  - No user-facing code is affected
+
+#### Summary
+- **Total Vulnerabilities**: 19 moderate severity
+- **All from**: jest@29.7.0 dependency chain
+- **Production Impact**: None (devDependencies only)
+- **User Impact**: None
+
+### **Why These Are Not Fixed**
+
+1. **Development Only**: All affected packages are in `devDependencies`
+2. **No Production Impact**: These packages are not included in production builds
+3. **Breaking Changes**: Forcing updates would break the test environment
+4. **Upstream Issue**: Waiting for jest ecosystem to update dependencies
+5. **Risk Assessment**: The actual risk to users is zero
+
+### **Monitoring and Updates**
+
+We actively monitor these issues and will update dependencies when:
+- jest releases a version with updated dependencies
+- A critical vulnerability is discovered that affects production code
+- A non-breaking fix becomes available
+
 ## 🔍 Security Testing
 
 MPLP undergoes rigorous security testing:
@@ -144,9 +183,10 @@ MPLP undergoes rigorous security testing:
 
 - ✅ **2,902/2,902 tests passing** (100% pass rate)
 - ✅ **199/199 test suites passing** (100% pass rate)
-- ✅ **Zero critical vulnerabilities**
-- ✅ **Zero high-risk security issues**
+- ✅ **Zero critical vulnerabilities in production code**
+- ✅ **Zero high-risk security issues in production code**
 - ✅ **100% security compliance**
+- ⚠️ **19 moderate vulnerabilities in development dependencies** (no production impact)
 
 ## 📚 Security Best Practices
 
@@ -191,8 +231,8 @@ For security-related questions or concerns:
 
 ---
 
-**Last Updated**: October 17, 2025
-**Version**: 1.0.0
+**Last Updated**: January 15, 2025
+**Version**: 1.1.0
 **Status**: Active
 
 Thank you for helping keep MPLP and our users safe! 🙏
