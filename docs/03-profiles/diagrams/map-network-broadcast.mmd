@@ -1,0 +1,30 @@
+sequenceDiagram
+    participant Coordinator as MAP Coordinator
+    participant Broadcaster as Agent (Broadcaster)
+    participant A1 as Agent A1
+    participant A2 as Agent A2
+    participant A3 as Agent A3
+
+    Note over Coordinator: MAPSessionStarted
+    Coordinator->>Broadcaster: Assign broadcast role
+    Coordinator->>A1: Assign responder role
+    Coordinator->>A2: Assign responder role
+    Coordinator->>A3: Assign responder role
+    Note over Coordinator: MAPRolesAssigned
+
+    Broadcaster->>Coordinator: Broadcast message/task
+    Note over Coordinator: MAPBroadcastSent
+
+    par Parallel Response Collection
+        A1->>Coordinator: Response 1
+        Note over Coordinator: MAPBroadcastReceived (A1)
+    and
+        A2->>Coordinator: Response 2
+        Note over Coordinator: MAPBroadcastReceived (A2)
+    and
+        A3->>Coordinator: Response 3
+        Note over Coordinator: MAPBroadcastReceived (A3)
+    end
+
+    Coordinator->>Broadcaster: Aggregated results
+    Note over Coordinator: MAPSessionCompleted

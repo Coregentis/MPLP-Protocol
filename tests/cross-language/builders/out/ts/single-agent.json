@@ -1,0 +1,79 @@
+{
+  "context": {
+    "meta": {
+      "protocol_version": "1.0.0",
+      "schema_version": "1.0.0",
+      "created_at": "2025-11-29T13:02:25.385Z"
+    },
+    "context_id": "b72e8053-cfca-4f47-8da6-d7dfc3ae1772",
+    "root": {
+      "domain": "test",
+      "environment": "production"
+    },
+    "title": "Cross-Language Builder Test",
+    "status": "active",
+    "tags": [
+      "test",
+      "cross-lang"
+    ],
+    "language": "en",
+    "owner_role": "admin",
+    "constraints": {
+      "budget": "1000"
+    }
+  },
+  "plan": {
+    "meta": {
+      "protocol_version": "1.0.0",
+      "schema_version": "1.0.0",
+      "created_at": "2025-11-29T13:02:25.386Z"
+    },
+    "plan_id": "28674379-f8e1-45b1-8ce3-4fab9d0a1a4e",
+    "context_id": "b72e8053-cfca-4f47-8da6-d7dfc3ae1772",
+    "title": "Test Plan",
+    "objective": "Test cross-language builders",
+    "status": "draft",
+    "steps": [
+      {
+        "step_id": "2ff10097-7052-4665-adb1-74f37b02d85e",
+        "description": "Step 1",
+        "status": "pending"
+      },
+      {
+        "step_id": "ade2fb13-20f8-4aa2-9030-f5a0d5d8b1d3",
+        "description": "Step 2",
+        "status": "pending"
+      }
+    ]
+  },
+  "confirm": {
+    "meta": {
+      "protocol_version": "1.0.0",
+      "schema_version": "1.0.0",
+      "created_at": "2025-11-29T13:02:25.387Z"
+    },
+    "confirm_id": "350f3a20-ff5d-4343-abad-dd13763c41c9",
+    "target_type": "plan",
+    "target_id": "28674379-f8e1-45b1-8ce3-4fab9d0a1a4e",
+    "status": "approved",
+    "requested_by_role": "qa-lead",
+    "requested_at": "2025-11-29T13:02:25.387Z",
+    "reason": "All checks passed"
+  },
+  "trace": {
+    "meta": {
+      "protocol_version": "1.0.0",
+      "schema_version": "1.0.0",
+      "created_at": "2025-11-29T13:02:25.388Z"
+    },
+    "trace_id": "34389d9f-a98b-4486-b6f5-5fd73b7d6cdb",
+    "context_id": "b72e8053-cfca-4f47-8da6-d7dfc3ae1772",
+    "plan_id": "28674379-f8e1-45b1-8ce3-4fab9d0a1a4e",
+    "status": "running",
+    "root_span": {
+      "trace_id": "34389d9f-a98b-4486-b6f5-5fd73b7d6cdb",
+      "span_id": "063439a6-1089-4a40-9bfa-3333ca0ae5be",
+      "context_id": "b72e8053-cfca-4f47-8da6-d7dfc3ae1772"
+    }
+  }
+}

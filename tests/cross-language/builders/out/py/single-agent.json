@@ -1,0 +1,79 @@
+{
+  "context": {
+    "meta": {
+      "protocol_version": "1.0.0",
+      "schema_version": "1.0.0",
+      "created_at": "2025-11-29T13:02:26.769270Z"
+    },
+    "context_id": "1da34974-edd1-4d6d-8f03-3de7c9b0bea2",
+    "root": {
+      "domain": "test",
+      "environment": "production"
+    },
+    "title": "Cross-Language Builder Test",
+    "status": "active",
+    "tags": [
+      "test",
+      "cross-lang"
+    ],
+    "language": "en",
+    "owner_role": "admin",
+    "constraints": {
+      "budget": "1000"
+    }
+  },
+  "plan": {
+    "meta": {
+      "protocol_version": "1.0.0",
+      "schema_version": "1.0.0",
+      "created_at": "2025-11-29T13:02:26.769270Z"
+    },
+    "plan_id": "87a99e3e-bf63-47d9-aaa3-e78a99bc2831",
+    "context_id": "1da34974-edd1-4d6d-8f03-3de7c9b0bea2",
+    "title": "Test Plan",
+    "objective": "Test cross-language builders",
+    "status": "draft",
+    "steps": [
+      {
+        "step_id": "1bbeec6f-ffab-4817-8ba2-73dcd0fbb7ef",
+        "description": "Step 1",
+        "status": "pending"
+      },
+      {
+        "step_id": "fce67678-85ff-41db-bc03-5b540bd589a9",
+        "description": "Step 2",
+        "status": "pending"
+      }
+    ]
+  },
+  "confirm": {
+    "meta": {
+      "protocol_version": "1.0.0",
+      "schema_version": "1.0.0",
+      "created_at": "2025-11-29T13:02:26.769270Z"
+    },
+    "confirm_id": "57831b5b-8353-4151-99d3-ce0450bceb54",
+    "target_type": "plan",
+    "target_id": "87a99e3e-bf63-47d9-aaa3-e78a99bc2831",
+    "status": "approved",
+    "requested_by_role": "qa-lead",
+    "requested_at": "2025-11-29T13:02:26.769270Z",
+    "reason": "All checks passed"
+  },
+  "trace": {
+    "meta": {
+      "protocol_version": "1.0.0",
+      "schema_version": "1.0.0",
+      "created_at": "2025-11-29T13:02:26.769270Z"
+    },
+    "trace_id": "f3590728-dced-4713-84d5-8128151a1d4d",
+    "context_id": "1da34974-edd1-4d6d-8f03-3de7c9b0bea2",
+    "plan_id": "87a99e3e-bf63-47d9-aaa3-e78a99bc2831",
+    "root_span": {
+      "trace_id": "f3590728-dced-4713-84d5-8128151a1d4d",
+      "span_id": "93fbc924-0c15-44a1-8d95-770e82c0e6ef",
+      "context_id": "1da34974-edd1-4d6d-8f03-3de7c9b0bea2"
+    },
+    "status": "running"
+  }
+}

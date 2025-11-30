@@ -1,0 +1,25 @@
+{
+  "ok": false,
+  "errors": [
+    {
+      "path": "plan_id",
+      "code": "pattern",
+      "message": "String should match pattern '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'"
+    },
+    {
+      "path": "context_id",
+      "code": "pattern",
+      "message": "String should match pattern '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'"
+    },
+    {
+      "path": "objective",
+      "code": "required",
+      "message": "Field required"
+    },
+    {
+      "path": "steps[0].step_id",
+      "code": "required",
+      "message": "Field required"
+    }
+  ]
+}

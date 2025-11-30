@@ -1,0 +1,32 @@
+sequenceDiagram
+    participant Coordinator as MAP Coordinator
+    participant A1 as Agent A1 (Planner)
+    participant A2 as Agent A2 (Reviewer)
+
+    Note over Coordinator: MAPSessionStarted
+    Coordinator->>A1: Assign role: planner
+    Coordinator->>A2: Assign role: reviewer
+    Note over Coordinator: MAPRolesAssigned
+
+    Note over Coordinator: Turn 1: Planner
+    Coordinator->>A1: Dispatch token (Turn 1)
+    Note over Coordinator: MAPTurnDispatched (A1)
+    A1->>A1: Execute planning task
+    A1->>Coordinator: Signal completion
+    Note over Coordinator: MAPTurnCompleted (A1)
+
+    Note over Coordinator: Turn 2: Reviewer
+    Coordinator->>A2: Dispatch token (Turn 2)
+    Note over Coordinator: MAPTurnDispatched (A2)
+    A2->>A2: Execute review task
+    A2->>Coordinator: Signal completion
+    Note over Coordinator: MAPTurnCompleted (A2)
+
+    Note over Coordinator: Turn 3: Planner (Revision)
+    Coordinator->>A1: Dispatch token (Turn 3)
+    Note over Coordinator: MAPTurnDispatched (A1)
+    A1->>A1: Execute revision task
+    A1->>Coordinator: Signal completion
+    Note over Coordinator: MAPTurnCompleted (A1)
+
+    Note over Coordinator: MAPSessionCompleted

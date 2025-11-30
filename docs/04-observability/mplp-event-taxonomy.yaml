@@ -1,0 +1,175 @@
+version: "1.0.0"
+title: "MPLP Event Taxonomy v1.0"
+description: "Complete event family classification and minimal field requirements for MPLP v1.0 Observability Duties"
+
+event_families:
+  - id: import_process
+    title: "ImportProcessEvent"
+    description: "Project import, repository scanning, semantic card generation, PSG bootstrap"
+    minimal_fields:
+      - event_id # UUID v4 - unique event identifier
+      - event_type # String - specific event subtype (e.g., "import_started", "scan_completed")
+      - timestamp # ISO 8601 datetime
+      - project_id # UUID v4 - project being imported
+      - source # String - import source (filesystem, git, archive)
+      - phase # Enum - import phase (scan, parse, analyze, bootstrap)
+
+  - id: intent
+    title: "IntentEvent"
+    description: "User intentions, actor actions, input channels"
+    minimal_fields:
+      - event_id # UUID v4
+      - event_type # String
+      - timestamp # ISO 8601 datetime
+      - intent_id # UUID v4 - intent identifier
+      - actor_kind # Enum - actor type (user, agent, system)
+      - channel # String - input channel (cli, api, ui, agent)
+
+  - id: delta_intent
+    title: "DeltaIntentEvent"
+    description: "Intent deltas, change requests, modification impact scopes"
+    minimal_fields:
+      - event_id # UUID v4
+      - event_type # String
+      - timestamp # ISO 8601 datetime
+      - intent_id # UUID v4 - original intent
+      - delta_id # UUID v4 - delta identifier
+      - impact_scope # Enum - impact scope (local, module, system, global)
+
+  - id: impact_analysis
+    title: "ImpactAnalysisEvent"
+    description: "Impact assessment results, ripple effect analysis"
+    minimal_fields:
+      - event_id # UUID v4
+      - event_type # String
+      - timestamp # ISO 8601 datetime
+      - analysis_id # UUID v4 - analysis session identifier
+      - impact_level # Enum - impact severity (low, medium, high, critical)
+
+  - id: compensation_plan
+    title: "CompensationPlanEvent"
+    description: "Compensation planning for intent execution, artifact targeting"
+    minimal_fields:
+      - event_id # UUID v4
+      - event_type # String
+      - timestamp # ISO 8601 datetime
+      - plan_id # UUID v4 - compensation plan identifier
+      - target_artifacts # Array of strings - artifact IDs requiring compensation
+
+  - id: methodology
+    title: "MethodologyEvent"
+    description: "Methodology selection, method execution tracking"
+    minimal_fields:
+      - event_id # UUID v4
+      - event_type # String
+      - timestamp # ISO 8601 datetime
+      - method_id # UUID v4 - methodology instance identifier
+      - method_kind # String - methodology type (agile, waterfall, custom, etc.)
+
+  - id: reasoning_graph
+    title: "ReasoningGraphEvent"
+    description: "Reasoning graph construction, node updates, graph evolution"
+    minimal_fields:
+      - event_id # UUID v4
+      - event_type # String
+      - timestamp # ISO 8601 datetime
+      - graph_id # UUID v4 - reasoning graph identifier
+      - node_count # Integer - current number of nodes
+
+  - id: pipeline_stage
+    title: "PipelineStageEvent"
+    description: "**REQUIRED** - Pipeline stage transitions, execution flow tracking"
+    compliance: required
+    minimal_fields:
+      - event_id # UUID v4
+      - event_type # String
+      - timestamp # ISO 8601 datetime
+      - pipeline_id # UUID v4 - pipeline instance identifier
+      - stage_id # String - stage identifier
+      - stage_status # Enum - stage status (pending, running, completed, failed, skipped)
+
+  - id: graph_update
+    title: "GraphUpdateEvent"
+    description: "**REQUIRED** - PSG structural updates, node/edge mutations"
+    compliance: required
+    minimal_fields:
+      - event_id # UUID v4
+      - event_type # String
+      - timestamp # ISO 8601 datetime
+      - graph_id # UUID v4 - PSG identifier (typically project-level)
+      - update_kind # Enum - update type (node_add, node_update, node_delete, edge_add, edge_update, edge_delete, bulk)
+      - node_delta # Integer - node count delta (+/- or 0)
+      - edge_delta # Integer - edge count delta (+/- or 0)
+
+  - id: runtime_execution
+    title: "RuntimeExecutionEvent"
+    description: "Runtime execution lifecycle tracking (agents, tools, LLMs)"
+    minimal_fields:
+      - event_id # UUID v4
+      - event_type # String
+      - timestamp # ISO 8601 datetime
+      - execution_id # UUID v4 - execution instance identifier
+      - executor_kind # Enum - executor type (agent, tool, llm, worker, external)
+      - status # Enum - execution status (pending, running, completed, failed, cancelled)
+
+  - id: cost_budget
+    title: "CostAndBudgetEvent"
+    description: "Cost tracking, token usage, budget enforcement"
+    minimal_fields:
+      - event_id # UUID v4
+      - event_type # String
+      - timestamp # ISO 8601 datetime
+      - budget_profile_id # UUID v4 - budget profile identifier
+      - token_used # Integer - tokens consumed
+      - token_limit # Integer - budget limit
+
+  - id: external_integration
+    title: "ExternalIntegrationEvent"
+    description: "External system integration activities (APIs, databases, services)"
+    minimal_fields:
+      - event_id # UUID v4
+      - event_type # String
+      - timestamp # ISO 8601 datetime
+      - integration_kind # String - integration type (api, database, service, tool)
+      - target_system # String - target system identifier
+      - status # Enum - integration status (pending, success, failed, timeout)
+
+# Profile-Level Event Families (defined separately)
+profile_events:
+  - id: sa_profile
+    title: "SAEvent"
+    description: "Single Agent Profile events (Phase 1)"
+    schema_ref: "schemas/v2/events/mplp-sa-event.schema.json"
+    doc_ref: "docs/03-profiles/sa-events.md"
+    compliance: optional
+
+  - id: map_profile
+    title: "MAPEvent"
+    description: "Multi-Agent Profile events (Phase 2)"
+    schema_ref: "schemas/v2/events/mplp-map-event.schema.json"
+    doc_ref: "docs/03-profiles/map-events.md"
+    compliance: optional
+
+# Compliance Summary
+compliance_summary:
+  required_families:
+    - pipeline_stage # PipelineStageEvent - MUST emit
+    - graph_update # GraphUpdateEvent - MUST emit
+
+  recommended_families:
+    - import_process # SHOULD emit during import
+    - intent # SHOULD emit for user interactions
+    - runtime_execution # SHOULD emit for execution tracking
+    - cost_budget # SHOULD emit for cost monitoring
+
+  optional_families:
+    - delta_intent
+    - impact_analysis
+    - compensation_plan
+    - methodology
+    - reasoning_graph
+    - external_integration
+
+  profile_families:
+    - sa_profile # Optional - if implementing SA Profile
+    - map_profile # Optional - if implementing MAP Profile

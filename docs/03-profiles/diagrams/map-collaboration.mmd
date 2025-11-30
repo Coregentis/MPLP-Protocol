@@ -1,0 +1,46 @@
+stateDiagram-v2
+    [*] --> initialize_session
+    initialize_session --> assign_roles: Session created
+    assign_roles --> dispatch_turn: Roles assigned to agents
+    dispatch_turn --> collect_results: Execution token issued
+    collect_results --> resolve_conflicts: Agent completed turn
+    resolve_conflicts --> broadcast_updates: Conflicts resolved
+    broadcast_updates --> dispatch_turn: Next turn (iterative)
+    broadcast_updates --> complete_session: Final state update
+    complete_session --> [*]
+    
+    note right of initialize_session
+        Create Collab object
+        Set mode (round_robin/broadcast/orchestrated)
+        Bind to Context
+    end note
+    
+    note right of assign_roles
+        Map agents to roles
+        Populate Collab.participants[]
+        Validate Role capabilities
+    end note
+    
+    note right of dispatch_turn
+        Issue execution_token to role
+        Emit MAPTurnDispatched event
+        Agent begins execution
+    end note
+    
+    note right of collect_results
+        Agent signals completion
+        Emit MAPTurnCompleted event
+        Collect execution outcome
+    end note
+    
+    note right of resolve_conflicts
+        Check for concurrent modifications
+        Emit MAPConflictDetected (if any)
+        Emit MAPConflictResolved
+    end note
+    
+    note right of broadcast_updates
+        Sync state across participants
+        Emit MAPBroadcastSent
+        Prepare for next turn or completion
+    end note

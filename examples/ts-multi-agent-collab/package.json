@@ -1,0 +1,17 @@
+{
+    "name": "ts-multi-agent-collab",
+    "version": "0.0.0-dev",
+    "private": true,
+    "scripts": {
+        "start": "echo 'TODO: Implement multi-agent flow'"
+    },
+    "dependencies": {
+        "@mplp/core-protocol": "workspace:*",
+        "@mplp/coordination": "workspace:*",
+        "@mplp/reference-runtime": "workspace:*"
+    },
+    "devDependencies": {
+        "typescript": "^5.0.0",
+        "@types/node": "^20.0.0"
+    }
+}

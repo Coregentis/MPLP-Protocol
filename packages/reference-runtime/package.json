@@ -1,0 +1,21 @@
+{
+    "name": "@mplp/reference-runtime",
+    "version": "0.0.0-dev",
+    "description": "Vendor-neutral reference runtime (L3) for MPLP Protocol v1.0",
+    "license": "Apache-2.0",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsc -p tsconfig.json",
+        "test": "vitest run"
+    },
+    "dependencies": {
+        "@mplp/core-protocol": "workspace:*",
+        "@mplp/coordination": "workspace:*"
+    },
+    "devDependencies": {
+        "typescript": "^5.0.0",
+        "vitest": "^1.0.0",
+        "@types/node": "^20.0.0"
+    }
+}

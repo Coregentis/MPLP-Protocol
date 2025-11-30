@@ -1,0 +1,15 @@
+{
+  "ok": false,
+  "errors": [
+    {
+      "path": "meta.created_at",
+      "code": "format",
+      "message": "must match format \"date-time\""
+    },
+    {
+      "path": "context_id",
+      "code": "pattern",
+      "message": "must match pattern \"^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$\""
+    }
+  ]
+}

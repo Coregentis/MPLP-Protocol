@@ -1,0 +1,12 @@
+{
+    "title": "Golden Plan",
+    "objective": "Verify Golden Suite",
+    "steps": [
+        {
+            "description": "Step 1"
+        },
+        {
+            "description": "Step 2"
+        }
+    ]
+}

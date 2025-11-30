@@ -1,0 +1,37 @@
+stateDiagram-v2
+    [*] --> initialize
+    initialize --> load_context: SA instance created
+    load_context --> evaluate_plan: Context loaded successfully
+    evaluate_plan --> execute_step: Execution order determined
+    execute_step --> emit_trace: Step execution complete
+    emit_trace --> complete: All steps executed
+    complete --> [*]
+    
+    note right of initialize
+        SA initialization
+        Generate sa_id
+    end note
+    
+    note right of load_context
+        Load Context object
+        Validate context_id
+        Check context.status == active
+    end note
+    
+    note right of evaluate_plan
+        Parse Plan structure
+        Resolve step dependencies
+        Build execution graph
+    end note
+    
+    note right of execute_step
+        Execute according to agent_role
+        Handle tool/LLM/agent executors
+        Update step status
+    end note
+    
+    note right of emit_trace
+        Write SA events to Trace
+        Record step outcomes
+        Maintain audit trail
+    end note

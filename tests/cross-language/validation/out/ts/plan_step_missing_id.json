@@ -1,0 +1,25 @@
+{
+  "ok": false,
+  "errors": [
+    {
+      "path": "objective",
+      "code": "required",
+      "message": "must have required property 'objective'"
+    },
+    {
+      "path": "plan_id",
+      "code": "pattern",
+      "message": "must match pattern \"^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$\""
+    },
+    {
+      "path": "context_id",
+      "code": "pattern",
+      "message": "must match pattern \"^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$\""
+    },
+    {
+      "path": "steps[0].step_id",
+      "code": "required",
+      "message": "must have required property 'step_id'"
+    }
+  ]
+}

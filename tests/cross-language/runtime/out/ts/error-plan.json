@@ -1,0 +1,10 @@
+{
+  "meta": {
+    "protocol_version": "1.0.0",
+    "schema_version": "1.0.0"
+  },
+  "context_id": "some-context-id",
+  "title": "Invalid Plan",
+  "status": "draft",
+  "steps": []
+}

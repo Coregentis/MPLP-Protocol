@@ -1,0 +1,15 @@
+{
+  "ok": false,
+  "errors": [
+    {
+      "path": "meta.extra_field",
+      "code": "extra_forbidden",
+      "message": "Extra inputs are not permitted"
+    },
+    {
+      "path": "context_id",
+      "code": "pattern",
+      "message": "String should match pattern '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'"
+    }
+  ]
+}

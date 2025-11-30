@@ -1,0 +1,15 @@
+{
+  "ok": false,
+  "errors": [
+    {
+      "path": "meta.created_at",
+      "code": "format",
+      "message": "Input should be a valid datetime or date, invalid character in year"
+    },
+    {
+      "path": "context_id",
+      "code": "pattern",
+      "message": "String should match pattern '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'"
+    }
+  ]
+}
