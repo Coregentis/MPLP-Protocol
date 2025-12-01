@@ -1,0 +1,305 @@
+# ---
+# MPLP Protocol 1.0.0 — Frozen Specification
+# Status: Frozen as of 2025-11-30
+# License: Apache-2.0 (see LICENSE at repository root)
+# Any normative change requires a new protocol version.
+# ---
+
+version: "1.0.0"
+protocol: "MPLP"
+frozen_date: "2025-11-30"
+
+docs:
+  # Navigation & Overview
+  - id: docs-map
+    path: docs/00-index/mplp-v1.0-docs-map.md
+    kind: index
+    audience: [all]
+    compliance: required
+  - id: protocol-overview
+    path: docs/00-index/mplp-v1.0-protocol-overview.md
+    kind: overview
+    audience: [all]
+    compliance: required
+  - id: api-quick-ref
+    path: docs/00-index/api-quick-reference.md
+    kind: index
+    audience: [implementer]
+    compliance: required
+  - id: glossary
+    path: docs/00-index/glossary.md
+    kind: index
+    audience: [all]
+    compliance: required
+
+  # Architecture (L1-L4)
+  - id: arch-overview
+    path: docs/01-architecture/architecture-overview.md
+    kind: overview
+    audience: [architect]
+    compliance: required
+  - id: l1-core
+    path: docs/01-architecture/l1-core-protocol.md
+    kind: spec
+    audience: [architect]
+    compliance: required
+  - id: l2-coord
+    path: docs/01-architecture/l2-coordination-governance.md
+    kind: spec
+    audience: [architect]
+    compliance: required
+  - id: l3-exec
+    path: docs/01-architecture/l3-execution-orchestration.md
+    kind: spec
+    audience: [architect]
+    compliance: required
+  - id: l4-integ
+    path: docs/01-architecture/l4-integration-infra.md
+    kind: spec
+    audience: [architect]
+    compliance: optional
+  - id: arch-deep-dive
+    path: docs/01-architecture/l1-l4-architecture-deep-dive.md
+    kind: deep-dive
+    audience: [architect]
+    compliance: non-normative
+  - id: schema-conv
+    path: docs/01-architecture/schema-conventions.md
+    kind: spec
+    audience: [implementer]
+    compliance: required
+
+  # Cross-Cutting Concerns
+  - id: cross-coord
+    path: docs/01-architecture/cross-cutting/coordination.md
+    kind: spec
+    audience: [architect]
+    compliance: required
+  - id: cross-error
+    path: docs/01-architecture/cross-cutting/error-handling.md
+    kind: spec
+    audience: [architect]
+    compliance: required
+  - id: cross-event
+    path: docs/01-architecture/cross-cutting/event-bus.md
+    kind: spec
+    audience: [architect]
+    compliance: required
+  - id: cross-orch
+    path: docs/01-architecture/cross-cutting/orchestration.md
+    kind: spec
+    audience: [architect]
+    compliance: required
+  - id: cross-perf
+    path: docs/01-architecture/cross-cutting/performance.md
+    kind: spec
+    audience: [architect]
+    compliance: recommended
+  - id: cross-ver
+    path: docs/01-architecture/cross-cutting/protocol-version.md
+    kind: spec
+    audience: [architect]
+    compliance: required
+  - id: cross-sec
+    path: docs/01-architecture/cross-cutting/security.md
+    kind: spec
+    audience: [architect]
+    compliance: required
+  - id: cross-sync
+    path: docs/01-architecture/cross-cutting/state-sync.md
+    kind: spec
+    audience: [architect]
+    compliance: required
+  - id: cross-tx
+    path: docs/01-architecture/cross-cutting/transaction.md
+    kind: spec
+    audience: [architect]
+    compliance: required
+  - id: cross-overview
+    path: docs/01-architecture/cross-cutting/overview.md
+    kind: overview
+    audience: [architect]
+    compliance: required
+
+  # Modules (L2)
+  - id: mod-context
+    path: docs/02-modules/context-module.md
+    kind: spec
+    audience: [implementer]
+    compliance: required
+  - id: mod-plan
+    path: docs/02-modules/plan-module.md
+    kind: spec
+    audience: [implementer]
+    compliance: required
+  - id: mod-confirm
+    path: docs/02-modules/confirm-module.md
+    kind: spec
+    audience: [implementer]
+    compliance: required
+  - id: mod-trace
+    path: docs/02-modules/trace-module.md
+    kind: spec
+    audience: [implementer]
+    compliance: required
+  - id: mod-role
+    path: docs/02-modules/role-module.md
+    kind: spec
+    audience: [implementer]
+    compliance: required
+  - id: mod-extension
+    path: docs/02-modules/extension-module.md
+    kind: spec
+    audience: [implementer]
+    compliance: required
+  - id: mod-dialog
+    path: docs/02-modules/dialog-module.md
+    kind: spec
+    audience: [implementer]
+    compliance: required
+  - id: mod-collab
+    path: docs/02-modules/collab-module.md
+    kind: spec
+    audience: [implementer]
+    compliance: required
+  - id: mod-core
+    path: docs/02-modules/core-module.md
+    kind: spec
+    audience: [implementer]
+    compliance: required
+  - id: mod-network
+    path: docs/02-modules/network-module.md
+    kind: spec
+    audience: [implementer]
+    compliance: required
+  - id: mod-interactions
+    path: docs/02-modules/module-interactions.md
+    kind: spec
+    audience: [architect]
+    compliance: required
+
+  # Profiles
+  - id: profile-sa
+    path: docs/03-profiles/mplp-sa-profile.md
+    kind: profile
+    audience: [implementer]
+    compliance: required
+  - id: profile-map
+    path: docs/03-profiles/mplp-map-profile.md
+    kind: profile
+    audience: [implementer]
+    compliance: recommended
+
+  # Observability
+  - id: obs-overview
+    path: docs/04-observability/mplp-observability-overview.md
+    kind: overview
+    audience: [implementer]
+    compliance: required
+  - id: event-taxonomy
+    path: docs/04-observability/mplp-event-taxonomy.yaml
+    kind: taxonomy
+    audience: [implementer]
+    compliance: required
+  - id: event-matrix
+    path: docs/04-observability/module-event-matrix.md
+    kind: matrix
+    audience: [implementer]
+    compliance: required
+
+  # Learning
+  - id: learn-overview
+    path: docs/05-learning/mplp-learning-overview.md
+    kind: overview
+    audience: [researcher]
+    compliance: recommended
+  - id: learn-taxonomy
+    path: docs/05-learning/mplp-learning-taxonomy.yaml
+    kind: taxonomy
+    audience: [researcher]
+    compliance: recommended
+  - id: learn-points
+    path: docs/05-learning/learning-collection-points.md
+    kind: spec
+    audience: [researcher]
+    compliance: recommended
+
+  # Runtime Glue
+  - id: runtime-glue
+    path: docs/06-runtime/mplp-runtime-glue-overview.md
+    kind: overview
+    audience: [implementer]
+    compliance: required
+  - id: psg-paths
+    path: docs/06-runtime/module-psg-paths.md
+    kind: matrix
+    audience: [implementer]
+    compliance: required
+  - id: crosscut-bind
+    path: docs/06-runtime/crosscut-psg-event-binding.md
+    kind: spec
+    audience: [implementer]
+    compliance: required
+  - id: drift-spec
+    path: docs/06-runtime/drift-detection-spec.md
+    kind: spec
+    audience: [implementer]
+    compliance: recommended
+  - id: rollback-spec
+    path: docs/06-runtime/rollback-minimal-spec.md
+    kind: spec
+    audience: [implementer]
+    compliance: recommended
+
+  # Integration
+  - id: integ-spec
+    path: docs/07-integration/mplp-minimal-integration-spec.md
+    kind: spec
+    audience: [integrator]
+    compliance: optional
+  - id: integ-taxonomy
+    path: docs/07-integration/integration-event-taxonomy.yaml
+    kind: taxonomy
+    audience: [integrator]
+    compliance: optional
+
+  # Guides
+  - id: compliance-guide
+    path: docs/08-guides/mplp-v1.0-compliance-guide.md
+    kind: guide
+    audience: [all]
+    compliance: required
+  - id: compliance-checklist
+    path: docs/08-guides/mplp-v1.0-compliance-checklist.md
+    kind: checklist
+    audience: [implementer]
+    compliance: recommended
+
+  # Tests
+  - id: golden-overview
+    path: docs/09-tests/golden-test-suite-overview.md
+    kind: overview
+    audience: [implementer]
+    compliance: required
+  - id: golden-details
+    path: docs/09-tests/golden-test-suite-details.md
+    kind: spec
+    audience: [implementer]
+    compliance: required
+  - id: flow-registry
+    path: docs/09-tests/golden-flow-registry.md
+    kind: registry
+    audience: [implementer]
+    compliance: required
+
+  # Governance & Release
+  - id: versioning
+    path: docs/12-governance/versioning-policy.md
+    kind: policy
+    audience: [all]
+    compliance: required
+  - id: release-notes
+    path: docs/13-release/mplp-v1.0-release-notes.md
+    kind: release
+    audience: [all]
+    compliance: required

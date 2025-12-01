@@ -1,60 +1,22 @@
-  - **FLOW-05** – Single Agent with Confirm Required (multi-round approval + trace)
+## [1.0.0] - 2025-12-01
 
-- **Implemented cross-language Golden Harness**:
-  - TypeScript harness (`tests/golden/harness/ts/*`)
-  - Python harness (`packages/sdk-py/tests/golden/harness/*`)
-  - BOM-safe JSON loaders, wildcard path support, and 7 invariant rule types:
-    `uuid-v4`, `non-empty-string`, `exists`, `iso-datetime`, `eq(path)`, `min-length(N)`, `enum(...)`
+### 🚀 Frozen Specification Release
+- **Status**: **FROZEN**. All normative artifacts are now locked.
+- **Scope**:
+  - **Documentation**: Complete `docs/00-13` stack with Frozen Headers.
+  - **Schemas**: `schemas/v2` is the Single Source of Truth.
+  - **Tests**: Golden Test Suite (FLOW-01 ~ 05) is the Compliance Standard.
 
-- **Published MPLP v1.0 Compliance Guide** (`docs/02-guides/mplp-v1.0-compliance-guide.md`):
-  - Defines v1.0 protocol compliance boundary as: All L1 schemas validate AND FLOWS 01–05 pass
-  - Clarifies **locked** vs **open** L2 modules
-  - Documents `agent_role` semantics, `Confirm.decisions[]` model, cross-module ID binding
+### ✨ Key Features
+- **4-Layer Architecture**: L1 (Core) -> L2 (Modules) -> L3 (Runtime) -> L4 (Integration).
+- **"3 Physical / 12 Logical" Event Model**: Standardized observability.
+- **Vendor Neutrality**: Abstract `LlmClient` and `ToolExecutor` interfaces.
+- **Governance**: Formal MIP process and Versioning Policy.
 
-
-- **Updated Golden Test Suite Overview** with v1.0 compliance boundary and L2 module status matrix
-- **Cross-Language Equivalence**: Verified that runtime JSON output is structurally equivalent across TS and Python SDKs.
-- **Error Consistency**: Ensured runtime errors produce consistent `ValidationResult` (path, code) in both SDKs.
-- **CI Integration**: Added compatibility tests to GitHub Actions workflow.
-
-- **SA Profile (Single Agent Profile)**:  
-  - SA Profile YAML and Markdown specification  
-  - SA Event schema (7 event types)  
-  - SA Invariants  
-  - SA minimal flows (sa-flow-01-basic, sa-flow-02-step-evaluation)  
-
-- **MAP Profile (Multi-Agent Profile)**:  
-  - MAP Profile YAML and Markdown specification  
-  - MAP Event schema (9 event types)  
-  - MAP Invariants  
-  - MAP minimal flows (map-flow-01-turn-taking, map-flow-02-broadcast-fanout)  
-
-- **Observability Duties (Protocol Layer)**:  
-  - Event Taxonomy (12 families)  
-  - Core event schemas (PipelineStageEvent, GraphUpdateEvent - REQUIRED)  
-  - Module→Event Emission Matrix  
-  - Observability invariants  
-
-- **Learning Feedback Duties (Data Format Layer)**:  
-  - LearningSample core schema + family-specific schemas (intent_resolution, delta_impact)  
-  - Learning taxonomy (6 families: intent, delta, pipeline, confirm, graph, multi-agent)  
-  - Collection points specification (RECOMMENDED triggers)  
-  - Learning invariants (12 rules)  
-  - Example LearningSample JSON files (flow-01-intent, flow-05-confirm)
-
-- **Runtime Glue (L3 Documentation)**:  
-  - Runtime Glue overview (L2→L3→PSG layer model)  
-  - Module→Runtime→PSG read/write path matrix (12 components)  
-  - Crosscut→PSG & events binding (9 crosscuts: coordination, error-handling, orchestration, performance, state-sync, transaction, etc.)  
-  - Drift Detection minimal spec (PSG snapshot comparison, graph drift detection)  
-  - Rollback minimal spec (PSG restoration, snapshot triggers, trace integration)
-
-- **Minimal Integration Spec (L4 Boundary Layer)**:  
-  - Integration event taxonomy (4 families: tool_event, file_update_event, git_event, ci_event)  
-  - Integration schemas (tool, file-update, git, ci event payloads)  
-  - Integration invariants (20 rules using existing types)  
-  - Example integration payloads (IDE file save, Git push, CI build, tool execution)  
-  - Integration overview with model, compliance boundaries, relationships to Observability/Runtime Glue
+### ⚠️ Breaking Changes (since 0.9.x)
+- **Directory Structure**: Unified into `00-13` linear structure.
+- **Event Taxonomy**: Simplified to 3 physical schemas.
+- **Profile Specs**: Split into MD and YAML.
 
 ## [0.9.2-alpha] - 2025-11-29
 

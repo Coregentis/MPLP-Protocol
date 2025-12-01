@@ -1,5 +1,73 @@
-# Role Module (Skeleton)
+---
+**MPLP Protocol 1.0.0 — Frozen Specification**  
+**Status**: Frozen as of 2025-11-30  
+**Copyright**: © 2025 邦士（北京）网络科技有限公司  
+**License**: Apache License 2.0 (see LICENSE at repository root)  
+**Any normative change requires a new protocol version.**
+---
 
-This is a placeholder for the Role module of MPLP Protocol v1.0.
+# Role Module
 
-Detailed semantics, schema references, and coordination rules will be added later.
+## 1. Scope
+
+This document defines the **Role Module**, which manages capability declarations, permission sets, and behavioral identity models. It allows agents to understand "who" is performing an action.
+
+**Boundaries**:
+- **In Scope**: Role Definition, Capability Tags, Role Assignment.
+- **Out of Scope**: Authentication (AuthN), Identity Provider integration.
+
+## 2. Normative Definitions
+
+- **Role**: A named set of responsibilities and capabilities.
+- **Capability**: A specific permission or skill tag (e.g., `plan.create`).
+- **Assignment**: The binding of a Role to an Agent or User.
+
+## 3. Responsibilities (MUST/SHALL)
+
+1.  **Identification**: Every critical action (Plan, Step, Confirm) **SHOULD** be attributed to a `role_id`.
+2.  **Capability Check**: Agents **SHOULD** check if their assigned role has the necessary `capabilities` before attempting an action.
+3.  **Separation of Duties**: Critical workflows **SHOULD** use distinct roles for execution and approval.
+
+## 4. Architecture Structure
+
+**Schema File**: `schemas/v2/mplp-role.schema.json`
+
+| Field | Type | Required | Description |
+| :--- | :--- | :--- | :--- |
+| `meta` | `Metadata` | ✅ Yes | Protocol metadata. |
+| `governance` | `Object` | ❌ No | Lifecycle metadata. |
+| `role_id` | `UUID` | ✅ Yes | Global unique identifier. |
+| `name` | `String` | ✅ Yes | Human-readable name (e.g., "Planner"). |
+| `description` | `String` | ❌ No | Detailed function description. |
+| `capabilities` | `Array` | ❌ No | List of permission strings. |
+| `created_at` | `DateTime` | ❌ No | Creation timestamp. |
+| `updated_at` | `DateTime` | ❌ No | Last update timestamp. |
+| `trace` | `TraceBase` | ❌ No | Audit trace reference. |
+| `events` | `Array` | ❌ No | Key lifecycle events. |
+
+## 5. Binding Points
+
+- **L1 Schema**: `mplp-role.schema.json`
+- **L2 Events**: `GraphUpdateEvent`.
+- **PSG Path**: `psg.roles`.
+
+## 6. Interaction Model
+
+1.  **Definition**: System Administrator defines Roles and Capabilities.
+2.  **Assignment**: Agent is initialized with a specific `role_id`.
+3.  **Enforcement**: Runtime checks Role capabilities during execution.
+
+## 7. Versioning & Invariants
+
+- **Invariant**: `role_id` **MUST** be unique within the Context/Project.
+- **Invariant**: A Role **MUST** have a non-empty `name`.
+
+## 8. Security / Safety Considerations
+
+- **Least Privilege**: Roles should be granted only the minimum necessary capabilities.
+- **Immutable Audit**: Role assignments and capability changes **MUST** be auditable via Trace.
+
+## 9. References
+
+- [Confirm Module](confirm-module.md)
+- [Context Module](context-module.md)

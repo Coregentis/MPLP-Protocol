@@ -1,3 +1,11 @@
+---
+**MPLP Protocol 1.0.0 — Frozen Specification**  
+**Status**: Frozen as of 2025-11-30  
+**Copyright**: © 2025 邦士（北京）网络科技有限公司  
+**License**: Apache License 2.0 (see LICENSE at repository root)  
+**Any normative change requires a new protocol version.**
+---
+
 # MPLP Protocol v1.0 — World-Class, Vendor-Neutral Refactor Plan (Final v3.1)
 
 **Single Source of Truth for the Whole V1.0 Rebuild**
@@ -70,7 +78,7 @@
 * L1 Core Protocol（数据模型、语义、wire format）
 * L2 Coordination & Governance（10 模块 + 事件模型）
 * L3 Reference Runtime（orchestrator + AEL/VSL）
-* L4 Integration & Infra（LLM / tools / storage / orchestration frameworks 的通用抽象）
+* L4 Integration Layer（LLM / tools / storage / orchestration frameworks 的通用抽象）
 
 ### **3) Schema Set：JSON Schema v2**
 

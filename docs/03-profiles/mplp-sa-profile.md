@@ -1,192 +1,171 @@
-# MPLP-SA Profile v1.0
+---
+**MPLP Protocol 1.0.0 — Frozen Specification**  
+**Status**: Frozen as of 2025-11-30  
+**Copyright**: © 2025 邦士（北京）网络科技有限公司  
+**License**: Apache License 2.0 (see LICENSE at repository root)  
+**Any normative change requires a new protocol version.**
+---
 
-**Version**: 1.0.0  
-**Status**: Specification  
-**Last Updated**: 2025-11-30
+# SA Profile Specification (MPLP v1.0)
+
+> This document defines the normative **SA (Single Agent) Profile**  
+> for MPLP Protocol v1.0, including required modules, invariants, events,  
+> and runtime behavior over the Project Semantic Graph (PSG).
 
 ---
 
-## 1. Overview
+## 1. Identity & Scope  *(Normative)*
 
-**SA (Single Agent)** is the minimal executable unit in MPLP v1.0. It represents a single-agent execution context that:
-- Reads Context and Plan from the L2 protocol layer
-- Executes Plan steps sequentially according to dependencies
-- Emits Trace events for observability
-- Operates without multi-agent coordination (see MAP Profile for multi-agent scenarios)
-
-SA Profile defines the **lifecycle, capabilities, and contracts** that any SA-compliant runtime must implement.
-
----
-
-## 2. Responsibilities
-
-An SA instance is responsible for:
-
-1. **Context Loading**: Read and validate Context object (`context_id`, `root`, `status`, etc.)
-2. **Plan Evaluation**: Parse Plan structure, resolve step dependencies, determine execution order
-3. **Step Execution**: Execute each step according to its `agent_role` (agent, tool executor, LLM executor)
-4. **Trace Emission**: Write execution events to Trace for auditability and observability
-5. **State Management**: Maintain execution state through lifecycle transitions
-
-**What SA is NOT**:
-- ❌ **Not a multi-agent coordinator** (use MAP Profile)
-- ❌ **Not an LLM orchestrator** (SA can invoke LLMs via `agent_role: llm_*`, but doesn't manage prompts)
-- ❌ **Not a storage layer** (SA reads/writes protocol-level objects, not application data)
+- **Profile ID**: `sa_profile` (from `mplp-sa-profile.yaml`)
+- **Execution Mode**: `single_agent`
+- **Intended Use**:
+  - The **Single Agent (SA)** profile is the minimal executable unit in MPLP.
+  - It is designed for linear, autonomous task execution where a single agent reads a Context, evaluates a Plan, and executes steps sequentially.
+  - Suitable for: Data processing pipelines, simple request-response agents, and individual worker nodes within a larger system.
+- **Out-of-Scope**:
+  - Multi-agent coordination (see MAP Profile).
+  - Complex consensus mechanisms.
+  - Dynamic topology changes during execution.
 
 ---
 
-## 3. Execution Lifecycle
+## 2. Required Modules & Artifacts  *(Normative)*
 
-SA follows a strict 6-state lifecycle:
+> The following L2 modules are required for SA Profile compliance.
 
-```
-initialize → load_context → evaluate_plan → execute_step → emit_trace → complete
-```
-
-### 3.1 State Definitions
-
-| State | Description | Entry Condition | Exit Condition |
-|-------|-------------|-----------------|----------------|
-| **initialize** | SA instance created | Runtime instantiation | Context reference available |
-| **load_context** | Loading Context object | SA initialized | Context successfully loaded |
-| **evaluate_plan** | Parsing Plan, resolving dependencies | Context loaded | Execution order determined |
-| **execute_step** | Executing current plan step | Plan evaluated | Step completes (success/failure) |
-| **emit_trace** | Writing execution event to Trace | Step executed | Trace write confirmed |
-| **complete** | All steps executed | Final trace emitted | SA terminates |
-
-### 3.2 State Machine Visualization
-
-See [`diagrams/sa-lifecycle.mmd`](diagrams/sa-lifecycle.mmd) for the complete state machine diagram.
+| Module | Required | Purpose in this Profile |
+|--------|----------|-------------------------|
+| Context | **Yes** | Provides the immutable environment and domain information (`root`, `domain`). |
+| Plan    | **Yes** | Defines the executable strategy (`steps`, `dependencies`). |
+| Trace   | **Yes** | Records the execution history and observability events. |
+| Confirm | No | Optional. Used if Human-in-the-Loop approval is needed for specific steps. |
+| Role    | No | Optional. Used if the agent needs to validate specific capabilities. |
+| Extension | No | Optional. Used for tool execution. |
+| Dialog  | No | Optional. Used if the agent interacts with a user via chat. |
+| Collab  | No | Not used in SA (specific to MAP). |
+| Core    | **Yes** | Required by protocol definition (defines version). |
+| Network | No | Not typically used in isolated SA execution. |
 
 ---
 
-## 4. Interaction with L2 Modules
+## 3. Execution Model  *(Normative)*
 
-SA interacts with three L2 protocol modules:
+### 3.1 Lifecycle States
 
-### 4.1 Context Module
-- **Direction**: Read-only
-- **Fields Used**:
-  - `context_id`: Binds SA execution to a specific context
-  - `root.domain`, `root.environment`: Provides execution environment info
-  - `status`: Validates context is active before execution
-- **Usage**: SA loads Context at initialization, validates it's active, then uses it as immutable reference throughout execution
+The SA Profile defines a strict 6-state lifecycle:
 
-### 4.2 Plan Module
-- **Direction**: Read-only
-- **Fields Used**:
-  - `plan_id`: Identifies the execution strategy
-  - `context_id`: Must match SA's context_id
-  - `steps[]`: Array of execution steps
-    - `step_id`: Unique identifier
-    - `description`: Human-readable step description
-    - `status`: Execution status (pending → in_progress → completed/failed)
-    - **`agent_role`**: Executor type indicator (agent, curl_executor, llm_claude, etc.)
-    - `dependencies`: Array of step_ids that must complete first
-    - `order_index` (optional): Explicit ordering hint
-- **Usage**: SA evaluates Plan once after context loading, builds execution graph based on dependencies
+1.  **`initialize`**: The SA instance is created by the Runtime.
+2.  **`load_context`**: The SA binds to a specific `context_id` and validates its status.
+3.  **`evaluate_plan`**: The SA parses the `plan_id`, resolves step dependencies, and determines execution order.
+4.  **`execute_step`**: The SA executes steps sequentially. This state is re-entered for each step.
+5.  **`emit_trace`**: The SA writes execution events to the Trace module.
+6.  **`complete`**: All steps are finished (success or failure), and the SA terminates.
 
-### 4.3 Trace Module
-- **Direction**: Write-only
-- **Fields Used**:
-  - `trace_id`: Generated by SA
-  - `context_id`, `plan_id`: Binds to Context and Plan
-  - `events[]`: SA appends execution events here
-    - Conforms to `mplp-sa-event.schema.json`
-    - Includes `SAStepStarted`, `SAStepCompleted`, etc.
-- **Usage**: SA writes trace events at key lifecycle milestones (see SA Event Chain below)
+### 3.2 Required Transitions
+
+The Runtime MUST enforce the following transitions:
+
+-   `initialize` → `load_context`: Must occur immediately upon start.
+-   `load_context` → `evaluate_plan`: Requires valid, active Context.
+-   `evaluate_plan` → `execute_step`: Requires valid Plan with at least one step.
+-   `execute_step` → `emit_trace`: Must occur after each step or batch of steps.
+-   `emit_trace` → `complete`: Occurs when the plan is fully executed or a terminal failure is reached.
 
 ---
 
-## 5. SA Event Chain
+## 4. Invariants & Safety Guarantees  *(Normative)*
 
-SA emits a sequence of events during execution. All events conform to [`schemas/v2/events/mplp-sa-event.schema.json`](../../schemas/v2/events/mplp-sa-event.schema.json).
+The following invariants from `schemas/v2/invariants/sa-invariants.yaml` MUST be satisfied:
 
-**Standard Event Sequence**:
-
-```
-SAInitialized
-  ↓
-SAContextLoaded
-  ↓
-SAPlanEvaluated
-  ↓
-SAStepStarted (for each step)
-  ↓
-SAStepCompleted (for each step)
-  ↓
-SATraceEmitted
-  ↓
-SACompleted
-```
-
-**Event Details**: See [`sa-events.md`](sa-events.md) for complete event type specifications.
+| Rule ID | Description | Scope | Violation Effect |
+|---------|-------------|-------|------------------|
+| `sa_requires_context` | SA execution requires a valid Context with UUID v4 identifier. | Context | Execution Abort |
+| `sa_context_must_be_active` | SA can only execute when Context status is 'active'. | Context | Execution Abort |
+| `sa_plan_context_binding` | Plan's `context_id` must match SA's loaded Context. | Plan | Validation Error |
+| `sa_plan_has_steps` | Plan must contain at least one executable step. | Plan | Validation Error |
+| `sa_trace_not_empty` | SA must emit at least one trace event before completion. | Trace | Compliance Failure |
+| `sa_trace_context_binding` | Trace `context_id` must match SA's Context. | Trace | Data Integrity Error |
 
 ---
 
-## 6. Invariants
+## 5. Observability Requirements  *(Normative)*
 
-SA execution must satisfy the following invariants (defined in [`schemas/v2/invariants/sa-invariants.yaml`](../../schemas/v2/invariants/sa-invariants.yaml)):
+> See `sa-events.md` for detailed event definitions.
 
-1. **Context Requirement**: SA must have a valid Context (`context_id` must be UUID, `status` must be "active")
-2. **Plan-Context Binding**: SA's Plan must reference the same `context_id` as its Context
-3. **Step Ordering**: Plan steps must have valid `order_index` or resolvable `dependencies`
-4. **Trace Non-Empty**: SA must emit at least one trace event before completion
+### 5.1 Required Event Families
 
-These invariants are enforced by the Golden Test harness using standard MPLP invariant rules.
+| Event Family | When Emitted | Minimal Payload Requirements |
+|--------------|-------------|------------------------------|
+| `SAInitialized` | On instance creation | `sa_id`, `timestamp` |
+| `SAContextLoaded` | After context load | `context_id`, `context_status` |
+| `SAPlanEvaluated` | After plan parsing | `plan_id`, `step_count`, `execution_order` |
+| `SAStepStarted` | Before step execution | `step_id`, `agent_role` |
+| `SAStepCompleted` | After step success | `step_id`, `status=completed` |
+| `SATraceEmitted` | On trace write | `trace_id`, `events_written` |
+| `SACompleted` | On termination | `total_steps`, `success_count` |
 
----
+### 5.2 Recommended / Optional Events
 
-## 7. Dependencies to L2 Modules
-
-```
-SA Profile
-  ├─ requires: Context (read)
-  ├─ requires: Plan (read)
-  └─ produces: Trace (write)
-```
-
-**Dependency Rationale**:
-- **Context** provides immutable environment/domain information
-- **Plan** provides executable strategy (steps, dependencies, roles)
-- **Trace** records execution for observability and audit
+| Level | Event Family | Rationale |
+|-------|--------------|-----------|
+| Recommended | `SAStepFailed` | Critical for debugging execution failures. |
+| Optional | `CostAndBudgetEvent` | If the runtime tracks token usage per step. |
 
 ---
 
-## 8. Minimal Flows
+## 6. PSG & Runtime Behavior  *(Normative)*
 
-SA Profile is validated by two Golden Flows:
+### 6.1 PSG Read/Write Obligations
 
-### 8.1 sa-flow-01-basic
-- **Purpose**: Single-step execution baseline
-- **Validates**:
-  - SA can load Context and Plan
-  - SA can execute a single step
-  - SA emits valid trace events
-- **Location**: `tests/golden/flows/sa-flow-01-basic/`
+-   **Read Obligations**:
+    -   MUST read `psg.context_root` to establish environment.
+    -   MUST read `psg.plans` to retrieve execution strategy.
+-   **Write Obligations**:
+    -   MUST write to `psg.execution_traces` to persist the audit trail.
+    -   SHOULD update `psg.plan_steps` status (e.g., pending → completed) if the Runtime supports live updates.
 
-### 8.2 sa-flow-02-step-evaluation
-- **Purpose**: Multi-step execution with dependencies
-- **Validates**:
-  - SA correctly evaluates step dependencies
-  - SA respects `order_index`
-  - SA executes steps in correct order
-  - SA handles different `agent_role` values
-- **Location**: `tests/golden/flows/sa-flow-02-step-evaluation/`
+### 6.2 Cross-cutting Integration
 
-**Note**: SA flows are **Profile-level examples**, not part of the v1.0 compliance boundary (which is defined by FLOW-01~05).
+-   **Traceability**: All events must be linked to the `trace_id`.
+-   **Error Handling**: Step failures should trigger standard error handling policies (retry, skip, or abort) as defined in the Plan or Runtime config.
 
 ---
 
-## 9. References
+## 7. Interaction with L2 Coordination & Governance  *(Normative)*
 
-- [MPLP v1.0 Specification](../01-spec/README.md) - Core protocol specification
-- [SA Events](sa-events.md) - Complete event type reference
-- [SA Invariants](../../schemas/v2/invariants/sa-invariants.yaml) - Runtime invariants
-- [SA Event Schema](../../schemas/v2/events/mplp-sa-event.schema.json) - Event structure validation
+### 7.1 SA + Modules
+
+-   **SA + Context**: Read-only. The Context acts as the immutable "grounding" for the agent.
+-   **SA + Plan**: Read-only (structure). The Plan acts as the "instruction set".
+-   **SA + Trace**: Write-only. The Trace acts as the "write-ahead log" or "execution journal".
+
+### 7.2 Failure & Escalation Paths
+
+-   If `Context` is invalid: SA MUST NOT start.
+-   If `Plan` is invalid: SA MUST abort before first step.
+-   If a `Step` fails: SA SHOULD emit `SAStepFailed` and follow the Plan's error policy (default: abort).
 
 ---
 
-**End of MPLP-SA Profile v1.0**
+## 8. Golden Flow Coverage  *(Informational)*
 
-*SA Profile defines the single-agent execution semantics for MPLP. For multi-agent coordination, see MAP Profile (Phase 2).*
+-   **SA Profile is covered by:**
+    -   `sa-flow-01-basic`: Validates basic lifecycle and trace emission.
+    -   `sa-flow-02-step-evaluation`: Validates dependency resolution and ordering.
+
+---
+
+## 9. Versioning & Compatibility  *(Normative)*
+
+-   **Stability**: Stable (v1.0 Core).
+-   **Compatibility**:
+    -   Forward compatible with future 1.x versions.
+    -   New lifecycle states may be added in 2.0.
+
+---
+
+## 10. Non-normative Implementation Notes
+
+-   **Reference Implementation**: TracePilot implements the SA Profile by mapping `SAInitialized` to its internal `SessionStart` event.
+-   **Concurrency**: While SA is logically single-threaded, the Runtime may execute independent SA instances in parallel.
+-   **LLM Integration**: The `execute_step` state typically involves an API call to an LLM (e.g., Claude, GPT-4), but the SA Profile itself is agnostic to the specific model used.

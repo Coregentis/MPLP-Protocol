@@ -1,0 +1,1 @@
+# P7D.6 - Illegal Naming Variants Scan\n\n**Files Scanned**: 100\n**Issues Found**: 2\n\n## Issues\n\n- docs\13-release\validation\p7d-executive-summary.md: Contains 'MALP'\n- docs\13-release\validation\p7d-executive-summary.md: Contains 'MAPLP'\n

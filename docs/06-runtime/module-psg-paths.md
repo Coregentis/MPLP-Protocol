@@ -1,3 +1,11 @@
+---
+**MPLP Protocol 1.0.0 — Frozen Specification**  
+**Status**: Frozen as of 2025-11-30  
+**Copyright**: © 2025 邦士（北京）网络科技有限公司  
+**License**: Apache License 2.0 (see LICENSE at repository root)  
+**Any normative change requires a new protocol version.**
+---
+
 # Module → Runtime → PSG Read/Write Path Matrix
 
 **Purpose**: Define how each MPLP module interacts with the Project Semantic Graph (PSG) through the runtime glue layer.
@@ -29,18 +37,6 @@ This document systematically describes the **data flow paths** between MPLP L2 m
 - **RECOMMENDED**: Optional but valuable
 - **OPTIONAL**: Nice-to-have
 
-### 2.4 Learning Hooks
-- Sample families recommended for collection (from Phase 4 - Learning Feedback Duties)
-- All are **RECOMMENDED**, not REQUIRED for v1.0
-
----
-
-## 3. Module→PSG Matrix (Summary Table)
-
-| Component | Access Mode | PSG Areas Touched | Event Hooks | Learning Hooks |
-|-----------|------------|-------------------|-------------|----------------|
-| **Context** | READ-WRITE | project_root, environment, constraints | ImportProcessEvent (OPTIONAL) | intent_resolution |
-| **Plan** | READ-WRITE | plans, plan_steps, dependencies | PipelineStageEvent (SHOULD) | intent_resolution, pipeline_outcome |
 | **Confirm** | READ-WRITE | approval_nodes, decision_edges | RuntimeExecutionEvent (SHOULD) | confirm_decision |
 | **Trace** | WRITE | execution_traces, spans | RuntimeExecutionEvent (RECOMMENDED) | pipeline_outcome |
 | **Role** | READ-WRITE | agent_roles, assignments | - | multi_agent_coordination |

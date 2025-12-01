@@ -1,10 +1,15 @@
+# MPLP Protocol 1.0.0 — Frozen Specification
+# Status: Frozen as of 2025-11-30
+# License: Apache-2.0 (see LICENSE at repository root)
+# Any normative change requires a new protocol version.
+
 # MPLP Integration Event Taxonomy v1.0
 
 metadata:
   version: "1.0.0"
   last_updated: "2025-11-30"
-  compliance_level: "recommended" # NOT REQUIRED for v1.0
-  description: "Defines 4 Integration Event families for external tool integration (IDE, CI, Git, Tools)"
+  compliance_level: "optional" # L4 Event Family Specification
+  description: "Defines 4 Integration Event families for external tool integration (IDE, CI, Git, Tools). Binds to schemas/v2/integration."
 
 # Relationship to Phase 3 Observability
 observability_integration:

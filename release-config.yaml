@@ -1,0 +1,33 @@
+# MPLP v1.0 Release Packaging Config
+
+version: "1.0.0"
+
+include:
+  - "README.md"
+  - "CHANGELOG.md"
+  - "LICENSE"
+  - "schemas/v2/**"
+  - "docs/00-index/**"
+  - "docs/01-architecture/**"
+  - "docs/02-modules/**"
+  - "docs/03-profiles/**"
+  - "docs/04-observability/**"
+  - "docs/05-learning/**"
+  - "docs/06-runtime/**"
+  - "docs/07-integration/**"
+  - "docs/08-guides/**"
+  - "docs/09-tests/**"
+  - "docs/10-sdk/**"
+  - "docs/11-examples/**"
+  - "docs/12-governance/**"
+  - "docs/13-release/**"
+  - "tests/golden/**"
+  - "packages/**"
+
+exclude:
+  - "docs/99-meta/**"
+  - "internal/**"
+  - ".git/**"
+  - "node_modules/**"
+  - "dist/**"
+  - "scripts/**"

@@ -1,0 +1,36 @@
+/**
+ * Copyright 2025 邦士（北京）网络科技有限公司.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Core Module Core Protocol: Describes the minimal required semantics (Core Profile) for an MPLP protocol instance's version, enabled modules, and overall state.
+ */
+export interface Core {
+    /** [PROTOCOL-CORE] MPLP protocol and schema metadata. */
+    meta: any;
+    /** [PROTOCOL-CORE] Governance metadata for lifecycle management, truth domain authority, and locking status. */
+    governance?: object;
+    /** [PROTOCOL-CORE] Global unique identifier for the current Core instance. */
+    core_id: any;
+    /** [PROTOCOL-CORE] Major version number of the current MPLP protocol instance (e.g., 1.0.0). */
+    protocol_version: string;
+    /** [PROTOCOL-CORE] Lifecycle status of the current Core instance. */
+    status: 'draft' | 'active' | 'deprecated' | 'archived';
+    /** [PROTOCOL-CORE] List of L2 modules enabled in the current protocol instance. */
+    modules: any[];
+    /** [PROTOCOL-CORE] Main Trace reference bound to this Core instance, used for auditing Core layer configuration changes. */
+    trace?: any;
+    /** [PROTOCOL-CORE] List of key events related to this Core instance (version upgrades, module enable/disable, etc.). */
+    events?: any[];
+}

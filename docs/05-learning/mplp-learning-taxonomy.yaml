@@ -1,134 +1,32 @@
 version: "1.0.0"
-title: "MPLP LearningSample Taxonomy v1.0"
-description: "Complete LearningSample family classification defining when and how to capture learning samples from MPLP execution history"
+title: "MPLP Learning Taxonomy v1.0"
+description: "Taxonomy of Learning Samples for the MPLP v1.0 Learning Loop. Strictly aligned with schemas/v2/learning/."
 
-families:
-  - id: intent_resolution
-    title: "Intent Resolution Sample"
-    description: "Samples capturing how user/business intent is clarified, refined, and resolved into executable plans"
-    typical_sources:
-      - Plan.intent_model
-      - Dialog.turns
-      - Context metadata
-      - IntentEvent (Observability)
-      - DeltaIntentEvent (Observability)
-    recommended_triggers:
-      - "On successful IntentEvent + Plan creation (FLOW-01, FLOW-02)"
-      - "On major DeltaIntentEvent applied with plan revision"
-      - "When dialog thread resolves into concrete action"
-    collection_value: high
-    use_cases:
-      - "Train models to better understand ambiguous user requests"
-      - "Learn domain-specific intent patterns"
-      - "Improve intent clarification dialog strategies"
+# Governance
+status: "Frozen"
+last_updated: "2025-12-01"
 
-  - id: delta_impact
-    title: "Delta Impact Sample"
-    description: "Samples capturing the effect of Delta Intent and impact analysis outcomes, including compensation planning"
-    typical_sources:
-      - Delta intents
-      - Impact analysis artifacts
-      - Compensation plans
-      - ImpactAnalysisEvent (Observability)
-      - CompensationPlanEvent (Observability)
-    recommended_triggers:
-      - "On ImpactAnalysisEvent completion"
-      - "On CompensationPlanEvent approval/application"
-      - "When rollback or compensation is executed"
-    collection_value: high
-    use_cases:
-      - "Learn to predict change ripple effects accurately"
-      - "Optimize compensation strategy selection"
-      - "Identify high-risk delta patterns early"
+# Schema Mapping
+# All families map to specific schemas in schemas/v2/learning/.
 
-  - id: pipeline_outcome
-    title: "Pipeline Outcome Sample"
-    description: "Samples for pipeline stage-level success/failure patterns and execution performance"
-    typical_sources:
-      - PipelineStageEvent (Observability - REQUIRED)
-      - Trace module
-      - RuntimeExecutionEvent (Observability)
-    recommended_triggers:
-      - "On pipeline stage completed (success)"
-      - "On pipeline stage failed"
-      - "On pipeline stage skipped (with reason)"
-    collection_value: medium
-    use_cases:
-      - "Predict which pipeline configurations succeed/fail"
-      - "Optimize pipeline stage ordering"
-      - "Learn from execution failures for recovery strategies"
+learning_families:
+  - id: core
+    title: "LearningSampleCore"
+    description: "Base learning sample capturing input/output pairs and feedback."
+    schema_ref: "schemas/v2/learning/mplp-learning-sample-core.schema.json"
+    collection_points: ["execution_completion", "user_feedback"]
 
-  - id: confirm_decision
-    title: "Confirm Decision Sample"
-    description: "Samples of Confirm module decision patterns, approval conditions, and rejection reasoning"
-    typical_sources:
-      - Confirm.decisions[] array
-      - Plan metadata
-      - RuntimeExecutionEvent (Observability)
-    recommended_triggers:
-      - "On confirm approved (FLOW-05 pattern)"
-      - "On confirm rejected (with reason)"
-      - "On multi-round approval completion"
-    collection_value: high
-    use_cases:
-      - "Learn approval patterns for risky operations"
-      - "Predict which plans require human confirmation"
-      - "Optimize confidence thresholds for auto-approval"
+  - id: intent
+    title: "LearningSampleIntent"
+    description: "Samples capturing user intent resolution and refinement."
+    schema_ref: "schemas/v2/learning/mplp-learning-sample-intent.schema.json"
+    collection_points: ["intent_resolution", "plan_generation"]
 
-  - id: graph_evolution
-    title: "Graph Evolution Sample"
-    description: "Samples of PSG structural evolution over time, tracking healthy vs problematic growth patterns"
-    typical_sources:
-      - GraphUpdateEvent (Observability - REQUIRED)
-      - PSG snapshots
-      - Context + Plan + Collab references
-    recommended_triggers:
-      - "On major graph topology changes (bulk updates)"
-      - "At session completion (cumulative graph delta)"
-      - "When graph complexity metrics exceed thresholds"
-    collection_value: medium
-    use_cases:
-      - "Understand healthy vs problematic graph evolution"
-      - "Detect architectural drift early"
-      - "Learn optimal graph structure patterns"
-
-  - id: multi_agent_coordination
-    title: "Multi-Agent Coordination Sample"
-    description: "Samples capturing SA/MAP collaboration patterns, role distribution performance, and coordination efficiency"
-    typical_sources:
-      - MAP Events (MAPSessionStarted, MAPTurnDispatched, MAPBroadcastSent, etc.)
-      - SA Events (SAStepStarted, SAStepCompleted, etc.)
-      - Collab module
-      - Network module
-    recommended_triggers:
-      - "On MAP session completion"
-      - "On SA multi-step execution completion"
-      - "When role handoff occurs"
-      - "On broadcast fanout completion"
-    collection_value: high
-    use_cases:
-      - "Optimize agent role distribution"
-      - "Learn effective collaboration patterns"
-      - "Predict coordination overhead and bottlenecks"
-      - "Improve turn-taking vs broadcast selection"
-
-# Collection Value Guide:
-# - high: Critical for model improvement, collect whenever possible
-# - medium: Valuable but optional, collect based on resource constraints
-# - low: Nice-to-have, collect only in development/debug scenarios
-
-# Compliance Note:
-compliance_note: |
-  All LearningSample families defined above are RECOMMENDED for collection,
-  but NOT REQUIRED for MPLP v1.0 compliance. Runtimes MAY choose a subset
-  based on their training goals and resource constraints.
-
-  When LearningSamples ARE collected, they MUST conform to the schemas
-  defined in schemas/v2/learning/.
-
-# Schema References:
-schema_refs:
-  core: "schemas/v2/learning/mplp-learning-sample-core.schema.json"
-  intent_resolution: "schemas/v2/learning/mplp-learning-sample-intent.schema.json"
-  delta_impact: "schemas/v2/learning/mplp-learning-sample-delta.schema.json"
-  # Other families use core schema with sample_family field differentiation
+  - id: delta
+    title: "LearningSampleDelta"
+    description: "Samples capturing changes (deltas) to artifacts and their impact."
+    schema_ref: "schemas/v2/learning/mplp-learning-sample-delta.schema.json"
+    collection_points: ["plan_revision", "code_modification"]
+# Future Work (v1.1+)
+# - reasoning_sample
+# - failure_sample

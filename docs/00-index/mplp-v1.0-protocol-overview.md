@@ -1,9 +1,25 @@
+---
+**MPLP Protocol 1.0.0 — Frozen Specification**  
+**Status**: Frozen as of 2025-11-30  
+**Copyright**: © 2025 邦士（北京）网络科技有限公司  
+**License**: Apache License 2.0 (see LICENSE at repository root)  
+**Any normative change requires a new protocol version.**
+---
+
 # MPLP v1.0 Protocol Overview
 
-**Multi-Agent Protocol for Learning & Planning**  
+**Multi-Agent Lifecycle Protocol**  
 **Version**: 1.0.0  
 **Release Date**: 2025-11-30  
 **License**: Apache-2.0
+
+## Official Protocol Name (v1.0)
+
+For the avoidance of doubt, the protocol defined in this repository is officially named **“Multi-Agent Lifecycle Protocol” (MPLP)**.
+
+Any earlier drafts or documents that referred to “Multi-Agent Lifecycle Protocol” or other variants MUST be considered deprecated and non-normative.
+
+All normative references in this repository and in external integrations MUST use the name “Multi-Agent Lifecycle Protocol (MPLP)”.
 
 ---
 
@@ -125,7 +141,7 @@ MPLP organizes functionality into four layers (L1-L4):
 
 | Layer | Responsibility | Examples |
 |-------|---------------|----------|
-| **L1: Schemas** | Data structure definitions | `context.schema.json`, `plan.schema.json` |
+| **L1: Schemas** | Data structure definitions | `mplp-context.schema.json`, `mplp-plan.schema.json` |
 | **L2: Modules** | Domain logic & crosscuts | Context, Plan, Trace, Observability, Learning |
 | **L3: Runtime Glue** | Behavioral specifications | Module→PSG paths, Event emission rules, Drift/Rollback |
 | **L4: Integration** | External tool interactions | IDE file changes, Git commits, CI pipeline status |
@@ -154,45 +170,47 @@ graph LR
 
 **Module Descriptions**:
 
-1. **Context** (`schemas/v2/context/`): Project root, environment, constraints
+1. **Context** (`schemas/v2/mplp-context.schema.json`): Project root, environment, constraints
    - Purpose: Define "what problem are we solving?"
    - Example: Project title, timeline, budget, dependencies
 
-2. **Plan** (`schemas/v2/plan/`): Executable plans with steps and dependencies
+2. **Plan** (`schemas/v2/mplp-plan.schema.json`): Executable plans with steps and dependencies
    - Purpose: Define "how will we solve it?"
    - Example: Step-by-step refactoring plan with agent role assignments
 
-3. **Confirm** (`schemas/v2/confirm/`): Approval/rejection decisions for plans
+3. **Confirm** (`schemas/v2/mplp-confirm.schema.json`): Approval/rejection decisions for plans
    - Purpose: Human-in-loop governance
    - Example: User approves/rejects a plan before execution
 
-4. **Trace** (`schemas/v2/trace/`): Execution history and spans
+4. **Trace** (`schemas/v2/mplp-trace.schema.json`): Execution history and spans
    - Purpose: Audit trail for "what actually happened?"
    - Example: Timestamped log of agent actions, tool calls, LLM invocations
 
-5. **Role** (`schemas/v2/role/`): Agent role definitions and assignments
+5. **Role** (`schemas/v2/mplp-role.schema.json`): Agent role definitions and assignments
    - Purpose: Define "who does what?"
    - Example: Architect role, Developer role, QA role
 
-6. **Extension** (`schemas/v2/extension/`): Tool adapters and plugins
+6. **Extension** (`schemas/v2/mplp-extension.schema.json`): Tool adapters and plugins
    - Purpose: Integrate external tools (formatters, linters, APIs)
    - Example: ESLint adapter, Docker adapter, GitHub API adapter
 
-7. **Dialog** (`schemas/v2/dialog/`): Conversation threads for intent clarification
+7. **Dialog** (`schemas/v2/mplp-dialog.schema.json`): Conversation threads for intent clarification
    - Purpose: Iterative refinement of requirements
    - Example: Multi-turn dialog to clarify ambiguous user intent
 
-8. **Collab** (`schemas/v2/collab/`): Multi-agent collaboration sessions
+8. **Collab** (`schemas/v2/mplp-collab.schema.json`): Multi-agent collaboration sessions
    - Purpose: Coordinate multiple agents working together
    - Example: Turn-taking session with planner and executor agents
 
-9. **Core** (`schemas/v2/core/`): Orchestration, governance, conflict resolution
+9. **Core** (`schemas/v2/mplp-core.schema.json`): Orchestration, governance, conflict resolution
    - Purpose: Central control and policy enforcement
    - Example: Detect conflicting plans, apply resolution policies
 
-10. **Network** (`schemas/v2/network/`): External system integration metadata
+10. **Network** (`schemas/v2/mplp-network.schema.json`): External system integration metadata
     - Purpose: Manage connections to external services
     - Example: API endpoints, authentication, rate limits
+
+**Note**: All module schemas follow the `mplp-<module>.schema.json` naming convention at `schemas/v2/` root level. This is a v1.0 protocol guarantee.
 
 ---
 

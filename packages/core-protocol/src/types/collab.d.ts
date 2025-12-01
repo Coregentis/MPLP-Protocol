@@ -1,0 +1,46 @@
+/**
+ * Copyright 2025 邦士（北京）网络科技有限公司.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Collab Module Core Protocol: Describes the minimal required semantics (Core Profile) for multi-agent / multi-role collaboration sessions.
+ */
+export interface Collab {
+    /** [PROTOCOL-CORE] Protocol and schema metadata. */
+    meta: any;
+    /** [PROTOCOL-CORE] Governance metadata for lifecycle management, truth domain authority, and locking status. */
+    governance?: object;
+    /** [PROTOCOL-CORE] Global unique identifier for the collaboration session. */
+    collab_id: any;
+    /** [PROTOCOL-CORE] Identifier of the Context this collaboration session belongs to. */
+    context_id: any;
+    /** [PROTOCOL-CORE] Collaboration session title. */
+    title: string;
+    /** [PROTOCOL-CORE] Description of the purpose/goal of the collaboration. */
+    purpose: string;
+    /** [PROTOCOL-CORE] Collaboration mode (broadcast, round_robin, orchestrated, etc.). */
+    mode: 'broadcast' | 'round_robin' | 'orchestrated' | 'swarm' | 'pair';
+    /** [PROTOCOL-CORE] Collaboration session status. */
+    status: 'draft' | 'active' | 'suspended' | 'completed' | 'cancelled';
+    /** [PROTOCOL-CORE] List of roles/Agents participating in the collaboration. */
+    participants: any[];
+    /** [PROTOCOL-CORE] Creation time (ISO 8601). */
+    created_at: string;
+    /** [PROTOCOL-CORE] Last update time (ISO 8601). */
+    updated_at?: string;
+    /** [PROTOCOL-CORE] Trace reference bound to this collaboration session. */
+    trace?: any;
+    /** [PROTOCOL-CORE] List of key events directly related to this collaboration. */
+    events?: any[];
+}
