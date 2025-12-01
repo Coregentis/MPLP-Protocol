@@ -1,8 +1,8 @@
----
-**MPLP Protocol 1.0.0 — Frozen Specification**  
-**Status**: Frozen as of 2025-11-30  
-**Copyright**: © 2025 邦士（北京）网络科技有限公司  
-**License**: Apache License 2.0 (see LICENSE at repository root)  
+﻿---
+**MPLP Protocol 1.0.0 — Frozen Specification**
+**Status**: Frozen as of 2025-11-30
+**Copyright**: © 2025 邦士（北京）网络科技有限公司
+**License**: Apache License 2.0 (see LICENSE at repository root)
 **Any normative change requires a new protocol version.**
 ---
 
@@ -75,7 +75,7 @@ const executor = new InMemoryToolExecutor({
     const data = await response.json();
     return `Weather in ${city}: ${data.temperature}°C, ${data.condition}`;
   },
-  
+
   "calculate": async ({ expression }) => {
     // Safe math evaluation (in production, use a proper math parser)
     const allowedChars = /^[0-9+\-*/().\s]+$/;
@@ -84,7 +84,7 @@ const executor = new InMemoryToolExecutor({
     }
     return eval(expression);
   },
-  
+
   "send_email": async ({ to, subject, body }) => {
     // Email sending logic
     console.log(`Sending email to ${to}: ${subject}`);
@@ -138,10 +138,10 @@ Wrap tools with timeout logic:
 ```typescript
 const withTimeout = (fn: Function, timeoutMs: number) => {
   return async (payload: any) => {
-    const timeoutPromise = new Promise((_, reject) => 
+    const timeoutPromise = new Promise((_, reject) =>
       setTimeout(() => reject(new Error("Timeout")), timeoutMs)
     );
-    
+
     return Promise.race([fn(payload), timeoutPromise]);
   };
 };
@@ -161,23 +161,23 @@ Track and limit tool invocations:
 class RateLimitedExecutor implements ToolExecutor {
   private callCounts = new Map<string, number>();
   private limits = { "expensive_api": 10 };  // 10 calls per minute
-  
+
   constructor(private inner: ToolExecutor) {}
-  
+
   async invoke(invocation: ToolInvocation): Promise<ToolInvocationResult> {
     const count = this.callCounts.get(invocation.toolName) || 0;
     const limit = this.limits[invocation.toolName] || Infinity;
-    
+
     if (count >= limit) {
       return {
         success: false,
         errorMessage: `Rate limit exceeded for ${invocation.toolName}`
       };
     }
-    
+
     this.callCounts.set(invocation.toolName, count + 1);
     setTimeout(() => this.callCounts.delete(invocation.toolName), 60000);  // Reset after 1 min
-    
+
     return this.inner.invoke(invocation);
   }
 }
@@ -197,14 +197,14 @@ const traceHandler = (toolExecutor: ToolExecutor): TraceModuleHandler => {
   return async (input) => {
     const plan = input.coordination.plan;
     const traceSpans = [];
-    
+
     for (const step of plan.steps) {
       // Execute step using tools
       const result = await toolExecutor.invoke({
         toolName: step.toolName,  // Assume step defines toolName
         payload: step.parameters
       });
-      
+
       traceSpans.push({
         span_id: uuidv4(),
         trace_id: input.coordination.trace.trace_id,
@@ -212,7 +212,7 @@ const traceHandler = (toolExecutor: ToolExecutor): TraceModuleHandler => {
         attributes: { output: result.output }
       });
     }
-    
+
     return {
       trace_id: input.coordination.trace.trace_id,
       status: 'completed',
@@ -229,14 +229,14 @@ The AEL can expose a catalog of tools to the Agent:
 ```typescript
 class ToolAwareAEL implements ActionExecutionLayer {
   constructor(private toolExecutor: ToolExecutor) {}
-  
+
   async execute(action: Action): Promise<ActionResult> {
     if (action.type === 'use_tool') {
       const result = await this.toolExecutor.invoke({
         toolName: action.toolName,
         payload: action.parameters
       });
-      
+
       return {
         success: result.success,
         output: result.output,
@@ -331,7 +331,7 @@ const tools = {
       timeout: 1000,
       sandbox: { /* limited globals */ }
     });
-    
+
     return vm.run(code);
   }
 };
@@ -344,19 +344,19 @@ Log all tool invocations for compliance:
 ```typescript
 class AuditedToolExecutor implements ToolExecutor {
   constructor(private inner: ToolExecutor, private logger: Logger) {}
-  
+
   async invoke(invocation: ToolInvocation): Promise<ToolInvocationResult> {
     const startTime = Date.now();
     this.logger.info("Tool invoked", { tool: invocation.toolName, payload: invocation.payload });
-    
+
     const result = await this.inner.invoke(invocation);
-    
+
     this.logger.info("Tool completed", {
       tool: invocation.toolName,
       success: result.success,
       duration: Date.now() - startTime
     });
-    
+
     return result;
   }
 }
@@ -385,9 +385,9 @@ test('Tool executor handles errors gracefully', async () => {
   const executor = new InMemoryToolExecutor({
     "failing_tool": async () => { throw new Error("Simulated failure"); }
   });
-  
+
   const result = await executor.invoke({ toolName: "failing_tool", payload: {} });
-  
+
   expect(result.success).toBe(false);
   expect(result.errorMessage).toContain("Simulated failure");
 });

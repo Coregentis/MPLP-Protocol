@@ -1,8 +1,8 @@
----
-**MPLP Protocol 1.0.0 — Frozen Specification**  
-**Status**: Frozen as of 2025-11-30  
-**Copyright**: © 2025 邦士（北京）网络科技有限公司  
-**License**: Apache License 2.0 (see LICENSE at repository root)  
+﻿---
+**MPLP Protocol 1.0.0 — Frozen Specification**
+**Status**: Frozen as of 2025-11-30
+**Copyright**: © 2025 邦士（北京）网络科技有限公司
+**License**: Apache License 2.0 (see LICENSE at repository root)
 **Any normative change requires a new protocol version.**
 ---
 
@@ -220,7 +220,7 @@ async function main() {
 
   // Step 2: Initialize the Runtime
   const runtimeContext = new RuntimeContext(uuidv4());
-  
+
   // Step 3: Execute the flow
   const result = await runSingleAgentFlow({
     context: runtimeContext,
@@ -340,7 +340,7 @@ const llm = new HttpLlmClient({
 const planHandler: PlanModuleHandler = async (input) => {
   const prompt = `Generate a plan to: ${input.context.title}`;
   const response = await llm.generate({ model: "gpt-4", input: prompt });
-  
+
   // Parse LLM response into Plan object
   return parsePlanFromLLM(response.output);
 };
@@ -365,12 +365,12 @@ To prompt the user for approval:
 ```typescript
 const confirmHandler: ConfirmModuleHandler = async (input) => {
   const plan = input.coordination.plan;
-  
+
   console.log("Plan to approve:");
   console.log(JSON.stringify(plan, null, 2));
-  
+
   const answer = await prompt("Approve? (yes/no): ");
-  
+
   return {
     confirm_id: uuidv4(),
     target_type: "plan",
@@ -392,7 +392,7 @@ import { test } from 'vitest';
 test('Plan handler generates valid plan', async () => {
   const input = { context: mockContext };
   const result = await planHandler(input);
-  
+
   expect(validatePlan(result).ok).toBe(true);
   expect(result.steps.length).toBeGreaterThan(0);
 });

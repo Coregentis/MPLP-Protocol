@@ -1,8 +1,8 @@
----
-**MPLP Protocol 1.0.0 — Frozen Specification**  
-**Status**: Frozen as of 2025-11-30  
-**Copyright**: © 2025 邦士（北京）网络科技有限公司  
-**License**: Apache License 2.0 (see LICENSE at repository root)  
+﻿---
+**MPLP Protocol 1.0.0 — Frozen Specification**
+**Status**: Frozen as of 2025-11-30
+**Copyright**: © 2025 邦士（北京）网络科技有限公司
+**License**: Apache License 2.0 (see LICENSE at repository root)
 **Any normative change requires a new protocol version.**
 ---
 
@@ -15,9 +15,6 @@ The Go SDK (`mplp-go`) is designed for high-performance backend systems, orchest
 
 ## 2. Design Goals
 
-*   **Performance**: Minimize allocations and use efficient serialization.
-*   **Concurrency**: Leverage Goroutines for parallel step execution and event processing.
-*   **Simplicity**: Idiomatic Go code with flat package structures and explicit error handling.
 
 ## 3. Core Components
 
@@ -49,9 +46,6 @@ func (e *Engine) RunFlow(ctx context.Context, flow *Flow) error {
 
 ## 4. Package Structure
 
-*   `github.com/coregentis/mplp/go/core`: Core types and validators.
-*   `github.com/coregentis/mplp/go/runtime`: Execution engine.
-*   `github.com/coregentis/mplp/go/transport`: gRPC and HTTP transport layers.
 
 ## 5. Implementation Plan
 

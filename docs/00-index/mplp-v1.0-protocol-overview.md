@@ -1,16 +1,16 @@
----
-**MPLP Protocol 1.0.0 — Frozen Specification**  
-**Status**: Frozen as of 2025-11-30  
-**Copyright**: © 2025 邦士（北京）网络科技有限公司  
-**License**: Apache License 2.0 (see LICENSE at repository root)  
+﻿---
+**MPLP Protocol 1.0.0 — Frozen Specification**
+**Status**: Frozen as of 2025-11-30
+**Copyright**: © 2025 邦士（北京）网络科技有限公司
+**License**: Apache License 2.0 (see LICENSE at repository root)
 **Any normative change requires a new protocol version.**
 ---
 
 # MPLP v1.0 Protocol Overview
 
-**Multi-Agent Lifecycle Protocol**  
-**Version**: 1.0.0  
-**Release Date**: 2025-11-30  
+**Multi-Agent Lifecycle Protocol**
+**Version**: 1.0.0
+**Release Date**: 2025-11-30
 **License**: Apache-2.0
 
 ## Official Protocol Name (v1.0)
@@ -159,7 +159,7 @@ graph LR
     Context[Context<br/>Project scope] --> Plan[Plan<br/>Executable steps]
     Plan --> Confirm[Confirm<br/>Approval decisions]
     Confirm --> Trace[Trace<br/>Execution history]
-    
+
     Role[Role<br/>Agent roles] -->|assigns| Plan
     Extension[Extension<br/>Tool adapters] -->|provides| Plan
     Dialog[Dialog<br/>Clarification] -->|informs| Context

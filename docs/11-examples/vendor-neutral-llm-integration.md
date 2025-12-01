@@ -1,8 +1,8 @@
----
-**MPLP Protocol 1.0.0 — Frozen Specification**  
-**Status**: Frozen as of 2025-11-30  
-**Copyright**: © 2025 邦士（北京）网络科技有限公司  
-**License**: Apache License 2.0 (see LICENSE at repository root)  
+﻿---
+**MPLP Protocol 1.0.0 — Frozen Specification**
+**Status**: Frozen as of 2025-11-30
+**Copyright**: © 2025 邦士（北京）网络科技有限公司
+**License**: Apache License 2.0 (see LICENSE at repository root)
 **Any normative change requires a new protocol version.**
 ---
 
@@ -146,24 +146,24 @@ const llmClient = new HttpLlmClient({ /* config */ }, fetch);
 
 const planHandler: PlanModuleHandler = async (input) => {
   const context = input.coordination.context;
-  
+
   // Construct prompt from the context
   const prompt = `
     Create a detailed plan to accomplish the following objective:
     Title: ${context.title}
     Domain: ${context.root.domain}
-    
+
     Respond with a JSON array of steps.
   `;
-  
+
   const result = await llmClient.generate({
     model: "gpt-4",
     input: prompt,
     temperature: 0.3
   });
-  
+
   const stepsJson = JSON.parse(result.output);
-  
+
   return {
     meta: { protocol_version: "1.0.0", schema_version: "1.0.0", created_at: new Date().toISOString() },
     plan_id: uuidv4(),
@@ -187,14 +187,14 @@ The AEL can also use the LLM client for tool use planning or code generation:
 ```typescript
 class LlmPoweredAEL implements ActionExecutionLayer {
   constructor(private llm: LlmClient) {}
-  
+
   async execute(action: Action): Promise<ActionResult> {
     if (action.type === 'generate_code') {
       const result = await this.llm.generate({
         model: "gpt-4",
         input: `Generate Python code to: ${action.description}`
       });
-      
+
       return { success: true, output: result.output };
     }
     // ... other action types
@@ -272,7 +272,7 @@ Track token usage across all LLM calls:
 ```typescript
 class TokenTracker {
   private totalTokens = 0;
-  
+
   wrap(client: LlmClient): LlmClient {
     return {
       generate: async (req) => {
@@ -282,7 +282,7 @@ class TokenTracker {
       }
     };
   }
-  
+
   getTotal() { return this.totalTokens; }
 }
 ```

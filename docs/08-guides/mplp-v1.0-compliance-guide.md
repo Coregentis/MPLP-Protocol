@@ -1,15 +1,15 @@
----
-**MPLP Protocol 1.0.0 — Frozen Specification**  
-**Status**: Frozen as of 2025-11-30  
-**Copyright**: © 2025 邦士（北京）网络科技有限公司  
-**License**: Apache License 2.0 (see LICENSE at repository root)  
+﻿---
+**MPLP Protocol 1.0.0 — Frozen Specification**
+**Status**: Frozen as of 2025-11-30
+**Copyright**: © 2025 邦士（北京）网络科技有限公司
+**License**: Apache License 2.0 (see LICENSE at repository root)
 **Any normative change requires a new protocol version.**
 ---
 
 # MPLP v1.0 Compliance Guide
 
-**Version**: 1.0.0  
-**Last Updated**: 2025-11-30  
+**Version**: 1.0.0
+**Last Updated**: 2025-11-30
 **Audience**: Third-party runtime implementers, SDK developers, protocol certifiers
 
 ---
@@ -44,7 +44,7 @@ The keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SH
 ## 3. The Five Protocol-Invariant Flows
 
 ### FLOW-01: Single Agent Plan
-**Purpose**: Baseline happy-path workflow  
+**Purpose**: Baseline happy-path workflow
 **Validates**:
 - Context creation and immutability
 - Plan structure (steps array, IDs, status)
@@ -53,16 +53,16 @@ The keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SH
 **Key Invariants**: 7 rules covering Context/Plan ID binding, step structure
 
 ### FLOW-02: Single Agent Large Plan
-**Purpose**: Volumetric scalability  
+**Purpose**: Volumetric scalability
 **Validates**:
-- Large step arrays (25+ steps)  
+- Large step arrays (25+ steps)
 - `order_index` usage for explicit sequencing
 - `min-length(N)` invariant rule
 
 **Key Invariants**: 11 rules including step count minimums
 
 ### FLOW-03: Single Agent with Tools
-**Purpose**: Tool integration via `agent_role`  
+**Purpose**: Tool integration via `agent_role`
 **Validates**:
 - `agent_role` as executor type indicator
 - Tool roles: `curl_executor`, `jq_processor`
@@ -72,7 +72,7 @@ The keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SH
 **Key Invariants**: 5 rules validating `agent_role` as non-empty string
 
 ### FLOW-04: Single Agent with LLM Enrichment
-**Purpose**: LLM integration via `agent_role`  
+**Purpose**: LLM integration via `agent_role`
 **Validates**:
 - LLM roles: `llm_claude`, `llm_gpt`
 - Heterogeneous executor composition (tool + LLM + agent)
@@ -81,7 +81,7 @@ The keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SH
 **Key Invariants**: 5 rules, same structure as FLOW-03
 
 ### FLOW-05: Single Agent with Confirm Required
-**Purpose**: Multi-round approval workflow  
+**Purpose**: Multi-round approval workflow
 **Validates**:
 - Confirm module `decisions[]` array for multi-round approval
 - Trace module event logging
@@ -363,7 +363,7 @@ MPLP v1.0 defines **Minimal Integration** specifications for external tool integ
 
 1. **tool_event**: External tool invocation/results (formatters, linters, test runners)
    - Schema: [`mplp-tool-event.schema.json`](../../schemas/v2/integration/mplp-tool-event.schema.json)
-   
+
 2. **file_update_event**: IDE file changes (save, refactor, delete)
    - Schema: [`mplp-file-update-event.schema.json`](../../schemas/v2/integration/mplp-file-update-event.schema.json)
 
@@ -486,19 +486,19 @@ Organizations wishing to obtain **official MPLP v1.0 certification** may:
 
 ## 7. FAQ
 
-**Q: Do I need to implement all 25 flows?**  
+**Q: Do I need to implement all 25 flows?**
 A: No. Only FLOW-01~05 are required for v1.0 compliance. FLOW-06~25 are reference implementations.
 
-**Q: Can I add custom fields to Plan/Context?**  
+**Q: Can I add custom fields to Plan/Context?**
 A: No. `additionalProperties: false` in schemas prohibits extensions. Use the Extension module for custom data.
 
-**Q: What if my runtime uses a different executor model than `agent_role`?**  
+**Q: What if my runtime uses a different executor model than `agent_role`?**
 A: You must map your internal model to `agent_role` values for protocol compliance. Internal implementation can differ.
 
-**Q: Can I modify FLOW-01~05 fixtures to fit my runtime?**  
+**Q: Can I modify FLOW-01~05 fixtures to fit my runtime?**
 A: No. Fixtures are frozen. If your runtime cannot pass them as-is, it is not v1.0 compliant.
 
-**Q: What about Plan versioning / revision tracking?**  
+**Q: What about Plan versioning / revision tracking?**
 A: Not part of v1.0. Use Confirm `decisions[]` for approval history. Plan versioning may be added in v1.x or v2.0.
 
 ---

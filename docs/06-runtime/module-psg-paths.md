@@ -1,8 +1,8 @@
----
-**MPLP Protocol 1.0.0 — Frozen Specification**  
-**Status**: Frozen as of 2025-11-30  
-**Copyright**: © 2025 邦士（北京）网络科技有限公司  
-**License**: Apache License 2.0 (see LICENSE at repository root)  
+﻿---
+**MPLP Protocol 1.0.0 — Frozen Specification**
+**Status**: Frozen as of 2025-11-30
+**Copyright**: © 2025 邦士（北京）网络科技有限公司
+**License**: Apache License 2.0 (see LICENSE at repository root)
 **Any normative change requires a new protocol version.**
 ---
 
@@ -84,7 +84,7 @@ on Context.create(context_obj):
   }
   if context_obj.constraints:
     psg.constraints[context_obj.context_id] = context_obj.constraints
-  
+
   # Optional
   emit ImportProcessEvent({
     event_type: "project_initialized",
@@ -125,18 +125,18 @@ on Plan.create(plan_obj):
     status: "pending",
     created_at: now()
   }
-  
+
   for step in plan_obj.steps:
     psg.plan_steps[step.step_id] = {
       description: step.description,
       agent_role: step.agent_role,
       status: "pending"
     }
-    
+
     # Create dependency edges
     for dep_id in step.dependencies:
       psg.plan_edges.add(dep_id → step.step_id, type="depends_on")
-  
+
   # Emit GraphUpdateEvent
   emit GraphUpdateEvent({
     graph_id: psg.id,
@@ -177,10 +177,10 @@ on Confirm.decision_added(confirm_obj, decision):
     decided_by_role: decision.decided_by_role,
     decided_at: decision.decided_at
   })
-  
+
   # Update overall status
   psg.approval_nodes[confirm_obj.confirm_id].status = decision.status
-  
+
   # Emit RuntimeExecutionEvent
   emit RuntimeExecutionEvent({
     execution_id: decision.decision_id,
@@ -220,7 +220,7 @@ on Trace.event_added(trace_obj, event):
     operation: event.event_type,
     timestamp: event.timestamp
   }
-  
+
   # Emit RuntimeExecutionEvent
   emit RuntimeExecutionEvent({
     execution_id: event.event_id,
@@ -257,7 +257,7 @@ on Role.create(role_obj):
     name: role_obj.name,
     capabilities: role_obj.capabilities
   }
-  
+
   for assignment in role_obj.assignments:
     psg.role_assignments.add(assignment.agent_id → role_obj.role_id)
 ```

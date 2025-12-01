@@ -1,14 +1,14 @@
----
-**MPLP Protocol 1.0.0 — Frozen Specification**  
-**Status**: Frozen as of 2025-11-30  
-**Copyright**: © 2025 邦士（北京）网络科技有限公司  
-**License**: Apache License 2.0 (see LICENSE at repository root)  
+﻿---
+**MPLP Protocol 1.0.0 — Frozen Specification**
+**Status**: Frozen as of 2025-11-30
+**Copyright**: © 2025 邦士（北京）网络科技有限公司
+**License**: Apache License 2.0 (see LICENSE at repository root)
 **Any normative change requires a new protocol version.**
 ---
 
 # MPLP v1.0 Compliance Checklist
 
-**Version**: 1.0.0  
+**Version**: 1.0.0
 **Purpose**: Self-assessment tool for MPLP Protocol v1.0 compliance
 **Usage**: Check items as you implement
 
@@ -33,7 +33,7 @@
 ### ✅ REQUIRED
 **Must implement for "MPLP v1.0 compliant" claim**
 
-### ⚠️ RECOMMENDED  
+### ⚠️ RECOMMENDED
 **Strongly suggested, not mandatory**
 
 ### ⭕ OPTIONAL

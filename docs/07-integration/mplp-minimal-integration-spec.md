@@ -1,8 +1,8 @@
----
-**MPLP Protocol 1.0.0 — Frozen Specification**  
-**Status**: Frozen as of 2025-11-30  
-**Copyright**: © 2025 邦士（北京）网络科技有限公司  
-**License**: Apache License 2.0 (see LICENSE at repository root)  
+﻿---
+**MPLP Protocol 1.0.0 — Frozen Specification**
+**Status**: Frozen as of 2025-11-30
+**Copyright**: © 2025 邦士（北京）网络科技有限公司
+**License**: Apache License 2.0 (see LICENSE at repository root)
 **Any normative change requires a new protocol version.**
 ---
 
@@ -10,8 +10,8 @@
 
 **Purpose**: Define protocol-level specifications for external tool integration (IDE, CI, Git, Tools) as L4 Boundary Layer.
 
-**Version**: 1.0.0  
-**Last Updated**: 2025-11-30  
+**Version**: 1.0.0
+**Last Updated**: 2025-11-30
 **Status**: Normative Specification (Optional for v1.0)
 
 ---
@@ -59,10 +59,10 @@ graph LR
     Git[Git<br/>Hooks, Webhooks] -->|git_event| Runtime
     CI[CI Platform<br/>GitHub Actions, Jenkins] -->|ci_event| Runtime
     Tools[External Tools<br/>ESLint, Pytest] -->|tool_event| Runtime
-    
+
     Runtime[MPLP Runtime] -->|Updates| PSG[PSG<br/>Project Semantic Graph]
     Runtime -->|Emits| Events[Observability Events]
-    
+
     PSG --> Learning[Learning Samples]
     Events --> Learning
 ```
@@ -197,7 +197,7 @@ graph LR
 1. **IDE Integration** → RECOMMENDED:
    - Emit `file_update_event` on file save/create/delete
    - Use events to trigger PSG updates
-   
+
 2. **CI Integration** → RECOMMENDED:
    - Emit `ci_event` on pipeline start/complete/fail
    - Correlate with PipelineStageEvent (from Phase 3)
@@ -349,7 +349,7 @@ workspace.onDidSaveTextDocument((document) => {
     workspace_root: workspace.rootPath,
     timestamp: new Date().toISOString()
   };
-  
+
   // Emit to MPLP runtime
   mplpRuntime.emitIntegrationEvent({
     event_family: "ExternalIntegrationEvent",
@@ -405,7 +405,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Run tests
         run: npm test
-      
+
       - name: Emit CI event to MPLP
         if: always()
         run: |

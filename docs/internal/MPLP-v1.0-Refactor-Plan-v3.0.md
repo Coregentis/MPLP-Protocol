@@ -1,8 +1,8 @@
----
-**MPLP Protocol 1.0.0 — Frozen Specification**  
-**Status**: Frozen as of 2025-11-30  
-**Copyright**: © 2025 邦士（北京）网络科技有限公司  
-**License**: Apache License 2.0 (see LICENSE at repository root)  
+﻿---
+**MPLP Protocol 1.0.0 — Frozen Specification**
+**Status**: Frozen as of 2025-11-30
+**Copyright**: © 2025 邦士（北京）网络科技有限公司
+**License**: Apache License 2.0 (see LICENSE at repository root)
 **Any normative change requires a new protocol version.**
 ---
 
@@ -16,9 +16,6 @@
 
 ## **0.1 Physical Layout: `V1.0-release/` = The Only Official Repository**
 
-* 本仓库根目录包含历史代码（旧 src、旧 schemas、augment、产品逻辑混杂等）。
-* 现在开始，**所有 MPLP v1.0 的协议重构必须在 `/V1.0-release/` 目录下完成**。
-* `V1.0-release/` 即为逻辑根（相当于独立的 `mplp-protocol/` 仓库）。
 
 **未来所有对外发布（GitHub Release / NPM / PyPI / Go module / Maven）
 全部以 `V1.0-release/` 为基础发布。**
@@ -35,17 +32,9 @@
 
 它不是：
 
-* 任何 IDE
-* 任何 SaaS
-* 任何具体产品
-* 任何商业化运行时
 
 它的定位与期望对齐：
 
-* HTTP/1.1
-* gRPC / Protobuf
-* OpenAPI Spec
-* GraphQL Spec
 
 即：**纯协议仓库 + reference runtime + SDK + schemas + conformance test suite**。
 
@@ -54,10 +43,7 @@
 ## **0.3 Global Constraints (Hard Rules)**
 
 1.  **Language Constraint**:
-    *   All new code, docs, comments, error messages, and test names under `V1.0-release/` **MUST be in English**.
 2.  **Vendor-Neutral Constraint**:
-    *   **No provider / framework names** (e.g., OpenAI, Anthropic, LangChain, etc.) are allowed in core packages.
-    *   If needed, they can appear **only** in `docs/07-examples/` as configuration samples.
 
 ---
 
@@ -67,68 +53,31 @@
 
 ### **1) Formal Specification**
 
-* Protocol Spec v1.0
-* Glossary
-* Rationale
-* State machine diagrams
-* Message formats（JSON Schema v2）
 
 ### **2) 4-Layer Architecture**
 
-* L1 Core Protocol（数据模型、语义、wire format）
-* L2 Coordination & Governance（10 模块 + 事件模型）
-* L3 Reference Runtime（orchestrator + AEL/VSL）
-* L4 Integration Layer（LLM / tools / storage / orchestration frameworks 的通用抽象）
 
 ### **3) Schema Set：JSON Schema v2**
 
-* 全部 10 模块
-* Observability & Event Model
-* LearningSample 模型
-* Common schema（identifiers / timestamps / actors / etc.）
 
 ### **4) Multi-language SDK（Minimal, Protocol-Faithful）**
 
 一次性提供：
 
-* TypeScript SDK
-* Python SDK
-* Go SDK
-* Java/Kotlin SDK
 
 全部基于 **schema v2 codegen 或机械派生**。
 
 ### **5) Reference Runtime**
 
-* 厂商中立
-* In-memory AEL / VSL
-* 可跑通 25 Golden Flows
 
 ### **6) Golden Test Suite（25 Canonical Flows）**
 
-* 单 Agent
-* 多 Agent
-* 风险确认
-* 错误恢复
-* 行为一致性（事件序列、状态迁移）
-* **Conformance Kit Interface** (for third-party runtimes)
 
 ### **7) Governance & SemVer**
 
-* MIP（MPLP Improvement Proposal）流程
-* Protocol SemVer
-* Schema SemVer 绑定规则
-* Deprecation Policy
-* Compatibility Matrix
 
 ### **8) OSS Engineering**
 
-* CI（lint / test / schema validation / security audits）
-* Release pipeline
-* English-only public docs
-* LICENSE（Apache 2.0）
-* CONTRIBUTING / SECURITY / CODE OF CONDUCT
-* Standard configs (`.editorconfig`, etc.)
 
 ---
 
@@ -234,12 +183,7 @@ V1.0-release/
 
 根目录已有的 schema v2 是成熟资产，做法是：
 
-* 全部迁移到 `V1.0-release/schemas/v2/`
-* 允许的更改只有：
 
-  * `$id` → 更新到新 URL
-  * `title/description` → 规范化英文
-  * 命名 → 与十模块文件名一致
 
 **不改变字段、不改语义、不改结构。**
 
@@ -261,10 +205,6 @@ V1.0-release/
 
 旧测试中如果有：
 
-* canonical scenario
-* 输入 JSON
-* 输出预期
-* 事件顺序
 
 → 一律迁移到 `V1.0-release/tests/e2e/golden/`，只换调用 API。
 
@@ -276,15 +216,9 @@ V1.0-release/
 
 部分旧 runtime 逻辑可以指导：
 
-* orchestrator 执行顺序
-* AEL/VSL 的职责
-* 多模块协作的“节奏”
 
 但是为了协议纯度，L3 需要：
 
-* 重新组织结构
-* 抽象 vendor-neutral 能力
-* 清理产品特定逻辑
 
 **所以 runtime 是“参考 + 重写”，不是“直接迁移”。**
 
@@ -300,10 +234,6 @@ V1.0-release/
 
 目标：
 
-* 创建 `V1.0-release/` 全部空目录
-* 在 README 中建置“protocol-only”声明
-* 标记根目录为 read-only zone
-* 创建 workspace 环境（pnpm / tsconfig）
 
 ---
 
@@ -311,10 +241,6 @@ V1.0-release/
 
 目标：
 
-* 建立完整 docs 骨架
-* 从旧文档中提取“纯协议”部分，翻译 English
-* 去除产品/企业内容
-* **Governance Skeleton**: Create `docs/08-governance/` with placeholders for `mip-process.md`, `versioning-policy.md`, `compatibility-matrix.md`.
 
 ---
 
@@ -322,11 +248,6 @@ V1.0-release/
 
 目标：
 
-* 将根目录 schema v2 拷贝到 `V1.0-release/schemas/v2/`
-* **Include ALL schemas**: 10 modules, `common/events.schema.json`, `common/learning-sample.schema.json`, and other common schemas.
-* 做：路径调整、英文规范、统一命名
-* 不改字段、不改结构、不改语义
-* 加入 schema validation 脚本
 
 ---
 
@@ -334,9 +255,6 @@ V1.0-release/
 
 目标：
 
-* 定义模型类型（基于 schema v2 codegen）
-* **Strict Order**: Copy legacy validators/tests -> Strip product bits -> Refactor.
-* 迁移旧 validator tests（调整路径）
 
 ---
 
@@ -344,9 +262,6 @@ V1.0-release/
 
 目标：
 
-* 新写模块接口 / 协调逻辑
-* 新写事件模型
-* 有需要可参考旧流程代码结构，但不直接复制
 
 ---
 
@@ -354,10 +269,6 @@ V1.0-release/
 
 目标：
 
-* 实现 vendor-neutral orchestrator
-* 实现 InMemory AEL / VSL
-* 参考旧 runtime 行为，但结构全部重写
-* 避免任何产品耦合
 
 ---
 
@@ -365,10 +276,6 @@ V1.0-release/
 
 目标：
 
-* 通用 HTTP LLM client
-* 工具执行接口
-* KV / filesystem storage
-* 跨语言 demo（TS/Py/Go/Java）
 
 ---
 
@@ -376,10 +283,6 @@ V1.0-release/
 
 目标：
 
-* 基于 schema v2 codegen
-* 完成四语言 minimal SDK（TS/Py/Go/Java）
-* 迁移旧 golden flow 测试语义
-* **Conformance Kit**: Expose a simple interface so that an external, independent MPLP runtime can be plugged into the Golden Test Suite and run all 25 flows as a conformance check.
 
 ---
 
@@ -387,11 +290,6 @@ V1.0-release/
 
 目标：
 
-* 完成 README / GOVERNANCE / MIP / LICENSE / compatibility matrix / FAQ
-* **Security & Configs**: Add `.editorconfig`, `SECURITY.md`, and configure `npm audit` in CI.
-* 配置 CI & Release workflows
-* 发布 NPM / PyPI / Go module / Maven
-* GitHub v1.0.0 Release
 
 ---
 

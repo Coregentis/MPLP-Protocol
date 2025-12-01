@@ -1,8 +1,8 @@
----
-**MPLP Protocol 1.0.0 — Frozen Specification**  
-**Status**: Frozen as of 2025-11-30  
-**Copyright**: © 2025 邦士（北京）网络科技有限公司  
-**License**: Apache License 2.0 (see LICENSE at repository root)  
+﻿---
+**MPLP Protocol 1.0.0 — Frozen Specification**
+**Status**: Frozen as of 2025-11-30
+**Copyright**: © 2025 邦士（北京）网络科技有限公司
+**License**: Apache License 2.0 (see LICENSE at repository root)
 **Any normative change requires a new protocol version.**
 ---
 
@@ -21,9 +21,6 @@ The AEL abstracts the execution of side-effects, such as calling LLMs or invokin
 ```typescript
 export interface ActionExecutionLayer {
   /**
-   * Execute a discrete action.
-   * @param action The action definition (type, payload)
-   * @returns The result of the execution
    */
   execute(action: Action): Promise<ActionResult>;
 }
@@ -43,4 +40,3 @@ In a production setup, the AEL is the critical control point for:
 -   **Cost Tracking**: Monitoring token usage per tenant/user.
 -   **Sandboxing**: Running untrusted tool code in isolated environments (e.g., Firecracker microVMs or WASM).
 -   **Secret Management**: Injecting API keys at runtime without exposing them to the agent logic.
-

@@ -1,11 +1,11 @@
-# Phase 8 Task Plan - MPLP v1.0.0 Release
+﻿# Phase 8 Task Plan - MPLP v1.0.0 Release
 
 ## P8.0 Sanity Check
 - Check git status
 - Verify branch
 - Record branch in governance doc
 
-## P8.1 Markdown Polish  
+## P8.1 Markdown Polish
 - Scan all .md files
 - Fix heading hierarchy
 - Add code block language tags

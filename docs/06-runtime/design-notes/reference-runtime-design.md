@@ -1,8 +1,8 @@
----
-**MPLP Protocol 1.0.0 — Frozen Specification**  
-**Status**: Frozen as of 2025-11-30  
-**Copyright**: © 2025 邦士（北京）网络科技有限公司  
-**License**: Apache License 2.0 (see LICENSE at repository root)  
+﻿---
+**MPLP Protocol 1.0.0 — Frozen Specification**
+**Status**: Frozen as of 2025-11-30
+**Copyright**: © 2025 邦士（北京）网络科技有限公司
+**License**: Apache License 2.0 (see LICENSE at repository root)
 **Any normative change requires a new protocol version.**
 ---
 
@@ -51,4 +51,3 @@ A simple map connecting abstract module names (defined in L2 Flow Contracts) to 
 1.  **Stateless Core**: The runtime logic itself is stateless; all state is pushed to the VSL.
 2.  **Dependency Injection**: Modules, AEL, and VSL are injected, allowing for easy mocking and swapping.
 3.  **Event Driven**: All significant actions emit events, ensuring observability is built-in, not bolted on.
-

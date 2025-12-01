@@ -1,14 +1,14 @@
----
-**MPLP Protocol 1.0.0 — Frozen Specification**  
-**Status**: Frozen as of 2025-11-30  
-**Copyright**: © 2025 邦士（北京）网络科技有限公司  
-**License**: Apache License 2.0 (see LICENSE at repository root)  
+﻿---
+**MPLP Protocol 1.0.0 — Frozen Specification**
+**Status**: Frozen as of 2025-11-30
+**Copyright**: © 2025 邦士（北京）网络科技有限公司
+**License**: Apache License 2.0 (see LICENSE at repository root)
 **Any normative change requires a new protocol version.**
 ---
 
 # MPLP v1.0 Golden Test Suite - Technical Details
 
-**Version**: 1.0.0  
+**Version**: 1.0.0
 **Purpose**:  Comprehensive test harness documentation for MPLP protocol validation
 
 > **Protocol Behavior Disclaimer**: The Golden Test Suite validates **protocol-level behavior** (schemas, invariants, state transitions). It does not mandate specific runtime implementation details (e.g., language, storage engine), provided the external behavior matches the golden fixtures.

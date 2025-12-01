@@ -1,15 +1,15 @@
----
-**MPLP Protocol 1.0.0 — Frozen Specification**  
-**Status**: Frozen as of 2025-11-30  
-**Copyright**: © 2025 邦士（北京）网络科技有限公司  
-**License**: Apache License 2.0 (see LICENSE at repository root)  
+﻿---
+**MPLP Protocol 1.0.0 — Frozen Specification**
+**Status**: Frozen as of 2025-11-30
+**Copyright**: © 2025 邦士（北京）网络科技有限公司
+**License**: Apache License 2.0 (see LICENSE at repository root)
 **Any normative change requires a new protocol version.**
 ---
 
 # MPLP v1.0 API Quick Reference
 
-**Version**: 1.0.0  
-**Last Updated**: 2025-12-01  
+**Version**: 1.0.0
+**Last Updated**: 2025-12-01
 **Purpose**: One-page index of all protocol elements for rapid lookup.
 
 ---

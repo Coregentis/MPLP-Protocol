@@ -1,8 +1,8 @@
----
-**MPLP Protocol 1.0.0 — Frozen Specification**  
-**Status**: Frozen as of 2025-11-30  
-**Copyright**: © 2025 邦士（北京）网络科技有限公司  
-**License**: Apache License 2.0 (see LICENSE at repository root)  
+﻿---
+**MPLP Protocol 1.0.0 — Frozen Specification**
+**Status**: Frozen as of 2025-11-30
+**Copyright**: © 2025 邦士（北京）网络科技有限公司
+**License**: Apache License 2.0 (see LICENSE at repository root)
 **Any normative change requires a new protocol version.**
 ---
 
@@ -15,9 +15,6 @@ The Java SDK (`mplp-java`) targets enterprise environments, ensuring MPLP can be
 
 ## 2. Design Goals
 
-*   **Enterprise Ready**: Integration with Spring, Jakarta EE, and standard logging/monitoring (SLF4J, Micrometer).
-*   **Robustness**: Strict exception handling and comprehensive javadoc.
-*   **Backward Compatibility**: Designed to be stable and maintainable over long lifecycles.
 
 ## 3. Core Components
 
@@ -30,7 +27,7 @@ Java Beans compliant classes with Jackson annotations.
 public class Context {
     @JsonProperty("context_id")
     private String contextId;
-    
+
     // Getters, Setters, Builders
 }
 ```
@@ -50,9 +47,6 @@ JPA Entities for mapping Protocol Objects to relational tables, enabling complex
 
 ## 4. Package Structure
 
-*   `dev.mplp.core`: Core POJOs and Interfaces.
-*   `dev.mplp.runtime`: Default runtime implementation.
-*   `dev.mplp.spring`: Spring Boot integration.
 
 ## 5. Implementation Plan
 

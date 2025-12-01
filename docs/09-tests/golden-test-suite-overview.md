@@ -1,8 +1,8 @@
----
-**MPLP Protocol 1.0.0 — Frozen Specification**  
-**Status**: Frozen as of 2025-11-30  
-**Copyright**: © 2025 邦士（北京）网络科技有限公司  
-**License**: Apache License 2.0 (see LICENSE at repository root)  
+﻿---
+**MPLP Protocol 1.0.0 — Frozen Specification**
+**Status**: Frozen as of 2025-11-30
+**Copyright**: © 2025 邦士（北京）网络科技有限公司
+**License**: Apache License 2.0 (see LICENSE at repository root)
 **Any normative change requires a new protocol version.**
 ---
 
@@ -31,7 +31,7 @@ The Golden Test Suite follows HTTP/gRPC-level golden test standards:
 
 For MPLP v1.0, the **protocol-level compliance boundary** is defined as:
 
-✅ **All L1 JSON Schemas validate correctly**, AND  
+✅ **All L1 JSON Schemas validate correctly**, AND
 ✅ **FLOW-01 through FLOW-05 pass** with official fixtures and invariants
 
 **FLOW-06 through FLOW-25** are recommended product-level scenarios, **NOT required** for baseline protocol compliance.

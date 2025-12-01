@@ -1,8 +1,8 @@
----
-**MPLP Protocol 1.0.0 — Frozen Specification**  
-**Status**: Frozen as of 2025-11-30  
-**Copyright**: © 2025 邦士（北京）网络科技有限公司  
-**License**: Apache License 2.0 (see LICENSE at repository root)  
+﻿---
+**MPLP Protocol 1.0.0 — Frozen Specification**
+**Status**: Frozen as of 2025-11-30
+**Copyright**: © 2025 邦士（北京）网络科技有限公司
+**License**: Apache License 2.0 (see LICENSE at repository root)
 **Any normative change requires a new protocol version.**
 ---
 
@@ -59,4 +59,3 @@ The Orchestrator is designed to be:
 -   **Module Agnostic**: It doesn't know *how* to plan, it just calls the `Plan` module.
 -   **State Agnostic**: It delegates state persistence to the VSL.
 -   **Flow Agnostic**: New flows (e.g., Multi-Agent) can be implemented by creating new Orchestrator functions that reuse the same infrastructure.
-
