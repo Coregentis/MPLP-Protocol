@@ -3,14 +3,14 @@
 # Multi-Agent Lifecycle Protocol (MPLP)
 ### The Open Standard for Governing Agentic AI Systems
 
-[![Version](https://img.shields.io/badge/Version-v1.0.0_(Frozen)-blue?style=flat-square)](docs/13-release/mplp-v1.0.0-release-notes.md)
-[![License](https://img.shields.io/badge/License-Apache_2.0-green?style=flat-square)](LICENSE.txt)
-[![Protocol Status](https://img.shields.io/badge/Protocol_Status-Stable-success?style=flat-square)](docs/00-index/mplp-v1.0-protocol-overview.md)
-[![Profiles](https://img.shields.io/badge/Profiles-SA_%7C_MAP-orange?style=flat-square)](docs/03-profiles/)
-[![Schema](https://img.shields.io/badge/Schema-JSON_Schema_v1.0-purple?style=flat-square)](schemas/v2/)
-[![Governance](https://img.shields.io/badge/Governance-Multi--Agent_Ready-ff69b4?style=flat-square)](docs/12-governance/mip-process.md)
+[![Version](https://img.shields.io/badge/Version-v1.0.0_(Frozen)-blue?style=flat-square)](13-release/mplp-v1.0.0-release-notes.md)
+[![License](https://img.shields.io/badge/License-Apache_2.0-green?style=flat-square)](../LICENSE.txt)
+[![Protocol Status](https://img.shields.io/badge/Protocol_Status-Stable-success?style=flat-square)](00-index/mplp-v1.0-protocol-overview.md)
+[![Profiles](https://img.shields.io/badge/Profiles-SA_%7C_MAP-orange?style=flat-square)](03-profiles/)
+[![Schema](https://img.shields.io/badge/Schema-JSON_Schema_v1.0-purple?style=flat-square)](../schemas/v2/)
+[![Governance](https://img.shields.io/badge/Governance-Multi--Agent_Ready-ff69b4?style=flat-square)](12-governance/mip-process.md)
 
-[**Documentation**](docs/00-index/mplp-v1.0-docs-map.md) • [**Schemas**](schemas/v2/) • [**Examples**](examples/) • [**SDKs**](packages/) • [**Governance**](docs/12-governance/)
+[**Documentation**](00-index/mplp-v1.0-docs-map.md) • [**Schemas**](../schemas/v2/) • [**Examples**](../examples/) • [**SDKs**](../packages/) • [**Governance**](12-governance/)
 
 </div>
 
