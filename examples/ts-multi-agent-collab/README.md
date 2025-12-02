@@ -40,21 +40,6 @@ The collaboration follows a strict protocol flow:
 
 ### 3. Data Model
 
-This example will utilize the advanced L1 modules:
-
-*   **`Dialog`**: For conversational history and message passing.
-*   **`Collab`**: For managing shared resources, locks, and consistency.
-*   **`Network`**: For addressing and routing messages between agents.
-
-## 💻 Implementation Roadmap
-
-The implementation is scheduled for Phase P7 and will proceed as follows:
-
-1.  **SDK Integration**: Utilize the upcoming TypeScript SDK for type-safe interaction.
-2.  **Mock Transport**: Implement an in-memory message bus to simulate network traffic.
-3.  **State Machine**: Implement the `Collab` state machine to handle concurrent updates.
-4.  **Demo Scenario**: A "Travel Planning" scenario where the Planner creates the itinerary and the Executor books the flights (simulated).
-
 ## 📂 Current Structure
 
 ```text

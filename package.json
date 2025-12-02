@@ -1,6 +1,6 @@
 {
     "name": "mplp-protocol",
-    "version": "1.0.0-rc.1",
+    "version": "1.0.0",
     "private": true,
     "description": "Multi-Agent Lifecycle Protocol (MPLP) v1.0 - vendor-neutral, protocol-first repository",
     "license": "Apache-2.0",
@@ -16,6 +16,7 @@
         "test:runtime-compat:compare": "ts-node scripts/compare-runtime-json.ts",
         "test:runtime-compat": "pnpm runtime:dump:single-agent && pnpm test:runtime-compat:py && pnpm test:runtime-compat:compare && vitest run tests/runtime-compat",
         "test:golden": "ts-node --transpile-only tests/golden/harness/ts/golden-runner.ts",
+        "examples:ts-single-agent": "ts-node examples/ts-single-agent-basic/index.ts",
         "build:release": "node ./scripts/build-release.js"
     },
     "devDependencies": {

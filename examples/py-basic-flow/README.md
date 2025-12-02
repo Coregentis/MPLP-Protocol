@@ -1,13 +1,20 @@
 # Python Basic Flow Example
 
-This example demonstrates basic MPLP protocol usage with the Python SDK.
+This example demonstrates basic **MPLP (Multi-Agent Lifecycle Protocol)** usage with the Python SDK.
+
+It shows how to use the Builder API to construct valid protocol objects programmatically.
 
 ## Setup
 
 ```bash
 cd V1.0-release/packages/sdk-py
 python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
+# Activate virtual environment
+# Windows:
+.venv\Scripts\activate
+# Linux/Mac:
+source .venv/bin/activate
+
 pip install -e .[dev]
 ```
 
@@ -57,10 +64,18 @@ else:
 
 ```bash
 cd V1.0-release
+# Set PYTHONPATH to include the SDK source
+# Windows (PowerShell):
+$env:PYTHONPATH="packages/sdk-py/src"
+# Linux/Mac:
 export PYTHONPATH="packages/sdk-py/src"
+
 pytest packages/sdk-py/tests
 ```
 
 ## Next Steps
 
-See [py-sdk-guide.md](../../docs/06-sdk/py-sdk-guide.md) for complete API documentation.
+
+---
+**License**: [Apache 2.0](../../LICENSE.txt)
+

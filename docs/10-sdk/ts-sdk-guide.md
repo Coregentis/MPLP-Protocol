@@ -6,7 +6,19 @@
 **Any normative change requires a new protocol version.**
 ---
 
+---
+**MPLP Protocol 1.0.0 — Frozen Specification**
+**Status**: Frozen as of 2025-11-30
+**Copyright**: © 2025 邦士（北京）网络科技有限公司
+**License**: Apache License 2.0 (see LICENSE at repository root)
+**Any normative change requires a new protocol version.**
+---
+
 # TypeScript SDK Guide
+
+> **Status**: **Official / Reference Implementation**
+> **Package**: `@mplp/sdk-ts`
+> **Support**: Full (Schema v2, Validation, Builders)
 
 
 ## 1. Introduction

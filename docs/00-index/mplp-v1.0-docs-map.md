@@ -18,8 +18,9 @@
 
 **New to MPLP?** Start here:
 1. Read [Protocol Overview](mplp-v1.0-protocol-overview.md) (20 min)
-2. Review [Compliance Guide](../08-guides/mplp-v1.0-compliance-guide.md) (30 min)
-3. Try [Golden Test Suite](../09-tests/golden-test-suite-overview.md) (15 min)
+2. **Try [5-Min Quickstart](../08-guides/mplp-quickstart-5min.md)** (Hands-on)
+3. Review [Compliance Guide](../08-guides/mplp-v1.0-compliance-guide.md) (30 min)
+4. Try [Golden Test Suite](../09-tests/golden-test-suite-overview.md) (15 min)
 
 **Implementing MPLP?** Key documents:
 - [Compliance Checklist](../08-guides/mplp-v1.0-compliance-checklist.md)
@@ -78,7 +79,7 @@ docs/
 2. ✅ [Compliance Guide](../08-guides/mplp-v1.0-compliance-guide.md) - Requirements
 3. ✅ [Compliance Checklist](../08-guides/mplp-v1.0-compliance-checklist.md) - Self-assessment
 4. ✅ [Governance](../12-governance/versioning-policy.md) - Versioning and compatibility
-5. ✅ [Release Notes](../13-release/mplp-v1.0-release-notes.md) - Official release statement
+5. ✅ [Release Notes](../13-release/mplp-v1.0.0-release-notes.md) - Official release statement
 6. ✅ LICENSE (Apache-2.0 at repo root)
 
 ---
@@ -138,8 +139,8 @@ docs/
 
 | File | Type | Description | Phase |
 |------|------|-------------|-------|
-| [Release Notes](../13-release/mplp-v1.0-release-notes.md) | Release | Official v1.0.0 release statement | 7 |
-| [Governance Report](../13-release/07-13-governance-report.md) | Report | Final v1.0 governance summary | 7 |
+| [Release Notes](../13-release/mplp-v1.0.0-release-notes.md) | Release | Official v1.0.0 release statement | 7 |
+| [Governance Report](../13-release/mplp-v1.0-docs-governance-summary.md) | Report | Final v1.0 governance summary | 7 |
 
 ---
 

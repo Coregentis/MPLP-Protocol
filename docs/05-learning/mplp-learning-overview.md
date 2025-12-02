@@ -246,7 +246,7 @@ These are **product implementation decisions** for TracePilot, Coregentis, or ot
 - [Confirm Sample Example](../../examples/learning/flow-05-confirm-sample.json)
 
 **Compliance**:
-- [MPLP v1.0 Compliance Guide](../02-guides/mplp-v1.0-compliance-guide.md)
+- [MPLP v1.0 Compliance Guide](../08-guides/mplp-v1.0-compliance-guide.md)
 
 ---
 

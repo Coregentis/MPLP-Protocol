@@ -505,8 +505,8 @@ A: Not part of v1.0. Use Confirm `decisions[]` for approval history. Plan versio
 
 ## 8. References
 
-- [MPLP Specification v1.0](../01-spec/mplp-spec-v1.0.md)
-- [Golden Test Suite Overview](../08-tests/golden-test-suite-overview.md)
+- [MPLP Specification v1.0](../01-architecture/l1-core-protocol.md)
+- [Golden Test Suite Overview](../09-tests/golden-test-suite-overview.md)
 - [JSON Schemas](../../schemas/v2/)
 - [TypeScript Harness](../../tests/golden/harness/ts/)
 - [Python Harness](../../packages/sdk-py/tests/golden/harness/)

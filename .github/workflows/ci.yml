@@ -31,6 +31,10 @@ jobs:
         working-directory: V1.0-release
         run: pnpm run lint
 
+      - name: Validate Schemas
+        working-directory: V1.0-release
+        run: node validate_schemas_simple.js
+
       - name: Golden Test Suite (TypeScript)
         working-directory: V1.0-release
         run: pnpm test:golden

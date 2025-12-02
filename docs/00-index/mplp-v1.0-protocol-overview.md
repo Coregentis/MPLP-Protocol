@@ -475,7 +475,7 @@ psg.edges[step_1 → step_2] = {type: "depends_on"}
 - ⭕ Other Observability events
 - ⭕ Advanced features (ML-based drift, saga transactions, etc.)
 
-**Reference**: [Compliance Guide](../02-guides/mplp-v1.0-compliance-guide.md)
+**Reference**: [Compliance Guide](../08-guides/mplp-v1.0-compliance-guide.md)
 
 ---
 
@@ -501,7 +501,7 @@ psg.edges[step_1 → step_2] = {type: "depends_on"}
 
 **CI Integration**: GitHub Actions runs Golden Harness on every commit
 
-**Reference**: [Golden Test Suite](../08-tests/golden-test-suite-overview.md)
+**Reference**: [Golden Test Suite](../09-tests/golden-test-suite-overview.md)
 
 ---
 
@@ -539,9 +539,9 @@ psg.edges[step_1 → step_2] = {type: "depends_on"}
 
 ### For Implementers
 
-1. **Read**: [Compliance Guide](../02-guides/mplp-v1.0-compliance-guide.md)
+1. **Read**: [Compliance Guide](../08-guides/mplp-v1.0-compliance-guide.md)
 2. **Review**: [SA Profile](../03-profiles/mplp-sa-profile.md)
-3. **Test**: Run [Golden Harness](../08-tests/golden-test-suite-overview.md)
+3. **Test**: Run [Golden Harness](../09-tests/golden-test-suite-overview.md)
 4. **Implement**: Build runtime conforming to specs
 5. **Validate**: Pass all 9 Golden Flows
 
@@ -568,7 +568,7 @@ psg.edges[step_1 → step_2] = {type: "depends_on"}
 
 ### For Decision Makers
 
-1. **Assess**: [Release Notes](../09-release/mplp-v1.0-release-notes.md) - Scope and limitations
+1. **Assess**: [Release Notes](../13-release/mplp-v1.0.0-release-notes.md) - Scope and limitations
 2. **Evaluate**: Business value vs implementation cost
 3. **Plan**: Vendor selection (TracePilot, Coregentis, build in-house)
 4. **Adopt**: Gradual rollout (start with SA Profile, add MAP later)
@@ -579,8 +579,8 @@ psg.edges[step_1 → step_2] = {type: "depends_on"}
 
 **Explore Documentation**:
 - 📖 [Documentation Map](mplp-v1.0-docs-map.md) - Complete navigation guide
-- ✅ [Compliance Checklist](../02-guides/mplp-v1.0-compliance-checklist.md) - Self-assessment
-- 🧪 [Golden Test Suite](../08-tests/golden-test-suite-overview.md) - Validation mechanism
+- ✅ [Compliance Checklist](../08-guides/mplp-v1.0-compliance-checklist.md) - Self-assessment
+- 🧪 [Golden Test Suite](../09-tests/golden-test-suite-overview.md) - Validation mechanism
 
 **Join Community**:
 - GitHub: [mplp-protocol](https://github.com/org/mplp-protocol)
@@ -602,7 +602,7 @@ psg.edges[step_1 → step_2] = {type: "depends_on"}
 | 1.0.0 | 2025-11-30 | First stable public release |
 | 1.0.0-rc.1 | 2025-11-29 | Internal baseline (Phases 1-6) |
 
-**Future Roadmap**: See [Release Notes](../09-release/mplp-v1.0-release-notes.md)
+**Future Roadmap**: See [Release Notes](../13-release/mplp-v1.0.0-release-notes.md)
 
 ---
 

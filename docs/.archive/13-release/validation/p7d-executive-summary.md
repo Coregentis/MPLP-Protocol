@@ -123,37 +123,6 @@ All schema files properly use `/v1.0/` in `$id` URIs and follow consistent namin
 
 **Severity**: LOW
 
-**Expected**: 邦士（北京）网络科技有限公司  
-**Files Scanned**: 100  
-**Issues**: 1 file may have incorrect or missing copyright holder
-
-**Recommendation**: Verify all copyright attributions
-
-**Report**: [copyright-consistency-audit.md](file:///e:/Coregentis/MPLP/mplp-v1.0%20-%20%E5%89%AF%E6%9C%AC/V1.0-release/docs/13-release/validation/copyright-consistency-audit.md)
-
----
-
-### 🟠 P7D.8 — L1-L4 Architecture Linking (11 issues)
-
-**Severity**: MODERATE - Terminology Consistency
-
-**Correct Terms**:
-- L1 Core Protocol
-- L2 Coordination & Governance
-- L3 Runtime & Glue
-- L4 Integration Layer
-
-**Issues**: 11 files use incorrect or inconsistent architecture layer terminology
-
-**Recommendation**: Standardize all architecture references
-
-**Report**: [architecture-linking-consistency-report.md](file:///e:/Coregentis/MPLP/mplp-v1.0%20-%20%E5%89%AF%E6%9C%AC/V1.0-release/docs/13-release/validation/architecture-linking-consistency-report.md)
-
----
-
-## Skipped Validations
-
-### P7D.3 — Release Artifact Consistency
 **Reason**: `dist/mplp-v1.0/` directory not yet created (Phase 8 task)
 
 ### P7D.5 — Package Distribution Reality

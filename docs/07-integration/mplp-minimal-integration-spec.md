@@ -471,7 +471,7 @@ jobs:
 - [Phase 5: Runtime Glue](../06-runtime/mplp-runtime-glue-overview.md)
 
 **Compliance**:
-- [MPLP v1.0 Compliance Guide](../02-guides/mplp-v1.0-compliance-guide.md)
+- [MPLP v1.0 Compliance Guide](../08-guides/mplp-v1.0-compliance-guide.md)
 
 ---
 

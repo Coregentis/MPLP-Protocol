@@ -1,18 +1,5 @@
 ﻿---
 **MPLP Protocol 1.0.0 — Frozen Specification**
-**Status**: Frozen as of 2025-11-30
-**Copyright**: © 2025 邦士（北京）网络科技有限公司
-**License**: Apache License 2.0 (see LICENSE at repository root)
-**Any normative change requires a new protocol version.**
----
-
-# Java SDK Design Specification
-
-
-## 1. Introduction
-
-The Java SDK (`mplp-java`) targets enterprise environments, ensuring MPLP can be adopted in large-scale, legacy-integrated systems.
-
 ## 2. Design Goals
 
 

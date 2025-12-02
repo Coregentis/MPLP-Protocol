@@ -1,6 +1,6 @@
 # MPLP Single Agent Basic Example
 
-This project demonstrates a complete, runnable implementation of the **MPLP (Multi-Agent Protocol for Learning & Planning)** Single Agent Flow using the TypeScript Reference Runtime.
+This project demonstrates a complete, runnable implementation of the **MPLP (Multi-Agent Lifecycle Protocol)** Single Agent Flow using the TypeScript Reference Runtime.
 
 It showcases the core lifecycle of an MPLP execution: **Context → Plan → Confirm → Trace**.
 
@@ -123,7 +123,7 @@ Plan ID:    550e8400-e29b-41d4-a716-446655440002
 Steps:      1
 
 --- Step 3: Plan Confirmed ---
-Confirm ID: 550e8400-e29b-41d4-a716-446655440003
+Plan Confirmed: 550e8400-e29b-41d4-a716-446655440003
 Status:     approved
 
 --- Step 4: Trace Started ---
@@ -151,11 +151,14 @@ const client = new MplpRuntimeClient();
 const result = await client.runSingleAgentFlow({ ... });
 ```
 
-See [docs/06-sdk/ts-sdk-guide.md](../../docs/06-sdk/ts-sdk-guide.md) for details.
+See [TypeScript SDK Guide](../../docs/10-sdk/ts-sdk-guide.md) for details.
 
 ## 🛠 Extension
 
 To turn this into a real-world application:
 1.  Replace the `InMemoryVSL` with a database-backed VSL (e.g., PostgreSQL).
 2.  Replace the stub module handlers with real handlers that call an LLM (using `@mplp/integration-llm-http`).
-3.  Add a real CLI or Web UI to interact with the `Confirm` step.
+
+---
+**License**: [Apache 2.0](../../LICENSE.txt)
+

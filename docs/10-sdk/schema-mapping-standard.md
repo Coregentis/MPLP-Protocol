@@ -367,7 +367,7 @@ All MPLP SDKs MUST implement a standardized validation result structure:
 
 ### 5.1 Structure Definition
 
-> **Implementation Status**: Implemented in TypeScript and Python SDKs as of v0.9.2-alpha.
+> **Implementation Status**: Implemented in TypeScript and Python SDKs as of v1.0.0.
 
 **TypeScript**:
 ```typescript

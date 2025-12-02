@@ -1,18 +1,5 @@
 ﻿---
 **MPLP Protocol 1.0.0 — Frozen Specification**
-**Status**: Frozen as of 2025-11-30
-**Copyright**: © 2025 邦士（北京）网络科技有限公司
-**License**: Apache License 2.0 (see LICENSE at repository root)
-**Any normative change requires a new protocol version.**
----
-
-# MPLP Python SDK Guide
-
-
-## Overview
-
-The MPLP Python SDK provides:
-- **Schema-faithful Pydantic v2 models** - Auto-generated from JSON Schemas with exact field mapping
 - **Builder functions** - Easy-to-use helpers for creating protocol objects
 - **Validation utilities** - Runtime validation for Context, Plan, Confirm, and Trace
 

@@ -6,20 +6,6 @@
 
 ## ☕ Java SDK Design Preview
 
-The MPLP Java SDK is designed for Enterprise integration, enabling MPLP agents to run within existing Spring Boot, Quarkus, or Jakarta EE environments.
-
-### Key Features
-
-1.  **POJO & Builder Pattern**
-    *   Strongly-typed POJOs generated from JSON Schemas.
-    *   Fluent Builder API for constructing complex nested objects like Plans and Traces.
-    *   Jackson annotations for seamless JSON processing.
-
-    ```java
-    // Preview Syntax
-    import dev.mplp.core.Context;
-    
-    Context ctx = Context.builder()
         .title("Enterprise Workflow")
         .root(ContextRoot.builder()
             .domain("finance")
