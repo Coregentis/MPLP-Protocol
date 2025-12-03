@@ -59,7 +59,8 @@ function write(file, content) {
 // ------------------------------------------------------------
 
 function stripOldTSHeader(content) {
-  return content.replace(/^\/\*\*[\s\S]*?\*\/\s*/m, "").trimStart();
+  // Match header even if preceded by whitespace/newlines
+  return content.replace(/^[\s\n]*\/\*\*[\s\S]*?\*\/\s*/, "").trimStart();
 }
 
 function stripOldMDHeader(content) {
@@ -82,16 +83,19 @@ function stripOldJSONHeader(obj) {
 // ------------------------------------------------------------
 
 function applyTSHeader(content) {
-  // Handle shebang
-  const shebangMatch = content.match(/^#!.*\n/);
+  // Handle shebang - find it anywhere in the file (to fix misplaced ones)
+  const shebangMatch = content.match(/^#!.*\n/m);
   const shebang = shebangMatch ? shebangMatch[0] : "";
 
   // Remove shebang from content for processing
   if (shebang) {
-    content = content.replace(/^#!.*\n/, "");
+    content = content.replace(shebang, "");
+    // console.log("Found shebang:", shebang.trim());
   }
 
+  const beforeStrip = content.length;
   content = stripOldTSHeader(content);
+  // if (content.length < beforeStrip) console.log("Stripped header");
 
   // Re-assemble: Shebang + Header + Content
   return shebang + TS_HEADER + "\n" + content;
@@ -153,6 +157,8 @@ function walk(dir) {
 
     // Skip this script itself
     if (full.endsWith('update-frozen-headers.mjs')) continue;
+    // Skip cli.ts as it requires special shebang handling and is handled separately
+    if (full.endsWith('cli.ts')) continue;
 
     try {
       let content = read(full);
