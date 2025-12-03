@@ -1,40 +1,20 @@
-﻿---
+---
+MPLP Protocol: v1.0.0 — Frozen Specification
+Freeze Date: 2025-12-03
+Status: FROZEN (no breaking changes permitted)
+Governance: MPLP Protocol Governance Committee (MPGC)
+Copyright: © 2025 邦士（北京）网络科技有限公司
+License: Apache-2.0
+Any normative change requires a new protocol version.
+---
+
+---
 **MPLP Protocol 1.0.0 — Frozen Specification**
 **Status**: Frozen as of 2025-11-30
 **Copyright**: © 2025 邦士（北京）网络科技有限公司
 **License**: Apache License 2.0 (see LICENSE at repository root)
 **Any normative change requires a new protocol version.**
----
-
-# Plan Module
-
-## 1. Scope
-
-This document defines the **Plan Module**, which governs the decomposition of objectives into executable steps. It is the core driver of agent activity.
-
-**Boundaries**:
-- **In Scope**: Plan Lifecycle, Step Definition, Dependencies, Status Transitions.
-- **Out of Scope**: Execution logic (Trace), Scheduling algorithms (Orchestration).
-
-## 2. Normative Definitions
-
-- **Plan**: A structured sequence of steps to achieve an objective.
-- **Step**: An atomic unit of work assigned to an agent.
-- **Dependency**: A constraint requiring one step to complete before another.
-
-## 3. Responsibilities (MUST/SHALL)
-
-1.  **Decomposition**: The Plan **MUST** break down the `objective` into at least one `step`.
-2.  **Context Binding**: Every Plan **MUST** reference a valid `context_id`.
-3.  **DAG Structure**: Steps **SHOULD** form a Directed Acyclic Graph (DAG) via `dependencies`.
-
-## 4. Architecture Structure
-
-**Schema File**: `schemas/v2/mplp-plan.schema.json`
-
-### Plan Object
-| Field | Type | Required | Description |
-| :--- | :--- | :--- | :--- |
+| :--- | :--- | :--- |
 | `meta` | `Metadata` | ✅ Yes | Protocol metadata. |
 | `plan_id` | `UUID` | ✅ Yes | Global unique identifier. |
 | `context_id` | `UUID` | ✅ Yes | Binding to Context. |

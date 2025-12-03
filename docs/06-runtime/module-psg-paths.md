@@ -1,17 +1,19 @@
-﻿---
+---
+MPLP Protocol: v1.0.0 — Frozen Specification
+Freeze Date: 2025-12-03
+Status: FROZEN (no breaking changes permitted)
+Governance: MPLP Protocol Governance Committee (MPGC)
+Copyright: © 2025 邦士（北京）网络科技有限公司
+License: Apache-2.0
+Any normative change requires a new protocol version.
+---
+
+---
 **MPLP Protocol 1.0.0 — Frozen Specification**
 **Status**: Frozen as of 2025-11-30
 **Copyright**: © 2025 邦士（北京）网络科技有限公司
 **License**: Apache License 2.0 (see LICENSE at repository root)
 **Any normative change requires a new protocol version.**
----
-
-# Module → Runtime → PSG Read/Write Path Matrix
-
-**Purpose**: Define how each MPLP module interacts with the Project Semantic Graph (PSG) through the runtime glue layer.
-
----
-
 ## 1. Overview
 
 This document systematically describes the **data flow paths** between MPLP L2 modules and the PSG. Any runtime implementation claiming MPLP v1.0 compliance MUST document their Module→PSG mapping consistent with this specification.

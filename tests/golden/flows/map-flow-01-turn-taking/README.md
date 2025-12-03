@@ -1,22 +1,18 @@
+---
+MPLP Protocol: v1.0.0 — Frozen Specification
+Freeze Date: 2025-12-03
+Status: FROZEN (no breaking changes permitted)
+Governance: MPLP Protocol Governance Committee (MPGC)
+Copyright: © 2025 邦士（北京）网络科技有限公司
+License: Apache-2.0
+Any normative change requires a new protocol version.
+---
+
 # MAP-FLOW-01: MAP Turn-Taking Session
 
 **Flow Type**: MAP Profile Validation  
 **Category**: Profile-Level (not part of v1.0 compliance boundary)  
 **Status**: ✅ Implemented
-
----
-
-## Purpose
-
-This flow validates the **MAP turn-taking collaboration pattern** (`round_robin` mode):
-- Two agents with distinct roles (planner, reviewer)
-- Sequential execution with strict role ordering
-- Execution token transfer between roles
-- Role-agent binding via Collab.participants
-
-This demonstrates the fundamental multi-agent coordination semantics defined by MAP Profile.
-
----
 
 ## Test Scenario
 

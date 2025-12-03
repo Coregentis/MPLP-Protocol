@@ -1,50 +1,20 @@
-﻿---
+---
+MPLP Protocol: v1.0.0 — Frozen Specification
+Freeze Date: 2025-12-03
+Status: FROZEN (no breaking changes permitted)
+Governance: MPLP Protocol Governance Committee (MPGC)
+Copyright: © 2025 邦士（北京）网络科技有限公司
+License: Apache-2.0
+Any normative change requires a new protocol version.
+---
+
+---
 **MPLP Protocol 1.0.0 — Frozen Specification**
 **Status**: Frozen as of 2025-11-30
 **Copyright**: © 2025 邦士（北京）网络科技有限公司
 **License**: Apache License 2.0 (see LICENSE at repository root)
 **Any normative change requires a new protocol version.**
----
-
-# L1: Core Protocol
-
-## 1. Scope
-
-This document defines **L1 (Core Protocol)**, the foundational layer of MPLP. L1 is responsible for the **data structures, types, and invariants** that govern the protocol.
-
-**Boundaries**:
-- **In Scope**: JSON Schemas, TypeScript Type Definitions, Protocol Invariants, Validation Logic.
-- **Out of Scope**: Module behavior, runtime execution, external integration.
-
-## 2. Normative Definitions
-
-- **Schema**: A JSON Schema Draft-07 definition located in `schemas/v2/`.
-- **Type**: A TypeScript interface derived strictly from a Schema.
-- **Invariant**: A logical rule that must always hold true for a given data structure (defined in `schemas/v2/invariants/*.yaml`).
-- **Validator**: A pure function that accepts data and returns a boolean validity result based on Schema and Invariants.
-
-## 3. Responsibilities (MUST/SHALL)
-
-1.  **Schema Definition**: L1 **MUST** provide normative JSON schemas for all 10 Core Modules.
-2.  **Type Safety**: L1 **MUST** provide TypeScript type definitions that match the schemas 1:1.
-3.  **Validation**: L1 **MUST** expose validators that enforce schema constraints.
-4.  **Invariant Checking**: L1 **SHALL** provide mechanisms to verify protocol invariants (e.g., "A Plan must have at least one Step").
-5.  **No Side Effects**: L1 components **MUST** be pure functions with no side effects (no I/O, no state).
-
-## 4. Architecture Structure
-
-L1 is organized into three components:
-
-```mermaid
-graph TD
-    Schemas[JSON Schemas<br/>(schemas/v2/*.json)] --> Types[TypeScript Types<br/>(packages/core-protocol/types)]
-    Schemas --> Validators[Validators<br/>(packages/core-protocol/validators)]
-    Invariants[Invariants<br/>(schemas/v2/invariants/*.yaml)] --> Validators
-```
-
-### 10 Core Module Schemas
-| Module | Schema File | Description |
-| :--- | :--- | :--- |
+| :--- | :--- |
 | **Context** | `mplp-context.schema.json` | Project root, environment, constraints. |
 | **Plan** | `mplp-plan.schema.json` | Executable steps and dependencies. |
 | **Confirm** | `mplp-confirm.schema.json` | Approval/rejection decisions. |

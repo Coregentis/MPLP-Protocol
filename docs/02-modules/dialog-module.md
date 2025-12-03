@@ -1,40 +1,20 @@
-﻿---
+---
+MPLP Protocol: v1.0.0 — Frozen Specification
+Freeze Date: 2025-12-03
+Status: FROZEN (no breaking changes permitted)
+Governance: MPLP Protocol Governance Committee (MPGC)
+Copyright: © 2025 邦士（北京）网络科技有限公司
+License: Apache-2.0
+Any normative change requires a new protocol version.
+---
+
+---
 **MPLP Protocol 1.0.0 — Frozen Specification**
 **Status**: Frozen as of 2025-11-30
 **Copyright**: © 2025 邦士（北京）网络科技有限公司
 **License**: Apache License 2.0 (see LICENSE at repository root)
 **Any normative change requires a new protocol version.**
----
-
-# Dialog Module
-
-## 1. Scope
-
-This document defines the **Dialog Module**, which standardizes the exchange of messages between agents and users. It adopts a "Minimal Protocol Format" aligned with industry standards (OpenAI/Anthropic).
-
-**Boundaries**:
-- **In Scope**: Message Format, Thread Management, Role Definitions.
-- **Out of Scope**: Natural Language Understanding (NLU), Prompt Engineering.
-
-## 2. Normative Definitions
-
-- **Dialog**: A stateful conversation session.
-- **Thread**: A logical grouping of multi-turn interactions.
-- **Message**: An atomic unit of communication (Role + Content).
-
-## 3. Responsibilities (MUST/SHALL)
-
-1.  **Standardization**: Messages **MUST** follow the `role`, `content`, `timestamp` structure.
-2.  **Persistence**: Dialog history **SHOULD** be persisted to allow context restoration.
-3.  **Attribution**: Every message **MUST** have a valid `role`.
-
-## 4. Architecture Structure
-
-**Schema File**: `schemas/v2/mplp-dialog.schema.json`
-
-### Dialog Object
-| Field | Type | Required | Description |
-| :--- | :--- | :--- | :--- |
+| :--- | :--- | :--- |
 | `meta` | `Metadata` | ✅ Yes | Protocol metadata. |
 | `governance` | `Object` | ❌ No | Lifecycle metadata. |
 | `dialog_id` | `UUID` | ✅ Yes | Global unique identifier. |

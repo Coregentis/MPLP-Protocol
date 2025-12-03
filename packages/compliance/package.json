@@ -1,38 +1,39 @@
 {
-    "name": "@mplp/compliance",
-    "version": "1.0.0",
-    "description": "MPLP v1.0 Compliance & Validation - Golden Flow tests and invariant checks",
-    "license": "Apache-2.0",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/Coregentis/MPLP-Protocol.git",
-        "directory": "packages/compliance"
-    },
-    "keywords": [
-        "mplp",
-        "compliance",
-        "validation",
-        "testing",
-        "golden-flows"
-    ],
-    "publishConfig": {
-        "access": "public"
-    },
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
-    "scripts": {
-        "build": "tsc -p tsconfig.json",
-        "test": "npx ts-node ../../tests/golden/harness/ts/golden-runner.ts"
-    },
-    "dependencies": {
-        "@mplp/core": "workspace:*",
-        "@mplp/schema": "workspace:*",
-        "@mplp/modules": "workspace:*",
-        "@mplp/coordination": "workspace:*"
-    },
-    "devDependencies": {
-        "typescript": "^5.0.0",
-        "ts-node": "^10.9.1",
-        "@types/node": "^20.0.0"
-    }
+  "$comment": "MPLP Protocol v1.0.0 — Frozen Specification\nFreeze Date: 2025-12-03\nStatus: FROZEN (no breaking changes permitted)\nGovernance: MPLP Protocol Governance Committee (MPGC)\nCopyright: © 2025 邦士（北京）网络科技有限公司\nLicense: Apache-2.0\nAny normative change requires a new protocol version.",
+  "name": "@mplp/compliance",
+  "version": "1.0.0",
+  "description": "MPLP v1.0 Compliance & Validation - Golden Flow tests and invariant checks",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Coregentis/MPLP-Protocol.git",
+    "directory": "packages/compliance"
+  },
+  "keywords": [
+    "mplp",
+    "compliance",
+    "validation",
+    "testing",
+    "golden-flows"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "npx ts-node ../../tests/golden/harness/ts/golden-runner.ts"
+  },
+  "dependencies": {
+    "@mplp/core": "workspace:*",
+    "@mplp/schema": "workspace:*",
+    "@mplp/modules": "workspace:*",
+    "@mplp/coordination": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "ts-node": "^10.9.1",
+    "@types/node": "^20.0.0"
+  }
 }

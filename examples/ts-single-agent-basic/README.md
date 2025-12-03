@@ -1,3 +1,13 @@
+---
+MPLP Protocol: v1.0.0 — Frozen Specification
+Freeze Date: 2025-12-03
+Status: FROZEN (no breaking changes permitted)
+Governance: MPLP Protocol Governance Committee (MPGC)
+Copyright: © 2025 邦士（北京）网络科技有限公司
+License: Apache-2.0
+Any normative change requires a new protocol version.
+---
+
 # MPLP Single Agent Basic Example
 
 This project demonstrates a complete, runnable implementation of the **MPLP (Multi-Agent Lifecycle Protocol)** Single Agent Flow using the TypeScript Reference Runtime.
@@ -114,7 +124,6 @@ Starting Single Agent Basic Example...
 [Info] Storage initialized at: .../examples/ts-single-agent-basic/data
 [Info] Flow started with Run ID: 550e8400-e29b-41d4-a716-446655440000
 
---- Step 1: Context Initialized ---
 Context ID: 550e8400-e29b-41d4-a716-446655440001
 Domain:     example-domain
 

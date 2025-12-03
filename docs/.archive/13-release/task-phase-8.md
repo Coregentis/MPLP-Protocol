@@ -1,4 +1,14 @@
-﻿# Phase 8 Task Plan - MPLP v1.0.0 Release
+---
+MPLP Protocol: v1.0.0 — Frozen Specification
+Freeze Date: 2025-12-03
+Status: FROZEN (no breaking changes permitted)
+Governance: MPLP Protocol Governance Committee (MPGC)
+Copyright: © 2025 邦士（北京）网络科技有限公司
+License: Apache-2.0
+Any normative change requires a new protocol version.
+---
+
+# Phase 8 Task Plan - MPLP v1.0.0 Release
 
 ## P8.0 Sanity Check
 - Check git status

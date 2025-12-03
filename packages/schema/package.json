@@ -1,37 +1,38 @@
 {
-    "name": "@mplp/schema",
-    "version": "1.0.0",
-    "description": "MPLP Protocol v1.0 JSON Schemas - All protocol schema definitions",
-    "license": "Apache-2.0",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/Coregentis/MPLP-Protocol.git",
-        "directory": "packages/schema"
-    },
-    "keywords": [
-        "mplp",
-        "schema",
-        "json-schema",
-        "protocol",
-        "validation"
-    ],
-    "publishConfig": {
-        "access": "public"
-    },
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
-    "files": [
-        "dist",
-        "schemas"
-    ],
-    "scripts": {
-        "build": "tsc -p tsconfig.json"
-    },
-    "dependencies": {
-        "ajv": "^8.12.0",
-        "ajv-formats": "^2.1.1"
-    },
-    "devDependencies": {
-        "typescript": "^5.0.0"
-    }
+  "$comment": "MPLP Protocol v1.0.0 — Frozen Specification\nFreeze Date: 2025-12-03\nStatus: FROZEN (no breaking changes permitted)\nGovernance: MPLP Protocol Governance Committee (MPGC)\nCopyright: © 2025 邦士（北京）网络科技有限公司\nLicense: Apache-2.0\nAny normative change requires a new protocol version.",
+  "name": "@mplp/schema",
+  "version": "1.0.0",
+  "description": "MPLP Protocol v1.0 JSON Schemas - All protocol schema definitions",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Coregentis/MPLP-Protocol.git",
+    "directory": "packages/schema"
+  },
+  "keywords": [
+    "mplp",
+    "schema",
+    "json-schema",
+    "protocol",
+    "validation"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "schemas"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "ajv": "^8.12.0",
+    "ajv-formats": "^2.1.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
 }

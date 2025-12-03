@@ -1,51 +1,20 @@
-﻿---
+---
+MPLP Protocol: v1.0.0 — Frozen Specification
+Freeze Date: 2025-12-03
+Status: FROZEN (no breaking changes permitted)
+Governance: MPLP Protocol Governance Committee (MPGC)
+Copyright: © 2025 邦士（北京）网络科技有限公司
+License: Apache-2.0
+Any normative change requires a new protocol version.
+---
+
+---
 **MPLP Protocol 1.0.0 — Frozen Specification**
 **Status**: Frozen as of 2025-11-30
 **Copyright**: © 2025 邦士（北京）网络科技有限公司
 **License**: Apache License 2.0 (see LICENSE at repository root)
 **Any normative change requires a new protocol version.**
----
-
-# L3: Execution & Orchestration
-
-## 1. Scope
-
-This document defines **L3 (Execution & Orchestration)**, the runtime layer responsible for **state management, agent execution, and process orchestration**. L3 provides the "glue" that binds L2 modules into a coherent running system.
-
-**Boundaries**:
-- **In Scope**: Project Semantic Graph (PSG), Agent Execution Layer (AEL), Value State Layer (VSL), Orchestration Logic.
-- **Out of Scope**: Specific implementation language (e.g., Node.js vs Python), external tool adapters (L4).
-
-## 2. Normative Definitions
-
-- **Project Semantic Graph (PSG)**: The single source of truth for all project state, represented as a graph of nodes (Context, Plans, Steps) and edges.
-- **Agent Execution Layer (AEL)**: The abstraction layer that invokes agents and tools.
-- **Value State Layer (VSL)**: The abstraction layer that manages PSG persistence and retrieval.
-- **Orchestrator**: The central control loop that drives the execution based on L2 Profiles.
-
-## 3. Responsibilities (MUST/SHALL)
-
-1.  **Single Source of Truth**: L3 **MUST** maintain the PSG as the authoritative state.
-2.  **Event Routing**: L3 **MUST** implement an Event Bus to route L2/L4 events.
-3.  **Drift Detection**: L3 **SHOULD** detect divergence between the PSG and the actual codebase.
-4.  **Rollback**: L3 **SHOULD** support rolling back the PSG to a previous consistent state.
-5.  **Sandboxing**: L3 **SHOULD** isolate agent execution to prevent system compromise.
-
-## 4. Architecture Structure
-
-L3 is composed of four key components:
-
-```mermaid
-graph TD
-    Orchestrator[Orchestrator<br/>(Control Loop)] --> AEL[AEL<br/>(Agent Execution)]
-    Orchestrator --> VSL[VSL<br/>(State Management)]
-    VSL --> PSG[PSG<br/>(Project Semantic Graph)]
-    AEL --> L4[L4 Adapters]
-```
-
-### Component Details
-| Component | Responsibility | Reference Impl |
-| :--- | :--- | :--- |
+| :--- | :--- |
 | **Orchestrator** | Drives the `Context -> Plan -> Execute` loop. | `packages/reference-runtime/orchestrator` |
 | **PSG** | Stores state (nodes, edges, metadata). | `packages/reference-runtime/psg` |
 | **AEL** | Invokes LLMs and Tools. | `packages/reference-runtime/ael` |

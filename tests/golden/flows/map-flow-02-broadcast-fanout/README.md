@@ -1,22 +1,18 @@
+---
+MPLP Protocol: v1.0.0 — Frozen Specification
+Freeze Date: 2025-12-03
+Status: FROZEN (no breaking changes permitted)
+Governance: MPLP Protocol Governance Committee (MPGC)
+Copyright: © 2025 邦士（北京）网络科技有限公司
+License: Apache-2.0
+Any normative change requires a new protocol version.
+---
+
 # MAP-FLOW-02: MAP Broadcast Fan-out
 
 **Flow Type**: MAP Profile Validation  
 **Category**: Profile-Level (not part of v1.0 compliance boundary)  
 **Status**: ✅ Implemented
-
----
-
-## Purpose
-
-This flow validates the **MAP broadcast fan-out collaboration pattern** (`broadcast` mode):
-- One orchestrator agent broadcasts task to multiple responders
-- Parallel response collection (logically parallel, may be sequential at runtime)
-- Result aggregation by orchestrator
-- Multi-participant coordination via Collab.participants
-
-This demonstrates the broadcast collaboration semantics defined by MAP Profile.
-
----
 
 ## Test Scenario
 

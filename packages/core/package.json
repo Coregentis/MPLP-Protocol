@@ -1,23 +1,24 @@
 {
-    "name": "@mplp/core",
-    "version": "0.0.0-dev",
-    "description": "L1 Core Protocol models and validators for MPLP Protocol v1.0",
-    "license": "Apache-2.0",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
-    "scripts": {
-        "build": "tsc -p tsconfig.json",
-        "test": "npx vitest run",
-        "generate:types": "ts-node ../../scripts/generate-types-from-schemas.ts"
-    },
-    "dependencies": {
-        "ajv": "^8.12.0",
-        "ajv-formats": "^2.1.1"
-    },
-    "devDependencies": {
-        "typescript": "^5.0.0",
-        "ts-node": "^10.9.1",
-        "vitest": "^0.34.0",
-        "json-schema-to-typescript": "^13.0.0"
-    }
+  "$comment": "MPLP Protocol v1.0.0 — Frozen Specification\nFreeze Date: 2025-12-03\nStatus: FROZEN (no breaking changes permitted)\nGovernance: MPLP Protocol Governance Committee (MPGC)\nCopyright: © 2025 邦士（北京）网络科技有限公司\nLicense: Apache-2.0\nAny normative change requires a new protocol version.",
+  "name": "@mplp/core",
+  "version": "0.0.0-dev",
+  "description": "L1 Core Protocol models and validators for MPLP Protocol v1.0",
+  "license": "Apache-2.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "npx vitest run",
+    "generate:types": "ts-node ../../scripts/generate-types-from-schemas.ts"
+  },
+  "dependencies": {
+    "ajv": "^8.12.0",
+    "ajv-formats": "^2.1.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "ts-node": "^10.9.1",
+    "vitest": "^0.34.0",
+    "json-schema-to-typescript": "^13.0.0"
+  }
 }

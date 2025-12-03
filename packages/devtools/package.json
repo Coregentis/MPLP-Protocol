@@ -1,0 +1,35 @@
+{
+  "$comment": "MPLP Protocol v1.0.0 — Frozen Specification\nFreeze Date: 2025-12-03\nStatus: FROZEN (no breaking changes permitted)\nGovernance: MPLP Protocol Governance Committee (MPGC)\nCopyright: © 2025 邦士（北京）网络科技有限公司\nLicense: Apache-2.0\nAny normative change requires a new protocol version.",
+  "name": "@mplp/devtools",
+  "version": "1.0.0",
+  "description": "Developer tools and CLI for MPLP Protocol v1.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "mplp": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "echo 'No tests yet'"
+  },
+  "dependencies": {
+    "@mplp/core": "workspace:*",
+    "@mplp/schema": "workspace:*",
+    "@mplp/compliance": "workspace:*",
+    "commander": "^11.0.0",
+    "chalk": "^4.1.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "mplp": {
+    "module": "devtools",
+    "layer": "L4-Tools",
+    "status": "stable",
+    "governance": "MPGC"
+  }
+}

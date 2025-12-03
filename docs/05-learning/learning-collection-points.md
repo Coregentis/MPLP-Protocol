@@ -1,17 +1,19 @@
-﻿---
+---
+MPLP Protocol: v1.0.0 — Frozen Specification
+Freeze Date: 2025-12-03
+Status: FROZEN (no breaking changes permitted)
+Governance: MPLP Protocol Governance Committee (MPGC)
+Copyright: © 2025 邦士（北京）网络科技有限公司
+License: Apache-2.0
+Any normative change requires a new protocol version.
+---
+
+---
 **MPLP Protocol 1.0.0 — Frozen Specification**
 **Status**: Frozen as of 2025-11-30
 **Copyright**: © 2025 邦士（北京）网络科技有限公司
 **License**: Apache License 2.0 (see LICENSE at repository root)
 **Any normative change requires a new protocol version.**
----
-
-# Learning Collection Points (MPLP v1.0)
-
-> This document defines the standard **Collection Points** where the Runtime SHOULD generate Learning Samples.
-
----
-
 ## 1. Overview
 
 The Learning Loop operates by capturing **Learning Samples** at specific moments in the execution lifecycle. These moments are called **Collection Points**.

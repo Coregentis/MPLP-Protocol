@@ -1,40 +1,20 @@
-﻿---
+---
+MPLP Protocol: v1.0.0 — Frozen Specification
+Freeze Date: 2025-12-03
+Status: FROZEN (no breaking changes permitted)
+Governance: MPLP Protocol Governance Committee (MPGC)
+Copyright: © 2025 邦士（北京）网络科技有限公司
+License: Apache-2.0
+Any normative change requires a new protocol version.
+---
+
+---
 **MPLP Protocol 1.0.0 — Frozen Specification**
 **Status**: Frozen as of 2025-11-30
 **Copyright**: © 2025 邦士（北京）网络科技有限公司
 **License**: Apache License 2.0 (see LICENSE at repository root)
 **Any normative change requires a new protocol version.**
----
-
-# Trace Module
-
-## 1. Scope
-
-This document defines the **Trace Module**, which provides the standard for recording execution history, telemetry, and debugging information. It is the foundation of Observability.
-
-**Boundaries**:
-- **In Scope**: Execution Spans, Segments, Status Tracking, Timestamps.
-- **Out of Scope**: Log aggregation storage, Metrics analysis.
-
-## 2. Normative Definitions
-
-- **Trace**: A complete record of a single execution flow.
-- **Span**: An atomic unit of work with a start and end time (OpenTelemetry compatible).
-- **Segment**: A logical grouping of spans representing a business phase.
-
-## 3. Responsibilities (MUST/SHALL)
-
-1.  **Recording**: The Runtime **MUST** record a Trace for every Plan execution.
-2.  **Correlation**: Every Trace **MUST** link to a `context_id` and (if applicable) `plan_id`.
-3.  **Standardization**: Spans **SHOULD** follow OpenTelemetry semantic conventions where possible.
-
-## 4. Architecture Structure
-
-**Schema File**: `schemas/v2/mplp-trace.schema.json`
-
-### Trace Object
-| Field | Type | Required | Description |
-| :--- | :--- | :--- | :--- |
+| :--- | :--- | :--- |
 | `meta` | `Metadata` | ✅ Yes | Protocol metadata. |
 | `governance` | `Object` | ❌ No | Lifecycle metadata. |
 | `trace_id` | `UUID` | ✅ Yes | Global unique identifier. |

@@ -1,49 +1,18 @@
+---
+MPLP Protocol: v1.0.0 — Frozen Specification
+Freeze Date: 2025-12-03
+Status: FROZEN (no breaking changes permitted)
+Governance: MPLP Protocol Governance Committee (MPGC)
+Copyright: © 2025 邦士（北京）网络科技有限公司
+License: Apache-2.0
+Any normative change requires a new protocol version.
+---
+
 # FLOW-03 – Single Agent – With Tools
 
 **Category**: A: Single Agent Basics  
 **Status**: 🔄 In Progress (README Correction)  
 **Last Updated**: 2025-11-30
-
----
-
-## 1. Scenario Summary
-
-This flow validates MPLP's **tool integration capabilities** within a single-agent workflow. Unlike FLOW-01 (minimal baseline) and FLOW-02 (volumetric scale), FLOW-03 introduces **heterogeneous step types**: some steps involve tool execution (e.g., calling `curl`, `jq`), while others are pure agent logic.
-
-The primary goal of FLOW-03 is to demonstrate that:
-
-1. **Tool semantics are correctly expressed using protocol schema fields** (no ad-hoc extensions)
-2. **Tool-executing roles** can be distinguished from standard agent roles via the `agent_role` field
-3. **Trace events capture tool invocation details** for auditability and debugging
-4. **Cross-language consistency** is maintained when validating tool-enabled plans
-
-### Real-World Analogues
-
-- **API Testing**: An agent that uses `curl` for HTTP requests and `jq` for JSON parsing
-- **DevOps Automation**: Steps that invoke `kubectl`, `git`, `npm` as part of deployment workflows
-- **Data Pipeline**: Agents calling SQL tools, file processors, and validation scripts
-
-### Protocol-Level Tool Representation
-
-**CRITICAL**: MPLP Plan steps do NOT have `tool_name` or `parameters` fields in the schema.
-
-**Actual Schema Fields** (`plan_step_core`):
-- `step_id` (UUID v4)
-- `description` (string)
-- `status` (enum)
-- **`agent_role`** (string, optional) ← **KEY for tool semantics**
-- `dependencies` (array of UUIDs, optional)
-- `order_index` (integer, optional)
-
-**Tool Representation Strategy**:
-- Tool-executing steps use `agent_role` to indicate the tool provider
-  - Example: `agent_role: "curl_executor"` means this step uses curl
-  - Example: `agent_role: "jq_processor"` means this step uses jq
-  - Example: `agent_role: "agent"` means standard agent logic (no tool)
-- **No fictional fields** are introduced
-- Tool invocation details (parameters, outputs) are recorded in **Trace events**, not in Plan
-
----
 
 ## 2. MPLP Surface (L2 Modules)
 

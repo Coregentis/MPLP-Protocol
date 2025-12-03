@@ -1,60 +1,18 @@
+---
+MPLP Protocol: v1.0.0 — Frozen Specification
+Freeze Date: 2025-12-03
+Status: FROZEN (no breaking changes permitted)
+Governance: MPLP Protocol Governance Committee (MPGC)
+Copyright: © 2025 邦士（北京）网络科技有限公司
+License: Apache-2.0
+Any normative change requires a new protocol version.
+---
+
 # FLOW-05 – Single Agent with Confirm Required
 
 **Category**: A: Single Agent Basics  
 **Status**: 🔄 In Progress (README Correction)  
 **Last Updated**: 2025-11-30
-
----
-
-## 1. Scenario Summary
-
-This flow validates MPLP's **multi-round confirmation workflow**, demonstrating how plans undergo human-in-the-loop approval cycles. This is the **final protocol invariant building block** for MPLP v1.0, completing the minimum behavioral semantics for Context, Plan, Confirm, and Trace.
-
-The primary goal of FLOW-05 is to demonstrate that:
-
-1. **Multi-round approval semantics** are correctly expressed using protocol schema fields (no ad-hoc extensions)
-2. **Confirm records** bind to Plan via `target_id` and `target_type` fields
-3. **Rejection and approval** are captured in `decisions[]` array
-4. **Trace events** record the confirmation lifecycle
-5. **Cross-language consistency** is maintained when validating confirmation workflows
-
-### Real-World Analogues
-
-- **Infrastructure Changes**: DevOps agent proposes DB scaling; SRE reviews, requests justification; agent provides details; SRE approves
-- **Code Refactoring**: AI suggests refactoring; developer requests safety checks; AI adds rollback plan; developer approves
-- **Data Operations**: Agent plans data deletion; compliance officer requests audit logging; agent adds logging; officer approves
-
-### Protocol-Level Confirm Representation
-
-**CRITICAL**: MPLP does NOT have plan versioning fields like `parent_plan_id`, `version`, or `revision_reason` in the Plan schema for v1.0.
-
-**Actual Schema Fields**:
-
-**Confirm Schema**:
-- `confirm_id` (UUID)
-- `target_type` (enum: context, plan, trace, extension, other)
-- `target_id` (UUID - references the plan being approved)
-- `status` (enum: pending, approved, rejected, cancelled)
-- `requested_by_role` (string)
-- `requested_at` (ISO datetime)
-- `reason` (string, optional)
-- **`decisions[]`** (array) ← **KEY for multi-round approval**
-  - Each decision: `decision_id`, `status` (approved/rejected/cancelled), `decided_by_role`, `decided_at`, `reason`
-
-**Trace Schema**:
-- `trace_id`, `context_id`, `plan_id` (optional)
-- `root_span` (trace-base structure)
-- `status`, `started_at`, `finished_at` (optional)
-- `segments[]`, `events[]`
-
-**FLOW-05 Strategy**:
-- ONE Confirm object with MULTIPLE decisions in `decisions[]` array
-- First decision: `status: "rejected"` with rejection reason
-- Second decision: `status: "approved"` with approval reason
-- Trace events record both decisions
-- **No plan versioning** (v1.0 keeps Plan immutable within this flow)
-
----
 
 ## 2. MPLP Surface (L2 Modules)
 

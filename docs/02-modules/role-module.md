@@ -1,39 +1,20 @@
-﻿---
+---
+MPLP Protocol: v1.0.0 — Frozen Specification
+Freeze Date: 2025-12-03
+Status: FROZEN (no breaking changes permitted)
+Governance: MPLP Protocol Governance Committee (MPGC)
+Copyright: © 2025 邦士（北京）网络科技有限公司
+License: Apache-2.0
+Any normative change requires a new protocol version.
+---
+
+---
 **MPLP Protocol 1.0.0 — Frozen Specification**
 **Status**: Frozen as of 2025-11-30
 **Copyright**: © 2025 邦士（北京）网络科技有限公司
 **License**: Apache License 2.0 (see LICENSE at repository root)
 **Any normative change requires a new protocol version.**
----
-
-# Role Module
-
-## 1. Scope
-
-This document defines the **Role Module**, which manages capability declarations, permission sets, and behavioral identity models. It allows agents to understand "who" is performing an action.
-
-**Boundaries**:
-- **In Scope**: Role Definition, Capability Tags, Role Assignment.
-- **Out of Scope**: Authentication (AuthN), Identity Provider integration.
-
-## 2. Normative Definitions
-
-- **Role**: A named set of responsibilities and capabilities.
-- **Capability**: A specific permission or skill tag (e.g., `plan.create`).
-- **Assignment**: The binding of a Role to an Agent or User.
-
-## 3. Responsibilities (MUST/SHALL)
-
-1.  **Identification**: Every critical action (Plan, Step, Confirm) **SHOULD** be attributed to a `role_id`.
-2.  **Capability Check**: Agents **SHOULD** check if their assigned role has the necessary `capabilities` before attempting an action.
-3.  **Separation of Duties**: Critical workflows **SHOULD** use distinct roles for execution and approval.
-
-## 4. Architecture Structure
-
-**Schema File**: `schemas/v2/mplp-role.schema.json`
-
-| Field | Type | Required | Description |
-| :--- | :--- | :--- | :--- |
+| :--- | :--- | :--- |
 | `meta` | `Metadata` | ✅ Yes | Protocol metadata. |
 | `governance` | `Object` | ❌ No | Lifecycle metadata. |
 | `role_id` | `UUID` | ✅ Yes | Global unique identifier. |

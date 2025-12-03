@@ -1,56 +1,20 @@
-﻿---
+---
+MPLP Protocol: v1.0.0 — Frozen Specification
+Freeze Date: 2025-12-03
+Status: FROZEN (no breaking changes permitted)
+Governance: MPLP Protocol Governance Committee (MPGC)
+Copyright: © 2025 邦士（北京）网络科技有限公司
+License: Apache-2.0
+Any normative change requires a new protocol version.
+---
+
+---
 **MPLP Protocol 1.0.0 — Frozen Specification**
 **Status**: Frozen as of 2025-11-30
 **Copyright**: © 2025 邦士（北京）网络科技有限公司
 **License**: Apache License 2.0 (see LICENSE at repository root)
 **Any normative change requires a new protocol version.**
----
-
-# MPLP v1.0 Architecture Overview
-
-## 1. Scope
-
-This document defines the high-level architecture of the **Multi-Agent Lifecycle Protocol (MPLP)**. It establishes the four-layer stack (L1–L4) that governs all compliant implementations.
-
-**Boundaries**:
-- **In Scope**: Protocol layers, module responsibilities, cross-layer interactions, compliance requirements.
-- **Out of Scope**: Internal implementation details of specific runtimes (e.g., TracePilot, Coregentis), except where cited as reference implementations.
-
-## 2. Normative Definitions
-
-The following terms are normative for this specification:
-
-- **L1 (Core Protocol)**: The foundational layer defining data structures (schemas), types, and invariant rules.
-- **L2 (Coordination)**: The governance layer defining module interactions, execution profiles (SA/MAP), and event taxonomies.
-- **L3 (Execution)**: The runtime layer defining the Project Semantic Graph (PSG), Agent Execution Layer (AEL), and orchestration logic.
-- **L4 (Integration)**: The boundary layer defining adapters for external systems (LLMs, Storage, Tools).
-- **Module**: A distinct functional unit of the protocol (e.g., Context, Plan, Trace).
-- **Profile**: A defined set of execution behaviors (e.g., SA Profile, MAP Profile).
-
-## 3. Responsibilities (MUST/SHALL)
-
-1.  **Layer Separation**: Implementations **MUST** respect the separation of concerns between L1, L2, L3, and L4.
-2.  **Schema Compliance**: All data structures **MUST** validate against L1 schemas.
-3.  **Event Emission**: Runtimes **MUST** emit observability events as defined in L2/L3.
-4.  **PSG Authority**: The Project Semantic Graph (PSG) **MUST** be the single source of truth for project state.
-5.  **Vendor Neutrality**: The protocol **SHALL NOT** depend on specific vendors (e.g., OpenAI, GitHub) in its normative definitions.
-
-## 4. Architecture Structure
-
-MPLP is organized into a four-layer stack:
-
-```mermaid
-graph TD
-    L4[L4: Integration Infrastructure<br/>(Optional Adapters)] --> L3
-    L3[L3: Execution & Orchestration<br/>(Runtime Glue, PSG, AEL)] --> L2
-    L2[L2: Coordination & Governance<br/>(Modules, Profiles, Events)] --> L1
-    L1[L1: Core Protocol<br/>(Schemas, Types, Invariants)]
-```
-
-### Layer Breakdown
-
-| Layer | Component | Status | Responsibility |
-| :--- | :--- | :--- | :--- |
+| :--- | :--- | :--- |
 | **L4** | `packages/integration/*` | ⭕ Optional | Adapters for LLMs, Storage, Tools. |
 | **L3** | `packages/reference-runtime` | ✅ Required (Spec) | PSG management, Orchestration, AEL/VSL. |
 | **L2** | `packages/coordination` | ✅ Required | Module logic, SA/MAP Profiles, Event Bus. |

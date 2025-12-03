@@ -1,31 +1,32 @@
 {
-    "name": "@mplp/modules",
-    "version": "1.0.0",
-    "description": "MPLP v1.0 Module Interfaces & Helpers - 10 core modules and profile structures",
-    "license": "Apache-2.0",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/Coregentis/MPLP-Protocol.git",
-        "directory": "packages/modules"
-    },
-    "keywords": [
-        "mplp",
-        "modules",
-        "interfaces",
-        "profiles"
-    ],
-    "publishConfig": {
-        "access": "public"
-    },
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
-    "scripts": {
-        "build": "tsc -p tsconfig.json"
-    },
-    "dependencies": {
-        "@mplp/core": "workspace:*"
-    },
-    "devDependencies": {
-        "typescript": "^5.0.0"
-    }
+  "$comment": "MPLP Protocol v1.0.0 — Frozen Specification\nFreeze Date: 2025-12-03\nStatus: FROZEN (no breaking changes permitted)\nGovernance: MPLP Protocol Governance Committee (MPGC)\nCopyright: © 2025 邦士（北京）网络科技有限公司\nLicense: Apache-2.0\nAny normative change requires a new protocol version.",
+  "name": "@mplp/modules",
+  "version": "1.0.0",
+  "description": "MPLP v1.0 Module Interfaces & Helpers - 10 core modules and profile structures",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Coregentis/MPLP-Protocol.git",
+    "directory": "packages/modules"
+  },
+  "keywords": [
+    "mplp",
+    "modules",
+    "interfaces",
+    "profiles"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@mplp/core": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
 }

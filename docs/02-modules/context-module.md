@@ -1,39 +1,20 @@
-﻿---
+---
+MPLP Protocol: v1.0.0 — Frozen Specification
+Freeze Date: 2025-12-03
+Status: FROZEN (no breaking changes permitted)
+Governance: MPLP Protocol Governance Committee (MPGC)
+Copyright: © 2025 邦士（北京）网络科技有限公司
+License: Apache-2.0
+Any normative change requires a new protocol version.
+---
+
+---
 **MPLP Protocol 1.0.0 — Frozen Specification**
 **Status**: Frozen as of 2025-11-30
 **Copyright**: © 2025 邦士（北京）网络科技有限公司
 **License**: Apache License 2.0 (see LICENSE at repository root)
 **Any normative change requires a new protocol version.**
----
-
-# Context Module
-
-## 1. Scope
-
-This document defines the **Context Module**, which serves as the **root anchor** for any MPLP execution session. It defines the static "World State," including the business domain, runtime environment, and global constraints.
-
-**Boundaries**:
-- **In Scope**: Project Root, Environment, Global Constraints, Lifecycle Status.
-- **Out of Scope**: Dynamic execution state (Plan/Trace), Agent memory.
-
-## 2. Normative Definitions
-
-- **Context**: The immutable boundary of a project or session.
-- **Root**: The core definition of domain and environment.
-- **Constraint**: A global rule that applies to all plans and actions within the context.
-
-## 3. Responsibilities (MUST/SHALL)
-
-1.  **Root Definition**: The Context **MUST** be the first entity created in any MPLP session.
-2.  **Immutability**: Once `status` is `active`, the `root` properties (domain, environment) **SHOULD NOT** change.
-3.  **Constraint Propagation**: Constraints defined in Context **MUST** be respected by all Plans and Actions.
-
-## 4. Architecture Structure
-
-**Schema File**: `schemas/v2/mplp-context.schema.json`
-
-| Field | Type | Required | Description |
-| :--- | :--- | :--- | :--- |
+| :--- | :--- | :--- |
 | `meta` | `Metadata` | ✅ Yes | Protocol metadata. |
 | `governance` | `Object` | ❌ No | Lifecycle and locking metadata. |
 | `context_id` | `UUID` | ✅ Yes | Global unique identifier. |

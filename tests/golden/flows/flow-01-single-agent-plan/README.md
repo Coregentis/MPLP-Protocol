@@ -1,41 +1,18 @@
+---
+MPLP Protocol: v1.0.0 — Frozen Specification
+Freeze Date: 2025-12-03
+Status: FROZEN (no breaking changes permitted)
+Governance: MPLP Protocol Governance Committee (MPGC)
+Copyright: © 2025 邦士（北京）网络科技有限公司
+License: Apache-2.0
+Any normative change requires a new protocol version.
+---
+
 # FLOW-01 – Single Agent – Happy Path
 
 **Category**: A: Single Agent Basics  
 **Status**: ✅ Implemented  
 **Last Updated**: 2025-11-29
-
----
-
-## 1. Scenario Summary
-
-This flow serves as the **foundational baseline** for the entire MPLP Golden Test Suite. It validates the core protocol semantics through the simplest possible single-agent workflow: a single agent, operating within a single context, generates a plan, confirms it, and executes it to completion.
-
-FLOW-01 is intentionally minimalist to isolate and verify the **essential protocol mechanics** without the complexity introduced by:
-- Large-scale plans (see FLOW-02)
-- External tool integrations (see FLOW-03)
-- LLM enrichment (see FLOW-04)
-- Multi-round approvals (see FLOW-05)
-
-The primary goal of FLOW-01 is to demonstrate that:
-
-1. **The core protocol flow is intact**: Context → Plan → Confirm → Trace follows the documented state machine.
-2. **Schema validation works correctly**: All L2 modules (Context, Plan, Confirm, Trace) adhere to `@mplp/core-protocol` v2 schemas.
-3. **Cross-language consistency is achieved**: TypeScript and Python implementations produce structurally identical outputs.
-4. **Wildcard invariants function properly**: Even with a minimal 2-step plan, `steps[*].description` must validate all steps individually.
-5. **Golden harness infrastructure is operational**: Loader, validator, runner, and reporter all function as designed.
-
-### Real-World Analogues
-
-While FLOW-01 is intentionally simple, it represents actual production scenarios such as:
-- **Quick Automation Tasks**: An agent executing a two-step file operation (read, write)
-- **Health Checks**: Running a diagnostic plan with minimal steps (check status, report)
-- **Learning/Demo Scenarios**: Teaching users how MPLP flows work with a trivial example
-
-### Critical Design Principle
-
-FLOW-01 must be the **first flow to pass** in any MPLP implementation. If FLOW-01 fails, it indicates fundamental protocol-level issues, not edge cases. It serves as the "smoke test" for the entire system.
-
----
 
 ## 2. MPLP Surface (L2 Modules)
 

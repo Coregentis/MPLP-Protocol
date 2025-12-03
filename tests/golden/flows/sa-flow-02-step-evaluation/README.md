@@ -1,22 +1,18 @@
+---
+MPLP Protocol: v1.0.0 — Frozen Specification
+Freeze Date: 2025-12-03
+Status: FROZEN (no breaking changes permitted)
+Governance: MPLP Protocol Governance Committee (MPGC)
+Copyright: © 2025 邦士（北京）网络科技有限公司
+License: Apache-2.0
+Any normative change requires a new protocol version.
+---
+
 # SA-FLOW-02: SA Multi-Step Evaluation
 
 **Flow Type**: SA Profile Validation  
 **Category**: Profile-Level (not part of v1.0 compliance boundary)  
 **Status**: ✅ Implemented
-
----
-
-## Purpose
-
-This flow validates **SA's ability to handle multi-step plans with dependencies**:
-- SA correctly parses Plan with multiple steps
-- SA evaluates step dependencies
-- SA respects execution order (order_index + dependencies)
-- SA maintains correct lifecycle through multi-step execution
-
-This flow demonstrates SA's step evaluation capabilities beyond the minimal baseline.
-
----
 
 ## Test Scenario
 

@@ -1,40 +1,20 @@
-﻿---
+---
+MPLP Protocol: v1.0.0 — Frozen Specification
+Freeze Date: 2025-12-03
+Status: FROZEN (no breaking changes permitted)
+Governance: MPLP Protocol Governance Committee (MPGC)
+Copyright: © 2025 邦士（北京）网络科技有限公司
+License: Apache-2.0
+Any normative change requires a new protocol version.
+---
+
+---
 **MPLP Protocol 1.0.0 — Frozen Specification**
 **Status**: Frozen as of 2025-11-30
 **Copyright**: © 2025 邦士（北京）网络科技有限公司
 **License**: Apache License 2.0 (see LICENSE at repository root)
 **Any normative change requires a new protocol version.**
----
-
-# Network Module
-
-## 1. Scope
-
-This document defines the **Network Module**, which models the topology and node collection of a multi-agent system. It provides the "physical" map of where agents and services reside.
-
-**Boundaries**:
-- **In Scope**: Topology Type, Node Registry, Node Status.
-- **Out of Scope**: Network transport protocols (HTTP/gRPC), Service Discovery implementation.
-
-## 2. Normative Definitions
-
-- **Network**: The collection of addressable nodes in a Context.
-- **Node**: A distinct computational entity (Agent, Service, Database).
-- **Topology**: The structural arrangement of nodes (e.g., Mesh, Hub-Spoke).
-
-## 3. Responsibilities (MUST/SHALL)
-
-1.  **Registry**: The Network module **MUST** maintain an up-to-date list of all `nodes`.
-2.  **Status**: The module **SHOULD** reflect the current health `status` of nodes.
-3.  **Identity**: Every node **MUST** have a unique `node_id`.
-
-## 4. Architecture Structure
-
-**Schema File**: `schemas/v2/mplp-network.schema.json`
-
-### Network Object
-| Field | Type | Required | Description |
-| :--- | :--- | :--- | :--- |
+| :--- | :--- | :--- |
 | `meta` | `Metadata` | ✅ Yes | Protocol metadata. |
 | `governance` | `Object` | ❌ No | Lifecycle metadata. |
 | `network_id` | `UUID` | ✅ Yes | Global unique identifier. |

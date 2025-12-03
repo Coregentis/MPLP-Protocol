@@ -1,18 +1,19 @@
-﻿---
+---
+MPLP Protocol: v1.0.0 — Frozen Specification
+Freeze Date: 2025-12-03
+Status: FROZEN (no breaking changes permitted)
+Governance: MPLP Protocol Governance Committee (MPGC)
+Copyright: © 2025 邦士（北京）网络科技有限公司
+License: Apache-2.0
+Any normative change requires a new protocol version.
+---
+
+---
 **MPLP Protocol 1.0.0 — Frozen Specification**
 **Status**: Frozen as of 2025-11-30
 **Copyright**: © 2025 邦士（北京）网络科技有限公司
 **License**: Apache License 2.0 (see LICENSE at repository root)
 **Any normative change requires a new protocol version.**
----
-
-# MPLP Observability Overview (v1.0)
-
-> This document defines the **L2.5 Observability Layer** of the MPLP Protocol.
-> It specifies the standard Event Taxonomy, Schema Strategy, and Emission Obligations.
-
----
-
 ## 1. Philosophy: "3 Physical, 12 Logical"
 
 MPLP v1.0 adopts a pragmatic approach to observability:

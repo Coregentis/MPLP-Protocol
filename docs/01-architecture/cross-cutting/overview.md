@@ -1,40 +1,20 @@
-﻿---
+---
+MPLP Protocol: v1.0.0 — Frozen Specification
+Freeze Date: 2025-12-03
+Status: FROZEN (no breaking changes permitted)
+Governance: MPLP Protocol Governance Committee (MPGC)
+Copyright: © 2025 邦士（北京）网络科技有限公司
+License: Apache-2.0
+Any normative change requires a new protocol version.
+---
+
+---
 **MPLP Protocol 1.0.0 — Frozen Specification**
 **Status**: Frozen as of 2025-11-30
 **Copyright**: © 2025 邦士（北京）网络科技有限公司
 **License**: Apache License 2.0 (see LICENSE at repository root)
 **Any normative change requires a new protocol version.**
----
-
-# Cross-Cutting Concerns Overview
-
-## 1. Scope
-
-This document defines the **9 Cross-Cutting Concerns** of the MPLP Protocol. These are horizontal capabilities that cut across all vertical L2 Coordination & Governance and L3 Runtime components.
-
-**Boundaries**:
-- **In Scope**: Definition of the 9 concerns, normative requirements for modules/runtimes.
-- **Out of Scope**: Implementation details (see L3/L4 specs).
-
-## 2. Normative Definitions
-
-A **Cross-Cutting Concern** is a systemic requirement that cannot be encapsulated within a single module. It requires cooperation from:
-1.  **L2 Coordination & Governance** (to emit events/metadata)
-2.  **L3 Runtime** (to enforce policies/mechanisms)
-3.  **L4 Adapters** (to respect boundaries)
-
-## 3. Responsibilities (MUST/SHALL)
-
-1.  **Uniformity**: All modules **MUST** implement these concerns uniformly (e.g., same error handling pattern).
-2.  **Centralization**: The L3 Runtime **MUST** provide central mechanisms for these concerns (e.g., a single Event Bus).
-3.  **Precedence**: Security and Protocol Versioning concerns **SHALL** take precedence over functional requirements.
-
-## 4. Architecture Structure
-
-### The 9 Core Crosscuts
-
-| Concern | File | Description |
-| :--- | :--- | :--- |
+| :--- | :--- |
 | **1. Coordination** | [coordination.md](coordination.md) | Multi-agent collaboration and handoffs. |
 | **2. Error Handling** | [error-handling.md](error-handling.md) | Failure detection, recovery, and retry logic. |
 | **3. Event Bus** | [event-bus.md](event-bus.md) | Structured event routing and consumption. |

@@ -1,30 +1,18 @@
+---
+MPLP Protocol: v1.0.0 — Frozen Specification
+Freeze Date: 2025-12-03
+Status: FROZEN (no breaking changes permitted)
+Governance: MPLP Protocol Governance Committee (MPGC)
+Copyright: © 2025 邦士（北京）网络科技有限公司
+License: Apache-2.0
+Any normative change requires a new protocol version.
+---
+
 # FLOW-02 – Single Agent – Large Plan
 
 **Category**: A: Single Agent Basics  
 **Status**: ✅ Implemented  
 **Last Updated**: 2025-11-30
-
----
-
-## 1. Scenario Summary
-
-This flow validates MPLP's ability to handle large-scale single-agent plans with **20+ execution steps**. In real-world agent scenarios, complex tasks often decompose into extensive step sequences—for example, a multi-file refactoring might require 30+ individual operations (read, analyze, modify, write, verify). 
-
-The primary goal of FLOW-02 is to demonstrate that:
-
-1. **The MPLP protocol can serialize and deserialize large plan structures** without performance degradation or data loss.
-2. **Wildcard invariants** (e.g., `steps[*].description`) scale correctly across large arrays, ensuring every step is individually validated.
-3. **Sparse metadata handling** works efficiently—not all steps need to carry full Tool or Extension metadata; the protocol should gracefully handle heterogeneous step types.
-
-This flow deliberately avoids tool invocations or LLM enrichment to isolate scalability concerns from integration complexity. It focuses purely on the Context → Plan → Trace workflow with volumetric stress.
-
-### Real-World Analogues
-
-- **Batch Processing**: An agent planning 50 sequential database migration steps
-- **Multi-File Refactoring**: IDE-level refactoring decomposed into 25+ atomic changes
-- **DevOps Pipeline**: A deployment plan with 30+ stages (build, test, deploy, verify, rollback checkpoints)
-
----
 
 ## 2. MPLP Surface (L2 Modules)
 

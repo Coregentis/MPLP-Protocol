@@ -1,40 +1,20 @@
-﻿---
+---
+MPLP Protocol: v1.0.0 — Frozen Specification
+Freeze Date: 2025-12-03
+Status: FROZEN (no breaking changes permitted)
+Governance: MPLP Protocol Governance Committee (MPGC)
+Copyright: © 2025 邦士（北京）网络科技有限公司
+License: Apache-2.0
+Any normative change requires a new protocol version.
+---
+
+---
 **MPLP Protocol 1.0.0 — Frozen Specification**
 **Status**: Frozen as of 2025-11-30
 **Copyright**: © 2025 邦士（北京）网络科技有限公司
 **License**: Apache License 2.0 (see LICENSE at repository root)
 **Any normative change requires a new protocol version.**
----
-
-# Collab Module
-
-## 1. Scope
-
-This document defines the **Collab Module**, which orchestrates multi-agent and multi-role collaboration sessions. It defines "how" agents work together (e.g., Round Robin, Broadcast).
-
-**Boundaries**:
-- **In Scope**: Session Definition, Participant List, Interaction Mode.
-- **Out of Scope**: The actual content of the collaboration (handled by Dialog/Plan).
-
-## 2. Normative Definitions
-
-- **Collaboration Session**: A bounded period of cooperative work.
-- **Mode**: The pattern of interaction (e.g., `round_robin`).
-- **Participant**: An entity (Agent/Human) involved in the session.
-
-## 3. Responsibilities (MUST/SHALL)
-
-1.  **Coordination**: The Collab module **MUST** define the `mode` of interaction.
-2.  **Membership**: The module **MUST** maintain an accurate list of `participants`.
-3.  **Lifecycle**: The session **MUST** track its `status` (e.g., `active`, `completed`).
-
-## 4. Architecture Structure
-
-**Schema File**: `schemas/v2/mplp-collab.schema.json`
-
-### Collab Object
-| Field | Type | Required | Description |
-| :--- | :--- | :--- | :--- |
+| :--- | :--- | :--- |
 | `meta` | `Metadata` | ✅ Yes | Protocol metadata. |
 | `governance` | `Object` | ❌ No | Lifecycle metadata. |
 | `collab_id` | `UUID` | ✅ Yes | Global unique identifier. |

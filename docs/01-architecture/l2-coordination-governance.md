@@ -1,48 +1,20 @@
-﻿---
+---
+MPLP Protocol: v1.0.0 — Frozen Specification
+Freeze Date: 2025-12-03
+Status: FROZEN (no breaking changes permitted)
+Governance: MPLP Protocol Governance Committee (MPGC)
+Copyright: © 2025 邦士（北京）网络科技有限公司
+License: Apache-2.0
+Any normative change requires a new protocol version.
+---
+
+---
 **MPLP Protocol 1.0.0 — Frozen Specification**
 **Status**: Frozen as of 2025-11-30
 **Copyright**: © 2025 邦士（北京）网络科技有限公司
 **License**: Apache License 2.0 (see LICENSE at repository root)
 **Any normative change requires a new protocol version.**
----
-
-# L2: Coordination & Governance
-
-## 1. Scope
-
-This document defines **L2 (Coordination & Governance)**, the layer responsible for **module interactions, execution profiles, and event taxonomies**. L2 transforms static L1 data structures into dynamic behavioral patterns.
-
-**Boundaries**:
-- **In Scope**: Module logic, SA/MAP Profiles, Event definitions, Flow contracts.
-- **Out of Scope**: Runtime implementation (PSG, AEL), external integration.
-
-## 2. Normative Definitions
-
-- **Execution Profile**: A named set of behavioral rules and constraints (e.g., `sa_profile`, `map_profile`).
-- **Event Family**: A logical grouping of related events (e.g., `GraphUpdateEvent`, `PipelineStageEvent`).
-- **Flow Contract**: A formal specification of a sequence of operations (e.g., "Context must be initialized before Plan creation").
-
-## 3. Responsibilities (MUST/SHALL)
-
-1.  **Profile Enforcement**: L2 **MUST** define and enforce the rules of the active Execution Profile (SA or MAP).
-2.  **Event Emission**: L2 **MUST** define the schema and trigger conditions for all 12 Observability Event Families.
-3.  **Module Coordination**: L2 **MUST** govern how modules interact (e.g., Plan module reading from Context module).
-4.  **Flow Integrity**: L2 **SHALL** ensure that agent execution follows valid state transitions defined in Flow Contracts.
-
-## 4. Architecture Structure
-
-L2 is organized into three pillars:
-
-```mermaid
-graph TD
-    Profiles[Execution Profiles<br/>(docs/03-profiles)] --> Logic
-    Events[Event System<br/>(docs/04-observability)] --> Logic
-    Modules[Module Logic<br/>(docs/02-modules)] --> Logic[L2 Coordination Logic]
-```
-
-### Execution Profiles
-| Profile | ID | Compliance | Description |
-| :--- | :--- | :--- | :--- |
+| :--- | :--- | :--- |
 | **SA Profile** | `sa_profile` | ✅ Required | Single-Agent, sequential execution. |
 | **MAP Profile** | `map_profile` | ⚠️ Recommended | Multi-Agent, turn-taking, broadcast. |
 

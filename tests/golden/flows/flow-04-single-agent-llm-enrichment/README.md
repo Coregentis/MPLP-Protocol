@@ -1,50 +1,18 @@
+---
+MPLP Protocol: v1.0.0 — Frozen Specification
+Freeze Date: 2025-12-03
+Status: FROZEN (no breaking changes permitted)
+Governance: MPLP Protocol Governance Committee (MPGC)
+Copyright: © 2025 邦士（北京）网络科技有限公司
+License: Apache-2.0
+Any normative change requires a new protocol version.
+---
+
 # FLOW-04 – Single Agent with LLM Enrichment
 
 **Category**: A: Single Agent Basics  
 **Status**: 🔄 In Progress (README Correction)  
 **Last Updated**: 2025-11-30
-
----
-
-## 1. Scenario Summary
-
-This flow validates MPLP's **LLM integration capabilities** within a single-agent workflow. Unlike FLOW-01 (minimal baseline), FLOW-02 (volumetric scale), and FLOW-03 (tool integration), FLOW-04 introduces **LLM-powered execution steps** that use Large Language Models for text processing and reasoning tasks.
-
-The primary goal of FLOW-04 is to demonstrate that:
-
-1. **LLM semantics are correctly expressed using protocol schema fields** (no ad-hoc extensions)
-2. **LLM-executing roles** can be distinguished from tool and agent roles via the `agent_role` field
-3. **Heterogeneous executor types** (tools + LLMs + agents) can be combined in a single execution graph
-4. **Cross-language consistency** is maintained when validating LLM-enabled plans
-
-### Real-World Analogues
-
-- **Content Processing**: Agent fetches article, LLM summarizes it, agent validates output
-- **Code Analysis**: Tool extracts code, LLM explains logic, agent checks completeness
-- **Data Enrichment**: Tool queries API, LLM structures response, agent performs quality checks
-
-### Protocol-Level LLM Representation
-
-**CRITICAL**: MPLP Plan steps do NOT have `llm_model`, `enrichment_metadata`, or `meta.llm_provider` fields.
-
-**Actual Schema Fields** (`plan_step_core`):
-- `step_id` (UUID v4)
-- `description` (string)
-- `status` (enum)
-- **`agent_role`** (string, optional) ← **KEY for LLM semantics**
-- `dependencies` (array of UUIDs, optional)
-- `order_index` (integer, optional)
-
-**LLM Representation Strategy**:
-- LLM-executing steps use `agent_role` to indicate the LLM provider
-  - Example: `agent_role: "llm_claude"` means this step uses Claude
-  - Example: `agent_role: "llm_gpt"` means this step uses GPT
-  - Example: `agent_role: "llm_gemini"` means this step uses Gemini
-  - Example: `agent_role: "agent"` means standard agent logic (no LLM)
-- **No fictional fields** are introduced
-- LLM execution details (prompts, responses, token usage) would be recorded in **Trace events** (not covered in this plan-only flow)
-
----
 
 ## 2. MPLP Surface (L2 Modules)
 

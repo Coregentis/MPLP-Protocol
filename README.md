@@ -1,3 +1,13 @@
+---
+MPLP Protocol: v1.0.0 — Frozen Specification
+Freeze Date: 2025-12-03
+Status: FROZEN (no breaking changes permitted)
+Governance: MPLP Protocol Governance Committee (MPGC)
+Copyright: © 2025 邦士（北京）网络科技有限公司
+License: Apache-2.0
+Any normative change requires a new protocol version.
+---
+
 <div align="center">
 
 # Multi-Agent Lifecycle Protocol (MPLP)
@@ -13,13 +23,6 @@
 [**Documentation**](docs/00-index/mplp-v1.0-docs-map.md) • [**Schemas**](schemas/v2/) • [**Examples**](examples/) • [**SDKs**](packages/) • [**Governance**](docs/12-governance/)
 
 </div>
-
----
-
-> **"MPLP is to Multi-Agent Systems what TCP/IP was to the Internet."**  
-> The first open protocol for governing the full lifecycle of agentic systems—from planning and execution to observability and learning.
-
----
 
 ## 0. Why MPLP? The Case for a Lifecycle Protocol
 
