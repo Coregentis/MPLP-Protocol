@@ -1,5 +1,5 @@
 {
-    "name": "@mplp/core-protocol",
+    "name": "@mplp/core",
     "version": "0.0.0-dev",
     "description": "L1 Core Protocol models and validators for MPLP Protocol v1.0",
     "license": "Apache-2.0",

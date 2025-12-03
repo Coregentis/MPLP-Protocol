@@ -9,8 +9,8 @@
         "test": "vitest run"
     },
     "dependencies": {
-        "@mplp/core-protocol": "workspace:*",
-        "@mplp/reference-runtime": "workspace:*",
+        "@mplp/core": "workspace:*",
+        "@mplp/runtime-minimal": "workspace:*",
         "@mplp/coordination": "workspace:*",
         "uuid": "^9.0.1"
     },

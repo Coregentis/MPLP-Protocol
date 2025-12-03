@@ -1,5 +1,5 @@
 {
-    "name": "@mplp/reference-runtime",
+    "name": "@mplp/runtime-minimal",
     "version": "0.0.0-dev",
     "description": "Vendor-neutral reference runtime (L3) for MPLP Protocol v1.0",
     "license": "Apache-2.0",
@@ -10,7 +10,7 @@
         "test": "vitest run"
     },
     "dependencies": {
-        "@mplp/core-protocol": "workspace:*",
+        "@mplp/core": "workspace:*",
         "@mplp/coordination": "workspace:*"
     },
     "devDependencies": {
