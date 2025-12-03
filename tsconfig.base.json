@@ -2,12 +2,17 @@
     "compilerOptions": {
         "target": "ES2020",
         "module": "commonjs",
+        "lib": [
+            "ES2020"
+        ],
         "strict": true,
         "esModuleInterop": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "resolveJsonModule": true,
         "declaration": true,
+        "moduleResolution": "node",
+        "downlevelIteration": true,
         "baseUrl": ".",
         "paths": {
             "@mplp/core-protocol": [
@@ -23,5 +28,13 @@
                 "packages/integration/storage-fs/src"
             ]
         }
+    },
+    "ts-node": {
+        "compilerOptions": {
+            "module": "commonjs",
+            "target": "ES2020"
+        },
+        "transpileOnly": true,
+        "skipProject": false
     }
 }
