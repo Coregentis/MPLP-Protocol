@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import type { Trace } from "@mplp/core-protocol";
+import type { Trace } from "@mplp/core";
 import type { ModuleHandler } from "./index";
 
 export interface TraceModuleInput {

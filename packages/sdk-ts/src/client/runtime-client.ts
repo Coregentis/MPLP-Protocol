@@ -23,7 +23,7 @@ import {
     RuntimeModuleRegistry,
     ValueStateLayer,
     ActionExecutionLayer
-} from "@mplp/reference-runtime";
+} from "@mplp/runtime-minimal";
 import { SingleAgentFlowContract } from "@mplp/coordination";
 import { createContext, CreateContextOptions } from "../builders/context-builder";
 import { createPlan, CreatePlanOptions } from "../builders/plan-builder";

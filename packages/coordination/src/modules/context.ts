@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import type { Context } from "@mplp/core-protocol";
+import type { Context } from "@mplp/core";
 import type { ModuleHandler } from "./index";
 
 export interface ContextModuleInput {

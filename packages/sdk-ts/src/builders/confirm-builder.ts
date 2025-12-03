@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Confirm, Plan, validateConfirm } from "@mplp/core-protocol";
+import { Confirm, Plan, validateConfirm } from "@mplp/core";
 import { v4 as uuidv4 } from "uuid";
 
 export interface CreateConfirmOptions {

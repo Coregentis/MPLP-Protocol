@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Context, validateContext } from "@mplp/core-protocol";
+import { Context, validateContext } from "@mplp/core";
 import { v4 as uuidv4 } from "uuid";
 
 export interface CreateContextOptions {

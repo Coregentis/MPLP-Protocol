@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import type { Plan } from "@mplp/core-protocol";
+import type { Plan } from "@mplp/core";
 import type { ModuleHandler } from "./index";
 
 export interface PlanModuleInput {

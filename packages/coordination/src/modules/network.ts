@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import type { Network } from "@mplp/core-protocol";
+import type { Network } from "@mplp/core";
 import type { ModuleHandler } from "./index";
 
 export interface NetworkModuleInput {

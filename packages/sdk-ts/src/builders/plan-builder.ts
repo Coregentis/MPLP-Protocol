@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Plan, Context, validatePlan } from "@mplp/core-protocol";
+import { Plan, Context, validatePlan } from "@mplp/core";
 import { v4 as uuidv4 } from "uuid";
 
 export interface CreatePlanOptions {

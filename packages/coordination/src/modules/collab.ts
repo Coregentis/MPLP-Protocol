@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import type { Collab } from "@mplp/core-protocol";
+import type { Collab } from "@mplp/core";
 import type { ModuleHandler } from "./index";
 
 export interface CollabModuleInput {

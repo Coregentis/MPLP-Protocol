@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Trace, Context, Plan, validateTrace } from "@mplp/core-protocol";
+import { Trace, Context, Plan, validateTrace } from "@mplp/core";
 import { v4 as uuidv4 } from "uuid";
 
 export interface AppendTraceOptions {

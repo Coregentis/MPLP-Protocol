@@ -96,7 +96,7 @@ const traceHandler: TraceModuleHandler = async ({ ctx }) => ({
     events: []
 });
 
-describe("Reference Runtime â€“ Single Agent Flow", () => {
+describe("Reference Runtime â€?Single Agent Flow", () => {
     it("should execute SingleAgentFlowContract successfully", async () => {
         const vsl = new InMemoryVSL();
 

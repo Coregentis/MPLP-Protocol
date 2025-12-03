@@ -66,9 +66,9 @@ export function ajvErrorsToValidationResult(
  * Normalizes Ajv error instancePath to standard dot/bracket notation
  * 
  * Examples:
- * - "/meta/protocol_version" â†’ "meta.protocol_version"
- * - "/steps/0/step_id" â†’ "steps[0].step_id"
- * - "" (with missingProperty) â†’ "meta" (for required field)
+ * - "/meta/protocol_version" â†?"meta.protocol_version"
+ * - "/steps/0/step_id" â†?"steps[0].step_id"
+ * - "" (with missingProperty) â†?"meta" (for required field)
  * 
  * @param err - Ajv ErrorObject
  * @returns Normalized path string
@@ -99,9 +99,9 @@ function normalizeAjvPath(err: ErrorObject): string {
  * Converts Ajv's slash-separated path to dot/bracket notation
  * 
  * Examples:
- * - "/meta/protocol_version" â†’ "meta.protocol_version"
- * - "/steps/0/step_id" â†’ "steps[0].step_id"
- * - "" (with missingProperty) â†’ "meta" (for required field)
+ * - "/meta/protocol_version" â†?"meta.protocol_version"
+ * - "/steps/0/step_id" â†?"steps[0].step_id"
+ * - "" (with missingProperty) â†?"meta" (for required field)
  * 
  * @param raw - Raw path like "/meta/protocol_version" or "/steps/0/step_id"
  * @returns Normalized path like "meta.protocol_version" or "steps[0].step_id"

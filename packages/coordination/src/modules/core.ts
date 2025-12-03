@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import type { Core } from "@mplp/core-protocol";
+import type { Core } from "@mplp/core";
 import type { ModuleHandler } from "./index";
 
 export interface CoreModuleInput {

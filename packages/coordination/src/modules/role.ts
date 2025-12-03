@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import type { Role } from "@mplp/core-protocol";
+import type { Role } from "@mplp/core";
 import type { ModuleHandler } from "./index";
 
 export interface RoleModuleInput {

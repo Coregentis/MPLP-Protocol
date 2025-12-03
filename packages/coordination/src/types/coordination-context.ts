@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import type { Context, Plan, Confirm, Trace } from "@mplp/core-protocol";
+import type { Context, Plan, Confirm, Trace } from "@mplp/core";
 
 export interface CoordinationContextIds {
     runId: string;           // Unique id for this MPLP run

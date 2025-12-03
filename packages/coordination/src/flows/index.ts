@@ -49,7 +49,7 @@ export interface SingleAgentFlowOutput {
  */
 export const SingleAgentFlowContract: FlowContract<SingleAgentFlowOutput> = {
     flowId: "single-agent-v1",
-    description: "Standard single-agent workflow: Context â†’ Plan â†’ Confirm â†’ Trace",
+    description: "Standard single-agent workflow: Context â†?Plan â†?Confirm â†?Trace",
     steps: [
         { module: "context", input: {} },
         { module: "plan", input: {} },

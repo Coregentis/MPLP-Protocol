@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import type { Confirm } from "@mplp/core-protocol";
+import type { Confirm } from "@mplp/core";
 import type { ModuleHandler } from "./index";
 
 export interface ConfirmModuleInput {

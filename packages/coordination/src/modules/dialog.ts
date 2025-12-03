@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import type { Dialog } from "@mplp/core-protocol";
+import type { Dialog } from "@mplp/core";
 import type { ModuleHandler } from "./index";
 
 export interface DialogModuleInput {

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { Extension } from "@mplp/core-protocol";
+import type { Extension } from "@mplp/core";
 import type { ModuleHandler } from "./index";
 export interface ExtensionModuleInput {
     extensionId: string;

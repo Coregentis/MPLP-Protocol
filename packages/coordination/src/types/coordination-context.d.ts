@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { Context, Plan, Confirm, Trace } from "@mplp/core-protocol";
+import type { Context, Plan, Confirm, Trace } from "@mplp/core";
 export interface CoordinationContextIds {
     runId: string;
     projectId?: string;

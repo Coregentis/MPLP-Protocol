@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import type { Extension } from "@mplp/core-protocol";
+import type { Extension } from "@mplp/core";
 import type { ModuleHandler } from "./index";
 
 export interface ExtensionModuleInput {
