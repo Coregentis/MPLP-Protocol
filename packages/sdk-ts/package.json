@@ -10,6 +10,8 @@
     },
     "dependencies": {
         "@mplp/core": "workspace:*",
+        "@mplp/schema": "workspace:*",
+        "@mplp/modules": "workspace:*",
         "@mplp/runtime-minimal": "workspace:*",
         "@mplp/coordination": "workspace:*",
         "uuid": "^9.0.1"

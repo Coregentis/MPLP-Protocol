@@ -11,7 +11,8 @@
     },
     "dependencies": {
         "@mplp/core": "workspace:*",
-        "@mplp/coordination": "workspace:*"
+        "@mplp/coordination": "workspace:*",
+        "@mplp/modules": "workspace:*"
     },
     "devDependencies": {
         "typescript": "^5.0.0",

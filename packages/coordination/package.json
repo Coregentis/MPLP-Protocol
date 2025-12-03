@@ -10,7 +10,8 @@
         "verify": "node ../../scripts/verify-coordination.js"
     },
     "dependencies": {
-        "@mplp/core": "workspace:*"
+        "@mplp/core": "workspace:*",
+        "@mplp/modules": "workspace:*"
     },
     "devDependencies": {
         "typescript": "^5.0.0"
