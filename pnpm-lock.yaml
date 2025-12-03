@@ -174,6 +174,10 @@ importers:
         version: 5.9.3
 
   packages/integration/llm-http:
+    dependencies:
+      '@mplp/core':
+        specifier: workspace:*
+        version: link:../../core
     devDependencies:
       '@types/node':
         specifier: ^20.0.0
@@ -186,6 +190,10 @@ importers:
         version: 1.6.1(@types/node@20.19.25)
 
   packages/integration/storage-fs:
+    dependencies:
+      '@mplp/core':
+        specifier: workspace:*
+        version: link:../../core
     devDependencies:
       '@types/node':
         specifier: ^20.0.0
@@ -198,6 +206,10 @@ importers:
         version: 1.6.1(@types/node@20.19.25)
 
   packages/integration/storage-kv:
+    dependencies:
+      '@mplp/core':
+        specifier: workspace:*
+        version: link:../../core
     devDependencies:
       '@types/node':
         specifier: ^20.0.0
@@ -210,6 +222,10 @@ importers:
         version: 1.6.1(@types/node@20.19.25)
 
   packages/integration/tools-generic:
+    dependencies:
+      '@mplp/core':
+        specifier: workspace:*
+        version: link:../../core
     devDependencies:
       '@types/node':
         specifier: ^20.0.0

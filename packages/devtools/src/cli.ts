@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * MPLP Protocol v1.0.0 — Frozen Specification
  * Freeze Date: 2025-12-03
@@ -11,6 +10,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  */
 
+#!/usr/bin/env node
 import { Command } from 'commander';
 import chalk from 'chalk';
 import { validate } from '@mplp/schema';
