@@ -22,7 +22,7 @@ exports.ErrorRecoveryFlowContract = exports.RiskConfirmationFlowContract = expor
  */
 exports.SingleAgentFlowContract = {
     flowId: "single-agent-v1",
-    description: "Standard single-agent workflow: Context → Plan → Confirm → Trace",
+    description: "Standard single-agent workflow: Context �?Plan �?Confirm �?Trace",
     steps: [
         { module: "context", input: {} },
         { module: "plan", input: {} },
