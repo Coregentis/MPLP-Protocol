@@ -1,19 +1,4 @@
 {
     "name": "ts-single-agent-basic",
-    "version": "0.0.0-dev",
-    "private": true,
-    "scripts": {
-        "start": "ts-node src/index.ts"
-    },
-    "dependencies": {
-        "@mplp/core-protocol": "workspace:*",
-        "@mplp/coordination": "workspace:*",
-        "@mplp/reference-runtime": "workspace:*",
-        "@mplp/integration-storage-fs": "workspace:*"
-    },
-    "devDependencies": {
-        "typescript": "^5.0.0",
-        "ts-node": "^10.0.0",
-        "@types/node": "^20.0.0"
-    }
+}
 }
