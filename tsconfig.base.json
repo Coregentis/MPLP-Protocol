@@ -15,14 +15,14 @@
         "downlevelIteration": true,
         "baseUrl": ".",
         "paths": {
-            "@mplp/core-protocol": [
-                "packages/core-protocol/src"
+            "@mplp/core": [
+                "packages/core/src"
             ],
             "@mplp/coordination": [
                 "packages/coordination/src"
             ],
-            "@mplp/reference-runtime": [
-                "packages/reference-runtime/src"
+            "@mplp/runtime-minimal": [
+                "packages/runtime-minimal/src"
             ],
             "@mplp/integration-storage-fs": [
                 "packages/integration/storage-fs/src"

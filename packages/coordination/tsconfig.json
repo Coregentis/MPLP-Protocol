@@ -11,8 +11,8 @@
         "resolveJsonModule": true,
         "baseUrl": "../..",
         "paths": {
-            "@mplp/core-protocol": [
-                "packages/core-protocol/src"
+            "@mplp/core": [
+                "packages/core/src"
             ]
         }
     },
