@@ -1,12 +1,11 @@
 {
-  "$comment": "MPLP Protocol v1.0.0 — Frozen Specification\nFreeze Date: 2025-12-03\nStatus: FROZEN (no breaking changes permitted)\nGovernance: MPLP Protocol Governance Committee (MPGC)\nCopyright: © 2025 邦士（北京）网络科技有限公司\nLicense: Apache-2.0\nAny normative change requires a new protocol version.",
   "name": "@mplp/compliance",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "MPLP v1.0 Compliance & Validation - Golden Flow tests and invariant checks",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Coregentis/MPLP-Protocol.git",
+    "url": "https://github.com/coregentis/MPLP-Protocol.git",
     "directory": "packages/compliance"
   },
   "keywords": [
@@ -14,7 +13,10 @@
     "compliance",
     "validation",
     "testing",
-    "golden-flows"
+    "golden-flows",
+    "MPLP",
+    "multi-agent",
+    "protocol"
   ],
   "publishConfig": {
     "access": "public"
@@ -26,14 +28,32 @@
     "test": "npx ts-node ../../tests/golden/harness/ts/golden-runner.ts"
   },
   "dependencies": {
-    "@mplp/core": "workspace:*",
-    "@mplp/schema": "workspace:*",
-    "@mplp/modules": "workspace:*",
-    "@mplp/coordination": "workspace:*"
+    "@mplp/core": "^1.0.2",
+    "@mplp/schema": "^1.0.2",
+    "@mplp/modules": "^1.0.2",
+    "@mplp/coordination": "^1.0.2"
   },
   "devDependencies": {
     "typescript": "^5.0.0",
     "ts-node": "^10.9.1",
     "@types/node": "^20.0.0"
-  }
+  },
+  "author": "邦士（北京）网络科技有限公司",
+  "copyright": "© 2025 邦士（北京）网络科技有限公司",
+  "mplp": {
+    "protocolVersion": "1.0.0",
+    "frozen": true,
+    "governance": "MPGC"
+  },
+  "homepage": "https://github.com/coregentis/MPLP-Protocol",
+  "bugs": {
+    "url": "https://github.com/coregentis/MPLP-Protocol/issues"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "sideEffects": false
 }

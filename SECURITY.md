@@ -1,18 +1,37 @@
----
-MPLP Protocol: v1.0.0 — Frozen Specification
-Freeze Date: 2025-12-03
-Status: FROZEN (no breaking changes permitted)
-Governance: MPLP Protocol Governance Committee (MPGC)
-Copyright: © 2025 邦士（北京）网络科技有限公司
-License: Apache-2.0
-Any normative change requires a new protocol version.
----
-
 # Security Policy
 
-This repository represents the MPLP Protocol v1.0 implementation.
-If you discover a security issue (e.g., dependency vulnerabilities, CI concerns),
-please report it through GitHub Security Advisories or via the maintainers’ contact.
+## Supported Versions
 
-As a protocol-focused repository, we periodically review dependencies
-and apply updates in upcoming releases.
+| Version | Supported          |
+| ------- | ------------------ |
+| 1.0.x   | :white_check_mark: |
+| < 1.0   | :x:                |
+
+## Reporting a Vulnerability
+
+We take the security of the MPLP Protocol seriously. If you discover a security vulnerability, please follow these steps:
+
+1.  **Do NOT open a public issue.**
+2.  Email the details to **security@coregentis.com**.
+3.  Include:
+    *   Description of the vulnerability.
+    *   Steps to reproduce.
+    *   Affected components (e.g., specific schema, runtime module).
+
+## Response Policy
+
+*   We will acknowledge receipt of your report within **48 hours**.
+*   We will provide a status update every **5 business days**.
+*   Once resolved, we will publish a security advisory and credit you (if desired).
+
+## Scope
+
+This policy applies to:
+*   MPLP Protocol Specifications (Schemas)
+*   Reference Runtime (`@mplp/runtime-minimal`)
+*   Core Libraries (`@mplp/core`, `@mplp/coordination`)
+*   Official Integration Adapters (`@mplp/integration-*`)
+---
+
+© 2025 邦士（北京）网络科技有限公司
+Licensed under the Apache License, Version 2.0.

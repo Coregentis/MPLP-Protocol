@@ -1,14 +1,4 @@
 ---
-MPLP Protocol: v1.0.0 — Frozen Specification
-Freeze Date: 2025-12-03
-Status: FROZEN (no breaking changes permitted)
-Governance: MPLP Protocol Governance Committee (MPGC)
-Copyright: © 2025 邦士（北京）网络科技有限公司
-License: Apache-2.0
-Any normative change requires a new protocol version.
----
-
----
 **MPLP Protocol 1.0.0 — Frozen Specification**
 ## 2. Design Goals
 
@@ -50,3 +40,7 @@ JPA Entities for mapping Protocol Objects to relational tables, enabling complex
 1.  **POJO Generation**: Use `jsonschema2pojo` maven plugin.
 2.  **Core Library**: Implement the logic in pure Java (no heavy frameworks).
 3.  **Framework Integration**: Build the Spring Boot starter wrapper.
+---
+
+© 2025 邦士（北京）网络科技有限公司
+Licensed under the Apache License, Version 2.0.

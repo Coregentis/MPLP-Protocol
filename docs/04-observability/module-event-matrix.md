@@ -1,12 +1,10 @@
----
-MPLP Protocol: v1.0.0 — Frozen Specification
-Freeze Date: 2025-12-03
-Status: FROZEN (no breaking changes permitted)
-Governance: MPLP Protocol Governance Committee (MPGC)
-Copyright: © 2025 邦士（北京）网络科技有限公司
-License: Apache-2.0
-Any normative change requires a new protocol version.
----
+> [!FROZEN]
+> **MPLP Protocol v1.0.0 — Frozen Specification**
+> **Freeze Date**: 2025-12-03
+> **Status**: FROZEN (no breaking changes permitted)
+> **Governance**: MPLP Protocol Governance Committee (MPGC)
+> **License**: Apache-2.0
+> **Note**: Any normative change requires a new protocol version.
 
 ---
 **MPLP Protocol 1.0.0 — Frozen Specification**
@@ -316,3 +314,7 @@ If implementing SA/MAP Profiles, emit corresponding Profile events per Profile s
 **End of Module→Event Emission Matrix**
 
 *This matrix defines the protocol-level obligations for event emission across all MPLP core components, ensuring consistent observability for v1.0 compliant runtimes.*
+---
+
+© 2025 邦士（北京）网络科技有限公司
+Licensed under the Apache License, Version 2.0.

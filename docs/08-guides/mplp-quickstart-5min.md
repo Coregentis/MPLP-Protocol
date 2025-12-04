@@ -1,13 +1,3 @@
----
-MPLP Protocol: v1.0.0 — Frozen Specification
-Freeze Date: 2025-12-03
-Status: FROZEN (no breaking changes permitted)
-Governance: MPLP Protocol Governance Committee (MPGC)
-Copyright: © 2025 邦士（北京）网络科技有限公司
-License: Apache-2.0
-Any normative change requires a new protocol version.
----
-
 # 5-Minute Quickstart Guide
 
 This guide will help you validate the MPLP protocol schemas and run a basic agent flow in under 5 minutes.
@@ -88,3 +78,7 @@ They are generated in `packages/sdk-py/src/mplp_sdk/models`. If missing, run `pn
 
 ### Q: How do I visualize the Trace?
 MPLP Traces are JSON. You can use any JSON viewer. A dedicated "Trace Viewer" is planned for v1.1.
+---
+
+© 2025 邦士（北京）网络科技有限公司
+Licensed under the Apache License, Version 2.0.

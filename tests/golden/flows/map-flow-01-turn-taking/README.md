@@ -1,13 +1,3 @@
----
-MPLP Protocol: v1.0.0 — Frozen Specification
-Freeze Date: 2025-12-03
-Status: FROZEN (no breaking changes permitted)
-Governance: MPLP Protocol Governance Committee (MPGC)
-Copyright: © 2025 邦士（北京）网络科技有限公司
-License: Apache-2.0
-Any normative change requires a new protocol version.
----
-
 # MAP-FLOW-01: MAP Turn-Taking Session
 
 **Flow Type**: MAP Profile Validation  
@@ -155,3 +145,7 @@ Expected result: ✅ PASS for map-flow-01-turn-taking
 ---
 
 **End of MAP-FLOW-01 README**
+---
+
+© 2025 邦士（北京）网络科技有限公司
+Licensed under the Apache License, Version 2.0.

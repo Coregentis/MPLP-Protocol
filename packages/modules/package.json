@@ -1,19 +1,21 @@
 {
-  "$comment": "MPLP Protocol v1.0.0 — Frozen Specification\nFreeze Date: 2025-12-03\nStatus: FROZEN (no breaking changes permitted)\nGovernance: MPLP Protocol Governance Committee (MPGC)\nCopyright: © 2025 邦士（北京）网络科技有限公司\nLicense: Apache-2.0\nAny normative change requires a new protocol version.",
   "name": "@mplp/modules",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "MPLP v1.0 Module Interfaces & Helpers - 10 core modules and profile structures",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Coregentis/MPLP-Protocol.git",
+    "url": "https://github.com/coregentis/MPLP-Protocol.git",
     "directory": "packages/modules"
   },
   "keywords": [
     "mplp",
     "modules",
     "interfaces",
-    "profiles"
+    "profiles",
+    "MPLP",
+    "multi-agent",
+    "protocol"
   ],
   "publishConfig": {
     "access": "public"
@@ -24,9 +26,28 @@
     "build": "tsc -p tsconfig.json"
   },
   "dependencies": {
-    "@mplp/core": "workspace:*"
+    "@mplp/core": "^1.0.2"
   },
   "devDependencies": {
     "typescript": "^5.0.0"
-  }
+  },
+  "author": "邦士（北京）网络科技有限公司",
+  "copyright": "© 2025 邦士（北京）网络科技有限公司",
+  "mplp": {
+    "protocolVersion": "1.0.0",
+    "frozen": true,
+    "governance": "MPGC",
+    "layer": "L2"
+  },
+  "homepage": "https://github.com/coregentis/MPLP-Protocol",
+  "bugs": {
+    "url": "https://github.com/coregentis/MPLP-Protocol/issues"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "sideEffects": false
 }

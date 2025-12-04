@@ -1,13 +1,3 @@
----
-MPLP Protocol: v1.0.0 — Frozen Specification
-Freeze Date: 2025-12-03
-Status: FROZEN (no breaking changes permitted)
-Governance: MPLP Protocol Governance Committee (MPGC)
-Copyright: © 2025 邦士（北京）网络科技有限公司
-License: Apache-2.0
-Any normative change requires a new protocol version.
----
-
 # FLOW-05 – Single Agent with Confirm Required
 
 **Category**: A: Single Agent Basics  
@@ -334,3 +324,7 @@ FLOW-05 is **successfully implemented** when:
 *This document reflects the actual MPLP v1.0 protocol schemas. No fictional fields (parent_plan_id, version, revision_reason, snapshot_id) are described.*
 
 **Protocol Invariant Milestone**: FLOW-05 completion locks down Context, Plan, Confirm, and Trace minimum behavioral invariants for MPLP v1.0.
+---
+
+© 2025 邦士（北京）网络科技有限公司
+Licensed under the Apache License, Version 2.0.

@@ -1,20 +1,4 @@
 ---
-MPLP Protocol: v1.0.0 — Frozen Specification
-Freeze Date: 2025-12-03
-Status: FROZEN (no breaking changes permitted)
-Governance: MPLP Protocol Governance Committee (MPGC)
-Copyright: © 2025 邦士（北京）网络科技有限公司
-License: Apache-2.0
-Any normative change requires a new protocol version.
----
-
----
-**MPLP Protocol 1.0.0 — Frozen Specification**
-**Status**: Frozen as of 2025-11-30
-**Copyright**: © 2025 邦士（北京）网络科技有限公司
-**License**: Apache License 2.0 (see LICENSE at repository root)
-**Any normative change requires a new protocol version.**
----
 
 # Versioning Policy
 
@@ -63,3 +47,7 @@ A change is **non-breaking** (requires MINOR bump) if:
 ## 4. Long-Term Support (LTS)
 
 MPLP v1.0 is an LTS release. We commit to maintaining backward compatibility for the v1.x line for at least 1 year.
+---
+
+© 2025 邦士（北京）网络科技有限公司
+Licensed under the Apache License, Version 2.0.

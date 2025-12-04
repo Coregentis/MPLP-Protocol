@@ -1,20 +1,4 @@
 ---
-MPLP Protocol: v1.0.0 — Frozen Specification
-Freeze Date: 2025-12-03
-Status: FROZEN (no breaking changes permitted)
-Governance: MPLP Protocol Governance Committee (MPGC)
-Copyright: © 2025 邦士（北京）网络科技有限公司
-License: Apache-2.0
-Any normative change requires a new protocol version.
----
-
----
-**MPLP Protocol 1.0.0 — Frozen Specification**
-**Status**: Frozen as of 2025-11-30
-**Copyright**: © 2025 邦士（北京）网络科技有限公司
-**License**: Apache License 2.0 (see LICENSE at repository root)
-**Any normative change requires a new protocol version.**
----
 
 # Golden Fixture Format
 
@@ -98,3 +82,7 @@ The following fields are **EXCLUDED** from direct value comparison because they 
 
 - **Schema Mapping**: This format validates that the Runtime produces objects that conform to the [Schema Mapping Standard](../10-sdk/schema-mapping-standard.md).
 - **Integration Patterns**: This suite verifies that the [Integration Patterns](../07-integration/integration-patterns.md) are implemented correctly to produce standard-compliant behavior.
+---
+
+© 2025 邦士（北京）网络科技有限公司
+Licensed under the Apache License, Version 2.0.

@@ -1,13 +1,3 @@
----
-MPLP Protocol: v1.0.0 — Frozen Specification
-Freeze Date: 2025-12-03
-Status: FROZEN (no breaking changes permitted)
-Governance: MPLP Protocol Governance Committee (MPGC)
-Copyright: © 2025 邦士（北京）网络科技有限公司
-License: Apache-2.0
-Any normative change requires a new protocol version.
----
-
 # SDK Support Matrix (v1.0.0)
 
 This document defines the official support status of MPLP SDKs and language bindings for the v1.0.0 release.
@@ -49,3 +39,7 @@ This document defines the official support status of MPLP SDKs and language bind
 ### 3.3 Go & Java
 - **Role**: Educational examples.
 - **Guidance**: Developers should use these as a starting point to build their own bindings if needed, or wrap the TS/Py SDKs.
+---
+
+© 2025 邦士（北京）网络科技有限公司
+Licensed under the Apache License, Version 2.0.

@@ -1,13 +1,3 @@
----
-MPLP Protocol: v1.0.0 — Frozen Specification
-Freeze Date: 2025-12-03
-Status: FROZEN (no breaking changes permitted)
-Governance: MPLP Protocol Governance Committee (MPGC)
-Copyright: © 2025 邦士（北京）网络科技有限公司
-License: Apache-2.0
-Any normative change requires a new protocol version.
----
-
 <div align="center">
 
 # Multi-Agent Lifecycle Protocol (MPLP)
@@ -449,3 +439,7 @@ For enterprise adoption, integration partnerships, or protocol collaborations:
 <div align="center">
   <sub>Built for the future of Agentic AI. Vendor-neutral. Schema-driven. Lifecycle-governed.</sub>
 </div>
+---
+
+© 2025 邦士（北京）网络科技有限公司
+Licensed under the Apache License, Version 2.0.

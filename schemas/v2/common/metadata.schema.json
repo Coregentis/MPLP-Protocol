@@ -1,5 +1,5 @@
 {
-  "$comment": "MPLP Protocol v1.0.0 — Frozen Specification\nFreeze Date: 2025-12-03\nStatus: FROZEN (no breaking changes permitted)\nGovernance: MPLP Protocol Governance Committee (MPGC)\nCopyright: © 2025 邦士（北京）网络科技有限公司\nLicense: Apache-2.0\nAny normative change requires a new protocol version.",
+  "$comment": "MPLP v1.0.0 FROZEN – © 2025 邦士（北京）网络科技有限公司 – Apache-2.0 – Governance: MPGC",
   "$id": "https://schemas.mplp.dev/v1.0/common/metadata.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "MPLP Metadata",
@@ -109,5 +109,11 @@
     "protocol_version",
     "schema_version"
   ],
-  "additionalProperties": false
+  "additionalProperties": false,
+  "x-mplp-meta": {
+    "protocolVersion": "1.0.0",
+    "frozen": true,
+    "freezeDate": "2025-12-03",
+    "governance": "MPGC"
+  }
 }

@@ -1,12 +1,10 @@
----
-MPLP Protocol: v1.0.0 — Frozen Specification
-Freeze Date: 2025-12-03
-Status: FROZEN (no breaking changes permitted)
-Governance: MPLP Protocol Governance Committee (MPGC)
-Copyright: © 2025 邦士（北京）网络科技有限公司
-License: Apache-2.0
-Any normative change requires a new protocol version.
----
+> [!FROZEN]
+> **MPLP Protocol v1.0.0 — Frozen Specification**
+> **Freeze Date**: 2025-12-03
+> **Status**: FROZEN (no breaking changes permitted)
+> **Governance**: MPLP Protocol Governance Committee (MPGC)
+> **License**: Apache-2.0
+> **Note**: Any normative change requires a new protocol version.
 
 ---
 **MPLP Protocol 1.0.0 — Frozen Specification**
@@ -169,3 +167,7 @@ The following invariants from `schemas/v2/invariants/sa-invariants.yaml` MUST be
 -   **Reference Implementation**: TracePilot implements the SA Profile by mapping `SAInitialized` to its internal `SessionStart` event.
 -   **Concurrency**: While SA is logically single-threaded, the Runtime may execute independent SA instances in parallel.
 -   **LLM Integration**: The `execute_step` state typically involves an API call to an LLM (e.g., Claude, GPT-4), but the SA Profile itself is agnostic to the specific model used.
+---
+
+© 2025 邦士（北京）网络科技有限公司
+Licensed under the Apache License, Version 2.0.

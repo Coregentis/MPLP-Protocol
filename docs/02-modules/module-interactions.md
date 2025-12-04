@@ -1,12 +1,10 @@
----
-MPLP Protocol: v1.0.0 — Frozen Specification
-Freeze Date: 2025-12-03
-Status: FROZEN (no breaking changes permitted)
-Governance: MPLP Protocol Governance Committee (MPGC)
-Copyright: © 2025 邦士（北京）网络科技有限公司
-License: Apache-2.0
-Any normative change requires a new protocol version.
----
+> [!FROZEN]
+> **MPLP Protocol v1.0.0 — Frozen Specification**
+> **Freeze Date**: 2025-12-03
+> **Status**: FROZEN (no breaking changes permitted)
+> **Governance**: MPLP Protocol Governance Committee (MPGC)
+> **License**: Apache-2.0
+> **Note**: Any normative change requires a new protocol version.
 
 ---
 **MPLP Protocol 1.0.0 — Frozen Specification**
@@ -81,3 +79,7 @@ graph TD
 - **Circular Dependency**: `Context` should never depend on `Plan`.
 - **Orphaned Execution**: `Trace` without a `context_id` is invalid.
 - **Implicit Roles**: Actions without a defined `role_id` violate the audit trail.
+---
+
+© 2025 邦士（北京）网络科技有限公司
+Licensed under the Apache License, Version 2.0.

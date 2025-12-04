@@ -1,13 +1,3 @@
----
-MPLP Protocol: v1.0.0 — Frozen Specification
-Freeze Date: 2025-12-03
-Status: FROZEN (no breaking changes permitted)
-Governance: MPLP Protocol Governance Committee (MPGC)
-Copyright: © 2025 邦士（北京）网络科技有限公司
-License: Apache-2.0
-Any normative change requires a new protocol version.
----
-
 # FLOW-04 – Single Agent with LLM Enrichment
 
 **Category**: A: Single Agent Basics  
@@ -240,3 +230,7 @@ FLOW-04 is **successfully implemented** when:
 **End of FLOW-04 README (Schema-Corrected Version)**
 
 *This document reflects the actual MPLP v1.0 protocol schema. No fictional fields are described.*
+---
+
+© 2025 邦士（北京）网络科技有限公司
+Licensed under the Apache License, Version 2.0.

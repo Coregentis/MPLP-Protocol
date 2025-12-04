@@ -2,143 +2,198 @@ import fs from "fs";
 import path from "path";
 
 // ------------------------------------------------------------
-// 1. Frozen Header Templates for Different File Types
+// MPLP v1.0.x File-Level Governance Standards
 // ------------------------------------------------------------
 
-const TS_HEADER = `/**
- * MPLP Protocol v1.0.0 — Frozen Specification
- * Freeze Date: 2025-12-03
- * Status: FROZEN (no breaking changes permitted)
- * Governance: MPLP Protocol Governance Committee (MPGC)
- *
- * © 2025 邦士（北京）网络科技有限公司. All rights reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * http://www.apache.org/licenses/LICENSE-2.0
- */
-`;
+const FROZEN_MD_BLOCK = `> [!FROZEN]
+> **MPLP Protocol v1.0.0 — Frozen Specification**
+> **Freeze Date**: 2025-12-03
+> **Status**: FROZEN (no breaking changes permitted)
+> **Governance**: MPLP Protocol Governance Committee (MPGC)
+> **License**: Apache-2.0
+> **Note**: Any normative change requires a new protocol version.`;
 
-const MD_HEADER = `---
-MPLP Protocol: v1.0.0 — Frozen Specification
-Freeze Date: 2025-12-03
-Status: FROZEN (no breaking changes permitted)
-Governance: MPLP Protocol Governance Committee (MPGC)
-Copyright: © 2025 邦士（北京）网络科技有限公司
-License: Apache-2.0
-Any normative change requires a new protocol version.
+const COPYRIGHT_FOOTER = `
 ---
-`;
 
-const YAML_HEADER = `# MPLP Protocol v1.0.0 — Frozen Specification
-# Freeze Date: 2025-12-03
-# Status: FROZEN (no breaking changes permitted)
-# Governance: MPLP Protocol Governance Committee (MPGC)
-# © 2025 邦士（北京）网络科技有限公司
-# License: Apache-2.0
-# Any normative change requires a new protocol version.
-`;
+© 2025 邦士（北京）网络科技有限公司
+Licensed under the Apache License, Version 2.0.`;
 
-// CORRECTED: Single string with \n for JSON Schema Draft-07 compliance
-const JSON_HEADER_STRING = "MPLP Protocol v1.0.0 — Frozen Specification\nFreeze Date: 2025-12-03\nStatus: FROZEN (no breaking changes permitted)\nGovernance: MPLP Protocol Governance Committee (MPGC)\nCopyright: © 2025 邦士（北京）网络科技有限公司\nLicense: Apache-2.0\nAny normative change requires a new protocol version.";
+const SOURCE_HEADER = `/**
+ * © 2025 邦士（北京）网络科技有限公司
+ * Licensed under the Apache License, Version 2.0.
+ *
+ * This file is part of the MPLP reference implementation.
+ * It is NOT part of the frozen protocol specification.
+ */`;
 
-// ------------------------------------------------------------
-// 2. Utility
-// ------------------------------------------------------------
+const YAML_HEADER = `# MPLP v1.0.0 FROZEN – Invariant Set
+# © 2025 邦士（北京）网络科技有限公司 – Apache-2.0
+# Governance: MPLP Protocol Governance Committee (MPGC)`;
 
-function read(file) {
-  return fs.readFileSync(file, "utf8");
-}
+const JSON_COMMENT = "MPLP v1.0.0 FROZEN – © 2025 邦士（北京）网络科技有限公司 – Apache-2.0 – Governance: MPGC";
 
-function write(file, content) {
-  fs.writeFileSync(file, content, "utf8");
-  console.log("Updated:", file);
-}
-
-// ------------------------------------------------------------
-// 3. Remove Old Headers
-// ------------------------------------------------------------
-
-function stripOldTSHeader(content) {
-  // Match header even if preceded by whitespace/newlines
-  return content.replace(/^[\s\n]*\/\*\*[\s\S]*?\*\/\s*/, "").trimStart();
-}
-
-function stripOldMDHeader(content) {
-  return content.replace(/^---[\s\S]*?---\s*/m, "").trimStart();
-}
-
-function stripOldYAMLHeader(content) {
-  return content.replace(/^(#.*\n)+/m, "").trimStart();
-}
-
-function stripOldJSONHeader(obj) {
-  if (obj["$comment"]) {
-    delete obj["$comment"];
-  }
-  return obj;
-}
-
-// ------------------------------------------------------------
-// 4. Apply New Header by Type
-// ------------------------------------------------------------
-
-function applyTSHeader(content) {
-  // Handle shebang - find it anywhere in the file (to fix misplaced ones)
-  const shebangMatch = content.match(/^#!.*\n/m);
-  const shebang = shebangMatch ? shebangMatch[0] : "";
-
-  // Remove shebang from content for processing
-  if (shebang) {
-    content = content.replace(shebang, "");
-    // console.log("Found shebang:", shebang.trim());
-  }
-
-  const beforeStrip = content.length;
-  content = stripOldTSHeader(content);
-  // if (content.length < beforeStrip) console.log("Stripped header");
-
-  // Re-assemble: Shebang + Header + Content
-  return shebang + TS_HEADER + "\n" + content;
-}
-
-function applyMDHeader(content) {
-  content = stripOldMDHeader(content);
-  return MD_HEADER + "\n" + content;
-}
-
-function applyYAMLHeader(content) {
-  content = stripOldYAMLHeader(content);
-  return YAML_HEADER + "\n" + content;
-}
-
-function applyJSONHeader(content) {
-  try {
-    const obj = JSON.parse(content);
-    const cleaned = stripOldJSONHeader(obj);
-    // Add comment as first property if possible (not guaranteed in JSON but usually works)
-    const newObj = { "$comment": JSON_HEADER_STRING, ...cleaned };
-    return JSON.stringify(newObj, null, 2) + "\n";
-  } catch (err) {
-    console.error("Invalid JSON, skipping:", err);
-    return content;
-  }
-}
-
-// ------------------------------------------------------------
-// 5. File Walker
-// ------------------------------------------------------------
-
-const EXT_MAP = {
-  ts: applyTSHeader,
-  js: applyTSHeader,
-  md: applyMDHeader,
-  json: applyJSONHeader,
-  yaml: applyYAMLHeader,
-  yml: applyYAMLHeader
+const JSON_META_BASE = {
+  "protocolVersion": "1.0.0",
+  "frozen": true,
+  "freezeDate": "2025-12-03",
+  "governance": "MPGC"
 };
 
+// ------------------------------------------------------------
+// Utility
+// ------------------------------------------------------------
+
+function read(f) { return fs.readFileSync(f, 'utf8'); }
+function write(f, c) { fs.writeFileSync(f, c, 'utf8'); console.log('Updated:', f); }
+
+// ------------------------------------------------------------
+// Processors
+// ------------------------------------------------------------
+
+function processMarkdown(filePath) {
+  let content = read(filePath);
+
+  // Determine file type
+  // Normative: docs/00 to docs/07
+  const isNormative = /docs[\\\/]0[0-7]-/.test(filePath);
+
+  // Governance & Root: README, CHANGELOG, Governance docs
+  const isGovernance = /CODE_OF_CONDUCT|CONTRIBUTING|SECURITY|GOVERNANCE|MAINTAINERS/.test(filePath);
+  const isRoot = /README\.md|CHANGELOG\.md|LICENSE\.txt/.test(filePath);
+
+  // Other Docs: docs/08+, docs/99
+  const isOtherDocs = /docs[\\\/](0[8-9]|1[0-9]|99)-/.test(filePath);
+
+  // 1. Remove OLD Frozen Headers (YAML style)
+  content = content.replace(/^---[\r\n]+MPLP Protocol: v1.0.0[\s\S]*?---[\r\n]+/, '');
+
+  // 2a. Remove Manual Markdown Headers (bold text style)
+  content = content.replace(/^---[\r\n]+\*\*MPLP Protocol 1\.0\.0 — Frozen Specification\*\*[\s\S]*?requires a new protocol version\.\*\*[\r\n]+/, '');
+  content = content.replace(/^\*\*MPLP Protocol 1\.0\.0 — Frozen Specification\*\*[\s\S]*?requires a new protocol version\.\*\*[\r\n]+/, '');
+
+  // 2b. Remove NEW Frozen Headers (Blockquote style) to prevent duplication
+  content = content.replace(/^> \[!FROZEN\][\s\S]*?> \*\*Note\*\*:.*?\n\n?/m, '');
+
+  // 3. Remove Existing Footer (to prevent duplication)
+  content = content.replace(/[\r\n]+---[\r\n]+© 2025 邦士（北京）网络科技有限公司[\s\S]*?Version 2.0\.[\r\n]*/, '');
+
+  // 4. Apply Frozen Header (ONLY for Normative)
+  if (isNormative) {
+    content = FROZEN_MD_BLOCK + "\n\n" + content.trimStart();
+  }
+
+  // 5. Apply Footer (For all public docs except maybe templates)
+  // We apply to Normative, Governance, Root, and Other Docs.
+  if (isNormative || isGovernance || isRoot || isOtherDocs) {
+    content = content.trimEnd() + COPYRIGHT_FOOTER + "\n";
+  }
+
+  write(filePath, content);
+}
+
+function processJsonSchema(filePath) {
+  // Only for schemas/v2
+  if (!filePath.includes('schemas/v2') && !filePath.includes('schemas\\v2')) return;
+
+  const content = read(filePath);
+  try {
+    const json = JSON.parse(content);
+
+    // 1. Set $comment (Single line)
+    json.$comment = JSON_COMMENT;
+
+    // 2. Set x-mplp-meta
+    json['x-mplp-meta'] = { ...JSON_META_BASE };
+
+    write(filePath, JSON.stringify(json, null, 2) + "\n");
+  } catch (e) {
+    console.error('JSON Error:', filePath, e);
+  }
+}
+
+function processYaml(filePath) {
+  // Only for schemas/invariants
+  if (!filePath.includes('schemas/invariants') && !filePath.includes('schemas\\invariants')) return;
+
+  let content = read(filePath);
+
+  // Strip old headers
+  content = content.replace(/^# MPLP Protocol v1.0.0[\s\S]*?version\.\n/m, '');
+  content = content.replace(/^# MPLP v1.0.0 FROZEN[\s\S]*?\(MPGC\)\n/m, '');
+
+  // Add new header
+  content = YAML_HEADER + "\n\n" + content.trimStart();
+  write(filePath, content);
+}
+
+function processSource(filePath) {
+  // Only for packages/*/src
+  // Regex to match packages/<any>/src
+  if (!/packages[\\\/].*[\\\/]src[\\\/]/.test(filePath)) return;
+
+  // Skip cli.ts special handling if needed, but we handle shebang below
+
+  let content = read(filePath);
+
+  // Preserve Shebang
+  const shebangMatch = content.match(/^#!.*\n/);
+  const shebang = shebangMatch ? shebangMatch[0] : '';
+  if (shebang) content = content.replace(shebang, '');
+
+  // Strip old headers (Block comment style)
+  content = content.replace(/^\/\*\*[\s\S]*?MPLP Protocol v1.0.0[\s\S]*?\*\/\s*/, '');
+  content = content.replace(/^\/\*\*[\s\S]*?© 2025 邦士[\s\S]*?\*\/\s*/, '');
+
+  // Add new header
+  content = SOURCE_HEADER + "\n" + content.trimStart();
+
+  // Restore Shebang
+  if (shebang) content = shebang + content;
+
+  write(filePath, content);
+}
+
+function processPackageJson(filePath) {
+  // Only for packages/*/package.json
+  if (!/packages[\\\/].*[\\\/]package\.json/.test(filePath)) return;
+
+  try {
+    const json = JSON.parse(read(filePath));
+
+    // Remove Frozen Head ($comment) if present
+    if (json.$comment) delete json.$comment;
+
+    // Standard Fields
+    json.author = "邦士（北京）网络科技有限公司";
+    json.copyright = "© 2025 邦士（北京）网络科技有限公司";
+    if (!json.license) json.license = "Apache-2.0";
+
+    // Custom MPLP Meta
+    json.mplp = {
+      protocolVersion: "1.0.0",
+      frozen: true,
+      governance: "MPGC"
+    };
+
+    // Infer Layer
+    if (json.name.includes('core')) json.mplp.layer = 'L1';
+    else if (json.name.includes('modules') || json.name.includes('coordination')) json.mplp.layer = 'L2';
+    else if (json.name.includes('runtime')) json.mplp.layer = 'L3';
+    else if (json.name.includes('integration')) json.mplp.layer = 'L4';
+    else if (json.name.includes('devtools') || json.name.includes('sdk')) json.mplp.layer = 'Tools';
+
+    write(filePath, JSON.stringify(json, null, 2) + "\n");
+  } catch (e) {
+    console.error('Pkg JSON Error:', filePath, e);
+  }
+}
+
+// ------------------------------------------------------------
+// Walker
+// ------------------------------------------------------------
+
 function walk(dir) {
-  // Skip node_modules and .git and dist
   if (dir.includes('node_modules') || dir.includes('.git') || dir.includes('dist')) return;
 
   const items = fs.readdirSync(dir, { withFileTypes: true });
@@ -148,33 +203,19 @@ function walk(dir) {
 
     if (item.isDirectory()) {
       walk(full);
-      continue;
-    }
+    } else {
+      // Skip this script
+      if (full.endsWith('update-frozen-headers.mjs')) continue;
 
-    const ext = item.name.split(".").pop();
-    const fn = EXT_MAP[ext];
-    if (!fn) continue;
-
-    // Skip this script itself
-    if (full.endsWith('update-frozen-headers.mjs')) continue;
-    // Skip cli.ts as it requires special shebang handling and is handled separately
-    if (full.endsWith('cli.ts')) continue;
-
-    try {
-      let content = read(full);
-      let updated = fn(content);
-      write(full, updated);
-    } catch (e) {
-      console.error(`Error processing ${full}:`, e.message);
+      if (full.endsWith('.md')) processMarkdown(full);
+      else if (full.endsWith('.schema.json')) processJsonSchema(full);
+      else if (full.endsWith('.yaml') || full.endsWith('.yml')) processYaml(full);
+      else if (full.endsWith('.ts') || full.endsWith('.js')) processSource(full);
+      else if (item.name === 'package.json') processPackageJson(full);
     }
   }
 }
 
-// ------------------------------------------------------------
-// 6. Execute
-// ------------------------------------------------------------
-
-const ROOT = process.cwd();
-console.log("Starting Frozen Header Update (JSON String Fix)...");
-walk(ROOT);
-console.log("Frozen Header update complete.");
+console.log("Starting MPLP v1.0.x Governance Header Update...");
+walk(process.cwd());
+console.log("Governance Header Update Complete.");

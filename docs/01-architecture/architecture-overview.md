@@ -1,20 +1,16 @@
----
-MPLP Protocol: v1.0.0 — Frozen Specification
-Freeze Date: 2025-12-03
-Status: FROZEN (no breaking changes permitted)
-Governance: MPLP Protocol Governance Committee (MPGC)
-Copyright: © 2025 邦士（北京）网络科技有限公司
-License: Apache-2.0
-Any normative change requires a new protocol version.
----
+> [!FROZEN]
+> **MPLP Protocol v1.0.0 — Frozen Specification**
+> **Freeze Date**: 2025-12-03
+> **Status**: FROZEN (no breaking changes permitted)
+> **Governance**: MPLP Protocol Governance Committee (MPGC)
+> **License**: Apache-2.0
+> **Note**: Any normative change requires a new protocol version.
 
----
-**MPLP Protocol 1.0.0 — Frozen Specification**
-**Status**: Frozen as of 2025-11-30
-**Copyright**: © 2025 邦士（北京）网络科技有限公司
-**License**: Apache License 2.0 (see LICENSE at repository root)
-**Any normative change requires a new protocol version.**
-| :--- | :--- | :--- |
+
+# MPLP Architecture Overview
+
+| Layer | Package | Status | Description |
+| :--- | :--- | :--- | :--- |
 | **L4** | `packages/integration/*` | ⭕ Optional | Adapters for LLMs, Storage, Tools. |
 | **L3** | `packages/reference-runtime` | ✅ Required (Spec) | PSG management, Orchestration, AEL/VSL. |
 | **L2** | `packages/coordination` | ✅ Required | Module logic, SA/MAP Profiles, Event Bus. |
@@ -83,3 +79,7 @@ The architecture defines **9 Cross-Cutting Concerns** that span all layers:
 - [L3: Execution & Orchestration](l3-execution-orchestration.md)
 - [L4: Integration Infrastructure](l4-integration-infra.md)
 - [Compliance Guide](../08-guides/mplp-v1.0-compliance-guide.md)
+---
+
+© 2025 邦士（北京）网络科技有限公司
+Licensed under the Apache License, Version 2.0.

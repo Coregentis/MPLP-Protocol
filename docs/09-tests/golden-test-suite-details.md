@@ -1,19 +1,3 @@
----
-MPLP Protocol: v1.0.0 — Frozen Specification
-Freeze Date: 2025-12-03
-Status: FROZEN (no breaking changes permitted)
-Governance: MPLP Protocol Governance Committee (MPGC)
-Copyright: © 2025 邦士（北京）网络科技有限公司
-License: Apache-2.0
-Any normative change requires a new protocol version.
----
-
----
-**MPLP Protocol 1.0.0 — Frozen Specification**
-**Status**: Frozen as of 2025-11-30
-**Copyright**: © 2025 邦士（北京）网络科技有限公司
-**License**: Apache License 2.0 (see LICENSE at repository root)
-**Any normative change requires a new protocol version.**
 ## Table of Contents
 
 1. [Golden Suite Scope](#golden-suite-scope)
@@ -559,3 +543,7 @@ console.log(`FLOW-02 validation: ${duration}ms`);
 **End of Golden Test Suite Technical Details**
 
 *This document provides comprehensive guidance for running, extending, and troubleshooting the MPLP v1.0 Golden Test Suite.*
+---
+
+© 2025 邦士（北京）网络科技有限公司
+Licensed under the Apache License, Version 2.0.

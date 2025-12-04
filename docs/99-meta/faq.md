@@ -1,13 +1,3 @@
----
-MPLP Protocol: v1.0.0 — Frozen Specification
-Freeze Date: 2025-12-03
-Status: FROZEN (no breaking changes permitted)
-Governance: MPLP Protocol Governance Committee (MPGC)
-Copyright: © 2025 邦士（北京）网络科技有限公司
-License: Apache-2.0
-Any normative change requires a new protocol version.
----
-
 # Frequently Asked Questions (FAQ)
 
 ## General
@@ -49,3 +39,7 @@ Yes. MPLP is model-agnostic. The protocol defines how to structure the *inputs* 
 
 ### Can I modify the schemas?
 Normative schemas are frozen for v1.0.0. If you need changes, please submit a MIP for a future version. You can use the `Extension` module for custom data without breaking compliance.
+---
+
+© 2025 邦士（北京）网络科技有限公司
+Licensed under the Apache License, Version 2.0.

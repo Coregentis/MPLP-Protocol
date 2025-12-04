@@ -1,13 +1,3 @@
----
-MPLP Protocol: v1.0.0 — Frozen Specification
-Freeze Date: 2025-12-03
-Status: FROZEN (no breaking changes permitted)
-Governance: MPLP Protocol Governance Committee (MPGC)
-Copyright: © 2025 邦士（北京）网络科技有限公司
-License: Apache-2.0
-Any normative change requires a new protocol version.
----
-
 # Known Issues & Limitations (v1.0.0)
 
 This list applies strictly to MPLP Protocol v1.0.0 (Frozen).
@@ -47,3 +37,7 @@ This document lists known limitations and design constraints of the MPLP v1.0.0 
 ### 4.1 Schema Validation
 - **Limitation**: `ts-node` execution of validation scripts may require specific environment flags (`--transpile-only`).
 - **Workaround**: Use the provided `pnpm test:golden` or `node scripts/validate-schemas.js` (if available) which handle this.
+---
+
+© 2025 邦士（北京）网络科技有限公司
+Licensed under the Apache License, Version 2.0.

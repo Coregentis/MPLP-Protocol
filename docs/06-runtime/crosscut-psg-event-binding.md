@@ -1,12 +1,10 @@
----
-MPLP Protocol: v1.0.0 — Frozen Specification
-Freeze Date: 2025-12-03
-Status: FROZEN (no breaking changes permitted)
-Governance: MPLP Protocol Governance Committee (MPGC)
-Copyright: © 2025 邦士（北京）网络科技有限公司
-License: Apache-2.0
-Any normative change requires a new protocol version.
----
+> [!FROZEN]
+> **MPLP Protocol v1.0.0 — Frozen Specification**
+> **Freeze Date**: 2025-12-03
+> **Status**: FROZEN (no breaking changes permitted)
+> **Governance**: MPLP Protocol Governance Committee (MPGC)
+> **License**: Apache-2.0
+> **Note**: Any normative change requires a new protocol version.
 
 ---
 **MPLP Protocol 1.0.0 — Frozen Specification**
@@ -476,3 +474,7 @@ restore_psg_from_snapshot(psg.transaction_snapshots[txn_id])
 **End of Crosscut→PSG & Observability Event Binding**
 
 *This specification ensures MPLP's crosscutting concerns are consistently realized through PSG state and Observability events, providing uniform runtime behavior across implementations.*
+---
+
+© 2025 邦士（北京）网络科技有限公司
+Licensed under the Apache License, Version 2.0.

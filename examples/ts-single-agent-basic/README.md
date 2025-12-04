@@ -1,13 +1,3 @@
----
-MPLP Protocol: v1.0.0 — Frozen Specification
-Freeze Date: 2025-12-03
-Status: FROZEN (no breaking changes permitted)
-Governance: MPLP Protocol Governance Committee (MPGC)
-Copyright: © 2025 邦士（北京）网络科技有限公司
-License: Apache-2.0
-Any normative change requires a new protocol version.
----
-
 # MPLP Single Agent Basic Example
 
 This project demonstrates a complete, runnable implementation of the **MPLP (Multi-Agent Lifecycle Protocol)** Single Agent Flow using the TypeScript Reference Runtime.
@@ -170,4 +160,7 @@ To turn this into a real-world application:
 
 ---
 **License**: [Apache 2.0](../../LICENSE.txt)
+---
 
+© 2025 邦士（北京）网络科技有限公司
+Licensed under the Apache License, Version 2.0.

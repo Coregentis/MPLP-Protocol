@@ -1,12 +1,11 @@
 {
-  "$comment": "MPLP Protocol v1.0.0 — Frozen Specification\nFreeze Date: 2025-12-03\nStatus: FROZEN (no breaking changes permitted)\nGovernance: MPLP Protocol Governance Committee (MPGC)\nCopyright: © 2025 邦士（北京）网络科技有限公司\nLicense: Apache-2.0\nAny normative change requires a new protocol version.",
   "name": "@mplp/schema",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "MPLP Protocol v1.0 JSON Schemas - All protocol schema definitions",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Coregentis/MPLP-Protocol.git",
+    "url": "https://github.com/coregentis/MPLP-Protocol.git",
     "directory": "packages/schema"
   },
   "keywords": [
@@ -14,7 +13,9 @@
     "schema",
     "json-schema",
     "protocol",
-    "validation"
+    "validation",
+    "MPLP",
+    "multi-agent"
   ],
   "publishConfig": {
     "access": "public"
@@ -34,5 +35,23 @@
   },
   "devDependencies": {
     "typescript": "^5.0.0"
-  }
+  },
+  "author": "邦士（北京）网络科技有限公司",
+  "copyright": "© 2025 邦士（北京）网络科技有限公司",
+  "mplp": {
+    "protocolVersion": "1.0.0",
+    "frozen": true,
+    "governance": "MPGC"
+  },
+  "homepage": "https://github.com/coregentis/MPLP-Protocol",
+  "bugs": {
+    "url": "https://github.com/coregentis/MPLP-Protocol/issues"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "sideEffects": false
 }

@@ -1,15 +1,10 @@
 /**
- * MPLP Protocol v1.0.0 — Frozen Specification
- * Freeze Date: 2025-12-03
- * Status: FROZEN (no breaking changes permitted)
- * Governance: MPLP Protocol Governance Committee (MPGC)
+ * © 2025 邦士（北京）网络科技有限公司
+ * Licensed under the Apache License, Version 2.0.
  *
- * © 2025 邦士（北京）网络科技有限公司. All rights reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * http://www.apache.org/licenses/LICENSE-2.0
+ * This file is part of the MPLP reference implementation.
+ * It is NOT part of the frozen protocol specification.
  */
-
 import type { Dialog } from "@mplp/core";
 import type { ModuleHandler } from "./index";
 

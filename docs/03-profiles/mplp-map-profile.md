@@ -1,12 +1,10 @@
----
-MPLP Protocol: v1.0.0 — Frozen Specification
-Freeze Date: 2025-12-03
-Status: FROZEN (no breaking changes permitted)
-Governance: MPLP Protocol Governance Committee (MPGC)
-Copyright: © 2025 邦士（北京）网络科技有限公司
-License: Apache-2.0
-Any normative change requires a new protocol version.
----
+> [!FROZEN]
+> **MPLP Protocol v1.0.0 — Frozen Specification**
+> **Freeze Date**: 2025-12-03
+> **Status**: FROZEN (no breaking changes permitted)
+> **Governance**: MPLP Protocol Governance Committee (MPGC)
+> **License**: Apache-2.0
+> **Note**: Any normative change requires a new protocol version.
 
 ---
 **MPLP Protocol 1.0.0 — Frozen Specification**
@@ -164,3 +162,7 @@ The following invariants from `schemas/v2/invariants/map-invariants.yaml` MUST b
 
 -   **Execution Token**: The "Token" is a logical concept in the Profile, often implemented as a lock or a specific field in the Runtime's memory, not necessarily a persistent schema object.
 -   **Orchestrator**: In `orchestrated` mode, one agent (the Orchestrator) typically holds the token permanently and delegates sub-tasks via `Dialog` messages.
+---
+
+© 2025 邦士（北京）网络科技有限公司
+Licensed under the Apache License, Version 2.0.

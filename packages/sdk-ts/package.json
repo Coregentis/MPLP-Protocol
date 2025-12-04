@@ -1,7 +1,6 @@
 {
-  "$comment": "MPLP Protocol v1.0.0 — Frozen Specification\nFreeze Date: 2025-12-03\nStatus: FROZEN (no breaking changes permitted)\nGovernance: MPLP Protocol Governance Committee (MPGC)\nCopyright: © 2025 邦士（北京）网络科技有限公司\nLicense: Apache-2.0\nAny normative change requires a new protocol version.",
   "name": "@mplp/sdk-ts",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "MPLP TypeScript SDK for developers",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -10,16 +9,46 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@mplp/core": "workspace:*",
-    "@mplp/schema": "workspace:*",
-    "@mplp/modules": "workspace:*",
-    "@mplp/runtime-minimal": "workspace:*",
-    "@mplp/coordination": "workspace:*",
+    "@mplp/core": "^1.0.2",
+    "@mplp/schema": "^1.0.2",
+    "@mplp/modules": "^1.0.2",
+    "@mplp/runtime-minimal": "^1.0.2",
+    "@mplp/coordination": "^1.0.2",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
     "typescript": "^5.0.0",
     "vitest": "^1.0.0",
     "@types/uuid": "^9.0.0"
-  }
+  },
+  "author": "邦士（北京）网络科技有限公司",
+  "copyright": "© 2025 邦士（北京）网络科技有限公司",
+  "license": "Apache-2.0",
+  "mplp": {
+    "protocolVersion": "1.0.0",
+    "frozen": true,
+    "governance": "MPGC",
+    "layer": "Tools"
+  },
+  "homepage": "https://github.com/coregentis/MPLP-Protocol",
+  "bugs": {
+    "url": "https://github.com/coregentis/MPLP-Protocol/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/coregentis/MPLP-Protocol.git",
+    "directory": "packages/sdk-ts"
+  },
+  "keywords": [
+    "MPLP",
+    "multi-agent",
+    "protocol"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "sideEffects": false
 }

@@ -1,20 +1,3 @@
----
-MPLP Protocol: v1.0.0 — Frozen Specification
-Freeze Date: 2025-12-03
-Status: FROZEN (no breaking changes permitted)
-Governance: MPLP Protocol Governance Committee (MPGC)
-Copyright: © 2025 邦士（北京）网络科技有限公司
-License: Apache-2.0
-Any normative change requires a new protocol version.
----
-
-## [1.0.1] - 2025-12-04
-
-### 🐛 Fixes
-- **Schema Packaging**: Fixed `ENOENT` error by ensuring schemas are included in `@mplp/schema` package.
-- **Core Validator**: Refactored `MplpValidator` to use `loadSchema` from `@mplp/schema` instead of direct file access.
-- **CLI**: Fixed shebang in `@mplp/devtools` CLI.
-
 ## [1.0.0] - 2025-12-01
 
 ### 🚀 Frozen Specification Release
@@ -65,3 +48,7 @@ Any normative change requires a new protocol version.
   - `storage-fs`: JSON file storage.
   - `storage-kv`: In-memory Key-Value store.
 - **Examples**: Added `ts-single-agent-basic` runnable example.
+---
+
+© 2025 邦士（北京）网络科技有限公司
+Licensed under the Apache License, Version 2.0.

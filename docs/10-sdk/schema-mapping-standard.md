@@ -1,19 +1,3 @@
----
-MPLP Protocol: v1.0.0 — Frozen Specification
-Freeze Date: 2025-12-03
-Status: FROZEN (no breaking changes permitted)
-Governance: MPLP Protocol Governance Committee (MPGC)
-Copyright: © 2025 邦士（北京）网络科技有限公司
-License: Apache-2.0
-Any normative change requires a new protocol version.
----
-
----
-**MPLP Protocol 1.0.0 — Frozen Specification**
-**Status**: Frozen as of 2025-11-30
-**Copyright**: © 2025 邦士（北京）网络科技有限公司
-**License**: Apache License 2.0 (see LICENSE at repository root)
-**Any normative change requires a new protocol version.**
 ## 1. Introduction
 
 This document defines the **canonical mapping rules** from MPLP JSON Schema v2 to TypeScript and Python models. All MPLP SDK implementations (current and future) MUST conform to these rules to ensure cross-language protocol consistency at the HTTP/gRPC level.
@@ -505,3 +489,7 @@ TypeScript has no runtime enforcement of `additionalProperties: false`. This is 
 - **Author**: MPLP Protocol Team
 - **Last Updated**: 2025-11-29
 - **Status**: Normative v1.0.0
+---
+
+© 2025 邦士（北京）网络科技有限公司
+Licensed under the Apache License, Version 2.0.

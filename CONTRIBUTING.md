@@ -1,39 +1,60 @@
----
-MPLP Protocol: v1.0.0 — Frozen Specification
-Freeze Date: 2025-12-03
-Status: FROZEN (no breaking changes permitted)
-Governance: MPLP Protocol Governance Committee (MPGC)
-Copyright: © 2025 邦士（北京）网络科技有限公司
-License: Apache-2.0
-Any normative change requires a new protocol version.
----
+# Contributing to MPLP Protocol
 
-# Contributing to MPLP
+Thank you for your interest in contributing to the Multi-Agent Programming Language Protocol (MPLP). As a frozen specification, we have strict guidelines to maintain stability and interoperability.
 
-Thank you for your interest in contributing to the Multi-Agent Lifecycle Protocol (MPLP)!
+## ⚠️ Protocol Status: FROZEN
 
-## Protocol Status
+**MPLP v1.0.0 is a FROZEN SPECIFICATION.**
 
-**Current Version**: v1.0.0 (Frozen Specification)
+*   **Normative Changes**: NOT PERMITTED in this repository branch. Any change to schemas, core logic, or normative documentation requires a new protocol version (e.g., v1.1 or v2.0) and must go through the formal RFC process.
+*   **Allowed Contributions**:
+    *   Bug fixes in non-normative code (examples, tools, scripts).
+    *   Clarifications in documentation (non-normative).
+    *   New examples or integration adapters.
+    *   Performance improvements in reference implementations.
 
-MPLP is currently in a **Frozen Specification** state. This means:
-1.  **No Breaking Changes**: We are not accepting changes to L1 Schemas or L2 Normative Flows that would break v1.0 compatibility.
-2.  **Stability First**: Our focus is on SDK adoption, documentation, and tooling.
-
-## How to Contribute
+## 🚀 How to Contribute
 
 ### 1. Reporting Bugs
-If you find a bug in the schemas, documentation, or SDKs, please open a GitHub Issue using the **Bug Report** template.
+Please use the **Bug Report** issue template. Clearly describe:
+*   The issue.
+*   Steps to reproduce.
+*   Expected vs. actual behavior.
 
-### 2. Proposing Changes (MIP Process)
-All normative changes to the protocol must follow the **MPLP Improvement Proposal (MIP)** process.
-Please read [MIP Process](docs/12-governance/mip-process.md) before submitting a proposal.
+### 2. Proposing Changes (RFC Process)
+For any change that affects the protocol specification (schemas, event structures, flow contracts):
+1.  Do NOT open a PR directly.
+2.  Open an **RFC (Request for Comments)** issue using the RFC template.
+3.  The MPLP Protocol Governance Committee (MPGC) will review the proposal.
 
-### 3. Documentation
-We welcome improvements to documentation! Please feel free to submit PRs for typos, clarifications, or new examples.
+### 3. Pull Request Process
+1.  **Fork** the repository.
+2.  **Branch** from `main`.
+3.  **Make changes**.
+4.  **Verify**:
+    *   Run `pnpm install` to ensure dependencies are correct.
+    *   Run `pnpm test` to execute the full test suite.
+    *   **CRITICAL**: All Golden Tests (`tests/golden`) MUST pass.
+    *   **CRITICAL**: All Schemas MUST validate (`scripts/validate-schemas.ts`).
+5.  **Commit** using [Conventional Commits](https://www.conventionalcommits.org/).
+6.  **Submit PR**.
 
-## Code of Conduct
-We expect all contributors to adhere to professional and respectful conduct.
+## Development Setup
+
+```bash
+# Install dependencies
+pnpm install
+
+# Build all packages
+pnpm -r build
+
+# Run tests
+pnpm test
+```
 
 ## License
-By contributing, you agree that your contributions will be licensed under the [Apache-2.0 License](LICENSE.txt).
+By contributing, you agree that your contributions will be licensed under the Apache-2.0 License.
+---
+
+© 2025 邦士（北京）网络科技有限公司
+Licensed under the Apache License, Version 2.0.
