@@ -26,7 +26,11 @@ function readJsonFileSafe(filePath: string): any {
     const normalized = raw.replace(/^\uFEFF/, '').trim();
 
     try {
-        return JSON.parse(normalized);
+        const data = JSON.parse(normalized);
+        if (data && typeof data === 'object' && '$comment' in data) {
+            delete data.$comment;
+        }
+        return data;
     } catch (err) {
         console.error(`❌ Failed to parse JSON file: ${filePath}`);
         console.error('Content preview (first 200 chars):', normalized.slice(0, 200));

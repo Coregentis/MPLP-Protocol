@@ -15,7 +15,7 @@ import { deepCompare, DiffItem } from './compare';
 import { getValueNodesByPath } from './path-utils';
 import {
     validateContext, validatePlan, validateConfirm, validateTrace
-} from '../../../../packages/core-protocol/src/validators';
+} from '../../../../packages/core/src/validators';
 
 // Legacy single-value path getter (kept for eq() rule)
 function getValueByPath(obj: any, path: string): any {

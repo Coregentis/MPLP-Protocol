@@ -1,0 +1,80 @@
+
+> mplp-protocol@1.0.0 test E:\Coregentis\MPLP\mplp-v1.0 - 副本\V1.0-release
+> pnpm -r test
+
+Scope: 14 of 15 workspace projects
+packages/core test$ npx vitest run
+packages/core test: [7m[1m[36m RUN [39m[22m[27m [36mv0.34.6[39m [90mE:/Coregentis/MPLP/mplp-v1.0 - 副本/V1.0-release/packages/core[39m
+packages/core test:  [32m✓[39m tests/validators/validation-result.test.ts [2m ([22m[2m8 tests[22m[2m)[22m[90m 9[2mms[22m[39m
+packages/core test:  [32m✓[39m tests/validators/validators.test.ts [2m ([22m[2m6 tests[22m[2m)[22m[90m 8[2mms[22m[39m
+packages/core test: [2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+packages/core test: [2m      Tests [22m [1m[32m14 passed[39m[22m[90m (14)[39m
+packages/core test: [2m   Start at [22m 22:57:25
+packages/core test: [2m   Duration [22m 1.01s[2m (transform 187ms, setup 0ms, collect 623ms, tests 17ms, environment 0ms, prepare 741ms)[22m
+packages/core test: Done
+packages/integration/storage-fs test$ vitest run
+packages/integration/llm-http test$ vitest run
+packages/integration/storage-kv test$ vitest run
+packages/integration/tools-generic test$ vitest run
+packages/integration/storage-fs test: [7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90mE:/Coregentis/MPLP/mplp-v1.0 - 副本/V1.0-release/packages/integration/storage-fs[39m
+packages/integration/storage-kv test: [7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90mE:/Coregentis/MPLP/mplp-v1.0 - 副本/V1.0-release/packages/integration/storage-kv[39m
+packages/integration/llm-http test: [7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90mE:/Coregentis/MPLP/mplp-v1.0 - 副本/V1.0-release/packages/integration/llm-http[39m
+packages/integration/tools-generic test: [7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90mE:/Coregentis/MPLP/mplp-v1.0 - 副本/V1.0-release/packages/integration/tools-generic[39m
+packages/integration/storage-fs test:  [32m✓[39m tests/fs-storage.test.ts [2m ([22m[2m2 tests[22m[2m)[22m[90m 12[2mms[22m[39m
+packages/integration/storage-fs test: [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+packages/integration/storage-fs test: [2m      Tests [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+packages/integration/storage-fs test: [2m   Start at [22m 22:57:27
+packages/integration/storage-fs test: [2m   Duration [22m 1.06s[2m (transform 271ms, setup 0ms, collect 303ms, tests 12ms, environment 0ms, prepare 375ms)[22m
+packages/integration/storage-kv test:  [32m✓[39m tests/kv-storage.test.ts [2m ([22m[2m1 test[22m[2m)[22m[90m 5[2mms[22m[39m
+packages/integration/storage-kv test: [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+packages/integration/storage-kv test: [2m      Tests [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+packages/integration/storage-kv test: [2m   Start at [22m 22:57:27
+packages/integration/storage-kv test: [2m   Duration [22m 1.11s[2m (transform 181ms, setup 1ms, collect 205ms, tests 5ms, environment 0ms, prepare 498ms)[22m
+packages/integration/storage-fs test: Done
+packages/integration/tools-generic test:  [32m✓[39m tests/tools-generic.executor.test.ts [2m ([22m[2m2 tests[22m[2m)[22m[90m 5[2mms[22m[39m
+packages/integration/tools-generic test: [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+packages/integration/tools-generic test: [2m      Tests [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+packages/integration/tools-generic test: [2m   Start at [22m 22:57:27
+packages/integration/tools-generic test: [2m   Duration [22m 862ms[2m (transform 118ms, setup 1ms, collect 123ms, tests 5ms, environment 0ms, prepare 302ms)[22m
+packages/integration/storage-kv test: Done
+packages/integration/llm-http test:  [32m✓[39m tests/llm-http.client.test.ts [2m ([22m[2m1 test[22m[2m)[22m[90m 6[2mms[22m[39m
+packages/integration/llm-http test: [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+packages/integration/llm-http test: [2m      Tests [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+packages/integration/llm-http test: [2m   Start at [22m 22:57:27
+packages/integration/llm-http test: [2m   Duration [22m 1.22s[2m (transform 83ms, setup 0ms, collect 72ms, tests 6ms, environment 0ms, prepare 296ms)[22m
+packages/integration/tools-generic test: Done
+packages/integration/llm-http test: Done
+packages/compliance test$ npx ts-node ../../tests/golden/harness/ts/golden-runner.ts
+packages/runtime-minimal test$ vitest run
+packages/runtime-minimal test: [7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90mE:/Coregentis/MPLP/mplp-v1.0 - 副本/V1.0-release/packages/runtime-minimal[39m
+packages/runtime-minimal test:  [32m✓[39m tests/single-agent.runtime.test.ts [2m ([22m[2m1 test[22m[2m)[22m[90m 3[2mms[22m[39m
+packages/runtime-minimal test: [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+packages/runtime-minimal test: [2m      Tests [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+packages/runtime-minimal test: [2m   Start at [22m 22:57:28
+packages/runtime-minimal test: [2m   Duration [22m 515ms[2m (transform 69ms, setup 0ms, collect 80ms, tests 3ms, environment 0ms, prepare 154ms)[22m
+packages/compliance test: Error: Cannot find module '../../../../packages/core-protocol/src/validators'
+packages/compliance test: Require stack:
+packages/compliance test: - E:\Coregentis\MPLP\mplp-v1.0 - 副本\V1.0-release\tests\golden\harness\ts\golden-validator.ts
+packages/compliance test: - E:\Coregentis\MPLP\mplp-v1.0 - 副本\V1.0-release\tests\golden\harness\ts\golden-runner.ts
+packages/compliance test:     at Function.<anonymous> (node:internal/modules/cjs/loader:1401:15)
+packages/compliance test:     at Function.Module._resolveFilename.sharedData.moduleResolveFilenameHook.installedValue [as _resolveFilename] (E:\Coregentis\MPLP\mplp-v1.0 - 副本\V1.0-release\node_modules\.pnpm\@cspotcode+source-map-support@0.8.1\node_modules\@cspotcode\source-map-support\source-map-support.js:811:30)
+packages/compliance test:     at defaultResolveImpl (node:internal/modules/cjs/loader:1057:19)
+packages/compliance test:     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1062:22)
+packages/compliance test:     at Function._load (node:internal/modules/cjs/loader:1211:37)
+packages/compliance test:     at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+packages/compliance test:     at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+packages/compliance test:     at Module.require (node:internal/modules/cjs/loader:1487:12)
+packages/compliance test:     at require (node:internal/modules/helpers:135:16)
+packages/compliance test:     at Object.<anonymous> (E:\Coregentis\MPLP\mplp-v1.0 - 副本\V1.0-release\tests\golden\harness\ts\golden-validator.ts:16:1) {
+packages/compliance test:   code: 'MODULE_NOT_FOUND',
+packages/compliance test:   requireStack: [
+packages/compliance test:     'E:\\Coregentis\\MPLP\\mplp-v1.0 - 副本\\V1.0-release\\tests\\golden\\harness\\ts\\golden-validator.ts',
+packages/compliance test:     'E:\\Coregentis\\MPLP\\mplp-v1.0 - 副本\\V1.0-release\\tests\\golden\\harness\\ts\\golden-runner.ts'
+packages/compliance test:   ]
+packages/compliance test: }
+packages/runtime-minimal test: Done
+packages/compliance test: Failed
+E:\Coregentis\MPLP\mplp-v1.0 - 副本\V1.0-release\packages\compliance:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @mplp/compliance@1.0.1 test: `npx ts-node ../../tests/golden/harness/ts/golden-runner.ts`
+Exit status 1
+ ELIFECYCLE  Test failed. See above for more details.

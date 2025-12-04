@@ -8,6 +8,13 @@ License: Apache-2.0
 Any normative change requires a new protocol version.
 ---
 
+## [1.0.1] - 2025-12-04
+
+### 🐛 Fixes
+- **Schema Packaging**: Fixed `ENOENT` error by ensuring schemas are included in `@mplp/schema` package.
+- **Core Validator**: Refactored `MplpValidator` to use `loadSchema` from `@mplp/schema` instead of direct file access.
+- **CLI**: Fixed shebang in `@mplp/devtools` CLI.
+
 ## [1.0.0] - 2025-12-01
 
 ### 🚀 Frozen Specification Release
