@@ -9,13 +9,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "baseUrl": "../..",
-    "paths": {
-      "@mplp/core": [
-        "packages/core/src"
-      ]
-    }
+    "resolveJsonModule": true
   },
   "include": [
     "src/**/*"
