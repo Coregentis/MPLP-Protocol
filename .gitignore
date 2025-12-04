@@ -1,9 +1,31 @@
+# node / build
 node_modules/
 dist/
-.turbo/
-.DS_Store
-.env
-.env.*
+build/
 coverage/
+*.tsbuildinfo
+.turbo/
+
+# logs / tmp
+*.log
+.tmp/
+temp/
+*.tmp
+
+# IDE
 .idea/
 .vscode/
+.DS_Store
+
+# npm artifacts
+*.tgz
+
+# packages
+packages/*/node_modules/
+packages/*/dist/
+packages/*/coverage/
+packages/*/tsconfig.tsbuildinfo
+
+# env
+.env
+.env.*
