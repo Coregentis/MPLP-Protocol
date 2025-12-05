@@ -3,7 +3,7 @@
 # Multi-Agent Lifecycle Protocol (MPLP)
 ### The Open Standard for Governing Agentic AI Systems
 
-[![Version](https://img.shields.io/badge/Version-v1.0.0_(Frozen)-blue?style=flat-square)](docs/13-release/mplp-v1.0.0-release-notes.md)
+[![Version](https://img.shields.io/badge/Version-v1.0.3-blue?style=flat-square)](docs/13-release/mplp-v1.0.0-release-notes.md)
 [![License](https://img.shields.io/badge/License-Apache_2.0-green?style=flat-square)](LICENSE.txt)
 [![Protocol Status](https://img.shields.io/badge/Protocol_Status-Stable-success?style=flat-square)](docs/00-index/mplp-v1.0-protocol-overview.md)
 [![Profiles](https://img.shields.io/badge/Profiles-SA_%7C_MAP-orange?style=flat-square)](docs/03-profiles/)
@@ -97,14 +97,60 @@ MPLP introduces five foundational capabilities to the agentic stack:
 
 MPLP is not a framework; it is a **Lifecycle Protocol** that sits under frameworks and runtimes.
 
-| Capability            | LangGraph / LangChain | AutoGen | Model Context Protocol (MCP) | **MPLP**                     |
-| :-------------------- | :-------------------: | :-----: | :--------------------------: | :--------------------------: |
-| Lifecycle Standard    | ❌                    | ❌      | ❌                           | **✅ Yes**                   |
-| Governance Layer      | ❌                    | ⚠️ Partial| ❌                          | **✅ Native Spec**           |
-| Observability Spec    | ❌                    | ❌      | ⚠️ Partial                   | **✅ Event & Taxonomy**      |
-| Learning Loop Spec    | ❌                    | ❌      | ❌                           | **✅ Learning Taxonomy**     |
-| Vendor-Neutral        | ❌ (Python/JS)        | ❌      | ❌ (Single-provider)         | **✅ Protocol-First**        |
-| Nature                | Runtime Framework     | Framework| Context Interface            | **Lifecycle Protocol**       |
+| Capability            | LangGraph | AutoGen | CrewAI | Semantic Kernel | A2A | AgentCore | MCP | **MPLP** |
+| :-------------------- | :-------: | :-----: | :----: | :-------------: | :-: | :-------: | :-: | :------: |
+| Lifecycle Standard    | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | **✅ Yes** |
+| Governance Layer      | ❌ | ⚠️ Partial | ⚠️ Partial | ⚠️ Filters | ❌ | ⚠️ Partial | ❌ | **✅ Native Spec** |
+| Observability Spec    | ⚠️ (Proprietary) | ❌ | ⚠️ | ⚠️ Hooks | ❌ | ⚠️ | ⚠️ Partial | **✅ Event & Taxonomy** |
+| Learning Loop Spec    | ❌ | ❌ | ❌ | ⚠️ Memory | ❌ | ❌ | ❌ | **✅ Learning Taxonomy** |
+| Vendor-Neutral        | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | **✅ Protocol-First** |
+| Nature                | Framework | Framework | Framework | SDK | Pattern | Framework | Interface | **Lifecycle Protocol** |
+
+### 🚀 The "Universal Bridge" Advantage: Cross-Framework Interoperability
+
+Beyond feature comparison, MPLP's critical advantage is **breaking ecosystem silos**.
+
+Frameworks often lock you in: an AutoGen agent cannot naturally "talk" to a LangGraph agent. MPLP provides a **standardized protocol layer** that sits *below* the frameworks, enabling true heterogeneity:
+
+*   **Connect Any Ecosystem**: An AutoGen agent (Python) can initiate a Plan that is executed by a Semantic Kernel agent (C#) and audited by a custom enterprise system (Java).
+*   **Unified Governance**: Regardless of the underlying engine, all agents adhere to the same `Context → Plan → Confirm → Trace` lifecycle, ensuring consistent compliance and observability across heterogeneous fleets.
+*   **Future-Proof**: Switch frameworks or mix-and-match runtimes without rewriting your entire governance and observability stack.
+
+```mermaid
+graph TD
+    subgraph Ecosystems ["Heterogeneous Agent Ecosystems"]
+        style Ecosystems fill:#f9f9f9,stroke:#333,stroke-dasharray: 5 5
+        A[AutoGen Agent<br/>(Python)]:::framework
+        B[LangGraph Agent<br/>(JS/TS)]:::framework
+        C[Semantic Kernel<br/>(C#)]:::framework
+        D[Custom Enterprise<br/>(Java)]:::framework
+    end
+
+    subgraph Protocol ["MPLP: The Universal Bridge"]
+        style Protocol fill:#e1f5fe,stroke:#01579b
+        P[MPLP Protocol Layer<br/>(Context • Plan • Confirm • Trace)]:::protocol
+    end
+
+    subgraph Value ["Unified Operations"]
+        style Value fill:#e8f5e9,stroke:#2e7d32
+        G[Global Governance]:::ops
+        O[Unified Observability]:::ops
+        L[Shared Learning Loop]:::ops
+    end
+
+    A -->|"Speaks MPLP"| P
+    B -->|"Speaks MPLP"| P
+    C -->|"Speaks MPLP"| P
+    D -->|"Speaks MPLP"| P
+
+    P --> G
+    P --> O
+    P --> L
+
+    classDef framework fill:#fff3e0,stroke:#ef6c00,color:#000
+    classDef protocol fill:#0288d1,stroke:#01579b,color:#fff,stroke-width:2px
+    classDef ops fill:#4caf50,stroke:#2e7d32,color:#fff
+```
 
 ---
 
@@ -268,20 +314,22 @@ MPLP is runtime- and language-agnostic, but v1.0.0 includes SDK support:
 * Used as the canonical implementation for Golden Flows.
 
 > Guide: `docs/10-sdk/ts-sdk-guide.md`
-> Package: `packages/sdk-ts/` (published as `@mplp/sdk-ts` in npm in typical deployments)
+> Package: `packages/sdk-ts/`
+> Install: `npm install @mplp/sdk-ts`
 
 ---
 
-### Python SDK — **Preview / Codegen-Ready**
+### Python SDK — **Stable**
 
-* Status: **Preview**
+* Status: **Stable / v1.0.0**
 * Implemented via Pydantic v2 models generated from schemas
 * Fully covers core protocol structures
 * Used in cross-language Golden Flow validation
-* Planned PyPI release in a future v1.1
+* Available on PyPI as `mplp`
 
 > Guide: `docs/10-sdk/py-sdk-guide.md`
 > Package: `packages/sdk-py/`
+> Install: `pip install mplp`
 
 ---
 
@@ -301,8 +349,8 @@ These are **illustrative only**, not part of the protocol’s compatibility cont
 ### 1. Clone & Install
 
 ```bash
-git clone https://github.com/<your-org>/mplp.git
-cd mplp
+git clone https://github.com/Coregentis/MPLP-Protocol.git
+cd MPLP-Protocol
 pnpm install
 ```
 
@@ -348,11 +396,10 @@ More flows & patterns: `docs/11-examples/`
   * Frozen core protocol (schemas + invariants)
   * SA & MAP Profiles
   * Golden Flow test suite (01–05)
-  * TS SDK stable, Python SDK preview
+  * TS SDK stable (v1.0.3), Python SDK stable (v1.0.0)
 
 * **v1.1 (Planned)**
 
-  * PyPI release of Python SDK
   * Expanded Golden Flows & invariants
   * More integration patterns for IDE / CI
 
@@ -366,7 +413,17 @@ More flows & patterns: `docs/11-examples/`
 
 ---
 
-## 13. Governance & License
+## 13. Operations (MPLP-OPS)
+
+MPLP is maintained via the **MPLP-OPS** framework, ensuring consistent governance, release quality, and schema evolution.
+
+* **Overview**: `docs/14-ops/mplp-ops-overview.md`
+* **Release Runbook**: `docs/14-ops/release-runbook.md`
+* **Schema Change Process**: `docs/14-ops/schema-sdk-change-process.md`
+
+---
+
+## 14. Governance & License
 
 MPLP is governed as an open protocol:
 
@@ -391,7 +448,7 @@ License & Copyright:
 
 ---
 
-## 14. Contributing
+## 15. Contributing
 
 You can contribute by:
 
@@ -407,7 +464,7 @@ Please start with:
 
 ---
 
-## 15. Contact
+## 16. Contact
 
 For enterprise adoption, integration partnerships, or protocol collaborations:
 

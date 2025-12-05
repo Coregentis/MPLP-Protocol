@@ -10,8 +10,8 @@ This guide will help you validate the MPLP protocol schemas and run a basic agen
 ## 1. Clone & Install
 
 ```bash
-git clone https://github.com/Coregentis/MPLP.git
-cd MPLP/V1.0-release
+git clone https://github.com/Coregentis/MPLP-Protocol.git
+cd MPLP-Protocol
 pnpm install
 ```
 
