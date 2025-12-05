@@ -120,15 +120,15 @@ Frameworks often lock you in: an AutoGen agent cannot naturally "talk" to a Lang
 graph TD
     subgraph Ecosystems ["Heterogeneous Agent Ecosystems"]
         style Ecosystems fill:#f9f9f9,stroke:#333,stroke-dasharray: 5 5
-        A[AutoGen Agent<br/>(Python)]:::framework
-        B[LangGraph Agent<br/>(JS/TS)]:::framework
-        C[Semantic Kernel<br/>(C#)]:::framework
-        D[Custom Enterprise<br/>(Java)]:::framework
+        A["AutoGen Agent<br/>(Python)"]:::framework
+        B["LangGraph Agent<br/>(JS/TS)"]:::framework
+        C["Semantic Kernel<br/>(C#)"]:::framework
+        D["Custom Enterprise<br/>(Java)"]:::framework
     end
 
     subgraph Protocol ["MPLP: The Universal Bridge"]
         style Protocol fill:#e1f5fe,stroke:#01579b
-        P[MPLP Protocol Layer<br/>(Context • Plan • Confirm • Trace)]:::protocol
+        P["MPLP Protocol Layer<br/>(Context • Plan • Confirm • Trace)"]:::protocol
     end
 
     subgraph Value ["Unified Operations"]
