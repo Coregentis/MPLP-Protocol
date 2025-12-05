@@ -135,10 +135,10 @@ graph TD
         MPLP(("MPLP UNIVERSAL PROTOCOL<br/>(The Common Language)")):::protocol
 
         %% The Flow
-        AG ==>"1. Creates Plan"==> MPLP
-        MPLP ==>"2. Routes Task"==> LG
-        LG ==>"3. Executes & Traces"==> MPLP
-        MPLP ==>"4. Governance Audit"==> SK
+        AG ==>|"1. Creates Plan"| MPLP
+        MPLP ==>|"2. Routes Task"| LG
+        LG ==>|"3. Executes & Traces"| MPLP
+        MPLP ==>|"4. Governance Audit"| SK
     end
 
     %% Value Props
