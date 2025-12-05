@@ -118,38 +118,34 @@ Frameworks often lock you in: an AutoGen agent cannot naturally "talk" to a Lang
 
 ```mermaid
 graph TD
-    subgraph Ecosystems ["Heterogeneous Agent Ecosystems"]
-        style Ecosystems fill:#f9f9f9,stroke:#333,stroke-dasharray: 5 5
-        A["AutoGen Agent<br/>(Python)"]:::framework
-        B["LangGraph Agent<br/>(JS/TS)"]:::framework
-        C["Semantic Kernel<br/>(C#)"]:::framework
-        D["Custom Enterprise<br/>(Java)"]:::framework
+    %% Styles
+    classDef framework fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000,font-weight:bold
+    classDef protocol fill:#0277bd,stroke:#004c8c,stroke-width:4px,color:#fff,font-size:16px,font-weight:bold,rx:10,ry:10
+    classDef action fill:#e1f5fe,stroke:#0288d1,stroke-width:2px,color:#01579b,stroke-dasharray: 5 5
+
+    subgraph Scenario ["The MPLP Effect: A Cross-Framework Workflow"]
+        direction TB
+        
+        %% The Actors
+        AG["AutoGen Agent<br/>(Python)"]:::framework
+        LG["LangGraph Agent<br/>(JS/TS)"]:::framework
+        SK["Semantic Kernel<br/>(C#)"]:::framework
+
+        %% The Hub
+        MPLP(("MPLP UNIVERSAL PROTOCOL<br/>(The Common Language)")):::protocol
+
+        %% The Flow
+        AG ==>"1. Creates Plan"==> MPLP
+        MPLP ==>"2. Routes Task"==> LG
+        LG ==>"3. Executes & Traces"==> MPLP
+        MPLP ==>"4. Governance Audit"==> SK
     end
 
-    subgraph Protocol ["MPLP: The Universal Bridge"]
-        style Protocol fill:#e1f5fe,stroke:#01579b
-        P["MPLP Protocol Layer<br/>(Context • Plan • Confirm • Trace)"]:::protocol
-    end
+    %% Value Props
+    MPLP -.->|"Unified State"| GOV["Global Governance"]
+    MPLP -.->|"Unified History"| OBS["Global Observability"]
 
-    subgraph Value ["Unified Operations"]
-        style Value fill:#e8f5e9,stroke:#2e7d32
-        G[Global Governance]:::ops
-        O[Unified Observability]:::ops
-        L[Shared Learning Loop]:::ops
-    end
-
-    A -->|"Speaks MPLP"| P
-    B -->|"Speaks MPLP"| P
-    C -->|"Speaks MPLP"| P
-    D -->|"Speaks MPLP"| P
-
-    P --> G
-    P --> O
-    P --> L
-
-    classDef framework fill:#fff3e0,stroke:#ef6c00,color:#000
-    classDef protocol fill:#0288d1,stroke:#01579b,color:#fff,stroke-width:2px
-    classDef ops fill:#4caf50,stroke:#2e7d32,color:#fff
+    style Scenario fill:#fafafa,stroke:#ccc,stroke-width:2px
 ```
 
 ---
