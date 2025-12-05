@@ -52,26 +52,6 @@ It is *not*:
 - Not bound to any single cloud or model provider
 
 It *is*:
-
-- A **4-layer protocol stack** (L1–L4)  
-- A set of **10 core modules** (Context, Plan, Confirm, Trace, Role, Dialog, Collab, Extension, Core, Network)  
-- A pair of **Execution Profiles** (SA & MAP) that runtimes can claim compliance with  
-- A **Golden Test Suite** and **Schema + Invariants** that make behavior verifiable
-
-You can build **your own framework / runtime / IDE / SaaS** on top of MPLP, or make your existing system “MPLP-compliant” to unlock portability and governance.
-
----
-
-## 2. The Paradigm Shift: Prompt → Protocol
-
-MPLP replaces unstructured prompts with structured, verifiable protocol objects.
-
-| Dimension        | Prompt Engineering (Old Way)             | Protocol Engineering (MPLP)                       |
-|-----------------|------------------------------------------|--------------------------------------------------|
-| **Interaction** | Unstructured Text Prompts                | **Structured Schemas** (Context, Plan, Trace)    |
-| **State**       | Hidden in LLM Context Window             | Explicit **Project Semantic Graph (PSG)**        |
-| **Collab**      | Fragile, Ad-Hoc Handoffs                 | Standardized **SA** & **MAP** Profiles           |
-| **Governance**  | “Human in the Loop” (informal)           | **Confirm Module**, Delta-Intent Governance Spec |
 | **Observability**| Text Logs / Print Statements            | Structured **Event Streams** (Observability Spec)|
 | **Learning**    | Manual Fine-Tuning                       | Systematic **Learning Samples**                  |
 
@@ -134,10 +114,10 @@ MPLP organizes the agentic stack into four layers:
 
 ```mermaid
 graph TD
-    L4[L4: Integration Layer] -->|IDE, CI/CD, Git, Tools| L3
-    L3[L3: Runtime Glue Spec] -->|PSG Binding, Drift Hooks, AEL/VSL Interfaces| L2
-    L2[L2: Modules & Crosscuts] -->|Context, Plan, Confirm, Trace, Collab, ...| L1
-    L1[L1: Schemas & Invariants] -->|JSON Schemas (The Law)| Data
+    L4["L4: Integration Layer"] -->|"IDE, CI/CD, Git, Tools"| L3
+    L3["L3: Runtime Glue Spec"] -->|"PSG Binding, Drift Hooks, AEL/VSL Interfaces"| L2
+    L2["L2: Modules & Crosscuts"] -->|"Context, Plan, Confirm, Trace, Collab, ..."| L1
+    L1["L1: Schemas & Invariants"] -->|"JSON Schemas (The Law)"| Data
 ```
 
 * **L1: Schemas & Invariants**

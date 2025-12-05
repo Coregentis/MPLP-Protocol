@@ -1,3 +1,11 @@
+## [1.0.0-rc.1] - 2025-12-05
+
+### 📦 Python SDK Governance & Packaging
+- **Governance**: Applied MPLP v1.0.x governance headers across all Python source files and docs.
+- **Documentation**: Added comprehensive documentation pack (`PARITY-MAP`, `PROTOCOL-COMPATIBILITY`, `RUNTIME`, etc.).
+- **Packaging**: Cleaned distribution package (removed `tests`, `internal`, `scripts`).
+- **Note**: Protocol behavior unchanged; parity with TS confirmed in Phase 0.
+
 ## [1.0.0] - 2025-12-01
 
 ### 🚀 Frozen Specification Release

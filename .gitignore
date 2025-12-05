@@ -1,31 +1,28 @@
-# node / build
-node_modules/
-dist/
-build/
-coverage/
-*.tsbuildinfo
-.turbo/
-
-# logs / tmp
+# Generated reports
+reports/
 *.log
-.tmp/
-temp/
-*.tmp
+test_output.txt
+test_output_v2.txt
 
-# IDE
-.idea/
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Node modules
+node_modules/
+.pnpm-store/
+
+# IDE settings
 .vscode/
+.idea/
+
+# System files
 .DS_Store
+Thumbs.db
 
-# npm artifacts
+# Phase 2 artifacts
+test_output_py.txt
+packages/sdk-py/src/mplp/mplp.egg-info/
+packages/sdk-py/dist/
 *.tgz
-
-# packages
-packages/*/node_modules/
-packages/*/dist/
-packages/*/coverage/
-packages/*/tsconfig.tsbuildinfo
-
-# env
-.env
-.env.*

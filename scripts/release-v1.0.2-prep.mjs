@@ -23,11 +23,32 @@ if (rootPkg.mplp) rootPkg.mplp.protocolVersion = '1.0.0'; // Protocol version st
 fs.writeFileSync(ROOT_PKG, JSON.stringify(rootPkg, null, 2) + '\n');
 console.log(`Updated root package.json to ${VERSION}`);
 
-// Get all packages
-const packages = fs.readdirSync(PACKAGES_DIR).filter(p => fs.statSync(path.join(PACKAGES_DIR, p)).isDirectory());
+// Get all packages (Recursive)
+function getPackageDirs(dir) {
+    let results = [];
+    const list = fs.readdirSync(dir);
+    list.forEach(file => {
+        const fullPath = path.join(dir, file);
+        const stat = fs.statSync(fullPath);
+        if (stat && stat.isDirectory()) {
+            if (fs.existsSync(path.join(fullPath, 'package.json'))) {
+                results.push(fullPath);
+            }
+            // Recurse into 'integration' or other container dirs if they don't have package.json
+            // or even if they do (though MPLP structure seems to be leaf-only packages)
+            // But 'integration' folder itself doesn't have package.json, so we recurse.
+            else {
+                results = results.concat(getPackageDirs(fullPath));
+            }
+        }
+    });
+    return results;
+}
 
-packages.forEach(pkgName => {
-    const pkgDir = path.join(PACKAGES_DIR, pkgName);
+const packageDirs = getPackageDirs(PACKAGES_DIR);
+
+packageDirs.forEach(pkgDir => {
+    const pkgName = path.basename(pkgDir);
     const pkgJsonPath = path.join(pkgDir, 'package.json');
 
     if (!fs.existsSync(pkgJsonPath)) return;

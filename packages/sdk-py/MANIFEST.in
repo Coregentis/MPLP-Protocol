@@ -1,0 +1,9 @@
+graft src
+graft examples
+include README.md
+include LICENSE
+include CHANGELOG.md
+prune tests
+prune internal
+prune scripts
+global-exclude *.py[cod]

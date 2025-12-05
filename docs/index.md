@@ -439,3 +439,6 @@ For enterprise adoption, integration partnerships, or protocol collaborations:
 <div align="center">
   <sub>Built for the future of Agentic AI. Vendor-neutral. Schema-driven. Lifecycle-governed.</sub>
 </div>
+
+© 2025 邦士（北京）网络科技有限公司
+Licensed under the Apache License, Version 2.0.

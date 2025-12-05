@@ -1,0 +1,200 @@
+{
+  "$comment": "MPLP v1.0.0 FROZEN – © 2025 邦士（北京）网络科技有限公司 – Apache-2.0 – Governance: MPGC",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.mplp.dev/v1.0/common/learning-sample.schema.json",
+  "title": "MPLP Learning Sample – Schema v2.0",
+  "description": "Structured learning sample for MPLP v1.0 runtimes.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "sample_id": {
+      "$ref": "identifiers.schema.json",
+      "description": "Unique identifier for this learning sample."
+    },
+    "project_id": {
+      "type": "string",
+      "description": "Project identifier this sample belongs to."
+    },
+    "intent_before": {
+      "type": "object",
+      "description": "Structured representation of the original intent (can reference Context/Plan).",
+      "additionalProperties": true
+    },
+    "plan": {
+      "type": "object",
+      "description": "Structured representation of the plan used (can reference Plan module).",
+      "additionalProperties": true
+    },
+    "delta_intents": {
+      "type": "array",
+      "description": "Array of delta intents proposed/applied.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "graph_before": {
+      "type": "object",
+      "description": "Optional snapshot or summary of the knowledge graph before the change.",
+      "additionalProperties": true
+    },
+    "graph_after": {
+      "type": "object",
+      "description": "Optional snapshot or summary of the knowledge graph after the change.",
+      "additionalProperties": true
+    },
+    "pipeline_path": {
+      "type": "array",
+      "description": "Sequence of pipeline stages traversed.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "success_flag": {
+      "type": "boolean",
+      "description": "Whether the action/intent succeeded."
+    },
+    "error_info": {
+      "type": "object",
+      "description": "Error details if action failed.",
+      "additionalProperties": false,
+      "properties": {
+        "error_code": {
+          "type": "string"
+        },
+        "error_message": {
+          "type": "string"
+        },
+        "stack_trace": {
+          "type": "string"
+        }
+      }
+    },
+    "token_usage": {
+      "type": "object",
+      "description": "LLM token consumption metrics.",
+      "additionalProperties": false,
+      "properties": {
+        "total_tokens": {
+          "type": "number",
+          "minimum": 0
+        },
+        "prompt_tokens": {
+          "type": "number",
+          "minimum": 0
+        },
+        "completion_tokens": {
+          "type": "number",
+          "minimum": 0
+        },
+        "by_agent": {
+          "type": "array",
+          "description": "Token usage breakdown by agent.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "agent_id": {
+                "type": "string"
+              },
+              "role": {
+                "type": "string"
+              },
+              "tokens": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "agent_id",
+              "tokens"
+            ]
+          }
+        }
+      }
+    },
+    "execution_time_ms": {
+      "type": "number",
+      "description": "Execution time in milliseconds.",
+      "minimum": 0
+    },
+    "impact_score": {
+      "type": "number",
+      "description": "Impact score (0.0-1.0).",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "user_feedback": {
+      "type": "object",
+      "description": "Human feedback on the action/result.",
+      "additionalProperties": false,
+      "properties": {
+        "decision": {
+          "type": "string",
+          "enum": [
+            "approve",
+            "reject",
+            "override",
+            "unknown"
+          ]
+        },
+        "comment": {
+          "type": "string"
+        },
+        "rating": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 5
+        }
+      }
+    },
+    "governance_decisions": {
+      "type": "array",
+      "description": "Governance rules evaluated during execution.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "timestamps": {
+      "type": "object",
+      "description": "Execution timeline.",
+      "additionalProperties": false,
+      "properties": {
+        "started_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "completed_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "started_at"
+      ]
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional metadata (extensibility point).",
+      "additionalProperties": true
+    },
+    "vendor_extensions": {
+      "type": "object",
+      "description": "Optional vendor-specific extensions. Structure is implementation-defined and MUST NOT conflict with core protocol fields.",
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "sample_id",
+    "project_id",
+    "success_flag",
+    "timestamps"
+  ],
+  "x-mplp-meta": {
+    "protocolVersion": "1.0.0",
+    "frozen": true,
+    "freezeDate": "2025-12-03",
+    "governance": "MPGC"
+  }
+}

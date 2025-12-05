@@ -3,21 +3,58 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "mplp-sdk"
-version = "1.0.0-rc.1"
-description = "MPLP Protocol v1.0 Python SDK – schema v2 faithful models and builders"
-authors = [{ name = "MPLP Protocol Team", email = "dev@mplp.dev" }]
+name = "mplp"
+version = "1.0.0"
+description = "Python SDK and reference runtime for the MPLP Protocol v1.0.0 (Multi-Agent Lifecycle Protocol)."
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+
+authors = [
+  { name = "邦士（北京）网络科技有限公司" }
+]
+
+keywords = ["MPLP", "multi-agent", "protocol", "AI agents", "lifecycle", "trace", "runtime"]
+
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Software Development :: Libraries",
+  "Topic :: Software Development :: Libraries :: Application Frameworks",
+  "Typing :: Typed"
+]
+
 dependencies = [
   "pydantic>=2.0,<3.0",
 ]
+
+[project.urls]
+Homepage = "https://coregentis.github.io/MPLP-Protocol/"
+Documentation = "https://coregentis.github.io/MPLP-Protocol/sdk-python"
+Source = "https://github.com/coregentis/MPLP-Protocol"
+Tracker = "https://github.com/coregentis/MPLP-Protocol/issues"
 
 [project.optional-dependencies]
 dev = [
   "pytest>=7.0",
   "mypy>=1.0",
+  "datamodel-code-generator>=0.25.0",
 ]
 
-[tool.setuptools.packages.find]
-where = ["src"]
+[tool.mplp]
+protocolVersion = "1.0.0"
+frozen = true
+governance = "MPGC"
+layer = "L2-L3"
+
+[tool.setuptools]
+packages = ["mplp"]
+package-dir = {"" = "src"}
+
+[tool.setuptools.exclude-package-data]
+"mplp" = ["tests/*", "internal/*", "scripts/*", "*.txt"]
