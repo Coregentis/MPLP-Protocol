@@ -7,10 +7,7 @@
     "start": "ts-node src/index.ts"
   },
   "dependencies": {
-    "@mplp/core": "workspace:*",
-    "@mplp/coordination": "workspace:*",
-    "@mplp/runtime-minimal": "workspace:*",
-    "@mplp/integration-storage-fs": "workspace:*"
+    "@mplp/sdk-ts": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

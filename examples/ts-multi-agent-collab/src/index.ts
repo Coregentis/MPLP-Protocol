@@ -10,8 +10,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  */
 
-import { runSingleAgentFlow } from "@mplp/reference-runtime";
-import { SingleAgentFlowContract } from "@mplp/coordination";
+import { runSingleAgentFlow, SingleAgentFlowContract } from "@mplp/sdk-ts";
 
 // TODO: This example is a placeholder for the future Multi-Agent collaboration flow.
 // It will be completed after the corresponding coordination contracts and Golden flows are finalized.

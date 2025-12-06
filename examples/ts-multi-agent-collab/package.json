@@ -7,9 +7,7 @@
     "start": "echo 'TODO: Implement multi-agent flow'"
   },
   "dependencies": {
-    "@mplp/core": "workspace:*",
-    "@mplp/coordination": "workspace:*",
-    "@mplp/runtime-minimal": "workspace:*"
+    "@mplp/sdk-ts": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

@@ -15,19 +15,18 @@ import {
     runSingleAgentFlow,
     InMemoryVSL,
     type RuntimeContext,
-    type RuntimeModuleRegistry
-} from "@mplp/reference-runtime";
-import { SingleAgentFlowContract } from "@mplp/coordination";
-import { JsonFsStorage } from "@mplp/integration-storage-fs";
+    type RuntimeModuleRegistry,
+    SingleAgentFlowContract
+} from "@mplp/sdk-ts";
 import { join } from "path";
 
 async function main() {
     console.log("Starting Single Agent Basic Example...");
 
-    // 1. Setup Storage (Optional, just to show integration usage)
-    const storage = new JsonFsStorage({ baseDir: join(__dirname, "../data") });
-    await storage.write("startup-log", { startedAt: new Date().toISOString() });
-    console.log("Startup log written to data/startup-log.json");
+    // 1. Setup Storage (Skipped in minimal example)
+    // const storage = new JsonFsStorage({ baseDir: join(__dirname, "../data") });
+    // await storage.write("startup-log", { startedAt: new Date().toISOString() });
+    console.log("Startup log skipped (storage integration not available)");
 
     // 2. Setup Runtime Context
     const runtimeContext: RuntimeContext = {

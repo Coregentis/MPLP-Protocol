@@ -11,3 +11,5 @@ export * from "./builders/plan-builder";
 export * from "./builders/confirm-builder";
 export * from "./builders/trace-builder";
 export * from "./client/runtime-client";
+export * from "./coordination";
+export * from "./runtime-minimal";
