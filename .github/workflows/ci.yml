@@ -28,7 +28,7 @@ jobs:
         run: pnpm run lint
 
       - name: Validate Schemas
-        run: node validate_schemas_simple.js
+        run: npx ts-node scripts/validate-schemas.ts
 
       - name: Golden Test Suite (TypeScript)
         run: pnpm test:golden
