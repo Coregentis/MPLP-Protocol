@@ -2,11 +2,9 @@ name: CI
 
 on:
   push:
-    paths:
-      - "V1.0-release/**"
+    branches: ["main"]
   pull_request:
-    paths:
-      - "V1.0-release/**"
+    branches: ["main"]
 
 jobs:
   build:
@@ -24,19 +22,15 @@ jobs:
         run: npm install -g pnpm
 
       - name: Install dependencies
-        working-directory: V1.0-release
         run: pnpm install || pnpm install --no-frozen-lockfile
 
       - name: Lint placeholder
-        working-directory: V1.0-release
         run: pnpm run lint
 
       - name: Validate Schemas
-        working-directory: V1.0-release
         run: node validate_schemas_simple.js
 
       - name: Golden Test Suite (TypeScript)
-        working-directory: V1.0-release
         run: pnpm test:golden
 
       - name: Setup Python
@@ -45,15 +39,12 @@ jobs:
           python-version: "3.12"
 
       - name: Install Python dependencies
-        working-directory: V1.0-release
         run: |
           python -m pip install --upgrade pip
           pip install pytest pydantic
 
       - name: Golden Test Suite (Python)
-        working-directory: V1.0-release
         run: python -m pytest packages/sdk-py/tests/golden/ -v
 
       - name: Test placeholder
-        working-directory: V1.0-release
         run: pnpm run test
