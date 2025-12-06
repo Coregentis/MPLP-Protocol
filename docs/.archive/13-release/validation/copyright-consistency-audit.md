@@ -1,1 +1,0 @@
-# P7D.7 - Copyright Holder Consistency Audit\n\n**Files Scanned**: 100\n**Issues Found**: 2\n\n## Issues\n\n- docs\13-release\validation\copyright-consistency-audit.md: Copyright present but wrong holder\n- docs\13-release\validation\frozen-header-audit.md: Copyright present but wrong holder\n

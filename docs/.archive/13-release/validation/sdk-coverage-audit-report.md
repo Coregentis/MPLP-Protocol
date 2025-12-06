@@ -1,1 +1,0 @@
-# P7D.4 - SDK Coverage Reality Audit\n\n## Current SDK Status\n\n- ✅ **Python SDK**: Exists (`packages/sdk-py`)\n- ❌ **TypeScript SDK**: Does NOT exist\n- ❌ **Java SDK**: Does NOT exist\n- ❌ **Go SDK**: Does NOT exist\n\n**Issues Found**: 1\n\n## Issues\n\n- go-sdk-guide.md: Claims Go SDK exists\n
