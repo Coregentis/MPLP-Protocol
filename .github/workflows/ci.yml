@@ -28,7 +28,9 @@ jobs:
         run: pnpm run lint
 
       - name: Validate Schemas
-        run: pnpm exec node --loader ts-node/esm scripts/validate-schemas.ts
+        run: |
+          npx tsc scripts/validate-schemas.ts --target es2020 --module commonjs --esModuleInterop --skipLibCheck
+          node scripts/validate-schemas.js
 
       - name: Golden Test Suite (TypeScript)
         run: pnpm test:golden
