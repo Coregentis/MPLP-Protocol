@@ -1,0 +1,10 @@
+﻿{
+    "label":  "Operations",
+    "link":  {
+                 "type":  "generated-index",
+                 "description":  "Deployment, monitoring, and operational runbooks."
+             },
+    "position":  15,
+    "collapsed":  true,
+    "collapsible":  true
+}

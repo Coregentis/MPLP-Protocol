@@ -1,0 +1,10 @@
+﻿{
+    "label":  "Tests",
+    "link":  {
+                 "type":  "generated-index",
+                 "description":  "Golden test suite and compliance testing."
+             },
+    "position":  10,
+    "collapsed":  true,
+    "collapsible":  true
+}

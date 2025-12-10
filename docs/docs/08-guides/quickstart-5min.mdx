@@ -1,0 +1,48 @@
+﻿---
+title: 5-Minute Quickstart Guide
+description: Validate the MPLP schemas and run a basic agent flow in under 5 minutes.
+---
+
+import Link from '@docusaurus/Link';
+
+# 5-Minute Quickstart
+
+This guide helps you validate MPLP protocol schemas and execute a minimal Golden Flow.
+
+---
+
+## 1. Clone & Install
+
+```bash
+git clone https://github.com/Coregentis/MPLP-Protocol.git
+cd MPLP-Protocol
+pnpm install
+```
+
+---
+
+## 2. Validate Protocol Schemas
+
+```bash
+pnpm test:schema
+```
+
+If the validation succeeds, your environment is MPLP-ready.
+
+---
+
+## 3. Run a Golden Flow
+
+```bash
+cd examples/ts-golden-flows
+pnpm run flow:01
+```
+
+You should see a trace of MPLP envelopes moving through the lifecycle.
+
+---
+
+## Next Steps
+
+* <Link to="/guides/mplp-v1.0-compliance-checklist">Compliance Checklist</Link>
+* <Link to="/sdk/ts-sdk-guide">TypeScript SDK</Link>

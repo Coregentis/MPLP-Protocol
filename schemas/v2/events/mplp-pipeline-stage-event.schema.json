@@ -1,0 +1,62 @@
+{
+  "$comment": "MPLP v1.0.0 FROZEN – © 2025 Bangshi Beijing Network Technology Limited Company – Apache-2.0 – Governance: MPGC",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://mplp.dev/schemas/v1.0/events/mplp-pipeline-stage-event.schema.json",
+  "title": "MPLP PipelineStageEvent v1.0",
+  "description": "**REQUIRED** - Pipeline stage transition events (MANDATORY for v1.0 compliance)",
+  "allOf": [
+    {
+      "$ref": "mplp-event-core.schema.json"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "event_family": {
+          "const": "pipeline_stage",
+          "description": "Must be 'pipeline_stage' for this event type"
+        },
+        "pipeline_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Pipeline instance identifier"
+        },
+        "stage_id": {
+          "type": "string",
+          "description": "Stage identifier (e.g., 'import', 'analyze', 'execute')"
+        },
+        "stage_name": {
+          "type": "string",
+          "description": "Human-readable stage name"
+        },
+        "stage_status": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "running",
+            "completed",
+            "failed",
+            "skipped"
+          ],
+          "description": "Current status of the pipeline stage"
+        },
+        "stage_order": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Sequential order of this stage in pipeline"
+        }
+      },
+      "required": [
+        "event_family",
+        "pipeline_id",
+        "stage_id",
+        "stage_status"
+      ]
+    }
+  ],
+  "x-mplp-meta": {
+    "protocolVersion": "1.0.0",
+    "frozen": true,
+    "freezeDate": "2025-12-03",
+    "governance": "MPGC"
+  }
+}

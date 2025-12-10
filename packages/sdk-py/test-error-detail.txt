@@ -1,0 +1,67 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.12.7, pytest-7.4.3, pluggy-1.6.0 -- C:\Users\jearo\anaconda3\python.exe
+cachedir: .pytest_cache
+metadata: {'Python': '3.12.7', 'Platform': 'Windows-11-10.0.26200-SP0', 'Packages': {'pytest': '7.4.3', 'pluggy': '1.6.0'}, 'Plugins': {'anyio': '4.9.0', 'Faker': '37.0.0', 'langsmith': '0.4.1', 'asyncio': '0.21.1', 'cov': '6.2.1', 'html': '4.1.1', 'json-report': '1.5.0', 'metadata': '3.1.1', 'mock': '3.14.1', 'timeout': '2.4.0', 'xdist': '3.7.0', 'typeguard': '4.4.4'}}
+rootdir: E:\Coregentis\MPLP\mplp-v1.0 - 副本\V1.0-release\packages\sdk-py
+plugins: anyio-4.9.0, Faker-37.0.0, langsmith-0.4.1, asyncio-0.21.1, cov-6.2.1, html-4.1.1, json-report-1.5.0, metadata-3.1.1, mock-3.14.1, timeout-2.4.0, xdist-3.7.0, typeguard-4.4.4
+asyncio: mode=Mode.STRICT
+collecting ... collected 1 item
+
+tests/cross_language/test_builders_cross_language.py::test_python_builders_cross_language FAILED [100%]
+
+================================== FAILURES ===================================
+_____________________ test_python_builders_cross_language _____________________
+
+    def test_python_builders_cross_language():
+        """Generate JSON from canonical fixture using Python builders"""
+    
+        # Ensure output directory exists
+        OUT_DIR.mkdir(parents=True, exist_ok=True)
+    
+        # Load input fixture
+        input_path = FIXTURES_DIR / "single-agent-input.json"
+        with open(input_path, 'r') as f:
+>           input_data = json.load(f)
+
+tests\cross_language\test_builders_cross_language.py:45: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+fp = <_io.TextIOWrapper name='E:\\Coregentis\\MPLP\\mplp-v1.0 - 副本\\V1.0-release\\tests\\cross-language\\builders\\fixtures\\single-agent-input.json' mode='r' encoding='cp936'>
+cls = None, object_hook = None, parse_float = None, parse_int = None
+parse_constant = None, object_pairs_hook = None, kw = {}
+
+    def load(fp, *, cls=None, object_hook=None, parse_float=None,
+            parse_int=None, parse_constant=None, object_pairs_hook=None, **kw):
+        """Deserialize ``fp`` (a ``.read()``-supporting file-like object containing
+        a JSON document) to a Python object.
+    
+        ``object_hook`` is an optional function that will be called with the
+        result of any object literal decode (a ``dict``). The return value of
+        ``object_hook`` will be used instead of the ``dict``. This feature
+        can be used to implement custom decoders (e.g. JSON-RPC class hinting).
+    
+        ``object_pairs_hook`` is an optional function that will be called with the
+        result of any object literal decoded with an ordered list of pairs.  The
+        return value of ``object_pairs_hook`` will be used instead of the ``dict``.
+        This feature can be used to implement custom decoders.  If ``object_hook``
+        is also defined, the ``object_pairs_hook`` takes priority.
+    
+        To use a custom ``JSONDecoder`` subclass, specify it with the ``cls``
+        kwarg; otherwise ``JSONDecoder`` is used.
+        """
+>       return loads(fp.read(),
+            cls=cls, object_hook=object_hook,
+            parse_float=parse_float, parse_int=parse_int,
+            parse_constant=parse_constant, object_pairs_hook=object_pairs_hook, **kw)
+E       UnicodeDecodeError: 'gbk' codec can't decode byte 0x94 in position 41: illegal multibyte sequence
+
+C:\Users\jearo\anaconda3\Lib\json\__init__.py:293: UnicodeDecodeError
+============================== warnings summary ===============================
+C:\Users\jearo\anaconda3\Lib\site-packages\pydantic\_internal\_config.py:295: 10 warnings
+  C:\Users\jearo\anaconda3\Lib\site-packages\pydantic\_internal\_config.py:295: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.10/migration/
+    warnings.warn(DEPRECATION_MESSAGE, DeprecationWarning)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/cross_language/test_builders_cross_language.py::test_python_builders_cross_language
+======================= 1 failed, 10 warnings in 0.23s ========================

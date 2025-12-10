@@ -1,0 +1,10 @@
+﻿{
+    "label":  "Release",
+    "link":  {
+                 "type":  "generated-index",
+                 "description":  "Release notes and migration guides."
+             },
+    "position":  14,
+    "collapsed":  true,
+    "collapsible":  true
+}

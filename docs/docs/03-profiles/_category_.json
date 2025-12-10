@@ -1,0 +1,10 @@
+﻿{
+    "label":  "Profiles",
+    "link":  {
+                 "type":  "generated-index",
+                 "description":  "SA (Single-Agent) and MAP (Multi-Agent) execution profiles."
+             },
+    "position":  4,
+    "collapsed":  true,
+    "collapsible":  true
+}

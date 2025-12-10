@@ -1,0 +1,10 @@
+﻿{
+    "label":  "Observability",
+    "link":  {
+                 "type":  "generated-index",
+                 "description":  "Event taxonomy, trace formats, and observability invariants."
+             },
+    "position":  5,
+    "collapsed":  true,
+    "collapsible":  true
+}

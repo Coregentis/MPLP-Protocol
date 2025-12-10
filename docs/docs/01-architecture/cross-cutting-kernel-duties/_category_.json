@@ -1,0 +1,10 @@
+{
+    "label": "Cross-Cutting Kernel Duties (11 OS-Level Duties)",
+    "position": 10,
+    "collapsible": true,
+    "collapsed": false,
+    "link": {
+        "type": "generated-index",
+        "description": "The 11 OS-Level Kernel Duties that apply across every lifecycle stage, agent, and runtime in MPLP."
+    }
+}

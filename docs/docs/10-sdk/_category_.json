@@ -1,0 +1,10 @@
+{
+    "label": "SDK",
+    "position": 11,
+    "collapsible": true,
+    "collapsed": true,
+    "link": {
+        "type": "generated-index",
+        "description": "TypeScript and Python SDKs for building MPLP-compliant agent systems."
+    }
+}

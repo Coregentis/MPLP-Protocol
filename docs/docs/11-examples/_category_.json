@@ -1,0 +1,10 @@
+﻿{
+    "label":  "Examples",
+    "link":  {
+                 "type":  "generated-index",
+                 "description":  "Example flows and implementation patterns."
+             },
+    "position":  12,
+    "collapsed":  true,
+    "collapsible":  true
+}

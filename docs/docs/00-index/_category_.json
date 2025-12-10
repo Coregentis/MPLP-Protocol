@@ -1,0 +1,10 @@
+﻿{
+    "label":  "Reference",
+    "link":  {
+                 "type":  "generated-index",
+                 "description":  "Protocol overview, glossary, and quick reference."
+             },
+    "position":  1,
+    "collapsed":  true,
+    "collapsible":  true
+}

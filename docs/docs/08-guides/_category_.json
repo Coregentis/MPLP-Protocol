@@ -1,0 +1,10 @@
+﻿{
+    "label":  "Guides",
+    "link":  {
+                 "type":  "generated-index",
+                 "description":  "Quick start, compliance guides, and best practices."
+             },
+    "position":  9,
+    "collapsed":  true,
+    "collapsible":  true
+}

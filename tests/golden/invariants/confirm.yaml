@@ -1,0 +1,27 @@
+# MPLP Protocol v1.0.0 — Frozen Specification
+# Freeze Date: 2025-12-03
+# Status: FROZEN (no breaking changes permitted)
+# Governance: MPLP Protocol Governance Committee (MPGC)
+# © 2025 邦士（北京）网络科技有限公司
+# License: Apache-2.0
+# Any normative change requires a new protocol version.
+
+- id: confirm_id_must_be_uuid
+  path: confirm_id
+  rule: uuid-v4
+  description: "Confirm ID must be a valid UUID v4"
+
+- id: confirm_target_match
+  path: target_id
+  rule: eq(plan.plan_id)
+  description: "Confirm target_id must match Plan ID"
+
+- id: status_must_be_valid_enum
+  path: status
+  rule: one-of(["approved", "rejected"])
+  description: "Status must be either approved or rejected"
+
+- id: rejected_must_have_reason
+  path: reason
+  rule: if(status == "rejected", non-empty-string)
+  description: "Reason is required if status is rejected"

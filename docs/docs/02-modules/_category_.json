@@ -1,0 +1,10 @@
+﻿{
+    "label":  "Modules",
+    "link":  {
+                 "type":  "generated-index",
+                 "description":  "10 core protocol modules: Context, Plan, Confirm, Trace, and more."
+             },
+    "position":  3,
+    "collapsed":  true,
+    "collapsible":  true
+}

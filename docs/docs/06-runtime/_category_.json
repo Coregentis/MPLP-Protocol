@@ -1,0 +1,10 @@
+﻿{
+    "label":  "Runtime",
+    "link":  {
+                 "type":  "generated-index",
+                 "description":  "Runtime glue specifications: PSG, AEL, VSL, drift detection."
+             },
+    "position":  7,
+    "collapsed":  true,
+    "collapsible":  true
+}

@@ -1,0 +1,115 @@
+{
+  "$comment": "MPLP v1.0.0 FROZEN – © 2025 Bangshi Beijing Network Technology Limited Company – Apache-2.0 – Governance: MPGC",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://mplp.dev/schemas/v1.0/events/mplp-sa-event.schema.json",
+  "title": "MPLP SA Event v1.0",
+  "description": "Events emitted by a Single Agent (SA) execution in MPLP v1.0 protocol",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier for this event"
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "SAInitialized",
+        "SAContextLoaded",
+        "SAPlanEvaluated",
+        "SAStepStarted",
+        "SAStepCompleted",
+        "SAStepFailed",
+        "SATraceEmitted",
+        "SACompleted"
+      ],
+      "description": "Type of SA lifecycle event"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when event occurred"
+    },
+    "sa_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Identifier of the SA instance emitting this event"
+    },
+    "context_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Context ID bound to this SA execution"
+    },
+    "plan_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Plan ID being executed by this SA"
+    },
+    "trace_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Trace ID where this event is recorded"
+    },
+    "payload": {
+      "type": "object",
+      "description": "Event-specific data payload",
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "event_id",
+    "event_type",
+    "timestamp",
+    "sa_id"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "step_started_payload": {
+      "type": "object",
+      "properties": {
+        "step_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "agent_role": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "step_id"
+      ]
+    },
+    "step_completed_payload": {
+      "type": "object",
+      "properties": {
+        "step_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "completed",
+            "failed"
+          ]
+        },
+        "result": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "step_id",
+        "status"
+      ]
+    }
+  },
+  "x-mplp-meta": {
+    "protocolVersion": "1.0.0",
+    "frozen": true,
+    "freezeDate": "2025-12-03",
+    "governance": "MPGC"
+  }
+}

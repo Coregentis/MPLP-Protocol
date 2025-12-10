@@ -1,0 +1,10 @@
+﻿{
+    "label":  "Architecture",
+    "link":  {
+                 "type":  "generated-index",
+                 "description":  "L1-L4 architecture layers and design principles."
+             },
+    "position":  2,
+    "collapsed":  true,
+    "collapsible":  true
+}

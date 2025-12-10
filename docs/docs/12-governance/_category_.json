@@ -1,0 +1,10 @@
+﻿{
+    "label":  "Governance",
+    "link":  {
+                 "type":  "generated-index",
+                 "description":  "Versioning policy, MIP process, and security policies."
+             },
+    "position":  13,
+    "collapsed":  true,
+    "collapsible":  true
+}

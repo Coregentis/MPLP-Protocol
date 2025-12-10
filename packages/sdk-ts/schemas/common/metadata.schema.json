@@ -1,0 +1,119 @@
+{
+  "$comment": "MPLP v1.0.0 FROZEN – © 2025 邦士（北京）网络科技有限公司 – Apache-2.0 – Governance: MPGC",
+  "$id": "https://schemas.mplp.dev/v1.0/common/metadata.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MPLP Metadata",
+  "description": "Common metadata structure for all MPLP objects. Provides version control, creation info, tags, and cross-cutting concern declarations. All top-level objects in L2/L3/L4 should include the meta field.",
+  "type": "object",
+  "properties": {
+    "protocol_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "MPLP protocol version, using Semantic Versioning.",
+      "examples": [
+        "1.0.0",
+        "1.1.0"
+      ]
+    },
+    "schema_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "Schema version used by the current object, using Semantic Versioning.",
+      "examples": [
+        "2.0.0",
+        "2.1.0"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Object creation time (ISO 8601 format).",
+      "examples": [
+        "2025-01-28T15:30:00.000Z"
+      ]
+    },
+    "created_by": {
+      "type": "string",
+      "description": "Creator identifier (User ID / Agent Name / System ID).",
+      "examples": [
+        "user-123",
+        "agent-planner",
+        "system"
+      ]
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Object last update time (ISO 8601 format).",
+      "examples": [
+        "2025-01-28T16:45:00.000Z"
+      ]
+    },
+    "updated_by": {
+      "type": "string",
+      "description": "Last updater identifier.",
+      "examples": [
+        "user-456",
+        "agent-executor"
+      ]
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Set of tags for indexing/search. Supports custom classification and retrieval.",
+      "uniqueItems": true,
+      "examples": [
+        [
+          "production",
+          "high-priority"
+        ],
+        [
+          "development",
+          "experimental"
+        ]
+      ]
+    },
+    "cross_cutting": {
+      "type": "array",
+      "description": "Declares cross-cutting concerns enabled for the current object (one of the 9 concerns in Governance Plane).",
+      "items": {
+        "type": "string",
+        "enum": [
+          "coordination",
+          "error-handling",
+          "event-bus",
+          "orchestration",
+          "performance",
+          "protocol-version",
+          "security",
+          "state-sync",
+          "transaction"
+        ]
+      },
+      "uniqueItems": true,
+      "examples": [
+        [
+          "security",
+          "transaction"
+        ],
+        [
+          "performance",
+          "event-bus"
+        ]
+      ]
+    }
+  },
+  "required": [
+    "protocol_version",
+    "schema_version"
+  ],
+  "additionalProperties": false,
+  "x-mplp-meta": {
+    "protocolVersion": "1.0.0",
+    "frozen": true,
+    "freezeDate": "2025-12-03",
+    "governance": "MPGC"
+  }
+}
