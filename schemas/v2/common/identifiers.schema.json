@@ -1,0 +1,19 @@
+{
+  "$comment": "MPLP v1.0.0 FROZEN – © 2025 Bangshi Beijing Network Technology Limited Company – Apache-2.0 – Governance: MPGC",
+  "$id": "https://schemas.mplp.dev/v1.0/common/identifiers.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MPLP Identifier",
+  "description": "Unified identifier type used for contextId/planId/traceId/eventId, etc. Uses UUID v4 standard to ensure global uniqueness and collision-free generation in distributed environments.",
+  "type": "string",
+  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+  "examples": [
+    "123e4567-e89b-12d3-a456-426614174000",
+    "550e8400-e29b-41d4-a716-446655440000"
+  ],
+  "x-mplp-meta": {
+    "protocolVersion": "1.0.0",
+    "frozen": true,
+    "freezeDate": "2025-12-03",
+    "governance": "MPGC"
+  }
+}

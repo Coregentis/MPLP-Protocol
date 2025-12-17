@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install || pnpm install --no-frozen-lockfile
+
+      - name: Lint placeholder
+        run: pnpm run lint
+
+      - name: Validate Schemas
+        run: |
+          npx tsc scripts/validate-schemas.ts --target es2020 --module commonjs --esModuleInterop --skipLibCheck
+          node scripts/validate-schemas.js
+
+      - name: Golden Test Suite (TypeScript)
+        run: pnpm test:golden
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest pydantic PyYAML
+          pip install -e packages/sdk-py
+
+      - name: Golden Test Suite (Python)
+        run: python -m pytest packages/sdk-py/tests/golden/ -v
+
+      - name: Test placeholder
+        run: pnpm run test

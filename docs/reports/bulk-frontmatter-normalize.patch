@@ -1,0 +1,45 @@
+--- a/00-index
++++ b/00-index
+(JSON modification not shown in unified diff for brevity)
+--- a/01-architecture
++++ b/01-architecture
+(JSON modification not shown in unified diff for brevity)
+--- a/02-modules
++++ b/02-modules
+(JSON modification not shown in unified diff for brevity)
+--- a/03-profiles
++++ b/03-profiles
+(JSON modification not shown in unified diff for brevity)
+--- a/04-observability
++++ b/04-observability
+(JSON modification not shown in unified diff for brevity)
+--- a/05-learning
++++ b/05-learning
+(JSON modification not shown in unified diff for brevity)
+--- a/06-runtime
++++ b/06-runtime
+(JSON modification not shown in unified diff for brevity)
+--- a/07-integration
++++ b/07-integration
+(JSON modification not shown in unified diff for brevity)
+--- a/08-guides
++++ b/08-guides
+(JSON modification not shown in unified diff for brevity)
+--- a/09-tests
++++ b/09-tests
+(JSON modification not shown in unified diff for brevity)
+--- a/11-examples
++++ b/11-examples
+(JSON modification not shown in unified diff for brevity)
+--- a/12-governance
++++ b/12-governance
+(JSON modification not shown in unified diff for brevity)
+--- a/13-release
++++ b/13-release
+(JSON modification not shown in unified diff for brevity)
+--- a/14-ops
++++ b/14-ops
+(JSON modification not shown in unified diff for brevity)
+--- a/99-meta
++++ b/99-meta
+(JSON modification not shown in unified diff for brevity)

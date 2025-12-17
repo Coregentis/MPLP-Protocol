@@ -1,0 +1,46 @@
+{
+  "label": "Observability",
+  "link": {
+    "type": "doc",
+    "id": "observability/index"
+  },
+  "position": 5,
+  "collapsed": true,
+  "collapsible": true,
+  "customProps": {
+    "doc_status": "normative",
+    "doc_role": "normative_index",
+    "protocol_version": "1.0.0",
+    "spec_level": "CrossCutting",
+    "category_semantics": {
+      "scope": "Normative coverage for observability",
+      "guaranteed_behaviors": [
+        {
+          "statement": "Defines protocols for: Base Event, Core Event v1.0, PipelineStageEvent v1.0.",
+          "evidence": {
+            "schema_refs": [
+              "https://schemas.mplp.dev/v1.0/common/events.schema.json",
+              "https://mplp.dev/schemas/v1.0/events/mplp-event-core.schema.json",
+              "https://mplp.dev/schemas/v1.0/events/mplp-pipeline-stage-event.schema.json"
+            ]
+          }
+        },
+        {
+          "statement": "Guarantees behavioral invariants defined in 1 invariant specifications.",
+          "evidence": {
+            "invariant_refs": [
+              "tests/golden/invariants/trace.yaml"
+            ]
+          }
+        }
+      ],
+      "explicit_non_claims": [
+        "Does not define normative constraints not explicitly bound in 'guaranteed_behaviors'."
+      ],
+      "truth_binding": {
+        "binding_source": "MANUAL_PAGE_BINDING_MAP_v1.0.yaml",
+        "binding_type": "aggregate"
+      }
+    }
+  }
+}

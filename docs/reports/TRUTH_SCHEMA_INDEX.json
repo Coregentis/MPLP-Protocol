@@ -1,0 +1,629 @@
+{
+  "https://schemas.mplp.dev/v1.0/mplp-trace.schema.json": {
+    "filePath": "packages/sdk-ts/schemas/mplp-trace.schema.json",
+    "title": "MPLP Trace Module – Core Protocol v1.0",
+    "type": "object",
+    "properties": [
+      "meta",
+      "governance",
+      "trace_id",
+      "context_id",
+      "plan_id",
+      "root_span",
+      "status",
+      "started_at",
+      "finished_at",
+      "segments",
+      "events"
+    ],
+    "required": [
+      "meta",
+      "trace_id",
+      "context_id",
+      "root_span",
+      "status"
+    ],
+    "definitions": [],
+    "description": "Trace Module Core Protocol: Describes the minimal required semantics (Core Profile) for execution trace resources (Trace) and their key segments and events."
+  },
+  "https://schemas.mplp.dev/v1.0/mplp-role.schema.json": {
+    "filePath": "packages/sdk-ts/schemas/mplp-role.schema.json",
+    "title": "MPLP Role Module – Core Protocol v1.0",
+    "type": "object",
+    "properties": [
+      "meta",
+      "governance",
+      "role_id",
+      "name",
+      "description",
+      "capabilities",
+      "created_at",
+      "updated_at",
+      "trace",
+      "events"
+    ],
+    "required": [
+      "meta",
+      "role_id",
+      "name"
+    ],
+    "definitions": [],
+    "description": "Role Module Core Protocol: Describes the minimal required semantics (Core Profile) for capability declarations, permission declarations, and behavioral identity models in multi-agent systems."
+  },
+  "https://schemas.mplp.dev/v1.0/mplp-plan.schema.json": {
+    "filePath": "packages/sdk-ts/schemas/mplp-plan.schema.json",
+    "title": "MPLP Plan Module – Core Protocol v1.0",
+    "type": "object",
+    "properties": [
+      "meta",
+      "plan_id",
+      "context_id",
+      "title",
+      "objective",
+      "status",
+      "steps",
+      "trace",
+      "events"
+    ],
+    "required": [
+      "meta",
+      "plan_id",
+      "context_id",
+      "title",
+      "objective",
+      "status",
+      "steps"
+    ],
+    "definitions": [],
+    "description": "Plan Module Core Protocol: Describes the plan objects and their lifecycle minimal required semantics (Core Profile) in multi-agent collaboration."
+  },
+  "https://schemas.mplp.dev/v1.0/mplp-network.schema.json": {
+    "filePath": "packages/sdk-ts/schemas/mplp-network.schema.json",
+    "title": "MPLP Network Module – Core Protocol v1.0",
+    "type": "object",
+    "properties": [
+      "meta",
+      "governance",
+      "network_id",
+      "context_id",
+      "name",
+      "description",
+      "topology_type",
+      "status",
+      "nodes",
+      "trace",
+      "events"
+    ],
+    "required": [
+      "meta",
+      "network_id",
+      "context_id",
+      "name",
+      "topology_type",
+      "status"
+    ],
+    "definitions": [],
+    "description": "Network Module Core Protocol: Describes the minimal required semantics (Core Profile) for the topology and node collection of a multi-agent collaboration network."
+  },
+  "https://schemas.mplp.dev/v1.0/mplp-extension.schema.json": {
+    "filePath": "packages/sdk-ts/schemas/mplp-extension.schema.json",
+    "title": "MPLP Extension Module – Core Protocol v1.0",
+    "type": "object",
+    "properties": [
+      "meta",
+      "governance",
+      "extension_id",
+      "context_id",
+      "name",
+      "extension_type",
+      "version",
+      "status",
+      "config",
+      "trace",
+      "events"
+    ],
+    "required": [
+      "meta",
+      "extension_id",
+      "context_id",
+      "name",
+      "extension_type",
+      "version",
+      "status"
+    ],
+    "definitions": [],
+    "description": "Extension Module Core Protocol: Describes the minimal required semantics (Core Profile) for the MPLP plugin system, capability injection, and protocol enhancement points."
+  },
+  "https://schemas.mplp.dev/v1.0/mplp-dialog.schema.json": {
+    "filePath": "packages/sdk-ts/schemas/mplp-dialog.schema.json",
+    "title": "MPLP Dialog Module – Core Protocol v1.0",
+    "type": "object",
+    "properties": [
+      "meta",
+      "governance",
+      "dialog_id",
+      "context_id",
+      "thread_id",
+      "status",
+      "messages",
+      "started_at",
+      "ended_at",
+      "trace",
+      "events"
+    ],
+    "required": [
+      "meta",
+      "dialog_id",
+      "context_id",
+      "status",
+      "messages"
+    ],
+    "definitions": [],
+    "description": "Dialog Module Core Protocol: Describes the dialog interaction semantics in multi-agent systems, adopting Minimal Protocol Format aligned with OpenAI/Anthropic standards."
+  },
+  "https://schemas.mplp.dev/v1.0/mplp-core.schema.json": {
+    "filePath": "packages/sdk-ts/schemas/mplp-core.schema.json",
+    "title": "MPLP Core Module – Core Protocol v1.0",
+    "type": "object",
+    "properties": [
+      "meta",
+      "governance",
+      "core_id",
+      "protocol_version",
+      "status",
+      "modules",
+      "trace",
+      "events"
+    ],
+    "required": [
+      "meta",
+      "core_id",
+      "protocol_version",
+      "status",
+      "modules"
+    ],
+    "definitions": [],
+    "description": "Core Module Core Protocol: Describes the minimal required semantics (Core Profile) for an MPLP protocol instance's version, enabled modules, and overall state."
+  },
+  "https://schemas.mplp.dev/v1.0/mplp-context.schema.json": {
+    "filePath": "packages/sdk-ts/schemas/mplp-context.schema.json",
+    "title": "MPLP Context Module – Core Protocol v1.0",
+    "type": "object",
+    "properties": [
+      "meta",
+      "governance",
+      "context_id",
+      "root",
+      "title",
+      "summary",
+      "status",
+      "tags",
+      "language",
+      "owner_role",
+      "constraints",
+      "created_at",
+      "updated_at",
+      "trace",
+      "events"
+    ],
+    "required": [
+      "meta",
+      "context_id",
+      "root",
+      "title",
+      "status"
+    ],
+    "definitions": [],
+    "description": "Context Module Core Protocol: Describes the context resources and their minimal required semantics (Core Profile) for a multi-agent collaboration project/session."
+  },
+  "https://schemas.mplp.dev/v1.0/mplp-confirm.schema.json": {
+    "filePath": "packages/sdk-ts/schemas/mplp-confirm.schema.json",
+    "title": "MPLP Confirm Module – Core Protocol v1.0",
+    "type": "object",
+    "properties": [
+      "meta",
+      "governance",
+      "confirm_id",
+      "target_type",
+      "target_id",
+      "status",
+      "requested_by_role",
+      "requested_at",
+      "reason",
+      "decisions",
+      "trace",
+      "events"
+    ],
+    "required": [
+      "meta",
+      "confirm_id",
+      "target_type",
+      "target_id",
+      "status",
+      "requested_by_role",
+      "requested_at"
+    ],
+    "definitions": [],
+    "description": "Confirm Module Core Protocol: Describes the minimal required semantics (Core Profile) for approval requests and decision records."
+  },
+  "https://schemas.mplp.dev/v1.0/mplp-collab.schema.json": {
+    "filePath": "packages/sdk-ts/schemas/mplp-collab.schema.json",
+    "title": "MPLP Collab Module – Core Protocol v1.0",
+    "type": "object",
+    "properties": [
+      "meta",
+      "governance",
+      "collab_id",
+      "context_id",
+      "title",
+      "purpose",
+      "mode",
+      "status",
+      "participants",
+      "created_at",
+      "updated_at",
+      "trace",
+      "events"
+    ],
+    "required": [
+      "meta",
+      "collab_id",
+      "context_id",
+      "title",
+      "purpose",
+      "mode",
+      "status",
+      "participants",
+      "created_at"
+    ],
+    "definitions": [],
+    "description": "Collab Module Core Protocol: Describes the minimal required semantics (Core Profile) for multi-agent / multi-role collaboration sessions."
+  },
+  "https://mplp.dev/schemas/v1.0/learning/mplp-learning-sample-intent.schema.json": {
+    "filePath": "packages/sdk-ts/schemas/learning/mplp-learning-sample-intent.schema.json",
+    "title": "MPLP LearningSample – Intent Resolution v1.0",
+    "properties": [],
+    "required": [],
+    "definitions": [],
+    "description": "Specialized schema for intent_resolution samples capturing user intent clarification and plan generation"
+  },
+  "https://mplp.dev/schemas/v1.0/learning/mplp-learning-sample-delta.schema.json": {
+    "filePath": "packages/sdk-ts/schemas/learning/mplp-learning-sample-delta.schema.json",
+    "title": "MPLP LearningSample – Delta Impact v1.0",
+    "properties": [],
+    "required": [],
+    "definitions": [],
+    "description": "Specialized schema for delta_impact samples capturing change effect analysis and compensation planning"
+  },
+  "https://mplp.dev/schemas/v1.0/learning/mplp-learning-sample-core.schema.json": {
+    "filePath": "packages/sdk-ts/schemas/learning/mplp-learning-sample-core.schema.json",
+    "title": "MPLP LearningSample Core v1.0",
+    "type": "object",
+    "properties": [
+      "sample_id",
+      "sample_family",
+      "created_at",
+      "input",
+      "state",
+      "output",
+      "meta"
+    ],
+    "required": [
+      "sample_id",
+      "sample_family",
+      "created_at",
+      "input",
+      "output"
+    ],
+    "definitions": [],
+    "description": "Core structure for MPLP LearningSample entities - defines the universal format for learning samples generated from execution history"
+  },
+  "https://mplp.dev/schemas/v1.0/integration/mplp-tool-event.json": {
+    "filePath": "packages/sdk-ts/schemas/integration/mplp-tool-event.schema.json",
+    "title": "MPLP Tool Event v1.0",
+    "type": "object",
+    "properties": [
+      "tool_id",
+      "tool_kind",
+      "invocation_id",
+      "status",
+      "started_at",
+      "completed_at",
+      "exit_code",
+      "output_summary",
+      "args",
+      "working_directory"
+    ],
+    "required": [
+      "tool_id",
+      "tool_kind",
+      "invocation_id",
+      "status"
+    ],
+    "definitions": [],
+    "description": "External tool invocation and results (formatters, linters, test runners, generators)"
+  },
+  "https://mplp.dev/schemas/v1.0/integration/mplp-git-event.json": {
+    "filePath": "packages/sdk-ts/schemas/integration/mplp-git-event.schema.json",
+    "title": "MPLP Git Event v1.0",
+    "type": "object",
+    "properties": [
+      "repo_url",
+      "commit_id",
+      "ref_name",
+      "event_kind",
+      "author_name",
+      "author_email",
+      "commit_message",
+      "timestamp",
+      "files_changed",
+      "insertions",
+      "deletions",
+      "parent_commits"
+    ],
+    "required": [
+      "repo_url",
+      "commit_id",
+      "ref_name",
+      "event_kind",
+      "timestamp"
+    ],
+    "definitions": [],
+    "description": "Git operations (commit, push, branch/merge/tag)"
+  },
+  "https://mplp.dev/schemas/v1.0/integration/mplp-file-update-event.json": {
+    "filePath": "packages/sdk-ts/schemas/integration/mplp-file-update-event.schema.json",
+    "title": "MPLP File Update Event v1.0",
+    "type": "object",
+    "properties": [
+      "file_path",
+      "change_type",
+      "workspace_root",
+      "change_summary",
+      "timestamp",
+      "lines_added",
+      "lines_removed",
+      "previous_path",
+      "encoding",
+      "language"
+    ],
+    "required": [
+      "file_path",
+      "change_type",
+      "timestamp"
+    ],
+    "definitions": [],
+    "description": "IDE file changes (save, refactor, batch modify)"
+  },
+  "https://mplp.dev/schemas/v1.0/integration/mplp-ci-event.json": {
+    "filePath": "packages/sdk-ts/schemas/integration/mplp-ci-event.schema.json",
+    "title": "MPLP CI Event v1.0",
+    "type": "object",
+    "properties": [
+      "ci_provider",
+      "pipeline_id",
+      "run_id",
+      "status",
+      "started_at",
+      "completed_at",
+      "branch_name",
+      "commit_id",
+      "run_url",
+      "duration_ms",
+      "stages",
+      "trigger_kind"
+    ],
+    "required": [
+      "ci_provider",
+      "pipeline_id",
+      "run_id",
+      "status"
+    ],
+    "definitions": [],
+    "description": "CI pipeline execution status"
+  },
+  "https://mplp.dev/schemas/v1.0/events/mplp-sa-event.schema.json": {
+    "filePath": "packages/sdk-ts/schemas/events/mplp-sa-event.schema.json",
+    "title": "MPLP SA Event v1.0",
+    "type": "object",
+    "properties": [
+      "event_id",
+      "event_type",
+      "timestamp",
+      "sa_id",
+      "context_id",
+      "plan_id",
+      "trace_id",
+      "payload"
+    ],
+    "required": [
+      "event_id",
+      "event_type",
+      "timestamp",
+      "sa_id"
+    ],
+    "definitions": [],
+    "description": "Events emitted by a Single Agent (SA) execution in MPLP v1.0 protocol"
+  },
+  "https://mplp.dev/schemas/v1.0/events/mplp-runtime-execution-event.schema.json": {
+    "filePath": "packages/sdk-ts/schemas/events/mplp-runtime-execution-event.schema.json",
+    "title": "MPLP RuntimeExecutionEvent v1.0",
+    "properties": [],
+    "required": [],
+    "definitions": [],
+    "description": "Runtime execution lifecycle events (agents, tools, LLMs, workers)"
+  },
+  "https://mplp.dev/schemas/v1.0/events/mplp-pipeline-stage-event.schema.json": {
+    "filePath": "packages/sdk-ts/schemas/events/mplp-pipeline-stage-event.schema.json",
+    "title": "MPLP PipelineStageEvent v1.0",
+    "properties": [],
+    "required": [],
+    "definitions": [],
+    "description": "**REQUIRED** - Pipeline stage transition events (MANDATORY for v1.0 compliance)"
+  },
+  "https://mplp.dev/schemas/v1.0/events/mplp-map-event.schema.json": {
+    "filePath": "packages/sdk-ts/schemas/events/mplp-map-event.schema.json",
+    "title": "MPLP MAP Event v1.0",
+    "type": "object",
+    "properties": [
+      "event_id",
+      "event_type",
+      "timestamp",
+      "session_id",
+      "initiator_role",
+      "target_roles",
+      "payload"
+    ],
+    "required": [
+      "event_id",
+      "event_type",
+      "timestamp",
+      "session_id"
+    ],
+    "definitions": [],
+    "description": "Events emitted by Multi-Agent Profile (MAP) collaboration sessions in MPLP v1.0 protocol"
+  },
+  "https://mplp.dev/schemas/v1.0/events/mplp-graph-update-event.schema.json": {
+    "filePath": "packages/sdk-ts/schemas/events/mplp-graph-update-event.schema.json",
+    "title": "MPLP GraphUpdateEvent v1.0",
+    "properties": [],
+    "required": [],
+    "definitions": [],
+    "description": "**REQUIRED** - PSG structural update events (MANDATORY for v1.0 compliance)"
+  },
+  "https://mplp.dev/schemas/v1.0/events/mplp-event-core.schema.json": {
+    "filePath": "packages/sdk-ts/schemas/events/mplp-event-core.schema.json",
+    "title": "MPLP Core Event v1.0",
+    "type": "object",
+    "properties": [
+      "event_id",
+      "event_type",
+      "event_family",
+      "timestamp",
+      "project_id",
+      "payload"
+    ],
+    "required": [
+      "event_id",
+      "event_type",
+      "event_family",
+      "timestamp"
+    ],
+    "definitions": [],
+    "description": "Base structure for MPLP observability events - provides common fields inherited by all event families"
+  },
+  "https://schemas.mplp.dev/v1.0/common/trace-base.schema.json": {
+    "filePath": "packages/sdk-ts/schemas/common/trace-base.schema.json",
+    "title": "MPLP Trace Base",
+    "type": "object",
+    "properties": [
+      "trace_id",
+      "span_id",
+      "parent_span_id",
+      "context_id",
+      "attributes"
+    ],
+    "required": [
+      "trace_id",
+      "span_id"
+    ],
+    "definitions": [],
+    "description": "Common base fields for Trace / Span structures. Designed based on W3C Trace Context standard, providing a unified tracing context for the MPLP execution chain. Supports distributed tracing and parent-child relationships of execution steps."
+  },
+  "https://schemas.mplp.dev/v1.0/common/metadata.schema.json": {
+    "filePath": "packages/sdk-ts/schemas/common/metadata.schema.json",
+    "title": "MPLP Metadata",
+    "type": "object",
+    "properties": [
+      "protocol_version",
+      "schema_version",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by",
+      "tags",
+      "cross_cutting"
+    ],
+    "required": [
+      "protocol_version",
+      "schema_version"
+    ],
+    "definitions": [],
+    "description": "Common metadata structure for all MPLP objects. Provides version control, creation info, tags, and cross-cutting concern declarations. All top-level objects in L2/L3/L4 should include the meta field."
+  },
+  "https://schemas.mplp.dev/v1.0/common/learning-sample.schema.json": {
+    "filePath": "packages/sdk-ts/schemas/common/learning-sample.schema.json",
+    "title": "MPLP Learning Sample – Schema v2.0",
+    "type": "object",
+    "properties": [
+      "sample_id",
+      "project_id",
+      "intent_before",
+      "plan",
+      "delta_intents",
+      "graph_before",
+      "graph_after",
+      "pipeline_path",
+      "success_flag",
+      "error_info",
+      "token_usage",
+      "execution_time_ms",
+      "impact_score",
+      "user_feedback",
+      "governance_decisions",
+      "timestamps",
+      "metadata",
+      "vendor_extensions"
+    ],
+    "required": [
+      "sample_id",
+      "project_id",
+      "success_flag",
+      "timestamps"
+    ],
+    "definitions": [],
+    "description": "Structured learning sample for MPLP v1.0 runtimes."
+  },
+  "https://schemas.mplp.dev/v1.0/common/identifiers.schema.json": {
+    "filePath": "packages/sdk-ts/schemas/common/identifiers.schema.json",
+    "title": "MPLP Identifier",
+    "type": "string",
+    "properties": [],
+    "required": [],
+    "definitions": [],
+    "description": "Unified identifier type used for contextId/planId/traceId/eventId, etc. Uses UUID v4 standard to ensure global uniqueness and collision-free generation in distributed environments."
+  },
+  "https://schemas.mplp.dev/v1.0/common/events.schema.json": {
+    "filePath": "packages/sdk-ts/schemas/common/events.schema.json",
+    "title": "MPLP Base Event",
+    "type": "object",
+    "properties": [
+      "event_id",
+      "event_type",
+      "source",
+      "timestamp",
+      "trace_id",
+      "data"
+    ],
+    "required": [
+      "event_id",
+      "event_type",
+      "source",
+      "timestamp"
+    ],
+    "definitions": [],
+    "description": "Base model for all event structures in MPLP. Designed based on CloudEvents v1.0 core fields, providing unified event identification, type, source, and timestamp. ExecutionEvent, StateTransitionEvent, etc., are extensions of this."
+  },
+  "https://schemas.mplp.dev/v1.0/common/common-types.schema.json": {
+    "filePath": "packages/sdk-ts/schemas/common/common-types.schema.json",
+    "title": "MPLP Common Types",
+    "properties": [],
+    "required": [],
+    "definitions": [
+      "MplpId",
+      "Ref",
+      "BaseMeta"
+    ],
+    "description": "Common type definitions used across MPLP modules to ensure consistency and reduce duplication."
+  }
+}

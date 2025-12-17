@@ -1,0 +1,95 @@
+{
+  "$comment": "MPLP Protocol v1.0.0 — Frozen Specification\nFreeze Date: 2025-12-03\nStatus: FROZEN (no breaking changes permitted)\nGovernance: MPLP Protocol Governance Committee (MPGC)\nCopyright: © 2025 邦士（北京）网络科技有限公司\nLicense: Apache-2.0\nAny normative change requires a new protocol version.",
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "lib": [
+      "ES2020"
+    ],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "moduleResolution": "node",
+    "downlevelIteration": true,
+    "baseUrl": ".",
+    "paths": {
+      "@mplp/core": [
+        "packages/sdk-ts/src/core/index.ts"
+      ],
+      "@mplp/core/*": [
+        "packages/sdk-ts/src/core/*"
+      ],
+      "@mplp/coordination": [
+        "packages/sdk-ts/src/coordination/index.ts"
+      ],
+      "@mplp/coordination/*": [
+        "packages/sdk-ts/src/coordination/*"
+      ],
+      "@mplp/runtime-minimal": [
+        "packages/sdk-ts/src/runtime-minimal/index.ts"
+      ],
+      "@mplp/runtime-minimal/*": [
+        "packages/sdk-ts/src/runtime-minimal/*"
+      ],
+      "@mplp/schema": [
+        "packages/sdk-ts/src/schema/index.ts"
+      ],
+      "@mplp/schema/*": [
+        "packages/sdk-ts/src/schema/*"
+      ],
+      "@mplp/modules": [
+        "packages/sdk-ts/src/modules/index.ts"
+      ],
+      "@mplp/modules/*": [
+        "packages/sdk-ts/src/modules/*"
+      ],
+      "@mplp/integration-llm-http": [
+        "packages/sdk-ts/src/integration/llm-http/index.ts"
+      ],
+      "@mplp/integration-llm-http/*": [
+        "packages/sdk-ts/src/integration/llm-http/*"
+      ],
+      "@mplp/integration-storage-fs": [
+        "packages/sdk-ts/src/integration/storage-fs/index.ts"
+      ],
+      "@mplp/integration-storage-fs/*": [
+        "packages/sdk-ts/src/integration/storage-fs/*"
+      ],
+      "@mplp/integration-storage-kv": [
+        "packages/sdk-ts/src/integration/storage-kv/index.ts"
+      ],
+      "@mplp/integration-storage-kv/*": [
+        "packages/sdk-ts/src/integration/storage-kv/*"
+      ],
+      "@mplp/integration-tools-generic": [
+        "packages/sdk-ts/src/integration/tools-generic/index.ts"
+      ],
+      "@mplp/integration-tools-generic/*": [
+        "packages/sdk-ts/src/integration/tools-generic/*"
+      ],
+      "@mplp/devtools": [
+        "packages/sdk-ts/src/devtools/index.ts"
+      ],
+      "@mplp/devtools/*": [
+        "packages/sdk-ts/src/devtools/*"
+      ],
+      "@mplp/compliance": [
+        "packages/sdk-ts/src/compliance/index.ts"
+      ],
+      "@mplp/compliance/*": [
+        "packages/sdk-ts/src/compliance/*"
+      ]
+    }
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs",
+      "target": "ES2020"
+    },
+    "transpileOnly": true,
+    "skipProject": false
+  }
+}

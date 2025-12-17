@@ -1,0 +1,1202 @@
+{
+  "intro.mdx": {
+    "category": "informative",
+    "claim_stats": {
+      "definition": 1,
+      "constraint": 0,
+      "behavior": 0,
+      "example": 0
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "99-meta/roadmap.md": {
+    "category": "governance",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 1,
+      "example": 0
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "99-meta/frontmatter-policy.md": {
+    "category": "governance",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 4,
+      "behavior": 0,
+      "example": 2
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "99-meta/faq.md": {
+    "category": "governance",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 0,
+      "example": 0
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "14-ops/schema-sdk-change-process.md": {
+    "category": "governance",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 1,
+      "example": 1
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "14-ops/release-runbook.md": {
+    "category": "governance",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 0,
+      "example": 0
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "14-ops/ops-overview.md": {
+    "category": "governance",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 0,
+      "example": 0
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "14-ops/monitoring-guide.md": {
+    "category": "governance",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 0,
+      "example": 0
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "14-ops/deployment-checklist.md": {
+    "category": "governance",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 0,
+      "example": 0
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "13-release/mplp-v1.0.3-release-audit.md": {
+    "category": "governance",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 11,
+      "example": 0
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "13-release/mplp-v1.0.0-release-notes.md": {
+    "category": "governance",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 0,
+      "example": 0
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "13-release/mplp-v1.0.0-known-issues.md": {
+    "category": "governance",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 8,
+      "example": 0
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "13-release/mplp-v1.0-docs-governance-summary.md": {
+    "category": "governance",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 0,
+      "example": 0
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "13-release/mplp-v0.9-to-v1.0-migration-guide.md": {
+    "category": "governance",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 0,
+      "example": 0
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "13-release/maintainer-guide.md": {
+    "category": "governance",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 1,
+      "example": 0
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "13-release/editorial-policy.md": {
+    "category": "governance",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 1,
+      "behavior": 0,
+      "example": 0
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "12-governance/versioning-policy.md": {
+    "category": "governance",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 0,
+      "example": 1
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "12-governance/security-policy.md": {
+    "category": "governance",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 0,
+      "example": 0
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "12-governance/mip-process.md": {
+    "category": "governance",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 0,
+      "example": 0
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "12-governance/compatibility-matrix.md": {
+    "category": "governance",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 1,
+      "behavior": 0,
+      "example": 0
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "11-examples/vendor-neutral-llm-integration.md": {
+    "category": "informative",
+    "claim_stats": {
+      "definition": 1,
+      "constraint": 0,
+      "behavior": 1,
+      "example": 1
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "11-examples/tool-execution-integration.md": {
+    "category": "informative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 1,
+      "example": 0
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "11-examples/single-agent-flow.md": {
+    "category": "informative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 7,
+      "example": 6
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "11-examples/risk-confirmation-flow.md": {
+    "category": "informative",
+    "claim_stats": {
+      "definition": 1,
+      "constraint": 0,
+      "behavior": 8,
+      "example": 4
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "11-examples/multi-agent-collab-flow.md": {
+    "category": "informative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 7,
+      "example": 3
+    },
+    "mapped_refs": 3,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "11-examples/error-recovery-flow.md": {
+    "category": "informative",
+    "claim_stats": {
+      "definition": 1,
+      "constraint": 0,
+      "behavior": 7,
+      "example": 4
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "10-sdk/ts-sdk-guide.md": {
+    "category": "informative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 0,
+      "example": 0
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "10-sdk/sdk-support-matrix.md": {
+    "category": "informative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 6,
+      "example": 3
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "10-sdk/schema-mapping-standard.md": {
+    "category": "governance",
+    "claim_stats": {
+      "definition": 3,
+      "constraint": 17,
+      "behavior": 1,
+      "example": 7
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "10-sdk/py-sdk-guide.md": {
+    "category": "informative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 2,
+      "example": 1
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "10-sdk/java-sdk-guide.md": {
+    "category": "informative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 2,
+      "example": 6
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "10-sdk/go-sdk-guide.md": {
+    "category": "informative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 3,
+      "example": 5
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "10-sdk/codegen-from-schema.md": {
+    "category": "governance",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 3,
+      "behavior": 2,
+      "example": 0
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "09-tests/golden-test-suite-overview.md": {
+    "category": "informative",
+    "claim_stats": {
+      "definition": 2,
+      "constraint": 0,
+      "behavior": 98,
+      "example": 9
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "09-tests/golden-test-suite-details.md": {
+    "category": "informative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 2,
+      "behavior": 38,
+      "example": 5
+    },
+    "mapped_refs": 6,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "09-tests/golden-flow-registry.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 37,
+      "example": 0
+    },
+    "mapped_refs": 9,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "09-tests/golden-fixture-format.md": {
+    "category": "informative",
+    "claim_stats": {
+      "definition": 1,
+      "constraint": 3,
+      "behavior": 13,
+      "example": 0
+    },
+    "mapped_refs": 3,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "08-guides/quickstart-5min.md": {
+    "category": "informative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 2,
+      "example": 3
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "08-guides/mplp-v1.0-compliance-guide.md": {
+    "category": "informative",
+    "claim_stats": {
+      "definition": 1,
+      "constraint": 0,
+      "behavior": 1,
+      "example": 0
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "08-guides/mplp-v1.0-compliance-checklist.md": {
+    "category": "informative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 2,
+      "example": 0
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "08-guides/migration-guide.md": {
+    "category": "informative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 0,
+      "example": 0
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "07-integration/integration-spec.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 8,
+      "behavior": 13,
+      "example": 4
+    },
+    "mapped_refs": 2,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "06-runtime/runtime-glue-overview.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 11,
+      "behavior": 5,
+      "example": 6
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "06-runtime/module-psg-paths.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 10,
+      "behavior": 3,
+      "example": 6
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "06-runtime/drift-and-rollback.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 1,
+      "constraint": 10,
+      "behavior": 3,
+      "example": 4
+    },
+    "mapped_refs": 2,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "06-runtime/crosscut-psg-event-binding.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 14,
+      "behavior": 7,
+      "example": 9
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "05-learning/learning-sample-schema.md": {
+    "category": "informative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 1,
+      "behavior": 3,
+      "example": 27
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "05-learning/learning-overview.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 1,
+      "constraint": 6,
+      "behavior": 6,
+      "example": 14
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "05-learning/learning-invariants.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 1,
+      "behavior": 0,
+      "example": 22
+    },
+    "mapped_refs": 2,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "05-learning/learning-collection-points.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 1,
+      "behavior": 8,
+      "example": 19
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "04-observability/runtime-trace-format.md": {
+    "category": "informative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 0,
+      "example": 2
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "04-observability/physical-schemas-reference.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 6,
+      "behavior": 1,
+      "example": 6
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "04-observability/observability-overview.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 3,
+      "behavior": 2,
+      "example": 1
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "04-observability/observability-invariants.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 1,
+      "behavior": 0,
+      "example": 0
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "04-observability/module-event-matrix.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 1,
+      "behavior": 10,
+      "example": 1
+    },
+    "mapped_refs": 2,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "04-observability/event-taxonomy.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 6,
+      "behavior": 3,
+      "example": 5
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "04-observability/common-schemas-reference.md": {
+    "category": "informative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 0,
+      "example": 12
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "02-modules/trace-module.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 2,
+      "behavior": 0,
+      "example": 4
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "02-modules/role-module.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 1,
+      "example": 1
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "02-modules/plan-module.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 1,
+      "constraint": 3,
+      "behavior": 4,
+      "example": 2
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "02-modules/network-module.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 0,
+      "example": 1
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "02-modules/module-interactions.md": {
+    "category": "informative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 2,
+      "example": 1
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "02-modules/extension-module.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 1,
+      "example": 1
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "02-modules/dialog-module.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 0,
+      "example": 1
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "02-modules/core-module.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 1,
+      "behavior": 0,
+      "example": 1
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "02-modules/context-module.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 4,
+      "behavior": 0,
+      "example": 1
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "02-modules/confirm-module.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 3,
+      "example": 1
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "02-modules/collab-module.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 1,
+      "behavior": 1,
+      "example": 1
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "01-architecture/schema-conventions.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 6,
+      "behavior": 1,
+      "example": 20
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "01-architecture/l4-integration-infra.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 6,
+      "behavior": 9,
+      "example": 11
+    },
+    "mapped_refs": 2,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "01-architecture/l3-execution-orchestration.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 1,
+      "constraint": 8,
+      "behavior": 18,
+      "example": 5
+    },
+    "mapped_refs": 2,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "01-architecture/l2-coordination-governance.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 22,
+      "behavior": 23,
+      "example": 6
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "01-architecture/l1-l4-architecture-deep-dive.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 9,
+      "behavior": 5,
+      "example": 7
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "01-architecture/l1-core-protocol.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 1,
+      "constraint": 13,
+      "behavior": 8,
+      "example": 7
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "01-architecture/architecture-overview.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 21,
+      "behavior": 6,
+      "example": 10
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "00-index/mplp-v1.0-protocol-overview.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 4,
+      "constraint": 10,
+      "behavior": 2,
+      "example": 8
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "00-index/mplp-v1.0-normative-corpus-index.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 2,
+      "behavior": 0,
+      "example": 1
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "00-index/mplp-v1.0-docs-map.md": {
+    "category": "informative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 5,
+      "example": 7
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "00-index/mplp-v1.0-authority-sources.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 2,
+      "behavior": 3,
+      "example": 0
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "00-index/legacy-readme-v0.md": {
+    "category": "informative",
+    "claim_stats": {
+      "definition": 3,
+      "constraint": 0,
+      "behavior": 13,
+      "example": 3
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "00-index/api-quick-reference.md": {
+    "category": "informative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 1,
+      "behavior": 18,
+      "example": 7
+    },
+    "mapped_refs": 9,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "03-profiles/sa-profile.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 11,
+      "behavior": 2,
+      "example": 0
+    },
+    "mapped_refs": 3,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "03-profiles/sa-events.md": {
+    "category": "informative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 1,
+      "behavior": 2,
+      "example": 2
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "03-profiles/multi-agent-governance-profile.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 1,
+      "behavior": 4,
+      "example": 0
+    },
+    "mapped_refs": 2,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "03-profiles/map-profile.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 5,
+      "behavior": 2,
+      "example": 0
+    },
+    "mapped_refs": 3,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "03-profiles/map-events.md": {
+    "category": "informative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 1,
+      "behavior": 4,
+      "example": 0
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "01-architecture/cross-cutting/vsl.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 3,
+      "constraint": 16,
+      "behavior": 0,
+      "example": 12
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "01-architecture/cross-cutting/transaction.md": {
+    "category": "informative",
+    "claim_stats": {
+      "definition": 1,
+      "constraint": 0,
+      "behavior": 1,
+      "example": 1
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "01-architecture/cross-cutting/state-sync.md": {
+    "category": "informative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 0,
+      "behavior": 2,
+      "example": 0
+    },
+    "mapped_refs": 0,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "01-architecture/cross-cutting/security.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 3,
+      "behavior": 0,
+      "example": 1
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "01-architecture/cross-cutting/protocol-versioning.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 3,
+      "behavior": 1,
+      "example": 12
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "01-architecture/cross-cutting/performance.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 2,
+      "behavior": 0,
+      "example": 0
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "01-architecture/cross-cutting/overview.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 8,
+      "behavior": 2,
+      "example": 3
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "01-architecture/cross-cutting/orchestration.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 1,
+      "constraint": 3,
+      "behavior": 5,
+      "example": 3
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "01-architecture/cross-cutting/observability.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 1,
+      "constraint": 15,
+      "behavior": 1,
+      "example": 9
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "01-architecture/cross-cutting/learning-feedback.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 1,
+      "constraint": 13,
+      "behavior": 0,
+      "example": 36
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "01-architecture/cross-cutting/event-bus.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 7,
+      "behavior": 7,
+      "example": 3
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "01-architecture/cross-cutting/error-handling.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 2,
+      "behavior": 1,
+      "example": 9
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "01-architecture/cross-cutting/coordination.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 7,
+      "behavior": 2,
+      "example": 2
+    },
+    "mapped_refs": 2,
+    "status": "PASS",
+    "fail_reason": ""
+  },
+  "01-architecture/cross-cutting/ael.md": {
+    "category": "normative",
+    "claim_stats": {
+      "definition": 0,
+      "constraint": 16,
+      "behavior": 4,
+      "example": 12
+    },
+    "mapped_refs": 1,
+    "status": "PASS",
+    "fail_reason": ""
+  }
+}

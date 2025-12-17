@@ -1,0 +1,33 @@
+{
+  "label": "Examples",
+  "link": {
+    "type": "doc",
+    "id": "examples/index"
+  },
+  "position": 12,
+  "collapsed": true,
+  "collapsible": true,
+  "customProps": {
+    "doc_status": "informative",
+    "doc_role": "example",
+    "protocol_version": "1.0.0",
+    "spec_level": "N/A",
+    "category_semantics": {
+      "scope": "Normative coverage for examples",
+      "guaranteed_behaviors": [
+        {
+          "statement": "Provides informative documentation and architectural overviews.",
+          "evidence": {}
+        }
+      ],
+      "explicit_non_claims": [
+        "Does not define normative constraints not explicitly bound in 'guaranteed_behaviors'.",
+        "Does not define protocol compliant behavior."
+      ],
+      "truth_binding": {
+        "binding_source": "MANUAL_PAGE_BINDING_MAP_v1.0.yaml",
+        "binding_type": "aggregate"
+      }
+    }
+  }
+}

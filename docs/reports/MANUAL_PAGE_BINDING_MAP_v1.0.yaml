@@ -1,0 +1,244 @@
+version: 1.0.0
+protocol_version: 1.0.0
+truth_level: T0
+bindings:
+  # Profiles
+  docs/docs/03-profiles/sa-profile.md:
+    doc_role: "normative"
+    schema_refs:
+      - https://schemas.mplp.dev/v1.0/mplp-core.schema.json
+      - https://schemas.mplp.dev/v1.0/mplp-network.schema.json
+    invariant_refs:
+      - tests/golden/flows/sa-flow-01-basic/invariants.yaml # Verified path
+    golden_refs:
+      - tests/golden/flows/sa-flow-01-basic/README.md
+
+  docs/docs/01-architecture/l2-coordination-governance.md:
+    doc_role: "normative"
+    schema_refs:
+      - https://schemas.mplp.dev/v1.0/mplp-collab.schema.json
+      - https://schemas.mplp.dev/v1.0/mplp-role.schema.json
+    invariant_refs:
+      - tests/golden/invariants/confirm.yaml # Heuristic
+
+  docs/docs/03-profiles/map-profile.md:
+    schema_refs:
+      - https://mplp.dev/schemas/v1.0/events/mplp-map-event.schema.json
+      - https://schemas.mplp.dev/v1.0/mplp-collab.schema.json
+    golden_refs:
+      - tests/golden/flows/map-flow-01-turn-taking/README.md
+
+  # Architecture - Core
+  docs/docs/01-architecture/l1-core-protocol.md:
+    doc_role: "normative"
+    schema_refs:
+      - https://schemas.mplp.dev/v1.0/mplp-core.schema.json
+      - https://schemas.mplp.dev/v1.0/mplp-context.schema.json
+    invariant_refs:
+      - tests/golden/invariants/context.yaml # Core behavior
+
+  docs/docs/01-architecture/architecture-overview.md:
+    schema_refs:
+      - https://schemas.mplp.dev/v1.0/mplp-core.schema.json
+
+  docs/docs/01-architecture/l1-l4-architecture-deep-dive.md:
+    schema_refs:
+      - https://schemas.mplp.dev/v1.0/mplp-core.schema.json
+
+  docs/docs/01-architecture/l3-execution-orchestration.md:
+    schema_refs:
+      - https://schemas.mplp.dev/v1.0/mplp-plan.schema.json
+      - https://schemas.mplp.dev/v1.0/mplp-context.schema.json
+
+  docs/docs/01-architecture/l4-integration-infra.md:
+    schema_refs:
+      - https://mplp.dev/schemas/v1.0/integration/mplp-tool-event.json
+      - https://mplp.dev/schemas/v1.0/integration/mplp-ci-event.json
+
+  # Cross-Cutting
+  docs/docs/01-architecture/cross-cutting/ael.md:
+    schema_refs:
+      - https://mplp.dev/schemas/v1.0/events/mplp-runtime-execution-event.schema.json
+    code_refs:
+      ts: [ "packages/sdk-ts/src/runtime-minimal/index.ts" ]
+
+  docs/docs/01-architecture/cross-cutting/vsl.md:
+    code_refs:
+      ts: [ "packages/sdk-ts/src/runtime-minimal/index.ts" ]
+    schema_refs:
+      - https://mplp.dev/schemas/v1.0/learning/mplp-learning-sample-core.schema.json
+
+  docs/docs/01-architecture/cross-cutting/observability.md:
+    schema_refs:
+      - https://schemas.mplp.dev/v1.0/common/events.schema.json
+    invariant_refs:
+      - tests/golden/invariants/trace.yaml
+  
+  docs/docs/01-architecture/cross-cutting/error-handling.md:
+    schema_refs:
+      - https://schemas.mplp.dev/v1.0/common/trace-base.schema.json
+
+  docs/docs/01-architecture/cross-cutting/coordination.md:
+    schema_refs:
+      - https://schemas.mplp.dev/v1.0/mplp-collab.schema.json
+      - https://schemas.mplp.dev/v1.0/mplp-confirm.schema.json
+
+  docs/docs/01-architecture/cross-cutting/overview.md:
+    schema_refs:
+      - https://schemas.mplp.dev/v1.0/mplp-core.schema.json
+
+  # Observability Normative
+  docs/docs/04-observability/observability-overview.md:
+    schema_refs:
+      - https://schemas.mplp.dev/v1.0/common/events.schema.json
+
+  docs/docs/04-observability/observability-invariants.md:
+      invariant_refs:
+        - tests/golden/invariants/trace.yaml
+
+  # Index / Meta Normative
+  docs/docs/00-index/mplp-v1.0-protocol-overview.md:
+    schema_refs:
+      - https://schemas.mplp.dev/v1.0/mplp-core.schema.json
+
+  docs/docs/00-index/mplp-v1.0-normative-corpus-index.md:
+    note: "Self-referential normative index"
+    # Mapping to itself or core schema
+    schema_refs:
+      - https://schemas.mplp.dev/v1.0/mplp-core.schema.json
+
+  docs/docs/00-index/mplp-v1.0-authority-sources.md:
+    note: "Meta-normative"
+    schema_refs:
+      - https://schemas.mplp.dev/v1.0/mplp-core.schema.json
+
+  # --- FUNCTIONAL SPECS (Option A Upgrade) ---
+
+  # Integration
+  docs/docs/07-integration/integration-spec.md:
+    doc_role: "functional-spec"
+    schema_refs:
+      - https://mplp.dev/schemas/v1.0/integration/mplp-tool-event.json
+      - https://mplp.dev/schemas/v1.0/integration/mplp-ci-event.json
+    code_refs:
+      ts: ["packages/sdk-ts/src/core/index.ts"] # Fallback
+
+  # Runtime
+  docs/docs/06-runtime/runtime-glue-overview.md:
+    doc_role: "functional-spec"
+    schema_refs:
+      - https://mplp.dev/schemas/v1.0/events/mplp-runtime-execution-event.schema.json
+    code_refs:
+      ts: ["packages/sdk-ts/src/runtime-minimal/index.ts"]
+
+  docs/docs/06-runtime/module-psg-paths.md:
+    doc_role: "functional-spec"
+    schema_refs:
+      - https://schemas.mplp.dev/v1.0/mplp-context.schema.json
+    invariant_refs:
+      - tests/golden/invariants/context.yaml
+
+  docs/docs/06-runtime/drift-and-rollback.md:
+    doc_role: "functional-spec"
+    schema_refs:
+      - https://schemas.mplp.dev/v1.0/mplp-trace.schema.json
+      - https://schemas.mplp.dev/v1.0/mplp-context.schema.json
+    invariant_refs:
+      - tests/golden/invariants/trace.yaml # Proxy for runtime drift
+    event_refs:
+      - https://mplp.dev/schemas/v1.0/events/mplp-graph-update-event.schema.json
+
+  docs/docs/06-runtime/crosscut-psg-event-binding.md:
+    doc_role: "functional-spec"
+    schema_refs:
+      - https://schemas.mplp.dev/v1.0/common/events.schema.json
+    code_refs:
+      ts: ["packages/sdk-ts/src/core/index.ts"]
+
+  # Learning
+  docs/docs/05-learning/learning-overview.md:
+    doc_role: "functional-spec"
+    schema_refs:
+      - https://schemas.mplp.dev/v1.0/common/learning-sample.schema.json
+
+  docs/docs/05-learning/learning-invariants.md:
+    doc_role: "functional-spec"
+    schema_refs:
+      - https://schemas.mplp.dev/v1.0/common/learning-sample.schema.json
+    invariant_refs:
+      - tests/golden/flows/flow-04-single-agent-llm-enrichment/invariants.yaml # Proxy
+    golden_refs:
+      - tests/golden/flows/flow-04-single-agent-llm-enrichment/README.md
+
+  docs/docs/05-learning/learning-collection-points.md:
+    doc_role: "functional-spec"
+    schema_refs:
+      - https://schemas.mplp.dev/v1.0/common/learning-sample.schema.json
+    code_refs:
+      ts: ["packages/sdk-ts/src/runtime/index.ts"] # Fallback
+
+  # Observability
+  docs/docs/04-observability/physical-schemas-reference.md:
+    doc_role: "functional-spec"
+    schema_refs:
+      - https://schemas.mplp.dev/v1.0/common/events.schema.json
+
+  docs/docs/04-observability/module-event-matrix.md:
+    doc_role: "functional-spec"
+    schema_refs:
+      - https://mplp.dev/schemas/v1.0/events/mplp-event-core.schema.json
+      - https://mplp.dev/schemas/v1.0/events/mplp-pipeline-stage-event.schema.json
+    invariant_refs:
+      - tests/golden/invariants/trace.yaml
+
+  docs/docs/04-observability/event-taxonomy.md:
+    doc_role: "functional-spec"
+    schema_refs:
+      - https://schemas.mplp.dev/v1.0/common/events.schema.json
+
+  # Architecture - Cross Cutting / Specs
+  docs/docs/01-architecture/schema-conventions.md:
+    doc_role: "functional-spec"
+    schema_refs:
+      - https://schemas.mplp.dev/v1.0/common/common-types.schema.json
+
+  docs/docs/01-architecture/cross-cutting/security.md:
+    doc_role: "functional-spec"
+    schema_refs:
+      - https://schemas.mplp.dev/v1.0/mplp-role.schema.json
+    code_refs:
+      ts: ["packages/sdk-ts/src/core/index.ts"]
+
+  docs/docs/01-architecture/cross-cutting/protocol-versioning.md:
+    doc_role: "functional-spec"
+    schema_refs:
+      - https://schemas.mplp.dev/v1.0/common/metadata.schema.json
+
+  docs/docs/01-architecture/cross-cutting/performance.md:
+    doc_role: "functional-spec"
+    schema_refs:
+      - https://schemas.mplp.dev/v1.0/common/trace-base.schema.json
+
+  docs/docs/01-architecture/cross-cutting/orchestration.md:
+    doc_role: "functional-spec"
+    schema_refs:
+      - https://schemas.mplp.dev/v1.0/mplp-plan.schema.json
+
+  docs/docs/01-architecture/cross-cutting/learning-feedback.md:
+    doc_role: "functional-spec"
+    schema_refs:
+      - https://schemas.mplp.dev/v1.0/common/learning-sample.schema.json
+
+  docs/docs/01-architecture/cross-cutting/event-bus.md:
+    doc_role: "functional-spec"
+    schema_refs:
+      - https://schemas.mplp.dev/v1.0/common/events.schema.json
+    code_refs:
+      ts: ["packages/sdk-ts/src/core/index.ts"]
+
+  # Profiles (Informative -> Functional Spec)
+  docs/docs/03-profiles/multi-agent-governance-profile.md:
+    doc_role: "functional-spec"
+    schema_refs:
+      - https://schemas.mplp.dev/v1.0/mplp-collab.schema.json
+      - https://schemas.mplp.dev/v1.0/mplp-role.schema.json

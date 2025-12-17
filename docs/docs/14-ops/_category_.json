@@ -1,0 +1,32 @@
+{
+  "label": "Operations",
+  "link": {
+    "type": "doc",
+    "id": "ops/index"
+  },
+  "position": 15,
+  "collapsed": true,
+  "collapsible": true,
+  "customProps": {
+    "doc_status": "informative",
+    "doc_role": "ops",
+    "protocol_version": "1.0.0",
+    "spec_level": "N/A",
+    "category_semantics": {
+      "scope": "Normative coverage for ops",
+      "guaranteed_behaviors": [
+        {
+          "statement": "Provides informative documentation and architectural overviews.",
+          "evidence": {}
+        }
+      ],
+      "explicit_non_claims": [
+        "Does not define normative constraints not explicitly bound in 'guaranteed_behaviors'."
+      ],
+      "truth_binding": {
+        "binding_source": "MANUAL_PAGE_BINDING_MAP_v1.0.yaml",
+        "binding_type": "aggregate"
+      }
+    }
+  }
+}

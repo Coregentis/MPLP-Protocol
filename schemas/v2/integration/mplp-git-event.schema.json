@@ -1,0 +1,104 @@
+{
+  "$comment": "MPLP v1.0.0 FROZEN – © 2025 Bangshi Beijing Network Technology Limited Company – Apache-2.0 – Governance: MPGC",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://mplp.dev/schemas/v1.0/integration/mplp-git-event.json",
+  "title": "MPLP Git Event v1.0",
+  "description": "Git operations (commit, push, branch/merge/tag)",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "repo_url": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Repository URL or identifier",
+      "examples": [
+        "https://github.com/org/repo.git",
+        "git@github.com:org/repo.git"
+      ]
+    },
+    "commit_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Commit SHA or identifier",
+      "examples": [
+        "abc123def456",
+        "1a2b3c4d5e6f7g8h9i0j"
+      ]
+    },
+    "ref_name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Branch, tag, or ref name",
+      "examples": [
+        "refs/heads/main",
+        "refs/tags/v1.0.0",
+        "main"
+      ]
+    },
+    "event_kind": {
+      "type": "string",
+      "enum": [
+        "commit",
+        "push",
+        "merge",
+        "tag",
+        "branch_create",
+        "branch_delete"
+      ],
+      "description": "Type of Git operation"
+    },
+    "author_name": {
+      "type": "string",
+      "description": "Commit author name"
+    },
+    "author_email": {
+      "type": "string",
+      "format": "email",
+      "description": "Commit author email"
+    },
+    "commit_message": {
+      "type": "string",
+      "description": "Commit message (first line or summary)"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the Git operation occurred (ISO 8601)"
+    },
+    "files_changed": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of files changed in commit"
+    },
+    "insertions": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total lines inserted"
+    },
+    "deletions": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total lines deleted"
+    },
+    "parent_commits": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Parent commit SHA(s) - multiple for merges"
+    }
+  },
+  "required": [
+    "repo_url",
+    "commit_id",
+    "ref_name",
+    "event_kind",
+    "timestamp"
+  ],
+  "x-mplp-meta": {
+    "protocolVersion": "1.0.0",
+    "frozen": true,
+    "freezeDate": "2025-12-03",
+    "governance": "MPGC"
+  }
+}

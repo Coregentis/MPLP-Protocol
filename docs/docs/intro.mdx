@@ -1,0 +1,122 @@
+---
+title: Multi-Agent Lifecycle Protocol (MPLP)
+hide_title: true
+slug: /
+doc_status: informative
+doc_role: overview
+protocol_version: 1.0.0
+description: "MPLP documentation console: start here to adopt, implement, and validate MPLP v1.0.0 (FROZEN)."
+keywords:
+  - MPLP
+  - Multi-Agent Lifecycle Protocol
+  - agent protocol
+  - protocol engineering
+  - golden flows
+  - conformance
+  - schemas
+  - interoperability
+protocol_alignment:
+  truth_level: T2
+  protocol_version: 1.0.0
+  schema_refs: []
+  invariant_refs: []
+  golden_refs: []
+  code_refs:
+    ts: []
+    py: []
+  evidence_notes:
+    - "Home page is informative; normative claims live in bound pages and T0 evidence."
+---
+
+<div align="center">
+
+<h1 style={{color: '#1A73E8'}}><strong>Multi-Agent Lifecycle Protocol</strong></h1>
+<h2 style={{color: '#1A73E8'}}><strong>The Agent OS Protocol</strong></h2>
+### **Documentation Console**
+
+**MPLP v1.0.0 — FROZEN Specification**
+
+The lifecycle protocol for AI agents. Observable. Governed. Vendor-neutral.
+
+</div>
+
+---
+
+## Start Here
+
+Choose your entry point:
+
+<div style={{display: 'flex', justifyContent: 'center', gap: '2rem', flexWrap: 'wrap', marginTop: '1rem', marginBottom: '2rem'}}>
+
+[📘 **Protocol Overview**](./00-index/mplp-v1.0-protocol-overview.md)
+
+[🏛 **Architecture**](./01-architecture/architecture-overview.md)
+
+[✅ **Compliance Checklist**](./08-guides/mplp-v1.0-compliance-checklist.md)
+
+</div>
+
+---
+
+## Adopt MPLP Incrementally
+
+Recommended adoption path:
+
+1. **Trace First** — Start with observability. Record what your agents do.  
+   → [Trace Module](./02-modules/trace-module.md) · [Observability](./04-observability/observability-overview.md)
+
+2. **Confirm Boundaries** — Add confirmation before high-risk actions.  
+   → [Confirm Module](./02-modules/confirm-module.md) · [Governance](./12-governance/versioning-policy.md)
+
+3. **Plan & Context** — Structure agent reasoning with explicit plans and shared context.  
+   → [Plan Module](./02-modules/plan-module.md) · [Context Module](./02-modules/context-module.md)
+
+4. **Profiles & Conformance** — Validate against execution profiles and golden flows.  
+   → [SA Profile](./03-profiles/sa-profile.md) · [MAP Profile](./03-profiles/map-profile.md)
+
+---
+
+## Conformance & Golden Flows
+
+Validate your implementation:
+
+- [**Golden Test Suite Overview**](./09-tests/golden-test-suite-overview.md) — Test fixtures and validation procedures
+- [**SA Profile**](./03-profiles/sa-profile.md) — Single-Agent execution profile
+- [**MAP Profile**](./03-profiles/map-profile.md) — Multi-Agent execution profile
+
+---
+
+## Schemas & SDKs
+
+Build with MPLP:
+
+- [**Normative Corpus Index**](./00-index/mplp-v1.0-normative-corpus-index.md) — All normative schemas and references
+- [**TypeScript SDK Guide**](./10-sdk/ts-sdk-guide.md) — `@mplp/sdk-ts`
+- [**Python SDK Guide**](./10-sdk/py-sdk-guide.md) — `mplp-sdk` package
+
+---
+
+## Protocol Status
+
+| Property       | Value                                      |
+| :------------- | :----------------------------------------- |
+| **Version**    | MPLP v1.0.0                                |
+| **Status**     | FROZEN                                     |
+| **Governance** | MPLP Protocol Governance Committee (MPGC)  |
+| **License**    | Apache-2.0                                 |
+
+<div style={{fontSize: '0.8rem', color: '#64748b', marginTop: '1rem'}}>
+
+Normative truth resides in schemas, invariants, and golden flows.  
+This documentation console provides navigation and context — it does not define new protocol constraints.
+
+</div>
+
+---
+
+<div align="center" style={{fontSize: '0.8rem', color: '#64748b'}}>
+
+© 2025 Bangshi Beijing Network Technology Limited Company  
+**Multi-Agent Lifecycle Protocol (MPLP)** — The Agent OS Protocol.
+
+</div>

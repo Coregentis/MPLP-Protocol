@@ -1,0 +1,190 @@
+# MPLP v1.0.0 FROZEN – Doc Role Registry
+# © 2025 Bangshi Beijing Network Technology Limited Company – Apache-2.0
+# Governance: MPLP Protocol Governance Committee (MPGC)
+# Freeze Date: 2025-12-03
+# Status: FROZEN (no breaking changes permitted)
+
+version: "1.0.0"
+registry_type: "doc-role"
+doc_status: "normative"
+doc_role: "registry"
+
+# =============================================================================
+# Doc Role Definitions
+# =============================================================================
+# Each role defines:
+# - schema_type: The Schema.org type for JSON-LD
+# - required_fields: Frontmatter fields that MUST be present
+# - min_schema_fields: Minimum JSON-LD fields for SEO validity
+# - allowed_directories: Directories where this role is valid
+# =============================================================================
+
+roles:
+  normative_spec:
+    description: "Core specification documents defining protocol requirements"
+    schema_type: TechArticle
+    required_fields:
+      - doc_status
+      - doc_role
+      - protocol_version
+      - spec_level
+      - normative_id
+      - normative_refs
+    min_schema_fields:
+      - headline
+      - description
+      - author
+      - publisher
+      - datePublished
+      - version
+    allowed_directories:
+      - 01-architecture
+      - 02-modules
+      - 03-profiles
+      - 04-observability
+      - 05-learning
+      - 06-runtime
+      - 07-integration
+      - 09-tests
+      - 12-governance
+
+  normative_index:
+    description: "Index pages for normative content sections"
+    schema_type: CollectionPage
+    required_fields:
+      - doc_status
+      - doc_role
+      - protocol_version
+    min_schema_fields:
+      - headline
+      - description
+      - author
+      - publisher
+    allowed_directories:
+      - 00-index
+      - 01-architecture
+      - 02-modules
+
+  defined_term:
+    description: "Individual term definition pages"
+    schema_type: DefinedTerm
+    required_fields:
+      - doc_status
+      - doc_role
+      - protocol_version
+    min_schema_fields:
+      - name
+      - description
+      - inDefinedTermSet
+    allowed_directories:
+      - 00-index
+
+  glossary:
+    description: "Glossary and terminology collection pages"
+    schema_type: DefinedTermSet
+    required_fields:
+      - doc_status
+      - doc_role
+      - protocol_version
+    min_schema_fields:
+      - name
+      - description
+      - publisher
+    allowed_directories:
+      - 00-index
+
+  registry:
+    description: "Registry and manifest pages"
+    schema_type: Dataset
+    required_fields:
+      - doc_status
+      - doc_role
+      - protocol_version
+    min_schema_fields:
+      - name
+      - description
+      - publisher
+      - license
+    allowed_directories:
+      - 00-index
+
+  guide:
+    description: "Informative guide documents"
+    schema_type: WebPage
+    required_fields:
+      - doc_status
+      - doc_role
+    min_schema_fields:
+      - headline
+      - description
+    allowed_directories:
+      - 08-guides
+      - 10-sdk
+
+  example:
+    description: "Example and sample code documents"
+    schema_type: WebPage
+    required_fields:
+      - doc_status
+      - doc_role
+    min_schema_fields:
+      - headline
+      - description
+    allowed_directories:
+      - 11-examples
+
+  policy:
+    description: "Governance and policy documents"
+    schema_type: TechArticle
+    required_fields:
+      - doc_status
+      - doc_role
+      - protocol_version
+    min_schema_fields:
+      - headline
+      - description
+      - author
+      - publisher
+    allowed_directories:
+      - 12-governance
+
+  release:
+    description: "Release notes and changelog documents"
+    schema_type: WebPage
+    required_fields:
+      - doc_status
+      - doc_role
+    min_schema_fields:
+      - headline
+      - description
+      - datePublished
+    allowed_directories:
+      - 13-release
+
+  ops:
+    description: "Operations and infrastructure documents"
+    schema_type: WebPage
+    required_fields:
+      - doc_status
+      - doc_role
+    min_schema_fields:
+      - headline
+      - description
+    allowed_directories:
+      - 14-ops
+
+  test_spec:
+    description: "Test specification and golden flow documents"
+    schema_type: TechArticle
+    required_fields:
+      - doc_status
+      - doc_role
+      - protocol_version
+      - normative_id
+    min_schema_fields:
+      - headline
+      - description
+      - author
+      - publisher
+    allowed_directories:
+      - 09-tests

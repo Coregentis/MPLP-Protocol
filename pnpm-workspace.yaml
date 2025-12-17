@@ -1,0 +1,8 @@
+packages:
+  - packages/*
+  - packages/integration/*
+  - examples/*
+
+onlyBuiltDependencies:
+  - es5-ext
+  - esbuild

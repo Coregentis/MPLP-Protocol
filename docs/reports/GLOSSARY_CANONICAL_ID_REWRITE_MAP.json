@@ -1,0 +1,15 @@
+{
+  "https://mplp.dev/schemas/v1.0/learning/mplp-learning-sample-intent.schema.json": "https://schemas.mplp.dev/v1.0/learning/mplp-learning-sample-intent.schema.json",
+  "https://mplp.dev/schemas/v1.0/learning/mplp-learning-sample-delta.schema.json": "https://schemas.mplp.dev/v1.0/learning/mplp-learning-sample-delta.schema.json",
+  "https://mplp.dev/schemas/v1.0/learning/mplp-learning-sample-core.schema.json": "https://schemas.mplp.dev/v1.0/learning/mplp-learning-sample-core.schema.json",
+  "https://mplp.dev/schemas/v1.0/integration/mplp-tool-event.json": "https://schemas.mplp.dev/v1.0/integration/mplp-tool-event.json",
+  "https://mplp.dev/schemas/v1.0/integration/mplp-git-event.json": "https://schemas.mplp.dev/v1.0/integration/mplp-git-event.json",
+  "https://mplp.dev/schemas/v1.0/integration/mplp-file-update-event.json": "https://schemas.mplp.dev/v1.0/integration/mplp-file-update-event.json",
+  "https://mplp.dev/schemas/v1.0/integration/mplp-ci-event.json": "https://schemas.mplp.dev/v1.0/integration/mplp-ci-event.json",
+  "https://mplp.dev/schemas/v1.0/events/mplp-sa-event.schema.json": "https://schemas.mplp.dev/v1.0/events/mplp-sa-event.schema.json",
+  "https://mplp.dev/schemas/v1.0/events/mplp-runtime-execution-event.schema.json": "https://schemas.mplp.dev/v1.0/events/mplp-runtime-execution-event.schema.json",
+  "https://mplp.dev/schemas/v1.0/events/mplp-pipeline-stage-event.schema.json": "https://schemas.mplp.dev/v1.0/events/mplp-pipeline-stage-event.schema.json",
+  "https://mplp.dev/schemas/v1.0/events/mplp-map-event.schema.json": "https://schemas.mplp.dev/v1.0/events/mplp-map-event.schema.json",
+  "https://mplp.dev/schemas/v1.0/events/mplp-graph-update-event.schema.json": "https://schemas.mplp.dev/v1.0/events/mplp-graph-update-event.schema.json",
+  "https://mplp.dev/schemas/v1.0/events/mplp-event-core.schema.json": "https://schemas.mplp.dev/v1.0/events/mplp-event-core.schema.json"
+}

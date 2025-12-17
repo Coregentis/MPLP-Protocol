@@ -1,0 +1,257 @@
+{
+  "meta/index": {
+    "category": "99-meta",
+    "alignment": {
+      "schema_refs": [
+        "https://schemas.mplp.dev/v1.0/mplp-core.schema.json"
+      ],
+      "invariant_refs": [],
+      "golden_refs": [],
+      "code_refs": {
+        "ts": [],
+        "py": []
+      }
+    },
+    "status": "CREATED_INDEX"
+  },
+  "ops/index": {
+    "category": "14-ops",
+    "alignment": {
+      "schema_refs": [
+        "https://schemas.mplp.dev/v1.0/mplp-core.schema.json"
+      ],
+      "invariant_refs": [],
+      "golden_refs": [],
+      "code_refs": {
+        "ts": [],
+        "py": []
+      }
+    },
+    "status": "CREATED_INDEX"
+  },
+  "release/index": {
+    "category": "13-release",
+    "alignment": {
+      "schema_refs": [
+        "https://schemas.mplp.dev/v1.0/mplp-core.schema.json"
+      ],
+      "invariant_refs": [],
+      "golden_refs": [],
+      "code_refs": {
+        "ts": [],
+        "py": []
+      }
+    },
+    "status": "CREATED_INDEX"
+  },
+  "governance/index": {
+    "category": "12-governance",
+    "alignment": {
+      "schema_refs": [
+        "https://schemas.mplp.dev/v1.0/mplp-core.schema.json"
+      ],
+      "invariant_refs": [],
+      "golden_refs": [],
+      "code_refs": {
+        "ts": [],
+        "py": []
+      }
+    },
+    "status": "CREATED_INDEX"
+  },
+  "examples/index": {
+    "category": "11-examples",
+    "alignment": {
+      "schema_refs": [
+        "https://schemas.mplp.dev/v1.0/mplp-core.schema.json"
+      ],
+      "invariant_refs": [],
+      "golden_refs": [],
+      "code_refs": {
+        "ts": [],
+        "py": []
+      }
+    },
+    "status": "CREATED_INDEX"
+  },
+  "sdk/index": {
+    "category": "10-sdk",
+    "alignment": {
+      "schema_refs": [
+        "https://schemas.mplp.dev/v1.0/mplp-core.schema.json"
+      ],
+      "invariant_refs": [],
+      "golden_refs": [],
+      "code_refs": {
+        "ts": [],
+        "py": []
+      }
+    },
+    "status": "CREATED_INDEX"
+  },
+  "tests/index": {
+    "category": "09-tests",
+    "alignment": {
+      "schema_refs": [
+        "https://schemas.mplp.dev/v1.0/mplp-core.schema.json"
+      ],
+      "invariant_refs": [],
+      "golden_refs": [],
+      "code_refs": {
+        "ts": [],
+        "py": []
+      }
+    },
+    "status": "CREATED_INDEX"
+  },
+  "guides/index": {
+    "category": "08-guides",
+    "alignment": {
+      "schema_refs": [
+        "https://schemas.mplp.dev/v1.0/mplp-core.schema.json"
+      ],
+      "invariant_refs": [],
+      "golden_refs": [],
+      "code_refs": {
+        "ts": [],
+        "py": []
+      }
+    },
+    "status": "CREATED_INDEX"
+  },
+  "integration/index": {
+    "category": "07-integration",
+    "alignment": {
+      "schema_refs": [
+        "https://schemas.mplp.dev/v1.0/mplp-core.schema.json"
+      ],
+      "invariant_refs": [],
+      "golden_refs": [],
+      "code_refs": {
+        "ts": [],
+        "py": []
+      }
+    },
+    "status": "CREATED_INDEX"
+  },
+  "runtime/index": {
+    "category": "06-runtime",
+    "alignment": {
+      "schema_refs": [
+        "https://schemas.mplp.dev/v1.0/mplp-core.schema.json"
+      ],
+      "invariant_refs": [],
+      "golden_refs": [],
+      "code_refs": {
+        "ts": [],
+        "py": []
+      }
+    },
+    "status": "CREATED_INDEX"
+  },
+  "learning/index": {
+    "category": "05-learning",
+    "alignment": {
+      "schema_refs": [
+        "https://schemas.mplp.dev/v1.0/mplp-core.schema.json"
+      ],
+      "invariant_refs": [],
+      "golden_refs": [],
+      "code_refs": {
+        "ts": [],
+        "py": []
+      }
+    },
+    "status": "CREATED_INDEX"
+  },
+  "observability/index": {
+    "category": "04-observability",
+    "alignment": {
+      "schema_refs": [
+        "https://schemas.mplp.dev/v1.0/mplp-core.schema.json"
+      ],
+      "invariant_refs": [],
+      "golden_refs": [],
+      "code_refs": {
+        "ts": [],
+        "py": []
+      }
+    },
+    "status": "CREATED_INDEX"
+  },
+  "profiles/index": {
+    "category": "03-profiles",
+    "alignment": {
+      "schema_refs": [
+        "https://schemas.mplp.dev/v1.0/mplp-core.schema.json"
+      ],
+      "invariant_refs": [],
+      "golden_refs": [],
+      "code_refs": {
+        "ts": [],
+        "py": []
+      }
+    },
+    "status": "CREATED_INDEX"
+  },
+  "architecture/index": {
+    "category": "01-architecture",
+    "alignment": {
+      "schema_refs": [
+        "https://schemas.mplp.dev/v1.0/mplp-core.schema.json"
+      ],
+      "invariant_refs": [],
+      "golden_refs": [],
+      "code_refs": {
+        "ts": [],
+        "py": []
+      }
+    },
+    "status": "CREATED_INDEX"
+  },
+  "index/index": {
+    "category": "00-index",
+    "alignment": {
+      "schema_refs": [
+        "https://schemas.mplp.dev/v1.0/mplp-core.schema.json"
+      ],
+      "invariant_refs": [],
+      "golden_refs": [],
+      "code_refs": {
+        "ts": [],
+        "py": []
+      }
+    },
+    "status": "CREATED_INDEX"
+  },
+  "modules/index": {
+    "category": "02-modules",
+    "alignment": {
+      "schema_refs": [
+        "https://schemas.mplp.dev/v1.0/mplp-core.schema.json"
+      ],
+      "invariant_refs": [],
+      "golden_refs": [],
+      "code_refs": {
+        "ts": [],
+        "py": []
+      }
+    },
+    "status": "CREATED_INDEX"
+  },
+  "architecture/cross-cutting/index": {
+    "category": "01-architecture/cross-cutting",
+    "alignment": {
+      "schema_refs": [
+        "https://schemas.mplp.dev/v1.0/mplp-core.schema.json"
+      ],
+      "invariant_refs": [],
+      "golden_refs": [],
+      "code_refs": {
+        "ts": [],
+        "py": []
+      }
+    },
+    "status": "CREATED_INDEX"
+  }
+}

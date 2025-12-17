@@ -1,0 +1,52 @@
+{
+  "label": "Architecture",
+  "link": {
+    "type": "doc",
+    "id": "architecture/index"
+  },
+  "position": 2,
+  "collapsed": true,
+  "collapsible": true,
+  "customProps": {
+    "doc_status": "normative",
+    "doc_role": "normative_index",
+    "protocol_version": "1.0.0",
+    "spec_level": "L1",
+    "category_semantics": {
+      "scope": "Normative coverage for architecture",
+      "guaranteed_behaviors": [
+        {
+          "statement": "Defines protocols for: Core Module – Core Protocol v1.0, Context Module – Core Protocol v1.0, Collab Module – Core Protocol v1.0, Role Module – Core Protocol v1.0, Plan Module – Core Protocol v1.0, Tool Event v1.0, CI Event v1.0, Common Types.",
+          "evidence": {
+            "schema_refs": [
+              "https://schemas.mplp.dev/v1.0/mplp-core.schema.json",
+              "https://schemas.mplp.dev/v1.0/mplp-context.schema.json",
+              "https://schemas.mplp.dev/v1.0/mplp-collab.schema.json",
+              "https://schemas.mplp.dev/v1.0/mplp-role.schema.json",
+              "https://schemas.mplp.dev/v1.0/mplp-plan.schema.json",
+              "https://mplp.dev/schemas/v1.0/integration/mplp-tool-event.json",
+              "https://mplp.dev/schemas/v1.0/integration/mplp-ci-event.json",
+              "https://schemas.mplp.dev/v1.0/common/common-types.schema.json"
+            ]
+          }
+        },
+        {
+          "statement": "Guarantees behavioral invariants defined in 2 invariant specifications.",
+          "evidence": {
+            "invariant_refs": [
+              "tests/golden/invariants/context.yaml",
+              "tests/golden/invariants/confirm.yaml"
+            ]
+          }
+        }
+      ],
+      "explicit_non_claims": [
+        "Does not define normative constraints not explicitly bound in 'guaranteed_behaviors'."
+      ],
+      "truth_binding": {
+        "binding_source": "MANUAL_PAGE_BINDING_MAP_v1.0.yaml",
+        "binding_type": "aggregate"
+      }
+    }
+  }
+}

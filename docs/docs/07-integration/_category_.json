@@ -1,0 +1,37 @@
+{
+  "label": "Integration",
+  "link": {
+    "type": "doc",
+    "id": "integration/index"
+  },
+  "position": 8,
+  "collapsed": true,
+  "collapsible": true,
+  "customProps": {
+    "doc_status": "normative",
+    "doc_role": "normative_index",
+    "protocol_version": "1.0.0",
+    "spec_level": "L4",
+    "category_semantics": {
+      "scope": "Normative coverage for integration",
+      "guaranteed_behaviors": [
+        {
+          "statement": "Defines protocols for: Tool Event v1.0, CI Event v1.0.",
+          "evidence": {
+            "schema_refs": [
+              "https://mplp.dev/schemas/v1.0/integration/mplp-tool-event.json",
+              "https://mplp.dev/schemas/v1.0/integration/mplp-ci-event.json"
+            ]
+          }
+        }
+      ],
+      "explicit_non_claims": [
+        "Does not define normative constraints not explicitly bound in 'guaranteed_behaviors'."
+      ],
+      "truth_binding": {
+        "binding_source": "MANUAL_PAGE_BINDING_MAP_v1.0.yaml",
+        "binding_type": "aggregate"
+      }
+    }
+  }
+}

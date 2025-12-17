@@ -1,0 +1,375 @@
+{
+  "golden": [
+    {
+      "name": "sa-flow-02-step-evaluation",
+      "path": "tests/golden/flows/sa-flow-02-step-evaluation",
+      "hasReadme": true
+    },
+    {
+      "name": "sa-flow-01-basic",
+      "path": "tests/golden/flows/sa-flow-01-basic",
+      "hasReadme": true
+    },
+    {
+      "name": "map-flow-02-broadcast-fanout",
+      "path": "tests/golden/flows/map-flow-02-broadcast-fanout",
+      "hasReadme": true
+    },
+    {
+      "name": "map-flow-01-turn-taking",
+      "path": "tests/golden/flows/map-flow-01-turn-taking",
+      "hasReadme": true
+    },
+    {
+      "name": "flow-05-single-agent-confirm-required",
+      "path": "tests/golden/flows/flow-05-single-agent-confirm-required",
+      "hasReadme": true
+    },
+    {
+      "name": "flow-04-single-agent-llm-enrichment",
+      "path": "tests/golden/flows/flow-04-single-agent-llm-enrichment",
+      "hasReadme": true
+    },
+    {
+      "name": "flow-03-single-agent-with-tools",
+      "path": "tests/golden/flows/flow-03-single-agent-with-tools",
+      "hasReadme": true
+    },
+    {
+      "name": "flow-02-single-agent-large-plan",
+      "path": "tests/golden/flows/flow-02-single-agent-large-plan",
+      "hasReadme": true
+    },
+    {
+      "name": "flow-01-single-agent-plan",
+      "path": "tests/golden/flows/flow-01-single-agent-plan",
+      "hasReadme": true
+    }
+  ],
+  "examples": [
+    {
+      "path": "packages/sdk-ts/examples/flow-05-network-transport.ts"
+    },
+    {
+      "path": "packages/sdk-ts/examples/flow-04-error-recovery.ts"
+    },
+    {
+      "path": "packages/sdk-ts/examples/flow-03-risk-confirm.ts"
+    },
+    {
+      "path": "packages/sdk-ts/examples/flow-02-multi-agent.ts"
+    },
+    {
+      "path": "packages/sdk-ts/examples/flow-01-single-agent.ts"
+    },
+    {
+      "path": "packages/sdk-py/examples/flow_05_network_transport.py"
+    },
+    {
+      "path": "packages/sdk-py/examples/flow_04_error_recovery.py"
+    },
+    {
+      "path": "packages/sdk-py/examples/flow_03_risk_confirm.py"
+    },
+    {
+      "path": "packages/sdk-py/examples/flow_02_multi_agent.py"
+    },
+    {
+      "path": "packages/sdk-py/examples/quickstart/quickstart_single_agent.py"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/src/index.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/src/index.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@mplp/sdk-ts/vitest.config.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/zlib.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/worker_threads.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/wasi.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/vm.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/v8.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/util.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/url.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/tty.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/trace_events.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/tls.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/timers.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/test.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/string_decoder.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/stream.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/sea.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/repl.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/readline.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/querystring.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/punycode.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/process.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/perf_hooks.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/path.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/os.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/net.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/module.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/inspector.generated.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/index.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/https.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/http2.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/http.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/globals.typedarray.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/globals.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/fs.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/events.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/domain.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/dns.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/diagnostics_channel.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/dgram.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/crypto.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/constants.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/console.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/cluster.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/child_process.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/buffer.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/buffer.buffer.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/async_hooks.d.ts"
+    },
+    {
+      "path": "examples/ts-multi-agent-collab/node_modules/@types/node/assert.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/zlib.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/worker_threads.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/wasi.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/vm.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/v8.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/util.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/url.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/tty.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/trace_events.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/tls.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/timers.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/test.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/string_decoder.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/stream.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/sea.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/repl.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/readline.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/querystring.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/punycode.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/process.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/perf_hooks.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/path.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/os.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/net.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/module.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/inspector.generated.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/index.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/https.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/http2.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/http.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/globals.typedarray.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/globals.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/fs.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/events.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/domain.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/dns.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/diagnostics_channel.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/dgram.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/crypto.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/constants.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/console.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/cluster.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/child_process.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/buffer.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/buffer.buffer.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/async_hooks.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@types/node/assert.d.ts"
+    },
+    {
+      "path": "examples/ts-single-agent-basic/node_modules/@mplp/sdk-ts/vitest.config.ts"
+    }
+  ]
+}

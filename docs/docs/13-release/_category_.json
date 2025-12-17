@@ -1,0 +1,32 @@
+{
+  "label": "Release",
+  "link": {
+    "type": "doc",
+    "id": "release/index"
+  },
+  "position": 14,
+  "collapsed": true,
+  "collapsible": true,
+  "customProps": {
+    "doc_status": "informative",
+    "doc_role": "release",
+    "protocol_version": "1.0.0",
+    "spec_level": "N/A",
+    "category_semantics": {
+      "scope": "Normative coverage for release",
+      "guaranteed_behaviors": [
+        {
+          "statement": "Provides informative documentation and architectural overviews.",
+          "evidence": {}
+        }
+      ],
+      "explicit_non_claims": [
+        "Does not define normative constraints not explicitly bound in 'guaranteed_behaviors'."
+      ],
+      "truth_binding": {
+        "binding_source": "MANUAL_PAGE_BINDING_MAP_v1.0.yaml",
+        "binding_type": "aggregate"
+      }
+    }
+  }
+}

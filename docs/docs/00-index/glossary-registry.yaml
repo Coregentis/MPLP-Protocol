@@ -1,0 +1,223 @@
+version: 1.0.0
+protocol_version: 1.0.0
+registry_type: glossary
+doc_status: canonical
+doc_role: glossary-registry
+truth_level: T1
+freeze_date: 2025-12-16
+governance: MPLP Protocol Governance Committee (MPGC)
+license: Apache-2.0
+terms:
+  - term_id: mplp.events.events
+    term: MPLP Base Event
+    canonical: true
+    normative: true
+    definition: Base model for all event structures in MPLP.
+    definition_source:
+      source_type: schema
+      id: https://schemas.mplp.dev/v1.0/common/events.schema.json
+      ref: packages/sdk-ts/schemas/common/events.schema.json
+    usage_evidence:
+      schema_refs:
+        - https://schemas.mplp.dev/v1.0/common/events.schema.json
+  - term_id: mplp.module.collab
+    term: Collab Module
+    canonical: true
+    normative: true
+    definition: "Collab Module Core Protocol: Describes the minimal required
+      semantics (Core Profile) for multi-agent / multi-role collaboration
+      sessions."
+    definition_source:
+      source_type: schema
+      id: https://schemas.mplp.dev/v1.0/mplp-collab.schema.json
+      ref: packages/sdk-ts/schemas/mplp-collab.schema.json
+    usage_evidence:
+      schema_refs:
+        - https://schemas.mplp.dev/v1.0/mplp-collab.schema.json
+  - term_id: mplp.module.confirm
+    term: Confirm Module
+    canonical: true
+    normative: true
+    definition: "Confirm Module Core Protocol: Describes the minimal required
+      semantics (Core Profile) for approval requests and decision records."
+    definition_source:
+      source_type: schema
+      id: https://schemas.mplp.dev/v1.0/mplp-confirm.schema.json
+      ref: packages/sdk-ts/schemas/mplp-confirm.schema.json
+    usage_evidence:
+      schema_refs:
+        - https://schemas.mplp.dev/v1.0/mplp-confirm.schema.json
+  - term_id: mplp.module.context
+    term: Context Module
+    canonical: true
+    normative: true
+    definition: "Context Module Core Protocol: Describes the context resources and
+      their minimal required semantics (Core Profile) for a multi-agent
+      collaboration project/session."
+    definition_source:
+      source_type: schema
+      id: https://schemas.mplp.dev/v1.0/mplp-context.schema.json
+      ref: packages/sdk-ts/schemas/mplp-context.schema.json
+    usage_evidence:
+      schema_refs:
+        - https://schemas.mplp.dev/v1.0/mplp-context.schema.json
+  - term_id: mplp.module.core
+    term: Core Module
+    canonical: true
+    normative: true
+    definition: "Core Module Core Protocol: Describes the minimal required semantics
+      (Core Profile) for an MPLP protocol instance's version, enabled modules,
+      and overall state."
+    definition_source:
+      source_type: schema
+      id: https://schemas.mplp.dev/v1.0/mplp-core.schema.json
+      ref: packages/sdk-ts/schemas/mplp-core.schema.json
+    usage_evidence:
+      schema_refs:
+        - https://schemas.mplp.dev/v1.0/mplp-core.schema.json
+  - term_id: mplp.module.dialog
+    term: Dialog Module
+    canonical: true
+    normative: true
+    definition: "Dialog Module Core Protocol: Describes the dialog interaction
+      semantics in multi-agent systems, adopting Minimal Protocol Format aligned
+      with OpenAI/Anthropic standards."
+    definition_source:
+      source_type: schema
+      id: https://schemas.mplp.dev/v1.0/mplp-dialog.schema.json
+      ref: packages/sdk-ts/schemas/mplp-dialog.schema.json
+    usage_evidence:
+      schema_refs:
+        - https://schemas.mplp.dev/v1.0/mplp-dialog.schema.json
+  - term_id: mplp.module.extension
+    term: Extension Module
+    canonical: true
+    normative: true
+    definition: "Extension Module Core Protocol: Describes the minimal required
+      semantics (Core Profile) for the MPLP plugin system, capability injection,
+      and protocol enhancement points."
+    definition_source:
+      source_type: schema
+      id: https://schemas.mplp.dev/v1.0/mplp-extension.schema.json
+      ref: packages/sdk-ts/schemas/mplp-extension.schema.json
+    usage_evidence:
+      schema_refs:
+        - https://schemas.mplp.dev/v1.0/mplp-extension.schema.json
+  - term_id: mplp.module.network
+    term: Network Module
+    canonical: true
+    normative: true
+    definition: "Network Module Core Protocol: Describes the minimal required
+      semantics (Core Profile) for the topology and node collection of a
+      multi-agent collaboration network."
+    definition_source:
+      source_type: schema
+      id: https://schemas.mplp.dev/v1.0/mplp-network.schema.json
+      ref: packages/sdk-ts/schemas/mplp-network.schema.json
+    usage_evidence:
+      schema_refs:
+        - https://schemas.mplp.dev/v1.0/mplp-network.schema.json
+  - term_id: mplp.module.plan
+    term: Plan Module
+    canonical: true
+    normative: true
+    definition: "Plan Module Core Protocol: Describes the plan objects and their
+      lifecycle minimal required semantics (Core Profile) in multi-agent
+      collaboration."
+    definition_source:
+      source_type: schema
+      id: https://schemas.mplp.dev/v1.0/mplp-plan.schema.json
+      ref: packages/sdk-ts/schemas/mplp-plan.schema.json
+    usage_evidence:
+      schema_refs:
+        - https://schemas.mplp.dev/v1.0/mplp-plan.schema.json
+  - term_id: mplp.module.role
+    term: Role Module
+    canonical: true
+    normative: true
+    definition: "Role Module Core Protocol: Describes the minimal required semantics
+      (Core Profile) for capability declarations, permission declarations, and
+      behavioral identity models in multi-agent systems."
+    definition_source:
+      source_type: schema
+      id: https://schemas.mplp.dev/v1.0/mplp-role.schema.json
+      ref: packages/sdk-ts/schemas/mplp-role.schema.json
+    usage_evidence:
+      schema_refs:
+        - https://schemas.mplp.dev/v1.0/mplp-role.schema.json
+  - term_id: mplp.module.trace
+    term: Trace Module
+    canonical: true
+    normative: true
+    definition: "Trace Module Core Protocol: Describes the minimal required
+      semantics (Core Profile) for execution trace resources (Trace) and their
+      key segments and events."
+    definition_source:
+      source_type: schema
+      id: https://schemas.mplp.dev/v1.0/mplp-trace.schema.json
+      ref: packages/sdk-ts/schemas/mplp-trace.schema.json
+    usage_evidence:
+      schema_refs:
+        - https://schemas.mplp.dev/v1.0/mplp-trace.schema.json
+  - term_id: mplp.object.common-types
+    term: MPLP Common Types
+    canonical: true
+    normative: true
+    definition: Common type definitions used across MPLP modules to ensure
+      consistency and reduce duplication.
+    definition_source:
+      source_type: schema
+      id: https://schemas.mplp.dev/v1.0/common/common-types.schema.json
+      ref: packages/sdk-ts/schemas/common/common-types.schema.json
+    usage_evidence:
+      schema_refs:
+        - https://schemas.mplp.dev/v1.0/common/common-types.schema.json
+  - term_id: mplp.object.identifiers
+    term: MPLP Identifier
+    canonical: true
+    normative: true
+    definition: Unified identifier type used for contextId/planId/traceId/eventId, etc.
+    definition_source:
+      source_type: schema
+      id: https://schemas.mplp.dev/v1.0/common/identifiers.schema.json
+      ref: packages/sdk-ts/schemas/common/identifiers.schema.json
+    usage_evidence:
+      schema_refs:
+        - https://schemas.mplp.dev/v1.0/common/identifiers.schema.json
+  - term_id: mplp.object.learning-sample
+    term: MPLP Learning Sample – Schema v2.0
+    canonical: true
+    normative: true
+    definition: Structured learning sample for MPLP v1.
+    definition_source:
+      source_type: schema
+      id: https://schemas.mplp.dev/v1.0/common/learning-sample.schema.json
+      ref: packages/sdk-ts/schemas/common/learning-sample.schema.json
+    usage_evidence:
+      schema_refs:
+        - https://schemas.mplp.dev/v1.0/common/learning-sample.schema.json
+  - term_id: mplp.object.metadata
+    term: MPLP Metadata
+    canonical: true
+    normative: true
+    definition: Common metadata structure for all MPLP objects.
+    definition_source:
+      source_type: schema
+      id: https://schemas.mplp.dev/v1.0/common/metadata.schema.json
+      ref: packages/sdk-ts/schemas/common/metadata.schema.json
+    usage_evidence:
+      schema_refs:
+        - https://schemas.mplp.dev/v1.0/common/metadata.schema.json
+  - term_id: mplp.object.trace-base
+    term: MPLP Trace Base
+    canonical: true
+    normative: true
+    definition: Common base fields for Trace / Span structures.
+    definition_source:
+      source_type: schema
+      id: https://schemas.mplp.dev/v1.0/common/trace-base.schema.json
+      ref: packages/sdk-ts/schemas/common/trace-base.schema.json
+    usage_evidence:
+      schema_refs:
+        - https://schemas.mplp.dev/v1.0/common/trace-base.schema.json
+

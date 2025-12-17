@@ -1,0 +1,48 @@
+{
+  "label": "Profiles",
+  "link": {
+    "type": "doc",
+    "id": "profiles/index"
+  },
+  "position": 4,
+  "collapsed": true,
+  "collapsible": true,
+  "customProps": {
+    "doc_status": "normative",
+    "doc_role": "normative_index",
+    "protocol_version": "1.0.0",
+    "spec_level": "L2",
+    "category_semantics": {
+      "scope": "Normative coverage for profiles",
+      "guaranteed_behaviors": [
+        {
+          "statement": "Defines protocols for: MAP Event v1.0, Collab Module – Core Protocol v1.0, Role Module – Core Protocol v1.0, Core Module – Core Protocol v1.0, Network Module – Core Protocol v1.0.",
+          "evidence": {
+            "schema_refs": [
+              "https://mplp.dev/schemas/v1.0/events/mplp-map-event.schema.json",
+              "https://schemas.mplp.dev/v1.0/mplp-collab.schema.json",
+              "https://schemas.mplp.dev/v1.0/mplp-role.schema.json",
+              "https://schemas.mplp.dev/v1.0/mplp-core.schema.json",
+              "https://schemas.mplp.dev/v1.0/mplp-network.schema.json"
+            ]
+          }
+        },
+        {
+          "statement": "Guarantees behavioral invariants defined in 1 invariant specifications.",
+          "evidence": {
+            "invariant_refs": [
+              "tests/golden/flows/sa-flow-01-basic/invariants.yaml"
+            ]
+          }
+        }
+      ],
+      "explicit_non_claims": [
+        "Does not define normative constraints not explicitly bound in 'guaranteed_behaviors'."
+      ],
+      "truth_binding": {
+        "binding_source": "MANUAL_PAGE_BINDING_MAP_v1.0.yaml",
+        "binding_type": "aggregate"
+      }
+    }
+  }
+}

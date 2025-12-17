@@ -1,0 +1,687 @@
+# MPLP v1.0.0 FROZEN – Normative Document Registry
+# © 2025 Bangshi Beijing Network Technology Limited Company – Apache-2.0
+# Governance: MPLP Protocol Governance Committee (MPGC)
+# Freeze Date: 2025-12-03
+# Status: FROZEN (no breaking changes permitted)
+
+version: "1.0.0"
+registry_type: "normative-documents"
+doc_status: "normative"
+doc_role: "registry"
+corpus_id: "https://docs.mplp.io/id/MPLP-CORPUS-v1.0.0"
+
+# =============================================================================
+# 00-index: Index & Meta Documents
+# =============================================================================
+documents:
+  - id: MPLP-PROTOCOL-OVERVIEW
+    json_ld_id: "https://docs.mplp.io/id/MPLP-PROTOCOL-OVERVIEW"
+    title: "MPLP v1.0 Protocol Overview"
+    permalink: /00-index/mplp-v1.0-protocol-overview
+    spec_level: L1
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORPUS-INDEX
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORPUS-INDEX"
+    title: "MPLP v1.0 Normative Corpus Index"
+    permalink: /00-index/mplp-v1.0-normative-corpus-index
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-AUTH-SOURCES
+    json_ld_id: "https://docs.mplp.io/id/MPLP-AUTH-SOURCES"
+    title: "MPLP v1.0 Authority Sources"
+    permalink: /00-index/mplp-v1.0-authority-sources
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-GLOSSARY
+    json_ld_id: "https://docs.mplp.io/id/MPLP-GLOSSARY"
+    title: "MPLP v1.0 Glossary"
+    permalink: /00-index/glossary
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+# =============================================================================
+# 01-architecture: Architecture Documents
+# =============================================================================
+  - id: MPLP-ARCH-OVERVIEW
+    json_ld_id: "https://docs.mplp.io/id/MPLP-ARCH-OVERVIEW"
+    title: "Architecture Overview"
+    permalink: /architecture/architecture-overview
+    spec_level: L1
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-L1-CORE
+    json_ld_id: "https://docs.mplp.io/id/MPLP-L1-CORE"
+    title: "L1 Core Protocol"
+    permalink: /architecture/l1-core-protocol
+    spec_level: L1
+    modules: [core]
+    cross_cutting: []
+
+  - id: MPLP-L2-COORD
+    json_ld_id: "https://docs.mplp.io/id/MPLP-L2-COORD"
+    title: "L2 Coordination & Governance"
+    permalink: /architecture/l2-coordination-governance
+    spec_level: L2
+    modules: []
+    cross_cutting: [coordination]
+
+  - id: MPLP-L3-EXEC
+    json_ld_id: "https://docs.mplp.io/id/MPLP-L3-EXEC"
+    title: "L3 Execution & Orchestration"
+    permalink: /architecture/l3-execution-orchestration
+    spec_level: L3
+    modules: []
+    cross_cutting: [orchestration]
+
+  - id: MPLP-L4-INTEG
+    json_ld_id: "https://docs.mplp.io/id/MPLP-L4-INTEG"
+    title: "L4 Integration & Infrastructure"
+    permalink: /architecture/l4-integration-infra
+    spec_level: L4
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-L1L4-DEEPDIVE
+    json_ld_id: "https://docs.mplp.io/id/MPLP-L1L4-DEEPDIVE"
+    title: "L1-L4 Architecture Deep Dive"
+    permalink: /architecture/l1-l4-architecture-deep-dive
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+# =============================================================================
+# 01-architecture/cross-cutting: Cross-Cutting Concerns
+# =============================================================================
+  - id: MPLP-CC-OVERVIEW
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CC-OVERVIEW"
+    title: "Cross-Cutting Concerns Overview"
+    permalink: /architecture/cross-cutting/overview
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CC-AEL
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CC-AEL"
+    title: "Agent Execution Layer (AEL)"
+    permalink: /architecture/cross-cutting/ael
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: [ael]
+
+  - id: MPLP-CC-VSL
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CC-VSL"
+    title: "Verification & Safety Layer (VSL)"
+    permalink: /architecture/cross-cutting/vsl
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: [vsl]
+
+  - id: MPLP-CC-OBS
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CC-OBS"
+    title: "Observability"
+    permalink: /architecture/cross-cutting/observability
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: [observability]
+
+  - id: MPLP-CC-COORD
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CC-COORD"
+    title: "Coordination"
+    permalink: /architecture/cross-cutting/coordination
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: [coordination]
+
+  - id: MPLP-CC-ERROR
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CC-ERROR"
+    title: "Error Handling"
+    permalink: /architecture/cross-cutting/error-handling
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: [error-handling]
+
+# =============================================================================
+# 02-modules: Module Specifications
+# =============================================================================
+  - id: MPLP-MOD-CONTEXT
+    json_ld_id: "https://docs.mplp.io/id/MPLP-MOD-CONTEXT"
+    title: "Context Module"
+    permalink: /modules/context-module
+    spec_level: L2
+    modules: [context]
+    cross_cutting: []
+
+  - id: MPLP-MOD-PLAN
+    json_ld_id: "https://docs.mplp.io/id/MPLP-MOD-PLAN"
+    title: "Plan Module"
+    permalink: /modules/plan-module
+    spec_level: L2
+    modules: [plan]
+    cross_cutting: []
+
+  - id: MPLP-MOD-CONFIRM
+    json_ld_id: "https://docs.mplp.io/id/MPLP-MOD-CONFIRM"
+    title: "Confirm Module"
+    permalink: /modules/confirm-module
+    spec_level: L2
+    modules: [confirm]
+    cross_cutting: []
+
+  - id: MPLP-MOD-TRACE
+    json_ld_id: "https://docs.mplp.io/id/MPLP-MOD-TRACE"
+    title: "Trace Module"
+    permalink: /modules/trace-module
+    spec_level: L2
+    modules: [trace]
+    cross_cutting: []
+
+  - id: MPLP-MOD-ROLE
+    json_ld_id: "https://docs.mplp.io/id/MPLP-MOD-ROLE"
+    title: "Role Module"
+    permalink: /modules/role-module
+    spec_level: L2
+    modules: [role]
+    cross_cutting: []
+
+  - id: MPLP-MOD-DIALOG
+    json_ld_id: "https://docs.mplp.io/id/MPLP-MOD-DIALOG"
+    title: "Dialog Module"
+    permalink: /modules/dialog-module
+    spec_level: L2
+    modules: [dialog]
+    cross_cutting: []
+
+  - id: MPLP-MOD-COLLAB
+    json_ld_id: "https://docs.mplp.io/id/MPLP-MOD-COLLAB"
+    title: "Collab Module"
+    permalink: /modules/collab-module
+    spec_level: L2
+    modules: [collab]
+    cross_cutting: []
+
+  - id: MPLP-MOD-EXTENSION
+    json_ld_id: "https://docs.mplp.io/id/MPLP-MOD-EXTENSION"
+    title: "Extension Module"
+    permalink: /modules/extension-module
+    spec_level: L2
+    modules: [extension]
+    cross_cutting: []
+
+  - id: MPLP-MOD-CORE
+    json_ld_id: "https://docs.mplp.io/id/MPLP-MOD-CORE"
+    title: "Core Module"
+    permalink: /modules/core-module
+    spec_level: L2
+    modules: [core]
+    cross_cutting: []
+
+  - id: MPLP-MOD-NETWORK
+    json_ld_id: "https://docs.mplp.io/id/MPLP-MOD-NETWORK"
+    title: "Network Module"
+    permalink: /modules/network-module
+    spec_level: L2
+    modules: [network]
+    cross_cutting: []
+
+# =============================================================================
+# 03-profiles: Standard Profiles
+# =============================================================================
+  - id: MPLP-PROF-SA
+    json_ld_id: "https://docs.mplp.io/id/MPLP-PROF-SA"
+    title: "SA Profile (Single-Agent)"
+    permalink: /profiles/sa-profile
+    spec_level: L2
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-PROF-MAP
+    json_ld_id: "https://docs.mplp.io/id/MPLP-PROF-MAP"
+    title: "MAP Profile (Multi-Agent)"
+    permalink: /profiles/map-profile
+    spec_level: L2
+    modules: []
+    cross_cutting: []
+
+# =============================================================================
+# 04-observability: Observability Specification
+# =============================================================================
+  - id: MPLP-OBS-OVERVIEW
+    json_ld_id: "https://docs.mplp.io/id/MPLP-OBS-OVERVIEW"
+    title: "Observability Overview"
+    permalink: /observability/observability-overview
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: [observability]
+
+  - id: MPLP-OBS-INVARIANTS
+    json_ld_id: "https://docs.mplp.io/id/MPLP-OBS-INVARIANTS"
+    title: "Observability Invariants"
+    permalink: /observability/observability-invariants
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: [observability]
+
+# =============================================================================
+# 09-tests: Test Specifications
+# =============================================================================
+  - id: MPLP-TEST-GOLDEN
+    json_ld_id: "https://docs.mplp.io/id/MPLP-TEST-GOLDEN"
+    title: "Golden Flow Registry"
+    permalink: /tests/golden-flow-registry
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+# =============================================================================
+# 12-governance: Governance Documents
+# =============================================================================
+  - id: MPLP-GOV-POLICY
+    json_ld_id: "https://docs.mplp.io/id/MPLP-GOV-POLICY"
+    title: "Governance Policy"
+    permalink: /governance/governance-policy
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+# =============================================================================
+# 10-sdk: SDK Standards
+# =============================================================================
+  - id: MPLP-SDK-SCHEMA-MAPPING
+    json_ld_id: "https://docs.mplp.io/id/MPLP-SDK-SCHEMA-MAPPING"
+    title: "Schema Mapping Standard"
+    permalink: /sdk/schema-mapping-standard
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORE-ROADMAP
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORE-ROADMAP"
+    title: "roadmap" # Placeholder title
+    permalink: /meta/roadmap
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORE-FRONTMATTER-POLICY
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORE-FRONTMATTER-POLICY"
+    title: "frontmatter-policy" # Placeholder title
+    permalink: /meta/frontmatter-policy
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORE-FAQ
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORE-FAQ"
+    title: "faq" # Placeholder title
+    permalink: /meta/faq
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORE-MPLP-V1-0-3-RELEASE-AUDIT
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORE-MPLP-V1-0-3-RELEASE-AUDIT"
+    title: "mplp-v1.0.3-release-audit" # Placeholder title
+    permalink: /release/mplp-v1.0.3-release-audit
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORE-MPLP-V1-0-0-RELEASE-NOTES
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORE-MPLP-V1-0-0-RELEASE-NOTES"
+    title: "mplp-v1.0.0-release-notes" # Placeholder title
+    permalink: /release/mplp-v1.0.0-release-notes
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORE-MPLP-V1-0-0-KNOWN-ISSUES
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORE-MPLP-V1-0-0-KNOWN-ISSUES"
+    title: "mplp-v1.0.0-known-issues" # Placeholder title
+    permalink: /release/mplp-v1.0.0-known-issues
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORE-MPLP-V1-0-DOCS-GOVERNANCE-SUMMARY
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORE-MPLP-V1-0-DOCS-GOVERNANCE-SUMMARY"
+    title: "mplp-v1.0-docs-governance-summary" # Placeholder title
+    permalink: /release/mplp-v1.0-docs-governance-summary
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORE-MPLP-V0-9-TO-V1-0-MIGRATION-GUIDE
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORE-MPLP-V0-9-TO-V1-0-MIGRATION-GUIDE"
+    title: "mplp-v0.9-to-v1.0-migration-guide" # Placeholder title
+    permalink: /release/mplp-v0.9-to-v1.0-migration-guide
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORE-MAINTAINER-GUIDE
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORE-MAINTAINER-GUIDE"
+    title: "maintainer-guide" # Placeholder title
+    permalink: /release/maintainer-guide
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORE-EDITORIAL-POLICY
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORE-EDITORIAL-POLICY"
+    title: "editorial-policy" # Placeholder title
+    permalink: /release/editorial-policy
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORE-SCHEMA-SDK-CHANGE-PROCESS
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORE-SCHEMA-SDK-CHANGE-PROCESS"
+    title: "schema-sdk-change-process" # Placeholder title
+    permalink: /ops/schema-sdk-change-process
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORE-RELEASE-RUNBOOK
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORE-RELEASE-RUNBOOK"
+    title: "release-runbook" # Placeholder title
+    permalink: /ops/release-runbook
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORE-OPS-OVERVIEW
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORE-OPS-OVERVIEW"
+    title: "ops-overview" # Placeholder title
+    permalink: /ops/ops-overview
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORE-MONITORING-GUIDE
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORE-MONITORING-GUIDE"
+    title: "monitoring-guide" # Placeholder title
+    permalink: /ops/monitoring-guide
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORE-DEPLOYMENT-CHECKLIST
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORE-DEPLOYMENT-CHECKLIST"
+    title: "deployment-checklist" # Placeholder title
+    permalink: /ops/deployment-checklist
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-SDK-CODEGEN-FROM-SCHEMA
+    json_ld_id: "https://docs.mplp.io/id/MPLP-SDK-CODEGEN-FROM-SCHEMA"
+    title: "codegen-from-schema" # Placeholder title
+    permalink: /sdk/codegen-from-schema
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORE-INTEGRATION-SPEC
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORE-INTEGRATION-SPEC"
+    title: "integration-spec" # Placeholder title
+    permalink: /integration/integration-spec
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-RT-RUNTIME-GLUE-OVERVIEW
+    json_ld_id: "https://docs.mplp.io/id/MPLP-RT-RUNTIME-GLUE-OVERVIEW"
+    title: "runtime-glue-overview" # Placeholder title
+    permalink: /runtime/runtime-glue-overview
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-RT-MODULE-PSG-PATHS
+    json_ld_id: "https://docs.mplp.io/id/MPLP-RT-MODULE-PSG-PATHS"
+    title: "module-psg-paths" # Placeholder title
+    permalink: /runtime/module-psg-paths
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-RT-DRIFT-AND-ROLLBACK
+    json_ld_id: "https://docs.mplp.io/id/MPLP-RT-DRIFT-AND-ROLLBACK"
+    title: "drift-and-rollback" # Placeholder title
+    permalink: /runtime/drift-and-rollback
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-RT-CROSSCUT-PSG-EVENT-BINDING
+    json_ld_id: "https://docs.mplp.io/id/MPLP-RT-CROSSCUT-PSG-EVENT-BINDING"
+    title: "crosscut-psg-event-binding" # Placeholder title
+    permalink: /runtime/crosscut-psg-event-binding
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-LEARN-LEARNING-OVERVIEW
+    json_ld_id: "https://docs.mplp.io/id/MPLP-LEARN-LEARNING-OVERVIEW"
+    title: "learning-overview" # Placeholder title
+    permalink: /learning/learning-overview
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-LEARN-LEARNING-INVARIANTS
+    json_ld_id: "https://docs.mplp.io/id/MPLP-LEARN-LEARNING-INVARIANTS"
+    title: "learning-invariants" # Placeholder title
+    permalink: /learning/learning-invariants
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-LEARN-LEARNING-COLLECTION-POINTS
+    json_ld_id: "https://docs.mplp.io/id/MPLP-LEARN-LEARNING-COLLECTION-POINTS"
+    title: "learning-collection-points" # Placeholder title
+    permalink: /learning/learning-collection-points
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-OBS-PHYSICAL-SCHEMAS-REFERENCE
+    json_ld_id: "https://docs.mplp.io/id/MPLP-OBS-PHYSICAL-SCHEMAS-REFERENCE"
+    title: "physical-schemas-reference" # Placeholder title
+    permalink: /observability/physical-schemas-reference
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-OBS-MODULE-EVENT-MATRIX
+    json_ld_id: "https://docs.mplp.io/id/MPLP-OBS-MODULE-EVENT-MATRIX"
+    title: "module-event-matrix" # Placeholder title
+    permalink: /observability/module-event-matrix
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-OBS-EVENT-TAXONOMY
+    json_ld_id: "https://docs.mplp.io/id/MPLP-OBS-EVENT-TAXONOMY"
+    title: "event-taxonomy" # Placeholder title
+    permalink: /observability/event-taxonomy
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORE-MULTI-AGENT-GOVERNANCE-PROFILE
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORE-MULTI-AGENT-GOVERNANCE-PROFILE"
+    title: "multi-agent-governance-profile" # Placeholder title
+    permalink: /profiles/multi-agent-governance-profile
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORE-SCHEMA-CONVENTIONS
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORE-SCHEMA-CONVENTIONS"
+    title: "schema-conventions" # Placeholder title
+    permalink: /architecture/schema-conventions
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORE-VERSIONING-POLICY
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORE-VERSIONING-POLICY"
+    title: "versioning-policy" # Placeholder title
+    permalink: /governance/versioning-policy
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORE-SECURITY-POLICY
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORE-SECURITY-POLICY"
+    title: "security-policy" # Placeholder title
+    permalink: /governance/security-policy
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORE-MIP-PROCESS
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORE-MIP-PROCESS"
+    title: "mip-process" # Placeholder title
+    permalink: /governance/mip-process
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORE-COMPATIBILITY-MATRIX
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORE-COMPATIBILITY-MATRIX"
+    title: "compatibility-matrix" # Placeholder title
+    permalink: /governance/compatibility-matrix
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORE-PROTOCOL-VERSIONING
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORE-PROTOCOL-VERSIONING"
+    title: "protocol-versioning" # Placeholder title
+    permalink: /cross-cutting/protocol-versioning
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORE-PERFORMANCE
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORE-PERFORMANCE"
+    title: "performance" # Placeholder title
+    permalink: /cross-cutting/performance
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORE-ORCHESTRATION
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORE-ORCHESTRATION"
+    title: "orchestration" # Placeholder title
+    permalink: /cross-cutting/orchestration
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORE-LEARNING-FEEDBACK
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORE-LEARNING-FEEDBACK"
+    title: "learning-feedback" # Placeholder title
+    permalink: /cross-cutting/learning-feedback
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORE-EVENT-BUS
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORE-EVENT-BUS"
+    title: "event-bus" # Placeholder title
+    permalink: /cross-cutting/event-bus
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORE-INDEX-MDX
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORE-INDEX-MDX"
+    title: "index.mdx" # Placeholder title
+    permalink: /governance/index.mdx
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-RT-INDEX-MDX
+    json_ld_id: "https://docs.mplp.io/id/MPLP-RT-INDEX-MDX"
+    title: "index.mdx" # Placeholder title
+    permalink: /runtime/index.mdx
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-OBS-INDEX-MDX
+    json_ld_id: "https://docs.mplp.io/id/MPLP-OBS-INDEX-MDX"
+    title: "index.mdx" # Placeholder title
+    permalink: /observability/index.mdx
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORE-GOVERNANCE
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORE-GOVERNANCE"
+    title: "governance" # Placeholder title
+    permalink: /governance/governance
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-TEST-TESTS
+    json_ld_id: "https://docs.mplp.io/id/MPLP-TEST-TESTS"
+    title: "tests" # Placeholder title
+    permalink: /tests/tests
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-OBS-OBSERVABILITY
+    json_ld_id: "https://docs.mplp.io/id/MPLP-OBS-OBSERVABILITY"
+    title: "observability" # Placeholder title
+    permalink: /observability/observability
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORE-ARCHITECTURE
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORE-ARCHITECTURE"
+    title: "architecture" # Placeholder title
+    permalink: /architecture/architecture
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORE-PROFILES
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORE-PROFILES"
+    title: "profiles" # Placeholder title
+    permalink: /profiles/profiles
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORE-MODULES
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORE-MODULES"
+    title: "modules" # Placeholder title
+    permalink: /modules/modules
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []
+
+  - id: MPLP-CORE-CROSS-CUTTING
+    json_ld_id: "https://docs.mplp.io/id/MPLP-CORE-CROSS-CUTTING"
+    title: "cross-cutting" # Placeholder title
+    permalink: /cross-cutting/cross-cutting
+    spec_level: CrossCutting
+    modules: []
+    cross_cutting: []

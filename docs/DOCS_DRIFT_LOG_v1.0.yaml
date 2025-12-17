@@ -1,0 +1,19 @@
+version: "1.0.0"
+date: "2025-01-01"
+# This log records Semantic Drifts detected during the Remediation Audit and their resolutions.
+# Format:
+# - id: <UUID>
+#   file: <path>
+#   drift_type: "TERM_MISMATCH" | "MODULE_BOUNDARY" | "NORMATIVE_TONE" | "UNSOURCED_CLAIM"
+#   description: "..."
+#   resolution: "..."
+#   commit: "..."
+
+drifts:
+  # Example Entry
+  # - id: "001"
+  #   file: "docs/02-modules/context-module.md"
+  #   drift_type: "TERM_MISMATCH"
+  #   description: "Used 'Global State Graph' instead of 'Project Semantic Graph'."
+  #   resolution: "Renamed to 'Project Semantic Graph (PSG)' and linked to glossary."
+  #   commit: "pending"

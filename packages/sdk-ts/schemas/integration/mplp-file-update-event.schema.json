@@ -1,0 +1,76 @@
+{
+  "$comment": "MPLP v1.0.0 FROZEN – © 2025 邦士（北京）网络科技有限公司 – Apache-2.0 – Governance: MPGC",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://mplp.dev/schemas/v1.0/integration/mplp-file-update-event.json",
+  "title": "MPLP File Update Event v1.0",
+  "description": "IDE file changes (save, refactor, batch modify)",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "file_path": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Path to the file (absolute or workspace-relative)",
+      "examples": [
+        "src/components/App.tsx",
+        "/Users/dev/project/main.py"
+      ]
+    },
+    "change_type": {
+      "type": "string",
+      "enum": [
+        "created",
+        "modified",
+        "deleted",
+        "renamed"
+      ],
+      "description": "Type of file change"
+    },
+    "workspace_root": {
+      "type": "string",
+      "description": "Workspace root directory (for resolving relative paths)"
+    },
+    "change_summary": {
+      "type": "string",
+      "description": "Brief description of changes (e.g., 'Added error handling')"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the change occurred (ISO 8601)"
+    },
+    "lines_added": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of lines added (if applicable)"
+    },
+    "lines_removed": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of lines removed (if applicable)"
+    },
+    "previous_path": {
+      "type": "string",
+      "description": "Previous path (for renamed files)"
+    },
+    "encoding": {
+      "type": "string",
+      "description": "File encoding (e.g., 'utf-8')"
+    },
+    "language": {
+      "type": "string",
+      "description": "Programming language or file type (e.g., 'typescript', 'python')"
+    }
+  },
+  "required": [
+    "file_path",
+    "change_type",
+    "timestamp"
+  ],
+  "x-mplp-meta": {
+    "protocolVersion": "1.0.0",
+    "frozen": true,
+    "freezeDate": "2025-12-03",
+    "governance": "MPGC"
+  }
+}

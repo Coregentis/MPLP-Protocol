@@ -1,0 +1,121 @@
+[
+  {
+    "category": "99-meta",
+    "pages": 3,
+    "guarantees": 0,
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "category": "14-ops",
+    "pages": 5,
+    "guarantees": 1,
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "category": "13-release",
+    "pages": 7,
+    "guarantees": 1,
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "category": "12-governance",
+    "pages": 4,
+    "guarantees": 1,
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "category": "11-examples",
+    "pages": 6,
+    "guarantees": 1,
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "category": "10-sdk",
+    "pages": 7,
+    "guarantees": 1,
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "category": "09-tests",
+    "pages": 4,
+    "guarantees": 1,
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "category": "08-guides",
+    "pages": 4,
+    "guarantees": 1,
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "category": "07-integration",
+    "pages": 1,
+    "guarantees": 1,
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "category": "06-runtime",
+    "pages": 4,
+    "guarantees": 2,
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "category": "05-learning",
+    "pages": 4,
+    "guarantees": 2,
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "category": "04-observability",
+    "pages": 7,
+    "guarantees": 2,
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "category": "03-profiles",
+    "pages": 5,
+    "guarantees": 2,
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "category": "02-modules",
+    "pages": 11,
+    "guarantees": 1,
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "category": "01-architecture",
+    "pages": 7,
+    "guarantees": 2,
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "category": "00-index",
+    "pages": 7,
+    "guarantees": 1,
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "category": "01-architecture/cross-cutting",
+    "pages": 14,
+    "guarantees": 2,
+    "status": "PASS",
+    "note": ""
+  }
+]
