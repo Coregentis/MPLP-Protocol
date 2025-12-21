@@ -1,0 +1,198 @@
+{
+  "$comment": "MPLP Protocol v1.0.0 — Frozen Specification\nFreeze Date: 2025-12-03\nStatus: FROZEN (no breaking changes permitted)\nGovernance: MPLP Protocol Governance Committee (MPGC)\nCopyright: © 2025 邦士（北京）网络科技有限公司\nLicense: Apache-2.0\nAny normative change requires a new protocol version.",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.mplp.dev/v1.0/mplp-dialog.schema.json",
+  "title": "MPLP Dialog Module – Core Protocol v1.0",
+  "description": "Dialog Module Core Protocol: Describes the dialog interaction semantics in multi-agent systems, adopting Minimal Protocol Format aligned with OpenAI/Anthropic standards.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "meta": {
+      "$ref": "common/metadata.schema.json",
+      "description": "[PROTOCOL-CORE] MPLP protocol and schema metadata."
+    },
+    "governance": {
+      "type": "object",
+      "description": "[PROTOCOL-CORE] Governance metadata for lifecycle management, truth domain authority, and locking status.",
+      "properties": {
+        "lifecyclePhase": {
+          "type": "string",
+          "description": "Current phase in the lifecycle fence (e.g., 'design', 'implementation', 'review')."
+        },
+        "truthDomain": {
+          "type": "string",
+          "description": "The truth domain this object belongs to (e.g., 'requirements', 'architecture')."
+        },
+        "locked": {
+          "type": "boolean",
+          "description": "If true, this object cannot be modified except by specific governance overrides."
+        },
+        "lastConfirmRef": {
+          "$ref": "common/common-types.schema.json#/definitions/Ref",
+          "description": "Reference to the last Confirm decision that validated this state."
+        }
+      },
+      "additionalProperties": false
+    },
+    "dialog_id": {
+      "$ref": "common/identifiers.schema.json",
+      "description": "[PROTOCOL-CORE] Global unique identifier for the Dialog."
+    },
+    "context_id": {
+      "$ref": "common/identifiers.schema.json",
+      "description": "[PROTOCOL-CORE] Associated Context ID."
+    },
+    "thread_id": {
+      "$ref": "common/identifiers.schema.json",
+      "description": "[PROTOCOL-CORE] Dialog thread ID (for multi-turn dialog grouping)."
+    },
+    "status": {
+      "type": "string",
+      "description": "[PROTOCOL-CORE] Dialog status.",
+      "enum": [
+        "active",
+        "paused",
+        "completed",
+        "cancelled"
+      ]
+    },
+    "messages": {
+      "type": "array",
+      "description": "[PROTOCOL-CORE] Dialog message list (Minimal Protocol Format).",
+      "items": {
+        "$ref": "#/$defs/dialog_message_core"
+      }
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "[PROTOCOL-CORE] Dialog start time (ISO 8601)."
+    },
+    "ended_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "[PROTOCOL-CORE] Dialog end time (ISO 8601)."
+    },
+    "trace": {
+      "$ref": "common/trace-base.schema.json",
+      "description": "[PROTOCOL-CORE] Audit trace reference associated with this dialog."
+    },
+    "events": {
+      "type": "array",
+      "description": "[PROTOCOL-CORE] List of key events directly related to this dialog.",
+      "items": {
+        "$ref": "common/events.schema.json"
+      }
+    }
+  },
+  "required": [
+    "meta",
+    "dialog_id",
+    "context_id",
+    "status",
+    "messages"
+  ],
+  "$defs": {
+    "dialog_core_properties": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "common/metadata.schema.json",
+          "description": "[PROTOCOL-CORE] MPLP protocol and schema metadata."
+        },
+        "dialog_id": {
+          "$ref": "common/identifiers.schema.json",
+          "description": "[PROTOCOL-CORE] Global unique identifier for the Dialog."
+        },
+        "context_id": {
+          "$ref": "common/identifiers.schema.json",
+          "description": "[PROTOCOL-CORE] Associated Context ID."
+        },
+        "thread_id": {
+          "$ref": "common/identifiers.schema.json",
+          "description": "[PROTOCOL-CORE] Dialog thread ID (for multi-turn dialog grouping)."
+        },
+        "status": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Dialog status.",
+          "enum": [
+            "active",
+            "paused",
+            "completed",
+            "cancelled"
+          ]
+        },
+        "messages": {
+          "type": "array",
+          "description": "[PROTOCOL-CORE] Dialog message list (Minimal Protocol Format).",
+          "items": {
+            "$ref": "#/$defs/dialog_message_core"
+          }
+        },
+        "started_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "[PROTOCOL-CORE] Dialog start time (ISO 8601)."
+        },
+        "ended_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "[PROTOCOL-CORE] Dialog end time (ISO 8601)."
+        },
+        "trace": {
+          "$ref": "common/trace-base.schema.json",
+          "description": "[PROTOCOL-CORE] Audit trace reference associated with this dialog."
+        },
+        "events": {
+          "type": "array",
+          "description": "[PROTOCOL-CORE] List of key events directly related to this dialog.",
+          "items": {
+            "$ref": "common/events.schema.json"
+          }
+        }
+      },
+      "required": [
+        "meta",
+        "dialog_id",
+        "context_id",
+        "status",
+        "messages"
+      ]
+    },
+    "dialog_message_core": {
+      "type": "object",
+      "description": "Minimal Protocol Format - Aligned with OpenAI/Anthropic standards",
+      "additionalProperties": false,
+      "properties": {
+        "role": {
+          "type": "string",
+          "description": "Message sender role.",
+          "enum": [
+            "user",
+            "assistant",
+            "system",
+            "agent"
+          ]
+        },
+        "content": {
+          "type": "string",
+          "description": "Message content (plain text)."
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Message timestamp (ISO 8601)."
+        },
+        "event": {
+          "$ref": "common/events.schema.json",
+          "description": "Optional L1 Event reference (for deep integration with Trace module)."
+        }
+      },
+      "required": [
+        "role",
+        "content",
+        "timestamp"
+      ]
+    }
+  }
+}

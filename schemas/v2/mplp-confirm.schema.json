@@ -1,0 +1,232 @@
+{
+  "$comment": "MPLP v1.0.0 FROZEN – © 2025 Bangshi Beijing Network Technology Limited Company – Apache-2.0 – Governance: MPGC",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.mplp.dev/v1.0/mplp-confirm.schema.json",
+  "title": "MPLP Confirm Module – Core Protocol v1.0",
+  "description": "Confirm Module Core Protocol: Describes the minimal required semantics (Core Profile) for approval requests and decision records.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "meta": {
+      "$ref": "common/metadata.schema.json",
+      "description": "[PROTOCOL-CORE] MPLP protocol schema metadata (version, source, cross-cutting tags, etc.)."
+    },
+    "governance": {
+      "type": "object",
+      "description": "[PROTOCOL-CORE] Governance metadata for lifecycle management, truth domain authority, and locking status.",
+      "properties": {
+        "lifecyclePhase": {
+          "type": "string",
+          "description": "Current phase in the lifecycle fence (e.g., 'design', 'implementation', 'review')."
+        },
+        "truthDomain": {
+          "type": "string",
+          "description": "The truth domain this object belongs to (e.g., 'requirements', 'architecture')."
+        },
+        "locked": {
+          "type": "boolean",
+          "description": "If true, this object cannot be modified except by specific governance overrides."
+        },
+        "lastConfirmRef": {
+          "$ref": "common/common-types.schema.json#/definitions/Ref",
+          "description": "Reference to the last Confirm decision that validated this state."
+        }
+      },
+      "additionalProperties": false
+    },
+    "confirm_id": {
+      "$ref": "common/identifiers.schema.json",
+      "description": "[PROTOCOL-CORE] Global unique identifier for the approval request."
+    },
+    "target_type": {
+      "type": "string",
+      "description": "[PROTOCOL-CORE] Approval target type (type of the resource being approved).",
+      "enum": [
+        "context",
+        "plan",
+        "trace",
+        "extension",
+        "other"
+      ]
+    },
+    "target_id": {
+      "$ref": "common/identifiers.schema.json",
+      "description": "[PROTOCOL-CORE] Global unique identifier of the resource being approved."
+    },
+    "status": {
+      "type": "string",
+      "description": "[PROTOCOL-CORE] Current status of the approval request.",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected",
+        "cancelled"
+      ]
+    },
+    "requested_by_role": {
+      "type": "string",
+      "description": "[PROTOCOL-CORE] Identifier of the role initiating the approval request (should correspond to role_id in Role module)."
+    },
+    "requested_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "[PROTOCOL-CORE] Approval request creation time (ISO 8601)."
+    },
+    "reason": {
+      "type": "string",
+      "description": "[PROTOCOL-CORE] Reason for the request, for humans and Agents."
+    },
+    "decisions": {
+      "type": "array",
+      "description": "[PROTOCOL-CORE] List of decision records related to this Confirm request.",
+      "items": {
+        "$ref": "#/$defs/confirm_decision_core"
+      }
+    },
+    "trace": {
+      "$ref": "common/trace-base.schema.json",
+      "description": "[PROTOCOL-CORE] Trace reference bound to this Confirm request (for cross-module tracing)."
+    },
+    "events": {
+      "type": "array",
+      "description": "[PROTOCOL-CORE] List of key events directly related to this Confirm request (creation, decision, cancellation, etc.).",
+      "items": {
+        "$ref": "common/events.schema.json"
+      }
+    }
+  },
+  "required": [
+    "meta",
+    "confirm_id",
+    "target_type",
+    "target_id",
+    "status",
+    "requested_by_role",
+    "requested_at"
+  ],
+  "$defs": {
+    "confirm_core_properties": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "common/metadata.schema.json",
+          "description": "[PROTOCOL-CORE] MPLP protocol schema metadata (version, source, cross-cutting tags, etc.)."
+        },
+        "confirm_id": {
+          "$ref": "common/identifiers.schema.json",
+          "description": "[PROTOCOL-CORE] Global unique identifier for the approval request."
+        },
+        "target_type": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Approval target type (type of the resource being approved).",
+          "enum": [
+            "context",
+            "plan",
+            "trace",
+            "extension",
+            "other"
+          ]
+        },
+        "target_id": {
+          "$ref": "common/identifiers.schema.json",
+          "description": "[PROTOCOL-CORE] Global unique identifier of the resource being approved."
+        },
+        "status": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Current status of the approval request.",
+          "enum": [
+            "pending",
+            "approved",
+            "rejected",
+            "cancelled"
+          ]
+        },
+        "requested_by_role": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Identifier of the role initiating the approval request (should correspond to role_id in Role module)."
+        },
+        "requested_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "[PROTOCOL-CORE] Approval request creation time (ISO 8601)."
+        },
+        "reason": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Reason for the request, for humans and Agents."
+        },
+        "decisions": {
+          "type": "array",
+          "description": "[PROTOCOL-CORE] List of decision records related to this Confirm request.",
+          "items": {
+            "$ref": "#/$defs/confirm_decision_core"
+          }
+        },
+        "trace": {
+          "$ref": "common/trace-base.schema.json",
+          "description": "[PROTOCOL-CORE] Trace reference bound to this Confirm request (for cross-module tracing)."
+        },
+        "events": {
+          "type": "array",
+          "description": "[PROTOCOL-CORE] List of key events directly related to this Confirm request (creation, decision, cancellation, etc.).",
+          "items": {
+            "$ref": "common/events.schema.json"
+          }
+        }
+      },
+      "required": [
+        "meta",
+        "confirm_id",
+        "target_type",
+        "target_id",
+        "status",
+        "requested_by_role",
+        "requested_at"
+      ]
+    },
+    "confirm_decision_core": {
+      "type": "object",
+      "description": "[PROTOCOL-CORE] Minimal required semantics for a single approval decision record.",
+      "additionalProperties": false,
+      "properties": {
+        "decision_id": {
+          "$ref": "common/identifiers.schema.json",
+          "description": "[PROTOCOL-CORE] Global unique identifier for the decision record."
+        },
+        "status": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Decision result status.",
+          "enum": [
+            "approved",
+            "rejected",
+            "cancelled"
+          ]
+        },
+        "decided_by_role": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Identifier of the role making the decision (should correspond to role_id in Role module)."
+        },
+        "decided_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "[PROTOCOL-CORE] Decision time (ISO 8601)."
+        },
+        "reason": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Summary of the decision reason (optional)."
+        }
+      },
+      "required": [
+        "decision_id",
+        "status",
+        "decided_by_role",
+        "decided_at"
+      ]
+    }
+  },
+  "x-mplp-meta": {
+    "protocolVersion": "1.0.0",
+    "frozen": true,
+    "freezeDate": "2025-12-03",
+    "governance": "MPGC"
+  }
+}

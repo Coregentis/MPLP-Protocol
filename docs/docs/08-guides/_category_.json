@@ -1,0 +1,10 @@
+﻿{
+    "label": "Guides",
+    "link": {
+        "type": "doc",
+        "id": "conformance-guide"
+    },
+    "position": 9,
+    "collapsed": true,
+    "collapsible": true
+}

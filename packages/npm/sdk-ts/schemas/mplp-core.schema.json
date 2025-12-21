@@ -1,0 +1,189 @@
+{
+  "$comment": "MPLP v1.0.0 FROZEN – © 2025 邦士（北京）网络科技有限公司 – Apache-2.0 – Governance: MPGC",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.mplp.dev/v1.0/mplp-core.schema.json",
+  "title": "MPLP Core Module – Core Protocol v1.0",
+  "description": "Core Module Core Protocol: Describes the minimal required semantics (Core Profile) for an MPLP protocol instance's version, enabled modules, and overall state.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "meta": {
+      "$ref": "common/metadata.schema.json",
+      "description": "[PROTOCOL-CORE] MPLP protocol and schema metadata."
+    },
+    "governance": {
+      "type": "object",
+      "description": "[PROTOCOL-CORE] Governance metadata for lifecycle management, truth domain authority, and locking status.",
+      "properties": {
+        "lifecyclePhase": {
+          "type": "string",
+          "description": "Current phase in the lifecycle fence (e.g., 'design', 'implementation', 'review')."
+        },
+        "truthDomain": {
+          "type": "string",
+          "description": "The truth domain this object belongs to (e.g., 'requirements', 'architecture')."
+        },
+        "locked": {
+          "type": "boolean",
+          "description": "If true, this object cannot be modified except by specific governance overrides."
+        },
+        "lastConfirmRef": {
+          "$ref": "common/common-types.schema.json#/definitions/Ref",
+          "description": "Reference to the last Confirm decision that validated this state."
+        }
+      },
+      "additionalProperties": false
+    },
+    "core_id": {
+      "$ref": "common/identifiers.schema.json",
+      "description": "[PROTOCOL-CORE] Global unique identifier for the current Core instance."
+    },
+    "protocol_version": {
+      "type": "string",
+      "minLength": 1,
+      "description": "[PROTOCOL-CORE] Major version number of the current MPLP protocol instance (e.g., 1.0.0)."
+    },
+    "status": {
+      "type": "string",
+      "description": "[PROTOCOL-CORE] Lifecycle status of the current Core instance.",
+      "enum": [
+        "draft",
+        "active",
+        "deprecated",
+        "archived"
+      ]
+    },
+    "modules": {
+      "type": "array",
+      "description": "[PROTOCOL-CORE] List of L2 modules enabled in the current protocol instance.",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/core_module_descriptor"
+      }
+    },
+    "trace": {
+      "$ref": "common/trace-base.schema.json",
+      "description": "[PROTOCOL-CORE] Main Trace reference bound to this Core instance, used for auditing Core layer configuration changes."
+    },
+    "events": {
+      "type": "array",
+      "description": "[PROTOCOL-CORE] List of key events related to this Core instance (version upgrades, module enable/disable, etc.).",
+      "items": {
+        "$ref": "common/events.schema.json"
+      }
+    }
+  },
+  "required": [
+    "meta",
+    "core_id",
+    "protocol_version",
+    "status",
+    "modules"
+  ],
+  "$defs": {
+    "core_core_properties": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "common/metadata.schema.json"
+        },
+        "core_id": {
+          "$ref": "common/identifiers.schema.json"
+        },
+        "protocol_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "active",
+            "deprecated",
+            "archived"
+          ]
+        },
+        "modules": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/core_module_descriptor"
+          }
+        },
+        "trace": {
+          "$ref": "common/trace-base.schema.json"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "common/events.schema.json"
+          }
+        }
+      },
+      "required": [
+        "meta",
+        "core_id",
+        "protocol_version",
+        "status",
+        "modules"
+      ]
+    },
+    "core_module_descriptor": {
+      "type": "object",
+      "description": "[PROTOCOL-CORE] L2 module descriptor (used to declare which modules are enabled in the current instance).",
+      "additionalProperties": false,
+      "properties": {
+        "module_id": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Module identifier.",
+          "enum": [
+            "context",
+            "plan",
+            "confirm",
+            "trace",
+            "role",
+            "extension",
+            "dialog",
+            "collab",
+            "core",
+            "network"
+          ]
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "description": "[PROTOCOL-CORE] Protocol version used by this module in the current instance (SemVer recommended)."
+        },
+        "status": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Status of this module in the current instance.",
+          "enum": [
+            "enabled",
+            "disabled",
+            "experimental",
+            "deprecated"
+          ]
+        },
+        "required": {
+          "type": "boolean",
+          "description": "[PROTOCOL-CORE] Whether this module is mandatory for the current instance."
+        },
+        "description": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Brief description of the module, for humans and Agents."
+        }
+      },
+      "required": [
+        "module_id",
+        "version",
+        "status"
+      ]
+    }
+  },
+  "x-mplp-meta": {
+    "protocolVersion": "1.0.0",
+    "frozen": true,
+    "freezeDate": "2025-12-03",
+    "governance": "MPGC"
+  }
+}

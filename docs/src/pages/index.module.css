@@ -1,0 +1,169 @@
+.heroBanner {
+    padding: 5rem 0 3rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background: radial-gradient(circle at top center, #eff6ff 0, #ffffff 60%);
+}
+
+/* Primary Title: "Multi-Agent Lifecycle Protocol (MPLP)" - Blue & Large */
+.heroTitlePrimary {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #3b82f6;
+    /* Logo Blue */
+    margin-bottom: 1.25rem;
+    /* Increased spacing */
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    padding: 0 1rem;
+}
+
+/* Secondary Title: "The AgentOS Protocol" - Blue & Medium-Large */
+.heroTitleSecondary {
+    font-size: 2.5rem;
+    /* Increased from 2rem to be closer to 3rem */
+    font-weight: 700;
+    color: #3b82f6;
+    /* Logo Blue */
+    margin-bottom: 1.25rem;
+    /* Matched spacing */
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+}
+
+.heroSubtitle {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #64748b;
+    /* Slate 500 */
+    margin-bottom: 2rem;
+}
+
+.badges {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* Value Prop - Symmetric Split Layout */
+.valuePropGrid {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    /* Gap handled by padding */
+    max-width: 1000px;
+    width: 100%;
+    margin: 0 auto 3rem;
+    padding: 0 1rem;
+}
+
+.valuePropItemLeft {
+    flex: 1;
+    text-align: right;
+    /* Align towards center */
+    padding-right: 3rem;
+    /* Space from divider */
+    font-size: 1.15rem;
+    color: #334155;
+    /* Slate 700 */
+    line-height: 1.6;
+}
+
+.valuePropItemRight {
+    flex: 1;
+    text-align: left;
+    /* Align towards center */
+    padding-left: 3rem;
+    /* Space from divider */
+    font-size: 1.15rem;
+    color: #334155;
+    /* Slate 700 */
+    line-height: 1.6;
+}
+
+.valuePropDivider {
+    width: 1px;
+    height: 60px;
+    background-color: #cbd5e1;
+    /* Slate 300 */
+    flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+    .valuePropGrid {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .valuePropDivider {
+        width: 60px;
+        height: 1px;
+    }
+
+    .valuePropItemLeft,
+    .valuePropItemRight {
+        text-align: center;
+        padding: 0;
+    }
+}
+
+.buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.features {
+    display: flex;
+    align-items: center;
+    padding: 4rem 0;
+    width: 100%;
+}
+
+/* Feature Cards */
+.featureCard {
+    display: block;
+    height: 100%;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 0.75rem;
+    transition: all 0.2s ease;
+    background: #fff;
+    text-decoration: none !important;
+    /* Remove underline from link */
+    color: inherit;
+    /* Inherit text color */
+    margin-bottom: 1.5rem;
+}
+
+.featureCard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.15);
+    border-color: #3b82f6;
+}
+
+.featureTitle {
+    color: #1e293b;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.featureCard:hover .featureTitle {
+    color: #3b82f6;
+}
+
+.featureDescription {
+    color: #64748b;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}

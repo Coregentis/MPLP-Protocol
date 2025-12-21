@@ -1,0 +1,66 @@
+# MPLP Protocol v1.0.0 �?Frozen Specification
+# Freeze Date: 2025-12-03
+# Status: FROZEN (no breaking changes permitted)
+# Governance: MPLP Protocol Governance Committee (MPGC)
+# © 2025 邦士（北京）网络科技有限公司
+# License: Apache-2.0
+# Any normative change requires a new protocol version.
+
+sa_profile:
+  version: "1.0.0"
+  title: "MPLP-SA Profile v1.0"
+  description: "Single Agent execution profile for MPLP v1.0 - defines the minimal executable agent unit"
+
+  lifecycle:
+    states:
+      - initialize
+      - load_context
+      - evaluate_plan
+      - execute_step
+      - emit_trace
+      - complete
+    transitions:
+      - from: initialize
+        to: load_context
+        description: "SA instance created, ready to load context"
+      - from: load_context
+        to: evaluate_plan
+        description: "Context loaded, begin plan evaluation"
+      - from: evaluate_plan
+        to: execute_step
+        description: "Plan evaluated, start executing steps"
+      - from: execute_step
+        to: emit_trace
+        description: "Step execution complete, emit trace event"
+      - from: emit_trace
+        to: complete
+        description: "All steps executed, finalize SA execution"
+
+  capabilities:
+    - id: read_context
+      description: "Read context state and environment information"
+    - id: read_plan
+      description: "Read plan structure, steps, and dependencies"
+    - id: execute_plan_step
+      description: "Execute individual plan steps according to agent_role"
+    - id: write_trace
+      description: "Write execution events to trace for observability"
+
+  contracts:
+    input:
+      - context: "Context object with环境 and domain information"
+      - plan: "Plan object with ordered steps and dependencies"
+    output:
+      - trace: "Trace object with execution events and outcomes"
+
+  dependencies:
+    l2_modules:
+      - context: "Required for environment and state information"
+      - plan: "Required for execution steps and strategy"
+      - trace: "Required for recording execution events"
+
+  invariants_ref: "schemas/v2/invariants/sa-invariants.yaml"
+  events_ref: "schemas/v2/events/mplp-sa-event.schema.json"
+  minimal_flows:
+    - sa-flow-01-basic
+    - sa-flow-02-step-evaluation

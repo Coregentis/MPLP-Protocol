@@ -1,0 +1,10 @@
+﻿{
+    "label": "Observability",
+    "link": {
+        "type": "doc",
+        "id": "observability-overview"
+    },
+    "position": 5,
+    "collapsed": true,
+    "collapsible": true
+}

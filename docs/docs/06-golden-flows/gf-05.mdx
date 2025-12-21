@@ -1,0 +1,80 @@
+---
+title: "GF-05: Governance"
+sidebar_label: "GF-05: Governance"
+sidebar_position: 5
+description: GF-05 validates the governance and confirmation lifecycle, including multi-round human-in-the-loop approvals.
+keywords: [MPLP, Golden Flow, Governance, Confirmation, validation, conformance, HITL]
+---
+> [!FROZEN]
+> **MPLP Protocol v1.0.0  Frozen Specification**
+> **Freeze Date**: 2025-12-03
+> **Status**: FROZEN (no breaking changes permitted)
+> **Governance**: MPLP Protocol Governance Committee (MPGC)
+> **License**: Apache-2.0
+> **Note**: Any normative change requires a new protocol version.
+
+# GF-05: Governance (Confirmation)
+
+> **Type**: Normative Validation Scenario
+> **Profile**: SA (Single Agent)
+> **Status**: ✅ VERIFIED
+
+## Scope
+
+This golden flow validates:
+- **Confirmation** module's multi-round approval process
+- **Human-in-the-loop** (HITL) decision recording
+- **Trace** emission of governance events
+- **Plan** execution blocking until approval is received
+
+## Non-Goals
+
+This flow does NOT validate:
+- Multi-agent coordination (see GF-02)
+- Drift detection (see GF-03)
+
+---
+
+## Modules Involved
+
+| Module | Role in Flow |
+|:-------|:-------------|
+| **Confirm** | Manages the approval lifecycle and decisions |
+| **Plan** | Subject of the confirmation request |
+| **Trace** | Records the audit trail of approvals/rejections |
+| **Role** | Defines who has authority to confirm |
+
+---
+
+## Cross-Cutting Duties Exercised
+
+- Governance Gate
+- Decision Audit
+- Authority Verification
+
+---
+
+## Evidence
+
+| Type | Location | Status |
+|:-----|:---------|:-------|
+| **Golden Flow** | `tests/golden/flows/flow-05-single-agent-confirm-required/` | ✅ Passed |
+
+---
+
+## Normative Requirements
+
+Implementations MUST:
+- Block execution of sensitive steps until a valid `Confirm` object is `approved`
+- Support multi-round decisions (e.g., `rejected` -> `modified` -> `approved`)
+- Record the `decision_id` and `author_id` for every governance action
+- Ensure that `override` decisions are explicitly flagged in the Trace
+
+---
+
+## Expected Outcome
+
+- Agent pauses execution at the governance gate
+- Human/System provides a decision (e.g., Approve)
+- Agent resumes execution only after valid approval
+- All decisions are permanently recorded in the Trace

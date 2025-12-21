@@ -1,0 +1,10 @@
+﻿{
+    "label": "Learning",
+    "link": {
+        "type": "doc",
+        "id": "learning-overview"
+    },
+    "position": 6,
+    "collapsed": true,
+    "collapsible": true
+}

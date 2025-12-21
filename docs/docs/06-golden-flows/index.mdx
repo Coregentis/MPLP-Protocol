@@ -1,0 +1,88 @@
+---
+title: Golden Flows Overview
+sidebar_label: Overview
+sidebar_position: 0
+description: Golden Flows are normative validation scenarios that define expected behavior for MPLP-conformant implementations.
+keywords: [MPLP, Golden Flows, validation, conformance, protocol testing, AI agent behavior]
+---
+> [!FROZEN]
+> **MPLP Protocol v1.0.0  Frozen Specification**
+> **Freeze Date**: 2025-12-03
+> **Status**: FROZEN (no breaking changes permitted)
+> **Governance**: MPLP Protocol Governance Committee (MPGC)
+> **License**: Apache-2.0
+> **Note**: Any normative change requires a new protocol version.
+
+# Golden Flows
+
+Golden Flows are **normative validation scenarios** that define expected behavior for MPLP-conformant implementations.
+
+## 🧭 How to Use This Section
+
+| Your Goal | Start Here |
+|:----------|:-----------|
+| **Verify implementation** | [GF-01: SA Lifecycle](./gf-01.mdx) |
+| **Understand coordination** | [GF-02: MAP Coordination](./gf-02.mdx) |
+| **Check governance** | [GF-05: Governance](./gf-05.mdx) |
+| **View registry** | [Golden Flow Registry](/docs/tests/golden-flow-registry) |
+
+---
+
+## What Are Golden Flows?
+
+Golden Flows are **end-to-end execution scenarios** that:
+
+1. **Define** the expected sequence of module interactions
+2. **Validate** that implementations produce correct state transitions
+3. **Provide** evidence of conformance for auditors
+
+They are **not tutorials** — they are **contracts**.
+
+---
+
+## The Five Golden Flows
+
+| Flow | Name | Purpose | Modules Involved |
+|:-----|:-----|:--------|:-----------------|
+| **GF-01** | [SA Lifecycle](/docs/golden-flows/gf-01) | Single-agent lifecycle correctness | Context, Plan, Trace |
+| **GF-02** | [MAP Coordination](/docs/golden-flows/gf-02) | Multi-agent coordination | Collab, Role, Dialog |
+| **GF-03** | [Drift Detection](/docs/golden-flows/gf-03) | Plan-execution divergence | Plan, Trace, Confirm |
+| **GF-04** | [Delta-Intent](/docs/golden-flows/gf-04) | Incremental state update | Context, Trace |
+| **GF-05** | [Governance](/docs/golden-flows/gf-05) | Policy enforcement | Confirm, Role |
+
+---
+
+## How to Use Golden Flows
+
+### For Implementers
+Run the Golden Flow test suite against your implementation to verify conformance.
+
+```bash
+npm run test:golden
+```
+
+### For Auditors
+Use Golden Flows as **evidence** that an implementation behaves correctly.
+Each flow maps to specific modules and cross-cutting duties.
+
+### For Evaluators
+Golden Flows demonstrate that MPLP is **verifiable**, not just aspirational.
+
+---
+
+## Traceability
+
+All Golden Flows are mapped to:
+- **Modules** they validate
+- **Cross-Cutting Duties** they exercise
+- **Test files** in the repository
+
+See: [Repo-Docs-Code Alignment](/docs/index/REPO_DOCS_CODE_ALIGNMENT)
+
+---
+
+## Change Policy
+
+Golden Flows are **Normative**.
+Changes require Documentation Governance review.
+Semantic changes require MPGC approval.

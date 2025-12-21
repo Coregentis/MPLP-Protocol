@@ -1,0 +1,116 @@
+# MPLP Protocol v1.0.0 �?Frozen Specification
+# Freeze Date: 2025-12-03
+# Status: FROZEN (no breaking changes permitted)
+# Governance: MPLP Protocol Governance Committee (MPGC)
+# © 2025 邦士（北京）网络科技有限公司
+# License: Apache-2.0
+# Any normative change requires a new protocol version.
+
+map_profile:
+  version: "1.0.0"
+  title: "MPLP-MAP Profile v1.0"
+  description: "Multi-Agent collaboration profile for MPLP v1.0 - defines session lifecycle, role dispatch, execution token mechanism, and collaboration patterns"
+
+  session_lifecycle:
+    states:
+      - initialize_session
+      - assign_roles
+      - dispatch_turn
+      - collect_results
+      - resolve_conflicts
+      - broadcast_updates
+      - complete_session
+    transitions:
+      - from: initialize_session
+        to: assign_roles
+        description: "Session created, roles need assignment"
+      - from: assign_roles
+        to: dispatch_turn
+        description: "Roles assigned, begin first turn"
+      - from: dispatch_turn
+        to: collect_results
+        description: "Turn dispatched to agent, await completion"
+      - from: collect_results
+        to: resolve_conflicts
+        description: "Results collected, check for conflicts"
+      - from: resolve_conflicts
+        to: broadcast_updates
+        description: "Conflicts resolved, broadcast state updates"
+      - from: broadcast_updates
+        to: dispatch_turn
+        description: "Updates broadcast, next turn (iterative)"
+      - from: broadcast_updates
+        to: complete_session
+        description: "Updates broadcast, session终止 (终�?"
+
+  collaboration_patterns:
+    - id: turn_taking
+      description: "Sequential execution - one active agent at a time, strict ordering"
+      collab_mode: "round_robin"
+      characteristics:
+        - single_active_agent
+        - ordered_sequence
+        - exclusive_execution_token
+
+    - id: broadcast_fanout
+      description: "One agent broadcasts context/task, multiple agents respond in parallel (logically)"
+      collab_mode: "broadcast"
+      characteristics:
+        - single_broadcaster
+        - multiple_responders
+        - parallel_response_collection
+
+    - id: orchestrated
+      description: "Central coordinator dispatches tasks, agents execute under coordination"
+      collab_mode: "orchestrated"
+      characteristics:
+        - central_coordination
+        - task_distribution
+        - result_aggregation
+
+  execution_token:
+    description: "Logical token granting execution right to a specific role/agent (Profile-layer concept, not in L2 schemas)"
+    purpose: "Prevent concurrent modification conflicts in turn-taking scenarios"
+    structure:
+      - token_id: "UUID identifying this token instance"
+      - holder_role_id: "Role ID currently holding the token"
+      - issued_at: "ISO 8601 timestamp when token was issued"
+      - expires_at: "ISO 8601 timestamp when token expires (optional)"
+
+    transfer_rules:
+      - "Only one role holds token at any time (turn-taking)"
+      - "Token transfer triggers MAPTurnDispatched event"
+      - "Token release triggers MAPTurnCompleted event"
+
+    note: "execution_token is a MAP Profile abstraction, not a field in Collab/Network/Role schemas"
+
+  dependencies:
+    l2_modules:
+      - module: collab
+        usage: "Session structure, mode selection, participant management"
+        key_fields: ["collab_id", "mode", "participants", "status"]
+
+      - module: network
+        usage: "Agent topology, communication channels"
+        key_fields: ["network_id", "topology_type", "nodes"]
+
+      - module: role
+        usage: "Role definitions, capabilities, permissions"
+        key_fields: ["role_id", "name", "capabilities"]
+
+      - module: dialog
+        usage: "Multi-turn conversation threading (optional)"
+        key_fields: ["thread_id", "messages"]
+
+  invariants_ref: "schemas/v2/invariants/map-invariants.yaml"
+  events_ref: "schemas/v2/events/mplp-map-event.schema.json"
+
+  minimal_flows:
+    - map-flow-01-turn-taking
+    - map-flow-02-broadcast-fanout
+
+  notes:
+    - "MAP Profile is Profile-layer abstraction, not part of v1.0 compliance boundary"
+    - "Collab.mode enum values map to MAP collaboration patterns"
+    - "execution_token is conceptual (not added as schema field)"
+    - "MAP flows demonstrate patterns, not protocol requirements"

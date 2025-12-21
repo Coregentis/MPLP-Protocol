@@ -1,0 +1,127 @@
+/*
+ * MPLP Protocol Documentation - Standard Theme
+ * Based on Docusaurus Classic Preset
+ */
+
+/* 1. Typography Imports */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* 2. Global Variables & Branding */
+:root {
+  /* Brand Colors - Professional & Clean */
+  --ifm-color-primary: #3b82f6;
+  /* Standard Blue */
+  --ifm-color-primary-dark: #2563eb;
+  --ifm-color-primary-darker: #1d4ed8;
+  --ifm-color-primary-darkest: #1e40af;
+  --ifm-color-primary-light: #60a5fa;
+  --ifm-color-primary-lighter: #93c5fd;
+  --ifm-color-primary-lightest: #dbeafe;
+
+  /* Typography */
+  --ifm-font-family-base: 'Inter', system-ui, -apple-system, sans-serif;
+  --ifm-font-family-monospace: 'JetBrains Mono', monospace;
+  --ifm-heading-font-weight: 600;
+  --ifm-font-size-base: 16px;
+
+  /* Layout Dimensions (Standard Docusaurus) */
+  --ifm-container-width: 1280px;
+  /* Comfortable reading width */
+  --ifm-navbar-height: 64px;
+}
+
+/* 3. Dark Mode Overrides */
+[data-theme='dark'] {
+  --ifm-color-primary: #60a5fa;
+  --ifm-color-primary-dark: #3b82f6;
+  --ifm-color-primary-darker: #2563eb;
+  --ifm-color-primary-darkest: #1d4ed8;
+  --ifm-color-primary-light: #93c5fd;
+  --ifm-color-primary-lighter: #bfdbfe;
+  --ifm-color-primary-lightest: #dbeafe;
+  --ifm-background-color: #0f172a;
+  /* Slate 900 */
+}
+
+/* 4. Navbar Styling */
+.navbar {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.navbar__title {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+/* 5. Sidebar Styling */
+.theme-doc-sidebar-container {
+  border-right: 1px solid var(--ifm-color-emphasis-200) !important;
+}
+
+.menu__link {
+  border-radius: 0.375rem;
+  font-size: 0.9rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.menu__link--active {
+  background-color: var(--ifm-color-primary-lightest);
+  color: var(--ifm-color-primary-dark);
+}
+
+[data-theme='dark'] .menu__link--active {
+  background-color: rgba(59, 130, 246, 0.15);
+  color: var(--ifm-color-primary-light);
+}
+
+/* 6. Content & Typography */
+.markdown h1 {
+  font-size: 2.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.markdown h2 {
+  font-size: 1.75rem;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.markdown h3 {
+  font-size: 1.25rem;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.markdown p {
+  line-height: 1.7;
+  margin-bottom: 1.25rem;
+}
+
+/* 7. Code Blocks */
+.theme-code-block {
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* 8. Buttons */
+.button--soft-primary {
+  background-color: var(--ifm-color-primary-lightest);
+  color: var(--ifm-color-primary-darker);
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.button--soft-primary:hover {
+  background-color: var(--ifm-color-primary-lighter);
+  text-decoration: none;
+}
+
+[data-theme='dark'] .button--soft-primary {
+  background-color: rgba(59, 130, 246, 0.15);
+  color: var(--ifm-color-primary-light);
+}
+
+[data-theme='dark'] .button--soft-primary:hover {
+  background-color: rgba(59, 130, 246, 0.25);
+}

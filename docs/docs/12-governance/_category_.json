@@ -1,0 +1,10 @@
+﻿{
+    "label": "Governance",
+    "link": {
+        "type": "doc",
+        "id": "EXTERNAL_TRUST_OVERVIEW"
+    },
+    "position": 13,
+    "collapsed": true,
+    "collapsible": true
+}

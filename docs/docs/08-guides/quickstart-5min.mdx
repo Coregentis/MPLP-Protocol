@@ -1,0 +1,47 @@
+﻿---
+title: Quick Start (5 Minutes)
+description: Get started with MPLP in 5 minutes. Clone, install, validate schemas, and run your first Golden Flow.
+keywords: [MPLP, quick start, getting started, installation, tutorial]
+sidebar_label: Quick Start
+---
+
+import Link from '@docusaurus/Link';
+
+> [!IMPORTANT]
+> **Informative, not normative.** This guide provides suggested steps, not protocol requirements.
+
+## 1. Clone & Install
+
+```bash
+git clone https://github.com/Coregentis/MPLP-Protocol.git
+cd MPLP-Protocol
+pnpm install
+```
+
+---
+
+## 2. Validate Protocol Schemas
+
+```bash
+pnpm test:schema
+```
+
+If the validation succeeds, your environment is MPLP-ready.
+
+---
+
+## 3. Run a Golden Flow
+
+```bash
+cd examples/ts-golden-flows
+pnpm run flow:01
+```
+
+You should see a trace of MPLP envelopes moving through the lifecycle.
+
+---
+
+## Next Steps
+
+* <Link to="/docs/guides/conformance-checklist">Conformance Checklist</Link>
+* <Link to="/docs/sdk/ts-sdk-guide">TypeScript SDK</Link>

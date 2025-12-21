@@ -1,0 +1,141 @@
+﻿---
+id: intro
+title: Documentation Overview
+sidebar_label: Overview
+slug: /
+description: Documentation Overview for the MPLP (Multi-Agent Lifecycle Protocol). Technical reference and implementation guide for building observable, interoperable, and governed AI agents.
+keywords: [MPLP, Multi-Agent Lifecycle Protocol, AI Agent, Protocol, Documentation, Overview, Agent OS]
+---
+
+import PathCard from '@site/src/components/PathCard';
+
+# Documentation Overview
+
+## Purpose of This Documentation
+
+This documentation site serves as a **technical reference and implementation guide** for the MPLP (Multi-Agent Lifecycle Protocol).
+
+It explains **how the protocol is structured**, **how it can be implemented**, and **how protocol behavior can be verified through self-declared conformance**.
+
+This site is **not**:
+- a product website
+- a marketing or promotional surface
+- a certification, endorsement, or compliance authority
+
+For protocol positioning, governance boundaries, and standards relationships, refer to the canonical MPLP website at **https://mplp.io**.
+
+---
+
+## 🧭 How to Use These Docs
+
+Choose the reading path that matches your intent:
+
+<div className="card-grid">
+  <PathCard
+    title="Protocol Implementer"
+    description="Deep dive into the L1-L4 architecture and core specifications."
+    to="/docs/architecture/architecture-overview"
+    icon="🏗️"
+  />
+  <PathCard
+    title="Enterprise / Auditor"
+    description="Understand governance, compliance, and trust boundaries."
+    to="/docs/governance/GOVERNANCE_LAYERS"
+    icon="🏢"
+  />
+  <PathCard
+    title="Builder / Developer"
+    description="Get started with the TypeScript and Python SDKs."
+    to="/docs/sdk/ts-sdk-guide"
+    icon="💻"
+  />
+  <PathCard
+    title="Compliance Officer"
+    description="Verify agent behavior against Golden Flows."
+    to="/docs/golden-flows"
+    icon="🛡️"
+  />
+</div>
+
+📋 **Full navigation overview**: [Docs IA Overview](/docs/index/DOCS_IA_OVERVIEW)
+
+---
+
+> [!TIP]
+> **New to MPLP?**
+> Start with the [5-Minute Quickstart](./08-guides/quickstart-5min.mdx) to see the protocol in action.
+
+Welcome to the **Multi-Agent Lifecycle Protocol (MPLP)** documentation. MPLP is the open standard for defining, coordinating, and executing multi-agent systems with full observability and governance.
+
+## 🚀 Getting Started
+
+If you are new to MPLP, start here:
+
+<div className="card-grid">
+  <PathCard
+    title="5-Minute Quickstart"
+    description="Run your first MPLP-conformant agent interaction locally."
+    to="/docs/guides/quickstart-5min"
+    icon="⏱️"
+  />
+  <PathCard
+    title="Installation"
+    description="Learn how to install the SDKs and set up your environment."
+    to="/docs/guides/conformance-guide"
+    icon="📦"
+  />
+</div>
+
+## 📚 Core Concepts
+
+The protocol is divided into several key areas:
+
+<div className="card-grid">
+  <PathCard
+    title="Architecture"
+    description="L1–L4 Layered Architecture: Core, Coordination, Execution, Integration."
+    to="/docs/architecture/architecture-overview"
+    icon="🏛️"
+  />
+  <PathCard
+    title="Modules"
+    description="Composable building blocks: Memory, Planning, Tools, User Interaction."
+    to="/docs/modules/core-module"
+    icon="🧩"
+  />
+  <PathCard
+    title="Profiles"
+    description="Standardized capabilities for different agent types."
+    to="/docs/profiles/map-profile"
+    icon="🆔"
+  />
+  <PathCard
+    title="Observability"
+    description="OpenTelemetry-based tracing and event taxonomy."
+    to="/docs/observability/observability-overview"
+    icon="🔭"
+  />
+</div>
+
+## 🛠️ For Developers
+
+<div className="card-grid">
+  <PathCard
+    title="SDKs"
+    description="Reference libraries for TypeScript and Python."
+    to="/docs/sdk/ts-sdk-guide"
+    icon="🧰"
+  />
+  <PathCard
+    title="Tests"
+    description="Validate your implementation against the Golden Test Suite."
+    to="/docs/tests/golden-test-suite-overview"
+    icon="✅"
+  />
+</div>
+
+## 🤝 Contributing
+
+MPLP is an open standard. We welcome contributions to the specification and the standard library.
+*   [GitHub Repository](https://github.com/Coregentis/MPLP-Protocol)
+*   [Governance](./12-governance/versioning-policy.md)

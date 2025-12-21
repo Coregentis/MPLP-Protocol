@@ -1,0 +1,10 @@
+﻿{
+    "label": "Modules",
+    "link": {
+        "type": "doc",
+        "id": "module-interactions"
+    },
+    "position": 3,
+    "collapsed": true,
+    "collapsible": true
+}

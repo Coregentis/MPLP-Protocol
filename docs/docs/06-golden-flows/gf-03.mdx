@@ -1,0 +1,80 @@
+---
+title: "GF-03: Drift Detection"
+sidebar_label: "GF-03: Drift Detection"
+sidebar_position: 3
+description: GF-03 validates the protocol's ability to detect and recover from drift between the PSG state and physical reality.
+keywords: [MPLP, Golden Flow, Drift Detection, validation, conformance, recovery]
+---
+> [!FROZEN]
+> **MPLP Protocol v1.0.0  Frozen Specification**
+> **Freeze Date**: 2025-12-03
+> **Status**: FROZEN (no breaking changes permitted)
+> **Governance**: MPLP Protocol Governance Committee (MPGC)
+> **License**: Apache-2.0
+> **Note**: Any normative change requires a new protocol version.
+
+# GF-03: Drift Detection & Recovery
+
+> **Type**: Normative Validation Scenario
+> **Profile**: SA (Single Agent)
+> **Status**: ✅ VERIFIED
+
+## Scope
+
+This golden flow validates:
+- **Drift detection** when physical files are modified outside the protocol
+- **Trace** emission of `DriftDetected` events
+- **Recovery Plan** generation to realign state
+- **Extension** module usage for external state verification
+
+## Non-Goals
+
+This flow does NOT validate:
+- Multi-agent coordination (see GF-02)
+- Initial plan creation (see GF-01)
+
+---
+
+## Modules Involved
+
+| Module | Role in Flow |
+|:-------|:-------------|
+| **Context** | Defines the "Expected State" anchor |
+| **Plan** | Generates the recovery strategy |
+| **Extension** | Provides the drift detection logic (e.g., file hasher) |
+| **Trace** | Records the drift event and recovery steps |
+
+---
+
+## Cross-Cutting Duties Exercised
+
+- Drift Detection
+- State Realignment
+- External Verification
+
+---
+
+## Evidence
+
+| Type | Location | Status |
+|:-----|:---------|:-------|
+| **Golden Flow** | `tests/golden/flows/flow-03-single-agent-with-tools/` | ✅ Passed |
+
+---
+
+## Normative Requirements
+
+Implementations MUST:
+- Emit a `DriftDetected` event immediately upon discovery of divergence
+- Include the `drift_scope` and `impact_analysis` in the event payload
+- Generate a new `Plan` (Recovery Plan) to address the drift
+- Block further execution of the original Plan until drift is resolved or acknowledged
+
+---
+
+## Expected Outcome
+
+- System detects the external change (e.g., file deletion)
+- `DriftDetected` event is present in the Trace
+- A recovery plan is proposed and successfully executed
+- Final state is consistent with the realigned reality

@@ -1,0 +1,81 @@
+---
+title: "GF-02: MAP Coordination"
+sidebar_label: "GF-02: MAP Coordination"
+sidebar_position: 2
+description: GF-02 validates the Multi-Agent (MAP) coordination lifecycle, including turn-taking and broadcast patterns.
+keywords: [MPLP, Golden Flow, MAP Coordination, validation, conformance]
+---
+> [!FROZEN]
+> **MPLP Protocol v1.0.0  Frozen Specification**
+> **Freeze Date**: 2025-12-03
+> **Status**: FROZEN (no breaking changes permitted)
+> **Governance**: MPLP Protocol Governance Committee (MPGC)
+> **License**: Apache-2.0
+> **Note**: Any normative change requires a new protocol version.
+
+# GF-02: Multi-Agent Coordination
+
+> **Type**: Normative Validation Scenario
+> **Profile**: MAP (Multi-Agent)
+> **Status**: ✅ VERIFIED
+
+## Scope
+
+This golden flow validates:
+- **Collab** session initialization
+- **Role** binding for multiple participants
+- **Turn-taking** logic between agents
+- **Broadcast** communication patterns
+
+## Non-Goals
+
+This flow does NOT validate:
+- Single-agent lifecycle (see GF-01)
+- Drift detection (see GF-03)
+- Governance confirmation (see GF-05)
+
+---
+
+## Modules Involved
+
+| Module | Role in Flow |
+|:-------|:-------------|
+| **Collab** | Manages multi-agent session state |
+| **Role** | Defines participant capabilities |
+| **Dialog** | Handles message exchange |
+| **Network** | Manages topology and transport |
+
+---
+
+## Cross-Cutting Duties Exercised
+
+- Multi-Agent Sync
+- Message Ordering
+- Topology Enforcement
+
+---
+
+## Evidence
+
+| Type | Location | Status |
+|:-----|:---------|:-------|
+| **Golden Flow** | `tests/golden/flows/map-flow-01-turn-taking/` | ✅ Passed |
+| **Golden Flow** | `tests/golden/flows/map-flow-02-broadcast-fanout/` | ✅ Passed |
+
+---
+
+## Normative Requirements
+
+Implementations MUST:
+- Ensure all participants have valid Role bindings
+- Enforce turn-taking constraints defined in Collab mode
+- Emit `MAPTurnDispatched` and `MAPTurnCompleted` events
+- Maintain consistent shared state across all participants
+
+---
+
+## Expected Outcome
+
+- All agents participate according to the Collab mode
+- Messages are delivered in the correct order
+- Session terminates gracefully with a final state snapshot

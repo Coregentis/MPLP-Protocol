@@ -1,0 +1,83 @@
+---
+title: "GF-01: SA Lifecycle"
+sidebar_label: "GF-01: SA Lifecycle"
+sidebar_position: 1
+description: GF-01 validates the Single-Agent (SA) lifecycle, including context initialization, plan creation, and trace recording.
+keywords: [MPLP, Golden Flow, SA Lifecycle, validation, conformance]
+---
+> [!FROZEN]
+> **MPLP Protocol v1.0.0  Frozen Specification**
+> **Freeze Date**: 2025-12-03
+> **Status**: FROZEN (no breaking changes permitted)
+> **Governance**: MPLP Protocol Governance Committee (MPGC)
+> **License**: Apache-2.0
+> **Note**: Any normative change requires a new protocol version.
+
+# GF-01: Single-Agent Lifecycle
+
+> **Type**: Normative Validation Scenario
+> **Profile**: SA (Single Agent)
+> **Status**: ✅ VERIFIED
+
+## Scope
+
+This golden flow validates:
+- **Context** initialization from project configuration
+- **Plan** creation with step decomposition
+- **Trace** recording for each execution step
+- **State transitions** are deterministic and immutable
+
+## Non-Goals
+
+This flow does NOT validate:
+- Multi-agent coordination (see GF-02)
+- Human-in-the-loop confirmation workflows (see GF-04)
+- Drift detection and recovery (see GF-03)
+
+---
+
+## Modules Involved
+
+| Module | Role in Flow |
+|:-------|:-------------|
+| **Context** | Provides initial constraints and objectives |
+| **Plan** | Defines execution steps |
+| **Trace** | Records all state transitions |
+| **Confirm** | Validates governance at each step |
+
+---
+
+## Cross-Cutting Duties Exercised
+
+- Trace Append
+- State Snapshot
+- Lifecycle Transition
+
+---
+
+## Evidence
+
+| Type | Location | Status |
+|:-----|:---------|:-------|
+| **SDK Test** | `packages/sources/sdk-ts/tests/runtime/single-agent.runtime.test.ts` | ✅ Passed |
+| **Golden Flow** | `tests/golden/flows/flow-01-single-agent-plan/` | ✅ Passed |
+| **Golden Flow** | `tests/golden/flows/sa-flow-01-basic/` | ✅ Passed |
+| **Golden Flow** | `tests/golden/flows/sa-flow-02-step-evaluation/` | ✅ Passed |
+
+---
+
+## Normative Requirements
+
+Implementations MUST:
+- Initialize Context before Plan creation
+- Record all step transitions in Trace
+- Ensure terminal Trace states are immutable
+- Complete lifecycle without orphaned resources
+
+---
+
+## Expected Outcome
+
+- Agent completes lifecycle without error
+- All trace entries are immutable and ordered
+- Final state matches expected output

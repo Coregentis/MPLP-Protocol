@@ -1,0 +1,10 @@
+﻿{
+    "label": "Tests",
+    "link": {
+        "type": "doc",
+        "id": "golden-test-suite-overview"
+    },
+    "position": 10,
+    "collapsed": true,
+    "collapsible": true
+}

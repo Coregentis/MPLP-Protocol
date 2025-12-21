@@ -1,0 +1,79 @@
+---
+title: "GF-04: Delta-Intent"
+sidebar_label: "GF-04: Delta-Intent"
+sidebar_position: 4
+description: GF-04 validates incremental state updates and LLM-driven intent enrichment within the protocol.
+keywords: [MPLP, Golden Flow, Delta-Intent, LLM Enrichment, validation, conformance]
+---
+> [!FROZEN]
+> **MPLP Protocol v1.0.0  Frozen Specification**
+> **Freeze Date**: 2025-12-03
+> **Status**: FROZEN (no breaking changes permitted)
+> **Governance**: MPLP Protocol Governance Committee (MPGC)
+> **License**: Apache-2.0
+> **Note**: Any normative change requires a new protocol version.
+
+# GF-04: Delta-Intent (LLM Enrichment)
+
+> **Type**: Normative Validation Scenario
+> **Profile**: SA (Single Agent)
+> **Status**: ✅ VERIFIED
+
+## Scope
+
+This golden flow validates:
+- **Incremental updates** to the Project Context (Delta-Intent)
+- **LLM enrichment** of raw user requests into structured objectives
+- **Core** module's role as the protocol version anchor
+- **Trace** recording of reasoning steps
+
+## Non-Goals
+
+This flow does NOT validate:
+- Multi-agent coordination (see GF-02)
+- Governance confirmation (see GF-05)
+
+---
+
+## Modules Involved
+
+| Module | Role in Flow |
+|:-------|:-------------|
+| **Context** | Receives the delta updates |
+| **Core** | Manages protocol versioning and module state |
+| **Plan** | Updates based on enriched intent |
+| **Trace** | Records the reasoning graph and intent resolution |
+
+---
+
+## Cross-Cutting Duties Exercised
+
+- Intent Resolution
+- Reasoning Trace
+- Incremental State Update
+
+---
+
+## Evidence
+
+| Type | Location | Status |
+|:-----|:---------|:-------|
+| **Golden Flow** | `tests/golden/flows/flow-04-single-agent-llm-enrichment/` | ✅ Passed |
+
+---
+
+## Normative Requirements
+
+Implementations MUST:
+- Support `DeltaIntent` events that modify the active Context
+- Record the `reasoning_graph` in the Trace for all LLM-driven enrichments
+- Ensure that Delta updates do not violate existing L1 invariants
+- Maintain a clear link between the original Intent and the Enriched Objective
+
+---
+
+## Expected Outcome
+
+- Raw intent is successfully transformed into a detailed Plan
+- Delta updates are applied without breaking context integrity
+- Reasoning steps are fully auditable in the Trace

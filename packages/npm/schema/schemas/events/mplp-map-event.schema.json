@@ -1,0 +1,147 @@
+{
+  "$comment": "MPLP Protocol v1.0.0 — Frozen Specification\nFreeze Date: 2025-12-03\nStatus: FROZEN (no breaking changes permitted)\nGovernance: MPLP Protocol Governance Committee (MPGC)\nCopyright: © 2025 邦士（北京）网络科技有限公司\nLicense: Apache-2.0\nAny normative change requires a new protocol version.",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://mplp.dev/schemas/v1.0/events/mplp-map-event.schema.json",
+  "title": "MPLP MAP Event v1.0",
+  "description": "Events emitted by Multi-Agent Profile (MAP) collaboration sessions in MPLP v1.0 protocol",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier for this event"
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "MAPSessionStarted",
+        "MAPRolesAssigned",
+        "MAPTurnDispatched",
+        "MAPTurnCompleted",
+        "MAPBroadcastSent",
+        "MAPBroadcastReceived",
+        "MAPConflictDetected",
+        "MAPConflictResolved",
+        "MAPSessionCompleted"
+      ],
+      "description": "Type of MAP session lifecycle event"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when event occurred"
+    },
+    "session_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Collaboration session ID (corresponds to Collab.collab_id)"
+    },
+    "initiator_role": {
+      "type": "string",
+      "description": "Role ID of the initiating agent (optional, depends on event type)"
+    },
+    "target_roles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Array of target role IDs for this event (e.g., broadcast targets)"
+    },
+    "payload": {
+      "type": "object",
+      "description": "Event-specific data payload",
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "event_id",
+    "event_type",
+    "timestamp",
+    "session_id"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "turn_dispatched_payload": {
+      "type": "object",
+      "properties": {
+        "role_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Role receiving execution token"
+        },
+        "turn_number": {
+          "type": "integer",
+          "description": "Sequential turn number"
+        },
+        "token_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Execution token identifier"
+        }
+      },
+      "required": [
+        "role_id",
+        "turn_number"
+      ]
+    },
+    "turn_completed_payload": {
+      "type": "object",
+      "properties": {
+        "role_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Role that completed the turn"
+        },
+        "turn_number": {
+          "type": "integer",
+          "description": "Sequential turn number"
+        },
+        "result": {
+          "type": "object",
+          "description": "Turn execution result"
+        }
+      },
+      "required": [
+        "role_id",
+        "turn_number"
+      ]
+    },
+    "broadcast_sent_payload": {
+      "type": "object",
+      "properties": {
+        "broadcaster_role_id": {
+          "type": "string",
+          "description": "Role sending broadcast"
+        },
+        "target_count": {
+          "type": "integer",
+          "description": "Number of target agents"
+        },
+        "message": {
+          "type": "object",
+          "description": "Broadcast message content"
+        }
+      },
+      "required": [
+        "broadcaster_role_id",
+        "target_count"
+      ]
+    },
+    "broadcast_received_payload": {
+      "type": "object",
+      "properties": {
+        "receiver_role_id": {
+          "type": "string",
+          "description": "Role that received broadcast"
+        },
+        "response": {
+          "type": "object",
+          "description": "Agent response to broadcast"
+        }
+      },
+      "required": [
+        "receiver_role_id"
+      ]
+    }
+  }
+}

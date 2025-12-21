@@ -1,0 +1,33 @@
+.pathCard {
+    display: block;
+    height: 100%;
+    transition: all 0.2s ease;
+    text-decoration: none !important;
+    border: 1px solid var(--ifm-border-color);
+    background-color: var(--ifm-background-color);
+}
+
+.pathCard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1);
+    border-color: var(--ifm-color-primary);
+}
+
+.icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.title {
+    margin-bottom: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--ifm-heading-color);
+}
+
+.description {
+    color: var(--ifm-font-color-base);
+    opacity: 0.8;
+    margin-bottom: 0;
+    line-height: 1.5;
+}
