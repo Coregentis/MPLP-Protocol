@@ -1,0 +1,68 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.12.7, pytest-7.4.3, pluggy-1.6.0 -- C:\Users\jearo\anaconda3\python.exe
+cachedir: .pytest_cache
+metadata: {'Python': '3.12.7', 'Platform': 'Windows-11-10.0.26200-SP0', 'Packages': {'pytest': '7.4.3', 'pluggy': '1.6.0'}, 'Plugins': {'anyio': '4.9.0', 'Faker': '37.0.0', 'langsmith': '0.4.1', 'asyncio': '0.21.1', 'cov': '6.2.1', 'html': '4.1.1', 'json-report': '1.5.0', 'metadata': '3.1.1', 'mock': '3.14.1', 'timeout': '2.4.0', 'xdist': '3.7.0', 'typeguard': '4.4.4'}}
+rootdir: E:\Coregentis\MPLP\mplp-v1.0\V1.0-release\packages\sources\sdk-py
+plugins: anyio-4.9.0, Faker-37.0.0, langsmith-0.4.1, asyncio-0.21.1, cov-6.2.1, html-4.1.1, json-report-1.5.0, metadata-3.1.1, mock-3.14.1, timeout-2.4.0, xdist-3.7.0, typeguard-4.4.4
+asyncio: mode=Mode.STRICT
+collecting ... collected 51 items
+
+tests/golden/test_golden_flow_01.py::test_golden_flow_01_passes PASSED   [  1%]
+tests/golden/test_golden_flow_01.py::test_all_golden_flows_pass PASSED   [  3%]
+tests/golden/test_invariant_rules.py::TestRuleValidators::test_is_uuid_v4_valid PASSED [  5%]
+tests/golden/test_invariant_rules.py::TestRuleValidators::test_is_uuid_v4_invalid PASSED [  7%]
+tests/golden/test_invariant_rules.py::TestRuleValidators::test_is_non_empty_string_valid PASSED [  9%]
+tests/golden/test_invariant_rules.py::TestRuleValidators::test_is_non_empty_string_invalid PASSED [ 11%]
+tests/golden/test_invariant_rules.py::TestRuleValidators::test_is_exists_valid PASSED [ 13%]
+tests/golden/test_invariant_rules.py::TestRuleValidators::test_is_exists_invalid PASSED [ 15%]
+tests/golden/test_invariant_rules.py::TestRuleValidators::test_is_iso_datetime_valid PASSED [ 17%]
+tests/golden/test_invariant_rules.py::TestRuleValidators::test_is_iso_datetime_invalid PASSED [ 19%]
+tests/golden/test_invariant_rules.py::TestEqRule::test_eq_literal_string PASSED [ 21%]
+tests/golden/test_invariant_rules.py::TestEqRule::test_eq_path_reference PASSED [ 23%]
+tests/golden/test_invariant_rules.py::TestEqRule::test_eq_invalid_syntax PASSED [ 25%]
+tests/golden/test_invariant_rules.py::TestEvaluateInvariant::test_uuid_v4_passes PASSED [ 27%]
+tests/golden/test_invariant_rules.py::TestEvaluateInvariant::test_uuid_v4_fails PASSED [ 29%]
+tests/golden/test_invariant_rules.py::TestEvaluateInvariant::test_non_empty_string_passes PASSED [ 31%]
+tests/golden/test_invariant_rules.py::TestEvaluateInvariant::test_non_empty_string_fails PASSED [ 33%]
+tests/golden/test_invariant_rules.py::TestEvaluateInvariant::test_wildcard_all_pass PASSED [ 35%]
+tests/golden/test_invariant_rules.py::TestEvaluateInvariant::test_wildcard_one_fails PASSED [ 37%]
+tests/golden/test_invariant_rules.py::TestEvaluateInvariant::test_eq_literal_passes PASSED [ 39%]
+tests/golden/test_invariant_rules.py::TestEvaluateInvariant::test_eq_path_passes PASSED [ 41%]
+tests/golden/test_invariant_rules.py::TestEvaluateInvariant::test_eq_path_fails PASSED [ 43%]
+tests/golden/test_invariant_rules.py::TestMinLengthRule::test_min_length_list_passes PASSED [ 45%]
+tests/golden/test_invariant_rules.py::TestMinLengthRule::test_min_length_list_exact PASSED [ 47%]
+tests/golden/test_invariant_rules.py::TestMinLengthRule::test_min_length_list_fails PASSED [ 49%]
+tests/golden/test_invariant_rules.py::TestMinLengthRule::test_min_length_string_passes PASSED [ 50%]
+tests/golden/test_invariant_rules.py::TestMinLengthRule::test_min_length_string_fails PASSED [ 52%]
+tests/golden/test_invariant_rules.py::TestMinLengthRule::test_min_length_wrong_type PASSED [ 54%]
+tests/golden/test_invariant_rules.py::TestEnumRule::test_enum_passes PASSED [ 56%]
+tests/golden/test_invariant_rules.py::TestEnumRule::test_enum_fails PASSED [ 58%]
+tests/golden/test_invariant_rules.py::TestEnumRule::test_enum_with_whitespace PASSED [ 60%]
+tests/golden/test_invariant_rules.py::TestEnumRule::test_enum_wildcard_all_pass PASSED [ 62%]
+tests/golden/test_invariant_rules.py::TestEnumRule::test_enum_wildcard_one_fails PASSED [ 64%]
+tests/golden/test_loader.py::TestLoadInvariants::test_load_plan_invariants SKIPPED [ 66%]
+tests/golden/test_loader.py::TestLoadInvariants::test_load_global_invariants SKIPPED [ 68%]
+tests/golden/test_loader.py::TestLoadFlow::test_load_flow_01_json_files SKIPPED [ 70%]
+tests/golden/test_loader.py::TestLoadFlow::test_load_flow_01_complete SKIPPED [ 72%]
+tests/golden/test_loader.py::TestLoadFlow::test_load_all_flows PASSED    [ 74%]
+tests/golden/test_path_utils.py::TestParsePath::test_simple_property PASSED [ 76%]
+tests/golden/test_path_utils.py::TestParsePath::test_array_index PASSED  [ 78%]
+tests/golden/test_path_utils.py::TestParsePath::test_wildcard PASSED     [ 80%]
+tests/golden/test_path_utils.py::TestParsePath::test_nested_wildcard PASSED [ 82%]
+tests/golden/test_path_utils.py::TestParsePath::test_invalid_bracket PASSED [ 84%]
+tests/golden/test_path_utils.py::TestParsePath::test_invalid_index PASSED [ 86%]
+tests/golden/test_path_utils.py::TestGetValueNodesByPath::test_simple_property_access PASSED [ 88%]
+tests/golden/test_path_utils.py::TestGetValueNodesByPath::test_array_index_access PASSED [ 90%]
+tests/golden/test_path_utils.py::TestGetValueNodesByPath::test_wildcard_expansion PASSED [ 92%]
+tests/golden/test_path_utils.py::TestGetValueNodesByPath::test_nested_wildcard_expansion PASSED [ 94%]
+tests/golden/test_path_utils.py::TestGetValueNodesByPath::test_nonexistent_path PASSED [ 96%]
+tests/golden/test_path_utils.py::TestGetValueNodesByPath::test_out_of_bounds_index PASSED [ 98%]
+tests/golden/test_path_utils.py::TestGetValueNodesByPath::test_wildcard_on_empty_array PASSED [100%]
+
+============================== warnings summary ===============================
+C:\Users\jearo\anaconda3\Lib\site-packages\pydantic\_internal\_config.py:295
+  C:\Users\jearo\anaconda3\Lib\site-packages\pydantic\_internal\_config.py:295: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.10/migration/
+    warnings.warn(DEPRECATION_MESSAGE, DeprecationWarning)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================== 47 passed, 4 skipped, 1 warning in 0.25s ===================

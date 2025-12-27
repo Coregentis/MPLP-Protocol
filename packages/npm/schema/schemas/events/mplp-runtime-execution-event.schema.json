@@ -1,0 +1,58 @@
+{
+  "$comment": "MPLP Protocol v1.0.0 — Frozen Specification\nFreeze Date: 2025-12-03\nStatus: FROZEN (no breaking changes permitted)\nGovernance: MPLP Protocol Governance Committee (MPGC)\nCopyright: © 2025 邦士（北京）网络科技有限公司\nLicense: Apache-2.0\nAny normative change requires a new protocol version.",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://mplp.dev/schemas/v1.0/events/mplp-runtime-execution-event.schema.json",
+  "title": "MPLP RuntimeExecutionEvent v1.0",
+  "description": "Runtime execution lifecycle events (agents, tools, LLMs, workers)",
+  "allOf": [
+    {
+      "$ref": "mplp-event-core.schema.json"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "event_family": {
+          "const": "runtime_execution",
+          "description": "Must be 'runtime_execution' for this event type"
+        },
+        "execution_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Execution instance identifier"
+        },
+        "executor_kind": {
+          "type": "string",
+          "enum": [
+            "agent",
+            "tool",
+            "llm",
+            "worker",
+            "external"
+          ],
+          "description": "Type of executor performing this execution"
+        },
+        "executor_role": {
+          "type": "string",
+          "description": "Role identifier (e.g., 'planner', 'reviewer', 'curl_executor')"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "running",
+            "completed",
+            "failed",
+            "cancelled"
+          ],
+          "description": "Current execution status"
+        }
+      },
+      "required": [
+        "event_family",
+        "execution_id",
+        "executor_kind",
+        "status"
+      ]
+    }
+  ]
+}

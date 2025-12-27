@@ -1,0 +1,252 @@
+{
+  "$comment": "MPLP v1.0.0 FROZEN – © 2025 Bangshi Beijing Network Technology Limited Company – Apache-2.0 – Governance: MPGC",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.mplp.dev/v1.0/mplp-context.schema.json",
+  "title": "MPLP Context Module – Core Protocol v1.0",
+  "description": "Context Module Core Protocol: Describes the context resources and their minimal required semantics (Core Profile) for a multi-agent collaboration project/session.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "meta": {
+      "$ref": "common/metadata.schema.json",
+      "description": "[PROTOCOL-CORE] MPLP protocol and schema metadata (version, source, cross-cutting tags, etc.)."
+    },
+    "governance": {
+      "type": "object",
+      "description": "[PROTOCOL-CORE] Governance metadata for lifecycle management, truth domain authority, and locking status.",
+      "properties": {
+        "lifecyclePhase": {
+          "type": "string",
+          "description": "Current phase in the lifecycle fence (e.g., 'design', 'implementation', 'review')."
+        },
+        "truthDomain": {
+          "type": "string",
+          "description": "The truth domain this object belongs to (e.g., 'requirements', 'architecture')."
+        },
+        "locked": {
+          "type": "boolean",
+          "description": "If true, this object cannot be modified except by specific governance overrides."
+        },
+        "lastConfirmRef": {
+          "$ref": "common/common-types.schema.json#/definitions/Ref",
+          "description": "Reference to the last Confirm decision that validated this state."
+        }
+      },
+      "additionalProperties": false
+    },
+    "context_id": {
+      "$ref": "common/identifiers.schema.json",
+      "description": "[PROTOCOL-CORE] Global unique identifier for the Context."
+    },
+    "root": {
+      "type": "object",
+      "description": "[PROTOCOL-CORE] Context root node definition (business domain, environment, entry point resources, etc.).",
+      "properties": {
+        "domain": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Business domain identifier."
+        },
+        "environment": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Runtime environment identifier (e.g., development, production)."
+        },
+        "entry_point": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Entry point resource identifier."
+        }
+      },
+      "required": [
+        "domain",
+        "environment"
+      ],
+      "additionalProperties": true
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "description": "[PROTOCOL-CORE] Context title, used for human and Agent identification of the project/session."
+    },
+    "summary": {
+      "type": "string",
+      "description": "[PROTOCOL-CORE] Brief summary of the Context (background, scope, etc.)."
+    },
+    "status": {
+      "type": "string",
+      "description": "[PROTOCOL-CORE] Current lifecycle status of the Context.",
+      "enum": [
+        "draft",
+        "active",
+        "suspended",
+        "archived",
+        "closed"
+      ]
+    },
+    "tags": {
+      "type": "array",
+      "description": "[PROTOCOL-CORE] List of tags for classification and retrieval.",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "language": {
+      "type": "string",
+      "description": "[PROTOCOL-CORE] Primary working language of the Context (e.g., en, zh-CN)."
+    },
+    "owner_role": {
+      "type": "string",
+      "description": "[PROTOCOL-CORE] Identifier of the primary owner role (should correspond to role_id in Role module)."
+    },
+    "constraints": {
+      "type": "object",
+      "description": "[PROTOCOL-CORE] Key constraints for the Context, such as security boundaries, compliance requirements, budget, or deadlines.",
+      "additionalProperties": true
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "[PROTOCOL-CORE] Context creation time (ISO 8601)."
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "[PROTOCOL-CORE] Context last update time (ISO 8601)."
+    },
+    "trace": {
+      "$ref": "common/trace-base.schema.json",
+      "description": "[PROTOCOL-CORE] Main Trace reference bound to this Context (for global tracing)."
+    },
+    "events": {
+      "type": "array",
+      "description": "[PROTOCOL-CORE] List of key events directly related to this Context (creation, status change, archiving, etc.).",
+      "items": {
+        "$ref": "common/events.schema.json"
+      }
+    }
+  },
+  "required": [
+    "meta",
+    "context_id",
+    "root",
+    "title",
+    "status"
+  ],
+  "$defs": {
+    "context_core_properties": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "common/metadata.schema.json",
+          "description": "[PROTOCOL-CORE] MPLP protocol and schema metadata (version, source, cross-cutting tags, etc.)."
+        },
+        "context_id": {
+          "$ref": "common/identifiers.schema.json",
+          "description": "[PROTOCOL-CORE] Global unique identifier for the Context."
+        },
+        "root": {
+          "type": "object",
+          "description": "[PROTOCOL-CORE] Context root node definition (business domain, environment, entry point resources, etc.).",
+          "properties": {
+            "domain": {
+              "type": "string",
+              "description": "[PROTOCOL-CORE] Business domain identifier."
+            },
+            "environment": {
+              "type": "string",
+              "description": "[PROTOCOL-CORE] Runtime environment identifier (e.g., development, production)."
+            },
+            "entry_point": {
+              "type": "string",
+              "description": "[PROTOCOL-CORE] Entry point resource identifier."
+            }
+          },
+          "required": [
+            "domain",
+            "environment"
+          ],
+          "additionalProperties": true
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "description": "[PROTOCOL-CORE] Context title, used for human and Agent identification of the project/session."
+        },
+        "summary": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Brief summary of the Context (background, scope, etc.)."
+        },
+        "status": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Current lifecycle status of the Context.",
+          "enum": [
+            "draft",
+            "active",
+            "suspended",
+            "archived",
+            "closed"
+          ]
+        },
+        "tags": {
+          "type": "array",
+          "description": "[PROTOCOL-CORE] List of tags for classification and retrieval.",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "language": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Primary working language of the Context (e.g., en, zh-CN)."
+        },
+        "owner_role": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Identifier of the primary owner role (should correspond to role_id in Role module)."
+        },
+        "constraints": {
+          "type": "object",
+          "description": "[PROTOCOL-CORE] Key constraints for the Context, such as security boundaries, compliance requirements, budget, or deadlines.",
+          "additionalProperties": true
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "[PROTOCOL-CORE] Context creation time (ISO 8601)."
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "[PROTOCOL-CORE] Context last update time (ISO 8601)."
+        },
+        "trace": {
+          "$ref": "common/trace-base.schema.json",
+          "description": "[PROTOCOL-CORE] Main Trace reference bound to this Context (for global tracing)."
+        },
+        "events": {
+          "type": "array",
+          "description": "[PROTOCOL-CORE] List of key events directly related to this Context (creation, status change, archiving, etc.).",
+          "items": {
+            "$ref": "common/events.schema.json"
+          }
+        }
+      },
+      "required": [
+        "meta",
+        "context_id",
+        "root",
+        "title",
+        "status"
+      ]
+    },
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "description": "[DEPRECATED] Please use common/identifiers.schema.json. This definition is retained for backward compatibility only and is no longer recommended for reference."
+    }
+  },
+  "x-mplp-meta": {
+    "protocolVersion": "1.0.0",
+    "frozen": true,
+    "freezeDate": "2025-12-03",
+    "governance": "MPGC"
+  }
+}

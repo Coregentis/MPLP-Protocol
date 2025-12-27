@@ -1,0 +1,10 @@
+﻿{
+    "label":  "Reference",
+    "link":  {
+                 "type":  "doc",
+                 "id":  "mplp-v1.0-protocol-overview"
+             },
+    "position":  1,
+    "collapsed":  true,
+    "collapsible":  true
+}

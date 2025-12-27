@@ -1,0 +1,10 @@
+﻿{
+    "label":  "Integration",
+    "link":  {
+                 "type":  "doc",
+                 "id":  "integration-spec"
+             },
+    "position":  13,
+    "collapsed":  true,
+    "collapsible":  true
+}

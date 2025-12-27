@@ -1,0 +1,92 @@
+{
+  "$comment": "MPLP Protocol v1.0.0 — Frozen Specification\nFreeze Date: 2025-12-03\nStatus: FROZEN (no breaking changes permitted)\nGovernance: MPLP Protocol Governance Committee (MPGC)\nCopyright: © 2025 邦士（北京）网络科技有限公司\nLicense: Apache-2.0\nAny normative change requires a new protocol version.",
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "lib": [
+      "ES2020"
+    ],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "moduleResolution": "node",
+    "downlevelIteration": true,
+    "outDir": "dist",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "paths": {
+      "@mplp/core": [
+        "src/core/index.ts"
+      ],
+      "@mplp/core/*": [
+        "src/core/*"
+      ],
+      "@mplp/coordination": [
+        "src/coordination/index.ts"
+      ],
+      "@mplp/coordination/*": [
+        "src/coordination/*"
+      ],
+      "@mplp/runtime-minimal": [
+        "src/runtime-minimal/index.ts"
+      ],
+      "@mplp/runtime-minimal/*": [
+        "src/runtime-minimal/*"
+      ],
+      "@mplp/schema": [
+        "src/schema/index.ts"
+      ],
+      "@mplp/schema/*": [
+        "src/schema/*"
+      ],
+      "@mplp/modules": [
+        "src/modules/index.ts"
+      ],
+      "@mplp/modules/*": [
+        "src/modules/*"
+      ],
+      "@mplp/integration-llm-http": [
+        "src/integration/llm-http/index.ts"
+      ],
+      "@mplp/integration-llm-http/*": [
+        "src/integration/llm-http/*"
+      ],
+      "@mplp/integration-storage-fs": [
+        "src/integration/storage-fs/index.ts"
+      ],
+      "@mplp/integration-storage-fs/*": [
+        "src/integration/storage-fs/*"
+      ],
+      "@mplp/integration-storage-kv": [
+        "src/integration/storage-kv/index.ts"
+      ],
+      "@mplp/integration-storage-kv/*": [
+        "src/integration/storage-kv/*"
+      ],
+      "@mplp/integration-tools-generic": [
+        "src/integration/tools-generic/index.ts"
+      ],
+      "@mplp/integration-tools-generic/*": [
+        "src/integration/tools-generic/*"
+      ],
+      "@mplp/devtools": [
+        "src/devtools/index.ts"
+      ],
+      "@mplp/devtools/*": [
+        "src/devtools/*"
+      ],
+      "@mplp/compliance": [
+        "src/compliance/index.ts"
+      ],
+      "@mplp/compliance/*": [
+        "src/compliance/*"
+      ]
+    }
+  },
+  "include": [
+    "src"
+  ]
+}

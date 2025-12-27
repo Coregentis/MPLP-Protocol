@@ -1,0 +1,407 @@
+/*
+ * MPLP Protocol Documentation - Unified World-Class Theme
+ * Based on Docusaurus Classic Preset
+ */
+
+/* 1. Typography Imports */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* 2. Global Variables & Branding */
+:root {
+  /* --- MPLP Brand Palette --- */
+  --mplp-blue: #2563EB;
+  --mplp-blue-dark: #1D4ED8;
+  --mplp-blue-light: #60A5FA;
+  --mplp-cyan: #06B6D4;
+  --mplp-indigo: #4F46E5;
+  --mplp-slate-50: #F8FAFC;
+  --mplp-slate-100: #F1F5F9;
+  --mplp-slate-200: #E2E8F0;
+  --mplp-slate-300: #CBD5E1;
+  --mplp-slate-400: #94A3B8;
+  --mplp-slate-500: #64748B;
+  --mplp-slate-600: #475569;
+  --mplp-slate-700: #334155;
+  --mplp-slate-800: #1E293B;
+  --mplp-slate-900: #0F172A;
+  --mplp-slate-950: #020617;
+
+  /* --- Docusaurus Overrides --- */
+  --ifm-color-primary: var(--mplp-blue);
+  --ifm-color-primary-dark: var(--mplp-blue-dark);
+  --ifm-color-primary-darker: #1e40af;
+  --ifm-color-primary-darkest: #1e3a8a;
+  --ifm-color-primary-light: var(--mplp-blue-light);
+  --ifm-color-primary-lighter: #93c5fd;
+  --ifm-color-primary-lightest: #dbeafe;
+
+  /* Typography */
+  --ifm-font-family-base: 'Inter', system-ui, -apple-system, sans-serif;
+  --ifm-font-family-monospace: 'JetBrains Mono', monospace;
+  --ifm-heading-font-weight: 700;
+  --ifm-font-size-base: 16px;
+  --ifm-line-height-base: 1.6;
+
+  /* Layout */
+  --ifm-container-width: 1280px;
+  --ifm-navbar-height: 64px;
+  --ifm-spacing-horizontal: 1.5rem;
+
+  /* Colors */
+  --ifm-background-color: #ffffff;
+  --ifm-font-color-base: var(--mplp-slate-800);
+  --ifm-link-color: var(--mplp-blue);
+  --ifm-link-hover-color: var(--mplp-blue-dark);
+  --ifm-border-color: var(--mplp-slate-200);
+
+  /* Code Blocks */
+  --ifm-code-font-size: 0.9em;
+  --ifm-pre-background: var(--mplp-slate-50);
+  --ifm-pre-color: var(--mplp-slate-800);
+}
+
+/* 3. Dark Mode Overrides (Slate Palette) */
+[data-theme='dark'] {
+  --ifm-color-primary: var(--mplp-blue-light);
+  --ifm-color-primary-dark: #3b82f6;
+  --ifm-color-primary-darker: #2563eb;
+  --ifm-color-primary-light: #93c5fd;
+
+  --ifm-background-color: var(--mplp-slate-950);
+  --ifm-font-color-base: var(--mplp-slate-100);
+  --ifm-border-color: var(--mplp-slate-800);
+
+  --ifm-link-color: #60A5FA;
+  --ifm-link-hover-color: #93C5FD;
+
+  --ifm-pre-background: var(--mplp-slate-900);
+  --ifm-pre-color: var(--mplp-slate-100);
+}
+
+/* 4. Global Resets & Typography */
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--ifm-font-color-base);
+  letter-spacing: -0.02em;
+}
+
+.markdown h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.markdown h2 {
+  font-size: 1.75rem;
+  margin-top: 2.5rem;
+  border-bottom: 1px solid var(--ifm-border-color);
+  padding-bottom: 0.5rem;
+}
+
+.markdown h3 {
+  font-size: 1.25rem;
+  margin-top: 2rem;
+}
+
+/* 5. Navbar Styling */
+.navbar {
+  border-bottom: 1px solid var(--ifm-border-color);
+  backdrop-filter: blur(12px);
+  background-color: rgba(255, 255, 255, 0.85);
+}
+
+[data-theme='dark'] .navbar {
+  background-color: rgba(2, 6, 23, 0.85);
+}
+
+.navbar__logo {
+  height: 2rem;
+}
+
+.navbar__title {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.navbar__link {
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+/* 6. Sidebar Styling */
+.theme-doc-sidebar-container {
+  border-right: 1px solid var(--ifm-border-color) !important;
+  background-color: var(--ifm-background-color);
+}
+
+.menu__link {
+  border-radius: 6px;
+  font-size: 0.9rem;
+  padding: 0.5rem 0.75rem;
+  color: var(--mplp-slate-600);
+}
+
+[data-theme='dark'] .menu__link {
+  color: var(--mplp-slate-400);
+}
+
+.menu__link:hover {
+  background-color: var(--mplp-slate-100);
+  color: var(--mplp-slate-900);
+}
+
+[data-theme='dark'] .menu__link:hover {
+  background-color: var(--mplp-slate-800);
+  color: var(--mplp-slate-50);
+}
+
+.menu__link--active {
+  background-color: #EFF6FF !important;
+  color: var(--mplp-blue) !important;
+  font-weight: 600;
+}
+
+[data-theme='dark'] .menu__link--active {
+  background-color: rgba(37, 99, 235, 0.15) !important;
+  color: var(--mplp-blue-light) !important;
+}
+
+/* 7. Content Components */
+
+/* Admonitions (Callouts) */
+.admonition {
+  border-radius: 8px;
+  border-left: 4px solid;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
+}
+
+.admonition-note {
+  background-color: #EFF6FF;
+  border-color: var(--mplp-blue);
+  color: var(--mplp-slate-800);
+}
+
+[data-theme='dark'] .admonition-note {
+  background-color: rgba(37, 99, 235, 0.1);
+  color: var(--mplp-slate-100);
+}
+
+.admonition-tip {
+  background-color: #ECFDF5;
+  border-color: var(--mplp-emerald);
+  color: var(--mplp-slate-800);
+}
+
+[data-theme='dark'] .admonition-tip {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: var(--mplp-slate-100);
+}
+
+.admonition-info {
+  background-color: #F0F9FF;
+  border-color: var(--mplp-cyan);
+  color: var(--mplp-slate-800);
+}
+
+[data-theme='dark'] .admonition-info {
+  background-color: rgba(6, 182, 212, 0.1);
+  color: var(--mplp-slate-100);
+}
+
+.admonition-warning {
+  background-color: #FFFBEB;
+  border-color: #F59E0B;
+  color: var(--mplp-slate-800);
+}
+
+[data-theme='dark'] .admonition-warning {
+  background-color: rgba(245, 158, 11, 0.1);
+  color: var(--mplp-slate-100);
+}
+
+.admonition-danger {
+  background-color: #FEF2F2;
+  border-color: #EF4444;
+  color: var(--mplp-slate-800);
+}
+
+[data-theme='dark'] .admonition-danger {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: var(--mplp-slate-100);
+}
+
+/* Cards */
+.card {
+  border: 1px solid var(--ifm-border-color);
+  border-radius: 12px;
+  background-color: var(--ifm-background-color);
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border-color: var(--ifm-color-primary);
+}
+
+/* Tables */
+.markdown table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  border: 1px solid var(--ifm-border-color);
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 2rem 0;
+}
+
+.markdown th,
+.markdown td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--ifm-border-color);
+}
+
+.markdown th {
+  background-color: var(--mplp-slate-50);
+  font-weight: 600;
+  text-align: left;
+  color: var(--mplp-slate-700);
+}
+
+[data-theme='dark'] .markdown th {
+  background-color: var(--mplp-slate-900);
+  color: var(--mplp-slate-300);
+}
+
+.markdown tr:last-child td {
+  border-bottom: none;
+}
+
+/* Code Blocks */
+.theme-code-block {
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+}
+
+/* Buttons */
+.button--primary {
+  background-color: var(--mplp-blue);
+  border-color: var(--mplp-blue);
+  border-radius: 9999px;
+  padding: 0.5rem 1.5rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.button--primary:hover {
+  background-color: var(--mplp-blue-dark);
+  border-color: var(--mplp-blue-dark);
+  transform: translateY(-1px);
+}
+
+.button--secondary-mplp:hover {
+  background-color: rgba(15, 23, 42, 1);
+  border-color: var(--mplp-text-muted);
+  color: white;
+  text-decoration: none;
+}
+
+/* Card Grid Layout */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+/* Hero Section */
+.hero {
+  padding: 4rem 0;
+  text-align: center;
+  background: radial-gradient(circle at center, var(--mplp-slate-50) 0%, transparent 70%);
+}
+
+[data-theme='dark'] .hero {
+  background: radial-gradient(circle at center, var(--mplp-slate-900) 0%, transparent 70%);
+}
+
+.hero__title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background: linear-gradient(to right, var(--mplp-blue), var(--mplp-indigo));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 1rem;
+}
+
+.hero__subtitle {
+  font-size: 1.25rem;
+  color: var(--mplp-slate-600);
+  max-width: 800px;
+  margin: 0 auto 2rem;
+}
+
+[data-theme='dark'] .hero__subtitle {
+  color: var(--mplp-slate-400);
+}
+
+/* Footer */
+.footer {
+  background-color: var(--mplp-slate-50);
+  border-top: 1px solid var(--ifm-border-color);
+}
+
+[data-theme='dark'] .footer {
+  background-color: var(--mplp-slate-950);
+}
+
+.footer__title {
+  color: var(--mplp-slate-900);
+  font-weight: 700;
+}
+
+[data-theme='dark'] .footer__title {
+  color: var(--mplp-slate-100);
+}
+
+.footer__link-item {
+  color: var(--mplp-slate-600);
+}
+
+[data-theme='dark'] .footer__link-item {
+  color: var(--mplp-slate-400);
+}
+
+.footer__link-item:hover {
+  color: var(--mplp-blue);
+  text-decoration: none;
+}
+
+/* 8. Governance Page Overrides */
+.governance-page blockquote {
+  font-size: 0.9em;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.5rem;
+  background-color: var(--mplp-slate-50);
+  border-left: 4px solid var(--mplp-slate-300);
+  color: var(--mplp-slate-700);
+}
+
+[data-theme='dark'] .governance-page blockquote {
+  background-color: var(--mplp-slate-900);
+  border-color: var(--mplp-slate-700);
+  color: var(--mplp-slate-300);
+}

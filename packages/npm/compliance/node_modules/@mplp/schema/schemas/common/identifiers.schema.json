@@ -1,0 +1,13 @@
+{
+  "$comment": "MPLP Protocol v1.0.0 — Frozen Specification\nFreeze Date: 2025-12-03\nStatus: FROZEN (no breaking changes permitted)\nGovernance: MPLP Protocol Governance Committee (MPGC)\nCopyright: © 2025 邦士（北京）网络科技有限公司\nLicense: Apache-2.0\nAny normative change requires a new protocol version.",
+  "$id": "https://schemas.mplp.dev/v1.0/common/identifiers.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MPLP Identifier",
+  "description": "Unified identifier type used for contextId/planId/traceId/eventId, etc. Uses UUID v4 standard to ensure global uniqueness and collision-free generation in distributed environments.",
+  "type": "string",
+  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+  "examples": [
+    "123e4567-e89b-12d3-a456-426614174000",
+    "550e8400-e29b-41d4-a716-446655440000"
+  ]
+}

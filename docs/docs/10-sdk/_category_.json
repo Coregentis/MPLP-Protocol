@@ -1,0 +1,10 @@
+﻿{
+    "label":  "SDK",
+    "position":  7,
+    "collapsible":  true,
+    "collapsed":  true,
+    "link":  {
+                 "type":  "doc",
+                 "id":  "ts-sdk-guide"
+             }
+}

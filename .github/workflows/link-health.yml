@@ -1,0 +1,71 @@
+name: Link Health Check
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Daily at 03:00 UTC
+    - cron: "0 3 * * *"
+
+jobs:
+  link-health:
+    name: Documentation Link Verification
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install root dependencies
+        run: npm install
+
+      - name: Install linkinator
+        run: npm install -g linkinator
+
+      # Build and check docs only (website is in separate repo)
+      - name: Build Documentation
+        run: |
+          cd docs
+          npm install
+          npm run build
+
+      - name: Start Docs Server
+        run: |
+          cd docs
+          npm run serve -- --port 3001 &
+          sleep 10
+
+      - name: Check Docs Links
+        run: |
+          linkinator http://localhost:3001 \
+            --recurse \
+            --skip "(twitter.com|x.com|github.com|pypi.org|npmjs.com|www.mplp.io)" \
+            --timeout 30000 \
+            --verbosity error
+        continue-on-error: true
+
+      - name: Cross-Surface Mapping Check
+        run: node scripts/semantic/mapping-health.mjs --skip-live
+        continue-on-error: true
+
+      - name: Generate Health Report
+        if: always()
+        run: |
+          echo "# Link Health Report (Docs Only)" > link-health-report.md
+          echo "Generated: $(date -u)" >> link-health-report.md
+          echo "" >> link-health-report.md
+          echo "## Summary" >> link-health-report.md
+          echo "- Docs: checked" >> link-health-report.md
+          echo "- Note: Website is in separate MPLP-Official-Website repo" >> link-health-report.md
+
+      - name: Upload health report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: link-health-report
+          path: link-health-report.md
+          retention-days: 30

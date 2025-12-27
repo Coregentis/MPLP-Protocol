@@ -1,0 +1,10 @@
+﻿{
+    "label":  "Profiles",
+    "link":  {
+                 "type":  "doc",
+                 "id":  "sa-profile"
+             },
+    "position":  10,
+    "collapsed":  true,
+    "collapsible":  true
+}

@@ -1,0 +1,12 @@
+{
+    "id": "plan-flow-01",
+    "steps": [
+        {
+            "id": "step-01",
+            "tool": "search",
+            "args": {
+                "query": "hello"
+            }
+        }
+    ]
+}

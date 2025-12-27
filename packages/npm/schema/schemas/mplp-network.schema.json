@@ -1,0 +1,230 @@
+{
+  "$comment": "MPLP Protocol v1.0.0 — Frozen Specification\nFreeze Date: 2025-12-03\nStatus: FROZEN (no breaking changes permitted)\nGovernance: MPLP Protocol Governance Committee (MPGC)\nCopyright: © 2025 邦士（北京）网络科技有限公司\nLicense: Apache-2.0\nAny normative change requires a new protocol version.",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.mplp.dev/v1.0/mplp-network.schema.json",
+  "title": "MPLP Network Module – Core Protocol v1.0",
+  "description": "Network Module Core Protocol: Describes the minimal required semantics (Core Profile) for the topology and node collection of a multi-agent collaboration network.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "meta": {
+      "$ref": "common/metadata.schema.json",
+      "description": "[PROTOCOL-CORE] MPLP protocol and schema metadata."
+    },
+    "governance": {
+      "type": "object",
+      "description": "[PROTOCOL-CORE] Governance metadata for lifecycle management, truth domain authority, and locking status.",
+      "properties": {
+        "lifecyclePhase": {
+          "type": "string",
+          "description": "Current phase in the lifecycle fence (e.g., 'design', 'implementation', 'review')."
+        },
+        "truthDomain": {
+          "type": "string",
+          "description": "The truth domain this object belongs to (e.g., 'requirements', 'architecture')."
+        },
+        "locked": {
+          "type": "boolean",
+          "description": "If true, this object cannot be modified except by specific governance overrides."
+        },
+        "lastConfirmRef": {
+          "$ref": "common/common-types.schema.json#/definitions/Ref",
+          "description": "Reference to the last Confirm decision that validated this state."
+        }
+      },
+      "additionalProperties": false
+    },
+    "network_id": {
+      "$ref": "common/identifiers.schema.json",
+      "description": "[PROTOCOL-CORE] Global unique identifier for the network."
+    },
+    "context_id": {
+      "$ref": "common/identifiers.schema.json",
+      "description": "[PROTOCOL-CORE] Identifier of the Context this network belongs to."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "[PROTOCOL-CORE] Network name."
+    },
+    "description": {
+      "type": "string",
+      "description": "[PROTOCOL-CORE] Brief description of the network."
+    },
+    "topology_type": {
+      "type": "string",
+      "description": "[PROTOCOL-CORE] Network topology type.",
+      "enum": [
+        "single_node",
+        "hub_spoke",
+        "mesh",
+        "hierarchical",
+        "hybrid",
+        "other"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "description": "[PROTOCOL-CORE] Network lifecycle status.",
+      "enum": [
+        "draft",
+        "provisioning",
+        "active",
+        "degraded",
+        "maintenance",
+        "retired"
+      ]
+    },
+    "nodes": {
+      "type": "array",
+      "description": "[PROTOCOL-CORE] Collection of core nodes in the network.",
+      "items": {
+        "$ref": "#/$defs/network_node_core"
+      }
+    },
+    "trace": {
+      "$ref": "common/trace-base.schema.json",
+      "description": "[PROTOCOL-CORE] Trace reference associated with this network."
+    },
+    "events": {
+      "type": "array",
+      "description": "[PROTOCOL-CORE] List of key events related to this network.",
+      "items": {
+        "$ref": "common/events.schema.json"
+      }
+    }
+  },
+  "required": [
+    "meta",
+    "network_id",
+    "context_id",
+    "name",
+    "topology_type",
+    "status"
+  ],
+  "$defs": {
+    "network_core_properties": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "common/metadata.schema.json",
+          "description": "[PROTOCOL-CORE] MPLP protocol and schema metadata."
+        },
+        "network_id": {
+          "$ref": "common/identifiers.schema.json",
+          "description": "[PROTOCOL-CORE] Global unique identifier for the network."
+        },
+        "context_id": {
+          "$ref": "common/identifiers.schema.json",
+          "description": "[PROTOCOL-CORE] Identifier of the Context this network belongs to."
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "[PROTOCOL-CORE] Network name."
+        },
+        "description": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Brief description of the network."
+        },
+        "topology_type": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Network topology type.",
+          "enum": [
+            "single_node",
+            "hub_spoke",
+            "mesh",
+            "hierarchical",
+            "hybrid",
+            "other"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Network lifecycle status.",
+          "enum": [
+            "draft",
+            "provisioning",
+            "active",
+            "degraded",
+            "maintenance",
+            "retired"
+          ]
+        },
+        "nodes": {
+          "type": "array",
+          "description": "[PROTOCOL-CORE] Collection of core nodes in the network.",
+          "items": {
+            "$ref": "#/$defs/network_node_core"
+          }
+        },
+        "trace": {
+          "$ref": "common/trace-base.schema.json",
+          "description": "[PROTOCOL-CORE] Trace reference associated with this network."
+        },
+        "events": {
+          "type": "array",
+          "description": "[PROTOCOL-CORE] List of key events related to this network.",
+          "items": {
+            "$ref": "common/events.schema.json"
+          }
+        }
+      },
+      "required": [
+        "meta",
+        "network_id",
+        "context_id",
+        "name",
+        "topology_type",
+        "status"
+      ]
+    },
+    "network_node_core": {
+      "type": "object",
+      "description": "[PROTOCOL-CORE] Minimal required semantics for a network node.",
+      "additionalProperties": false,
+      "properties": {
+        "node_id": {
+          "$ref": "common/identifiers.schema.json",
+          "description": "[PROTOCOL-CORE] Node identifier."
+        },
+        "name": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Node name."
+        },
+        "kind": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Node type.",
+          "enum": [
+            "agent",
+            "service",
+            "database",
+            "queue",
+            "external",
+            "other"
+          ]
+        },
+        "role_id": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Role identifier corresponding to this node (should correspond to role_id in Role module)."
+        },
+        "status": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Current status of the node.",
+          "enum": [
+            "active",
+            "inactive",
+            "degraded",
+            "unreachable",
+            "retired"
+          ]
+        }
+      },
+      "required": [
+        "node_id",
+        "kind",
+        "status"
+      ]
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "$comment": "MPLP Protocol v1.0.0 — Frozen Specification\nFreeze Date: 2025-12-03\nStatus: FROZEN (no breaking changes permitted)\nGovernance: MPLP Protocol Governance Committee (MPGC)\nCopyright: © 2025 邦士（北京）网络科技有限公司\nLicense: Apache-2.0\nAny normative change requires a new protocol version.",
+  "name": "ts-multi-agent-collab",
+  "version": "0.0.0-dev",
+  "private": true,
+  "scripts": {
+    "start": "echo 'TODO: Implement multi-agent flow'"
+  },
+  "dependencies": {
+    "@mplp/sdk-ts": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  }
+}

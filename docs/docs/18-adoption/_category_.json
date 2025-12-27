@@ -1,0 +1,8 @@
+﻿{
+    "label":  "Adoption",
+    "position":  18,
+    "link":  {
+                 "type":  "doc",
+                 "id":  "index"
+             }
+}

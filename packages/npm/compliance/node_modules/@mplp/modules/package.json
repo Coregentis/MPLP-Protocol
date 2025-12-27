@@ -1,0 +1,54 @@
+{
+  "name": "@mplp/modules",
+  "version": "1.0.4",
+  "description": "MPLP v1.0 Module Interfaces & Helpers - 10 core modules and profile structures",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Coregentis/MPLP-Protocol.git"
+  },
+  "keywords": [
+    "mplp",
+    "modules",
+    "interfaces",
+    "profiles",
+    "multi-agent",
+    "protocol",
+    "lifecycle",
+    "agent-os",
+    "agent-os-protocol"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "dependencies": {
+    "@mplp/core": "^1.0.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "author": "Coregentis AI",
+  "copyright": "© 2025 邦士（北京）网络科技有限公司",
+  "mplp": {
+    "protocolVersion": "1.0.0",
+    "frozen": true,
+    "governance": "MPGC",
+    "layer": "L2"
+  },
+  "homepage": "https://mplp.io",
+  "bugs": {
+    "url": "https://github.com/Coregentis/MPLP-Protocol/issues"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  }
+}

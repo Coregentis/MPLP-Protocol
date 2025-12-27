@@ -1,0 +1,68 @@
+---
+doc_type: normative
+status: frozen
+authority: MPGC
+description: ""
+title: Golden Flows Overview
+---
+
+# Golden Flows Overview
+
+> **Status**: Normative
+> **Version**: 1.0.0
+> **Authority**: MPGC
+> **Protocol**: MPLP v1.0.0 (Frozen)
+
+## Scope
+
+This document defines the normative Golden Flows that all MPLP-compliant runtimes must support.
+
+## Non-Goals
+
+Alternative or experimental flows not listed here are not required for compliance.
+
+## 1. Scope
+
+This specification defines the normative requirements for **Golden Flows**.
+
+## 2. Non-Goals
+
+This specification does not mandate specific implementation details beyond the defined interfaces and invariants.
+
+Golden Flows are **normative validation scenarios** that define expected behavior for MPLP-conformant implementations.
+
+## 馃Л How to Use This Section
+
+| Your Goal | Start Here |
+|:----------|:-----------|
+| **Verify implementation** | [GF-01: SA Lifecycle](./gf-01.mdx) |
+| **Understand coordination** | [GF-02: MAP Coordination](./gf-02.mdx) |
+| **Check governance** | [GF-05: Governance](./gf-05.mdx) |
+| **View registry** | [Golden Flow Registry](/docs/tests/golden-flow-registry) |
+
+## The Five Golden Flows
+
+| Flow | Name | Purpose | Modules Involved |
+|:-----|:-----|:--------|:-----------------|
+| **GF-01** | [SA Lifecycle](/docs/golden-flows/gf-01) | Single-agent lifecycle correctness | Context, Plan, Trace |
+| **GF-02** | [MAP Coordination](/docs/golden-flows/gf-02) | Multi-agent coordination | Collab, Role, Dialog |
+| **GF-03** | [Drift Detection](/docs/golden-flows/gf-03) | Plan-execution divergence | Plan, Trace, Confirm |
+| **GF-04** | [Delta-Intent](/docs/golden-flows/gf-04) | Incremental state update | Context, Trace |
+| **GF-05** | [Governance](/docs/golden-flows/gf-05) | Policy enforcement | Confirm, Role |
+
+## Traceability
+
+All Golden Flows are mapped to:
+- **Modules** they validate
+- **Cross-Cutting Duties** they exercise
+- **Test files** in the repository
+
+See: [Repo-Docs-Code Alignment](/docs/index/REPO_DOCS_CODE_ALIGNMENT)
+
+---
+
+## Change Policy
+
+Golden Flows are **Normative**.
+Changes require Documentation Governance review.
+Semantic changes require MPGC approval.

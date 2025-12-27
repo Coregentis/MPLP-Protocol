@@ -1,0 +1,104 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://mplp.io/schemas/governance/docs-validation-report.schema.json",
+    "title": "MPLP Docs Validation Report",
+    "type": "object",
+    "required": [
+        "schema_version",
+        "protocol_version",
+        "run_id",
+        "generated_at",
+        "summary",
+        "findings"
+    ],
+    "properties": {
+        "schema_version": {
+            "type": "string"
+        },
+        "protocol_version": {
+            "type": "string"
+        },
+        "run_id": {
+            "type": "string"
+        },
+        "generated_at": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "summary": {
+            "type": "object",
+            "required": [
+                "status",
+                "hard_failures",
+                "warnings",
+                "files_scanned"
+            ],
+            "properties": {
+                "status": {
+                    "type": "string",
+                    "enum": [
+                        "PASS",
+                        "FAIL"
+                    ]
+                },
+                "hard_failures": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "warnings": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "files_scanned": {
+                    "type": "integer",
+                    "minimum": 1
+                }
+            },
+            "additionalProperties": false
+        },
+        "findings": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/finding"
+            }
+        }
+    },
+    "$defs": {
+        "finding": {
+            "type": "object",
+            "required": [
+                "severity",
+                "code",
+                "path",
+                "message"
+            ],
+            "properties": {
+                "severity": {
+                    "type": "string",
+                    "enum": [
+                        "HARD",
+                        "WARN"
+                    ]
+                },
+                "code": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "line": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "message": {
+                    "type": "string"
+                },
+                "evidence": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        }
+    },
+    "additionalProperties": false
+}
