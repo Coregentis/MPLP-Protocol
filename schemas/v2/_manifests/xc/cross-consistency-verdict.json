@@ -1,0 +1,86 @@
+{
+    "manifest_version": "1.0.0",
+    "generated_at": "2026-01-04T15:10:00Z",
+    "bundle_hash": "sha256:78ea3511cee7cacebff416b5ad6179358032d5322e5991523b5f8d6257d10354",
+    "event_family": {
+        "source_schema": "events/mplp-event-core.schema.json",
+        "source_yaml": "taxonomy/event-taxonomy.yaml",
+        "expected_count": 12,
+        "schema_values": [
+            "compensation_plan",
+            "cost_budget",
+            "delta_intent",
+            "external_integration",
+            "graph_update",
+            "impact_analysis",
+            "import_process",
+            "intent",
+            "methodology",
+            "pipeline_stage",
+            "reasoning_graph",
+            "runtime_execution"
+        ],
+        "yaml_values": [
+            "compensation_plan",
+            "cost_budget",
+            "delta_intent",
+            "external_integration",
+            "graph_update",
+            "impact_analysis",
+            "import_process",
+            "intent",
+            "methodology",
+            "pipeline_stage",
+            "reasoning_graph",
+            "runtime_execution"
+        ],
+        "match": true,
+        "verdict": "PASS"
+    },
+    "invariants": {
+        "source_yaml": "invariants/*.yaml",
+        "expected_total": 61,
+        "counts": {
+            "sa-invariants.yaml": 9,
+            "map-invariants.yaml": 9,
+            "observability-invariants.yaml": 12,
+            "learning-invariants.yaml": 12,
+            "integration-invariants.yaml": 19
+        },
+        "actual_total": 61,
+        "match": true,
+        "verdict": "PASS"
+    },
+    "modules": {
+        "source_schemas": "mplp-*.schema.json",
+        "source_yaml": "taxonomy/module-event-matrix.yaml",
+        "expected_count": 10,
+        "schema_modules": [
+            "collab",
+            "confirm",
+            "context",
+            "core",
+            "dialog",
+            "extension",
+            "network",
+            "plan",
+            "role",
+            "trace"
+        ],
+        "yaml_modules": [
+            "collab",
+            "confirm",
+            "context",
+            "core",
+            "dialog",
+            "extension",
+            "network",
+            "plan",
+            "role",
+            "trace"
+        ],
+        "match": true,
+        "verdict": "PASS"
+    },
+    "overall_verdict": "PASS"
+}

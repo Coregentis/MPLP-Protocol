@@ -1,0 +1,180 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://mplp.io/schemas/governance/docs-classification.schema.json",
+    "title": "MPLP Docs Classification",
+    "type": "object",
+    "required": [
+        "schema_version",
+        "protocol_version",
+        "generated_at",
+        "root_dir",
+        "items"
+    ],
+    "properties": {
+        "schema_version": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "protocol_version": {
+            "type": "string",
+            "const": "1.0.0"
+        },
+        "generated_at": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "root_dir": {
+            "type": "string",
+            "minLength": 1
+        },
+        "items": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "$ref": "#/$defs/classifiedDoc"
+            }
+        }
+    },
+    "$defs": {
+        "classifiedDoc": {
+            "type": "object",
+            "required": [
+                "path",
+                "doc_type",
+                "status",
+                "authority"
+            ],
+            "properties": {
+                "path": {
+                    "type": "string",
+                    "pattern": "^docs/docs/.+\\.(md|mdx)$"
+                },
+                "doc_type": {
+                    "type": "string",
+                    "enum": [
+                        "normative",
+                        "informative",
+                        "governance",
+                        "reference",
+                        "internal_ops"
+                    ]
+                },
+                "status": {
+                    "type": "string",
+                    "enum": [
+                        "frozen",
+                        "active"
+                    ]
+                },
+                "authority": {
+                    "type": "string",
+                    "enum": [
+                        "MPGC",
+                        "Documentation Governance",
+                        "Internal"
+                    ]
+                },
+                "normative_role": {
+                    "type": "string",
+                    "enum": [
+                        "root",
+                        "subpage",
+                        null
+                    ]
+                },
+                "inherits_from": {
+                    "type": "string",
+                    "pattern": "^docs/docs/.+\\.(md|mdx)$"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "uniqueItems": true
+                },
+                "notes": {
+                    "type": "string"
+                }
+            },
+            "allOf": [
+                {
+                    "if": {
+                        "properties": {
+                            "doc_type": {
+                                "const": "normative"
+                            }
+                        }
+                    },
+                    "then": {
+                        "required": [
+                            "normative_role"
+                        ],
+                        "properties": {
+                            "authority": {
+                                "const": "MPGC"
+                            },
+                            "status": {
+                                "const": "frozen"
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "doc_type": {
+                                "const": "normative"
+                            },
+                            "normative_role": {
+                                "const": "subpage"
+                            }
+                        }
+                    },
+                    "then": {
+                        "required": [
+                            "inherits_from"
+                        ]
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "doc_type": {
+                                "const": "governance"
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "authority": {
+                                "const": "Documentation Governance"
+                            },
+                            "status": {
+                                "const": "frozen"
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "doc_type": {
+                                "const": "internal_ops"
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "authority": {
+                                "const": "Internal"
+                            }
+                        }
+                    }
+                }
+            ],
+            "additionalProperties": false
+        }
+    },
+    "additionalProperties": false
+}

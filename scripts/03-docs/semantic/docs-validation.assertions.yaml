@@ -1,0 +1,74 @@
+schema_version: "0.1.0"
+protocol_version: "1.0.0"
+
+assertions:
+  # ---- Phase 0: Classification Hard Gate ----
+  - id: DOCS-AST-001
+    severity: HARD
+    selector:
+      match:
+        path_glob: "docs/docs/**/*.{md,mdx}"
+    require:
+      frontmatter:
+        doc_type: "*" # tool interprets "*" as "must exist"
+    message: "All docs must be classified with doc_type."
+
+  # ---- Normative Root must have Scope + Non-Goals ----
+  - id: DOCS-AST-010
+    severity: HARD
+    selector:
+      match:
+        doc_type: "normative"
+        tags_any: ["normative-root"]
+    require:
+      headings:
+        must_have: ["Scope", "Non-Goals"]
+    message: "Normative root docs MUST contain Scope and Non-Goals."
+
+  # ---- Normative Subpage: allow inheritance OR local sections ----
+  - id: DOCS-AST-011
+    severity: HARD
+    selector:
+      match:
+        doc_type: "normative"
+        tags_any: ["normative-subpage"]
+    require:
+      header_block:
+        must_contain_keys: ["Scope", "Non-Goals"] # interpreted as: must declare inheritance lines OR have local sections
+    message: "Normative sub-pages MUST declare inheritance in header OR provide local Scope & Non-Goals."
+
+  # ---- Governance docs forbid alert syntax ----
+  - id: DOCS-AST-020
+    severity: HARD
+    selector:
+      match:
+        doc_type: "governance"
+        path_glob: "docs/docs/12-governance/**/*.{md,mdx}"
+    require:
+      header_block:
+        forbid_patterns:
+          ["\\[!IMPORTANT\\]", "\\[!NOTE\\]", "\\[!WARNING\\]", "\\[!FROZEN\\]"]
+    message: "Governance docs MUST NOT use Markdown alert syntax."
+
+  # ---- Standards mapping must include Interpretation Notice + Non-Claims ----
+  - id: DOCS-AST-030
+    severity: HARD
+    selector:
+      match:
+        tags_any: ["standards-mapping"]
+        path_glob: "docs/docs/15-standards/**/*.{md,mdx}"
+    require:
+      headings:
+        must_have: ["Interpretation Notice", "Non-Claims"]
+    message: "Standards mapping docs MUST include Interpretation Notice and Non-Claims."
+
+  # ---- Optional: warn on placeholder TODO in normative pages ----
+  - id: DOCS-AST-900
+    severity: WARN
+    selector:
+      match:
+        doc_type: "normative"
+    require:
+      header_block:
+        forbid_patterns: ["TODO:", "TBD", "PLACEHOLDER"]
+    message: "Avoid placeholder text in normative docs."

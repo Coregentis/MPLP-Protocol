@@ -1,0 +1,14 @@
+{
+  "meta": {
+    "protocol_version": "1.0.0",
+    "schema_version": "1.0.0",
+    "created_at": "2025-11-30T12:10:00.000Z"
+  },
+  "context_id": "650e8400-e29b-41d4-a716-446655443000",
+  "root": {
+    "domain": "map-turn-taking-demo",
+    "environment": "test"
+  },
+  "title": "MAP Turn-Taking Collaboration Demo",
+  "status": "active"
+}

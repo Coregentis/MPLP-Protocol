@@ -1,0 +1,33 @@
+{
+  "title": "Cross-Language Builder Test",
+  "root": {
+    "domain": "test",
+    "environment": "production"
+  },
+  "owner_role": "admin",
+  "tags": [
+    "test",
+    "cross-lang"
+  ],
+  "language": "en",
+  "constraints": {
+    "budget": "1000"
+  },
+  "plan": {
+    "title": "Test Plan",
+    "objective": "Test cross-language builders",
+    "steps": [
+      {
+        "description": "Step 1"
+      },
+      {
+        "description": "Step 2"
+      }
+    ]
+  },
+  "confirm": {
+    "status": "approved",
+    "reviewer": "qa-lead",
+    "reason": "All checks passed"
+  }
+}

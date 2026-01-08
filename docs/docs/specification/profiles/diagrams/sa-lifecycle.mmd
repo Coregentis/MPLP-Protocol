@@ -1,0 +1,109 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#4a90d9', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d5a87', 'lineColor': '#333', 'secondaryColor': '#f4f4f4', 'tertiaryColor': '#eef' }}}%%
+%% MPLP SA Profile Lifecycle State Machine
+%% Version: 1.0.0 | Frozen: 2025-12-03
+%% Schema Reference: schemas/v2/invariants/sa-invariants.yaml
+
+stateDiagram-v2
+    direction TB
+    
+    %% States
+    [*] --> Initialize: Boot Runtime
+    Initialize --> LoadContext: SA Created (sa_id generated)
+    LoadContext --> EvaluatePlan: Context Valid (status=active)
+    EvaluatePlan --> ExecuteStep: DAG Resolved
+    ExecuteStep --> EmitTrace: Step Done
+    EmitTrace --> ExecuteStep: More Steps
+    EmitTrace --> Complete: All Steps Done
+    Complete --> [*]: Terminate
+    
+    %% Error handling
+    LoadContext --> Failed: Context Invalid
+    EvaluatePlan --> Failed: Plan Invalid
+    ExecuteStep --> HandleError: Step Error
+    HandleError --> ExecuteStep: Retry
+    HandleError --> Failed: Fatal Error
+    Failed --> [*]: Terminate
+    
+    %% State descriptions
+    state Initialize {
+        [*] --> CreateSAInstance
+        CreateSAInstance --> GenerateSAId
+        GenerateSAId --> EmitSAInitialized
+        EmitSAInitialized --> [*]
+    }
+    
+    state LoadContext {
+        [*] --> ValidateContextId
+        ValidateContextId --> CheckContextStatus
+        CheckContextStatus --> EmitSAContextLoaded
+        EmitSAContextLoaded --> [*]
+        
+        note right of ValidateContextId
+            sa_requires_context:
+            context_id must be UUID v4
+        end note
+        
+        note right of CheckContextStatus
+            sa_context_must_be_active:
+            context.status == 'active'
+        end note
+    }
+    
+    state EvaluatePlan {
+        [*] --> ValidatePlanBinding
+        ValidatePlanBinding --> ParseSteps
+        ParseSteps --> ResolveDependencies
+        ResolveDependencies --> BuildExecutionDAG
+        BuildExecutionDAG --> EmitSAPlanEvaluated
+        EmitSAPlanEvaluated --> [*]
+        
+        note right of ValidatePlanBinding
+            sa_plan_context_binding:
+            plan.context_id == context.context_id
+        end note
+        
+        note right of ParseSteps
+            sa_plan_has_steps:
+            steps.length >= 1
+            sa_steps_agent_role_if_present:
+            if agent_role present, non-empty
+        end note
+    }
+    
+    state ExecuteStep {
+        [*] --> SelectExecutor
+        SelectExecutor --> RunExecution
+        RunExecution --> UpdateStepStatus
+        UpdateStepStatus --> [*]
+        
+        note right of SelectExecutor
+            Match agent_role to executor
+            (tool/LLM/agent)
+        end note
+    }
+    
+    state EmitTrace {
+        [*] --> WriteSegment
+        WriteSegment --> RecordOutcome
+        RecordOutcome --> EmitSATraceEmitted
+        EmitSATraceEmitted --> [*]
+        
+        note right of WriteSegment
+            sa_trace_context_binding:
+            trace.context_id == context.context_id
+            sa_trace_plan_binding:
+            trace.plan_id == plan.plan_id
+        end note
+    }
+    
+    state Complete {
+        [*] --> FinalizeTrace
+        FinalizeTrace --> EmitSACompleted
+        EmitSACompleted --> [*]
+    }
+    
+    state HandleError {
+        [*] --> ClassifyError
+        ClassifyError --> DecideAction
+        DecideAction --> [*]
+    }

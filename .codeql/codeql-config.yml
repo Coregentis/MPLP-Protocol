@@ -1,0 +1,27 @@
+name: "mplp-codeql-config"
+
+# Only scan source-of-truth code
+paths:
+  - "packages/**"
+  - "scripts/**"
+  - "docs/src/**"
+  - "docs/static/**"
+  - "governance/**"
+
+# Exclude build artifacts, generated files, third-party bundles
+paths-ignore:
+  # Docusaurus build output
+  - "docs/build/**"
+  - "docs/.docusaurus/**"
+
+  # Website build output (if present in repo)
+  - "MPLP_website/public/pagefind/**"
+  - "MPLP_website/.next/**"
+  - "MPLP_website/out/**"
+  - "MPLP_website/node_modules/**"
+
+  # Common generated/dependency directories
+  - "**/node_modules/**"
+  - "**/dist/**"
+  - "**/coverage/**"
+  - "**/.cache/**"

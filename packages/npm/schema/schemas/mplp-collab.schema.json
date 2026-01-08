@@ -1,0 +1,243 @@
+{
+  "$comment": "MPLP Protocol v1.0.0 — Frozen Specification\nFreeze Date: 2025-12-03\nStatus: FROZEN (no breaking changes permitted)\nGovernance: MPLP Protocol Governance Committee (MPGC)\nCopyright: © 2025 邦士（北京）网络科技有限公司\nLicense: Apache-2.0\nAny normative change requires a new protocol version.",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.mplp.dev/v1.0/mplp-collab.schema.json",
+  "title": "MPLP Collab Module – Core Protocol v1.0",
+  "description": "Collab Module Core Protocol: Describes the minimal required semantics (Core Profile) for multi-agent / multi-role collaboration sessions.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "meta": {
+      "$ref": "common/metadata.schema.json",
+      "description": "[PROTOCOL-CORE] Protocol and schema metadata."
+    },
+    "governance": {
+      "type": "object",
+      "description": "[PROTOCOL-CORE] Governance metadata for lifecycle management, truth domain authority, and locking status.",
+      "properties": {
+        "lifecyclePhase": {
+          "type": "string",
+          "description": "Current phase in the lifecycle fence (e.g., 'design', 'implementation', 'review')."
+        },
+        "truthDomain": {
+          "type": "string",
+          "description": "The truth domain this object belongs to (e.g., 'requirements', 'architecture')."
+        },
+        "locked": {
+          "type": "boolean",
+          "description": "If true, this object cannot be modified except by specific governance overrides."
+        },
+        "lastConfirmRef": {
+          "$ref": "common/common-types.schema.json#/definitions/Ref",
+          "description": "Reference to the last Confirm decision that validated this state."
+        }
+      },
+      "additionalProperties": false
+    },
+    "collab_id": {
+      "$ref": "common/identifiers.schema.json",
+      "description": "[PROTOCOL-CORE] Global unique identifier for the collaboration session."
+    },
+    "context_id": {
+      "$ref": "common/identifiers.schema.json",
+      "description": "[PROTOCOL-CORE] Identifier of the Context this collaboration session belongs to."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "description": "[PROTOCOL-CORE] Collaboration session title."
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 1,
+      "description": "[PROTOCOL-CORE] Description of the purpose/goal of the collaboration."
+    },
+    "mode": {
+      "type": "string",
+      "description": "[PROTOCOL-CORE] Collaboration mode (broadcast, round_robin, orchestrated, etc.).",
+      "enum": [
+        "broadcast",
+        "round_robin",
+        "orchestrated",
+        "swarm",
+        "pair"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "description": "[PROTOCOL-CORE] Collaboration session status.",
+      "enum": [
+        "draft",
+        "active",
+        "suspended",
+        "completed",
+        "cancelled"
+      ]
+    },
+    "participants": {
+      "type": "array",
+      "description": "[PROTOCOL-CORE] List of roles/Agents participating in the collaboration.",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/collab_participant_core"
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "[PROTOCOL-CORE] Creation time (ISO 8601)."
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "[PROTOCOL-CORE] Last update time (ISO 8601)."
+    },
+    "trace": {
+      "$ref": "common/trace-base.schema.json",
+      "description": "[PROTOCOL-CORE] Trace reference bound to this collaboration session."
+    },
+    "events": {
+      "type": "array",
+      "description": "[PROTOCOL-CORE] List of key events directly related to this collaboration.",
+      "items": {
+        "$ref": "common/events.schema.json"
+      }
+    }
+  },
+  "required": [
+    "meta",
+    "collab_id",
+    "context_id",
+    "title",
+    "purpose",
+    "mode",
+    "status",
+    "participants",
+    "created_at"
+  ],
+  "$defs": {
+    "collab_core_properties": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "common/metadata.schema.json",
+          "description": "[PROTOCOL-CORE] Protocol and schema metadata."
+        },
+        "collab_id": {
+          "$ref": "common/identifiers.schema.json",
+          "description": "[PROTOCOL-CORE] Global unique identifier for the collaboration session."
+        },
+        "context_id": {
+          "$ref": "common/identifiers.schema.json",
+          "description": "[PROTOCOL-CORE] Identifier of the Context this collaboration session belongs to."
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "description": "[PROTOCOL-CORE] Collaboration session title."
+        },
+        "purpose": {
+          "type": "string",
+          "minLength": 1,
+          "description": "[PROTOCOL-CORE] Description of the purpose/goal of the collaboration."
+        },
+        "mode": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Collaboration mode (broadcast, round_robin, orchestrated, etc.).",
+          "enum": [
+            "broadcast",
+            "round_robin",
+            "orchestrated",
+            "swarm",
+            "pair"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Collaboration session status.",
+          "enum": [
+            "draft",
+            "active",
+            "suspended",
+            "completed",
+            "cancelled"
+          ]
+        },
+        "participants": {
+          "type": "array",
+          "description": "[PROTOCOL-CORE] List of roles/Agents participating in the collaboration.",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/collab_participant_core"
+          }
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "[PROTOCOL-CORE] Creation time (ISO 8601)."
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "[PROTOCOL-CORE] Last update time (ISO 8601)."
+        },
+        "trace": {
+          "$ref": "common/trace-base.schema.json",
+          "description": "[PROTOCOL-CORE] Trace reference bound to this collaboration session."
+        },
+        "events": {
+          "type": "array",
+          "description": "[PROTOCOL-CORE] List of key events directly related to this collaboration.",
+          "items": {
+            "$ref": "common/events.schema.json"
+          }
+        }
+      },
+      "required": [
+        "meta",
+        "collab_id",
+        "context_id",
+        "title",
+        "purpose",
+        "mode",
+        "status",
+        "participants",
+        "created_at"
+      ]
+    },
+    "collab_participant_core": {
+      "type": "object",
+      "description": "[PROTOCOL-CORE] Minimal required semantics for a collaboration participant.",
+      "additionalProperties": false,
+      "properties": {
+        "participant_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "[PROTOCOL-CORE] Participant identifier (can be Role/Agent/External ID)."
+        },
+        "role_id": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Role ID bound to this participant (corresponds to role_id in Role module)."
+        },
+        "kind": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Participant type.",
+          "enum": [
+            "agent",
+            "human",
+            "system",
+            "external"
+          ]
+        },
+        "display_name": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Display name (for human identification)."
+        }
+      },
+      "required": [
+        "participant_id",
+        "kind"
+      ]
+    }
+  }
+}

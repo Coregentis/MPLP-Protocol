@@ -1,0 +1,96 @@
+# MPLP Protocol v1.0.0 — Frozen Specification
+# Freeze Date: 2025-12-03
+# Status: FROZEN (no breaking changes permitted)
+# Governance: MPLP Protocol Governance Committee (MPGC)
+# © 2025 Bangshi (Beijing) Network Technology Co., Ltd.
+# License: Apache-2.0
+# Any normative change requires a new protocol version.
+
+invariants:
+  # Core Event Structure Invariants
+  - id: obs_event_id_is_uuid
+    scope: event
+    path: event_id
+    rule: uuid-v4
+    description: "All events must have UUID v4 event_id"
+
+  - id: obs_event_type_non_empty
+    scope: event
+    path: event_type
+    rule: non-empty-string
+    description: "All events must have non-empty event_type"
+
+  - id: obs_event_family_valid
+    scope: event
+    path: event_family
+    rule: enum(import_process,intent,delta_intent,impact_analysis,compensation_plan,methodology,reasoning_graph,pipeline_stage,graph_update,runtime_execution,cost_budget,external_integration)
+    description: "Event family must be valid enum value"
+
+  - id: obs_timestamp_iso_format
+    scope: event
+    path: timestamp
+    rule: iso-datetime
+    description: "All events must have ISO 8601 timestamp"
+
+  # PipelineStageEvent Specific Invariants
+  - id: obs_pipeline_event_has_pipeline_id
+    scope: event
+    path: pipeline_id
+    rule: uuid-v4
+    description: "PipelineStageEvent must have valid pipeline_id"
+    note: "Apply when event_family == pipeline_stage"
+
+  - id: obs_pipeline_stage_id_non_empty
+    scope: event
+    path: stage_id
+    rule: non-empty-string
+    description: "PipelineStageEvent must have non-empty stage_id"
+    note: "Apply when event_family == pipeline_stage"
+
+  - id: obs_pipeline_stage_status_valid
+    scope: event
+    path: stage_status
+    rule: enum(pending,running,completed,failed,skipped)
+    description: "PipelineStageEvent stage_status must be valid enum"
+    note: "Apply when event_family == pipeline_stage"
+
+  # GraphUpdateEvent Specific Invariants
+  - id: obs_graph_event_has_graph_id
+    scope: event
+    path: graph_id
+    rule: uuid-v4
+    description: "GraphUpdateEvent must have valid graph_id"
+    note: "Apply when event_family == graph_update"
+
+  - id: obs_graph_update_kind_valid
+    scope: event
+    path: update_kind
+    rule: enum(node_add,node_update,node_delete,edge_add,edge_update,edge_delete,bulk)
+    description: "GraphUpdateEvent update_kind must be valid enum"
+    note: "Apply when event_family == graph_update"
+
+  # RuntimeExecutionEvent Specific Invariants
+  - id: obs_runtime_event_has_execution_id
+    scope: event
+    path: execution_id
+    rule: uuid-v4
+    description: "RuntimeExecutionEvent must have valid execution_id"
+    note: "Apply when event_family == runtime_execution"
+
+  - id: obs_runtime_executor_kind_valid
+    scope: event
+    path: executor_kind
+    rule: enum(agent,tool,llm,worker,external)
+    description: "RuntimeExecutionEvent executor_kind must be valid enum"
+    note: "Apply when event_family == runtime_execution"
+
+  - id: obs_runtime_status_valid
+    scope: event
+    path: status
+    rule: enum(pending,running,completed,failed,cancelled)
+    description: "RuntimeExecutionEvent status must be valid enum"
+    note: "Apply when event_family == runtime_execution"
+# Note: The "note" fields indicate conditional application based on event_family.
+# If the invariant engine does not support conditional rules, these should be
+# validated at the schema level (which is already done in the event schemas).
+# These invariants provide additional layer of validation for runtime enforcement.

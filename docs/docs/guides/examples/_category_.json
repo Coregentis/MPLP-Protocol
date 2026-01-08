@@ -1,0 +1,10 @@
+{
+  "label": "Examples (Advanced)",
+  "position": 13,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "description": "Examples (Advanced) Documentation"
+  }
+}

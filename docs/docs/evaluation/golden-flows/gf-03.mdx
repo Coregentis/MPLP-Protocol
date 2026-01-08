@@ -1,0 +1,115 @@
+---
+entry_surface: documentation
+doc_type: informative
+normativity: informative
+status: active
+authority: Documentation Governance
+protocol_version: "1.0.0"
+doc_id: "DOC-EVAL-FLOW-03-001"
+
+# UI metadata (non-normative; excluded from protocol semantics)
+title: "FLOW-03: Single Agent – With Tools"
+sidebar_label: "FLOW-03: With Tools"
+sidebar_position: 3
+description: "MPLP evaluation scenario: FLOW-03: Single Agent – With Tools. Reference flow for conformance testing."
+---
+
+# FLOW-03: Single Agent – With Tools
+
+**Source of Truth:** `tests/golden/flows/flow-03-single-agent-with-tools/`
+
+## Purpose
+
+Tool integration via `agent_role` field. Validates protocol semantics for tool-enabled workflows where steps invoke external tools.
+
+## Scope
+
+This evaluation scenario validates:
+- **Plan** steps with `agent_role` indicating tool usage
+- **Trace** recording of tool invocation events and results
+- Tool outputs captured in trace events
+- Protocol-level tool role semantics
+
+## Non-Goals
+
+This scenario does NOT evaluate:
+- Basic 2-step flows (see FLOW-01)
+- Large plan volumetrics (see FLOW-02)
+- LLM enrichment (see FLOW-04)
+- Multi-round approval (see FLOW-05)
+
+---
+
+## L2 Modules Exercised
+
+| Module | Role in Flow |
+|:-------|:-------------|
+| **Context** | Establishes problem domain for tool-enabled workflows |
+| **Plan** | Defines steps with `agent_role` for tool execution |
+| **Trace** | Records tool invocation events and results |
+
+---
+
+## Key Protocol Fields
+
+### Plan (Tool Steps)
+- `steps[]`: Mix of tool-based and agent logic steps
+- Each tool step:
+  - `step_id`: UUID v4
+  - `description`: Task description
+  - `agent_role`: Role/tool indicator (e.g., "curl_executor", "jq_processor")
+  - `dependencies`: Optional sequencing
+
+### Tool Roles (via agent_role)
+- `agent_role: "curl_executor"` → HTTP/curl tool
+- `agent_role: "jq_processor"` → JSON processing
+- `agent_role: "agent"` → Standard agent logic
+
+### Trace (Tool Events)
+- Tool invocation events (type, timestamp, step reference)
+- Tool result events (output summary, errors)
+- Deterministic outputs for golden tests
+
+---
+
+## Integration Dimensions (L3/L4)
+
+### Tool Integration (via Runtime)
+- Tools are **runtime capabilities**, not L2 protocol constructs
+- `agent_role` provides protocol-level indication of tool usage
+- Actual tool execution happens at L4 (Runtime Agent Execution layer)
+- For golden tests: tool outputs are **pre-determined**
+
+---
+
+## Evidence
+
+| Type | Location | Status |
+|:-----|:---------|:-------|
+| **Golden Flow** | `tests/golden/flows/flow-03-single-agent-with-tools/` | ✅ Passed |
+| **Input Fixtures** | `tests/golden/flows/flow-03-single-agent-with-tools/input/` | Available |
+| **Expected Fixtures** | `tests/golden/flows/flow-03-single-agent-with-tools/expected/` | Available |
+
+---
+
+## Expected Behavior
+
+- Tool steps execute via `agent_role` mechanism
+- Tool outputs captured in trace events
+- No `tool_name` or `parameters` fields (these are runtime concerns)
+- Context remains immutable throughout
+- Trace correctly records tool invocation sequence
+
+---
+
+## Invariants Tested
+
+- Steps with tool roles have valid `agent_role` values
+- Tool invocations produce trace events
+- Output determinism for golden test validation
+- No schema violations from tool-related fields
+
+---
+
+**Document Status**: Informative (Evaluation Scenario)  
+**Source of Truth**: `tests/golden/flows/flow-03-single-agent-with-tools/README.md`

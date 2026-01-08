@@ -1,0 +1,106 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#4a90d9', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d5a87', 'lineColor': '#333', 'secondaryColor': '#f4f4f4', 'tertiaryColor': '#eef' }}}%%
+%% MPLP MAP Session Collaboration State Machine
+%% Version: 1.0.0 | Frozen: 2025-12-03
+%% Schema Reference: schemas/v2/invariants/map-invariants.yaml
+
+stateDiagram-v2
+    direction TB
+    
+    %% Main flow
+    [*] --> InitializeSession: Create Session
+    InitializeSession --> AssignRoles: Collab Created (mode selected)
+    AssignRoles --> DispatchTurn: Roles Bound
+    DispatchTurn --> CollectResults: Token Issued
+    CollectResults --> ResolveConflicts: Turn Complete
+    ResolveConflicts --> BroadcastUpdates: Conflicts Handled
+    BroadcastUpdates --> DispatchTurn: Next Turn
+    BroadcastUpdates --> CompleteSession: All Done
+    CompleteSession --> [*]: Session Closed
+    
+    %% Suspension and cancellation
+    DispatchTurn --> Suspended: Pause
+    Suspended --> DispatchTurn: Resume
+    DispatchTurn --> Cancelled: Abort
+    CollectResults --> Cancelled: Critical Failure
+    Cancelled --> [*]: Terminate
+    
+    %% State details
+    state InitializeSession {
+        [*] --> CreateCollabObject
+        CreateCollabObject --> SelectMode
+        SelectMode --> BindToContext
+        BindToContext --> EmitMAPSessionStarted
+        EmitMAPSessionStarted --> [*]
+        
+        note right of SelectMode
+            Modes: broadcast, round_robin,
+            orchestrated, swarm, pair
+        end note
+    }
+    
+    state AssignRoles {
+        [*] --> ValidateParticipants
+        ValidateParticipants --> MapAgentsToRoles
+        MapAgentsToRoles --> CheckRoleCapabilities
+        CheckRoleCapabilities --> EmitMAPRolesAssigned
+        EmitMAPRolesAssigned --> [*]
+        
+        note right of ValidateParticipants
+            map_session_requires_participants:
+            participants.length >= 1
+        end note
+        
+        note right of MapAgentsToRoles
+            map_participants_have_role_ids:
+            all participants.role_id non-empty
+        end note
+    }
+    
+    state DispatchTurn {
+        [*] --> SelectNextRole
+        SelectNextRole --> IssueToken
+        IssueToken --> EmitMAPTurnDispatched
+        EmitMAPTurnDispatched --> WaitForCompletion
+        WaitForCompletion --> [*]
+        
+        note right of IssueToken
+            execution_token grants
+            exclusive modification rights
+            (turn-taking modes)
+        end note
+    }
+    
+    state CollectResults {
+        [*] --> ReceiveCompletion
+        ReceiveCompletion --> ValidateOutput
+        ValidateOutput --> EmitMAPTurnCompleted
+        EmitMAPTurnCompleted --> ReleaseToken
+        ReleaseToken --> [*]
+    }
+    
+    state ResolveConflicts {
+        [*] --> DetectConflicts
+        DetectConflicts --> ApplyStrategy
+        ApplyStrategy --> EmitResolutionEvents
+        EmitResolutionEvents --> [*]
+        
+        note right of ApplyStrategy
+            Strategies: hierarchy,
+            voting, LWW, escalation
+        end note
+    }
+    
+    state BroadcastUpdates {
+        [*] --> SyncState
+        SyncState --> EmitMAPBroadcastSent
+        EmitMAPBroadcastSent --> NotifyParticipants
+        NotifyParticipants --> DecideNextStep
+        DecideNextStep --> [*]
+    }
+    
+    state CompleteSession {
+        [*] --> AggregateResults
+        AggregateResults --> FinalizeTrace
+        FinalizeTrace --> EmitMAPSessionCompleted
+        EmitMAPSessionCompleted --> [*]
+    }

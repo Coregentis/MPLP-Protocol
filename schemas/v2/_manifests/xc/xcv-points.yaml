@@ -1,0 +1,143 @@
+# XCV-01 Cross-Consistency Point Registry
+# Version: 1.0.1
+# Status: Governance-Frozen
+# Updated: 2026-01-04 (added tool_kind, fixed pointer dialects, added severity mapping)
+
+# This file defines all verified cross-consistency points.
+# Adding new points requires MPGC approval.
+
+version: "1.0.1"
+last_updated: "2026-01-04"
+
+# Severity Mapping (CI Behavior)
+severity_mapping:
+  FAIL: "block_merge"
+  WARN: "allow_merge_with_label"
+  INFO: "record_only"
+
+# Path Dialect Specification
+path_dialects:
+  json_pointer: "RFC 6901 JSON Pointer (for JSON Schema)"
+  yq_path: "yq expression syntax (for YAML extraction)"
+
+points:
+  # --- Event Family Enum ---
+  - id: xcv_event_family
+    title: "Event Family Enum Alignment"
+    source_schema:
+      file: "events/mplp-event-core.schema.json"
+      path_dialect: "json_pointer"
+      path: "#/properties/event_family/enum"
+    source_yaml:
+      file: "taxonomy/event-taxonomy.yaml"
+      path_dialect: "yq_path"
+      path: ".event_families[].id"
+    comparison: "set_equality"
+    expected_count: 12
+    severity: FAIL
+    description: "Schema enum values MUST equal YAML family IDs"
+
+  # --- Tool Kind Enum (Integration) ---
+  - id: xcv_tool_kind
+    title: "Tool Kind Enum Alignment"
+    source_schema:
+      file: "integration/mplp-tool-event.schema.json"
+      path_dialect: "json_pointer"
+      path: "#/properties/tool_kind/enum"
+    source_yaml:
+      file: "taxonomy/integration-event-taxonomy.yaml"
+      path_dialect: "yq_path"
+      path: ".TOOL_EVENT.tool_kinds[]"
+    comparison: "set_equality"
+    expected_count: 5
+    severity: FAIL
+    description: "Schema tool_kind enum MUST equal YAML tool_kinds"
+
+  # --- Invariant Counts ---
+  - id: xcv_invariant_count_sa
+    title: "SA Invariant Count"
+    source_yaml:
+      file: "invariants/sa-invariants.yaml"
+      path_dialect: "yq_path"
+      path: ".invariants | length"
+    extraction: "array_length"
+    expected: 9
+    severity: FAIL
+
+  - id: xcv_invariant_count_map
+    title: "MAP Invariant Count"
+    source_yaml:
+      file: "invariants/map-invariants.yaml"
+      path_dialect: "yq_path"
+      path: ".invariants | length"
+    extraction: "array_length"
+    expected: 9
+    severity: FAIL
+
+  - id: xcv_invariant_count_observability
+    title: "Observability Invariant Count"
+    source_yaml:
+      file: "invariants/observability-invariants.yaml"
+      path_dialect: "yq_path"
+      path: ".invariants | length"
+    extraction: "array_length"
+    expected: 12
+    severity: FAIL
+
+  - id: xcv_invariant_count_learning
+    title: "Learning Invariant Count"
+    source_yaml:
+      file: "invariants/learning-invariants.yaml"
+      path_dialect: "yq_path"
+      path: ".invariants | length"
+    extraction: "array_length"
+    expected: 12
+    severity: FAIL
+
+  - id: xcv_invariant_count_integration
+    title: "Integration Invariant Count"
+    source_yaml:
+      file: "invariants/integration-invariants.yaml"
+      path_dialect: "yq_path"
+      path: ".invariants | length"
+    extraction: "array_length"
+    expected: 19
+    severity: FAIL
+
+  - id: xcv_invariant_count_total
+    title: "Total Invariant Count"
+    derivation: "sum(xcv_invariant_count_*)"
+    expected: 61
+    severity: FAIL
+
+  # --- Module Names ---
+  - id: xcv_module_names
+    title: "Module Name Alignment"
+    source_schema:
+      pattern: "mplp-*.schema.json"
+      extraction: "filename_stem"
+    source_yaml:
+      file: "taxonomy/module-event-matrix.yaml"
+      path_dialect: "yq_path"
+      path: ".module_event_mapping[].module_id"
+    comparison: "set_equality"
+    expected_count: 10
+    severity: FAIL
+
+  # --- Schema Ref Existence ---
+  - id: xcv_schema_ref_exists
+    title: "Taxonomy Schema Refs Exist"
+    source_yaml:
+      files:
+        - "taxonomy/event-taxonomy.yaml"
+        - "taxonomy/learning-taxonomy.yaml"
+      path_dialect: "yq_path"
+      path: ".. | .schema_ref? // empty"
+    validation: "file_exists"
+    severity: FAIL
+
+# Extension Rules
+extension_policy:
+  approval_required: true
+  approver: "MPGC"
+  versioning: "MINOR version bump required"

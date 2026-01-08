@@ -1,0 +1,10 @@
+{
+  "label": "Golden Flows",
+  "position": 7,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "evaluation/golden-flows/index"
+  }
+}

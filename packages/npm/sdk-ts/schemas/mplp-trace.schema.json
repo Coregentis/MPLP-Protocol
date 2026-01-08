@@ -1,0 +1,222 @@
+{
+  "$comment": "MPLP v1.0.0 FROZEN – © 2025 邦士（北京）网络科技有限公司 – Apache-2.0 – Governance: MPGC",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.mplp.dev/v1.0/mplp-trace.schema.json",
+  "title": "MPLP Trace Module – Core Protocol v1.0",
+  "description": "Trace Module Core Protocol: Describes the minimal required semantics (Core Profile) for execution trace resources (Trace) and their key segments and events.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "meta": {
+      "$ref": "common/metadata.schema.json",
+      "description": "[PROTOCOL-CORE] MPLP protocol and schema metadata."
+    },
+    "governance": {
+      "type": "object",
+      "description": "[PROTOCOL-CORE] Governance metadata for lifecycle management, truth domain authority, and locking status.",
+      "properties": {
+        "lifecyclePhase": {
+          "type": "string",
+          "description": "Current phase in the lifecycle fence (e.g., 'design', 'implementation', 'review')."
+        },
+        "truthDomain": {
+          "type": "string",
+          "description": "The truth domain this object belongs to (e.g., 'requirements', 'architecture')."
+        },
+        "locked": {
+          "type": "boolean",
+          "description": "If true, this object cannot be modified except by specific governance overrides."
+        },
+        "lastConfirmRef": {
+          "$ref": "common/common-types.schema.json#/definitions/Ref",
+          "description": "Reference to the last Confirm decision that validated this state."
+        }
+      },
+      "additionalProperties": false
+    },
+    "trace_id": {
+      "$ref": "common/identifiers.schema.json",
+      "description": "[PROTOCOL-CORE] Global unique identifier for the Trace."
+    },
+    "context_id": {
+      "$ref": "common/identifiers.schema.json",
+      "description": "[PROTOCOL-CORE] Identifier of the Context this Trace belongs to."
+    },
+    "plan_id": {
+      "$ref": "common/identifiers.schema.json",
+      "description": "[PROTOCOL-CORE] Identifier of the Plan associated with this Trace (if any)."
+    },
+    "root_span": {
+      "$ref": "common/trace-base.schema.json",
+      "description": "[PROTOCOL-CORE] Root span definition of the Trace (follows L1 trace-base structure)."
+    },
+    "status": {
+      "type": "string",
+      "description": "[PROTOCOL-CORE] Current status of the Trace.",
+      "enum": [
+        "pending",
+        "running",
+        "completed",
+        "failed",
+        "cancelled"
+      ]
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "[PROTOCOL-CORE] Trace start time (ISO 8601)."
+    },
+    "finished_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "[PROTOCOL-CORE] Trace finish time (ISO 8601, optional if not finished)."
+    },
+    "segments": {
+      "type": "array",
+      "description": "[PROTOCOL-CORE] Key execution segments in the Trace (can correspond to multiple spans or phased aggregations).",
+      "items": {
+        "$ref": "#/$defs/trace_segment_core"
+      }
+    },
+    "events": {
+      "type": "array",
+      "description": "[PROTOCOL-CORE] List of events directly related to this Trace (errors, retries, status changes, etc.).",
+      "items": {
+        "$ref": "common/events.schema.json"
+      }
+    }
+  },
+  "required": [
+    "meta",
+    "trace_id",
+    "context_id",
+    "root_span",
+    "status"
+  ],
+  "$defs": {
+    "trace_core_properties": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "common/metadata.schema.json",
+          "description": "[PROTOCOL-CORE] MPLP protocol and schema metadata."
+        },
+        "trace_id": {
+          "$ref": "common/identifiers.schema.json",
+          "description": "[PROTOCOL-CORE] Global unique identifier for the Trace."
+        },
+        "context_id": {
+          "$ref": "common/identifiers.schema.json",
+          "description": "[PROTOCOL-CORE] Identifier of the Context this Trace belongs to."
+        },
+        "plan_id": {
+          "$ref": "common/identifiers.schema.json",
+          "description": "[PROTOCOL-CORE] Identifier of the Plan associated with this Trace (if any)."
+        },
+        "root_span": {
+          "$ref": "common/trace-base.schema.json",
+          "description": "[PROTOCOL-CORE] Root span definition of the Trace (follows L1 trace-base structure)."
+        },
+        "status": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Current status of the Trace.",
+          "enum": [
+            "pending",
+            "running",
+            "completed",
+            "failed",
+            "cancelled"
+          ]
+        },
+        "started_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "[PROTOCOL-CORE] Trace start time (ISO 8601)."
+        },
+        "finished_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "[PROTOCOL-CORE] Trace finish time (ISO 8601, optional if not finished)."
+        },
+        "segments": {
+          "type": "array",
+          "description": "[PROTOCOL-CORE] Key execution segments in the Trace (can correspond to multiple spans or phased aggregations).",
+          "items": {
+            "$ref": "#/$defs/trace_segment_core"
+          }
+        },
+        "events": {
+          "type": "array",
+          "description": "[PROTOCOL-CORE] List of events directly related to this Trace (errors, retries, status changes, etc.).",
+          "items": {
+            "$ref": "common/events.schema.json"
+          }
+        }
+      },
+      "required": [
+        "meta",
+        "trace_id",
+        "context_id",
+        "root_span",
+        "status"
+      ]
+    },
+    "trace_segment_core": {
+      "type": "object",
+      "description": "[PROTOCOL-CORE] Key segments in execution tracing, used to express an auditable execution interval at the protocol layer.",
+      "additionalProperties": false,
+      "properties": {
+        "segment_id": {
+          "$ref": "common/identifiers.schema.json",
+          "description": "[PROTOCOL-CORE] Segment identifier."
+        },
+        "parent_segment_id": {
+          "$ref": "common/identifiers.schema.json",
+          "description": "[PROTOCOL-CORE] Parent segment identifier (optional if root segment)."
+        },
+        "label": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Segment label/name, for human and Agent identification of the interval."
+        },
+        "status": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Segment status.",
+          "enum": [
+            "pending",
+            "running",
+            "completed",
+            "failed",
+            "cancelled",
+            "skipped"
+          ]
+        },
+        "started_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "[PROTOCOL-CORE] Segment start time."
+        },
+        "finished_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "[PROTOCOL-CORE] Segment finish time (optional if not finished)."
+        },
+        "attributes": {
+          "type": "object",
+          "description": "[PROTOCOL-CORE] Key context attributes related to this segment (key-value form, for tracing and audit).",
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "segment_id",
+        "label",
+        "status"
+      ]
+    }
+  },
+  "x-mplp-meta": {
+    "protocolVersion": "1.0.0",
+    "frozen": true,
+    "freezeDate": "2025-12-03",
+    "governance": "MPGC"
+  }
+}

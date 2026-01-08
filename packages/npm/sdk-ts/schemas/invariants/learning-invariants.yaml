@@ -1,0 +1,98 @@
+# MPLP v1.0.0 FROZEN – Invariant Set
+# © 2026 Bangshi Beijing Network Technology Limited Company – Apache-2.0
+# Governance: MPLP Protocol Governance Committee (MPGC)
+
+# MPLP Protocol 1.0.0 — Frozen Specification
+# Status: Frozen as of 2025-11-30
+# Copyright: © 2026 邦士（北京）网络科技有限公司
+# License: Apache-2.0 (see LICENSE at repository root)
+# Any normative change requires a new protocol version.
+
+invariants:
+  # Core LearningSample Structure Invariants
+  - id: learning_sample_id_is_uuid
+    scope: learning_sample
+    path: sample_id
+    rule: uuid-v4
+    description: "All LearningSamples must have UUID v4 sample_id"
+
+  - id: learning_sample_family_non_empty
+    scope: learning_sample
+    path: sample_family
+    rule: non-empty-string
+    description: "LearningSample must have non-empty sample_family"
+
+  - id: learning_sample_created_at_iso
+    scope: learning_sample
+    path: created_at
+    rule: iso-datetime
+    description: "LearningSample created_at must be ISO 8601 timestamp"
+
+  # Input/Output Existence (using non-empty-string on a required sub-field if possible)
+  - id: learning_sample_has_input_section
+    scope: learning_sample
+    path: input
+    rule: exists
+    description: "LearningSample must have input section"
+
+  - id: learning_sample_has_output_section
+    scope: learning_sample
+    path: output
+    rule: exists
+    description: "LearningSample must have output section"
+
+  # Meta Field Invariants (optional but validate when present)
+  - id: learning_sample_feedback_label_valid
+    scope: learning_sample
+    path: meta.human_feedback_label
+    rule: enum(approved,rejected,not_reviewed)
+    description: "If human_feedback_label present, must be valid enum"
+    note: "Apply only when meta.human_feedback_label exists"
+
+  - id: learning_sample_source_flow_non_empty
+    scope: learning_sample
+    path: meta.source_flow_id
+    rule: non-empty-string
+    description: "If source_flow_id present, must be non-empty"
+    note: "Apply only when meta.source_flow_id exists"
+
+  # Intent Resolution Family Invariants
+  - id: learning_intent_has_intent_id
+    scope: learning_sample
+    path: input.intent_id
+    rule: non-empty-string
+    description: "Intent resolution samples must have intent_id in input"
+    note: "Apply when sample_family == intent_resolution"
+
+  - id: learning_intent_quality_label_valid
+    scope: learning_sample
+    path: output.resolution_quality_label
+    rule: enum(good,acceptable,bad,unknown)
+    description: "Intent resolution quality label must be valid enum if present"
+    note: "Apply when sample_family == intent_resolution AND field exists"
+
+  # Delta Impact Family Invariants
+  - id: learning_delta_has_delta_id
+    scope: learning_sample
+    path: input.delta_id
+    rule: non-empty-string
+    description: "Delta impact samples must have delta_id in input"
+    note: "Apply when sample_family == delta_impact"
+
+  - id: learning_delta_scope_valid
+    scope: learning_sample
+    path: output.impact_scope
+    rule: enum(local,module,system,global)
+    description: "Delta impact scope must be valid enum"
+    note: "Apply when sample_family == delta_impact"
+
+  - id: learning_delta_risk_valid
+    scope: learning_sample
+    path: state.risk_level
+    rule: enum(low,medium,high,critical)
+    description: "Delta risk level must be valid enum if present"
+note: "Apply when sample_family == delta_impact AND field exists"
+# Note: Conditional invariants (based on sample_family) are indicated in "note" fields.
+# If the invariant engine does not support conditional application, these should be
+# enforced at the schema level (already done in family-specific schemas) or during
+# runtime validation. These invariants provide an additional validation layer.

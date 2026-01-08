@@ -1,0 +1,119 @@
+{
+  "$comment": "MPLP Protocol v1.0.0 — Frozen Specification\nFreeze Date: 2025-12-03\nStatus: FROZEN (no breaking changes permitted)\nGovernance: MPLP Protocol Governance Committee (MPGC)\nCopyright: © 2025 邦士（北京）网络科技有限公司\nLicense: Apache-2.0\nAny normative change requires a new protocol version.",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://mplp.dev/schemas/v1.0/learning/mplp-learning-sample-intent.schema.json",
+  "title": "MPLP LearningSample – Intent Resolution v1.0",
+  "description": "Specialized schema for intent_resolution samples capturing user intent clarification and plan generation",
+  "allOf": [
+    {
+      "$ref": "mplp-learning-sample-core.schema.json"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "sample_family": {
+          "const": "intent_resolution",
+          "description": "Must be 'intent_resolution' for this sample type"
+        },
+        "input": {
+          "type": "object",
+          "properties": {
+            "intent_id": {
+              "type": "string",
+              "description": "Intent identifier from IntentEvent or Plan.intent_model"
+            },
+            "raw_request_summary": {
+              "type": "string",
+              "description": "Abstracted summary of original user request (PII-scrubbed if needed)"
+            },
+            "constraints_summary": {
+              "type": "string",
+              "description": "Optional: Key constraints mentioned (timeline, budget, resources, etc.)"
+            },
+            "dialog_turns_count": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Optional: Number of dialog exchanges before intent resolution"
+            }
+          },
+          "required": [
+            "intent_id",
+            "raw_request_summary"
+          ],
+          "additionalProperties": true
+        },
+        "state": {
+          "type": "object",
+          "properties": {
+            "project_phase": {
+              "type": "string",
+              "description": "Optional: Project state (greenfield, brownfield, maintenance, etc.)"
+            },
+            "psg_node_count": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Optional: PSG size before intent application"
+            },
+            "existing_plan_count": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Optional: Number of existing plans in context"
+            }
+          },
+          "additionalProperties": true
+        },
+        "output": {
+          "type": "object",
+          "properties": {
+            "final_intent_summary": {
+              "type": "string",
+              "description": "Refined/clarified intent after resolution process"
+            },
+            "plan_id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Optional: Generated Plan identifier (if plan created)"
+            },
+            "plan_step_count": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Optional: Number of steps in generated plan"
+            },
+            "resolution_quality_label": {
+              "type": "string",
+              "enum": [
+                "good",
+                "acceptable",
+                "bad",
+                "unknown"
+              ],
+              "description": "Assessment of intent resolution quality"
+            }
+          },
+          "required": [
+            "final_intent_summary"
+          ],
+          "additionalProperties": true
+        },
+        "meta": {
+          "type": "object",
+          "properties": {
+            "clarification_rounds": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Optional: Clarification rounds needed before resolution"
+            },
+            "ambiguity_flags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Optional: Detected ambiguity types (vague_scope, missing_constraints, etc.)"
+            }
+          },
+          "additionalProperties": true
+        }
+      }
+    }
+  ]
+}

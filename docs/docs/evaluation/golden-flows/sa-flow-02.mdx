@@ -1,0 +1,64 @@
+---
+entry_surface: documentation
+doc_type: informative
+normativity: informative
+status: draft
+protocol_version: "1.0.0"
+doc_id: "DOC-EVAL-SA-FLOW-02-001"
+
+# UI metadata (non-normative; excluded from protocol semantics)
+title: "SA-FLOW-02: SA Multi-Step Evaluation"
+sidebar_label: "SA-FLOW-02: SA Multi-Step"
+sidebar_position: 12
+description: "MPLP evaluation scenario: SA-FLOW-02: SA Multi-Step Evaluation. Reference flow for conformance testing."
+authority: Documentation Governance
+---
+
+# SA-FLOW-02: SA Multi-Step Evaluation
+
+## Scope
+
+This evaluation scenario validates multi-step execution in SA profile:
+- SA loads Context with multi-step Plan
+- SA processes steps by order_index sequence
+- Each step status updated correctly
+- Context remains stable across execution
+
+## Non-Goals
+
+This scenario does NOT evaluate:
+- Single-step execution (see SA-FLOW-01)
+- Tool integration (see FLOW-03)
+- LLM enrichment (see FLOW-04)
+
+---
+
+## Modules Involved
+
+| Module | Role in Flow |
+|:-------|:-------------|
+| **Context** | Provides stable execution boundary |
+| **Plan** | Defines multiple ordered steps |
+
+---
+
+## Evidence
+
+| Type | Location | Status |
+|:-----|:---------|:-------|
+| **Golden Flow** | `tests/golden/flows/sa-flow-02-step-evaluation/` | Passed |
+| **Input Fixtures** | `tests/golden/flows/sa-flow-02-step-evaluation/input/` | Available |
+| **Expected Fixtures** | `tests/golden/flows/sa-flow-02-step-evaluation/expected/` | Available |
+
+---
+
+## Expected Behavior
+
+- Steps execute in order_index sequence
+- Step status transitions: pending → in_progress → completed
+- Context immutability preserved
+- All step_ids are valid UUID v4
+
+---
+
+**Source of Truth**: `tests/golden/flows/sa-flow-02-step-evaluation/README.md`

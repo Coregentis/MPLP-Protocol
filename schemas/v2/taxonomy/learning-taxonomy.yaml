@@ -1,0 +1,291 @@
+# MPLP Protocol v1.0.0 – Frozen Specification
+# Freeze Date: 2025-12-03
+# Status: FROZEN (no breaking changes permitted)
+# Governance: MPLP Protocol Governance Committee (MPGC)
+# © 2025 Bangshi (Beijing) Network Technology Co., Ltd.
+# License: Apache-2.0
+# Any normative change requires a new protocol version.
+
+# ============================================================
+# MPLP Learning Sample Taxonomy v1.0
+# Source of Truth: schemas/v2/learning/*.schema.json
+# ============================================================
+
+version: "1.0.0"
+title: "MPLP Learning Sample Taxonomy"
+description: "Authoritative taxonomy of LearningSample families and collection points, derived from frozen JSON schemas."
+keywords:
+  [
+    "MPLP",
+    "Multi-Agent Lifecycle Protocol",
+    "Agent OS Protocol",
+    "AI Agent",
+    "Observable",
+    "Governed",
+    "Vendor-neutral",
+    "Learning Sample Taxonomy",
+    "learning families",
+    "collection points",
+    "learning schema",
+  ]
+
+# Governance
+status: "Frozen"
+freeze_date: "2025-12-03"
+
+# ============================================================
+# SAMPLE FAMILIES
+# From: mplp-learning-sample-core.schema.json#sample_family
+# ============================================================
+
+sample_families:
+  # --------------------------------------------------------
+  # 1. Intent Resolution
+  # Schema: mplp-learning-sample-intent.schema.json
+  # --------------------------------------------------------
+  - id: intent_resolution
+    title: "Intent Resolution Sample"
+    description: "Captures user intent clarification and plan generation"
+    schema_ref: "schemas/v2/learning/mplp-learning-sample-intent.schema.json"
+
+    input_fields:
+      required:
+        - intent_id # Intent identifier from IntentEvent
+        - raw_request_summary # Abstracted user request (PII-scrubbed)
+      optional:
+        - constraints_summary # Timeline, budget, resources
+        - dialog_turns_count # Dialog exchanges before resolution
+
+    state_fields:
+      - project_phase # greenfield, brownfield, maintenance
+      - psg_node_count # PSG size before intent
+      - existing_plan_count # Existing plans in context
+
+    output_fields:
+      required:
+        - final_intent_summary # Refined intent after resolution
+      optional:
+        - plan_id # Generated Plan UUID
+        - plan_step_count # Steps in generated plan
+        - resolution_quality_label # good, acceptable, bad, unknown
+
+    meta_extensions:
+      - clarification_rounds # Rounds needed before resolution
+      - ambiguity_flags # vague_scope, missing_constraints, etc.
+
+  # --------------------------------------------------------
+  # 2. Delta Impact
+  # Schema: mplp-learning-sample-delta.schema.json
+  # --------------------------------------------------------
+  - id: delta_impact
+    title: "Delta Impact Sample"
+    description: "Captures change effect analysis and compensation planning"
+    schema_ref: "schemas/v2/learning/mplp-learning-sample-delta.schema.json"
+
+    input_fields:
+      required:
+        - delta_id # Delta Intent identifier
+        - intent_id # Original intent being modified
+        - change_summary # Abstracted summary of change
+      optional:
+        - delta_type # refinement, correction, expansion, reduction, pivot
+
+    state_fields:
+      - affected_artifact_count # Artifacts potentially affected
+      - risk_level # low, medium, high, critical
+      - psg_complexity_score # PSG complexity metric
+
+    output_fields:
+      required:
+        - actual_impact_summary # Impact after analysis
+        - impact_scope # local, module, system, global
+      optional:
+        - comp_plan_required # Compensation plan needed?
+        - comp_plan_applied # Compensation applied?
+        - rollback_used # Rollback triggered?
+
+    meta_extensions:
+      - impact_analysis_duration_ms # Time on impact analysis
+      - predicted_vs_actual_accuracy # accurate, underestimated, overestimated
+
+  # --------------------------------------------------------
+  # 3. Pipeline Outcome
+  # Schema: mplp-learning-sample-core.schema.json (base)
+  # --------------------------------------------------------
+  - id: pipeline_outcome
+    title: "Pipeline Outcome Sample"
+    description: "Captures pipeline stage success/failure patterns"
+    schema_ref: "schemas/v2/learning/mplp-learning-sample-core.schema.json"
+    note: "Uses Core schema with pipeline-specific input/output"
+
+    recommended_input_fields:
+      - pipeline_id
+      - stage_id
+      - stage_config
+
+    recommended_output_fields:
+      - status # completed, failed, skipped
+      - duration_ms
+      - error_info # If failed
+
+  # --------------------------------------------------------
+  # 4. Confirm Decision
+  # Schema: mplp-learning-sample-core.schema.json (base)
+  # --------------------------------------------------------
+  - id: confirm_decision
+    title: "Confirm Decision Sample"
+    description: "Captures approval/rejection decisions and reasoning"
+    schema_ref: "schemas/v2/learning/mplp-learning-sample-core.schema.json"
+    note: "Uses Core schema with confirm-specific input/output"
+
+    recommended_input_fields:
+      - confirm_id
+      - target_type # plan, step, delta
+      - target_id
+      - risk_label
+
+    recommended_output_fields:
+      - decision # approve, reject, override
+      - reasoning
+      - decided_by_role
+
+  # --------------------------------------------------------
+  # 5. Graph Evolution
+  # Schema: mplp-learning-sample-core.schema.json (base)
+  # --------------------------------------------------------
+  - id: graph_evolution
+    title: "Graph Evolution Sample"
+    description: "Captures PSG structural changes over time"
+    schema_ref: "schemas/v2/learning/mplp-learning-sample-core.schema.json"
+    note: "Uses Core schema; also see common/learning-sample.schema.json for graph_before/graph_after"
+
+    recommended_input_fields:
+      - trigger_event_id
+      - change_type # node_added, edge_added, attribute_changed
+
+    recommended_state_fields:
+      - psg_snapshot_before_id
+      - node_count_before
+      - edge_count_before
+
+    recommended_output_fields:
+      - psg_snapshot_after_id
+      - nodes_added
+      - edges_added
+      - topology_change_score
+
+  # --------------------------------------------------------
+  # 6. Multi-Agent Coordination
+  # Schema: mplp-learning-sample-core.schema.json (base)
+  # --------------------------------------------------------
+  - id: multi_agent_coordination
+    title: "Multi-Agent Coordination Sample"
+    description: "Captures SA/MAP collaboration patterns"
+    schema_ref: "schemas/v2/learning/mplp-learning-sample-core.schema.json"
+    note: "Uses Core schema with MAP-specific input/output"
+
+    recommended_input_fields:
+      - session_id
+      - coordination_mode # turn_based, parallel, hierarchical
+      - participant_count
+      - initiator_role
+
+    recommended_output_fields:
+      - total_turns
+      - handoffs_count
+      - outcome # success, partial, failed
+      - duration_ms
+
+# ============================================================
+# COLLECTION POINTS
+# ============================================================
+
+collection_points:
+  - id: intent_resolution
+    description: "When user intent is successfully parsed and clarified"
+    trigger_events:
+      - IntentEvent
+      - SAPlanEvaluated
+    sample_families: [intent_resolution]
+    priority: HIGH
+
+  - id: plan_generation
+    description: "When a Plan is generated from user request"
+    trigger_events:
+      - SAPlanEvaluated
+    sample_families: [intent_resolution]
+    priority: HIGH
+
+  - id: plan_revision
+    description: "When user modifies or rejects a Plan"
+    trigger_events:
+      - DeltaIntentEvent
+    sample_families: [delta_impact]
+    priority: HIGH
+
+  - id: impact_analysis_completion
+    description: "When impact analysis finishes"
+    trigger_events:
+      - ImpactAnalysisEvent
+    sample_families: [delta_impact]
+    priority: MEDIUM
+
+  - id: execution_completion
+    description: "When a Plan step completes (success or failure)"
+    trigger_events:
+      - SAStepCompleted
+      - RuntimeExecutionEvent
+    sample_families: [pipeline_outcome]
+    priority: HIGH
+
+  - id: pipeline_failure
+    description: "When a pipeline stage fails"
+    trigger_events:
+      - PipelineStageEvent(status=failed)
+    sample_families: [pipeline_outcome]
+    priority: HIGH
+
+  - id: user_feedback
+    description: "When user provides explicit approval/rejection"
+    trigger_events:
+      - ConfirmDecisionAdded
+    sample_families: [confirm_decision]
+    priority: HIGH
+
+  - id: graph_update
+    description: "When PSG structure changes significantly"
+    trigger_events:
+      - GraphUpdateEvent
+    sample_families: [graph_evolution]
+    priority: MEDIUM
+
+  - id: map_session_completion
+    description: "When a MAP collaboration session ends"
+    trigger_events:
+      - MAPSessionCompleted
+    sample_families: [multi_agent_coordination]
+    priority: MEDIUM
+
+# ============================================================
+# INVARIANTS REFERENCE
+# Source: schemas/v2/invariants/learning-invariants.yaml
+# ============================================================
+
+invariants_summary:
+  core_invariants:
+    - learning_sample_id_is_uuid # sample_id must be UUID v4
+    - learning_sample_family_non_empty # sample_family required
+    - learning_sample_created_at_iso # created_at must be ISO 8601
+    - learning_sample_has_input_section # input required
+    - learning_sample_has_output_section # output required
+    - learning_sample_feedback_label_valid # enum validation when present
+    - learning_sample_source_flow_non_empty # non-empty when present
+
+  intent_family_invariants:
+    - learning_intent_has_intent_id # intent_id required for intent_resolution
+    - learning_intent_quality_label_valid # enum validation when present
+
+  delta_family_invariants:
+    - learning_delta_has_delta_id # delta_id required for delta_impact
+    - learning_delta_scope_valid # impact_scope must be valid enum
+    - learning_delta_risk_valid # risk_level must be valid enum

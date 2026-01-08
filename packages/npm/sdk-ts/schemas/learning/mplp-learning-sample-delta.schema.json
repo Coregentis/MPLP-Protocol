@@ -1,0 +1,143 @@
+{
+  "$comment": "MPLP v1.0.0 FROZEN – © 2025 邦士（北京）网络科技有限公司 – Apache-2.0 – Governance: MPGC",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://mplp.dev/schemas/v1.0/learning/mplp-learning-sample-delta.schema.json",
+  "title": "MPLP LearningSample – Delta Impact v1.0",
+  "description": "Specialized schema for delta_impact samples capturing change effect analysis and compensation planning",
+  "allOf": [
+    {
+      "$ref": "mplp-learning-sample-core.schema.json"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "sample_family": {
+          "const": "delta_impact",
+          "description": "Must be 'delta_impact' for this sample type"
+        },
+        "input": {
+          "type": "object",
+          "properties": {
+            "delta_id": {
+              "type": "string",
+              "description": "Delta Intent identifier"
+            },
+            "intent_id": {
+              "type": "string",
+              "description": "Original intent being modified"
+            },
+            "delta_type": {
+              "type": "string",
+              "enum": [
+                "refinement",
+                "correction",
+                "expansion",
+                "reduction",
+                "pivot"
+              ],
+              "description": "Type of delta change"
+            },
+            "change_summary": {
+              "type": "string",
+              "description": "Abstracted summary of requested change"
+            }
+          },
+          "required": [
+            "delta_id",
+            "intent_id",
+            "change_summary"
+          ],
+          "additionalProperties": true
+        },
+        "state": {
+          "type": "object",
+          "properties": {
+            "affected_artifact_count": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Optional: Number of artifacts potentially affected"
+            },
+            "risk_level": {
+              "type": "string",
+              "enum": [
+                "low",
+                "medium",
+                "high",
+                "critical"
+              ],
+              "description": "Assessed risk level before change"
+            },
+            "psg_complexity_score": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Optional: PSG complexity metric before change"
+            }
+          },
+          "additionalProperties": true
+        },
+        "output": {
+          "type": "object",
+          "properties": {
+            "actual_impact_summary": {
+              "type": "string",
+              "description": "Summary of actual impact after analysis"
+            },
+            "impact_scope": {
+              "type": "string",
+              "enum": [
+                "local",
+                "module",
+                "system",
+                "global"
+              ],
+              "description": "Scope of detected impact"
+            },
+            "comp_plan_required": {
+              "type": "boolean",
+              "description": "Whether compensation plan was needed"
+            },
+            "comp_plan_applied": {
+              "type": "boolean",
+              "description": "Optional: Whether compensation was actually applied"
+            },
+            "rollback_used": {
+              "type": "boolean",
+              "description": "Optional: Whether rollback mechanism was triggered"
+            }
+          },
+          "required": [
+            "actual_impact_summary",
+            "impact_scope"
+          ],
+          "additionalProperties": true
+        },
+        "meta": {
+          "type": "object",
+          "properties": {
+            "impact_analysis_duration_ms": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Optional: Time spent on impact analysis"
+            },
+            "predicted_vs_actual_accuracy": {
+              "type": "string",
+              "enum": [
+                "accurate",
+                "underestimated",
+                "overestimated"
+              ],
+              "description": "Optional: Accuracy of impact prediction"
+            }
+          },
+          "additionalProperties": true
+        }
+      }
+    }
+  ],
+  "x-mplp-meta": {
+    "protocolVersion": "1.0.0",
+    "frozen": true,
+    "freezeDate": "2025-12-03",
+    "governance": "MPGC"
+  }
+}

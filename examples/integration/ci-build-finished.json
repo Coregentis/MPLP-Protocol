@@ -1,0 +1,31 @@
+{
+  "$comment": "MPLP Protocol v1.0.0 — Frozen Specification\nFreeze Date: 2025-12-03\nStatus: FROZEN (no breaking changes permitted)\nGovernance: MPLP Protocol Governance Committee (MPGC)\nCopyright: © 2025 邦士（北京）网络科技有限公司\nLicense: Apache-2.0\nAny normative change requires a new protocol version.",
+  "ci_provider": "github-actions",
+  "pipeline_id": "build-and-test",
+  "run_id": "2025113001",
+  "status": "succeeded",
+  "started_at": "2025-11-30T11:35:00.000Z",
+  "completed_at": "2025-11-30T11:42:30.000Z",
+  "branch_name": "main",
+  "commit_id": "abc123def456789012345678901234567890abcd",
+  "run_url": "https://github.com/mplp/protocol/actions/runs/2025113001",
+  "duration_ms": 450000,
+  "stages": [
+    {
+      "stage_name": "build",
+      "status": "succeeded",
+      "duration_ms": 120000
+    },
+    {
+      "stage_name": "test",
+      "status": "succeeded",
+      "duration_ms": 180000
+    },
+    {
+      "stage_name": "lint",
+      "status": "succeeded",
+      "duration_ms": 90000
+    }
+  ],
+  "trigger_kind": "push"
+}

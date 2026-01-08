@@ -1,0 +1,63 @@
+# MPLP Protocol v1.0.0 — Frozen Specification
+# Freeze Date: 2025-12-03
+# Status: FROZEN (no breaking changes permitted)
+# Governance: MPLP Protocol Governance Committee (MPGC)
+# © 2025 Bangshi (Beijing) Network Technology Co., Ltd.
+# License: Apache-2.0
+# Any normative change requires a new protocol version.
+
+invariants:
+  # Session structure invariants
+  - id: map_session_requires_participants
+    scope: collab
+    path: participants
+    rule: min-length(1)
+    description: "MAP sessions require at least 1 participant (per schema minItems constraint)"
+
+  - id: map_collab_mode_valid
+    scope: collab
+    path: mode
+    rule: enum(broadcast,round_robin,orchestrated,swarm,pair)
+    description: "Collab.mode must be valid collaboration pattern"
+
+  - id: map_session_id_is_uuid
+    scope: collab
+    path: collab_id
+    rule: uuid-v4
+    description: "Session ID (collab_id) must be valid UUID v4"
+
+  - id: map_participants_have_role_ids
+    scope: collab
+    path: participants[*].role_id
+    rule: non-empty-string
+    description: "All participants must have valid role_id binding"
+
+  # Event consistency invariants (descriptive, not all auto-enforceable)
+  - id: map_turn_completion_matches_dispatch
+    scope: trace
+    description: "Every MAPTurnDispatched event should have a corresponding MAPTurnCompleted event for the same session_id and role_id"
+    note: "This is a higher-level invariant that requires trace event analysis. Mark as manual check or implement custom rule."
+
+  - id: map_broadcast_has_receivers
+    scope: trace
+    description: "If MAPBroadcastSent exists, at least one MAPBroadcastReceived must exist for the same session_id"
+    note: "Requires cross-event validation. Can be checked via trace event count."
+
+  # Role binding invariants
+  - id: map_role_ids_non_empty
+    scope: collab
+    path: participants[*].role_id
+    rule: optional-string
+    description: "If role_id present, must be valid string (per schema type constraint)"
+
+  - id: map_participant_ids_are_non_empty
+    scope: collab
+    path: participants[*].participant_id
+    rule: non-empty-string
+    description: "All participant_id values must be non-empty strings"
+
+  - id: map_participant_kind_valid
+    scope: collab
+    path: participants[*].kind
+    rule: enum(agent,human,system,external)
+    description: "Participant kind must be valid enum value"

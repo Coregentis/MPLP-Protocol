@@ -1,0 +1,139 @@
+{
+  "$comment": "MPLP Protocol v1.0.0 — Frozen Specification\nFreeze Date: 2025-12-03\nStatus: FROZEN (no breaking changes permitted)\nGovernance: MPLP Protocol Governance Committee (MPGC)\nCopyright: © 2025 邦士（北京）网络科技有限公司\nLicense: Apache-2.0\nAny normative change requires a new protocol version.",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.mplp.dev/v1.0/mplp-role.schema.json",
+  "title": "MPLP Role Module – Core Protocol v1.0",
+  "description": "Role Module Core Protocol: Describes the minimal required semantics (Core Profile) for capability declarations, permission declarations, and behavioral identity models in multi-agent systems.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "meta": {
+      "$ref": "common/metadata.schema.json",
+      "description": "[PROTOCOL-CORE] MPLP protocol schema metadata (version, source, cross-cutting tags, etc.)."
+    },
+    "governance": {
+      "type": "object",
+      "description": "[PROTOCOL-CORE] Governance metadata for lifecycle management, truth domain authority, and locking status.",
+      "properties": {
+        "lifecyclePhase": {
+          "type": "string",
+          "description": "Current phase in the lifecycle fence (e.g., 'design', 'implementation', 'review')."
+        },
+        "truthDomain": {
+          "type": "string",
+          "description": "The truth domain this object belongs to (e.g., 'requirements', 'architecture')."
+        },
+        "locked": {
+          "type": "boolean",
+          "description": "If true, this object cannot be modified except by specific governance overrides."
+        },
+        "lastConfirmRef": {
+          "$ref": "common/common-types.schema.json#/definitions/Ref",
+          "description": "Reference to the last Confirm decision that validated this state."
+        }
+      },
+      "additionalProperties": false
+    },
+    "role_id": {
+      "$ref": "common/identifiers.schema.json",
+      "description": "[PROTOCOL-CORE] Global unique identifier for the Role."
+    },
+    "name": {
+      "type": "string",
+      "description": "[PROTOCOL-CORE] Human-readable name of the role (e.g., 'planner', 'reviewer', 'executor')."
+    },
+    "description": {
+      "type": "string",
+      "description": "[PROTOCOL-CORE] Detailed description of the role function, for humans and Agents."
+    },
+    "capabilities": {
+      "type": "array",
+      "description": "[PROTOCOL-CORE] List of capability/permission tags possessed by the role (e.g., 'plan.create', 'confirm.approve').",
+      "items": {
+        "type": "string"
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "[PROTOCOL-CORE] Role creation time (ISO 8601)."
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "[PROTOCOL-CORE] Role last update time (ISO 8601)."
+    },
+    "trace": {
+      "$ref": "common/trace-base.schema.json",
+      "description": "[PROTOCOL-CORE] Audit trace reference associated with this role."
+    },
+    "events": {
+      "type": "array",
+      "description": "[PROTOCOL-CORE] List of key events directly related to this role (creation, permission changes, deactivation, etc.).",
+      "items": {
+        "$ref": "common/events.schema.json"
+      }
+    }
+  },
+  "required": [
+    "meta",
+    "role_id",
+    "name"
+  ],
+  "$defs": {
+    "role_core_properties": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "common/metadata.schema.json",
+          "description": "[PROTOCOL-CORE] MPLP protocol schema metadata (version, source, cross-cutting tags, etc.)."
+        },
+        "role_id": {
+          "$ref": "common/identifiers.schema.json",
+          "description": "[PROTOCOL-CORE] Global unique identifier for the Role."
+        },
+        "name": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Human-readable name of the role (e.g., 'planner', 'reviewer', 'executor')."
+        },
+        "description": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Detailed description of the role function, for humans and Agents."
+        },
+        "capabilities": {
+          "type": "array",
+          "description": "[PROTOCOL-CORE] List of capability/permission tags possessed by the role (e.g., 'plan.create', 'confirm.approve').",
+          "items": {
+            "type": "string"
+          }
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "[PROTOCOL-CORE] Role creation time (ISO 8601)."
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "[PROTOCOL-CORE] Role last update time (ISO 8601)."
+        },
+        "trace": {
+          "$ref": "common/trace-base.schema.json",
+          "description": "[PROTOCOL-CORE] Audit trace reference associated with this role."
+        },
+        "events": {
+          "type": "array",
+          "description": "[PROTOCOL-CORE] List of key events directly related to this role (creation, permission changes, deactivation, etc.).",
+          "items": {
+            "$ref": "common/events.schema.json"
+          }
+        }
+      },
+      "required": [
+        "meta",
+        "role_id",
+        "name"
+      ]
+    }
+  }
+}

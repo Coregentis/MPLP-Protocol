@@ -1,0 +1,33 @@
+# MPLP Protocol v1.0.0 — Frozen Specification
+# Freeze Date: 2025-12-03
+# Status: FROZEN (no breaking changes permitted)
+# Governance: MPLP Protocol Governance Committee (MPGC)
+# © 2025 邦士（北京）网络科技有限公司
+# License: Apache-2.0
+# Any normative change requires a new protocol version.
+
+invariants:
+  - id: flow03_plan_minimum_steps
+    scope: plan
+    path: steps
+    rule: min-length(6)
+
+  - id: flow03_step_ids_are_uuid
+    scope: plan
+    path: steps[*].step_id
+    rule: uuid-v4
+
+  - id: flow03_step_descriptions_non_empty
+    scope: plan
+    path: steps[*].description
+    rule: non-empty-string
+
+  - id: flow03_step_status_valid
+    scope: plan
+    path: steps[*].status
+    rule: enum(pending,in_progress,completed,blocked,skipped,failed)
+
+  - id: flow03_agent_role_non_empty
+    scope: plan
+    path: steps[*].agent_role
+    rule: non-empty-string

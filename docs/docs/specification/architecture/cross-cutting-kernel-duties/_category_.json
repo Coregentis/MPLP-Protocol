@@ -1,0 +1,10 @@
+{
+    "label": "Cross-Cutting Kernel Duties (11 OS-Level Duties)",
+    "position": 10,
+    "collapsible": true,
+    "collapsed": false,
+    "link": {
+        "type": "doc",
+        "id": "index"
+    }
+}

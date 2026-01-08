@@ -1,0 +1,253 @@
+# MPLP Protocol v1.0.0 – Frozen Specification
+# Freeze Date: 2025-12-03
+# Status: FROZEN (no breaking changes permitted)
+# Governance: MPLP Protocol Governance Committee (MPGC)
+# © 2025 Bangshi (Beijing) Network Technology Co., Ltd.
+# License: Apache-2.0
+# Any normative change requires a new protocol version.
+
+version: "1.0.0"
+title: "MPLP Module Event Matrix v1.0"
+description: "Machine-readable mapping of L2 Modules to Event Families for observability coverage validation"
+
+# Module → Event Family Mapping
+module_event_mapping:
+  # --- Context Module ---
+  - module_id: context
+    module_name: "Context Module"
+    primary_events:
+      - family: import_process
+        event_types: ["import_started", "import_completed", "import_failed"]
+        trigger: "Project initialization and scanning"
+      - family: graph_update
+        event_types:
+          ["context_created", "context_updated", "world_state_changed"]
+        trigger: "Context state mutations"
+    secondary_events:
+      - family: intent
+        event_types: ["context_intent_received"]
+        trigger: "Intent associated with context"
+
+  # --- Plan Module ---
+  - module_id: plan
+    module_name: "Plan Module"
+    primary_events:
+      - family: pipeline_stage
+        event_types:
+          [
+            "plan_status_changed",
+            "step_started",
+            "step_completed",
+            "step_failed",
+          ]
+        trigger: "Plan and step lifecycle transitions"
+        compliance: required
+      - family: graph_update
+        event_types:
+          [
+            "plan_created",
+            "step_added",
+            "step_removed",
+            "dag_edge_added",
+            "dag_edge_removed",
+          ]
+        trigger: "Plan DAG structural changes"
+        compliance: required
+    secondary_events:
+      - family: methodology
+        event_types: ["methodology_selected"]
+        trigger: "Plan strategy selection"
+      - family: impact_analysis
+        event_types: ["impact_assessed"]
+        trigger: "Change impact evaluation"
+
+  # --- Trace Module ---
+  - module_id: trace
+    module_name: "Trace Module"
+    role: "consumer"
+    description: "Consumes and persists all events from other modules"
+    primary_events: []
+    secondary_events:
+      - family: cost_budget
+        event_types: ["trace_cost_summary"]
+        trigger: "Aggregate cost tracking"
+
+  # --- Role Module ---
+  - module_id: role
+    module_name: "Role Module"
+    primary_events:
+      - family: graph_update
+        event_types:
+          [
+            "role_created",
+            "role_updated",
+            "capability_granted",
+            "capability_revoked",
+          ]
+        trigger: "Role definitions and permission changes"
+    secondary_events: []
+
+  # --- Confirm Module ---
+  - module_id: confirm
+    module_name: "Confirm Module"
+    primary_events:
+      - family: pipeline_stage
+        event_types: ["confirm_created", "confirm_pending", "confirm_resolved"]
+        trigger: "Approval workflow lifecycle"
+      - family: graph_update
+        event_types: ["confirm_created", "decision_added"]
+        trigger: "Confirm object mutations"
+    secondary_events:
+      - family: reasoning_graph
+        event_types: ["approval_reasoning"]
+        trigger: "Decision rationale capture"
+
+  # --- Dialog Module ---
+  - module_id: dialog
+    module_name: "Dialog Module"
+    primary_events:
+      - family: intent
+        event_types:
+          ["user_message_received", "intent_extracted", "intent_classified"]
+        trigger: "User interaction capture"
+      - family: delta_intent
+        event_types: ["modification_requested", "clarification_received"]
+        trigger: "Intent updates and changes"
+    secondary_events: []
+
+  # --- Collab Module ---
+  - module_id: collab
+    module_name: "Collab Module"
+    primary_events:
+      - family: pipeline_stage
+        event_types:
+          ["session_started", "session_completed", "session_cancelled"]
+        trigger: "Session lifecycle"
+      - family: runtime_execution
+        event_types:
+          [
+            "turn_dispatched",
+            "turn_completed",
+            "broadcast_sent",
+            "broadcast_received",
+          ]
+        trigger: "Turn and broadcast execution"
+    secondary_events:
+      - family: reasoning_graph
+        event_types: ["coordination_reasoning"]
+        trigger: "Multi-agent reasoning capture"
+
+  # --- Extension Module ---
+  - module_id: extension
+    module_name: "Extension Module"
+    primary_events:
+      - family: runtime_execution
+        event_types:
+          [
+            "extension_activated",
+            "tool_execution_started",
+            "tool_execution_completed",
+            "llm_call_started",
+            "llm_call_completed",
+          ]
+        trigger: "Extension and tool execution"
+      - family: external_integration
+        event_types: ["external_api_call", "webhook_received"]
+        trigger: "External system interactions"
+    secondary_events: []
+
+  # --- Network Module ---
+  - module_id: network
+    module_name: "Network Module"
+    primary_events:
+      - family: graph_update
+        event_types:
+          ["network_created", "node_added", "node_removed", "topology_changed"]
+        trigger: "Network topology mutations"
+    secondary_events:
+      - family: runtime_execution
+        event_types:
+          ["node_status_changed", "connection_established", "connection_lost"]
+        trigger: "Node runtime status"
+
+  # --- Core Module ---
+  - module_id: core
+    module_name: "Core Module"
+    primary_events:
+      - family: pipeline_stage
+        event_types:
+          ["protocol_initialized", "module_enabled", "module_disabled"]
+        trigger: "Protocol lifecycle"
+    secondary_events:
+      - family: cost_budget
+        event_types: ["budget_warning", "budget_exceeded"]
+        trigger: "Budget policy enforcement"
+      - family: compensation_plan
+        event_types: ["rollback_planned", "rollback_executed"]
+        trigger: "Error recovery"
+
+# Event Family → Module Reverse Mapping
+event_family_producers:
+  graph_update:
+    producers: [context, plan, role, confirm, network]
+    compliance: required
+
+  pipeline_stage:
+    producers: [plan, confirm, collab, core]
+    compliance: required
+
+  runtime_execution:
+    producers: [collab, extension, network]
+    compliance: recommended
+
+  import_process:
+    producers: [context]
+    compliance: recommended
+
+  intent:
+    producers: [context, dialog]
+    compliance: recommended
+
+  delta_intent:
+    producers: [dialog]
+    compliance: optional
+
+  cost_budget:
+    producers: [trace, core]
+    compliance: recommended
+
+  external_integration:
+    producers: [extension]
+    compliance: recommended
+
+  methodology:
+    producers: [plan]
+    compliance: optional
+
+  reasoning_graph:
+    producers: [confirm, collab]
+    compliance: optional
+
+  impact_analysis:
+    producers: [plan]
+    compliance: optional
+
+  compensation_plan:
+    producers: [core]
+    compliance: optional
+
+# Compliance Summary
+compliance_requirements:
+  required_event_families:
+    - graph_update
+    - pipeline_stage
+
+  required_producers:
+    graph_update: [context, plan]
+    pipeline_stage: [plan]
+
+  validation_rules:
+    - id: all_modules_emit_required
+      description: "All active modules must emit required event families for their scope"
+    - id: trace_receives_all
+      description: "Trace module must receive and persist all emitted events"

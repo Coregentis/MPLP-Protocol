@@ -1,0 +1,87 @@
+<svg width="1280" height="520" viewBox="0 0 1280 520" xmlns="http://www.w3.org/2000/svg"
+     role="img" aria-labelledby="arch-title arch-desc">
+  <title id="arch-title">MPLP Four-Layer Architecture (L1-L4)</title>
+  <desc id="arch-desc">MPLP Protocol Architecture diagram showing four layers: L1 Core Protocol (Schemas, Envelopes, Invariants), L2 Coordination and Governance Modules (10 Modules), L3 Runtime Glue (AEL, VSL, PSG), and L4 Integration Layer (Tools, IDEs, Frameworks, Platforms).</desc>
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>MPLP Four-Layer Architecture Diagram</dc:title>
+        <dc:description>Visual representation of the MPLP Protocol's L1-L4 architecture stack for AI agent lifecycle management.</dc:description>
+        <dc:creator>Bangshi Beijing Network Technology Limited Company</dc:creator>
+        <dc:rights>Copyright 2025 Bangshi Beijing Network Technology Limited Company. Apache-2.0 License.</dc:rights>
+        <dc:subject>MPLP Architecture, L1 Core Protocol, L2 Modules, L3 Runtime Glue, L4 Integration, AEL, VSL, PSG</dc:subject>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+
+  <defs>
+    <style>
+      text {
+        font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont,
+                     "Segoe UI", system-ui, sans-serif;
+      }
+    </style>
+  </defs>
+
+  <!-- Title -->
+  <text x="640" y="70"
+        font-size="40"
+        font-weight="600"
+        fill="#1A73E8"
+        text-anchor="middle">
+    MPLP — The Agent OS Protocol
+  </text>
+
+  <!-- L4 -->
+  <rect x="90" y="110" width="1100" height="70" rx="16"
+        fill="#F3E9FF" stroke="#C5A8F5" stroke-width="2"/>
+  <text x="140" y="155"
+        font-size="22"
+        font-weight="500"
+        fill="#333">
+    L4 • Integration Layer — Tools · IDEs · Frameworks · Platforms
+  </text>
+
+  <!-- L3 -->
+  <rect x="90" y="200" width="1100" height="70" rx="16"
+        fill="#EDF4FF" stroke="#9EC4FF" stroke-width="2"/>
+  <text x="140" y="245"
+        font-size="22"
+        font-weight="500"
+        fill="#333">
+    L3 • Runtime Glue — AEL · VSL · PSG
+  </text>
+
+  <!-- L2 -->
+  <rect x="90" y="290" width="1100" height="120" rx="16"
+        fill="#FFF6E5" stroke="#F2C465" stroke-width="2"/>
+  <text x="140" y="335"
+        font-size="22"
+        font-weight="600"
+        fill="#333">
+    L2 • Coordination &amp; Governance Modules — 10 Modules
+  </text>
+  <text x="140" y="365"
+        font-size="20"
+        font-weight="400"
+        fill="#555">
+    Context · Plan · Confirm · Trace · Role
+  </text>
+  <text x="140" y="395"
+        font-size="20"
+        font-weight="400"
+        fill="#555">
+    Dialog · Collab · Extension · Core · Network
+  </text>
+
+  <!-- L1 -->
+  <rect x="90" y="430" width="1100" height="70" rx="16"
+        fill="#E9F3FF" stroke="#75AFFF" stroke-width="2"/>
+  <text x="140" y="475"
+        font-size="22"
+        font-weight="500"
+        fill="#333">
+    L1 • Core Protocol — Schemas · Envelopes · Invariants
+  </text>
+</svg>

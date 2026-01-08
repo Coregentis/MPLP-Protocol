@@ -1,0 +1,93 @@
+{
+    "version": "B-2",
+    "generated_at": "2026-01-01",
+    "alignment_ref": "v1.3.1",
+    "rules": [
+        {
+            "from_prefix": "/docs/meta/index/",
+            "to_prefix": "/docs/introduction/"
+        },
+        {
+            "from_prefix": "/docs/specification/architecture/",
+            "to_prefix": "/docs/specification/architecture/"
+        },
+        {
+            "from_prefix": "/docs/specification/modules/",
+            "to_prefix": "/docs/specification/modules/"
+        },
+        {
+            "from_prefix": "/docs/specification/profiles/",
+            "to_prefix": "/docs/specification/profiles/"
+        },
+        {
+            "from_prefix": "/docs/specification/observability/",
+            "to_prefix": "/docs/specification/observability/"
+        },
+        {
+            "from_prefix": "/docs/guides/examples/learning-notes/",
+            "to_prefix": "/docs/guides/examples/learning-notes/"
+        },
+        {
+            "from_prefix": "/docs/evaluation/golden-flows/",
+            "to_prefix": "/docs/evaluation/golden-flows/"
+        },
+        {
+            "from_prefix": "/docs/specification/integration/",
+            "to_prefix": "/docs/specification/integration/"
+        },
+        {
+            "from_prefix": "/docs/guides/examples/",
+            "to_prefix": "/docs/guides/examples/_merged_from_07a/"
+        },
+        {
+            "from_prefix": "/docs/guides/",
+            "to_prefix": "/docs/guides/"
+        },
+        {
+            "from_prefix": "/docs/evaluation/tests/",
+            "to_prefix": "/docs/evaluation/tests/"
+        },
+        {
+            "from_prefix": "/docs/guides/sdk/",
+            "to_prefix": "/docs/guides/sdk/"
+        },
+        {
+            "from_prefix": "/docs/guides/examples/",
+            "to_prefix": "/docs/guides/examples/"
+        },
+        {
+            "from_prefix": "/docs/evaluation/governance/",
+            "to_prefix": "/docs/evaluation/governance/"
+        },
+        {
+            "from_prefix": "/docs/meta/release/",
+            "to_prefix": "/docs/meta/release/"
+        },
+        {
+            "from_prefix": "/docs/guides/runtime/",
+            "to_prefix": "/docs/guides/runtime/"
+        },
+        {
+            "from_prefix": "/docs/evaluation/standards/",
+            "to_prefix": "/docs/evaluation/standards/"
+        },
+        {
+            "from_prefix": "/docs/evaluation/conformance/",
+            "to_prefix": "/docs/evaluation/conformance/"
+        },
+        {
+            "from_prefix": "/docs/guides/enterprise/",
+            "to_prefix": "/docs/guides/enterprise/"
+        },
+        {
+            "from_prefix": "/docs/guides/adoption/",
+            "to_prefix": "/docs/guides/adoption/"
+        },
+        {
+            "from_prefix": "/docs/meta/",
+            "to_prefix": "/docs/meta/"
+        }
+    ],
+    "notes": "Directory-prefix redirects for B-1 IA restructure. File-level exceptions are listed in exceptions[].",
+    "exceptions": []
+}
