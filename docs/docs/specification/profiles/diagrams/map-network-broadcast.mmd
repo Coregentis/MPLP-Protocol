@@ -1,0 +1,79 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#4a90d9', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d5a87', 'lineColor': '#333', 'secondaryColor': '#f4f4f4', 'tertiaryColor': '#eef' }}}%%
+%% MPLP MAP Broadcast Mode Sequence Diagram
+%% Version: 1.0.0 | Frozen: 2025-12-03
+%% Mode: broadcast | Pattern: Fan-out / Fan-in
+
+sequenceDiagram
+    autonumber
+    
+    participant Orch as Orchestrator
+    participant EB as Event Bus
+    participant B as Broadcaster Agent
+    participant A1 as Worker Agent 1
+    participant A2 as Worker Agent 2
+    participant A3 as Worker Agent 3
+    participant Trace as Trace Module
+    
+    %% Session initialization
+    rect rgb(230, 245, 255)
+        Note over Orch,Trace: Phase 1: Session Setup
+        Orch->>EB: MAPSessionStarted
+        EB-->>Trace: Record event
+        
+        Orch->>B: Assign role: broadcaster
+        Orch->>A1: Assign role: worker
+        Orch->>A2: Assign role: worker
+        Orch->>A3: Assign role: worker
+        
+        Orch->>EB: MAPRolesAssigned
+        EB-->>Trace: Record event
+    end
+    
+    %% Broadcast phase
+    rect rgb(255, 245, 230)
+        Note over Orch,Trace: Phase 2: Fan-out (Broadcast)
+        B->>Orch: Submit task for broadcast
+        
+        Orch->>EB: MAPBroadcastSent
+        EB-->>Trace: Record event
+        Note right of EB: target_roles: [A1, A2, A3]
+        
+        par Parallel Distribution
+            EB->>A1: Deliver task
+            EB->>A2: Deliver task
+            EB->>A3: Deliver task
+        end
+    end
+    
+    %% Response collection phase
+    rect rgb(230, 255, 230)
+        Note over Orch,Trace: Phase 3: Fan-in (Response Collection)
+        
+        par Parallel Response
+            A1->>A1: Execute task
+            A1->>EB: Submit response
+            EB->>Orch: MAPBroadcastReceived (A1)
+            EB-->>Trace: Record event
+        and
+            A2->>A2: Execute task
+            A2->>EB: Submit response
+            EB->>Orch: MAPBroadcastReceived (A2)
+            EB-->>Trace: Record event
+        and
+            A3->>A3: Execute task
+            A3->>EB: Submit response
+            EB->>Orch: MAPBroadcastReceived (A3)
+            EB-->>Trace: Record event
+        end
+    end
+    
+    %% Aggregation and completion
+    rect rgb(245, 230, 255)
+        Note over Orch,Trace: Phase 4: Aggregation & Completion
+        Orch->>Orch: Aggregate responses
+        Orch->>B: Deliver aggregated result
+        
+        Orch->>EB: MAPSessionCompleted
+        EB-->>Trace: Finalize trace
+        Note right of EB: status: completed<br/>participants: 4<br/>broadcasts: 1<br/>responses: 3
+    end

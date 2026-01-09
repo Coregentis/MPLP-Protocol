@@ -1,0 +1,164 @@
+---
+sidebar_position: 0
+doc_type: informative
+normativity: informative
+status: active
+authority: Documentation Governance
+description: "Organizational, temporal, and governance constraints that emerge when agent systems operate at scale."
+title: Enterprise Context
+keywords: [MPLP, Enterprise, Governance, Accountability, Lifecycle, Audit]
+sidebar_label: Enterprise
+canonical: /docs/guides/enterprise
+---
+
+
+
+# Enterprise Context
+
+
+## 1. What Enterprise Means
+
+Enterprise is NOT:
+- More users
+- Bigger machines
+- Premium features
+
+Enterprise is:
+- **Longer lifecycles** — Systems must remain auditable for years
+- **Organizational accountability** — Someone is always responsible
+- **Mandatory governance** — Judgment is not optional
+- **Change ownership** — Every mutation has an authority
+
+## 2. Enterprise vs. Conformance
+
+| Aspect | Conformance (16-conformance) | Enterprise (17-enterprise) |
+|:---|:---|:---|
+| **Question** | Can this system be judged? | Must this system be judged? |
+| **Scope** | Technical evaluation | Organizational accountability |
+| **Evidence** | Evidence Pack structure | Evidence chain ownership |
+| **Approval** | Binary outcome | Authority hierarchy |
+| **Timeline** | Point-in-time evaluation | Longitudinal auditability |
+
+**Key Insight**:
+- **Conformance** = Technical capability to be evaluated
+- **Enterprise** = Organizational requirement to be evaluated
+
+## 3. Enterprise Constraints ↔ Kernel Duties Mapping
+
+> [!NOTE]
+> The Enterprise context does **not** introduce new protocol obligations.
+> It **activates** existing kernel duties under non-negotiable organizational constraints.
+
+### 3.1 Full Mapping (11 Kernel Duties)
+
+| Enterprise Constraint | Kernel Duty | Required Evidence | Conformance Dimension |
+|:---|:---|:---|:---|
+| **Authority chain** | `confirm` + `security` | Confirm record links to approver identity | Governance Gating |
+| **Long lifecycle** | `protocol-version` + `trace` | Version binding, change log, replayability | Version Declaration |
+| **Audit & liability** | `trace` + `transaction` | Deterministic evidence pack + integrity chain | Trace Integrity |
+| **Cross-team concurrency** | `state-sync` + `transaction` | Conflict decisions, rollback/snapshot evidence | Lifecycle Completeness |
+| **Cost control** | `performance` | Budget events, throttling decisions | (Informative) |
+| **Failure ownership** | `error-handling` | Recovery events, root cause records | Failure Bounding |
+| **Coordination accountability** | `coordination` | Module interaction trace | Lifecycle Completeness |
+| **Execution audit** | `orchestration` | Step execution sequence | Trace Integrity |
+| **Event durability** | `event-bus` | Event log persistence | Trace Integrity |
+| **Action isolation** | `AEL` | Execution boundary records | Schema Validity |
+| **State persistence** | `VSL` | Snapshot/restore evidence | (Informative) |
+
+### 3.2 Key Insight
+
+Every cell in this table answers one question:
+
+> "When Enterprise constraint X is active, what evidence MUST exist to be conformant?"
+
+This is not a guide. This is a **protocol-to-constraint projection**.
+
+## 4. Enterprise Constraints
+
+When MPLP enters enterprise environments, these constraints become **mandatory**:
+
+### 4.1 Authority Chains
+
+Every governance decision (`Confirm`) must trace to a human authority:
+
+| Role | Responsibility |
+|:---|:---|
+| **Plan Approver** | Authorizes execution scope |
+| **Risk Owner** | Accepts liability for high-risk actions |
+| **Change Authority** | Approves protocol/schema changes |
+| **Audit Authority** | Reviews evidence chains |
+
+### 4.2 Longitudinal Auditability
+
+Enterprise systems must answer questions **years after execution**:
+
+- "Who approved this plan on 2024-03-15?"
+- "What was the agent's context when it made this decision?"
+- "Can we reconstruct the execution from evidence alone?"
+
+MPLP's evidence model enables this, but **enterprise environments make it mandatory**.
+
+### 4.3 Organizational Governance
+
+Single-user projects don't need:
+- Role separation
+- Approval workflows
+- Change control boards
+- Audit committees
+
+Enterprise environments **always** need these. MPLP provides the **protocol hooks** (Confirm, Role, Trace), but enterprise contexts **activate** them.
+
+### 4.4 Failure Ownership
+
+In enterprise:
+- Failures have real consequences
+- Someone is always accountable
+- Recovery must be documented
+- Root cause is required
+
+MPLP's bounded failure model maps directly to enterprise incident management.
+
+## 5. What This Section Provides
+
+| Document | Purpose |
+|:---|:---|
+| [This Index](./index.mdx) | Defines Enterprise scope + Kernel mapping |
+| [Enterprise Scenarios](./enterprise-scenarios.md) | Constraint → Evidence → Conformance cards |
+| [Non-Goals](./non-goals.md) | What MPLP does NOT provide for enterprise |
+
+## 6. What This Section Does NOT Provide
+
+To prevent scope creep and maintain MPLP's positioning:
+
+| We Do NOT Provide | Reason |
+|:---|:---|
+| **Enterprise certification** | Not a certification body |
+| **Compliance guarantees** | Not a legal authority |
+| **Deployment architectures** | Implementation-specific |
+| **SaaS or managed services** | Vendor-specific |
+| **Enterprise pricing** | Not a commercial product |
+| **Vendor integrations** | Vendor-neutral by design |
+
+MPLP provides the **protocol substrate**. Enterprise vendors build products on top.
+
+## 7. Relationship to Other Sections
+
+| Section | Relationship |
+|:---|:---|
+| **08-guides** | How to implement (Guides) vs. Why you cannot avoid (Enterprise) |
+| **12-governance** | Protocol governance vs. Organizational governance |
+| **16-conformance** | Technical judgment vs. Mandatory judgment |
+
+## 8. Related Documentation
+
+- [Conformance & Evaluation](/docs/evaluation/conformance) — Technical conformance model
+- [Governance Overview](/docs/evaluation/governance) — Protocol governance
+- [Confirm Module](/docs/specification/modules/confirm-module) — Human-in-the-loop gating
+- [11 Kernel Duties](/docs/specification/architecture/cross-cutting-kernel-duties) — Duty specifications
+
+---
+
+**Document Status**: Informative (Scope Definition + Kernel Mapping)  
+**Key Insight**: Enterprise = "must be accountable for the future"  
+**Kernel Mapping**: 11 duties → 6 conformance dimensions  
+**Exclusions**: Certification, compliance guarantees, commercial offerings

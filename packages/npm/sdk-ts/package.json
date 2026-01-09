@@ -1,0 +1,69 @@
+{
+  "name": "@mplp/sdk-ts",
+  "version": "1.0.6",
+  "description": "TypeScript SDK and reference runtime for the MPLP Protocol v1.0.0 (Multi-Agent Lifecycle Protocol).",
+  "license": "Apache-2.0",
+  "author": "Bangshi Beijing Network Technology Limited Company",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Coregentis/MPLP-Protocol.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Coregentis/MPLP-Protocol/issues"
+  },
+  "homepage": "https://www.mplp.io",
+  "keywords": [
+    "mplp",
+    "multi-agent",
+    "protocol",
+    "ai agents",
+    "lifecycle",
+    "runtime",
+    "typescript",
+    "agent-os",
+    "agent-os-protocol"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/",
+    "schemas/",
+    "README.md",
+    "LICENSE.txt",
+    "CHANGELOG.md"
+  ],
+  "mplp": {
+    "protocolVersion": "1.0.0",
+    "frozen": true,
+    "governance": "MPGC",
+    "layer": "Tools"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "echo 'No tests yet'"
+  },
+  "dependencies": {
+    "ajv": "^8.12.0",
+    "ajv-formats": "^2.1.1",
+    "chalk": "^4.1.2",
+    "commander": "^11.0.0",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0",
+    "ts-node": "^10.9.1",
+    "json-schema-to-typescript": "^13.0.0",
+    "@types/node": "^20.0.0",
+    "@types/uuid": "^9.0.0"
+  },
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "sideEffects": false,
+  "copyright": "© 2026 Bangshi Beijing Network Technology Limited Company"
+}

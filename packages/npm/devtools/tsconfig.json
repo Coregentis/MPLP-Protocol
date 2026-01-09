@@ -1,0 +1,20 @@
+{
+  "$comment": "MPLP Protocol v1.0.0 — Frozen Specification\nFreeze Date: 2025-12-03\nStatus: FROZEN (no breaking changes permitted)\nGovernance: MPLP Protocol Governance Committee (MPGC)\nCopyright: © 2026 Bangshi Beijing Network Technology Limited Company\nLicense: Apache-2.0\nAny normative change requires a new protocol version.",
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "CommonJS",
+    "declaration": true,
+    "outDir": "./dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

@@ -1,0 +1,53 @@
+{
+    "name": "@mplp/conformance",
+    "version": "1.0.0",
+    "description": "MPLP v1.0 Conformance Kit - Protocol conformance testing and validation utilities for the Multi-Agent Lifecycle Protocol (MPLP) — the Agent OS Protocol for AI agent systems.",
+    "license": "Apache-2.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Coregentis/MPLP-Protocol.git"
+    },
+    "keywords": [
+        "mplp",
+        "conformance",
+        "validation",
+        "testing",
+        "golden-flows",
+        "multi-agent",
+        "protocol",
+        "lifecycle",
+        "agent-os",
+        "agent-os-protocol"
+    ],
+    "publishConfig": {
+        "access": "public"
+    },
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "dependencies": {
+        "@mplp/compliance": "^1.0.4",
+        "typescript": "^5.9.3"
+    },
+    "author": "Bangshi Beijing Network Technology Limited Company",
+    "copyright": "© 2026 Bangshi Beijing Network Technology Limited Company",
+    "mplp": {
+        "protocolVersion": "1.0.0",
+        "frozen": true,
+        "governance": "MPGC"
+    },
+    "homepage": "https://www.mplp.io",
+    "bugs": {
+        "url": "https://github.com/Coregentis/MPLP-Protocol/issues"
+    },
+    "exports": {
+        ".": {
+            "require": "./dist/index.js",
+            "import": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        }
+    },
+    "sideEffects": false,
+    "scripts": {
+        "build": "tsc -p tsconfig.json"
+    }
+}

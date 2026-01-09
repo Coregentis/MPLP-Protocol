@@ -1,0 +1,31 @@
+{
+    "meta": {
+        "protocol_version": "1.0.0",
+        "schema_version": "1.0.0",
+        "created_at": "2025-12-01T12:00:00.000Z"
+    },
+    "trace_id": "550e8400-e29b-41d4-a716-446655440530",
+    "context_id": "550e8400-e29b-41d4-a716-446655440500",
+    "plan_id": "550e8400-e29b-41d4-a716-446655440501",
+    "status": "completed",
+    "root_span": {
+        "trace_id": "550e8400-e29b-41d4-a716-446655440530",
+        "span_id": "550e8400-e29b-41d4-a716-446655440535"
+    },
+    "started_at": "2025-12-01T12:00:00.000Z",
+    "finished_at": "2025-12-01T12:10:00.000Z",
+    "events": [
+        {
+            "event_id": "550e8400-e29b-41d4-a716-446655440531",
+            "event_type": "confirm.requested",
+            "source": "confirm",
+            "timestamp": "2025-12-01T12:01:00.000Z"
+        },
+        {
+            "event_id": "550e8400-e29b-41d4-a716-446655440532",
+            "event_type": "confirm.approved",
+            "source": "confirm",
+            "timestamp": "2025-12-01T12:05:00.000Z"
+        }
+    ]
+}

@@ -1,0 +1,87 @@
+{
+  "context": {
+    "meta": {
+      "protocol_version": "1.0.0",
+      "schema_version": "1.0.0",
+      "created_at": "2025-12-07T15:22:34.836891Z",
+      "extra": {}
+    },
+    "context_id": "cec7fb7f-a39d-4b93-9a5b-c7d1b3f7fcd1",
+    "root": {
+      "domain": "test",
+      "environment": "production"
+    },
+    "title": "Cross-Language Builder Test",
+    "status": "active",
+    "owner_role": "admin",
+    "tags": [
+      "test",
+      "cross-lang"
+    ],
+    "constraints": {
+      "budget": "1000"
+    },
+    "language": "en"
+  },
+  "plan": {
+    "meta": {
+      "protocol_version": "1.0.0",
+      "schema_version": "1.0.0",
+      "created_at": "2025-12-07T15:22:34.836891Z",
+      "extra": {}
+    },
+    "plan_id": "5713a756-61f5-4844-97c3-7daeb26945a0",
+    "context_id": "cec7fb7f-a39d-4b93-9a5b-c7d1b3f7fcd1",
+    "title": "Test Plan",
+    "objective": "Test cross-language builders",
+    "status": "draft",
+    "steps": [
+      {
+        "step_id": "e89d0bff-b559-4e96-a941-5d21c2522e5b",
+        "description": "Step 1",
+        "status": "pending"
+      },
+      {
+        "step_id": "d6e88e71-0d53-448d-b55d-c5ef23317796",
+        "description": "Step 2",
+        "status": "pending"
+      }
+    ]
+  },
+  "confirm": {
+    "meta": {
+      "protocol_version": "1.0.0",
+      "schema_version": "1.0.0",
+      "created_at": "2025-12-07T15:22:34.836891Z",
+      "extra": {}
+    },
+    "confirm_id": "8136eaa6-113c-46d0-85a8-841196e7b56c",
+    "target_id": "5713a756-61f5-4844-97c3-7daeb26945a0",
+    "target_type": "plan",
+    "status": "approved",
+    "requested_by_role": "user",
+    "reason": "All checks passed",
+    "requested_at": "2025-12-07T15:22:34.836891Z",
+    "reviewer": "qa-lead"
+  },
+  "trace": {
+    "meta": {
+      "protocol_version": "1.0.0",
+      "schema_version": "1.0.0",
+      "created_at": "2025-12-07T15:22:34.836891Z",
+      "extra": {}
+    },
+    "trace_id": "3691bf8d-98a6-4897-9bc3-85d3e317c459",
+    "context_id": "cec7fb7f-a39d-4b93-9a5b-c7d1b3f7fcd1",
+    "plan_id": "5713a756-61f5-4844-97c3-7daeb26945a0",
+    "status": "running",
+    "root_span": {
+      "trace_id": "3691bf8d-98a6-4897-9bc3-85d3e317c459",
+      "span_id": "d4a9221d-12b1-4bde-bd4a-b39b361cb280",
+      "context_id": "cec7fb7f-a39d-4b93-9a5b-c7d1b3f7fcd1",
+      "name": "root",
+      "status": "running"
+    },
+    "events": []
+  }
+}

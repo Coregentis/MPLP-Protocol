@@ -1,0 +1,76 @@
+---
+entry_surface: documentation
+doc_type: informative
+normativity: informative
+status: draft
+protocol_version: "1.0.0"
+doc_id: "DOC-EVAL-MAP-FLOW-01-001"
+
+# UI metadata (non-normative; excluded from protocol semantics)
+title: "MAP-FLOW-01: MAP Turn-Taking Session"
+sidebar_label: "MAP-FLOW-01: Turn-Taking"
+sidebar_position: 21
+description: "MPLP evaluation scenario: MAP-FLOW-01: MAP Turn-Taking Session. Reference flow for conformance testing."
+authority: Documentation Governance
+---
+
+# MAP-FLOW-01: MAP Turn-Taking Session
+
+## Scope
+
+This evaluation scenario validates MAP round_robin mode with sequential turn execution:
+- MAP session initialized with round_robin mode
+- Roles assigned: Agent A (planner), Agent B (reviewer)
+- Turn 1: Planner creates initial plan
+- Turn 2: Reviewer evaluates plan
+- Turn 3: Planner revises based on review
+
+## Non-Goals
+
+This scenario does NOT evaluate:
+- Parallel execution (see MAP-FLOW-02)
+- Single-agent execution (see SA-FLOW-01/02)
+- HITL confirmation in MAP context
+
+---
+
+## Modules Involved
+
+| Module | Role in Flow |
+|:-------|:-------------|
+| **Context** | Shared semantic scope for session |
+| **Plan** | Steps respecting turn order |
+| **Collab** | Session coordination with round_robin mode |
+| **Role** | Participant role assignment and rotation |
+
+---
+
+## Collaboration Pattern: Turn-Taking
+
+**Pattern Characteristics**:
+- **Exclusive execution**: Only one agent active at a time
+- **Token-based**: Execution token transferred sequentially
+- **Ordered**: Turn sequence respects Plan.steps order_index + dependencies
+
+---
+
+## Evidence
+
+| Type | Location | Status |
+|:-----|:---------|:-------|
+| **Golden Flow** | `tests/golden/flows/map-flow-01-turn-taking/` | Passed |
+| **Input Fixtures** | `tests/golden/flows/map-flow-01-turn-taking/input/` | Available |
+| **Collab Fixture** | `tests/golden/flows/map-flow-01-turn-taking/input/collab.json` | Available |
+
+---
+
+## Expected Behavior
+
+- Turns execute sequentially (no concurrent execution)
+- Roles rotate correctly between participants
+- Collab mode is `round_robin`
+- All participants have valid role_id
+
+---
+
+**Source of Truth**: `tests/golden/flows/map-flow-01-turn-taking/README.md`

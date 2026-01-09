@@ -1,0 +1,72 @@
+{
+  "$comment": "MPLP v1.0.0 FROZEN – © 2026 Bangshi Beijing Network Technology Limited Company – Apache-2.0 – Governance: MPGC",
+  "$id": "https://schemas.mplp.dev/v1.0/common/events.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MPLP Base Event",
+  "description": "Base model for all event structures in MPLP. Designed based on CloudEvents v1.0 core fields, providing unified event identification, type, source, and timestamp. ExecutionEvent, StateTransitionEvent, etc., are extensions of this.",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "$ref": "identifiers.schema.json",
+      "description": "Unique identifier for the event (UUID v4)."
+    },
+    "event_type": {
+      "type": "string",
+      "description": "Event type identifier, e.g., execution.started / vsl.transition.applied / plan.created. Uses dot-separated namespace format.",
+      "pattern": "^[a-z][a-z0-9]*(?:\\.[a-z][a-z0-9]*)*$",
+      "examples": [
+        "execution.started",
+        "execution.completed",
+        "vsl.transition.applied",
+        "plan.created"
+      ]
+    },
+    "source": {
+      "type": "string",
+      "description": "Event source, typically a module or component identifier. Can be a module name (e.g., 'context') or component path (e.g., 'runtime.ael').",
+      "examples": [
+        "context",
+        "plan",
+        "runtime.ael",
+        "runtime.vsl"
+      ]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Event occurrence time (ISO 8601 format).",
+      "examples": [
+        "2025-01-28T15:30:00.000Z"
+      ]
+    },
+    "trace_id": {
+      "description": "Optional trace ID to associate the event with a specific Trace.",
+      "$ref": "identifiers.schema.json"
+    },
+    "data": {
+      "anyOf": [
+        {
+          "type": "object",
+          "description": "Business data related to the event, constrained by upper-layer structures. Can be any JSON object or null."
+        },
+        {
+          "type": "null",
+          "description": "Business data related to the event, constrained by upper-layer structures. Can be any JSON object or null."
+        }
+      ]
+    }
+  },
+  "required": [
+    "event_id",
+    "event_type",
+    "source",
+    "timestamp"
+  ],
+  "additionalProperties": false,
+  "x-mplp-meta": {
+    "protocolVersion": "1.0.0",
+    "frozen": true,
+    "freezeDate": "2025-12-03",
+    "governance": "MPGC"
+  }
+}

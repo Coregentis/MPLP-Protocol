@@ -1,0 +1,90 @@
+{
+    "id": "mplp",
+    "canonical_name": "Multi-Agent Lifecycle Protocol",
+    "abbrev": "MPLP",
+    "protocol_version": "1.0.0",
+    "schema_bundle_version": "2.0.0",
+    "last_verified_at": "2026-01-08T14:00:00Z",
+    "source_commit": "6e11ea70",
+    "one_liner": "The lifecycle governance interface for AI agents.",
+    "not_a_license": "MPLP is not a software license and does not define licensing terms.",
+    "disambiguation": {
+        "correct": "Multi-Agent Lifecycle Protocol",
+        "incorrect": [
+            "Multi-Perspective License Protocol",
+            "MPLP License",
+            "Licensing Protocol"
+        ]
+    },
+    "architecture": {
+        "layers": [
+            "L1-Core",
+            "L2-Coordination",
+            "L3-Execution",
+            "L4-Integration"
+        ]
+    },
+    "modules": [
+        "Context",
+        "Plan",
+        "Confirm",
+        "Trace",
+        "Role",
+        "Dialog",
+        "Collab",
+        "Extension",
+        "Core",
+        "Network"
+    ],
+    "cross_cutting_duties": [
+        "Coordination",
+        "Error Handling",
+        "Event Bus",
+        "Orchestration",
+        "Performance",
+        "Protocol Versioning",
+        "Security",
+        "State Sync",
+        "Transaction",
+        "AEL",
+        "VSL"
+    ],
+    "capability_tags": [
+        "Observability",
+        "Learning & Feedback"
+    ],
+    "golden_flows": {
+        "core": [
+            "GF-01",
+            "GF-02",
+            "GF-03",
+            "GF-04",
+            "GF-05"
+        ],
+        "sa_profile": [
+            "SA-FLOW-01",
+            "SA-FLOW-02"
+        ],
+        "map_profile": [
+            "MAP-FLOW-01",
+            "MAP-FLOW-02"
+        ]
+    },
+    "truth_source": {
+        "repo": "https://github.com/Coregentis/MPLP-Protocol",
+        "schemas": "schemas/v2/",
+        "tests": "tests/golden/flows/",
+        "governance": "governance/"
+    },
+    "entrypoints": {
+        "website": {
+            "primary": "https://www.mplp.io",
+            "anchor": "https://www.mplp.io/what-is-mplp"
+        },
+        "docs": {
+            "primary": "https://docs.mplp.io",
+            "anchor": "https://docs.mplp.io/docs/reference/entrypoints"
+        },
+        "repo": "https://github.com/Coregentis/MPLP-Protocol"
+    }
+}

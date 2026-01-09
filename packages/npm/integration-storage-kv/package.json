@@ -1,0 +1,55 @@
+{
+  "name": "@mplp/integration-storage-kv",
+  "version": "1.0.5",
+  "description": "Key-value storage integration for MPLP",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "dependencies": {
+    "@mplp/core": "^1.0.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0",
+    "@types/node": "^20.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "mplp": {
+    "protocolVersion": "1.0.0",
+    "frozen": true,
+    "governance": "MPGC",
+    "layer": "L4"
+  },
+  "author": "Bangshi Beijing Network Technology Limited Company",
+  "copyright": "© 2026 Bangshi Beijing Network Technology Limited Company",
+  "license": "Apache-2.0",
+  "homepage": "https://www.mplp.io",
+  "bugs": {
+    "url": "https://github.com/Coregentis/MPLP-Protocol/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Coregentis/MPLP-Protocol.git"
+  },
+  "keywords": [
+    "mplp",
+    "multi-agent",
+    "protocol",
+    "lifecycle",
+    "agent-os",
+    "agent-os-protocol"
+  ],
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  }
+}

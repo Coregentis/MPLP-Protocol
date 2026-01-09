@@ -1,0 +1,178 @@
+.heroBanner {
+    padding: 6rem 0 4rem;
+    text-align: center;
+    position: relative;
+    /* padding: 6rem 0 4rem; */
+    /* text-align: center; */
+    /* position: relative; */
+    /* overflow: hidden; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    /* Subtle, clean background - Standards Body Style */
+    background: #ffffff;
+    border-bottom: 1px solid #E5E7EB;
+}
+
+[data-theme='dark'] .heroBanner {
+    background: #020617;
+    border-bottom: 1px solid #1E293B;
+}
+
+/* Primary Title: Clean, High Contrast, Authoritative */
+.heroTitlePrimary {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #0F172A;
+    /* Slate 900 - almost black */
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    padding: 0 1rem;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+    /* Removed gradients for maximum readability */
+}
+
+[data-theme='dark'] .heroTitlePrimary {
+    color: #F8FAFC;
+}
+
+.heroSubtitle {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: #374151;
+    /* Slate 700 */
+    margin-bottom: 2.5rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.5;
+    text-align: center !important;
+    /* Force centering */
+}
+
+[data-theme='dark'] .heroSubtitle {
+    color: #94A3B8;
+}
+
+/* Badges */
+.badges {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.badges img {
+    height: 24px;
+    /* Standardize */
+    /* border-radius: 2px; */
+    /* Slight ease */
+    /* box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); */
+    /* Slight shadow for badges */
+}
+
+.badges a {
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s ease;
+}
+
+.badges a:hover {
+    transform: translateY(-1px);
+}
+
+/* Buttons */
+.buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1.5rem;
+    gap: 1rem;
+}
+
+/* Feature Section */
+.features {
+    display: flex;
+    align-items: center;
+    padding: 5rem 0;
+    width: 100%;
+    background-color: #F9FAFB;
+    /* Gray 50 */
+    border-top: none;
+}
+
+[data-theme='dark'] .features {
+    background-color: #0B1120;
+    /* Very dark slate */
+    /* border-top: 1px solid #1E293B; */
+}
+
+/* Feature Cards - Minimalist, Swiss Style */
+.featureCard {
+    display: block;
+    height: 100%;
+    border: 1px solid #E5E7EB;
+    border-radius: 6px;
+    /* Tighter radius */
+    transition: all 0.2s ease;
+    background: #fff;
+    text-decoration: none !important;
+    color: inherit;
+    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+    /* More breathing room inside */
+}
+
+[data-theme='dark'] .featureCard {
+    background: #111827;
+    border-color: #374151;
+}
+
+.featureCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border-color: #2563EB;
+}
+
+.featureTitle {
+    color: #111827;
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    /* Semi-bold */
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    letter-spacing: -0.01em;
+}
+
+[data-theme='dark'] .featureTitle {
+    color: #F9FAFB;
+}
+
+.featureCard:hover .featureTitle {
+    color: #2563EB;
+}
+
+[data-theme='dark'] .featureCard:hover .featureTitle {
+    color: #60A5FA;
+}
+
+.featureDescription {
+    color: #4B5563;
+    /* Gray 600 */
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+[data-theme='dark'] .featureDescription {
+    color: #9CA3AF;
+}

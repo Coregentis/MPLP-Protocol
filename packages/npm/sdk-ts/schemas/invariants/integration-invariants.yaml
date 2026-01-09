@@ -1,0 +1,139 @@
+# MPLP v1.0.0 FROZEN – Invariant Set
+# © 2026 Bangshi Beijing Network Technology Limited Company – Apache-2.0
+# Governance: MPLP Protocol Governance Committee (MPGC)
+
+# MPLP Protocol 1.0.0 — Frozen Specification
+# Status: Frozen as of 2025-11-30
+# Copyright: © 2026 Bangshi Beijing Network Technology Limited Company
+# License: Apache-2.0 (see LICENSE at repository root)
+# Any normative change requires a new protocol version.
+
+invariants:
+  # ========================================
+  # Tool Event Invariants
+  # ========================================
+  - id: integration_tool_event_id_non_empty
+    scope: tool_event
+    path: tool_id
+    rule: non-empty-string
+    description: "Tool event must have non-empty tool_id"
+
+  - id: integration_tool_kind_valid
+    scope: tool_event
+    path: tool_kind
+    rule: enum(formatter,linter,test_runner,generator,other)
+    description: "Tool kind must be valid enum value"
+
+  - id: integration_tool_invocation_id_uuid
+    scope: tool_event
+    path: invocation_id
+    rule: uuid-v4
+    description: "Tool invocation_id must be UUID v4"
+
+  - id: integration_tool_status_valid
+    scope: tool_event
+    path: status
+    rule: enum(pending,running,succeeded,failed,cancelled)
+    description: "Tool event status must be valid enum value"
+
+  - id: integration_tool_started_at_iso
+    scope: tool_event
+    path: started_at
+    rule: iso-datetime
+    description: "If started_at present, must be ISO 8601 datetime"
+    note: "Apply only when started_at field exists"
+
+  # ========================================
+  # File Update Event Invariants
+  # ========================================
+  - id: integration_file_path_non_empty
+    scope: file_update_event
+    path: file_path
+    rule: non-empty-string
+    description: "File update event must have non-empty file_path"
+
+  - id: integration_file_change_type_valid
+    scope: file_update_event
+    path: change_type
+    rule: enum(created,modified,deleted,renamed)
+    description: "File change_type must be valid enum value"
+
+  - id: integration_file_timestamp_iso
+    scope: file_update_event
+    path: timestamp
+    rule: iso-datetime
+    description: "File update timestamp must be ISO 8601 datetime"
+
+  # ========================================
+  # Git Event Invariants
+  # ========================================
+  - id: integration_git_repo_url_non_empty
+    scope: git_event
+    path: repo_url
+    rule: non-empty-string
+    description: "Git event must have non-empty repo_url"
+
+  - id: integration_git_commit_id_non_empty
+    scope: git_event
+    path: commit_id
+    rule: non-empty-string
+    description: "Git event must have non-empty commit_id"
+
+  - id: integration_git_ref_name_non_empty
+    scope: git_event
+    path: ref_name
+    rule: non-empty-string
+    description: "Git event must have non-empty ref_name"
+
+  - id: integration_git_event_kind_valid
+    scope: git_event
+    path: event_kind
+    rule: enum(commit,push,merge,tag,branch_create,branch_delete)
+    description: "Git event_kind must be valid enum value"
+
+  - id: integration_git_timestamp_iso
+    scope: git_event
+    path: timestamp
+    rule: iso-datetime
+    description: "Git event timestamp must be ISO 8601 datetime"
+
+  # ========================================
+  # CI Event Invariants
+  # ========================================
+  - id: integration_ci_provider_non_empty
+    scope: ci_event
+    path: ci_provider
+    rule: non-empty-string
+    description: "CI event must have non-empty ci_provider"
+
+  - id: integration_ci_pipeline_id_non_empty
+    scope: ci_event
+    path: pipeline_id
+    rule: non-empty-string
+    description: "CI event must have non-empty pipeline_id"
+
+  - id: integration_ci_run_id_non_empty
+    scope: ci_event
+    path: run_id
+    rule: non-empty-string
+    description: "CI event must have non-empty run_id"
+
+  - id: integration_ci_status_valid
+    scope: ci_event
+    path: status
+    rule: enum(pending,running,succeeded,failed,cancelled)
+    description: "CI event status must be valid enum value"
+
+  - id: integration_ci_started_at_iso
+    scope: ci_event
+    path: started_at
+    rule: iso-datetime
+    description: "If started_at present, must be ISO 8601 datetime"
+    note: "Apply only when started_at field exists"
+
+  - id: integration_ci_completed_at_iso
+    scope: ci_event
+    path: completed_at
+    rule: iso-datetime
+    description: "If completed_at present, must be ISO 8601 datetime"
+    note: "Apply only when completed_at field exists"

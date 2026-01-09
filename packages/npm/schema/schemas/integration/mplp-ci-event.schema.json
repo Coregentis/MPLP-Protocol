@@ -1,0 +1,130 @@
+{
+  "$comment": "MPLP Protocol v1.0.0 — Frozen Specification\nFreeze Date: 2025-12-03\nStatus: FROZEN (no breaking changes permitted)\nGovernance: MPLP Protocol Governance Committee (MPGC)\nCopyright: © 2026 Bangshi Beijing Network Technology Limited Company\nLicense: Apache-2.0\nAny normative change requires a new protocol version.",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://mplp.dev/schemas/v1.0/integration/mplp-ci-event.json",
+  "title": "MPLP CI Event v1.0",
+  "description": "CI pipeline execution status",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "ci_provider": {
+      "type": "string",
+      "minLength": 1,
+      "description": "CI platform identifier",
+      "examples": [
+        "github-actions",
+        "gitlab-ci",
+        "jenkins",
+        "circleci",
+        "travis-ci"
+      ]
+    },
+    "pipeline_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Pipeline or workflow identifier",
+      "examples": [
+        "build-and-test",
+        "deploy-production"
+      ]
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Unique identifier for this pipeline run",
+      "examples": [
+        "123456789",
+        "run-2025-11-30-001"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "running",
+        "succeeded",
+        "failed",
+        "cancelled"
+      ],
+      "description": "Current pipeline status"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Pipeline start timestamp (ISO 8601)"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Pipeline completion timestamp (ISO 8601)"
+    },
+    "branch_name": {
+      "type": "string",
+      "description": "Git branch that triggered the pipeline"
+    },
+    "commit_id": {
+      "type": "string",
+      "description": "Commit SHA that triggered the pipeline"
+    },
+    "run_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL to view pipeline run details"
+    },
+    "duration_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Pipeline execution duration in milliseconds"
+    },
+    "stages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "stage_name": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "running",
+              "succeeded",
+              "failed",
+              "cancelled",
+              "skipped"
+            ]
+          },
+          "duration_ms": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "stage_name",
+          "status"
+        ]
+      },
+      "description": "Pipeline stages and their statuses (optional)"
+    },
+    "trigger_kind": {
+      "type": "string",
+      "enum": [
+        "push",
+        "pull_request",
+        "schedule",
+        "manual",
+        "tag",
+        "other"
+      ],
+      "description": "What triggered the pipeline"
+    }
+  },
+  "required": [
+    "ci_provider",
+    "pipeline_id",
+    "run_id",
+    "status"
+  ]
+}

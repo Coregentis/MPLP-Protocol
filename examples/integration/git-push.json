@@ -1,0 +1,17 @@
+{
+  "$comment": "MPLP Protocol v1.0.0 — Frozen Specification\nFreeze Date: 2025-12-03\nStatus: FROZEN (no breaking changes permitted)\nGovernance: MPLP Protocol Governance Committee (MPGC)\nCopyright: © 2026 Bangshi Beijing Network Technology Limited Company\nLicense: Apache-2.0\nAny normative change requires a new protocol version.",
+  "repo_url": "https://github.com/mplp/protocol.git",
+  "commit_id": "abc123def456789012345678901234567890abcd",
+  "ref_name": "refs/heads/main",
+  "event_kind": "push",
+  "author_name": "Jane Developer",
+  "author_email": "jane@example.com",
+  "commit_message": "feat: Add Integration Layer schemas and taxonomy",
+  "timestamp": "2025-11-30T11:30:00.000Z",
+  "files_changed": 8,
+  "insertions": 450,
+  "deletions": 12,
+  "parent_commits": [
+    "def456abc123012345678901234567890abcdef"
+  ]
+}

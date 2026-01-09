@@ -1,0 +1,14 @@
+{
+  "meta": {
+    "protocol_version": "1.0.0",
+    "schema_version": "1.0.0",
+    "created_at": "2025-11-30T10:00:00.000Z"
+  },
+  "context_id": "550e8400-e29b-41d4-a716-446655440300",
+  "title": "API Testing Workflow with Tools",
+  "root": {
+    "domain": "golden-test",
+    "environment": "test"
+  },
+  "status": "active"
+}

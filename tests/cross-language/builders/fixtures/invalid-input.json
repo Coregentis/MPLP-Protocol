@@ -1,0 +1,24 @@
+{
+  "title": "Invalid Input Test - Missing Required Fields",
+  "root": {
+    "domain": "test-domain"
+  },
+  "plan": {
+    "title": "Invalid Plan",
+    "objective": "Test validation error handling",
+    "steps": [
+      {
+        "description": "Step with invalid status",
+        "status": "wrong-status-value"
+      }
+    ]
+  },
+  "confirm": {
+    "status": "super-approved",
+    "target_id": "not-a-valid-uuid"
+  },
+  "meta_invalid": {
+    "created_at": "not-a-date",
+    "protocol_version": "99.99.99"
+  }
+}

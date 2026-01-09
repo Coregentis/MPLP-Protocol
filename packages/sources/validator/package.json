@@ -1,0 +1,30 @@
+﻿{
+    "name": "@mplp/validator-source",
+    "version": "1.0.0",
+    "private": true,
+    "description": "MPLP Protocol Validator - CI-only internal tool (builds to CI runner, NOT for npm publish)",
+    "license": "Apache-2.0",
+    "author": "Coregentis AI",
+    "main": "src/index.ts",
+    "scripts": {
+        "build": "tsc --outDir ../../../npm/validator/dist",
+        "sync-schemas": "node scripts/sync-schemas.mjs"
+    },
+    "dependencies": {
+        "ajv": "^8.12.0",
+        "ajv-formats": "^2.1.1",
+        "commander": "^12.0.0"
+    },
+    "devDependencies": {
+        "@types/node": "^20.0.0",
+        "typescript": "^5.0.0"
+    },
+    "mplp": {
+        "protocolVersion": "1.0.0",
+        "frozen": true,
+        "governance": "MPGC",
+        "layer": "Tool",
+        "sourcePackage": true,
+        "targetNpmPackage": "@mplp/validator"
+    }
+}

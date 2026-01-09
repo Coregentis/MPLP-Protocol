@@ -1,0 +1,15 @@
+{
+  "meta": {
+    "protocol_version": "1.0.0",
+    "schema_version": "1.0.0",
+    "created_at": "2025-01-01T00:00:00.000Z",
+    "extra_field": "not allowed"
+  },
+  "context_id": "123e4567-e89b-12d3-a456-426614174000",
+  "root": {
+    "domain": "test",
+    "environment": "dev"
+  },
+  "title": "Extra Forbidden",
+  "status": "active"
+}

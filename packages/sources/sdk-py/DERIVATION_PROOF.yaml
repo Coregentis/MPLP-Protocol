@@ -1,0 +1,59 @@
+# DERIVATION_PROOF.yaml for mplp-sdk (Python)
+#
+# This file proves that all package content is derived from MPLP Truth Sources.
+# Reference: METHOD-SDKR-02 (Derivation Rules), METHOD-SDKR-08 §8.1.3
+#
+# © 2026 Bangshi Beijing Network Technology Limited Company
+
+protocol_version: "1.0.0"
+
+# Package Identity
+package:
+  name: "mplp-sdk"
+  ecosystem: "pypi"
+  version: "1.0.4"
+  category: "PUBLIC"
+
+# Truth Source Bundle Reference
+schema_bundle:
+  path: "schemas/v2"
+  
+evidence_baseline:
+  reference: "governance/freeze/FREEZE_EVIDENCE_BASELINE_v1.0.md"
+  version: "v1.0"
+
+# Derivation Process
+derivation:
+  method: "manual_implementation"
+  description: "Python SDK manually implemented to conform to MPLP protocol specification"
+  truth_sources:
+    - "schemas/v2/*.schema.json"
+    - "governance/01-core/MPLP_CONSTITUTION.md"
+  
+  build_inputs:
+    - path: "pyproject.toml"
+      description: "Package configuration"
+    - path: "src/mplp/**/*.py"
+      description: "Source code"
+
+# Python Distribution Artifacts
+python:
+  dist:
+    - type: sdist
+      filename: "mplp_sdk-1.0.4.tar.gz"
+      sha256: "f780cec91c3d2393c2cd111bed63386e7675ab08d1710f0579cee104f76766e4"
+    - type: wheel
+      filename: "mplp_sdk-1.0.4-py3-none-any.whl"
+      sha256: "c750540918f34dc690f1b31a4274f39ceedf845e3433c5ebe9d4b1ebf1576940"
+
+# Verification Results
+verification:
+  protocol_conformance: "VERIFIED"
+  api_surface_aligned: true
+  pydantic_models: true
+
+# Governance
+governance:
+  method: "METHOD-SDKR-08"
+  profile: "§8.1 Python"
+  frozen: true

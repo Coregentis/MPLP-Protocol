@@ -1,0 +1,65 @@
+# MPLP v1.0.0 FROZEN – Invariant Set
+# © 2026 Bangshi Beijing Network Technology Limited Company – Apache-2.0
+# Governance: MPLP Protocol Governance Committee (MPGC)
+
+# MPLP Protocol 1.0.0 — Frozen Specification
+# Status: Frozen as of 2025-11-30
+# Copyright: © 2026 Bangshi Beijing Network Technology Limited Company
+# License: Apache-2.0 (see LICENSE at repository root)
+# Any normative change requires a new protocol version.
+
+invariants:
+  # Session structure invariants
+  - id: map_session_requires_multiple_participants
+    scope: collab
+    path: participants
+    rule: min-length(2)
+    description: "MAP sessions require at least 2 participants for multi-agent collaboration"
+
+  - id: map_collab_mode_valid
+    scope: collab
+    path: mode
+    rule: enum(broadcast,round_robin,orchestrated,swarm,pair)
+    description: "Collab.mode must be valid collaboration pattern"
+
+  - id: map_session_id_is_uuid
+    scope: collab
+    path: collab_id
+    rule: uuid-v4
+    description: "Session ID (collab_id) must be valid UUID v4"
+
+  - id: map_participants_have_role_ids
+    scope: collab
+    path: participants[*].role_id
+    rule: non-empty-string
+    description: "All participants must have valid role_id binding"
+
+  # Event consistency invariants (descriptive, not all auto-enforceable)
+  - id: map_turn_completion_matches_dispatch
+    scope: trace
+    description: "Every MAPTurnDispatched event should have a corresponding MAPTurnCompleted event for the same session_id and role_id"
+    note: "This is a higher-level invariant that requires trace event analysis. Mark as manual check or implement custom rule."
+
+  - id: map_broadcast_has_receivers
+    scope: trace
+    description: "If MAPBroadcastSent exists, at least one MAPBroadcastReceived must exist for the same session_id"
+    note: "Requires cross-event validation. Can be checked via trace event count."
+
+  # Role binding invariants
+  - id: map_role_ids_are_uuids
+    scope: collab
+    path: participants[*].role_id
+    rule: uuid-v4
+    description: "All role_id values must be valid UUID v4 format"
+
+  - id: map_participant_ids_are_non_empty
+    scope: collab
+    path: participants[*].participant_id
+    rule: non-empty-string
+    description: "All participant_id values must be non-empty strings"
+
+  - id: map_participant_kind_valid
+    scope: collab
+    path: participants[*].kind
+    rule: enum(agent,human,system,external)
+    description: "Participant kind must be valid enum value"

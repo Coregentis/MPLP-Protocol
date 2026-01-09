@@ -1,0 +1,41 @@
+{
+  "meta": {
+    "protocol_version": "1.0.0",
+    "schema_version": "1.0.0",
+    "created_at": "2025-11-30T12:10:01.000Z"
+  },
+  "plan_id": "650e8400-e29b-41d4-a716-446655443001",
+  "context_id": "650e8400-e29b-41d4-a716-446655443000",
+  "title": "Turn-Taking Plan: Planner-Reviewer-Reviser",
+  "objective": "Validate MAP turn-taking pattern with role-based execution",
+  "status": "draft",
+  "steps": [
+    {
+      "step_id": "650e8400-e29b-41d4-a716-446655443010",
+      "description": "Create initial plan",
+      "status": "pending",
+      "agent_role": "planner",
+      "order_index": 0
+    },
+    {
+      "step_id": "650e8400-e29b-41d4-a716-446655443011",
+      "description": "Review plan for completeness",
+      "status": "pending",
+      "agent_role": "reviewer",
+      "order_index": 1,
+      "dependencies": [
+        "650e8400-e29b-41d4-a716-446655443010"
+      ]
+    },
+    {
+      "step_id": "650e8400-e29b-41d4-a716-446655443012",
+      "description": "Revise plan based on review",
+      "status": "pending",
+      "agent_role": "planner",
+      "order_index": 2,
+      "dependencies": [
+        "650e8400-e29b-41d4-a716-446655443011"
+      ]
+    }
+  ]
+}

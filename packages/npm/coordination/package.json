@@ -1,0 +1,59 @@
+{
+  "name": "@mplp/coordination",
+  "version": "1.0.6",
+  "description": "L2 Coordination & Governance contracts for MPLP Protocol v1.0.0 (Multi-Agent Lifecycle Protocol).",
+  "license": "Apache-2.0",
+  "author": "Bangshi Beijing Network Technology Limited Company",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE.txt"
+  ],
+  "homepage": "https://www.mplp.io",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Coregentis/MPLP-Protocol.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Coregentis/MPLP-Protocol/issues"
+  },
+  "keywords": [
+    "mplp",
+    "multi-agent",
+    "lifecycle",
+    "protocol",
+    "agent-os",
+    "coordination",
+    "governance",
+    "agent-os-protocol"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@mplp/core": "^1.0.6"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "mplp": {
+    "protocolVersion": "1.0.0",
+    "frozen": true,
+    "governance": "MPGC",
+    "layer": "L2"
+  },
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "copyright": "© 2026 Bangshi Beijing Network Technology Limited Company"
+}

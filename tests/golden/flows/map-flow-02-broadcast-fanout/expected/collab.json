@@ -1,0 +1,40 @@
+{
+  "meta": {
+    "protocol_version": "1.0.0",
+    "schema_version": "1.0.0",
+    "created_at": "2025-11-30T12:15:02.000Z"
+  },
+  "collab_id": "650e8400-e29b-41d4-a716-446655444002",
+  "context_id": "650e8400-e29b-41d4-a716-446655444000",
+  "title": "Broadcast Collaboration Session",
+  "purpose": "Demonstrate broadcast fan-out multi-agent pattern",
+  "mode": "broadcast",
+  "status": "active",
+  "participants": [
+    {
+      "participant_id": "agent-orchestrator",
+      "role_id": "650e8400-e29b-41d4-a716-446655444020",
+      "kind": "agent",
+      "display_name": "Orchestrator"
+    },
+    {
+      "participant_id": "agent-searcher-a",
+      "role_id": "650e8400-e29b-41d4-a716-446655444021",
+      "kind": "agent",
+      "display_name": "Searcher A"
+    },
+    {
+      "participant_id": "agent-searcher-b",
+      "role_id": "650e8400-e29b-41d4-a716-446655444022",
+      "kind": "agent",
+      "display_name": "Searcher B"
+    },
+    {
+      "participant_id": "agent-searcher-c",
+      "role_id": "650e8400-e29b-41d4-a716-446655444023",
+      "kind": "agent",
+      "display_name": "Searcher C"
+    }
+  ],
+  "created_at": "2025-11-30T12:15:02.000Z"
+}

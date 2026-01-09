@@ -1,0 +1,77 @@
+# Scope Domain Rule
+# Version: 1.0.1
+# Status: Governance-Frozen
+# Updated: 2026-01-04 (clarified authority model)
+
+# Machine-readable scope validation rules for invariants/*.yaml
+
+version: "1.0.1"
+last_updated: "2026-01-04"
+
+# Authority Model
+# derivation_rule is the AUTHORITATIVE source for allowed values.
+# snapshot_allowed is evidence-only (not used for CI judgment).
+authority: "derivation_rule"
+
+domains:
+  # --- Module Domain ---
+  - id: module
+    description: "10 core protocol modules"
+    derivation_rule:
+      source: "schemas/v2/mplp-*.schema.json"
+      extraction: "filename_stem"
+      command: "ls mplp-*.schema.json | sed 's/mplp-\\(.*\\).schema.json/\\1/'"
+    snapshot_allowed:
+      values: [context, plan, trace, confirm, role, dialog, collab, extension, network, core]
+      snapshot_date: "2026-01-04"
+      count: 10
+    authority: "derivation_rule"
+
+  # --- Event Type Domain ---
+  - id: event_type
+    description: "Base event schema type"
+    derivation_rule:
+      source: "fixed"
+      values: [event]
+    snapshot_allowed:
+      values: [event]
+      snapshot_date: "2026-01-04"
+      count: 1
+    authority: "derivation_rule"
+
+  # --- Learning Type Domain ---
+  - id: learning_type
+    description: "Learning sample schema type"
+    derivation_rule:
+      source: "fixed"
+      values: [learning_sample]
+    snapshot_allowed:
+      values: [learning_sample]
+      snapshot_date: "2026-01-04"
+      count: 1
+    authority: "derivation_rule"
+
+  # --- Integration Event Domain ---
+  - id: integration_event
+    description: "Integration event schema types"
+    derivation_rule:
+      source: "schemas/v2/integration/mplp-*-event.schema.json"
+      extraction: "filename_to_scope"
+      command: "ls integration/mplp-*-event.schema.json | sed 's/.*mplp-\\(.*\\)-event.schema.json/\\1_event/'"
+    snapshot_allowed:
+      values: [ci_event, git_event, file_update_event, tool_event]
+      snapshot_date: "2026-01-04"
+      count: 4
+    authority: "derivation_rule"
+
+# Extension Policy
+extension_policy:
+  new_integration_event: "Auto-allowed (derivation_rule updates automatically)"
+  new_module: "Requires MPGC approval + MINOR version bump"
+  new_domain: "Requires MPGC approval + MAJOR version bump"
+
+# Validation Gate
+gate:
+  rule: "ALL invariant scope values MUST belong to one of the defined domains"
+  verdict_on_unknown: "FAIL"
+  snapshot_mismatch_verdict: "WARN"

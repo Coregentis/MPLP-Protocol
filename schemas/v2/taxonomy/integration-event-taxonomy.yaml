@@ -1,0 +1,436 @@
+# MPLP Protocol v1.0.0 – Frozen Specification
+# Freeze Date: 2025-12-03
+# Status: FROZEN (no breaking changes permitted)
+# Governance: MPLP Protocol Governance Committee (MPGC)
+# © 2026 Bangshi (Beijing) Network Technology Co., Ltd.
+# License: Apache-2.0
+# Any normative change requires a new protocol version.
+
+version: "1.0.0"
+title: "MPLP Integration Event Taxonomy v1.0"
+description: "Defines 4 Integration Event families for external tool integration (IDE, CI, Git, Tools). Binds to schemas/v2/integration."
+
+metadata:
+  last_updated: "2025-11-30"
+  compliance_level: "optional" # L4 Event Family Specification
+  keywords:
+    [
+      "MPLP",
+      "Multi-Agent Lifecycle Protocol",
+      "Agent OS Protocol",
+      "AI Agent",
+      "Observable",
+      "Governed",
+      "Vendor-neutral",
+      "Integration Event Taxonomy",
+      "IDE integration",
+      "CI integration",
+      "Git integration",
+    ]
+
+# Relationship to Phase 3 Observability
+observability_integration:
+  parent_event: "ExternalIntegrationEvent" # From Phase 3
+  usage_pattern: |
+    Integration events typically appear as ExternalIntegrationEvent.payload:
+    {
+      "event_family": "ExternalIntegrationEvent",
+      "event_type": "tool_execution" | "file_update" | "git_operation" | "ci_pipeline",
+      "payload": <Integration Event conforming to schemas below>
+    }
+
+# Integration Event Families
+families:
+  # ========================================
+  # 1. TOOL_EVENT
+  # ========================================
+  tool_event:
+    description: "External tool invocation and results (formatters, linters, test runners, generators)"
+    compliance_level: "recommended"
+
+    typical_sources:
+      - "IDE plugins (ESLint, Prettier, Black, etc.)"
+      - "Command-line tools (pytest, npm test, etc.)"
+      - "Code generators (Copilot, CodeWhisperer, etc.)"
+
+    recommended_triggers:
+      - "Tool invocation initiated"
+      - "Tool execution completed"
+      - "Tool execution failed"
+
+    minimal_fields:
+      tool_id:
+        type: "string"
+        required: true
+        description: "Unique identifier for the tool"
+        example: "eslint-v8.50.0"
+
+      tool_kind:
+        type: "enum"
+        required: true
+        values: ["formatter", "linter", "test_runner", "generator", "other"]
+        description: "Category of tool"
+
+      invocation_id:
+        type: "string"
+        format: "uuid-v4"
+        required: true
+        description: "Unique identifier for this specific invocation"
+        example: "550e8400-e29b-41d4-a716-446655440000"
+
+      status:
+        type: "enum"
+        required: true
+        values: ["pending", "running", "succeeded", "failed", "cancelled"]
+        description: "Current execution status"
+
+      started_at:
+        type: "string"
+        format: "iso-datetime"
+        required: false
+        description: "Invocation start timestamp"
+
+      completed_at:
+        type: "string"
+        format: "iso-datetime"
+        required: false
+        description: "Invocation completion timestamp"
+
+      exit_code:
+        type: "integer"
+        required: false
+        description: "Tool process exit code (if applicable)"
+
+      output_summary:
+        type: "string"
+        required: false
+        description: "Brief summary of tool output or errors"
+
+      args:
+        type: "array"
+        items_type: "string"
+        required: false
+        description: "Command-line arguments passed to tool (optional)"
+
+      working_directory:
+        type: "string"
+        required: false
+        description: "Working directory where tool was executed (optional)"
+
+    use_cases:
+      - "Track linting violations over time"
+      - "Correlate test failures with code changes"
+      - "Monitor formatter application patterns"
+
+  # ========================================
+  # 2. FILE_UPDATE_EVENT
+  # ========================================
+  file_update_event:
+    description: "IDE file changes (save, refactor, batch modify)"
+    compliance_level: "recommended"
+
+    typical_sources:
+      - "IDE file watchers (VS Code, IntelliJ, etc.)"
+      - "File system monitors"
+      - "Version control pre-commit hooks"
+
+    recommended_triggers:
+      - "File saved in IDE"
+      - "File created in workspace"
+      - "File deleted from workspace"
+      - "File renamed/moved"
+      - "Batch refactor operation completed"
+
+    minimal_fields:
+      file_path:
+        type: "string"
+        required: true
+        description: "Path to the file (absolute or workspace-relative)"
+        example: "src/components/App.tsx"
+
+      change_type:
+        type: "enum"
+        required: true
+        values: ["created", "modified", "deleted", "renamed"]
+        description: "Type of file change"
+
+      workspace_root:
+        type: "string"
+        required: false
+        description: "Workspace root directory (for resolving relative paths)"
+        example: "/Users/dev/project"
+
+      change_summary:
+        type: "string"
+        required: false
+        description: "Brief description of changes (e.g., 'Added error handling')"
+
+      timestamp:
+        type: "string"
+        format: "iso-datetime"
+        required: true
+        description: "When the change occurred"
+
+      lines_added:
+        type: "integer"
+        required: false
+        description: "Number of lines added (if applicable)"
+
+      lines_removed:
+        type: "integer"
+        required: false
+        description: "Number of lines removed (if applicable)"
+
+      previous_path:
+        type: "string"
+        required: false
+        description: "Previous path (for renamed files)"
+
+      encoding:
+        type: "string"
+        required: false
+        description: "File encoding (e.g., 'utf-8')"
+
+      language:
+        type: "string"
+        required: false
+        description: "Programming language or file type (e.g., 'typescript', 'python')"
+
+    use_cases:
+      - "Trigger PSG node updates on file changes"
+      - "Track edit patterns for learning samples"
+      - "Correlate file changes with plan execution"
+
+  # ========================================
+  # 3. GIT_EVENT
+  # ========================================
+  git_event:
+    description: "Git operations (commit, push, branch/merge/tag)"
+    compliance_level: "recommended"
+
+    typical_sources:
+      - "Git hooks (pre-commit, post-commit, pre-push)"
+      - "Git hosting webhooks (GitHub, GitLab, Bitbucket)"
+      - "IDE Git integrations"
+
+    recommended_triggers:
+      - "Commit created"
+      - "Push to remote"
+      - "Branch created/deleted"
+      - "Merge completed"
+      - "Tag created"
+
+    minimal_fields:
+      repo_url:
+        type: "string"
+        required: true
+        description: "Repository URL or identifier"
+        example: "https://github.com/org/repo.git"
+
+      commit_id:
+        type: "string"
+        required: true
+        description: "Commit SHA or identifier"
+        example: "abc123def456"
+
+      ref_name:
+        type: "string"
+        required: true
+        description: "Branch, tag, or ref name"
+        example: "refs/heads/main"
+
+      event_kind:
+        type: "enum"
+        required: true
+        values:
+          ["commit", "push", "merge", "tag", "branch_create", "branch_delete"]
+        description: "Type of Git operation"
+
+      author_name:
+        type: "string"
+        required: false
+        description: "Commit author name"
+
+      author_email:
+        type: "string"
+        required: false
+        description: "Commit author email"
+
+      commit_message:
+        type: "string"
+        required: false
+        description: "Commit message (first line or summary)"
+
+      timestamp:
+        type: "string"
+        format: "iso-datetime"
+        required: true
+        description: "When the Git operation occurred"
+
+      files_changed:
+        type: "integer"
+        required: false
+        description: "Number of files changed in commit"
+
+      insertions:
+        type: "integer"
+        required: false
+        description: "Total lines inserted"
+
+      deletions:
+        type: "integer"
+        required: false
+        description: "Total lines deleted"
+
+      parent_commits:
+        type: "array"
+        items_type: "string"
+        required: false
+        description: "Parent commit SHA(s) - multiple for merges"
+
+    use_cases:
+      - "Record commits in PSG for audit trail"
+      - "Trigger CI pipelines on push"
+      - "Track collaboration patterns via commit history"
+
+  # ========================================
+  # 4. CI_EVENT
+  # ========================================
+  ci_event:
+    description: "CI pipeline execution status"
+    compliance_level: "recommended"
+
+    typical_sources:
+      - "CI platform webhooks (GitHub Actions, GitLab CI, Jenkins, CircleCI)"
+      - "CI pipeline monitoring tools"
+
+    recommended_triggers:
+      - "Pipeline started"
+      - "Pipeline stage completed"
+      - "Pipeline succeeded"
+      - "Pipeline failed"
+      - "Pipeline cancelled"
+
+    minimal_fields:
+      ci_provider:
+        type: "string"
+        required: true
+        description: "CI platform identifier"
+        example: "github-actions"
+        values_suggested:
+          [
+            "github-actions",
+            "gitlab-ci",
+            "jenkins",
+            "circleci",
+            "travis-ci",
+            "other",
+          ]
+
+      pipeline_id:
+        type: "string"
+        required: true
+        description: "Pipeline or workflow identifier"
+        example: "build-and-test"
+
+      run_id:
+        type: "string"
+        required: true
+        description: "Unique identifier for this pipeline run"
+        example: "123456789"
+
+      status:
+        type: "enum"
+        required: true
+        values: ["pending", "running", "succeeded", "failed", "cancelled"]
+        description: "Current pipeline status"
+
+      started_at:
+        type: "string"
+        format: "iso-datetime"
+        required: false
+        description: "Pipeline start timestamp"
+
+      completed_at:
+        type: "string"
+        format: "iso-datetime"
+        required: false
+        description: "Pipeline completion timestamp"
+
+      branch_name:
+        type: "string"
+        required: false
+        description: "Git branch that triggered the pipeline"
+
+      commit_id:
+        type: "string"
+        required: false
+        description: "Commit SHA that triggered the pipeline"
+
+      run_url:
+        type: "string"
+        required: false
+        description: "URL to view pipeline run details"
+
+      duration_ms:
+        type: "integer"
+        required: false
+        description: "Pipeline execution duration in milliseconds"
+
+      trigger_kind:
+        type: "enum"
+        required: false
+        values: ["push", "pull_request", "schedule", "manual", "tag", "other"]
+        description: "What triggered the pipeline"
+
+      stages:
+        type: "array"
+        required: false
+        description: "Pipeline stages and their statuses"
+        items:
+          stage_name:
+            type: "string"
+            required: true
+          status:
+            type: "enum"
+            required: true
+            values:
+              [
+                "pending",
+                "running",
+                "succeeded",
+                "failed",
+                "cancelled",
+                "skipped",
+              ]
+          duration_ms:
+            type: "integer"
+            required: false
+
+    use_cases:
+      - "Correlate CI results with plan execution"
+      - "Trigger rollback on CI failure"
+      - "Track build times and success rates"
+
+# Compliance Summary
+compliance:
+  v1_0_requirements:
+    required: [] # Integration events are NOT REQUIRED for v1.0
+    recommended:
+      - "tool_event: When integrating external tools"
+      - "file_update_event: When integrating IDE file watchers"
+      - "git_event: When integrating Git operations"
+      - "ci_event: When integrating CI pipelines"
+    optional:
+      - "Bidirectional integration patterns"
+      - "Real-time event streaming"
+
+  if_implemented:
+    must_conform_to: "Integration schemas in schemas/v2/integration/"
+    must_validate_against: "Integration invariants in schemas/v2/invariants/integration-invariants.yaml"
+
+  relationship_to_observability:
+    note: |
+      Integration events appear as ExternalIntegrationEvent.payload (from Phase 3).
+      ExternalIntegrationEvent provides envelope (event_id, timestamp, event_family).
+      Integration schemas define payload structure.

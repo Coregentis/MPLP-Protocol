@@ -1,0 +1,2178 @@
+{
+  "generated_at": "2026-01-08T14:11:05.947Z",
+  "source_commit": "5554978bd6c17583b242c3280285a8d112d0a983",
+  "protocol_version": "1.0.0",
+  "schema_bundle_version": "2.0.0",
+  "tripod": {
+    "website_anchor": "https://www.mplp.io/what-is-mplp",
+    "docs_anchor": "https://docs.mplp.io/docs/reference/entrypoints",
+    "repo_anchor": "https://github.com/Coregentis/MPLP-Protocol"
+  },
+  "total_pages": 161,
+  "pages": [
+    {
+      "path": "/docs/evaluation/conformance/conformance-model",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/evaluation/conformance/conformance-model",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/evaluation/conformance/evaluation-dimensions",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/evaluation/conformance/evaluation-dimensions",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/evaluation/conformance/evidence-model",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/evaluation/conformance/evidence-model",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/evaluation/conformance/index",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/evaluation/conformance/index",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/evaluation/conformance/results-and-status",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/evaluation/conformance/results-and-status",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/evaluation/conformance/roadmap",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/evaluation/conformance/roadmap",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/evaluation/golden-flows/gf-01",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/evaluation/golden-flows/gf-01",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/evaluation/golden-flows/gf-02",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/evaluation/golden-flows/gf-02",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/evaluation/golden-flows/gf-03",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/evaluation/golden-flows/gf-03",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/evaluation/golden-flows/gf-04",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/evaluation/golden-flows/gf-04",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/evaluation/golden-flows/gf-05",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/evaluation/golden-flows/gf-05",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/evaluation/golden-flows/index",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/evaluation/golden-flows/index",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/evaluation/golden-flows/map-flow-01",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/evaluation/golden-flows/map-flow-01",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/evaluation/golden-flows/map-flow-02",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/evaluation/golden-flows/map-flow-02",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/evaluation/golden-flows/sa-flow-01",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/evaluation/golden-flows/sa-flow-01",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/evaluation/golden-flows/sa-flow-02",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/evaluation/golden-flows/sa-flow-02",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/evaluation/governance/EXTERNAL_TRUST_OVERVIEW",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/evaluation/governance/EXTERNAL_TRUST_OVERVIEW",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/evaluation/governance/compatibility-matrix",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/evaluation/governance/compatibility-matrix",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/evaluation/governance/contributing",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/evaluation/governance/contributing",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/evaluation/governance/documentation-projection",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/evaluation/governance/documentation-projection",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/evaluation/governance/index",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/evaluation/governance/index",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/evaluation/governance/license-governance",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/evaluation/governance/license-governance",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/evaluation/governance/protocol-governance",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/evaluation/governance/protocol-governance",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/evaluation/governance/protocol-truth-index",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/evaluation/governance/protocol-truth-index",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/evaluation/governance/security-policy",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/evaluation/governance/security-policy",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/evaluation/governance/versioning-policy",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/evaluation/governance/versioning-policy",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/evaluation/index",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/evaluation/index",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/evaluation/standards/iso-mapping",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/evaluation/standards/iso-mapping",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/evaluation/standards/nist-mapping",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/evaluation/standards/nist-mapping",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/evaluation/standards/positioning",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/evaluation/standards/positioning",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/evaluation/tests/cross-language-overview",
+      "title": null,
+      "description": "Cross-language test suite overview and inventory. Projection of Repo tests; non-certification.",
+      "canonical": "https://docs.mplp.io/docs/evaluation/tests/cross-language-overview",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": "reference",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/evaluation/tests/golden-fixture-format",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/evaluation/tests/golden-fixture-format",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/evaluation/tests/golden-flow-registry",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/evaluation/tests/golden-flow-registry",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/evaluation/tests/golden-test-suite-overview",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/evaluation/tests/golden-test-suite-overview",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/evaluation/tests/runtime-compat-overview",
+      "title": null,
+      "description": "Runtime compatibility test suite overview and inventory. Projection of Repo tests; non-certification.",
+      "canonical": "https://docs.mplp.io/docs/evaluation/tests/runtime-compat-overview",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": "reference",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/evaluation/tests/schema-alignment-overview",
+      "title": null,
+      "description": "Schema alignment test suite overview and inventory. Projection of Repo tests; non-certification.",
+      "canonical": "https://docs.mplp.io/docs/evaluation/tests/schema-alignment-overview",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": "reference",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/evaluation/tests/test-architecture-overview",
+      "title": null,
+      "description": "Overview of the MPLP testing architecture including test categories, locations, and evidence mapping.",
+      "canonical": "https://docs.mplp.io/docs/evaluation/tests/test-architecture-overview",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/governance/evidence-baseline",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/governance/evidence-baseline",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/guides/adoption/adoption-signals",
+      "title": null,
+      "description": "Defines signals that indicate MPLP adoption stages.",
+      "canonical": "https://docs.mplp.io/docs/guides/adoption/adoption-signals",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/guides/adoption/index",
+      "title": null,
+      "description": "Defines what MPLP adoption means and the adoption lifecycle stages.",
+      "canonical": "https://docs.mplp.io/docs/guides/adoption/index",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/guides/adoption/non-goals",
+      "title": null,
+      "description": "Explicit non-goals for MPLP Adoption.",
+      "canonical": "https://docs.mplp.io/docs/guides/adoption/non-goals",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/guides/conformance-checklist",
+      "title": null,
+      "description": "Self-verification checklist for assessing MPLP v1.0 conformance levels (L1-L3).",
+      "canonical": "https://docs.mplp.io/docs/guides/conformance-checklist",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/guides/conformance-guide",
+      "title": null,
+      "description": "Step-by-step guide for achieving MPLP protocol conformance at L1, L2, and L3 levels.",
+      "canonical": "https://docs.mplp.io/docs/guides/conformance-guide",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/guides/enterprise/enterprise-scenarios",
+      "title": null,
+      "description": "Evidence-centered enterprise scenario cards showing constraint → evidence → conformance mapping.",
+      "canonical": "https://docs.mplp.io/docs/guides/enterprise/enterprise-scenarios",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/guides/enterprise/index",
+      "title": null,
+      "description": "Organizational, temporal, and governance constraints that emerge when agent systems operate at scale.",
+      "canonical": "https://docs.mplp.io/docs/guides/enterprise/index",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/guides/enterprise/non-goals",
+      "title": null,
+      "description": "Explicit non-goals for MPLP Enterprise context.",
+      "canonical": "https://docs.mplp.io/docs/guides/enterprise/non-goals",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/guides/evaluation-guide",
+      "title": null,
+      "description": "Guide for evaluating MPLP for enterprise architects and compliance reviewers.",
+      "canonical": "https://docs.mplp.io/docs/guides/evaluation-guide",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": "governance",
+      "lifecycle_status": "frozen",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/guides/examples/_merged_from_07a/example-01-minimal-sa-lifecycle",
+      "title": null,
+      "description": "A non-normative example demonstrating a minimal Single-Agent lifecycle.",
+      "canonical": "https://docs.mplp.io/docs/guides/examples/_merged_from_07a/example-01-minimal-sa-lifecycle",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": null,
+      "lifecycle_status": null,
+      "authority": null,
+      "missing_fields": [
+        "normativity",
+        "lifecycle_status",
+        "authority"
+      ]
+    },
+    {
+      "path": "/docs/guides/examples/_merged_from_07a/index",
+      "title": null,
+      "description": "Non-normative executable examples demonstrating MPLP protocol semantics.",
+      "canonical": "https://docs.mplp.io/docs/guides/examples/_merged_from_07a/index",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": null,
+      "lifecycle_status": null,
+      "authority": null,
+      "missing_fields": [
+        "normativity",
+        "lifecycle_status",
+        "authority"
+      ]
+    },
+    {
+      "path": "/docs/guides/examples/error-recovery-flow",
+      "title": null,
+      "description": "Example flow demonstrating error handling and recovery patterns in MPLP.",
+      "canonical": "https://docs.mplp.io/docs/guides/examples/error-recovery-flow",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": "reference",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/guides/examples/learning-notes/learning-collection-points",
+      "title": null,
+      "description": "Defines when and how to generate LearningSamples during MPLP execution.",
+      "canonical": "https://docs.mplp.io/docs/guides/examples/learning-notes/learning-collection-points",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/guides/examples/learning-notes/learning-feedback-overview",
+      "title": null,
+      "description": "Overview of the MPLP learning feedback loop including sample collection and training.",
+      "canonical": "https://docs.mplp.io/docs/guides/examples/learning-notes/learning-feedback-overview",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/guides/examples/learning-notes/learning-invariants",
+      "title": null,
+      "description": "Validation rules for LearningSamples, covering core and family-specific invariants.",
+      "canonical": "https://docs.mplp.io/docs/guides/examples/learning-notes/learning-invariants",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/guides/examples/learning-notes/learning-overview",
+      "title": null,
+      "description": "Overview of MPLP Learning module, covering LearningSample families, collection mechanisms, and compliance boundaries.",
+      "canonical": "https://docs.mplp.io/docs/guides/examples/learning-notes/learning-overview",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/guides/examples/learning-notes/learning-sample-schema",
+      "title": null,
+      "description": "Documents the LearningSample schema structure, covering core and family-specific fields.",
+      "canonical": "https://docs.mplp.io/docs/guides/examples/learning-notes/learning-sample-schema",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/guides/examples/multi-agent-collab-flow",
+      "title": null,
+      "description": "Example showing multi-agent collaboration patterns using MPLP MAP Profile.",
+      "canonical": "https://docs.mplp.io/docs/guides/examples/multi-agent-collab-flow",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": "reference",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/guides/examples/risk-confirmation-flow",
+      "title": null,
+      "description": "Example flow demonstrating human-in-the-loop confirmation for high-risk actions.",
+      "canonical": "https://docs.mplp.io/docs/guides/examples/risk-confirmation-flow",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": "reference",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/guides/examples/single-agent-flow",
+      "title": null,
+      "description": "Example showing a complete Single Agent (SA) flow using MPLP TypeScript SDK.",
+      "canonical": "https://docs.mplp.io/docs/guides/examples/single-agent-flow",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": "reference",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/guides/examples/tool-execution-integration",
+      "title": null,
+      "description": "Example showing how agents integrate with external tools via MPLP Extension module.",
+      "canonical": "https://docs.mplp.io/docs/guides/examples/tool-execution-integration",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": "reference",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/guides/examples/vendor-neutral-llm-integration",
+      "title": null,
+      "description": "Example demonstrating vendor-neutral LLM integration through MPLP abstractions.",
+      "canonical": "https://docs.mplp.io/docs/guides/examples/vendor-neutral-llm-integration",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": "reference",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/guides/index",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/guides/index",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": null,
+      "lifecycle_status": null,
+      "authority": null,
+      "missing_fields": [
+        "description",
+        "normativity",
+        "lifecycle_status",
+        "authority"
+      ]
+    },
+    {
+      "path": "/docs/guides/runtime/ael",
+      "title": null,
+      "description": "Action Execution Layer (AEL) reference for runtime implementers.",
+      "canonical": "https://docs.mplp.io/docs/guides/runtime/ael",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "MPGC",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/guides/runtime/crosscut-psg-event-binding",
+      "title": null,
+      "description": "Crosscut PSG and Observability Event Binding specification for MPLP runtime.",
+      "canonical": "https://docs.mplp.io/docs/guides/runtime/crosscut-psg-event-binding",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "MPGC",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/guides/runtime/drift-and-rollback",
+      "title": null,
+      "description": "Drift Detection and Rollback Mechanisms for MPLP runtimes.",
+      "canonical": "https://docs.mplp.io/docs/guides/runtime/drift-and-rollback",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "MPGC",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/guides/runtime/module-psg-paths",
+      "title": null,
+      "description": "Module PSG Read/Write Path Matrix defining how each MPLP module interacts with the Protocol State Graph.",
+      "canonical": "https://docs.mplp.io/docs/guides/runtime/module-psg-paths",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "MPGC",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/guides/runtime/psg",
+      "title": null,
+      "description": "The Project Semantic Graph (PSG) is the runtime state substrate of MPLP.",
+      "canonical": "https://docs.mplp.io/docs/guides/runtime/psg",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "MPGC",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/guides/runtime/runtime-authority",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/guides/runtime/runtime-authority",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "MPGC",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/guides/runtime/runtime-capability-matrix",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/guides/runtime/runtime-capability-matrix",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": "reference",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/guides/runtime/runtime-glue-overview",
+      "title": null,
+      "description": "Runtime Glue Overview - L3 specification layer for MPLP.",
+      "canonical": "https://docs.mplp.io/docs/guides/runtime/runtime-glue-overview",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "MPGC",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/guides/runtime/skeleton/index",
+      "title": null,
+      "description": "Interface-Level Contract for Profile-14-Golden Runtime",
+      "canonical": "https://docs.mplp.io/docs/guides/runtime/skeleton/index",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": null,
+      "missing_fields": [
+        "authority"
+      ]
+    },
+    {
+      "path": "/docs/guides/runtime/vsl",
+      "title": null,
+      "description": "Value State Layer (VSL) reference for state persistence implementations.",
+      "canonical": "https://docs.mplp.io/docs/guides/runtime/vsl",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "MPGC",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/guides/sdk/codegen-from-schema",
+      "title": null,
+      "description": "Guide for generating type-safe code from MPLP JSON schemas in multiple languages.",
+      "canonical": "https://docs.mplp.io/docs/guides/sdk/codegen-from-schema",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": "reference",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/guides/sdk/go-sdk-guide",
+      "title": null,
+      "description": "Go SDK guide for MPLP including module installation and usage patterns.",
+      "canonical": "https://docs.mplp.io/docs/guides/sdk/go-sdk-guide",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": "reference",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/guides/sdk/implementation-maturity-matrix",
+      "title": null,
+      "description": "Matrix showing feature implementation status across MPLP SDK implementations (TypeScript, Python, Go, Java).",
+      "canonical": "https://docs.mplp.io/docs/guides/sdk/implementation-maturity-matrix",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": "reference",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/guides/sdk/java-sdk-guide",
+      "title": null,
+      "description": "Java SDK guide for MPLP including Gradle/Maven setup and core APIs.",
+      "canonical": "https://docs.mplp.io/docs/guides/sdk/java-sdk-guide",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": "reference",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/guides/sdk/py-sdk-guide",
+      "title": null,
+      "description": "Python SDK guide for mplp package including installation, usage, and API reference.",
+      "canonical": "https://docs.mplp.io/docs/guides/sdk/py-sdk-guide",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": "reference",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/guides/sdk/schema-mapping-standard",
+      "title": null,
+      "description": "Canonical mapping rules from MPLP JSON Schema v2 to TypeScript and Python models.",
+      "canonical": "https://docs.mplp.io/docs/guides/sdk/schema-mapping-standard",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "frozen",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/guides/sdk/ts-sdk-guide",
+      "title": null,
+      "description": "Reference implementation guide for the MPLP TypeScript SDK.",
+      "canonical": "https://docs.mplp.io/docs/guides/sdk/ts-sdk-guide",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": "reference",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/intro",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/intro",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/introduction/DOCS_AUTHOR_RULES",
+      "title": null,
+      "description": "This document defines the rules for adding or modifying documentation in the MPLP docs site.",
+      "canonical": "https://docs.mplp.io/docs/introduction/DOCS_AUTHOR_RULES",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": "reference",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/introduction/DOCS_IA_OVERVIEW",
+      "title": null,
+      "description": "This page defines how to read and navigate the MPLP documentation site, with recommended reading paths for different audiences.",
+      "canonical": "https://docs.mplp.io/docs/introduction/DOCS_IA_OVERVIEW",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": "reference",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/introduction/api-quick-reference",
+      "title": null,
+      "description": "Quick reference for MPLP observability event families and invariant rules.",
+      "canonical": "https://docs.mplp.io/docs/introduction/api-quick-reference",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": "reference",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/introduction/glossary",
+      "title": null,
+      "description": "Normative definitions for key terms used throughout the MPLP v1.0 specification.",
+      "canonical": "https://docs.mplp.io/docs/introduction/glossary",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": "reference",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/introduction/mplp-v1.0-docs-map",
+      "title": null,
+      "description": "Quick reference map for all MPLP schemas, modules, events, and invariants with their file locations.",
+      "canonical": "https://docs.mplp.io/docs/introduction/mplp-v1.0-docs-map",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": "reference",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/introduction/mplp-v1.0-protocol-overview",
+      "title": null,
+      "description": "Comprehensive overview of the Multi-Agent Lifecycle Protocol (MPLP) v1.0, covering architecture, modules, events, and conformance levels.",
+      "canonical": "https://docs.mplp.io/docs/introduction/mplp-v1.0-protocol-overview",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": "reference",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/introduction/posix-analogy-mapping",
+      "title": null,
+      "description": "A conceptual mapping (analogy) between POSIX interface ideas and MPLP's schema-defined lifecycle governance. Not a compatibility or certification claim.",
+      "canonical": "https://docs.mplp.io/docs/introduction/posix-analogy-mapping",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": "reference",
+      "lifecycle_status": "active",
+      "authority": null,
+      "missing_fields": [
+        "authority"
+      ]
+    },
+    {
+      "path": "/docs/meta/faq",
+      "title": null,
+      "description": "Frequently Asked Questions about MPLP Protocol.",
+      "canonical": "https://docs.mplp.io/docs/meta/faq",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/meta/index",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/meta/index",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": null,
+      "lifecycle_status": null,
+      "authority": null,
+      "missing_fields": [
+        "description",
+        "normativity",
+        "lifecycle_status",
+        "authority"
+      ]
+    },
+    {
+      "path": "/docs/meta/redirects/LINK_FIX_LEDGER",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/meta/redirects/LINK_FIX_LEDGER",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": null,
+      "lifecycle_status": null,
+      "authority": null,
+      "missing_fields": [
+        "description",
+        "normativity",
+        "lifecycle_status",
+        "authority"
+      ]
+    },
+    {
+      "path": "/docs/meta/redirects/REDIRECT_MANIFEST",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/meta/redirects/REDIRECT_MANIFEST",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": null,
+      "lifecycle_status": null,
+      "authority": null,
+      "missing_fields": [
+        "description",
+        "normativity",
+        "lifecycle_status",
+        "authority"
+      ]
+    },
+    {
+      "path": "/docs/meta/release/LEARNING_ATTESTATION_v1.0.0",
+      "title": null,
+      "description": "Formal attestation of Learning Module capabilities for MPLP v1.0.0.",
+      "canonical": "https://docs.mplp.io/docs/meta/release/LEARNING_ATTESTATION_v1.0.0",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": "attestation",
+      "lifecycle_status": "active",
+      "authority": "MPGC",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/meta/release/docs-freeze-declaration-v1.0",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/meta/release/docs-freeze-declaration-v1.0",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": "governance",
+      "lifecycle_status": "frozen",
+      "authority": "MPGC",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/meta/release/editorial-policy",
+      "title": null,
+      "description": "Editorial standards for MPLP documentation including writing style, formatting, terminology, and review process.",
+      "canonical": "https://docs.mplp.io/docs/meta/release/editorial-policy",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": "governance",
+      "lifecycle_status": "frozen",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/meta/release/maintainer-guide",
+      "title": null,
+      "description": "Guide for MPLP maintainers covering release process, review guidelines, and frozen specification rules.",
+      "canonical": "https://docs.mplp.io/docs/meta/release/maintainer-guide",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": "governance",
+      "lifecycle_status": "frozen",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/meta/release/mplp-v0.9-to-v1.0-migration-guide",
+      "title": null,
+      "description": "Migration guide for upgrading from MPLP v0.9 to v1.0, covering breaking changes, schema updates, and checklist.",
+      "canonical": "https://docs.mplp.io/docs/meta/release/mplp-v0.9-to-v1.0-migration-guide",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": "governance",
+      "lifecycle_status": "frozen",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/meta/release/mplp-v1.0-docs-governance-summary",
+      "title": null,
+      "description": "Summary of documentation governance policies for MPLP v1.0 including structure and authority.",
+      "canonical": "https://docs.mplp.io/docs/meta/release/mplp-v1.0-docs-governance-summary",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": "governance",
+      "lifecycle_status": "frozen",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/meta/release/mplp-v1.0.0-known-issues",
+      "title": null,
+      "description": "Known issues and limitations in MPLP v1.0.0 with workarounds and planned fixes.",
+      "canonical": "https://docs.mplp.io/docs/meta/release/mplp-v1.0.0-known-issues",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": "governance",
+      "lifecycle_status": "frozen",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/meta/release/mplp-v1.0.0-release-notes",
+      "title": null,
+      "description": "Release notes for MPLP Protocol v1.0.0 including new features, breaking changes, and installation instructions.",
+      "canonical": "https://docs.mplp.io/docs/meta/release/mplp-v1.0.0-release-notes",
+      "robots": "index,follow",
+      "doc_profile": "unknown-default-informative",
+      "normativity": "governance",
+      "lifecycle_status": "frozen",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/meta/roadmap",
+      "title": null,
+      "description": "Historical record and potential future exploration areas.",
+      "canonical": "https://docs.mplp.io/docs/meta/roadmap",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "active",
+      "authority": "Documentation Governance",
+      "missing_fields": []
+    },
+    {
+      "path": "/docs/specification/architecture/cross-cutting-kernel-duties/coordination-explained",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/architecture/cross-cutting-kernel-duties/coordination-explained",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/architecture/cross-cutting-kernel-duties/coordination",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/architecture/cross-cutting-kernel-duties/coordination",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/architecture/cross-cutting-kernel-duties/error-handling-explained",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/architecture/cross-cutting-kernel-duties/error-handling-explained",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/architecture/cross-cutting-kernel-duties/error-handling",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/architecture/cross-cutting-kernel-duties/error-handling",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/architecture/cross-cutting-kernel-duties/event-bus-explained",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/architecture/cross-cutting-kernel-duties/event-bus-explained",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/architecture/cross-cutting-kernel-duties/event-bus",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/architecture/cross-cutting-kernel-duties/event-bus",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/architecture/cross-cutting-kernel-duties/index",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/architecture/cross-cutting-kernel-duties/index",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/architecture/cross-cutting-kernel-duties/learning-feedback-explained",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/architecture/cross-cutting-kernel-duties/learning-feedback-explained",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/architecture/cross-cutting-kernel-duties/learning-feedback",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/architecture/cross-cutting-kernel-duties/learning-feedback",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/architecture/cross-cutting-kernel-duties/observability-explained",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/architecture/cross-cutting-kernel-duties/observability-explained",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/architecture/cross-cutting-kernel-duties/observability",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/architecture/cross-cutting-kernel-duties/observability",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/architecture/cross-cutting-kernel-duties/orchestration-explained",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/architecture/cross-cutting-kernel-duties/orchestration-explained",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/architecture/cross-cutting-kernel-duties/orchestration",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/architecture/cross-cutting-kernel-duties/orchestration",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/architecture/cross-cutting-kernel-duties/performance-explained",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/architecture/cross-cutting-kernel-duties/performance-explained",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/architecture/cross-cutting-kernel-duties/performance",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/architecture/cross-cutting-kernel-duties/performance",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/architecture/cross-cutting-kernel-duties/protocol-versioning-explained",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/architecture/cross-cutting-kernel-duties/protocol-versioning-explained",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/architecture/cross-cutting-kernel-duties/protocol-versioning",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/architecture/cross-cutting-kernel-duties/protocol-versioning",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/architecture/cross-cutting-kernel-duties/security-explained",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/architecture/cross-cutting-kernel-duties/security-explained",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/architecture/cross-cutting-kernel-duties/security",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/architecture/cross-cutting-kernel-duties/security",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/architecture/cross-cutting-kernel-duties/state-sync-explained",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/architecture/cross-cutting-kernel-duties/state-sync-explained",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/architecture/cross-cutting-kernel-duties/state-sync",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/architecture/cross-cutting-kernel-duties/state-sync",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/architecture/cross-cutting-kernel-duties/transaction-explained",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/architecture/cross-cutting-kernel-duties/transaction-explained",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/architecture/cross-cutting-kernel-duties/transaction",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/architecture/cross-cutting-kernel-duties/transaction",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/architecture/index",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/architecture/index",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/architecture/l1-core-protocol",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/architecture/l1-core-protocol",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/architecture/l1-l4-architecture-deep-dive",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/architecture/l1-l4-architecture-deep-dive",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/architecture/l2-coordination-governance",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/architecture/l2-coordination-governance",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/architecture/l3-execution-orchestration",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/architecture/l3-execution-orchestration",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/architecture/l4-integration-infra",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/architecture/l4-integration-infra",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/architecture/schema-conventions",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/architecture/schema-conventions",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/flow-to-duty-matrix",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/flow-to-duty-matrix",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/index",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/index",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/integration/index",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/integration/index",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/integration/integration-spec",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/integration/integration-spec",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/module-to-duty-matrix",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/module-to-duty-matrix",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/modules/collab-module",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/modules/collab-module",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/modules/confirm-module",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/modules/confirm-module",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/modules/context-module",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/modules/context-module",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/modules/core-module",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/modules/core-module",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/modules/dialog-module",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/modules/dialog-module",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/modules/extension-module",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/modules/extension-module",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/modules/module-interactions",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/modules/module-interactions",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/modules/network-module",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/modules/network-module",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/modules/plan-module",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/modules/plan-module",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/modules/role-module",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/modules/role-module",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/modules/trace-module",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/modules/trace-module",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/normative-coverage-report",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/normative-coverage-report",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/observability/common-schemas-reference",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/observability/common-schemas-reference",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/observability/event-taxonomy",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/observability/event-taxonomy",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/observability/module-event-matrix",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/observability/module-event-matrix",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/observability/observability-invariants",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/observability/observability-invariants",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/observability/observability-overview",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/observability/observability-overview",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/observability/physical-schemas-reference",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/observability/physical-schemas-reference",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/observability/runtime-trace-format",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/observability/runtime-trace-format",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/profiles/map-events",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/profiles/map-events",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/profiles/map-profile",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/profiles/map-profile",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/profiles/multi-agent-governance-profile",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/profiles/multi-agent-governance-profile",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/profiles/sa-events",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/profiles/sa-events",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/profiles/sa-profile",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/profiles/sa-profile",
+      "robots": "index,follow",
+      "doc_profile": "normative-frozen",
+      "normativity": "normative",
+      "lifecycle_status": "frozen",
+      "authority": "protocol",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/semantic-alignment-overview",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/semantic-alignment-overview",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/semantic-anchor-registry",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/semantic-anchor-registry",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    },
+    {
+      "path": "/docs/specification/spec-to-eval-matrix",
+      "title": null,
+      "description": null,
+      "canonical": "https://docs.mplp.io/docs/specification/spec-to-eval-matrix",
+      "robots": "index,follow",
+      "doc_profile": "informative",
+      "normativity": "informative",
+      "lifecycle_status": "draft",
+      "authority": "none",
+      "missing_fields": [
+        "description"
+      ]
+    }
+  ]
+}

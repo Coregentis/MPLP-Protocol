@@ -1,0 +1,64 @@
+{
+  "$comment": "MPLP v1.0.0 FROZEN – © 2026 Bangshi Beijing Network Technology Limited Company – Apache-2.0 – Governance: MPGC",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://mplp.dev/schemas/v1.0/events/mplp-runtime-execution-event.schema.json",
+  "title": "MPLP RuntimeExecutionEvent v1.0",
+  "description": "Runtime execution lifecycle events (agents, tools, LLMs, workers)",
+  "allOf": [
+    {
+      "$ref": "mplp-event-core.schema.json"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "event_family": {
+          "const": "runtime_execution",
+          "description": "Must be 'runtime_execution' for this event type"
+        },
+        "execution_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Execution instance identifier"
+        },
+        "executor_kind": {
+          "type": "string",
+          "enum": [
+            "agent",
+            "tool",
+            "llm",
+            "worker",
+            "external"
+          ],
+          "description": "Type of executor performing this execution"
+        },
+        "executor_role": {
+          "type": "string",
+          "description": "Role identifier (e.g., 'planner', 'reviewer', 'curl_executor')"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "running",
+            "completed",
+            "failed",
+            "cancelled"
+          ],
+          "description": "Current execution status"
+        }
+      },
+      "required": [
+        "event_family",
+        "execution_id",
+        "executor_kind",
+        "status"
+      ]
+    }
+  ],
+  "x-mplp-meta": {
+    "protocolVersion": "1.0.0",
+    "frozen": true,
+    "freezeDate": "2025-12-03",
+    "governance": "MPGC"
+  }
+}

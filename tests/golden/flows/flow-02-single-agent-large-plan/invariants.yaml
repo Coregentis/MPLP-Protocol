@@ -1,0 +1,41 @@
+# MPLP Protocol v1.0.0 — Frozen Specification
+# Freeze Date: 2025-12-03
+# Status: FROZEN (no breaking changes permitted)
+# Governance: MPLP Protocol Governance Committee (MPGC)
+# © 2026 Bangshi Beijing Network Technology Limited Company
+# License: Apache-2.0
+# Any normative change requires a new protocol version.
+
+# FLOW-02 Flow-Specific Invariants
+#
+# These invariants supplement the global plan invariants and validate
+# large-scale plan scenarios (20-30 steps).
+
+invariants:
+  # Volumetric requirement: plan must contain at least 20 steps
+  - id: flow02_plan_minimum_steps
+    scope: plan
+    path: steps
+    rule: min-length(20)
+    description: "Plan must contain at least 20 steps to validate large-scale handling"
+
+  # All step IDs must be valid UUID v4
+  - id: flow02_step_ids_are_uuid
+    scope: plan
+    path: steps[*].step_id
+    rule: uuid-v4
+    description: "All step IDs must be valid UUID v4 format"
+
+  # All step descriptions must be non-empty (tests wildcard path expansion at scale)
+  - id: flow02_step_descriptions_non_empty
+    scope: plan
+    path: steps[*].description
+    rule: non-empty-string
+    description: "All step descriptions must be non-empty strings (tests wildcard at scale)"
+
+  # All step statuses must be valid enum values
+  - id: flow02_step_status_valid
+    scope: plan
+    path: steps[*].status
+    rule: enum(pending,active,completed,skipped)
+    description: "All step statuses must be valid protocol values"

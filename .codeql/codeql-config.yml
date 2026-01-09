@@ -1,0 +1,29 @@
+name: "mplp-codeql-config"
+
+# Only scan production source code (not build tools/scripts)
+paths:
+  - "packages/npm/*/src/**"
+  - "packages/sources/*/src/**"
+  - "docs/src/**"
+
+# Exclude build artifacts, generated files, third-party bundles
+paths-ignore:
+  # Build tools and development scripts (not production code)
+  - "scripts/**"
+  
+  # Docusaurus build output
+  - "docs/build/**"
+  - "docs/.docusaurus/**"
+  - "docs/static/**"
+
+  # Test files (not production code)
+  - "**/tests/**"
+  - "**/*.test.ts"
+  - "**/*.test.js"
+
+  # Common generated/dependency directories
+  - "**/node_modules/**"
+  - "**/dist/**"
+  - "**/coverage/**"
+  - "**/.cache/**"
+

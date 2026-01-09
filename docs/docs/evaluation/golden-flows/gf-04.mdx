@@ -1,0 +1,114 @@
+---
+entry_surface: documentation
+doc_type: informative
+normativity: informative
+status: active
+authority: Documentation Governance
+protocol_version: "1.0.0"
+doc_id: "DOC-EVAL-FLOW-04-001"
+
+# UI metadata (non-normative; excluded from protocol semantics)
+title: "FLOW-04: Single Agent with LLM Enrichment"
+sidebar_label: "FLOW-04: LLM Enrichment"
+sidebar_position: 4
+description: "MPLP evaluation scenario: FLOW-04: Single Agent with LLM Enrichment. Reference flow for conformance testing."
+---
+
+# FLOW-04: Single Agent with LLM Enrichment
+
+**Source of Truth:** `tests/golden/flows/flow-04-single-agent-llm-enrichment/`
+
+## Purpose
+
+AEL (Action Execution Loop) integration. Validates LLM-enriched plan generation where steps involve LLM execution.
+
+## Scope
+
+This evaluation scenario validates:
+- **Plan** steps with LLM executor roles via `agent_role`
+- LLM roles combined with tool and agent roles
+- Protocol-level representation of LLM-powered workflows
+- Plan structure validation (not actual LLM execution)
+
+## Non-Goals
+
+This scenario does NOT evaluate:
+- Basic 2-step flows (see FLOW-01)
+- Large plan volumetrics (see FLOW-02)
+- Tool integration only (see FLOW-03)
+- Multi-round approval (see FLOW-05)
+- Actual LLM API calls (outputs are pre-determined)
+
+---
+
+## L2 Modules Exercised
+
+| Module | Role in Flow |
+|:-------|:-------------|
+| **Context** | Establishes problem domain for LLM-powered workflows |
+| **Plan** | Defines steps with LLM executor roles |
+
+---
+
+## Key Protocol Fields
+
+### Plan (LLM Steps)
+- `steps[]`: 6 steps with tool/LLM/agent pattern
+- Each step:
+  - `step_id`: UUID v4
+  - `description`: Task description
+  - `agent_role`: Executor type
+  - `dependencies`: Optional sequencing
+
+### LLM Roles (via agent_role)
+- `agent_role: "llm_claude"` → Claude LLM execution
+- `agent_role: "llm_gpt"` → GPT LLM execution
+- `agent_role: "curl_executor"` → HTTP tool (from FLOW-03)
+- `agent_role: "jq_processor"` → JSON processing
+- `agent_role: "agent"` → Standard agent logic
+
+---
+
+## Integration Dimensions (L3/L4)
+
+### LLM Integration (via Runtime)
+- LLMs are **runtime capabilities**, not L2 protocol constructs
+- `agent_role` provides protocol-level indication of LLM usage
+- Actual LLM invocation happens at L4 (Runtime layer)
+- For golden tests: LLM outputs are **pre-determined**
+
+**FLOW-04 focuses on** protocol-level representation, not actual LLM execution.
+
+---
+
+## Evidence
+
+| Type | Location | Status |
+|:-----|:---------|:-------|
+| **Golden Flow** | `tests/golden/flows/flow-04-single-agent-llm-enrichment/` | ✅ Passed |
+| **Input Fixtures** | `tests/golden/flows/flow-04-single-agent-llm-enrichment/input/` | Available |
+| **Expected Fixtures** | `tests/golden/flows/flow-04-single-agent-llm-enrichment/expected/` | Available |
+
+---
+
+## Expected Behavior
+
+- Plan with 6 steps using Tool → LLM → Agent pattern
+- All `agent_role` values are valid non-empty strings
+- No fictional fields (no `llm_model`, `enrichment_metadata`, etc.)
+- Context remains immutable throughout
+
+---
+
+## Invariants Tested
+
+- All `step_id` values unique UUID v4
+- All `description` fields non-empty
+- All `agent_role` fields non-empty
+- Step status valid enum values
+- Minimum 6 steps in plan
+
+---
+
+**Document Status**: Informative (Evaluation Scenario)  
+**Source of Truth**: `tests/golden/flows/flow-04-single-agent-llm-enrichment/README.md`

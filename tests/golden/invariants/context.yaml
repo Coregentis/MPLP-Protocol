@@ -1,0 +1,27 @@
+# MPLP Protocol v1.0.0 — Frozen Specification
+# Freeze Date: 2025-12-03
+# Status: FROZEN (no breaking changes permitted)
+# Governance: MPLP Protocol Governance Committee (MPGC)
+# © 2026 Bangshi Beijing Network Technology Limited Company
+# License: Apache-2.0
+# Any normative change requires a new protocol version.
+
+- id: context_id_must_be_uuid
+  path: context_id
+  rule: uuid-v4
+  description: "Context ID must be a valid UUID v4"
+
+- id: protocol_version_must_be_1_0
+  path: meta.protocol_version
+  rule: eq("1.0.0")
+  description: "Protocol version must be 1.0.0"
+
+- id: schema_version_must_exist
+  path: meta.schema_version
+  rule: exists
+  description: "Schema version must be present"
+
+- id: root_domain_must_be_non_empty
+  path: root.domain
+  rule: non-empty-string
+  description: "Root domain must be a non-empty string"

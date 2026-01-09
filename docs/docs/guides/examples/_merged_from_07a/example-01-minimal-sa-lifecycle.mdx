@@ -1,0 +1,241 @@
+---
+doc_type: informative
+normativity: informative
+status: active
+authority: Documentation Governance
+title: "Example 01: Minimal SA Lifecycle"
+sidebar_label: "Ex-01: SA Lifecycle"
+sidebar_position: 1
+description: A non-normative example demonstrating a minimal Single-Agent lifecycle.
+keywords: [MPLP, Example, SA Lifecycle, SDK]
+---
+
+
+> ⚠️ **Non-Normative Example**
+>
+> This document is **not part of the MPLP specification**.
+> It demonstrates one possible way to exercise MPLP semantics using an SDK.
+> MPLP does not mandate this implementation.
+
+# Example 01: Minimal SA Lifecycle
+
+## Scope
+
+This example demonstrates:
+- A minimal Single-Agent lifecycle (SA)
+- Emission of Context, Plan, and Trace events
+- Validation against MPLP schemas
+
+## Non-Goals
+
+This example does **not**:
+- Define best practices
+- Recommend an architecture
+- Cover multi-agent coordination
+- Address production deployment
+
+---
+
+## Scenario Outline
+
+This example follows a linear sequence:
+1.  **Context Initialization**: Defining constraints.
+2.  **Plan Creation**: Defining steps.
+3.  **Execution & Tracing**: Recording events.
+
+### 1. Context Initialization
+
+The **Context** defines the project's initial state and constraints.
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs>
+<TabItem value="ts" label="TypeScript">
+
+```typescript
+import { createContext } from '@mplp/sdk-ts';
+
+// This example shows how to initialize a Context with basic constraints
+const context = createContext({
+  source: 'user',
+  initial_objectives: ['Fix the login bug'],
+  constraints: {
+    budget_limit_usd: 10.0,
+    allowed_tools: ['read_file', 'write_file', 'run_tests']
+  }
+});
+
+console.log('Context ID:', context.context_id);
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from mplp import create_context
+
+# This example shows how to initialize a Context with basic constraints
+context = create_context(
+    source="user",
+    initial_objectives=["Fix the login bug"],
+    constraints={
+        "budget_limit_usd": 10.0,
+        "allowed_tools": ["read_file", "write_file", "run_tests"]
+    }
+)
+
+print(f"Context ID: {context.context_id}")
+```
+
+</TabItem>
+</Tabs>
+
+### 2. Plan Creation
+
+The **Plan** breaks down the objective into executable steps.
+
+<Tabs>
+<TabItem value="ts" label="TypeScript">
+
+```typescript
+import { createPlan, addStep } from '@mplp/sdk-ts';
+
+const plan = createPlan({
+  context_id: context.context_id,
+  title: 'Fix Login Bug',
+  status: 'draft'
+});
+
+addStep(plan, {
+  description: 'Read error logs',
+  agent_role: 'debugger',
+  status: 'pending'
+});
+
+addStep(plan, {
+  description: 'Identify root cause',
+  agent_role: 'debugger',
+  dependencies: [plan.steps[0].step_id],
+  status: 'pending'
+});
+
+console.log('Plan ID:', plan.plan_id);
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from mplp import create_plan, add_step
+
+plan = create_plan(
+    context_id=context.context_id,
+    title="Fix Login Bug",
+    status="draft"
+)
+
+add_step(plan, 
+    description="Read error logs",
+    agent_role="debugger",
+    status="pending"
+)
+
+add_step(plan,
+    description="Identify root cause",
+    agent_role="debugger",
+    dependencies=[plan.steps[0].step_id],
+    status="pending"
+)
+
+print(f"Plan ID: {plan.plan_id}")
+```
+
+</TabItem>
+</Tabs>
+
+### 3. Execution and Trace
+
+The **Trace** records the execution history.
+
+<Tabs>
+<TabItem value="ts" label="TypeScript">
+
+```typescript
+import { createTrace, appendSegment } from '@mplp/sdk-ts';
+
+// Create trace linked to context and plan
+const trace = createTrace({
+  context_id: context.context_id,
+  plan_id: plan.plan_id,
+  status: 'running'
+});
+
+// Simulate step execution and record
+const step1 = plan.steps[0];
+step1.status = 'running';
+
+appendSegment(trace, {
+  label: 'Step 1: Read error logs',
+  operation: 'read_file',
+  status: 'completed',
+  attributes: {
+    'mplp.step_id': step1.step_id,
+    'mplp.agent_role': 'debugger',
+    'mplp.duration_ms': 1500
+  }
+});
+
+step1.status = 'completed';
+
+// Complete trace
+trace.status = 'completed';
+console.log('Trace ID:', trace.trace_id);
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from mplp import create_trace, append_segment
+
+# Create trace linked to context and plan
+trace = create_trace(
+    context_id=context.context_id,
+    plan_id=plan.plan_id,
+    status="running"
+)
+
+# Simulate step execution and record
+step1 = plan.steps[0]
+step1.status = "running"
+
+append_segment(trace,
+    label="Step 1: Read error logs",
+    operation="read_file",
+    status="completed",
+    attributes={
+        "mplp.step_id": step1.step_id,
+        "mplp.agent_role": "debugger",
+        "mplp.duration_ms": 1500
+    }
+)
+
+step1.status = "completed"
+
+# Complete trace
+trace.status = "completed"
+print(f"Trace ID: {trace.trace_id}")
+```
+
+</TabItem>
+</Tabs>
+
+## Summary
+
+This example demonstrated:
+- **Context**: Defining initial state.
+- **Plan**: Structuring steps.
+- **Trace**: Recording execution.
+
+For normative validation scenarios, refer to [Golden Flows](/docs/evaluation/golden-flows).

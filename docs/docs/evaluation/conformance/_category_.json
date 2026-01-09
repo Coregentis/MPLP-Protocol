@@ -1,0 +1,10 @@
+{
+  "label": "Conformance",
+  "position": 18,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "evaluation/conformance/index"
+  }
+}

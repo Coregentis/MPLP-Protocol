@@ -1,0 +1,27 @@
+# MPLP Protocol v1.0.0 — Frozen Specification
+# Freeze Date: 2025-12-03
+# Status: FROZEN (no breaking changes permitted)
+# Governance: MPLP Protocol Governance Committee (MPGC)
+# © 2026 Bangshi Beijing Network Technology Limited Company
+# License: Apache-2.0
+# Any normative change requires a new protocol version.
+
+- id: plan_id_must_be_uuid
+  path: plan_id
+  rule: uuid-v4
+  description: "Plan ID must be a valid UUID v4"
+
+- id: plan_context_id_match
+  path: context_id
+  rule: eq(context.context_id)
+  description: "Plan's context_id must match the Context's ID"
+
+- id: step_ids_must_be_uuid
+  path: steps[*].step_id
+  rule: uuid-v4
+  description: "All Step IDs must be valid UUID v4"
+
+- id: step_descriptions_must_be_non_empty
+  path: steps[*].description
+  rule: non-empty-string
+  description: "All Step descriptions must be non-empty strings"

@@ -1,0 +1,141 @@
+{
+    "manifest_version": "1.0.0",
+    "generated_at": "2026-01-04T15:08:00Z",
+    "bundle_hash": "sha256:78ea3511cee7cacebff416b5ad6179358032d5322e5991523b5f8d6257d10354",
+    "summary": {
+        "total_refs": 144,
+        "unique_targets": 17,
+        "external_targets": 10,
+        "internal_defs": 7
+    },
+    "external_targets": {
+        "common/identifiers.schema.json": {
+            "count": 44,
+            "consumers": [
+                "all 10 modules",
+                "common/events",
+                "common/trace-base"
+            ]
+        },
+        "common/events.schema.json": {
+            "count": 21,
+            "consumers": [
+                "all 10 modules"
+            ]
+        },
+        "common/trace-base.schema.json": {
+            "count": 20,
+            "consumers": [
+                "all 10 modules"
+            ]
+        },
+        "common/metadata.schema.json": {
+            "count": 20,
+            "consumers": [
+                "all 10 modules"
+            ]
+        },
+        "common/common-types.schema.json#/definitions/Ref": {
+            "count": 9,
+            "consumers": [
+                "governance.lastConfirmRef in modules"
+            ]
+        },
+        "identifiers.schema.json": {
+            "count": 8,
+            "note": "relative ref within common/",
+            "consumers": [
+                "common/trace-base",
+                "common/events"
+            ]
+        },
+        "mplp-event-core.schema.json": {
+            "count": 3,
+            "consumers": [
+                "events/mplp-graph-update-event",
+                "events/mplp-pipeline-stage-event",
+                "events/mplp-runtime-execution-event"
+            ]
+        },
+        "mplp-learning-sample-core.schema.json": {
+            "count": 2,
+            "consumers": [
+                "learning/mplp-learning-sample-delta",
+                "learning/mplp-learning-sample-intent"
+            ]
+        },
+        "metadata.schema.json": {
+            "count": 1,
+            "note": "relative ref within common/",
+            "consumers": [
+                "common/learning-sample"
+            ]
+        }
+    },
+    "internal_defs": {
+        "#/$defs/trace_segment_core": {
+            "count": 2,
+            "defined_in": "mplp-trace.schema.json"
+        },
+        "#/$defs/plan_step_core": {
+            "count": 2,
+            "defined_in": "mplp-plan.schema.json"
+        },
+        "#/$defs/network_node_core": {
+            "count": 2,
+            "defined_in": "mplp-network.schema.json"
+        },
+        "#/$defs/dialog_message_core": {
+            "count": 2,
+            "defined_in": "mplp-dialog.schema.json"
+        },
+        "#/$defs/core_module_descriptor": {
+            "count": 2,
+            "defined_in": "mplp-core.schema.json"
+        },
+        "#/$defs/confirm_decision_core": {
+            "count": 2,
+            "defined_in": "mplp-confirm.schema.json"
+        },
+        "#/$defs/collab_participant_core": {
+            "count": 2,
+            "defined_in": "mplp-collab.schema.json"
+        },
+        "#/definitions/MplpId": {
+            "count": 1,
+            "defined_in": "common/identifiers.schema.json"
+        }
+    },
+    "closure_graph": {
+        "terminal_schemas": [
+            "common/identifiers.schema.json"
+        ],
+        "base_schemas": [
+            "common/identifiers.schema.json",
+            "common/metadata.schema.json",
+            "common/trace-base.schema.json",
+            "common/events.schema.json",
+            "common/common-types.schema.json",
+            "events/mplp-event-core.schema.json",
+            "learning/mplp-learning-sample-core.schema.json"
+        ],
+        "consumer_schemas": [
+            "mplp-context.schema.json",
+            "mplp-plan.schema.json",
+            "mplp-trace.schema.json",
+            "mplp-confirm.schema.json",
+            "mplp-role.schema.json",
+            "mplp-dialog.schema.json",
+            "mplp-collab.schema.json",
+            "mplp-extension.schema.json",
+            "mplp-network.schema.json",
+            "mplp-core.schema.json"
+        ]
+    },
+    "verification": {
+        "all_refs_resolvable": true,
+        "circular_dependencies": [],
+        "orphan_schemas": [],
+        "verdict": "PASS"
+    }
+}

@@ -1,0 +1,51 @@
+# MPLP Protocol v1.0.0 — Frozen Specification
+# Freeze Date: 2025-12-03
+# Status: FROZEN (no breaking changes permitted)
+# Governance: MPLP Protocol Governance Committee (MPGC)
+# © 2026 Bangshi Beijing Network Technology Limited Company
+# License: Apache-2.0
+# Any normative change requires a new protocol version.
+
+invariants:
+  # Context invariants
+  - id: sa02_context_uuid
+    scope: context
+    path: context_id
+    rule: uuid-v4
+
+  - id: sa02_context_active
+    scope: context
+    path: status
+    rule: enum(active)
+
+  # Plan invariants
+  - id: sa02_plan_uuid
+    scope: plan
+    path: plan_id
+    rule: uuid-v4
+
+  - id: sa02_plan_context_binding
+    scope: plan
+    path: context_id
+    rule: eq(context.context_id)
+
+  - id: sa02_plan_has_multiple_steps
+    scope: plan
+    path: steps
+    rule: min-length(3)
+
+  # Step invariants
+  - id: sa02_step_ids_uuid
+    scope: plan
+    path: steps[*].step_id
+    rule: uuid-v4
+
+  - id: sa02_steps_have_agent_role
+    scope: plan
+    path: steps[*].agent_role
+    rule: non-empty-string
+
+  - id: sa02_steps_have_descriptions
+    scope: plan
+    path: steps[*].description
+    rule: non-empty-string

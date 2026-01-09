@@ -1,0 +1,12 @@
+{
+  "version": "1.0.0",
+  "generated": "2026-01-09T03:57:08.886Z",
+  "fileCount": 760,
+  "totalSizeBytes": 5047514,
+  "totalSizeMB": "4.81",
+  "buildInfo": {
+    "node": "v25.2.1",
+    "platform": "darwin",
+    "arch": "arm64"
+  }
+}

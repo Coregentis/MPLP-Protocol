@@ -1,0 +1,17 @@
+{
+    "meta": {
+        "protocol_version": "1.0.0",
+        "schema_version": "1.0.0",
+        "created_at": "2025-11-29T13:41:06.526000Z"
+    },
+    "trace_id": "83b658e5-dba1-469b-b164-d22b923a5a96",
+    "context_id": "7e196aa8-a1c5-4638-a883-bf839f262507",
+    "plan_id": "1dd75501-77a1-49f1-a1ac-243faedd19a9",
+    "status": "completed",
+    "root_span": {
+        "trace_id": "83b658e5-dba1-469b-b164-d22b923a5a96",
+        "span_id": "4fafcd1d-84e6-43f0-acc7-c13d695b2bb9",
+        "context_id": "7e196aa8-a1c5-4638-a883-bf839f262507"
+    },
+    "events": []
+}

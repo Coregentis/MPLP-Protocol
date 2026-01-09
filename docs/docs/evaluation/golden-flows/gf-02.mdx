@@ -1,0 +1,112 @@
+---
+entry_surface: documentation
+doc_type: informative
+normativity: informative
+status: active
+authority: Documentation Governance
+protocol_version: "1.0.0"
+doc_id: "DOC-EVAL-FLOW-02-001"
+
+# UI metadata (non-normative; excluded from protocol semantics)
+title: "FLOW-02: Single Agent – Large Plan"
+sidebar_label: "FLOW-02: Large Plan"
+sidebar_position: 2
+description: "MPLP evaluation scenario: FLOW-02: Single Agent – Large Plan. Reference flow for conformance testing."
+---
+
+# FLOW-02: Single Agent – Large Plan
+
+**Source of Truth:** `tests/golden/flows/flow-02-single-agent-large-plan/`
+
+## Purpose
+
+Volumetric validation with 20+ steps. Tests protocol handling of large execution plans to validate that the runtime can execute a Plan with many steps while maintaining invariants.
+
+## Scope
+
+This evaluation scenario validates:
+- **Plan** with 20-30 heterogeneous steps
+- **Trace** handling volumetric event streams
+- **Step ordering** preservation (temporal causality)
+- **Performance** stability as step count grows
+
+## Non-Goals
+
+This scenario does NOT evaluate:
+- Minimal 2-step flows (see FLOW-01)
+- Tool integration (see FLOW-03)
+- LLM enrichment (see FLOW-04)
+- Multi-round approval (see FLOW-05)
+
+---
+
+## L2 Modules Exercised
+
+| Module | Role in Flow |
+|:-------|:-------------|
+| **Context** | Frames large-scale refactoring or batch processing scenario |
+| **Plan** | Contains 20-30 heterogeneous steps with dependencies |
+| **Trace** | Handles volumetric event streams efficiently |
+
+---
+
+## Key Protocol Fields
+
+### Plan (Large)
+- `steps[]`: 20-30 steps
+- Each step:
+  - `step_id`: UUID v4
+  - `description`: Non-empty, realistic task descriptions
+  - `status`: "pending" → "in_progress" → "completed"
+  - `dependencies`: Optional array of prior step IDs
+  - `order_index`: Optional integer for explicit ordering
+
+### Trace (Volumetric)
+- `spans[]`: One entry per step (20-30 spans)
+- `events[]`: Step completion events
+- Event ordering must be preserved
+
+---
+
+## Integration Dimensions (L3/L4)
+
+**None.** This flow intentionally excludes:
+- Tool Integration
+- LLM Backend
+- Storage Integration
+
+The isolation ensures any performance or correctness issues are attributable to L2 protocol layer.
+
+---
+
+## Evidence
+
+| Type | Location | Status |
+|:-----|:---------|:-------|
+| **Golden Flow** | `tests/golden/flows/flow-02-single-agent-large-plan/` | ✅ Passed |
+| **Input Fixtures** | `tests/golden/flows/flow-02-single-agent-large-plan/input/` | Available |
+| **Expected Fixtures** | `tests/golden/flows/flow-02-single-agent-large-plan/expected/` | Available |
+
+---
+
+## Expected Behavior
+
+- All 20+ steps complete without error
+- Step ordering is preserved (dependency chains respected)
+- No performance degradation with large plans
+- Trace correctly records all step events
+- Event ordering maintained (temporal causality)
+
+---
+
+## Invariants Tested
+
+- Plan structure handles 20+ steps without schema violations
+- All `step_id` values unique UUID v4
+- Dependency chains are acyclic and resolvable
+- Trace event count matches step count
+
+---
+
+**Document Status**: Informative (Evaluation Scenario)  
+**Source of Truth**: `tests/golden/flows/flow-02-single-agent-large-plan/README.md`

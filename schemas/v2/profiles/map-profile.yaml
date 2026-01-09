@@ -1,0 +1,123 @@
+# MPLP Protocol v1.0.0 – Frozen Specification
+# Freeze Date: 2025-12-03
+# Status: FROZEN (no breaking changes permitted)
+# Governance: MPLP Protocol Governance Committee (MPGC)
+# © 2026 Bangshi (Beijing) Network Technology Co., Ltd.
+# License: Apache-2.0
+# Any normative change requires a new protocol version.
+
+# MAP Profile Definition - Based on actual schema implementations
+# Truth Sources:
+#   - schemas/v2/events/mplp-map-event.schema.json
+#   - schemas/v2/invariants/map-invariants.yaml
+#   - schemas/v2/mplp-collab.schema.json
+
+map_profile:
+  version: "1.0.0"
+  profile_id: "mplp:profile:map:1.0.0"
+  title: "MPLP Multi-Agent Profile v1.0"
+  description: "Collaboration profile extending SA for multi-agent workflows"
+
+  # MAP extends SA Profile
+  extends: "mplp:profile:sa:1.0.0"
+
+  # Additional required modules (beyond SA modules)
+  additional_modules:
+    - module: collab
+      schema_ref: "schemas/v2/mplp-collab.schema.json"
+      usage: "Session structure, mode selection, participant management"
+    - module: dialog
+      schema_ref: "schemas/v2/mplp-dialog.schema.json"
+      usage: "Inter-agent communication"
+    - module: network
+      schema_ref: "schemas/v2/mplp-network.schema.json"
+      usage: "Agent topology and routing"
+
+  # Collab.mode enum values (from mplp-collab.schema.json)
+  coordination_modes:
+    - broadcast
+    - round_robin
+    - orchestrated
+    - swarm
+    - pair
+
+  # MAP lifecycle events (from mplp-map-event.schema.json)
+  event_types:
+    mandatory:
+      - MAPSessionStarted
+      - MAPRolesAssigned
+      - MAPTurnDispatched
+      - MAPTurnCompleted
+      - MAPSessionCompleted
+    recommended:
+      - MAPBroadcastSent
+      - MAPBroadcastReceived
+      - MAPConflictDetected
+      - MAPConflictResolved
+
+  # Event schema reference
+  events_schema: "schemas/v2/events/mplp-map-event.schema.json"
+
+  # Invariants (from map-invariants.yaml)
+  invariants:
+    ref: "schemas/v2/invariants/map-invariants.yaml"
+    count: 9
+    summary:
+      # Session structure (aligned with schema)
+      - map_session_requires_participants: "participants.length >= 1 (per schema minItems)"
+      - map_collab_mode_valid: "mode must be valid enum value"
+      - map_session_id_is_uuid: "collab_id must be UUID v4"
+      - map_participants_have_role_ids: "All participants must have role_id"
+      # Event consistency
+      - map_turn_completion_matches_dispatch: "Every dispatch must have completion"
+      - map_broadcast_has_receivers: "Every broadcast must have receivers"
+      # Role binding (aligned with schema)
+      - map_role_ids_non_empty: "role_id must be non-empty string if present"
+      - map_participant_ids_are_non_empty: "participant_id must be non-empty"
+      - map_participant_kind_valid: "kind must be agent|human|system|external"
+
+  # Event required fields (from schema)
+  event_required_fields:
+    all_events:
+      - event_id: "uuid"
+      - event_type: "enum"
+      - timestamp: "date-time"
+      - session_id: "uuid"
+    optional:
+      - initiator_role: "string"
+      - target_roles: "array[string]"
+      - payload: "object"
+
+  # Participant.kind enum (from mplp-collab.schema.json)
+  participant_kinds:
+    - agent
+    - human
+    - system
+    - external
+
+  # MAP session lifecycle
+  lifecycle:
+    phases:
+      - id: initialize
+        event: MAPSessionStarted
+        description: "Collab session created with mode and participants"
+      - id: assign_roles
+        event: MAPRolesAssigned
+        description: "Participant-role bindings established"
+      - id: dispatch_turns
+        events: [MAPTurnDispatched, MAPTurnCompleted]
+        description: "Turn-based execution loop"
+      - id: broadcast
+        events: [MAPBroadcastSent, MAPBroadcastReceived]
+        description: "Fan-out/fan-in communication (optional)"
+      - id: resolve_conflicts
+        events: [MAPConflictDetected, MAPConflictResolved]
+        description: "Concurrent modification resolution (optional)"
+      - id: complete
+        event: MAPSessionCompleted
+        description: "Session terminated with final status"
+
+  # Relationship to SA
+  relationship:
+    extends: "mplp:profile:sa:1.0.0"
+    note: "MAP inherits all SA modules and adds Collab, Dialog, Network"

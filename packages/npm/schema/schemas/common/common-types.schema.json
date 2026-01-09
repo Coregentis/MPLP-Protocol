@@ -1,0 +1,49 @@
+{
+  "$comment": "MPLP Protocol v1.0.0 — Frozen Specification\nFreeze Date: 2025-12-03\nStatus: FROZEN (no breaking changes permitted)\nGovernance: MPLP Protocol Governance Committee (MPGC)\nCopyright: © 2026 Bangshi Beijing Network Technology Limited Company\nLicense: Apache-2.0\nAny normative change requires a new protocol version.",
+  "$id": "https://schemas.mplp.dev/v1.0/common/common-types.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MPLP Common Types",
+  "description": "Common type definitions used across MPLP modules to ensure consistency and reduce duplication.",
+  "definitions": {
+    "MplpId": {
+      "$ref": "identifiers.schema.json"
+    },
+    "Ref": {
+      "type": "object",
+      "description": "A standard reference to another MPLP object.",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/MplpId"
+        },
+        "module": {
+          "type": "string",
+          "enum": [
+            "context",
+            "plan",
+            "confirm",
+            "trace",
+            "role",
+            "extension",
+            "dialog",
+            "collab",
+            "core",
+            "network"
+          ],
+          "description": "The module name of the referenced object."
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional description of the reference relationship."
+        }
+      },
+      "required": [
+        "id",
+        "module"
+      ],
+      "additionalProperties": false
+    },
+    "BaseMeta": {
+      "$ref": "metadata.schema.json"
+    }
+  }
+}

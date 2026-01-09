@@ -1,0 +1,123 @@
+---
+sidebar_position: 0
+doc_type: informative
+normativity: informative
+status: active
+authority: Documentation Governance
+description: "Defines what MPLP adoption means and the adoption lifecycle stages."
+title: Adoption
+keywords: [MPLP, Adoption, Lifecycle, Signals, Evaluation]
+sidebar_label: Adoption
+canonical: /docs/guides/adoption
+---
+
+:::note[Informative]
+**Status**: Informative • **Authority**: Documentation Governance
+
+This document mirrors the protocol definition for reference only.
+**Scope**: Inherited (from /docs/guides/adoption/)
+:::
+
+# Adoption
+
+
+## 1. What Adoption Means
+
+Adoption is NOT:
+- A certification
+- A badge or endorsement
+- A binary "installed / not installed" state
+
+Adoption IS:
+- A **lifecycle** with distinct stages
+- A **signal-based** recognition
+- A **self-declared** state (no external authority)
+
+## 2. Adoption Lifecycle
+
+MPLP adoption follows a three-stage lifecycle:
+
+```
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│  EVALUATION │ ──► │    PILOT    │ ──► │ PRODUCTION  │
+└─────────────┘     └─────────────┘     └─────────────┘
+```
+
+### 2.1 Evaluation Stage
+
+| Aspect | Description |
+|:---|:---|
+| **Goal** | Understand if MPLP fits the use case |
+| **Activities** | Read docs, run Golden Flows, validate schemas |
+| **Signals** | SDK installed, test fixtures run |
+| **Evidence** | None required (no production data) |
+
+### 2.2 Pilot Stage
+
+| Aspect | Description |
+|:---|:---|
+| **Goal** | Validate MPLP in a controlled environment |
+| **Activities** | Integration with real agent, limited scope |
+| **Signals** | Evidence Pack generated, Conformance evaluated |
+| **Evidence** | Pilot-scoped Context, Plan, Trace |
+
+### 2.3 Production Stage
+
+| Aspect | Description |
+|:---|:---|
+| **Goal** | Full operational use of MPLP |
+| **Activities** | Agent system in production with MPLP governance |
+| **Signals** | Ongoing evidence production, audit readiness |
+| **Evidence** | Full production Evidence Packs |
+
+## 3. Adoption vs. Related Concepts
+
+| Concept | Question | Location |
+|:---|:---|:---|
+| **Adoption** | Is this system using MPLP? | `/docs/guides/adoption` |
+| **Conformance** | Does this system match the spec? | `/docs/evaluation/conformance` |
+| **Enterprise** | Is organizational accountability required? | `/docs/guides/enterprise` |
+| **Implementation** | How do I build with MPLP? | `/docs/guides` |
+
+## 4. Adoption Signals
+
+See [Adoption Signals](./adoption-signals.md) for the signal definitions.
+
+Key signals include:
+- **SDK Installation** — First contact
+- **Golden Flow Execution** — Technical validation
+- **Evidence Pack Generation** — Pilot readiness
+- **Conformance Evaluation** — Production readiness
+
+## 5. What This Section Provides
+
+| Document | Purpose |
+|:---|:---|
+| [This Index](./index.mdx) | Defines Adoption semantics + lifecycle |
+| [Adoption Signals](./adoption-signals.md) | Signal definitions |
+| [Non-Goals](./non-goals.md) | What MPLP does NOT provide for adoption |
+
+## 6. What This Section Does NOT Provide
+
+| We Do NOT Provide | Reason |
+|:---|:---|
+| **Adoption certification** | Self-declared, no authority |
+| **Adoption badges** | No endorsement |
+| **Adoption tracking** | External to protocol |
+| **Adoption metrics** | Implementation-specific |
+| **Adoption support tiers** | Commercial realm |
+
+See [Non-Goals](./non-goals.md) for full details.
+
+## 7. Related Documentation
+
+- [Conformance & Evaluation](/docs/evaluation/conformance) — Technical conformance
+- [Enterprise Context](/docs/guides/enterprise) — Organizational constraints
+- [Quickstart Guide](/docs/guides/evaluation-guide) — How to start
+
+---
+
+**Document Status**: Informative (Adoption Definition)  
+**Key Insight**: Adoption = Lifecycle state, not certification  
+**Lifecycle**: Evaluation → Pilot → Production  
+**Distinction**: Adoption ≠ Conformance

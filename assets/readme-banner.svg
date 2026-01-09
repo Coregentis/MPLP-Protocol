@@ -1,0 +1,54 @@
+<svg width="1200" height="320" viewBox="0 0 1200 320" xmlns="http://www.w3.org/2000/svg"
+     role="img" aria-labelledby="banner-title banner-desc">
+  <title id="banner-title">MPLP — The Agent OS Protocol</title>
+  <desc id="banner-desc">Official banner for the Multi-Agent Lifecycle Protocol (MPLP). MPLP is the world's first open, vendor-neutral Agent OS Layer Protocol defining how AI agents live, coordinate, remain governed, and stay observable across all frameworks, runtimes, tools, and vendors.</desc>
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>MPLP — The Agent OS Protocol Banner</dc:title>
+        <dc:description>Official GitHub README banner for the Multi-Agent Lifecycle Protocol. The Lifecycle Protocol for AI Agents. Observable. Governed. Vendor-neutral.</dc:description>
+        <dc:creator>Bangshi Beijing Network Technology Limited Company</dc:creator>
+        <dc:rights>Copyright 2025 Bangshi Beijing Network Technology Limited Company. Apache-2.0 License.</dc:rights>
+        <dc:subject>MPLP, Agent OS, Multi-Agent Protocol, AI Agents, Lifecycle Protocol, Governance, Observability</dc:subject>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+
+  <defs>
+    <style>
+      .title {
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 52px;
+        font-weight: 700;
+        fill: #1A73E8;
+      }
+      .subtitle {
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 28px;
+        font-weight: 500;
+        fill: #1A73E8;
+      }
+      .tagline {
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 22px;
+        font-weight: 400;
+        fill: #444444;
+      }
+      .accent {
+        fill: #1A73E8;
+      }
+    </style>
+  </defs>
+
+  <!-- Transparent Background -->
+  <rect x="0" y="0" width="1200" height="320" fill="none"/>
+
+  <!-- Vertical Accent Bar -->
+  <rect x="80" y="40" width="10" height="240" rx="4" class="accent" />
+
+  <!-- Text -->
+  <text x="120" y="120" class="title">MPLP — The Agent OS Protocol</text>
+  <text x="120" y="170" class="subtitle">The Lifecycle Protocol for AI Agents</text>
+  <text x="120" y="215" class="tagline">Observable. Governed. Vendor-neutral.</text>
+</svg>

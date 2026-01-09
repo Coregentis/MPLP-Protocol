@@ -1,0 +1,27 @@
+{
+    "meta": {
+        "protocol_version": "1.0.0",
+        "schema_version": "1.0.0",
+        "created_at": "2025-01-01T00:00:00.000Z"
+    },
+    "plan_id": "550e8400-e29b-41d4-a716-446655440000",
+    "context_id": "550e8400-e29b-41d4-a716-446655440001",
+    "title": "Test Plan",
+    "objective": "Validate consumer-level events reference chain",
+    "status": "draft",
+    "steps": [
+        {
+            "step_id": "550e8400-e29b-41d4-a716-446655440300",
+            "description": "Test step for validation",
+            "status": "pending"
+        }
+    ],
+    "events": [
+        {
+            "event_id": "550e8400-e29b-41d4-a716-446655440200",
+            "event_type": "plan.created",
+            "source": "plan",
+            "timestamp": "2025-01-01T00:00:00.000Z"
+        }
+    ]
+}

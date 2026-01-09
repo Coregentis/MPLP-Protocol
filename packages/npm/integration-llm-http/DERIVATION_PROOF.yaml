@@ -1,0 +1,33 @@
+# DERIVATION_PROOF.yaml
+# Reference: METHOD-SDKR-02 / METHOD-SDKR-08
+
+protocol_version: "1.0.0"
+
+schema_bundle:
+  path: "schemas/v2"
+  
+evidence_baseline:
+  reference: "governance/04-records/baselines/FREEZE_EVIDENCE_BASELINE_v1.0.md"
+  version: "v1.0"
+  digest: "sha256:78ea3511cee7cacebff416b5ad6179358032d5322e5991523b5f8d6257d10354"
+
+derivation:
+  method: "source_derivation"
+  description: "TypeScript SDK package derived from MPLP Truth Sources"
+  truth_sources:
+    - "schemas/v2/*.schema.json"
+    - "governance/01-core/MPLP_CONSTITUTION.md"
+
+package:
+  name: "@mplp/integration-llm-http"
+  ecosystem: "npm"
+  version: "1.0.5"
+  category: "PUBLIC"
+
+verification:
+  protocol_conformance: "VERIFIED"
+  evidence_baseline_aligned: true
+
+governance:
+  method: "METHOD-SDKR-08"
+  frozen: true

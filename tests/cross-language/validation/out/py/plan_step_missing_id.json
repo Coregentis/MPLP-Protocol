@@ -1,0 +1,25 @@
+{
+  "ok": false,
+  "errors": [
+    {
+      "path": "plan_id",
+      "code": "uuid_version",
+      "message": "UUID version 4 expected"
+    },
+    {
+      "path": "context_id",
+      "code": "uuid_version",
+      "message": "UUID version 4 expected"
+    },
+    {
+      "path": "objective",
+      "code": "required",
+      "message": "Field required"
+    },
+    {
+      "path": "steps.0.step_id",
+      "code": "required",
+      "message": "Field required"
+    }
+  ]
+}

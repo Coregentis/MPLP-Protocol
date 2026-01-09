@@ -1,0 +1,139 @@
+{
+  "meta": {
+    "protocol_version": "1.0.0",
+    "schema_version": "1.0.0",
+    "created_at": "2025-11-29T10:05:00.000Z"
+  },
+  "plan_id": "550e8400-e29b-41d4-a716-446655440201",
+  "context_id": "550e8400-e29b-41d4-a716-446655440200",
+  "title": "OAuth 2.0 + JWT Migration Plan",
+  "objective": "Migrate authentication from sessions to OAuth 2.0 with JWT tokens",
+  "status": "draft",
+  "steps": [
+    {
+      "step_id": "550e8400-e29b-41d4-a716-446655440210",
+      "description": "Analyze session architecture and dependencies",
+      "status": "pending"
+    },
+    {
+      "step_id": "550e8400-e29b-41d4-a716-446655440211",
+      "description": "Design JWT token schema and signing algorithm",
+      "status": "pending"
+    },
+    {
+      "step_id": "550e8400-e29b-41d4-a716-446655440212",
+      "description": "Create OAuth database tables and migrations",
+      "status": "pending"
+    },
+    {
+      "step_id": "550e8400-e29b-41d4-a716-446655440213",
+      "description": "Implement JWT token generation service",
+      "status": "pending"
+    },
+    {
+      "step_id": "550e8400-e29b-41d4-a716-446655440214",
+      "description": "Build token refresh endpoint",
+      "status": "pending"
+    },
+    {
+      "step_id": "550e8400-e29b-41d4-a716-446655440215",
+      "description": "Implement OAuth authorization endpoint",
+      "status": "pending"
+    },
+    {
+      "step_id": "550e8400-e29b-41d4-a716-446655440216",
+      "description": "Create JWT validation middleware",
+      "status": "pending"
+    },
+    {
+      "step_id": "550e8400-e29b-41d4-a716-446655440217",
+      "description": "Update login endpoint for JWT tokens",
+      "status": "pending"
+    },
+    {
+      "step_id": "550e8400-e29b-41d4-a716-446655440218",
+      "description": "Implement token revocation mechanism",
+      "status": "pending"
+    },
+    {
+      "step_id": "550e8400-e29b-41d4-a716-446655440219",
+      "description": "Add RBAC claims to JWT",
+      "status": "pending"
+    },
+    {
+      "step_id": "550e8400-e29b-41d4-a716-446655440220",
+      "description": "Update all protected routes",
+      "status": "pending"
+    },
+    {
+      "step_id": "550e8400-e29b-41d4-a716-446655440221",
+      "description": "Implement key rotation service",
+      "status": "pending"
+    },
+    {
+      "step_id": "550e8400-e29b-41d4-a716-446655440222",
+      "description": "Add token expiration monitoring",
+      "status": "pending"
+    },
+    {
+      "step_id": "550e8400-e29b-41d4-a716-446655440223",
+      "description": "Create frontend migration guide",
+      "status": "pending"
+    },
+    {
+      "step_id": "550e8400-e29b-41d4-a716-446655440224",
+      "description": "Build backward compatibility layer",
+      "status": "pending"
+    },
+    {
+      "step_id": "550e8400-e29b-41d4-a716-446655440225",
+      "description": "Write comprehensive unit tests",
+      "status": "pending"
+    },
+    {
+      "step_id": "550e8400-e29b-41d4-a716-446655440226",
+      "description": "Create integration test suite",
+      "status": "pending"
+    },
+    {
+      "step_id": "550e8400-e29b-41d4-a716-446655440227",
+      "description": "Perform security audit",
+      "status": "pending"
+    },
+    {
+      "step_id": "550e8400-e29b-41d4-a716-446655440228",
+      "description": "Update API documentation",
+      "status": "pending"
+    },
+    {
+      "step_id": "550e8400-e29b-41d4-a716-446655440229",
+      "description": "Deploy to staging environment",
+      "status": "pending"
+    },
+    {
+      "step_id": "550e8400-e29b-41d4-a716-446655440230",
+      "description": "Conduct load testing",
+      "status": "pending"
+    },
+    {
+      "step_id": "550e8400-e29b-41d4-a716-446655440231",
+      "description": "Configure production environment",
+      "status": "pending"
+    },
+    {
+      "step_id": "550e8400-e29b-41d4-a716-446655440232",
+      "description": "Document rollback procedure",
+      "status": "pending"
+    },
+    {
+      "step_id": "550e8400-e29b-41d4-a716-446655440233",
+      "description": "Execute canary deployment",
+      "status": "pending"
+    },
+    {
+      "step_id": "550e8400-e29b-41d4-a716-446655440234",
+      "description": "Complete full production rollout",
+      "status": "pending"
+    }
+  ]
+}

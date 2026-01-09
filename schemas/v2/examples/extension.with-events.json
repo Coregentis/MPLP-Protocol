@@ -1,0 +1,21 @@
+{
+    "meta": {
+        "protocol_version": "1.0.0",
+        "schema_version": "1.0.0",
+        "created_at": "2025-01-01T00:00:00.000Z"
+    },
+    "extension_id": "550e8400-e29b-41d4-a716-446655440000",
+    "context_id": "550e8400-e29b-41d4-a716-446655440001",
+    "name": "Test Extension",
+    "extension_type": "capability",
+    "version": "1.0.0",
+    "status": "registered",
+    "events": [
+        {
+            "event_id": "550e8400-e29b-41d4-a716-446655440200",
+            "event_type": "extension.registered",
+            "source": "extension",
+            "timestamp": "2025-01-01T00:00:00.000Z"
+        }
+    ]
+}

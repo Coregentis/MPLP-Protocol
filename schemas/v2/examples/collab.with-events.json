@@ -1,0 +1,28 @@
+{
+    "meta": {
+        "protocol_version": "1.0.0",
+        "schema_version": "1.0.0",
+        "created_at": "2025-01-01T00:00:00.000Z"
+    },
+    "collab_id": "550e8400-e29b-41d4-a716-446655440000",
+    "context_id": "550e8400-e29b-41d4-a716-446655440001",
+    "title": "Test Collaboration",
+    "purpose": "Consumer-level events validation",
+    "mode": "broadcast",
+    "status": "draft",
+    "participants": [
+        {
+            "participant_id": "agent_001",
+            "kind": "agent"
+        }
+    ],
+    "created_at": "2025-01-01T00:00:00.000Z",
+    "events": [
+        {
+            "event_id": "550e8400-e29b-41d4-a716-446655440200",
+            "event_type": "collab.started",
+            "source": "collab",
+            "timestamp": "2025-01-01T00:00:00.000Z"
+        }
+    ]
+}

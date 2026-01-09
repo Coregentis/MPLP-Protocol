@@ -1,0 +1,20 @@
+{
+  "$comment": "MPLP v1.0.0 – Normative Example – Minimal Valid Plan (AUTO-GENERATED)",
+  "meta": {
+    "protocol_version": "1.0.0",
+    "schema_version": "1.0.0",
+    "created_at": "2025-01-01T00:00:00.000Z"
+  },
+  "plan_id": "550e8400-e29b-41d4-a716-446655440000",
+  "context_id": "550e8400-e29b-41d4-a716-446655440000",
+  "title": "title_value",
+  "objective": "objective_value",
+  "status": "draft",
+  "steps": [
+    {
+      "step_id": "550e8400-e29b-41d4-a716-446655440000",
+      "description": "description_value",
+      "status": "pending"
+    }
+  ]
+}

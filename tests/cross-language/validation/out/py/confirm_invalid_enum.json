@@ -1,0 +1,20 @@
+{
+  "ok": false,
+  "errors": [
+    {
+      "path": "confirm_id",
+      "code": "uuid_version",
+      "message": "UUID version 4 expected"
+    },
+    {
+      "path": "target_id",
+      "code": "uuid_version",
+      "message": "UUID version 4 expected"
+    },
+    {
+      "path": "status",
+      "code": "enum",
+      "message": "Input should be 'pending', 'approved' or 'rejected'"
+    }
+  ]
+}

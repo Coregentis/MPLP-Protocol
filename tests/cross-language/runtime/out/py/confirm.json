@@ -1,0 +1,13 @@
+{
+    "meta": {
+        "protocol_version": "1.0.0",
+        "schema_version": "1.0.0",
+        "created_at": "2025-11-29T13:41:06.525000Z"
+    },
+    "confirm_id": "1a623c83-a7a4-4e50-941c-04efb725f180",
+    "target_id": "1dd75501-77a1-49f1-a1ac-243faedd19a9",
+    "target_type": "plan",
+    "status": "approved",
+    "requested_by_role": "system",
+    "requested_at": "2025-11-29T13:41:06.525000Z"
+}
