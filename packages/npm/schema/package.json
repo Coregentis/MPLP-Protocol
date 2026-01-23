@@ -1,0 +1,59 @@
+{
+  "name": "@mplp/schema",
+  "version": "1.0.5",
+  "description": "MPLP Protocol v1.0 JSON Schemas - All protocol schema definitions",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Coregentis/MPLP-Protocol.git"
+  },
+  "keywords": [
+    "mplp",
+    "schema",
+    "json-schema",
+    "protocol",
+    "validation",
+    "multi-agent",
+    "lifecycle",
+    "agent-os",
+    "agent-os-protocol"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "schemas"
+  ],
+  "dependencies": {
+    "ajv": "^8.12.0",
+    "ajv-formats": "^2.1.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "author": "Bangshi Beijing Network Technology Limited Company",
+  "copyright": "© 2026 Bangshi Beijing Network Technology Limited Company",
+  "mplp": {
+    "protocolVersion": "1.0.0",
+    "frozen": true,
+    "governance": "MPGC"
+  },
+  "homepage": "https://www.mplp.io",
+  "bugs": {
+    "url": "https://github.com/Coregentis/MPLP-Protocol/issues"
+  },
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  }
+}

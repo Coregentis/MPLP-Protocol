@@ -1,0 +1,64 @@
+# MPLP v1.0.0 FROZEN – Invariant Set
+# © 2026 Bangshi Beijing Network Technology Limited Company – Apache-2.0
+# Governance: MPLP Protocol Governance Committee (MPGC)
+
+# MPLP Protocol 1.0.0 — Frozen Specification
+# Status: Frozen as of 2025-11-30
+# Copyright: © 2026 Bangshi Beijing Network Technology Limited Company
+# License: Apache-2.0 (see LICENSE at repository root)
+# Any normative change requires a new protocol version.
+
+invariants:
+  - id: sa_requires_context
+    scope: context
+    path: context_id
+    rule: uuid-v4
+    description: "SA execution requires a valid Context with UUID v4 identifier"
+
+  - id: sa_context_must_be_active
+    scope: context
+    path: status
+    rule: enum(active)
+    description: "SA can only execute when Context status is 'active'"
+
+  - id: sa_plan_context_binding
+    scope: plan
+    path: context_id
+    rule: eq(context.context_id)
+    description: "Plan's context_id must match SA's loaded Context"
+
+  - id: sa_plan_has_steps
+    scope: plan
+    path: steps
+    rule: min-length(1)
+    description: "Plan must contain at least one executable step"
+
+  - id: sa_steps_have_valid_ids
+    scope: plan
+    path: steps[*].step_id
+    rule: uuid-v4
+    description: "All plan steps must have valid UUID v4 identifiers"
+
+  - id: sa_steps_have_agent_role
+    scope: plan
+    path: steps[*].agent_role
+    rule: non-empty-string
+    description: "All steps must specify an agent_role for executor selection"
+
+  - id: sa_trace_not_empty
+    scope: trace
+    path: events
+    rule: min-length(1)
+    description: "SA must emit at least one trace event before completion"
+
+  - id: sa_trace_context_binding
+    scope: trace
+    path: context_id
+    rule: eq(context.context_id)
+    description: "Trace context_id must match SA's Context"
+
+  - id: sa_trace_plan_binding
+    scope: trace
+    path: plan_id
+    rule: eq(plan.plan_id)
+    description: "Trace plan_id must match SA's Plan"

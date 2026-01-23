@@ -1,0 +1,65 @@
+{
+  "meta": {
+    "protocol_version": "1.0.0",
+    "schema_version": "1.0.0",
+    "created_at": "2025-12-01T10:00:00.000Z"
+  },
+  "plan_id": "550e8400-e29b-41d4-a716-446655440401",
+  "context_id": "550e8400-e29b-41d4-a716-446655440400",
+  "title": "Article Processing with LLM",
+  "objective": "Fetch, summarize, and reformat article using LLM",
+  "status": "draft",
+  "steps": [
+    {
+      "step_id": "550e8400-e29b-41d4-a716-446655440410",
+      "description": "Fetch article via HTTP",
+      "status": "pending",
+      "agent_role": "curl_executor"
+    },
+    {
+      "step_id": "550e8400-e29b-41d4-a716-446655440411",
+      "description": "Parse article JSON",
+      "status": "pending",
+      "agent_role": "jq_processor",
+      "dependencies": [
+        "550e8400-e29b-41d4-a716-446655440410"
+      ]
+    },
+    {
+      "step_id": "550e8400-e29b-41d4-a716-446655440412",
+      "description": "Summarize article using LLM",
+      "status": "pending",
+      "agent_role": "llm_claude",
+      "dependencies": [
+        "550e8400-e29b-41d4-a716-446655440411"
+      ]
+    },
+    {
+      "step_id": "550e8400-e29b-41d4-a716-446655440413",
+      "description": "Validate summary format",
+      "status": "pending",
+      "agent_role": "agent",
+      "dependencies": [
+        "550e8400-e29b-41d4-a716-446655440412"
+      ]
+    },
+    {
+      "step_id": "550e8400-e29b-41d4-a716-446655440414",
+      "description": "Rewrite summary into bullet points using LLM",
+      "status": "pending",
+      "agent_role": "llm_gpt",
+      "dependencies": [
+        "550e8400-e29b-41d4-a716-446655440413"
+      ]
+    },
+    {
+      "step_id": "550e8400-e29b-41d4-a716-446655440415",
+      "description": "Final quality check and prepare report",
+      "status": "pending",
+      "agent_role": "agent",
+      "dependencies": [
+        "550e8400-e29b-41d4-a716-446655440414"
+      ]
+    }
+  ]
+}

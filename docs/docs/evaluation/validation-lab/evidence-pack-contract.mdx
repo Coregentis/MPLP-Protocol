@@ -1,0 +1,85 @@
+---
+sidebar_position: 4
+entry_surface: documentation
+doc_type: informative
+normativity: informative
+status: draft
+authority: none
+protocol_version: "1.0.0"
+doc_id: "DOC-EVAL-VLAB-PACK-001"
+
+# UI metadata (non-normative)
+title: Evidence Pack Contract
+sidebar_label: Evidence Pack
+description: "Structure and requirements for evidence packs submitted to the Validation Lab."
+keywords: [Evidence Pack, Contract, MPLP, Validation Lab, Manifest]
+---
+
+# Evidence Pack Contract
+
+> [!IMPORTANT]
+> **Non-Normative Document**
+>
+> This document is informative only.
+
+> **SSOT**: [`Validation_Lab/governance/contracts/`](https://github.com/Coregentis/MPLP-Validation-Lab/tree/main/governance/contracts)  
+> This page is a Reference projection. Authority resides in the Validation Lab repository.
+
+## What is an Evidence Pack?
+
+An **Evidence Pack** is the input to the Validation Lab's adjudication engine. It contains all artifacts, timeline events, and metadata required for the Lab to evaluate your implementation against Lifecycle Guarantees.
+
+:::warning No Execution Hosting
+The Lab does not run your code or accept uploads for execution. You generate evidence packs **locally** in your own environment, then the Lab evaluates the pack against versioned rulesets.
+:::
+
+## Pack Structure
+
+A valid evidence pack typically includes:
+
+| Component | Purpose |
+|:---|:---|
+| `manifest.json` | Pack metadata, version, and integrity checksums |
+| `artifacts/` | Context, Plan, Trace, and other module outputs |
+| `timeline/` | Event logs (e.g., `events.ndjson`) |
+| `snapshots/` | State snapshots for diff-based evaluation |
+| `integrity/` | Checksums and hash files |
+
+:::info Non-Normative Note
+The exact structure and required fields depend on the **pack format version** (e.g., `pack-v0.2`, `pack-v0.4`). See the [SSOT contract documents](https://github.com/Coregentis/MPLP-Validation-Lab/tree/main/governance/contracts) for authoritative field definitions.
+:::
+
+## Pack Versioning
+
+Evidence packs use the `pack-v*` prefix for format versioning:
+
+| Version | Description |
+|:---|:---|
+| `pack-v0.2~v0.4` | Current active formats |
+
+Each ruleset declares which pack versions it is compatible with.
+
+## Portability & Recheck
+
+Evidence packs are designed to be:
+
+- **Portable** — Can be exported and reviewed outside the Lab
+- **Recheckable** — Same pack re-evaluated yields same verdict
+- **Auditable** — All evidence pointers are resolvable
+
+## Export Contract
+
+The Lab provides an export contract for curated runs:
+
+| Export | Format | Purpose |
+|:---|:---|:---|
+| `curated-runs.json` | JSON | Consumer export for downstream systems |
+
+See [SSOT: `export/curated-runs.json`](https://github.com/Coregentis/MPLP-Validation-Lab/blob/main/export/curated-runs.json) for the authoritative schema.
+
+## Related Resources
+
+- [Validation Lab Overview](./) — Four Boundaries & terminology
+- [Lifecycle Guarantees](./lifecycle-guarantees.mdx) — LG-01~05 definitions
+- [Ruleset Reference](./rulesets.mdx) — Ruleset versioning
+- [Lab Site: Contract Policy](https://lab.mplp.io/policies/contract) — Live contract reference

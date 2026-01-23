@@ -1,0 +1,193 @@
+{
+  "$comment": "MPLP Protocol v1.0.0 — Frozen Specification\nFreeze Date: 2025-12-03\nStatus: FROZEN (no breaking changes permitted)\nGovernance: MPLP Protocol Governance Committee (MPGC)\nCopyright: © 2026 Bangshi Beijing Network Technology Limited Company\nLicense: Apache-2.0\nAny normative change requires a new protocol version.",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.mplp.dev/v1.0/mplp-plan.schema.json",
+  "title": "MPLP Plan Module – Core Protocol v1.0",
+  "description": "Plan Module Core Protocol: Describes the plan objects and their lifecycle minimal required semantics (Core Profile) in multi-agent collaboration.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "meta": {
+      "$ref": "common/metadata.schema.json",
+      "description": "[PROTOCOL-CORE] MPLP protocol schema metadata (version, source, cross-cutting tags, etc.)."
+    },
+    "plan_id": {
+      "$ref": "common/identifiers.schema.json",
+      "description": "[PROTOCOL-CORE] Global unique identifier for the Plan."
+    },
+    "context_id": {
+      "$ref": "common/identifiers.schema.json",
+      "description": "[PROTOCOL-CORE] Identifier of the Context this Plan belongs to."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "description": "[PROTOCOL-CORE] Plan title (brief description for humans and Agents)."
+    },
+    "objective": {
+      "type": "string",
+      "minLength": 1,
+      "description": "[PROTOCOL-CORE] Description of the objective to be achieved by the Plan."
+    },
+    "status": {
+      "type": "string",
+      "description": "[PROTOCOL-CORE] Status of the Plan in its lifecycle.",
+      "enum": [
+        "draft",
+        "proposed",
+        "approved",
+        "in_progress",
+        "completed",
+        "cancelled",
+        "failed"
+      ]
+    },
+    "steps": {
+      "type": "array",
+      "description": "[PROTOCOL-CORE] List of core steps decomposed from the Plan.",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/plan_step_core"
+      }
+    },
+    "trace": {
+      "$ref": "common/trace-base.schema.json",
+      "description": "[PROTOCOL-CORE] Main execution trace reference associated with this Plan."
+    },
+    "events": {
+      "type": "array",
+      "description": "[PROTOCOL-CORE] List of key events directly associated with this Plan (changes, approvals, status transitions, etc.).",
+      "items": {
+        "$ref": "common/events.schema.json"
+      }
+    }
+  },
+  "required": [
+    "meta",
+    "plan_id",
+    "context_id",
+    "title",
+    "objective",
+    "status",
+    "steps"
+  ],
+  "$defs": {
+    "plan_core_properties": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "common/metadata.schema.json",
+          "description": "[PROTOCOL-CORE] MPLP protocol schema metadata (version, source, cross-cutting tags, etc.)."
+        },
+        "plan_id": {
+          "$ref": "common/identifiers.schema.json",
+          "description": "[PROTOCOL-CORE] Global unique identifier for the Plan."
+        },
+        "context_id": {
+          "$ref": "common/identifiers.schema.json",
+          "description": "[PROTOCOL-CORE] Identifier of the Context this Plan belongs to."
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "description": "[PROTOCOL-CORE] Plan title (brief description for humans and Agents)."
+        },
+        "objective": {
+          "type": "string",
+          "minLength": 1,
+          "description": "[PROTOCOL-CORE] Description of the objective to be achieved by the Plan."
+        },
+        "status": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Status of the Plan in its lifecycle.",
+          "enum": [
+            "draft",
+            "proposed",
+            "approved",
+            "in_progress",
+            "completed",
+            "cancelled",
+            "failed"
+          ]
+        },
+        "steps": {
+          "type": "array",
+          "description": "[PROTOCOL-CORE] List of core steps decomposed from the Plan.",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/plan_step_core"
+          }
+        },
+        "trace": {
+          "$ref": "common/trace-base.schema.json",
+          "description": "[PROTOCOL-CORE] Main execution trace reference associated with this Plan."
+        },
+        "events": {
+          "type": "array",
+          "description": "[PROTOCOL-CORE] List of key events directly associated with this Plan (changes, approvals, status transitions, etc.).",
+          "items": {
+            "$ref": "common/events.schema.json"
+          }
+        }
+      },
+      "required": [
+        "meta",
+        "plan_id",
+        "context_id",
+        "title",
+        "objective",
+        "status",
+        "steps"
+      ]
+    },
+    "plan_step_core": {
+      "type": "object",
+      "description": "[PROTOCOL-CORE] Minimal required semantics for a plan step (excluding execution engine, scheduling policy implementation details).",
+      "additionalProperties": false,
+      "properties": {
+        "step_id": {
+          "$ref": "common/identifiers.schema.json",
+          "description": "[PROTOCOL-CORE] Global unique identifier for the step."
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "description": "[PROTOCOL-CORE] Content of the work to be completed in the step."
+        },
+        "status": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Current status of the step.",
+          "enum": [
+            "pending",
+            "in_progress",
+            "completed",
+            "blocked",
+            "skipped",
+            "failed"
+          ]
+        },
+        "dependencies": {
+          "type": "array",
+          "description": "[PROTOCOL-CORE] List of other step IDs that this step depends on.",
+          "items": {
+            "$ref": "common/identifiers.schema.json"
+          }
+        },
+        "agent_role": {
+          "type": "string",
+          "description": "[PROTOCOL-CORE] Identifier of the role responsible for this step (should correspond to role_id in Role module)."
+        },
+        "order_index": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "[PROTOCOL-CORE] Sort index in the current Plan, used for defining execution order or display order."
+        }
+      },
+      "required": [
+        "step_id",
+        "description",
+        "status"
+      ]
+    }
+  }
+}

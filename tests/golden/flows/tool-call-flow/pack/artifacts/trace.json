@@ -1,0 +1,35 @@
+{
+  "context_ref": "ddf295a9-15aa-50e3-84f0-b1ea5bfcb515",
+  "created_at": "2026-01-01T00:00:00Z",
+  "events": [
+    {
+      "data": {
+        "mcp_method": "tools/call",
+        "tool_input": {
+          "message": "Hello from MCP"
+        },
+        "tool_name": "echo",
+        "transport": "stdio"
+      },
+      "event_id": "673d00d5-89f0-52b2-88ad-2e8afc2f3edd",
+      "event_type": "tool.call",
+      "timestamp": "2026-01-01T00:00:00Z"
+    },
+    {
+      "data": {
+        "mcp_method": "tools/call",
+        "success": true,
+        "tool_name": "echo",
+        "tool_output": {
+          "echoed": "Hello from MCP"
+        }
+      },
+      "event_id": "a399d6d2-6cb5-52dc-8c97-e75be37afb40",
+      "event_type": "tool.result",
+      "parent_event_id": "673d00d5-89f0-52b2-88ad-2e8afc2f3edd",
+      "timestamp": "2026-01-01T00:00:00Z"
+    }
+  ],
+  "plan_ref": "1a58151e-6f7b-5544-8216-a5be77b237eb",
+  "trace_id": "8f088cdf-8743-548a-8976-f475a24a7837"
+}

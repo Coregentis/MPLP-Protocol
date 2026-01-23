@@ -1,0 +1,14 @@
+{
+  "$comment": "MPLP v1.0.0 – Normative Example – Minimal Valid Confirm (AUTO-GENERATED)",
+  "meta": {
+    "protocol_version": "1.0.0",
+    "schema_version": "1.0.0",
+    "created_at": "2025-01-01T00:00:00.000Z"
+  },
+  "confirm_id": "550e8400-e29b-41d4-a716-446655440000",
+  "target_type": "context",
+  "target_id": "550e8400-e29b-41d4-a716-446655440000",
+  "status": "pending",
+  "requested_by_role": "requested_by_role_value",
+  "requested_at": "2025-01-01T00:00:00.000Z"
+}

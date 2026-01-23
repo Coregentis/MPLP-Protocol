@@ -1,0 +1,8 @@
+{
+  "context_id": "ddf295a9-15aa-50e3-84f0-b1ea5bfcb515",
+  "created_at": "2026-01-01T00:00:00Z",
+  "project_id": "f03bc347-bcec-570d-800f-ebc5cedf08b2",
+  "requirements": {
+    "summary": "MCP tool-call flow validation"
+  }
+}

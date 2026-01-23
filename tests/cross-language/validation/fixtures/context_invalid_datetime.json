@@ -1,0 +1,14 @@
+{
+  "meta": {
+    "protocol_version": "1.0.0",
+    "schema_version": "1.0.0",
+    "created_at": "not-a-datetime"
+  },
+  "context_id": "123e4567-e89b-12d3-a456-426614174000",
+  "root": {
+    "domain": "test",
+    "environment": "dev"
+  },
+  "title": "Invalid Datetime",
+  "status": "active"
+}

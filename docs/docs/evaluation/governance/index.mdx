@@ -1,0 +1,93 @@
+---
+entry_surface: documentation
+doc_type: governance
+status: active
+authority: MPGC
+normativity: non-normative
+lifecycle_status: active
+protocol_version: "1.0.0"
+doc_id: "DOC-EVAL-GOV-INDEX-001"
+description: "Governance Constitution for the MPLP Protocol. Defines the 3-Layer Governance Model, MPGC authority, and governance processes."
+
+# UI metadata (non-normative; excluded from protocol semantics)
+title: Governance Constitution
+sidebar_label: Governance
+---
+
+# Governance Constitution
+
+:::info[Disambiguation]
+**MPLP is not a software license** and does not define licensing terms.  
+This document is authoritative for **governance process and policy**, but non-normative for protocol technical requirements. All normative technical specifications are defined in the [Specification documents](/docs/specification).
+:::
+
+## 1. The Supreme Authority
+
+The **MPLP Protocol** is governed by the **MPLP Protocol Governance Committee (MPGC)**.
+The MPGC ensures the protocol remains:
+1.  **Vendor Neutral**: No single entity controls the standard.
+2.  **Stable**: Changes require rigorous process (MIP).
+3.  **Observable**: All decisions are public and traceable.
+
+## 2. The 3-Layer Governance Model
+
+To prevent scope creep and ensure clarity, governance is divided into three distinct layers.
+
+<MermaidDiagram id="f67a3e73ee3b214d" />
+
+### Layer 1: Protocol Governance
+**"What MPLP IS"**
+- **Scope**: L1-L4 Specifications, Schemas, Invariants.
+- **Authority**: MPGC (Voting Required).
+- **Process**: [MIP Process](/docs/evaluation/governance/protocol-governance).
+- **Truth Sources**: [Protocol Truth Index](/docs/evaluation/governance/protocol-truth-index).
+
+### Layer 2: Documentation Projection
+**"How MPLP is EXPLAINED"**
+- **Scope**: Documentation Content (`docs/`).
+- **Authority**: Documentation Maintainers.
+- **Process**: [Documentation Projection Governance](/docs/evaluation/governance/documentation-projection).
+- **Constraint**: Aligns with Layer 1 Truth.
+
+### Layer 3: Website Projection
+**"How MPLP is DISCOVERED"**
+- **Scope**: Discovery & Positioning (Protocol evaluation entry).
+- **Authority**: Website Maintainers.
+- **Process**: Website Truth Policy (See `governance/05-specialized/website/` in repo).
+- **Constraint**: Read-Only Projection of Layer 1 & 2.
+- **Boundaries**: No certification, no endorsement, no product claims.
+
+## 3. Relationship to Three-Entry Model
+
+The **3-Layer Governance Model** (responsibility) maps to the **Three-Entry Model** (discovery):
+
+| Three-Entry Model | 3-Layer Governance | Role |
+|:---|:---|:---|
+| **Website** (mplp.io) | Layer 3: Website Projection | Discovery & Positioning |
+| **Docs** (docs.mplp.io) | Layer 2: Docs Projection | Explanation & Reference |
+| **Repo** (GitHub) | Layer 1: Protocol Governance | Truth Source & Specification |
+
+## 4. Governance Documents
+
+| Document | Purpose |
+|:---|:---|
+| [MIP Process](/docs/evaluation/governance/protocol-governance) | How to propose protocol changes |
+| [Contributing Guide](/docs/evaluation/governance/contributing) | How to contribute to MPLP |
+| [Security Policy](/docs/evaluation/governance/security-policy) | Reporting vulnerabilities |
+| [Versioning Policy](/docs/evaluation/governance/versioning-policy) | Semantic versioning rules |
+| [Compatibility Matrix](/docs/evaluation/governance/compatibility-matrix) | Version compatibility |
+| [License Governance](/docs/evaluation/governance/license-governance) | Apache-2.0 licensing |
+| [External Trust Overview](/docs/evaluation/governance/EXTERNAL_TRUST_OVERVIEW) | Trust model & forbidden claims |
+| [Protocol Truth Index](/docs/evaluation/governance/protocol-truth-index) | Authoritative truth sources |
+
+## 5. Release & Change History
+
+All protocol releases, freeze declarations, and change logs are maintained in:
+
+→ [Release History](/docs/meta/release/mplp-v1.0.0-release-notes)
+
+## 6. External Trust
+
+MPLP is designed for **Zero-Trust** environments.
+See [External Trust Overview](/docs/evaluation/governance/EXTERNAL_TRUST_OVERVIEW) for the threat model and trust boundaries.
+

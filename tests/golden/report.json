@@ -1,0 +1,47 @@
+[
+  {
+    "flowId": "FLOW-01",
+    "success": true,
+    "diffs": []
+  },
+  {
+    "flowId": "FLOW-02",
+    "success": true,
+    "diffs": []
+  },
+  {
+    "flowId": "FLOW-03",
+    "success": true,
+    "diffs": []
+  },
+  {
+    "flowId": "FLOW-04",
+    "success": true,
+    "diffs": []
+  },
+  {
+    "flowId": "FLOW-05",
+    "success": true,
+    "diffs": []
+  },
+  {
+    "flowId": "MAP-FLOW",
+    "success": true,
+    "diffs": []
+  },
+  {
+    "flowId": "MAP-FLOW",
+    "success": true,
+    "diffs": []
+  },
+  {
+    "flowId": "SA-FLOW",
+    "success": true,
+    "diffs": []
+  },
+  {
+    "flowId": "SA-FLOW",
+    "success": true,
+    "diffs": []
+  }
+]

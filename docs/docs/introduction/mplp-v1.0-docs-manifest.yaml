@@ -1,0 +1,108 @@
+# MPLP v1.0 Documentation Manifest
+# Single Source of Truth for Docs Structure
+
+manifest_version: "1.0.0"
+protocol_version: "1.0.0"
+base_url: "https://coregentis.github.io/MPLP-Protocol/"
+
+structure:
+  - title: Home
+    path: docs/intro.md
+
+  - title: Architecture
+    path: docs/01-architecture/architecture-overview.md
+    children:
+      - title: L1 Core Protocol
+        path: docs/01-architecture/l1-core-protocol.md
+      - title: L2 Coordination
+        path: docs/01-architecture/l2-coordination-governance.md
+      - title: L3 Execution
+        path: docs/01-architecture/l3-execution-orchestration.md
+      - title: L4 Integration
+        path: docs/01-architecture/l4-integration-infra.md
+
+  - title: Modules
+    path: docs/02-modules/core-module.md
+    children:
+      - title: Context
+        path: docs/02-modules/context-module.md
+      - title: Plan
+        path: docs/02-modules/plan-module.md
+      - title: Trace
+        path: docs/02-modules/trace-module.md
+      - title: Role
+        path: docs/02-modules/role-module.md
+      - title: Collab
+        path: docs/02-modules/collab-module.md
+      - title: Confirm
+        path: docs/02-modules/confirm-module.md
+      - title: Dialog
+        path: docs/02-modules/dialog-module.md
+      - title: Extension
+        path: docs/02-modules/extension-module.md
+      - title: Network
+        path: docs/02-modules/network-module.md
+      - title: Interactions
+        path: docs/02-modules/module-interactions.md
+
+  - title: Profiles
+    path: docs/03-profiles/sa-profile.md
+    children:
+      - title: MAP Profile
+        path: docs/03-profiles/map-profile.md
+      - title: Governance
+        path: docs/03-profiles/multi-agent-governance-profile.md
+
+  - title: Cross-Cutting Kernel Duties
+    path: docs/01-architecture/cross-cutting-kernel-duties/index.md
+    children:
+      - title: Observability
+        path: docs/04-observability/observability-overview.md
+      - title: Security
+        path: docs/01-architecture/cross-cutting-kernel-duties/security.md
+      - title: State Sync
+        path: docs/01-architecture/cross-cutting-kernel-duties/state-sync.md
+      - title: Transaction
+        path: docs/01-architecture/cross-cutting-kernel-duties/transaction.md
+      - title: Event Bus
+        path: docs/01-architecture/cross-cutting-kernel-duties/event-bus.md
+      - title: Orchestration
+        path: docs/01-architecture/cross-cutting-kernel-duties/orchestration.md
+      - title: Coordination
+        path: docs/01-architecture/cross-cutting-kernel-duties/coordination.md
+      - title: Error Handling
+        path: docs/01-architecture/cross-cutting-kernel-duties/error-handling.md
+      - title: Performance
+        path: docs/01-architecture/cross-cutting-kernel-duties/performance.md
+      - title: Protocol Versioning
+        path: docs/01-architecture/cross-cutting-kernel-duties/protocol-versioning.md
+      - title: AEL
+        path: docs/14-runtime/ael.md
+      - title: VSL
+        path: docs/14-runtime/vsl.md
+      - title: Learning Feedback
+        path: docs/05-learning/learning-feedback-overview.md
+
+  - title: Guides
+    path: docs/08-guides/quickstart-5min.mdx
+    children:
+      - title: Conformance
+        path: docs/08-guides/conformance-guide.md
+
+  - title: Tests
+    path: docs/09-tests/golden-test-suite-overview.md
+    children:
+      - title: Golden Flows
+        path: docs/09-tests/golden-flow-registry.md
+
+  - title: SDK
+    path: docs/10-sdk/sdk-overview.md
+
+  - title: Examples
+    path: docs/11-examples/examples-overview.md
+
+  - title: Governance
+    path: docs/12-governance/governance-overview.md
+
+  - title: Release
+    path: docs/13-release/release-process.md

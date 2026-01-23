@@ -1,0 +1,10 @@
+{
+  "label": "Governance",
+  "position": 14,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "evaluation/governance/index"
+  }
+}

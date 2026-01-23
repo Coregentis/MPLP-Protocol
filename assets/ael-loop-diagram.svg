@@ -1,0 +1,78 @@
+<svg width="1280" height="220" viewBox="0 0 1280 220" xmlns="http://www.w3.org/2000/svg"
+     role="img" aria-labelledby="ael-title ael-desc">
+  <title id="ael-title">MPLP Action Execution Layer (AEL) Loop</title>
+  <desc id="ael-desc">Diagram showing the AEL execution loop: Read Envelope → Evaluate Reasoning → Confirm Governance → Execute Action → Trace → Update PSG. This is the canonical OS-level execution loop that all MPLP-compliant runtimes must implement.</desc>
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>MPLP AEL (Action Execution Layer) Loop Diagram</dc:title>
+        <dc:description>The canonical execution loop for MPLP-compliant runtimes showing the six stages of action execution.</dc:description>
+        <dc:creator>Bangshi Beijing Network Technology Limited Company</dc:creator>
+        <dc:rights>Copyright 2025 Bangshi Beijing Network Technology Limited Company. Apache-2.0 License.</dc:rights>
+        <dc:subject>MPLP, AEL, Action Execution Layer, Runtime Loop, Governance, Trace, PSG</dc:subject>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="6" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 9 3, 0 6" fill="#555" />
+    </marker>
+    <style>
+      text {
+        font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont,
+                     "Segoe UI", system-ui, sans-serif;
+      }
+    </style>
+  </defs>
+
+  <!-- Title -->
+  <text x="640" y="32" font-size="26" font-weight="600"
+        fill="#1A73E8" text-anchor="middle">
+    AEL — Action Execution Loop
+  </text>
+
+  <!-- S: Read Envelope -->
+  <rect x="40" y="90" width="180" height="60" rx="14"
+        fill="#E3F2FD" stroke="#64B5F6" stroke-width="2"/>
+  <text x="130" y="125" font-size="17" font-weight="600"
+        fill="#0D47A1" text-anchor="middle">Read Envelope</text>
+
+  <!-- E: Evaluate Reasoning -->
+  <rect x="260" y="90" width="180" height="60" rx="14"
+        fill="#E8F5E9" stroke="#81C784" stroke-width="2"/>
+  <text x="350" y="125" font-size="17" font-weight="600"
+        fill="#1B5E20" text-anchor="middle">Evaluate Reasoning</text>
+
+  <!-- C: Confirm Governance -->
+  <rect x="480" y="90" width="200" height="60" rx="14"
+        fill="#FFF8E1" stroke="#FFCA28" stroke-width="2"/>
+  <text x="580" y="123" font-size="17" font-weight="600"
+        fill="#8A6A00" text-anchor="middle">Confirm Governance</text>
+
+  <!-- X: Execute Action -->
+  <rect x="720" y="90" width="180" height="60" rx="14"
+        fill="#E1F5FE" stroke="#4FC3F7" stroke-width="2"/>
+  <text x="810" y="125" font-size="17" font-weight="600"
+        fill="#01579B" text-anchor="middle">Execute Action</text>
+
+  <!-- T: Trace -->
+  <rect x="940" y="90" width="120" height="60" rx="14"
+        fill="#F3E5F5" stroke="#BA68C8" stroke-width="2"/>
+  <text x="1000" y="125" font-size="17" font-weight="600"
+        fill="#4A148C" text-anchor="middle">Trace</text>
+
+  <!-- U: Update PSG -->
+  <rect x="1100" y="90" width="160" height="60" rx="14"
+        fill="#FFF3E0" stroke="#FFB74D" stroke-width="2"/>
+  <text x="1180" y="125" font-size="17" font-weight="600"
+        fill="#E65100" text-anchor="middle">Update PSG</text>
+
+  <!-- Arrows -->
+  <line x1="220" y1="120" x2="260" y2="120" stroke="#555" stroke-width="2.2" marker-end="url(#arrow)"/>
+  <line x1="440" y1="120" x2="480" y2="120" stroke="#555" stroke-width="2.2" marker-end="url(#arrow)"/>
+  <line x1="680" y1="120" x2="720" y2="120" stroke="#555" stroke-width="2.2" marker-end="url(#arrow)"/>
+  <line x1="900" y1="120" x2="940" y2="120" stroke="#555" stroke-width="2.2" marker-end="url(#arrow)"/>
+  <line x1="1060" y1="120" x2="1100" y2="120" stroke="#555" stroke-width="2.2" marker-end="url(#arrow)"/>
+</svg>

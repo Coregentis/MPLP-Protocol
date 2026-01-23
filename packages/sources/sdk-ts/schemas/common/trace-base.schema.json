@@ -1,0 +1,49 @@
+{
+  "$comment": "MPLP v1.0.0 FROZEN – © 2026 Bangshi Beijing Network Technology Limited Company – Apache-2.0 – Governance: MPGC",
+  "$id": "https://schemas.mplp.dev/v1.0/common/trace-base.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MPLP Trace Base",
+  "description": "Common base fields for Trace / Span structures. Designed based on W3C Trace Context standard, providing a unified tracing context for the MPLP execution chain. Supports distributed tracing and parent-child relationships of execution steps.",
+  "type": "object",
+  "properties": {
+    "trace_id": {
+      "$ref": "identifiers.schema.json",
+      "description": "Identifier for a complete execution chain. All related Spans share the same trace_id."
+    },
+    "span_id": {
+      "$ref": "identifiers.schema.json",
+      "description": "Identifier for the current step or operation. Each Span has a unique span_id."
+    },
+    "parent_span_id": {
+      "$ref": "identifiers.schema.json",
+      "description": "Identifier of the parent step's span_id. Can be omitted if it is a root span."
+    },
+    "context_id": {
+      "$ref": "identifiers.schema.json",
+      "description": "Identifier of the Context Root. Associates the Trace with a specific project context."
+    },
+    "attributes": {
+      "type": "object",
+      "description": "Additional attributes (key-value pairs) to extend trace information. Can contain custom metadata, tags, etc.",
+      "additionalProperties": true,
+      "examples": [
+        {
+          "module": "plan",
+          "operation": "create",
+          "user_id": "user-123"
+        }
+      ]
+    }
+  },
+  "required": [
+    "trace_id",
+    "span_id"
+  ],
+  "additionalProperties": false,
+  "x-mplp-meta": {
+    "protocolVersion": "1.0.0",
+    "frozen": true,
+    "freezeDate": "2025-12-03",
+    "governance": "MPGC"
+  }
+}

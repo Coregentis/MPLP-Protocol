@@ -1,0 +1,89 @@
+{
+  "$comment": "MPLP v1.0.0 FROZEN – © 2026 Bangshi Beijing Network Technology Limited Company – Apache-2.0 – Governance: MPGC",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://mplp.dev/schemas/v1.0/integration/mplp-tool-event.json",
+  "title": "MPLP Tool Event v1.0",
+  "description": "External tool invocation and results (formatters, linters, test runners, generators)",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "tool_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Unique identifier for the tool",
+      "examples": [
+        "eslint-v8.50.0",
+        "prettier-v3.0.0",
+        "black-v23.10.0"
+      ]
+    },
+    "tool_kind": {
+      "type": "string",
+      "enum": [
+        "formatter",
+        "linter",
+        "test_runner",
+        "generator",
+        "other"
+      ],
+      "description": "Category of tool"
+    },
+    "invocation_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "description": "UUID v4 identifier for this specific invocation"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "running",
+        "succeeded",
+        "failed",
+        "cancelled"
+      ],
+      "description": "Current execution status"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Invocation start timestamp (ISO 8601)"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Invocation completion timestamp (ISO 8601)"
+    },
+    "exit_code": {
+      "type": "integer",
+      "description": "Tool process exit code (if applicable)"
+    },
+    "output_summary": {
+      "type": "string",
+      "description": "Brief summary of tool output or errors"
+    },
+    "args": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Command-line arguments passed to tool (optional)"
+    },
+    "working_directory": {
+      "type": "string",
+      "description": "Working directory where tool was executed (optional)"
+    }
+  },
+  "required": [
+    "tool_id",
+    "tool_kind",
+    "invocation_id",
+    "status"
+  ],
+  "x-mplp-meta": {
+    "protocolVersion": "1.0.0",
+    "frozen": true,
+    "freezeDate": "2025-12-03",
+    "governance": "MPGC"
+  }
+}

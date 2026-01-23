@@ -1,0 +1,102 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#4a90d9', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d5a87', 'lineColor': '#333', 'secondaryColor': '#f4f4f4', 'tertiaryColor': '#eef' }}}%%
+%% MPLP MAP Turn-Taking (Orchestrated Mode) Sequence Diagram
+%% Version: 1.0.0 | Frozen: 2025-12-03
+%% Mode: orchestrated | Pattern: Sequential Turn-Taking
+
+sequenceDiagram
+    autonumber
+    
+    participant Orch as Orchestrator
+    participant EB as Event Bus
+    participant P as Planner Agent
+    participant C as Coder Agent
+    participant R as Reviewer Agent
+    participant Trace as Trace Module
+    
+    %% Session initialization
+    rect rgb(230, 245, 255)
+        Note over Orch,Trace: Phase 1: Session Setup
+        Orch->>EB: MAPSessionStarted
+        EB-->>Trace: Record event
+        Note right of EB: mode: orchestrated<br/>participants: 3
+        
+        Orch->>P: Assign role: planner
+        Orch->>C: Assign role: coder
+        Orch->>R: Assign role: reviewer
+        
+        Orch->>EB: MAPRolesAssigned
+        EB-->>Trace: Record event
+    end
+    
+    %% Turn 1: Planner
+    rect rgb(255, 245, 230)
+        Note over Orch,Trace: Turn 1: Planner Creates Plan
+        
+        Orch->>EB: MAPTurnDispatched
+        EB-->>Trace: Record event
+        Note right of EB: role: planner<br/>turn: 1<br/>token_id: T001
+        
+        EB->>P: Grant execution token
+        
+        P->>P: Create implementation plan
+        Note over P: SA sub-loop executes here
+        
+        P->>EB: Signal completion
+        EB->>Orch: MAPTurnCompleted
+        EB-->>Trace: Record event
+        Note right of EB: role: planner<br/>turn: 1<br/>status: completed
+    end
+    
+    %% Turn 2: Coder
+    rect rgb(230, 255, 230)
+        Note over Orch,Trace: Turn 2: Coder Implements
+        
+        Orch->>EB: MAPTurnDispatched
+        EB-->>Trace: Record event
+        Note right of EB: role: coder<br/>turn: 2<br/>token_id: T002
+        
+        EB->>C: Grant execution token
+        
+        C->>C: Implement code
+        Note over C: SA sub-loop executes here
+        
+        C->>EB: Signal completion
+        EB->>Orch: MAPTurnCompleted
+        EB-->>Trace: Record event
+        Note right of EB: role: coder<br/>turn: 2<br/>status: completed
+    end
+    
+    %% Turn 3: Reviewer
+    rect rgb(245, 230, 255)
+        Note over Orch,Trace: Turn 3: Reviewer Reviews
+        
+        Orch->>EB: MAPTurnDispatched
+        EB-->>Trace: Record event
+        Note right of EB: role: reviewer<br/>turn: 3<br/>token_id: T003
+        
+        EB->>R: Grant execution token
+        
+        R->>R: Review implementation
+        Note over R: SA sub-loop executes here
+        
+        alt Review Passed
+            R->>EB: Approve
+            EB->>Orch: MAPTurnCompleted
+            Note right of EB: status: approved
+        else Review Failed
+            R->>EB: Request changes
+            EB->>Orch: MAPTurnCompleted
+            Note right of EB: status: changes_requested
+            Note over Orch: Loop back to Coder
+        end
+        EB-->>Trace: Record event
+    end
+    
+    %% Completion
+    rect rgb(230, 230, 230)
+        Note over Orch,Trace: Phase 5: Session Complete
+        
+        Orch->>EB: MAPSessionCompleted
+        EB-->>Trace: Finalize trace
+        Note right of EB: status: completed<br/>turns_total: 3<br/>duration_ms: 180000
+    end

@@ -1,0 +1,62 @@
+---
+sidebar_position: 0
+title: "Runtime Guides Overview"
+description: "MPLP runtime integration guides: PSG, VSL, AEL, and skeleton implementations. This page is informative only."
+keywords: [MPLP Runtime, PSG, VSL, AEL, Integration, Skeleton]
+doc_type: guide
+normativity: informative
+status: active
+protocol_version: "1.0.0"
+doc_id: "DOC-GUIDES-RUNTIME-INDEX-001"
+entry_surface: documentation
+---
+
+# Runtime Guides Overview
+
+> [!NOTE]
+> **Non-Normative Document**
+>
+> This page is informative only. Runtime guidance describes integration patterns, not normative requirements.
+
+## What This Section Contains
+
+This section documents **runtime integration patterns** for MPLP implementations. These are guidance documents that describe how protocol semantics may be realized.
+
+| Document | Purpose |
+|----------|---------|
+| [PSG (Protocol State Graph)](./psg.md) | State management patterns |
+| [VSL (Virtual State Layer)](./vsl.md) | State abstraction layer |
+| [AEL (Agent Execution Layer)](./ael.md) | Execution layer interface |
+| [Runtime Glue Overview](./runtime-glue-overview.md) | Integration overview |
+| [Module-PSG Paths](./module-psg-paths.md) | Module to PSG mapping |
+| [CrossCut-PSG Event Binding](./crosscut-psg-event-binding.md) | Event binding patterns |
+| [Drift and Rollback](./drift-and-rollback.md) | State recovery patterns |
+| [Runtime Authority](./runtime-authority.md) | Authority model |
+| [Runtime Capability Matrix](./runtime-capability-matrix.md) | Capability overview |
+| [Skeleton](./skeleton/index.md) | Reference implementation skeleton |
+
+## Boundary
+
+> [!IMPORTANT]
+> **Guides vs Specification**
+>
+> - **Specification** (normative): Defines protocol semantics
+> - **Guides** (informative): Describes implementation patterns
+>
+> Guides do not prescribe specific implementations.
+
+## Reading Path
+
+1. **Start with**: [Runtime Glue Overview](./runtime-glue-overview.md)
+2. **Core layers**: [PSG](./psg.md) → [VSL](./vsl.md) → [AEL](./ael.md)
+3. **Reference**: [Skeleton](./skeleton/index.md) — minimal implementation
+
+## Related Resources
+
+- [Architecture Overview](/docs/specification/architecture) — Protocol layers
+- [SDK Guides](/docs/guides/sdk) — Language-specific SDKs
+- [Repository](https://github.com/Coregentis/MPLP-Protocol) — SSOT
+
+---
+
+> *Runtime guidance here is informative. Authoritative semantics are defined in the specification.*

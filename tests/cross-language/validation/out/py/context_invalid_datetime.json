@@ -1,0 +1,15 @@
+{
+  "ok": false,
+  "errors": [
+    {
+      "path": "meta.created_at",
+      "code": "datetime_from_date_parsing",
+      "message": "Input should be a valid datetime or date, invalid character in year"
+    },
+    {
+      "path": "context_id",
+      "code": "uuid_version",
+      "message": "UUID version 4 expected"
+    }
+  ]
+}

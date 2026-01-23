@@ -1,0 +1,78 @@
+# MPLP Protocol v1.0.0 — Frozen Specification
+# Freeze Date: 2025-12-03
+# Status: FROZEN (no breaking changes permitted)
+# Governance: MPLP Protocol Governance Committee (MPGC)
+# © 2026 Bangshi Beijing Network Technology Limited Company
+# License: Apache-2.0
+# Any normative change requires a new protocol version.
+
+invariants:
+  # Plan structure
+  - id: flow05_plan_minimum_steps
+    scope: plan
+    path: steps
+    rule: min-length(3)
+
+  - id: flow05_plan_id_is_uuid
+    scope: plan
+    path: plan_id
+    rule: uuid-v4
+
+  # ID binding relationships (using eq!)
+  - id: flow05_plan_context_matches
+    scope: plan
+    path: context_id
+    rule: eq(context.context_id)
+
+  - id: flow05_confirm_target_matches_plan
+    scope: confirm
+    path: target_id
+    rule: eq(plan.plan_id)
+
+  - id: flow05_trace_context_matches
+    scope: trace
+    path: context_id
+    rule: eq(context.context_id)
+
+  - id: flow05_trace_plan_matches
+    scope: trace
+    path: plan_id
+    rule: eq(plan.plan_id)
+
+  # Confirm status
+  - id: flow05_confirm_status_valid
+    scope: confirm
+    path: status
+    rule: enum(pending,approved,rejected,cancelled)
+
+  - id: flow05_confirm_target_type_is_plan
+    scope: confirm
+    path: target_type
+    rule: enum(plan)
+
+  # Decisions array
+  - id: flow05_confirm_has_decisions
+    scope: confirm
+    path: decisions
+    rule: min-length(1)
+
+  - id: flow05_decisions_have_uuid
+    scope: confirm
+    path: decisions[*].decision_id
+    rule: uuid-v4
+
+  - id: flow05_decisions_have_valid_status
+    scope: confirm
+    path: decisions[*].status
+    rule: enum(approved,rejected,cancelled)
+
+  - id: flow05_decision_reasons_non_empty
+    scope: confirm
+    path: decisions[*].reason
+    rule: non-empty-string
+
+  # Trace events
+  - id: flow05_trace_has_events
+    scope: trace
+    path: events
+    rule: min-length(2)

@@ -1,0 +1,81 @@
+# MPLP Protocol v1.0.0 — Frozen Specification
+# Freeze Date: 2025-12-03
+# Status: FROZEN (no breaking changes permitted)
+# Governance: MPLP Protocol Governance Committee (MPGC)
+# © 2026 Bangshi Beijing Network Technology Limited Company
+# License: Apache-2.0
+# Any normative change requires a new protocol version.
+
+invariants:
+  # Context invariants
+  - id: map02_context_uuid
+    scope: context
+    path: context_id
+    rule: uuid-v4
+
+  - id: map02_context_active
+    scope: context
+    path: status
+    rule: enum(active)
+
+  # Plan invariants
+  - id: map02_plan_uuid
+    scope: plan
+    path: plan_id
+    rule: uuid-v4
+
+  - id: map02_plan_context_binding
+    scope: plan
+    path: context_id
+    rule: eq(context.context_id)
+
+  - id: map02_plan_has_broadcast_steps
+    scope: plan
+    path: steps
+    rule: min-length(3)
+
+  - id: map02_steps_have_agent_roles
+    scope: plan
+    path: steps[*].agent_role
+    rule: non-empty-string
+
+  - id: map02_steps_have_uuids
+    scope: plan
+    path: steps[*].step_id
+    rule: uuid-v4
+
+  # Collab invariants
+  - id: map02_collab_uuid
+    scope: collab
+    path: collab_id
+    rule: uuid-v4
+
+  - id: map02_collab_context_binding
+    scope: collab
+    path: context_id
+    rule: eq(context.context_id)
+
+  - id: map02_collab_mode_broadcast
+    scope: collab
+    path: mode
+    rule: enum(broadcast)
+
+  - id: map02_collab_has_multiple_participants
+    scope: collab
+    path: participants
+    rule: min-length(2)
+
+  - id: map02_participants_have_role_ids
+    scope: collab
+    path: participants[*].role_id
+    rule: non-empty-string
+
+  - id: map02_participant_kind_valid
+    scope: collab
+    path: participants[*].kind
+    rule: enum(agent,human,system,external)
+
+  - id: map02_participant_ids_non_empty
+    scope: collab
+    path: participants[*].participant_id
+    rule: non-empty-string

@@ -1,0 +1,64 @@
+{
+  "$comment": "MPLP v1.0.0 FROZEN – © 2026 Bangshi Beijing Network Technology Limited Company – Apache-2.0 – Governance: MPGC – NOTE: Informative base schema. Derived schemas (mplp-sa-event, mplp-map-event) are self-contained and do not $ref this schema.",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://mplp.dev/schemas/v1.0/events/mplp-event-core.schema.json",
+  "title": "MPLP Core Event v1.0 (Informative)",
+  "description": "INFORMATIVE: Base structure for MPLP observability events. Derived event schemas (mplp-sa-event.schema.json, mplp-map-event.schema.json) are self-contained definitions and do not inherit from this schema.",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier for this event (UUID v4)"
+    },
+    "event_type": {
+      "type": "string",
+      "description": "Specific event subtype (e.g., 'import_started', 'pipeline_stage_completed')"
+    },
+    "event_family": {
+      "type": "string",
+      "enum": [
+        "import_process",
+        "intent",
+        "delta_intent",
+        "impact_analysis",
+        "compensation_plan",
+        "methodology",
+        "reasoning_graph",
+        "pipeline_stage",
+        "graph_update",
+        "runtime_execution",
+        "cost_budget",
+        "external_integration"
+      ],
+      "description": "Event family classification - determines which minimal fields are required"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when event occurred"
+    },
+    "project_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Project context identifier (optional for system-level events)"
+    },
+    "payload": {
+      "type": "object",
+      "description": "Event-specific payload data (schema varies by event_family)"
+    }
+  },
+  "required": [
+    "event_id",
+    "event_type",
+    "event_family",
+    "timestamp"
+  ],
+  "additionalProperties": true,
+  "x-mplp-meta": {
+    "protocolVersion": "1.0.0",
+    "frozen": true,
+    "freezeDate": "2025-12-03",
+    "governance": "MPGC"
+  }
+}

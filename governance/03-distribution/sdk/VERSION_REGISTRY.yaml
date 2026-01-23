@@ -1,0 +1,46 @@
+# SDK Version Registry
+
+> **Status**: Governance Record
+> **Authority**: MPGC
+> **Purpose**: Track all SDK releases with their protocol binding
+
+---
+
+## Released Versions
+
+releases: []
+
+---
+
+## Registry Format
+
+Each release entry MUST contain:
+
+```yaml
+- sdk_version: "{major}.{minor}.{patch}"
+  sdk_package: "{package-name}"
+  language: "ts|py"
+  protocol_version: "{protocol-version}"
+  evidence_baseline_tag: "evidence-baseline-v{version}"
+  truth_source_bundle_hash: "sha256:{hash}"
+  release_date: "YYYY-MM-DD"
+  registry_url: "https://..."
+```
+
+---
+
+## First Release (Placeholder)
+
+When the first SDK is released, add:
+
+```yaml
+releases:
+  - sdk_version: "1.0.0"
+    sdk_package: "mplp-sdk-ts"
+    language: "ts"
+    protocol_version: "1.0.0"
+    evidence_baseline_tag: "evidence-baseline-v1.0"
+    truth_source_bundle_hash: "sha256:78ea3511cee7cacebff416b5ad6179358032d5322e5991523b5f8d6257d10354"
+    release_date: "2026-01-04"
+    registry_url: "https://www.npmjs.com/package/mplp-sdk-ts"
+```

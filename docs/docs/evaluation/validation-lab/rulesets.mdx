@@ -1,0 +1,87 @@
+---
+sidebar_position: 3
+entry_surface: documentation
+doc_type: informative
+normativity: informative
+status: draft
+authority: none
+protocol_version: "1.0.0"
+doc_id: "DOC-EVAL-VLAB-RULESET-001"
+
+# UI metadata (non-normative)
+title: Ruleset Reference
+sidebar_label: Rulesets
+description: "Versioned rulesets for deterministic evidence adjudication in the Validation Lab."
+keywords: [Ruleset, ruleset-1.0, MPLP, Validation Lab, Deterministic]
+---
+
+# Ruleset Reference
+
+> [!IMPORTANT]
+> **Non-Normative Document**
+>
+> This document is informative only.
+
+> **SSOT**: [`Validation_Lab/data/rulesets/*/manifest.yaml`](https://github.com/Coregentis/MPLP-Validation-Lab/tree/main/data/rulesets)  
+> This page is a Reference projection. Authority resides in the Validation Lab repository.
+
+## What is a Ruleset?
+
+A **Ruleset** is a versioned set of evaluation rules that the Validation Lab uses to adjudicate evidence packs. Rulesets are:
+
+- **Versioned** — Each ruleset has an independent version (e.g., `ruleset-1.0`)
+- **Deterministic** — Same evidence + same ruleset = same verdict hash
+- **Governed** — Changes follow Lab governance processes
+
+:::tip Key Principle
+**Same evidence + same ruleset version = same verdict hash.**
+
+This determinism guarantee ensures reproducible adjudication that can be independently verified.
+:::
+
+## Ruleset Versioning
+
+The Lab uses the `ruleset-*` prefix for ruleset versions. This is distinct from other version prefixes:
+
+| Prefix | Type | Example |
+|:---|:---|:---|
+| `ruleset-*` | Ruleset Version | `ruleset-1.0`, `ruleset-1.1` |
+| `pack-v*` | Evidence Pack Format | `pack-v0.2`, `pack-v0.4` |
+| `site-v*` | Site Freeze | `site-v0.5` |
+| `rel-lab-*` | Release Seal | `rel-lab-0.5` |
+
+## Current Rulesets
+
+The Validation Lab currently defines the following rulesets:
+
+| Ruleset | Status | LG Coverage | Strength |
+|:---|:---|:---|:---|
+| `ruleset-1.0` | Active | LG-01~05 | Presence-level |
+
+:::info Non-Normative Note
+**Presence-level** means the ruleset checks for artifact existence, not semantic correctness. Future rulesets may introduce deeper validation (e.g., state transition correctness, schema compliance).
+:::
+
+## Ruleset Compatibility
+
+Each ruleset defines compatibility ranges for evidence packs:
+
+- **Min Pack Version**: Minimum evidence pack format version
+- **Max Pack Version**: Maximum evidence pack format version
+
+See the [SSOT manifest files](https://github.com/Coregentis/MPLP-Validation-Lab/tree/main/data/rulesets) for authoritative compatibility declarations.
+
+## Ruleset Governance
+
+Ruleset changes follow the Lab's governance process:
+
+1. **Breaking Changes** — Require version bump and migration guidance
+2. **Non-Breaking Changes** — May be added within minor versions
+3. **Deprecation** — Old rulesets remain available for reproducibility
+
+## Related Resources
+
+- [Validation Lab Overview](./) — Four Boundaries & terminology
+- [Lifecycle Guarantees](./lifecycle-guarantees.mdx) — LG-01~05 definitions
+- [Evidence Pack Contract](./evidence-pack-contract.mdx) — Pack structure
+- [Lab Site: Rulesets](https://lab.mplp.io/rulesets) — Live ruleset reference

@@ -1,0 +1,87 @@
+.threeEntryBacklink {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+    margin-bottom: 1rem;
+    background: var(--ifm-color-emphasis-100);
+    border-radius: 6px;
+    font-size: 0.8rem;
+    flex-wrap: wrap;
+}
+
+.label {
+    color: var(--ifm-color-emphasis-600);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.entries {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.entry {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.entry:hover {
+    background: var(--ifm-color-emphasis-200);
+    text-decoration: none;
+}
+
+.entry.current {
+    background: var(--ifm-color-primary-lightest);
+    cursor: default;
+}
+
+.entryName {
+    font-weight: 600;
+    color: var(--ifm-color-primary);
+    font-size: 0.75rem;
+}
+
+.entryRole {
+    color: var(--ifm-color-emphasis-600);
+    font-size: 0.65rem;
+}
+
+.separator {
+    color: var(--ifm-color-emphasis-400);
+}
+
+.entityCard {
+    margin-left: auto;
+}
+
+.entityCard a {
+    font-size: 0.7rem;
+    color: var(--ifm-color-emphasis-600);
+    text-decoration: none;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid var(--ifm-color-emphasis-300);
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.entityCard a:hover {
+    background: var(--ifm-color-emphasis-200);
+    border-color: var(--ifm-color-emphasis-400);
+}
+
+/* Dark mode */
+[data-theme='dark'] .threeEntryBacklink {
+    background: var(--ifm-color-emphasis-100);
+}
+
+[data-theme='dark'] .entry.current {
+    background: rgba(37, 99, 235, 0.2);
+}

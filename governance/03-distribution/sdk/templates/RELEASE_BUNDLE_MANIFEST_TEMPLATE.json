@@ -1,0 +1,166 @@
+{
+    "$comment": "RELEASE_BUNDLE_MANIFEST.json Template - Records all packages in a coordinated release",
+    "bundle_version": "1.0.0",
+    "protocol_version": "1.0.0",
+    "release_timestamp": "PENDING",
+    "evidence_baseline": {
+        "reference": "governance/freeze/FREEZE_EVIDENCE_BASELINE_v1.0.md",
+        "version": "v1.0",
+        "digest": "sha256:PENDING"
+    },
+    "artifacts": {
+        "npm": {
+            "public": [
+                {
+                    "name": "@mplp/core",
+                    "version": "PENDING",
+                    "category": "PUBLIC",
+                    "layer": "L1",
+                    "derivation_proof": "packages/npm/core/DERIVATION_PROOF.yaml"
+                },
+                {
+                    "name": "@mplp/schema",
+                    "version": "PENDING",
+                    "category": "PUBLIC",
+                    "layer": "L1",
+                    "derivation_proof": "packages/npm/schema/DERIVATION_PROOF.yaml"
+                },
+                {
+                    "name": "@mplp/modules",
+                    "version": "PENDING",
+                    "category": "PUBLIC",
+                    "layer": "L2",
+                    "derivation_proof": "packages/npm/modules/DERIVATION_PROOF.yaml"
+                },
+                {
+                    "name": "@mplp/coordination",
+                    "version": "PENDING",
+                    "category": "PUBLIC",
+                    "layer": "L2",
+                    "derivation_proof": "packages/npm/coordination/DERIVATION_PROOF.yaml"
+                },
+                {
+                    "name": "@mplp/conformance",
+                    "version": "PENDING",
+                    "category": "PUBLIC",
+                    "layer": "L2",
+                    "derivation_proof": "packages/npm/conformance/DERIVATION_PROOF.yaml"
+                },
+                {
+                    "name": "@mplp/runtime-minimal",
+                    "version": "PENDING",
+                    "category": "PUBLIC",
+                    "layer": "L3",
+                    "derivation_proof": "packages/npm/runtime-minimal/DERIVATION_PROOF.yaml"
+                },
+                {
+                    "name": "@mplp/devtools",
+                    "version": "PENDING",
+                    "category": "PUBLIC",
+                    "layer": "Tool",
+                    "derivation_proof": "packages/npm/devtools/DERIVATION_PROOF.yaml"
+                },
+                {
+                    "name": "@mplp/sdk-ts",
+                    "version": "PENDING",
+                    "category": "PUBLIC",
+                    "layer": "Facade",
+                    "derivation_proof": "packages/npm/sdk-ts/DERIVATION_PROOF.yaml"
+                },
+                {
+                    "name": "@mplp/integration-storage-kv",
+                    "version": "PENDING",
+                    "category": "PUBLIC",
+                    "layer": "L4",
+                    "derivation_proof": "packages/npm/integration-storage-kv/DERIVATION_PROOF.yaml"
+                },
+                {
+                    "name": "@mplp/integration-storage-fs",
+                    "version": "PENDING",
+                    "category": "PUBLIC",
+                    "layer": "L4",
+                    "derivation_proof": "packages/npm/integration-storage-fs/DERIVATION_PROOF.yaml"
+                },
+                {
+                    "name": "@mplp/integration-llm-http",
+                    "version": "PENDING",
+                    "category": "PUBLIC",
+                    "layer": "L4",
+                    "derivation_proof": "packages/npm/integration-llm-http/DERIVATION_PROOF.yaml"
+                }
+            ],
+            "ci_only": [
+                {
+                    "name": "@mplp/validator",
+                    "version": "PENDING",
+                    "category": "CI-ONLY",
+                    "layer": "Tool",
+                    "publish_blocked": true
+                }
+            ],
+            "deprecated": [
+                {
+                    "name": "@mplp/compliance",
+                    "version": "1.0.4",
+                    "category": "DEPRECATED",
+                    "migration": "@mplp/conformance",
+                    "deprecation_message": "Legacy name. Use @mplp/conformance (Conformance Kit)."
+                }
+            ]
+        },
+        "pypi": {
+            "public": [
+                {
+                    "name": "mplp-sdk",
+                    "version": "PENDING",
+                    "category": "PUBLIC",
+                    "layer": "SDK + Runtime",
+                    "derivation_proof": "packages/pypi/mplp-sdk/DERIVATION_PROOF.yaml",
+                    "dist": {
+                        "sdist": "mplp_sdk-PENDING.tar.gz",
+                        "wheel": "mplp_sdk-PENDING-py3-none-any.whl",
+                        "sdist_sha256": "PENDING",
+                        "wheel_sha256": "PENDING"
+                    }
+                }
+            ],
+            "ci_only": [],
+            "deprecated": []
+        }
+    },
+    "version_sync": {
+        "rule": "V-SYNC-01",
+        "major_minor_consistent": true,
+        "target_version": "PENDING"
+    },
+    "dependency_graph": {
+        "$comment": "Simplified dependency graph snapshot",
+        "@mplp/sdk-ts": [
+            "@mplp/core",
+            "@mplp/schema",
+            "@mplp/modules"
+        ],
+        "@mplp/runtime-minimal": [
+            "@mplp/core",
+            "@mplp/schema",
+            "@mplp/coordination"
+        ],
+        "@mplp/conformance": [
+            "@mplp/core",
+            "@mplp/schema",
+            "@mplp/modules",
+            "@mplp/coordination"
+        ],
+        "@mplp/devtools": [
+            "@mplp/core",
+            "@mplp/schema",
+            "@mplp/validator"
+        ]
+    },
+    "verification": {
+        "all_proofs_valid": "PENDING",
+        "version_sync_passed": "PENDING",
+        "forbidden_packages_blocked": "PENDING",
+        "bundle_integrity": "PENDING"
+    }
+}

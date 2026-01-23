@@ -1,0 +1,83 @@
+# DERIVATION_PROOF.yaml Template
+#
+# This file proves that all package content is derived from MPLP Truth Sources.
+# Every SDK package MUST include a completed version of this file.
+#
+# Reference: METHOD-SDKR-02 (Derivation Rules)
+
+protocol_version: "1.0.0"
+
+# Truth Source Bundle Reference
+schema_bundle:
+  path: "schemas/v2"
+  digest: "sha256:PENDING"  # Hash of the schema bundle at derivation time
+  
+evidence_baseline:
+  reference: "governance/freeze/FREEZE_EVIDENCE_BASELINE_v1.0.md"
+  version: "v1.0"
+
+# Derivation Process
+derivation:
+  generator:
+    name: "scripts/derive.ts"  # Path to generation script
+    version: "git:PENDING"      # Git commit hash of generator
+  timestamp: "PENDING"          # ISO 8601 timestamp
+  
+  # Input schemas used for derivation
+  inputs:
+    - path: "schemas/v2/mplp-core.schema.json"
+      digest: "sha256:PENDING"
+    - path: "schemas/v2/mplp-context.schema.json"
+      digest: "sha256:PENDING"
+    # Add all schemas used...
+  
+  # Overlay templates (non-schema sources)
+  overlays:
+    - path: "packages/sources/sdk-ts/templates/*"
+      description: "TypeScript boilerplate templates"
+
+# Package Identity
+package:
+  name: "@mplp/PACKAGE_NAME"
+  version: "PENDING"
+
+# Generated Outputs
+outputs:
+  - path: "dist/index.js"
+    digest: "sha256:PENDING"
+  - path: "dist/index.d.ts"
+    digest: "sha256:PENDING"
+  # Add all generated files...
+
+# Python Distribution Artifacts (for PyPI packages only)
+# Reference: METHOD-SDKR-08 §6.6
+python_dist:
+  - type: sdist
+    filename: "package-x.y.z.tar.gz"
+    sha256: "PENDING"  # Compute with: shasum -a 256 <file>
+  - type: wheel
+    filename: "package-x.y.z-py3-none-any.whl"
+    sha256: "PENDING"  # Compute with: shasum -a 256 <file>
+
+# Manual Declared Files (requires explicit approval)
+manual_declared_files:
+  - path: "src/builders.ts"
+    declaration: "Schema-compatible builder pattern"
+    review_status: "PENDING"  # APPROVED | PENDING | REJECTED
+
+# Forbidden Patterns (MUST be empty in package)
+forbidden_patterns:
+  - "dist/helpers/*"
+  - "src/utils/*"
+
+# Verification Results
+verification:
+  schema_validation: "PENDING"      # PASS | FAIL
+  api_surface_check: "PENDING"      # PASS | FAIL
+  forbidden_content_scan: "PENDING" # PASS | FAIL
+  golden_flows_covered:
+    - "GF-01"
+    - "GF-02"
+    - "GF-03"
+    - "GF-04"
+    - "GF-05"

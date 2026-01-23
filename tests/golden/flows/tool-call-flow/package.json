@@ -1,0 +1,9 @@
+{
+    "name": "tool-call-flow-mcp-official-v0.2",
+    "private": true,
+    "type": "module",
+    "dependencies": {
+        "@modelcontextprotocol/server": "0.5.0",
+        "zod": "^3.22.0"
+    }
+}

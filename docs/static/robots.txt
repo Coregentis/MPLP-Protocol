@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /search
+Sitemap: https://docs.mplp.io/sitemap.xml

@@ -1,0 +1,22 @@
+{
+    "name": "mplp-protocol-oss",
+    "version": "1.0.0",
+    "description": "MPLP Protocol v1.0 - Multi-agent Planning and Learning Protocol (OSS Package)",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Coregentis/MPLP-Protocol.git"
+    },
+    "author": "Coregentis",
+    "license": "Apache-2.0",
+    "private": true,
+    "scripts": {
+        "docs:dev": "cd docs && npm run start",
+        "docs:build": "cd docs && npm run build",
+        "test": "echo 'No root tests configured'",
+        "lint": "echo 'No root linting configured'"
+    },
+    "devDependencies": {
+        "js-yaml": "^4.1.0",
+        "minimatch": "^10.0.1"
+    }
+}

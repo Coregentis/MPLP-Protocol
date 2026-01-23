@@ -1,0 +1,77 @@
+---
+entry_surface: documentation
+doc_type: informative
+normativity: informative
+status: draft
+protocol_version: "1.0.0"
+doc_id: "DOC-EVAL-MAP-FLOW-02-001"
+
+# UI metadata (non-normative; excluded from protocol semantics)
+title: "MAP-FLOW-02: MAP Broadcast Fan-out"
+sidebar_label: "MAP-FLOW-02: Broadcast"
+sidebar_position: 22
+description: "MPLP evaluation scenario: MAP-FLOW-02: MAP Broadcast Fan-out. Reference flow for conformance testing."
+authority: none
+---
+
+# MAP-FLOW-02: MAP Broadcast Fan-out
+
+## Scope
+
+This evaluation scenario validates MAP broadcast mode with parallel agent execution:
+- MAP session initialized with broadcast mode
+- 3+ agents registered as participants
+- Task broadcast to all participants simultaneously
+- Responses collected from all agents
+- Results aggregated into final output
+
+## Non-Goals
+
+This scenario does NOT evaluate:
+- Sequential turn-taking (see MAP-FLOW-01)
+- Single-agent execution (see SA-FLOW-01/02)
+- Tool integration in MAP context
+
+---
+
+## Modules Involved
+
+| Module | Role in Flow |
+|:-------|:-------------|
+| **Context** | Shared semantic scope for session |
+| **Plan** | Task definition for broadcast |
+| **Collab** | Session coordination with broadcast mode |
+| **Role** | Participant registration |
+
+---
+
+## Collaboration Pattern: Broadcast Fan-out
+
+**Pattern Characteristics**:
+- **Parallel dispatch**: All participants receive simultaneously
+- **Non-exclusive**: Multiple agents active concurrently
+- **Aggregated**: Results merged from all responses
+
+---
+
+## Evidence
+
+| Type | Location | Status |
+|:-----|:---------|:-------|
+| **Golden Flow** | `tests/golden/flows/map-flow-02-broadcast-fanout/` | Passed |
+| **Input Fixtures** | `tests/golden/flows/map-flow-02-broadcast-fanout/input/` | Available |
+| **Collab Fixture** | `tests/golden/flows/map-flow-02-broadcast-fanout/input/collab.json` | Available |
+
+---
+
+## Expected Behavior
+
+- Broadcast reaches all registered participants
+- Parallel execution succeeds
+- All responses collected
+- Result aggregation complete
+- Collab mode is `broadcast`
+
+---
+
+**Source of Truth**: `tests/golden/flows/map-flow-02-broadcast-fanout/README.md`

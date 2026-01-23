@@ -1,0 +1,109 @@
+# MPLP Protocol v1.0.0 – Frozen Specification
+# Freeze Date: 2025-12-03
+# Status: FROZEN (no breaking changes permitted)
+# Governance: MPLP Protocol Governance Committee (MPGC)
+# © 2026 Bangshi (Beijing) Network Technology Co., Ltd.
+# License: Apache-2.0
+# Any normative change requires a new protocol version.
+
+# SA Profile Definition - Based on actual schema implementations
+# Truth Sources:
+#   - schemas/v2/events/mplp-sa-event.schema.json
+#   - schemas/v2/invariants/sa-invariants.yaml
+#   - schemas/v2/mplp-plan.schema.json
+#   - schemas/v2/mplp-context.schema.json
+
+sa_profile:
+  version: "1.0.0"
+  profile_id: "mplp:profile:sa:1.0.0"
+  title: "MPLP Single-Agent Profile v1.0"
+  description: "Minimal execution profile for single-agent MPLP workflows"
+
+  # Required L2 Modules (per protocol specification)
+  required_modules:
+    - module: context
+      schema_ref: "schemas/v2/mplp-context.schema.json"
+      usage: "World state anchor, project/session scope"
+    - module: plan
+      schema_ref: "schemas/v2/mplp-plan.schema.json"
+      usage: "Task decomposition and step execution"
+    - module: trace
+      schema_ref: "schemas/v2/mplp-trace.schema.json"
+      usage: "Execution audit trail"
+    - module: role
+      schema_ref: "schemas/v2/mplp-role.schema.json"
+      usage: "Permission boundaries and capabilities"
+    - module: core
+      usage: "Protocol manifest and metadata"
+
+  # SA Lifecycle events (from mplp-sa-event.schema.json)
+  event_types:
+    mandatory:
+      - SAInitialized
+      - SAContextLoaded
+      - SAPlanEvaluated
+      - SAStepStarted
+      - SAStepCompleted
+      - SATraceEmitted
+      - SACompleted
+    recommended:
+      - SAStepFailed
+
+  # Event schema reference
+  events_schema: "schemas/v2/events/mplp-sa-event.schema.json"
+
+  # Invariants (from sa-invariants.yaml)
+  invariants:
+    ref: "schemas/v2/invariants/sa-invariants.yaml"
+    count: 9
+    summary:
+      - sa_requires_context: "Context must have valid UUID"
+      - sa_context_must_be_active: "Context status must be 'active'"
+      - sa_plan_context_binding: "Plan.context_id must match Context"
+      - sa_plan_has_steps: "Plan must have at least 1 step"
+      - sa_steps_have_valid_ids: "All step IDs must be UUID v4"
+      - sa_steps_agent_role_if_present: "agent_role must be non-empty if present"
+      - sa_trace_not_empty: "Trace must have at least 1 event"
+      - sa_trace_context_binding: "Trace.context_id must match Context"
+      - sa_trace_plan_binding: "Trace.plan_id must match Plan"
+
+  # SA execution lifecycle (derived from event sequence)
+  lifecycle:
+    phases:
+      - id: initialize
+        event: SAInitialized
+        description: "SA instance created with valid sa_id"
+      - id: load_context
+        event: SAContextLoaded
+        description: "Context bound, context_id captured"
+      - id: evaluate_plan
+        event: SAPlanEvaluated
+        description: "Plan parsed, steps ordered"
+      - id: execute_steps
+        events: [SAStepStarted, SAStepCompleted, SAStepFailed]
+        description: "Sequential step execution with trace"
+      - id: emit_trace
+        event: SATraceEmitted
+        description: "Execution trace finalized"
+      - id: complete
+        event: SACompleted
+        description: "SA execution terminated"
+
+  # Event required fields (from schema)
+  event_required_fields:
+    all_events:
+      - event_id: "uuid"
+      - event_type: "enum"
+      - timestamp: "date-time"
+      - sa_id: "uuid"
+    optional:
+      - context_id: "uuid"
+      - plan_id: "uuid"
+      - trace_id: "uuid"
+      - payload: "object"
+
+  # Relationship to MAP
+  relationship:
+    extends: null # SA is base profile
+    extended_by: ["mplp:profile:map:1.0.0"]
+    note: "MAP extends SA by adding Collab, Dialog, Network modules"

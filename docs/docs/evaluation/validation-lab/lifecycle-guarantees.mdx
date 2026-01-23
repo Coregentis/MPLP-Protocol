@@ -1,0 +1,80 @@
+---
+sidebar_position: 2
+entry_surface: documentation
+doc_type: informative
+normativity: informative
+status: draft
+authority: none
+protocol_version: "1.0.0"
+doc_id: "DOC-EVAL-VLAB-LG-001"
+
+# UI metadata (non-normative)
+title: Lifecycle Guarantees Reference
+sidebar_label: Lifecycle Guarantees
+description: "LG-01~05 definitions — what the Validation Lab adjudicates against evidence packs."
+keywords: [Lifecycle Guarantees, LG-01, LG-02, LG-03, LG-04, LG-05, MPLP, Validation Lab]
+---
+
+# Lifecycle Guarantees Reference
+
+> [!IMPORTANT]
+> **Non-Normative Document**
+>
+> This document is informative only.
+
+> **SSOT**: [`Validation_Lab/governance/LIFECYCLE_GUARANTEES.yaml`](https://github.com/Coregentis/MPLP-Validation-Lab/blob/main/governance/LIFECYCLE_GUARANTEES.yaml)  
+> This page is a Reference projection. Authority resides in the Validation Lab repository.
+
+## What are Lifecycle Guarantees?
+
+**Lifecycle Guarantees (LG-01~05)** are the adjudication targets in the Validation Lab. They define what the Lab evaluates when processing evidence packs under a versioned ruleset.
+
+:::warning Terminology Partition
+- **LG-01~05** = Lifecycle Guarantees (Lab adjudication targets) — defined in Validation Lab
+- **Flow-01~05** = Protocol Test Scenarios — defined in main repository (`tests/golden/flows/`)
+
+These are distinct naming spaces and should not be conflated.
+:::
+
+## LG-01~05 Definitions
+
+| ID | Internal ID | Name | Description |
+|:---|:---|:---|:---|
+| **LG-01** | `gf-01` | Single Agent Lifecycle | Evaluates presence of context, plan, and trace artifacts |
+| **LG-02** | `gf-02` | Multi-Agent Collaboration | Evaluates presence of timeline events |
+| **LG-03** | `gf-03` | Human-in-the-Loop Gating | Evaluates presence of confirm decision records |
+| **LG-04** | `gf-04` | Drift Detection & Recovery | Evaluates presence of manifest file |
+| **LG-05** | `gf-05` | External Tool Integration | Evaluates presence of integrity checksums |
+
+:::info Non-Normative Note
+Under **ruleset-1.0**, all Lifecycle Guarantees perform **presence-level adjudication only**. This means the Lab checks whether required artifacts exist, not whether they are semantically valid. Future ruleset versions may introduce deeper semantic validation.
+:::
+
+## Evidence Hints
+
+Each Lifecycle Guarantee has associated evidence hints — files the Lab expects to find in a valid evidence pack:
+
+| LG | Evidence Hints |
+|:---|:---|
+| LG-01 | `artifacts/context.json`, `artifacts/plan.json`, `artifacts/trace.json` |
+| LG-02 | `timeline/events.ndjson` |
+| LG-03 | `artifacts/context.json` (confirm field) |
+| LG-04 | `manifest.json` |
+| LG-05 | `integrity/sha256sums.txt` |
+
+## Ruleset Mapping
+
+Lifecycle Guarantees are evaluated by versioned rulesets. The current mapping:
+
+| Ruleset | LG Coverage | Strength |
+|:---|:---|:---|
+| `ruleset-1.0` | LG-01~05 | Presence-level |
+
+See [Ruleset Reference](./rulesets.mdx) for ruleset versioning details.
+
+## Related Resources
+
+- [Validation Lab Overview](./) — Four Boundaries & terminology
+- [Ruleset Reference](./rulesets.mdx) — Ruleset versioning
+- [Evidence Pack Contract](./evidence-pack-contract.mdx) — Pack structure
+- [Lab Site: Guarantees](https://lab.mplp.io/guarantees) — Live reference

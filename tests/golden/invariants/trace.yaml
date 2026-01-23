@@ -1,0 +1,27 @@
+# MPLP Protocol v1.0.0 — Frozen Specification
+# Freeze Date: 2025-12-03
+# Status: FROZEN (no breaking changes permitted)
+# Governance: MPLP Protocol Governance Committee (MPGC)
+# © 2026 Bangshi Beijing Network Technology Limited Company
+# License: Apache-2.0
+# Any normative change requires a new protocol version.
+
+- id: trace_id_must_be_uuid
+  path: trace_id
+  rule: uuid-v4
+  description: "Trace ID must be a valid UUID v4"
+
+- id: root_span_trace_id_match
+  path: root_span.trace_id
+  rule: eq(trace.trace_id)
+  description: "Root span trace_id must match Trace ID"
+
+- id: root_span_context_id_match
+  path: root_span.context_id
+  rule: eq(context.context_id)
+  description: "Root span context_id must match Context ID"
+
+- id: events_timestamp_iso
+  path: events[*].timestamp
+  rule: iso-datetime
+  description: "Event timestamps must be ISO 8601"

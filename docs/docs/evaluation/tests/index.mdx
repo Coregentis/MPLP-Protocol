@@ -1,0 +1,61 @@
+---
+sidebar_position: 0
+title: "Tests Overview"
+description: "Overview of MPLP test architecture: Golden Flows, test suites, and fixture formats. This page is informative only."
+keywords: [MPLP Tests, Golden Flows, Test Suite, Fixtures, Evaluation]
+doc_type: reference
+normativity: informative
+status: active
+protocol_version: "1.0.0"
+doc_id: "DOC-EVAL-TESTS-INDEX-001"
+entry_surface: documentation
+---
+
+# Tests Overview
+
+> [!NOTE]
+> **Non-Normative Document**
+>
+> This page is informative only. It describes test architecture for reference purposes.
+
+> **SSOT Reference**: Authoritative test definitions live in [Repository tests/](https://github.com/Coregentis/MPLP-Protocol/tree/main/tests/golden/flows).
+
+## What This Section Contains
+
+This section documents MPLP's **test architecture** — scenarios that generate evidence packs for evaluation. Adjudication of evidence is performed externally by the Validation Lab.
+
+| Document | Purpose |
+|----------|---------|
+| [Test Architecture Overview](./test-architecture-overview.md) | Test design principles |
+| [Golden Test Suite Overview](./golden-test-suite-overview.md) | Golden Flow test suite |
+| [Golden Flow Registry](./golden-flow-registry.md) | Flow-01~05 definitions |
+| [Golden Fixture Format](./golden-fixture-format.md) | Fixture structure |
+| [Cross-Language Overview](./cross-language-overview.md) | Multi-language testing |
+| [Schema Alignment Overview](./schema-alignment-overview.md) | Schema validation |
+| [Runtime Compat Overview](./runtime-compat-overview.md) | Runtime compatibility |
+
+## Boundary
+
+> [!IMPORTANT]
+> **Tests vs Adjudication**
+>
+> - **Tests** (this section): Define scenarios that generate evidence packs
+> - **Adjudication** (external): Performed by the [Validation Lab](https://lab.mplp.io)
+>
+> Docs do not contain adjudication results or live coverage data.
+
+## Reading Path
+
+1. **Start with**: [Test Architecture Overview](./test-architecture-overview.md)
+2. **Golden Flows**: [Golden Test Suite Overview](./golden-test-suite-overview.md)
+3. **Evaluation**: [Golden Flows](/docs/evaluation/golden-flows) (parent section)
+
+## Related Resources
+
+- [Golden Flows](/docs/evaluation/golden-flows) — Flow evaluation guidance
+- [Repository Tests](https://github.com/Coregentis/MPLP-Protocol/tree/main/tests) — SSOT
+- [Validation Lab](https://lab.mplp.io) — Evidence adjudication (external)
+
+---
+
+> *Evaluation guidance here is reference-only. Live adjudication data and coverage metrics remain in the [Validation Lab](https://lab.mplp.io).*

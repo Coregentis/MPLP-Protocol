@@ -1,0 +1,41 @@
+name: "mplp-codeql-config"
+
+# Only scan production SDK code (published packages)
+paths:
+  - "packages/sources/**"
+  - "packages/npm/**"
+  - "packages/pypi/**"
+
+# Exclude internal tooling, scripts, and build artifacts
+paths-ignore:
+  # Internal development scripts (not production code)
+  - "scripts/**"
+  
+  # Governance and documentation tools (internal)
+  - "governance/**"
+  
+  # Docusaurus source and build
+  - "docs/**"
+  
+  # Test files (not production code)
+  - "tests/**"
+  - "**/*.test.ts"
+  - "**/*.spec.ts"
+  
+  # Examples (demonstration code)
+  - "examples/**"
+  
+  # Website (separate repository)
+  - "MPLP_website/**"
+  
+  # Validation Lab (separate repository)
+  - "Validation_Lab/**"
+
+  # Common generated/dependency directories
+  - "**/node_modules/**"
+  - "**/dist/**"
+  - "**/build/**"
+  - "**/coverage/**"
+  - "**/.cache/**"
+  - "**/.docusaurus/**"
+

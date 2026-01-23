@@ -1,0 +1,10 @@
+{
+  "ok": false,
+  "errors": [
+    {
+      "path": "context_id",
+      "code": "required",
+      "message": "Field required"
+    }
+  ]
+}

@@ -1,0 +1,112 @@
+# MPLP Protocol v1.0.0 – Frozen Specification
+# Freeze Date: 2025-12-03
+# Status: FROZEN (no breaking changes permitted)
+# Governance: MPLP Protocol Governance Committee (MPGC)
+# © 2026 Bangshi (Beijing) Network Technology Co., Ltd.
+# License: Apache-2.0
+# Any normative change requires a new protocol version.
+
+version: "1.0.0"
+title: "MPLP Event Taxonomy v1.0"
+description: "Complete event family classification for MPLP v1.0 Observability Duties. Defines 12 Logical Families mapped to 3 Physical Schemas."
+
+# Governance
+status: "Frozen"
+last_updated: "2025-12-01"
+
+# Schema Mapping Strategy
+# 1. Specific Schemas: Used when the event has unique structural requirements (e.g., pipeline stage, graph update).
+# 2. Generic Core Schema: Used when the event follows the standard metadata + payload pattern without extra top-level fields.
+#
+# NOTE: For module-to-event-family mappings, see schemas/v2/taxonomy/module-event-matrix.yaml (single truth source).
+
+event_families:
+  # --- Physical Schema: mplp-graph-update-event.schema.json ---
+  - id: graph_update
+    title: "GraphUpdateEvent"
+    description: "**REQUIRED** - PSG structural updates, node/edge mutations"
+    compliance: required
+    schema_ref: "schemas/v2/events/mplp-graph-update-event.schema.json"
+
+  # --- Physical Schema: mplp-pipeline-stage-event.schema.json ---
+  - id: pipeline_stage
+    title: "PipelineStageEvent"
+    description: "**REQUIRED** - Pipeline stage transitions, execution flow tracking"
+    compliance: required
+    schema_ref: "schemas/v2/events/mplp-pipeline-stage-event.schema.json"
+
+  # --- Physical Schema: mplp-runtime-execution-event.schema.json ---
+  - id: runtime_execution
+    title: "RuntimeExecutionEvent"
+    description: "**RECOMMENDED** - Runtime execution lifecycle tracking (agents, tools, LLMs)"
+    compliance: recommended
+    schema_ref: "schemas/v2/events/mplp-runtime-execution-event.schema.json"
+
+  # --- Physical Schema: mplp-event-core.schema.json (Generic) ---
+  - id: import_process
+    title: "ImportProcessEvent"
+    description: "Project import, repository scanning, semantic card generation"
+    compliance: recommended
+    schema_ref: "schemas/v2/events/mplp-event-core.schema.json"
+
+  - id: intent
+    title: "IntentEvent"
+    description: "User intentions, actor actions, input channels"
+    compliance: recommended
+    schema_ref: "schemas/v2/events/mplp-event-core.schema.json"
+
+  - id: delta_intent
+    title: "DeltaIntentEvent"
+    description: "Intent deltas, change requests"
+    compliance: optional
+    schema_ref: "schemas/v2/events/mplp-event-core.schema.json"
+
+  - id: impact_analysis
+    title: "ImpactAnalysisEvent"
+    description: "Impact assessment results"
+    compliance: optional
+    schema_ref: "schemas/v2/events/mplp-event-core.schema.json"
+
+  - id: compensation_plan
+    title: "CompensationPlanEvent"
+    description: "Compensation planning for intent execution"
+    compliance: optional
+    schema_ref: "schemas/v2/events/mplp-event-core.schema.json"
+
+  - id: methodology
+    title: "MethodologyEvent"
+    description: "Methodology selection and execution tracking"
+    compliance: optional
+    schema_ref: "schemas/v2/events/mplp-event-core.schema.json"
+
+  - id: reasoning_graph
+    title: "ReasoningGraphEvent"
+    description: "Reasoning graph construction and evolution"
+    compliance: optional
+    schema_ref: "schemas/v2/events/mplp-event-core.schema.json"
+
+  - id: cost_budget
+    title: "CostAndBudgetEvent"
+    description: "Cost tracking and token usage"
+    compliance: recommended
+    schema_ref: "schemas/v2/events/mplp-event-core.schema.json"
+
+  - id: external_integration
+    title: "ExternalIntegrationEvent"
+    description: "External system integration activities"
+    compliance: recommended
+    schema_ref: "schemas/v2/events/mplp-event-core.schema.json"
+
+# Profile-Level Event Families
+profile_events:
+  - id: sa_profile
+    title: "SAEvent"
+    description: "Single Agent Profile events"
+    schema_ref: "schemas/v2/events/mplp-sa-event.schema.json"
+    doc_ref: "docs/03-profiles/sa-events.md"
+
+  - id: map_profile
+    title: "MAPEvent"
+    description: "Multi-Agent Profile events"
+    schema_ref: "schemas/v2/events/mplp-map-event.schema.json"
+    doc_ref: "docs/03-profiles/map-events.md"

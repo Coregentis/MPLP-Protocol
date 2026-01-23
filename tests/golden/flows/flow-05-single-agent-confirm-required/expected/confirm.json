@@ -1,0 +1,30 @@
+{
+  "meta": {
+    "protocol_version": "1.0.0",
+    "schema_version": "1.0.0",
+    "created_at": "2025-12-01T12:01:00.000Z"
+  },
+  "confirm_id": "550e8400-e29b-41d4-a716-446655440520",
+  "target_type": "plan",
+  "target_id": "550e8400-e29b-41d4-a716-446655440501",
+  "status": "approved",
+  "requested_by_role": "agent",
+  "requested_at": "2025-12-01T12:01:00.000Z",
+  "reason": "High-risk migration requires DBA approval",
+  "decisions": [
+    {
+      "decision_id": "550e8400-e29b-41d4-a716-446655440521",
+      "status": "rejected",
+      "decided_by_role": "dba_reviewer",
+      "decided_at": "2025-12-01T12:05:00.000Z",
+      "reason": "Missing rollback plan for high-risk migration"
+    },
+    {
+      "decision_id": "550e8400-e29b-41d4-a716-446655440522",
+      "status": "approved",
+      "decided_by_role": "dba_reviewer",
+      "decided_at": "2025-12-01T12:15:00.000Z",
+      "reason": "Rollback addressed via manual procedure documentation"
+    }
+  ]
+}

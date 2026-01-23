@@ -1,0 +1,100 @@
+{
+  "$comment": "MPLP v1.0.0 FROZEN – © 2026 Bangshi Beijing Network Technology Limited Company – Apache-2.0 – Governance: MPGC",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://mplp.dev/schemas/v1.0/learning/mplp-learning-sample-core.schema.json",
+  "title": "MPLP LearningSample Core v1.0",
+  "description": "Core structure for MPLP LearningSample entities - defines the universal format for learning samples generated from execution history",
+  "type": "object",
+  "properties": {
+    "sample_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier of the learning sample (UUID v4)"
+    },
+    "sample_family": {
+      "type": "string",
+      "description": "LearningSample family identifier - determines expected input/output structure",
+      "examples": [
+        "intent_resolution",
+        "delta_impact",
+        "pipeline_outcome",
+        "confirm_decision",
+        "graph_evolution",
+        "multi_agent_coordination"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when sample was generated"
+    },
+    "input": {
+      "type": "object",
+      "description": "Abstracted representation of input conditions, intent, context at sample creation time",
+      "additionalProperties": true
+    },
+    "state": {
+      "type": "object",
+      "description": "Snapshot of relevant system state before execution (PSG summary, config, roles, etc.)",
+      "additionalProperties": true
+    },
+    "output": {
+      "type": "object",
+      "description": "Abstracted representation of actual outcomes, decisions, changes, results",
+      "additionalProperties": true
+    },
+    "meta": {
+      "type": "object",
+      "description": "Metadata, labels, quality signals, provenance IDs, human feedback annotations",
+      "properties": {
+        "source_flow_id": {
+          "type": "string",
+          "description": "Optional: Flow ID that generated this sample (e.g., FLOW-01, SA-01, MAP-01)"
+        },
+        "source_event_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "description": "Optional: Observability event IDs referenced by this sample"
+        },
+        "project_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Optional: Project context identifier"
+        },
+        "human_feedback_label": {
+          "type": "string",
+          "enum": [
+            "approved",
+            "rejected",
+            "not_reviewed"
+          ],
+          "description": "Optional: Human quality assessment"
+        },
+        "quality_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Optional: Automated quality score (0.0-1.0)"
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "sample_id",
+    "sample_family",
+    "created_at",
+    "input",
+    "output"
+  ],
+  "additionalProperties": true,
+  "x-mplp-meta": {
+    "protocolVersion": "1.0.0",
+    "frozen": true,
+    "freezeDate": "2025-12-03",
+    "governance": "MPGC"
+  }
+}

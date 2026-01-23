@@ -1,0 +1,10 @@
+{
+  "label": "SDKs",
+  "position": 12,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "guides/sdk/index"
+  }
+}

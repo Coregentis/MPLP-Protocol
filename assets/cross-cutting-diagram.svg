@@ -1,0 +1,120 @@
+<svg width="1280" height="520" viewBox="0 0 1280 520" xmlns="http://www.w3.org/2000/svg"
+     role="img" aria-labelledby="cc-title cc-desc">
+  <title id="cc-title">MPLP Cross-Cutting Kernel Services (11 Items)</title>
+  <desc id="cc-desc">Grid diagram showing the 11 MPLP Cross-Cutting Kernel Services: Coordination, Error Handling, Event Bus, Learning Feedback, Observability, Orchestration, Performance, Protocol Versioning, Security, State Sync, and Transaction. These OS-level duties apply across all agents, stages, and runtimes.</desc>
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description>
+        <dc:title>MPLP Cross-Cutting Kernel Services Matrix</dc:title>
+        <dc:description>Visual matrix of the 11 cross-cutting concerns that form the Agent OS kernel services in MPLP.</dc:description>
+        <dc:creator>Bangshi Beijing Network Technology Limited Company</dc:creator>
+        <dc:rights>Copyright 2025 Bangshi Beijing Network Technology Limited Company. Apache-2.0 License.</dc:rights>
+        <dc:subject>MPLP, Cross-Cutting Concerns, Kernel Services, Coordination, Observability, Security, Transaction, State Sync</dc:subject>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+
+  <defs>
+    <style>
+      text {
+        font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont,
+                     "Segoe UI", system-ui, sans-serif;
+      }
+      .title {
+        font-weight: 600;
+        font-size: 32px;
+        fill: #1A73E8;
+      }
+      .cell-label {
+        font-weight: 600;
+        font-size: 18px;
+        fill: #1F2933;
+      }
+      .cell-bg {
+        fill: #F8FAFC;
+        stroke: #D0D7DE;
+        stroke-width: 1.5;
+      }
+    </style>
+  </defs>
+
+  <!-- Title -->
+  <text x="640" y="60" text-anchor="middle" class="title">
+    MPLP Cross-Cutting Kernel Services
+  </text>
+
+  <!-- Row 1 -->
+  <!-- Coordination -->
+  <rect x="80" y="110" width="260" height="100" rx="16" class="cell-bg" />
+  <text x="210" y="167" text-anchor="middle" class="cell-label">
+    Coordination
+  </text>
+
+  <!-- Error Handling -->
+  <rect x="360" y="110" width="260" height="100" rx="16" class="cell-bg" />
+  <text x="490" y="167" text-anchor="middle" class="cell-label">
+    Error Handling
+  </text>
+
+  <!-- Event Bus -->
+  <rect x="640" y="110" width="260" height="100" rx="16" class="cell-bg" />
+  <text x="770" y="167" text-anchor="middle" class="cell-label">
+    Event Bus
+  </text>
+
+  <!-- Learning Feedback -->
+  <rect x="920" y="110" width="260" height="100" rx="16" class="cell-bg" />
+  <text x="1050" y="167" text-anchor="middle" class="cell-label">
+    Learning Feedback
+  </text>
+
+  <!-- Row 2 -->
+  <!-- Observability -->
+  <rect x="80" y="230" width="260" height="100" rx="16" class="cell-bg" />
+  <text x="210" y="287" text-anchor="middle" class="cell-label">
+    Observability
+  </text>
+
+  <!-- Orchestration -->
+  <rect x="360" y="230" width="260" height="100" rx="16" class="cell-bg" />
+  <text x="490" y="287" text-anchor="middle" class="cell-label">
+    Orchestration
+  </text>
+
+  <!-- Performance -->
+  <rect x="640" y="230" width="260" height="100" rx="16" class="cell-bg" />
+  <text x="770" y="287" text-anchor="middle" class="cell-label">
+    Performance
+  </text>
+
+  <!-- Protocol Versioning -->
+  <rect x="920" y="230" width="260" height="100" rx="16" class="cell-bg" />
+  <text x="1050" y="279" text-anchor="middle" class="cell-label">
+    Protocol
+  </text>
+  <text x="1050" y="302" text-anchor="middle" class="cell-label">
+    Versioning
+  </text>
+
+  <!-- Row 3 -->
+  <!-- Security -->
+  <rect x="80" y="350" width="260" height="100" rx="16" class="cell-bg" />
+  <text x="210" y="407" text-anchor="middle" class="cell-label">
+    Security
+  </text>
+
+  <!-- State Sync -->
+  <rect x="360" y="350" width="260" height="100" rx="16" class="cell-bg" />
+  <text x="490" y="399" text-anchor="middle" class="cell-label">
+    State Sync
+  </text>
+
+  <!-- Transaction -->
+  <rect x="640" y="350" width="260" height="100" rx="16" class="cell-bg" />
+  <text x="770" y="399" text-anchor="middle" class="cell-label">
+    Transaction
+  </text>
+
+  <!-- Last cell intentionally left empty for visual breathing space -->
+</svg>

@@ -1,0 +1,10 @@
+{
+  "label": "Standards",
+  "position": 17,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "evaluation/standards/index"
+  }
+}

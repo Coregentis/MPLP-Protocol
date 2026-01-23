@@ -1,0 +1,66 @@
+---
+sidebar_position: 5
+entry_surface: documentation
+doc_type: informative
+normativity: informative
+status: draft
+authority: none
+protocol_version: "1.0.0"
+doc_id: "DOC-EVAL-VLAB-SUBSTRATE-001"
+
+# UI metadata (non-normative)
+title: Substrates Reference
+sidebar_label: Substrates
+description: "Execution substrates recognized by the Validation Lab for curated evidence evaluation."
+keywords: [Substrates, Tier-0, MPLP, Validation Lab, Coverage]
+---
+
+# Substrates Reference
+
+> [!IMPORTANT]
+> **Non-Normative Document**
+>
+> This document is informative only.
+
+> **SSOT**: [`Validation_Lab/data/curated-runs/substrate-index.yaml`](https://github.com/Coregentis/MPLP-Validation-Lab/blob/main/data/curated-runs/substrate-index.yaml)  
+> This page is a Reference projection. Authority resides in the Validation Lab repository.
+
+## What is a Substrate?
+
+A **Substrate** is an execution context or runtime environment against which the Lab has curated evidence. Substrates are categorized by evaluation tier:
+
+| Tier | Meaning | Example |
+|:---|:---|:---|
+| **Tier-0** | Built-in / synthetic substrates | Lab-generated reference evidence |
+| **Tier-1** | Curated with full LG coverage | Well-documented real-world implementations |
+| **Tier-2** | Partial coverage / in-progress | Emerging substrates under evaluation |
+
+:::warning Not a Ranking
+Substrate tiers represent **evaluation coverage maturity**, not quality or endorsement. A Tier-0 substrate is not "better" than Tier-2; it simply has more complete evidence coverage.
+:::
+
+## Substrate Scope
+
+The Lab's substrate index defines:
+
+- **Substrate ID** — Unique identifier
+- **Status** — Active, deprecated, or in-progress
+- **LG Coverage** — Which Lifecycle Guarantees have been evaluated
+- **Evidence Pack References** — Links to curated runs
+
+:::info Non-Normative Note
+The substrate list evolves as new evidence is curated. See the [SSOT index](https://github.com/Coregentis/MPLP-Validation-Lab/blob/main/data/curated-runs/substrate-index.yaml) for the authoritative, up-to-date list.
+:::
+
+## How Substrates Are Used
+
+1. **Evidence Pack Generation** — You run your implementation on a substrate to generate evidence
+2. **Lab Adjudication** — The Lab evaluates your evidence pack against the substrate's expected behavior
+3. **Coverage Reporting** — Results are aggregated by substrate in the Lab's coverage reports
+
+## Related Resources
+
+- [Validation Lab Overview](./) — Four Boundaries & terminology
+- [Lifecycle Guarantees](./lifecycle-guarantees.mdx) — LG-01~05 definitions
+- [Evidence Pack Contract](./evidence-pack-contract.mdx) — Pack structure
+- [Lab Site: Runs](https://lab.mplp.io/runs) — Curated runs by substrate

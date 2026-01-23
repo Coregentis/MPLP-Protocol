@@ -1,0 +1,111 @@
+---
+sidebar_position: 1
+entry_surface: documentation
+doc_type: informative
+normativity: informative
+status: draft
+authority: none
+protocol_version: "1.0.0"
+doc_id: "DOC-EVAL-VLAB-INDEX-001"
+
+# UI metadata (non-normative)
+title: Validation Lab Overview
+sidebar_label: Validation Lab
+description: "Evidence-based adjudication for MPLP Lifecycle Guarantees. Non-certifying, non-normative, no execution hosting, deterministic."
+keywords: [Validation Lab, MPLP, Evidence, Lifecycle Guarantees, Adjudication, Non-certification]
+---
+
+# Validation Lab Overview
+
+> [!IMPORTANT]
+> **Non-Normative Document**
+>
+> This document is informative only.
+
+> **SSOT Reference**: This page is a Reference projection of [Validation Lab governance documents](https://github.com/Coregentis/MPLP-Validation-Lab).  
+> Authority: Lab rulesets and evidence contracts are versioned and governed in the Validation Lab repository.
+
+## What is the Validation Lab?
+
+The **MPLP Validation Lab** is an evidence-based adjudication system for evaluating MPLP lifecycle guarantees. It provides:
+
+- **Evidence-based verdicts** for Lifecycle Guarantees (LG-01~05)
+- **Versioned rulesets** for deterministic, reproducible evaluation
+- **Curated runs** with reviewable adjudication proofs
+
+:::warning Four Boundaries (Non-Negotiable)
+1. **Non-Certifying** — Verdicts are evidence-based outputs, not official marks or endorsements
+2. **Non-Normative** — Lab does not define protocol semantics; see MPLP Docs for specifications
+3. **No Execution Hosting** — Lab does not accept uploads or run your code; you generate evidence locally
+4. **Deterministic Ruleset** — Same evidence + same ruleset version = same verdict hash
+:::
+
+## Terminology Partition
+
+:::info Flow vs LG — Distinct Naming Spaces
+- **Flow-01~05** = Protocol Test Scenarios (defined in main repository `tests/golden/flows/`)
+- **LG-01~05** = Lifecycle Guarantees (Lab adjudication targets)
+
+These are distinct and should not be conflated. Flows are test scenarios; LGs are what the Lab adjudicates.
+:::
+
+| Term | Definition | Role |
+|:---|:---|:---|
+| **Lifecycle Guarantee (LG)** | Adjudication target (LG-01~05) | What the Lab evaluates |
+| **Evidence Pack** | `manifest + artifacts + timeline + snapshots` | Input to adjudication |
+| **Ruleset** | Versioned evaluation rules | Deterministic decision basis |
+| **Verdict** | `PASS / FAIL / NOT_EVALUATED / NOT_ADMISSIBLE` | Output of adjudication |
+| **Conformance** | Evidence meets versioned ruleset requirements | Evaluation conclusion (NOT certification) |
+
+## Four Entry Points
+
+MPLP uses a four-entry model. Each surface has a strict, non-overlapping role:
+
+| Entry | Role | URL |
+|:---|:---|:---|
+| **Website** | Discovery & Positioning | [mplp.io](https://www.mplp.io) |
+| **Documentation** | Specification & Reference | [docs.mplp.io](https://docs.mplp.io) |
+| **Repository** | Source of Truth | [GitHub](https://github.com/Coregentis/MPLP-Protocol) |
+| **Validation Lab** | Evidence Adjudication | [lab.mplp.io](https://lab.mplp.io) |
+
+## Version Taxonomy
+
+The Lab uses four distinct version prefixes:
+
+| Prefix | Name | Description |
+|:---|:---|:---|
+| `site-v*` | Site Freeze | Website IA & public commitment |
+| `pack-v*` | Evidence Pack Format | Pack structure version |
+| `ruleset-*` | Ruleset Version | Adjudication rule version |
+| `rel-lab-*` | Release Seal | Governance freeze tag |
+
+:::tip
+When you see `v0.x` in Lab context:
+- In `/runs` page → refers to **pack format** (pack-v0.2~v0.4)
+- In Footer/Home → refers to **site freeze** (site-v0.5)
+- In `data/rulesets/` → refers to **ruleset version** (ruleset-1.0~1.2)
+:::
+
+## What the Lab Provides
+
+✅ Evidence-based evaluation tools  
+✅ Self-assessment frameworks  
+✅ Lifecycle Guarantee (LG-01~05) verdict generation  
+✅ Schema validation utilities  
+✅ Reproducible, auditable verdicts  
+
+## What the Lab Does NOT Provide
+
+❌ Official certification or compliance marks  
+❌ Badges, seals, or rankings  
+❌ Execution hosting or runtime environments  
+❌ Implementation advice or adaptor recommendations  
+❌ Regulatory or legal guarantees  
+
+## Related Resources
+
+- [Lifecycle Guarantees Reference](./lifecycle-guarantees.mdx) — LG-01~05 definitions
+- [Ruleset Reference](./rulesets.mdx) — ruleset-1.0~1.2 specifications
+- [Evidence Pack Contract](./evidence-pack-contract.mdx) — Pack structure requirements
+- [Validation Lab Site](https://lab.mplp.io) — Live adjudication system
+- [Validation Lab Repository](https://github.com/Coregentis/MPLP-Validation-Lab) — SSOT

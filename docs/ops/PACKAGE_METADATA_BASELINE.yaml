@@ -1,0 +1,52 @@
+# MPLP Package Metadata Baseline
+# Canonical source of truth for all NPM and PyPI packages
+# All publish sources MUST align to this baseline
+
+license: Apache-2.0
+author: Coregentis AI
+copyright_line: "© 2026 Bangshi Beijing Network Technology Limited Company"
+
+urls:
+  homepage: https://www.mplp.io
+  docs: https://docs.mplp.io
+  repo: https://github.com/Coregentis/MPLP-Protocol
+  issues: https://github.com/Coregentis/MPLP-Protocol/issues
+
+keywords:
+  - mplp
+  - multi-agent
+  - lifecycle
+  - protocol
+  - agent-os
+  - agent-os-protocol
+
+# NPM-specific mappings
+npm:
+  license: Apache-2.0
+  author: Coregentis AI
+  homepage: https://www.mplp.io
+  repository:
+    type: git
+    url: https://github.com/Coregentis/MPLP-Protocol.git
+  bugs:
+    url: https://github.com/Coregentis/MPLP-Protocol/issues
+  keywords:
+    - mplp
+    - multi-agent
+    - lifecycle
+    - protocol
+    - agent-os
+    - agent-os-protocol
+
+# PyPI-specific mappings
+pypi:
+  license: Apache-2.0
+  author: Coregentis AI
+  urls:
+    Homepage: https://www.mplp.io
+    Documentation: https://docs.mplp.io
+    Repository: https://github.com/Coregentis/MPLP-Protocol
+    Issues: https://github.com/Coregentis/MPLP-Protocol/issues
+  classifiers:
+    - "License :: OSI Approved :: Apache Software License"
+    - "Development Status :: 5 - Production/Stable"

@@ -1,0 +1,55 @@
+---
+sidebar_position: 0
+title: "Profiles Overview"
+description: "Overview of MPLP agent profiles: Single-Agent (SA) and Multi-Agent Protocol (MAP). This page is informative only."
+keywords: [MPLP Profiles, SA Profile, MAP Profile, Single-Agent, Multi-Agent]
+doc_type: reference
+normativity: informative
+status: active
+protocol_version: "1.0.0"
+doc_id: "DOC-SPEC-PROFILES-INDEX-001"
+entry_surface: documentation
+---
+
+# Profiles Overview
+
+> [!NOTE]
+> **Non-Normative Document**
+>
+> This page is informative only. It restates schema structure for navigation purposes.
+
+> **SSOT Reference**: Authoritative profile definitions live in [Repository schemas](https://github.com/Coregentis/MPLP-Protocol/tree/main/schemas/v2/profiles).
+
+## What This Section Contains
+
+MPLP defines **agent profiles** that specify capability requirements and event contracts for different agent complexity levels.
+
+| Profile | Schema File | Description |
+|---------|-------------|-------------|
+| [Single-Agent (SA)](./sa-profile.md) | `sa-profile.schema.json` | Standalone agent lifecycle |
+| [Multi-Agent Protocol (MAP)](./map-profile.md) | `map-profile.schema.json` | Coordinated multi-agent systems |
+| [Multi-Agent Governance](./multi-agent-governance-profile.md) | — | Governance patterns for MAP |
+
+## Event Contracts
+
+Each profile specifies required events:
+
+- [SA Events](./sa-events.md) — Single-Agent event taxonomy
+- [MAP Events](./map-events.md) — Multi-Agent event taxonomy
+
+## Reading Path
+
+1. **Start with**: [SA Profile](./sa-profile.md) — understand single-agent lifecycle
+2. **Then**: [MAP Profile](./map-profile.md) — multi-agent coordination
+3. **Cross-reference**: [Module-Event Matrix](/docs/specification/observability/module-event-matrix)
+
+## Related Resources
+
+- [Architecture Overview](/docs/specification/architecture) — L1-L4 layer model
+- [Observability Overview](/docs/specification/observability) — Event taxonomy
+- [Repository Schemas](https://github.com/Coregentis/MPLP-Protocol/tree/main/schemas/v2/profiles) — SSOT
+- [Validation Lab](https://lab.mplp.io) — Evidence adjudication (external)
+
+---
+
+> *Evaluation guidance here is reference-only. Live adjudication data and coverage metrics remain in the [Validation Lab](https://lab.mplp.io).*

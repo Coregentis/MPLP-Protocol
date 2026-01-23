@@ -1,0 +1,55 @@
+---
+sidebar_position: 0
+title: "Modules Overview"
+description: "Overview of MPLP's ten composable modules: Core, Plan, Confirm, Trace, Context, Dialog, Role, Collab, Network, and Extension. This page is informative only."
+keywords: [MPLP Modules, Plan, Confirm, Trace, Context, Dialog, Role, Collab, Network, Extension]
+doc_type: reference
+normativity: informative
+status: active
+protocol_version: "1.0.0"
+doc_id: "DOC-SPEC-MODULES-INDEX-001"
+entry_surface: documentation
+---
+
+# Modules Overview
+
+> [!NOTE]
+> **Non-Normative Document**
+>
+> This page is informative only. It restates schema structure for navigation purposes.
+
+> **SSOT Reference**: Authoritative module definitions live in [Repository schemas](https://github.com/Coregentis/MPLP-Protocol/tree/main/schemas/v2).
+> Schema files: `mplp-{module}.schema.json`
+
+## What This Section Contains
+
+This section documents MPLP's **ten composable modules** — schema-defined building blocks that structure agent lifecycle artifacts. Each module page restates schema semantics for readability.
+
+| Module | Schema File | Purpose |
+|--------|-------------|---------|
+| [Core](./core-module.md) | `mplp-core.schema.json` | Foundation types and identifiers |
+| [Plan](./plan-module.md) | `mplp-plan.schema.json` | Intent declaration before action |
+| [Confirm](./confirm-module.md) | `mplp-confirm.schema.json` | Authorization gates |
+| [Trace](./trace-module.md) | `mplp-trace.schema.json` | Execution recording |
+| [Context](./context-module.md) | `mplp-context.schema.json` | State management |
+| [Dialog](./dialog-module.md) | `mplp-dialog.schema.json` | Human interaction |
+| [Role](./role-module.md) | `mplp-role.schema.json` | Agent identity and capabilities |
+| [Collab](./collab-module.md) | `mplp-collab.schema.json` | Multi-agent coordination |
+| [Network](./network-module.md) | `mplp-network.schema.json` | External communication |
+| [Extension](./extension-module.md) | `mplp-extension.schema.json` | Custom extensions |
+
+## Reading Path
+
+1. **Module Interactions**: [How modules compose](./module-interactions.md)
+2. **Evidence Chain**: [Plan](./plan-module.md) → [Confirm](./confirm-module.md) → [Trace](./trace-module.md)
+3. **Cross-Cutting Duties**: [Module-to-Duty Matrix](/docs/specification/module-to-duty-matrix)
+
+## Related Resources
+
+- [Architecture Overview](/docs/specification/architecture) — L1-L4 layer model
+- [Repository Schemas](https://github.com/Coregentis/MPLP-Protocol/tree/main/schemas/v2) — SSOT
+- [Validation Lab](https://lab.mplp.io) — Evidence adjudication (external)
+
+---
+
+> *Evaluation guidance here is reference-only. Live adjudication data and coverage metrics remain in the [Validation Lab](https://lab.mplp.io).*

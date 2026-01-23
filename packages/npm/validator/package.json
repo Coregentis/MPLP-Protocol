@@ -1,0 +1,70 @@
+{
+    "name": "@mplp/validator",
+    "version": "1.0.0",
+    "private": true,
+    "description": "MPLP Protocol Validator CLI - CI-only internal tool for schema validation and Golden Flow verification. NOT FOR EXTERNAL PUBLICATION.",
+    "license": "Apache-2.0",
+    "author": "Coregentis AI",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "bin": {
+        "mplp": "./bin/mplp.js"
+    },
+    "files": [
+        "dist/",
+        "bin/",
+        "schemas/",
+        "README.md",
+        "LICENSE.txt"
+    ],
+    "homepage": "https://www.mplp.io",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Coregentis/MPLP-Protocol.git"
+    },
+    "bugs": {
+        "url": "https://github.com/Coregentis/MPLP-Protocol/issues"
+    },
+    "keywords": [
+        "mplp",
+        "validator",
+        "protocol",
+        "ci",
+        "schema-validation",
+        "agent-os",
+        "agent-os-protocol"
+    ],
+    "__comment_publishConfig": "REMOVED: publishConfig.access conflicts with private:true. CI-only package.",
+    "dependencies": {
+        "ajv": "^8.12.0",
+        "ajv-formats": "^2.1.1",
+        "commander": "^12.0.0"
+    },
+    "devDependencies": {
+        "@types/node": "^20.0.0",
+        "typescript": "^5.0.0"
+    },
+    "mplp": {
+        "protocolVersion": "1.0.0",
+        "frozen": true,
+        "governance": "MPGC",
+        "layer": "Tool",
+        "ci_only": true,
+        "publishBlocked": true
+    },
+    "exports": {
+        ".": {
+            "import": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        }
+    },
+    "sideEffects": false,
+    "engines": {
+        "node": ">=18.0.0"
+    },
+    "scripts": {
+        "build": "tsc",
+        "ci:build": "npm run sync-schemas && npm run build",
+        "sync-schemas": "node scripts/sync-schemas.mjs"
+    }
+}

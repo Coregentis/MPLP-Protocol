@@ -1,0 +1,28 @@
+flow_id: tool-call-flow
+strength: S1
+description: "Tool-call evidence flow - presence level validation only"
+
+invariants:
+  - id: tool_call_event_present
+    scope: trace
+    description: "Tool call event must exist in trace"
+    schema_ref:
+      path: schemas/v2/common/events.schema.json
+      pointer: /properties/event_type
+    rule: exists(events[?event_type=="tool.call"])
+    
+  - id: tool_result_event_present
+    scope: trace
+    description: "Tool result event must exist in trace"
+    schema_ref:
+      path: schemas/v2/common/events.schema.json
+      pointer: /properties/event_type
+    rule: exists(events[?event_type=="tool.result"])
+    
+  - id: tool_data_present
+    scope: trace
+    description: "Tool call event must have data payload"
+    schema_ref:
+      path: schemas/v2/common/events.schema.json
+      pointer: /properties/data
+    rule: events[?event_type=="tool.call"].data != null

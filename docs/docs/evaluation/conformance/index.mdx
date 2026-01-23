@@ -1,0 +1,130 @@
+---
+entry_surface: documentation
+doc_type: informative
+normativity: informative
+status: draft
+protocol_version: "1.0.0"
+doc_id: "DOC-EVAL-CONF-INDEX-001"
+
+# UI metadata (non-normative; excluded from protocol semantics)
+title: Conformance & Evaluation
+sidebar_label: Conformance
+description: "MPLP conformance evaluation: Conformance & Evaluation. Non-normative guidance for protocol conformance assessment."
+authority: none
+---
+
+> "Can I prove what the agents did, why they did it, and whether the system stayed within approved lifecycle guarantees?"
+
+MPLP's answer is: **evidence-first lifecycle governance**, not "trust the prompt" or "trust best practices".
+
+## 2. What This Section Is NOT
+
+This section does **not** provide:
+
+- **Certification**, endorsement, or compliance badges
+- **Legal advice** or regulatory determinations
+- A mandatory runtime, SDK, or framework adapter
+- "One true" implementation pattern for agents
+
+MPLP is **vendor-neutral** by design. Conformance is judged by **evidence**, not by brand names or frameworks.
+
+## 3. How to Use This Section
+
+| Your Goal | Start Here |
+|:---|:---|
+| Understand conformance model | [Conformance Model](./conformance-model.md) |
+| Understand evidence structure | [Evidence Model](./evidence-model.md) |
+| See evaluation axes | [Evaluation Dimensions](./evaluation-dimensions.md) |
+| Understand result semantics | [Results & Status](./results-and-status.md) |
+| See future plans | [Roadmap](./roadmap.mdx) |
+| Practical evaluation steps | [Conformance Guide](/docs/guides/conformance-guide) |
+| Validate with Golden Flows | [Golden Flows](/docs/evaluation/golden-flows) |
+
+## 4. Core Principles
+
+### 4.1 Evidence-First
+
+Conformance is judged by **exported evidence**, not runtime inspection:
+
+| Evidence Type | Purpose |
+|:---|:---|
+| **Plan** | Intent declaration |
+| **Confirm** | Governance gate record |
+| **Trace** | Execution history |
+| **Snapshot** | State checkpoint |
+| **Manifest** | Configuration declaration |
+
+### 4.2 Vendor Neutral
+
+Evidence does not depend on proprietary runtime features to be interpretable. Any conformant runtime MUST produce evidence that:
+
+- Uses MPLP JSON Schemas
+- Is self-describing (contains protocol version)
+- Is replayable (trace can reconstruct timeline)
+
+### 4.3 Non-Certification
+
+MPLP does **not** provide:
+- Certification programs
+- Compliance badges
+- Runtime endorsements
+
+Conformance is a **binary outcome** (conformant / non-conformant / incomplete-evidence), not a score or certification level.
+
+## 5. Minimal Conformance Checklist
+
+Use this as a quick sanity check before deeper evaluation:
+
+| # | Check | Evidence Source |
+|:---|:---|:---|
+| 1 | **Protocol version declared** | `meta.protocolVersion` in artifacts |
+| 2 | **Plan → Confirm → Trace chain exists** | Linked IDs across objects |
+| 3 | **High-risk actions gated** | `Confirm` objects for gated steps |
+| 4 | **Replayability** | Trace segments with timestamps |
+| 5 | **Bounded failure** | Recovery events or safe-stop records |
+
+## 6. Conformance Documents
+
+| Document | Purpose |
+|:---|:---|
+| [Conformance Model](./conformance-model.md) | Conformance classes (L1/L2/L3) and outcomes |
+| [Evidence Model](./evidence-model.md) | What constitutes valid evidence |
+| [Evaluation Dimensions](./evaluation-dimensions.md) | 6 axes for judging conformance |
+| [Results & Status](./results-and-status.md) | Outcome semantics and reporting |
+| [Roadmap](./roadmap.mdx) | Future plans and boundaries |
+| [Conformance Guide](/docs/guides/conformance-guide) | Practical evaluation workflow |
+| [Conformance Checklist](/docs/guides/conformance-checklist) | Vendor self-verification template |
+
+## 7. Related Documentation
+
+- [Golden Flows](/docs/evaluation/golden-flows) — Protocol test scenarios for conformance verification
+- [Versioning Policy](/docs/evaluation/governance/versioning-policy) — Protocol version semantics
+- [Schema Mapping Standard](/docs/guides/sdk/schema-mapping-standard) — Evidence schema definitions
+
+## 8. Evidence Adjudication (Validation Lab)
+
+For evidence-based verdict generation and adjudication, see the **Validation Lab**:
+
+| Resource | Description | Link |
+|:---|:---|:---|
+| **Lifecycle Guarantees** | LG-01~05 adjudication targets | [Docs Reference](/docs/evaluation/validation-lab/lifecycle-guarantees) / [Lab](https://lab.mplp.io/guarantees) |
+| **Rulesets** | Versioned evaluation rules | [Docs Reference](/docs/evaluation/validation-lab/rulesets) / [Lab](https://lab.mplp.io/rulesets) |
+| **Evidence Pack Contract** | Pack structure & format | [Docs Reference](/docs/evaluation/validation-lab/evidence-pack-contract) / [Lab Policy](https://lab.mplp.io/policies/contract) |
+| **Terminology** | Flow vs LG naming conventions | [Docs Reference](/docs/evaluation/validation-lab/terminology) |
+
+:::info Terminology Note
+- **Flow-01~05** = Protocol Test Scenarios (this repository)
+- **LG-01~05** = Lifecycle Guarantees (Lab adjudication targets)
+
+These are distinct naming spaces. See [Terminology Reference](/docs/evaluation/validation-lab/terminology) for details.
+:::
+
+:::warning Non-Certification Boundary
+The Validation Lab provides **evidence-based verdicts**, not certification, badges, or endorsements. Verdicts are reproducible outputs: same evidence + same ruleset = same verdict hash.
+:::
+
+---
+
+**Document Status**: Informative (Navigation Entry Point)  
+**Scope**: Evidence-based conformance evaluation  
+**Exclusions**: Certification, legal compliance, vendor endorsement

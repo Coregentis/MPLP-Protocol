@@ -1,0 +1,28 @@
+{
+  "meta": {
+    "protocol_version": "1.0.0",
+    "schema_version": "1.0.0",
+    "created_at": "2025-11-30T12:10:02.000Z"
+  },
+  "collab_id": "650e8400-e29b-41d4-a716-446655443002",
+  "context_id": "650e8400-e29b-41d4-a716-446655443000",
+  "title": "Turn-Taking Collaboration Session",
+  "purpose": "Demonstrate round-robin multi-agent collaboration",
+  "mode": "round_robin",
+  "status": "active",
+  "participants": [
+    {
+      "participant_id": "agent-a-planner",
+      "role_id": "650e8400-e29b-41d4-a716-446655443020",
+      "kind": "agent",
+      "display_name": "Agent A (Planner)"
+    },
+    {
+      "participant_id": "agent-b-reviewer",
+      "role_id": "650e8400-e29b-41d4-a716-446655443021",
+      "kind": "agent",
+      "display_name": "Agent B (Reviewer)"
+    }
+  ],
+  "created_at": "2025-11-30T12:10:02.000Z"
+}

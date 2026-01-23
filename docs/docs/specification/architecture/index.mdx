@@ -1,0 +1,53 @@
+---
+entry_surface: documentation
+doc_type: informative
+normativity: informative
+status: draft
+protocol_version: "1.0.0"
+doc_id: "DOC-ARCH-INDEX-001"
+
+# UI metadata (non-normative; excluded from protocol semantics)
+title: Architecture
+sidebar_label: Architecture
+sidebar_position: 0
+description: "MPLP architecture documentation: Architecture. Defines structural requirements and layer responsibilities."
+authority: Documentation Governance
+---
+
+:::important[Non-Normative Document]
+
+This document is informative only.
+:::
+
+# Architecture
+
+Welcome to the MPLP Architecture documentation. This section covers the foundational design of the protocol.
+
+## Scope
+
+This index provides navigation to the **four-layer architecture** specifications that define MPLP's structural foundations.
+
+## Non-Goals
+
+This page does not contain normative requirements. All normative content is defined in the linked specification documents.
+
+---
+
+## Layer Specifications (Normative)
+
+| Layer | Document | Responsibility |
+|-------|----------|----------------|
+| **L1** | [L1 Core Protocol](./l1-core-protocol.md) | Data schemas, invariants, type system |
+| **L2** | [L2 Coordination & Governance](./l2-coordination-governance.md) | Module lifecycles, execution profiles |
+| **L3** | [L3 Execution & Orchestration](./l3-execution-orchestration.md) | Runtime execution, AEL/VSL/PSG |
+| **L4** | [L4 Integration Infrastructure](./l4-integration-infra.md) | External integrations, drift detection |
+
+## Additional Resources
+
+- [L1-L4 Architecture Deep Dive](./l1-l4-architecture-deep-dive.md) — Technical deep dive (informative)
+- [Schema Conventions](./schema-conventions.md) — Schema design conventions (normative)
+- [Cross-Cutting Kernel Duties](/docs/specification/architecture/cross-cutting-kernel-duties) — Protocol-wide invariants (normative)
+
+---
+
+**Document Status**: Informative (Navigation Entry)
