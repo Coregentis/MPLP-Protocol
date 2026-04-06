@@ -11,11 +11,10 @@
  */
 
 import { describe, test, expect } from 'vitest';
-import { MplpRuntimeClient } from '../../packages/sdk-ts/src';
-import { validatePlan } from '../../packages/core-protocol/src/validators';
+import { MplpRuntimeClient } from '../../packages/npm/sdk-ts/dist';
+import { validatePlan } from '../../packages/npm/core/dist/validators';
 import { writeFileSync, mkdirSync, existsSync } from 'fs';
 import { join } from 'path';
-import { Plan } from '../../packages/core-protocol/src/types';
 
 describe('H6.4: Runtime Error → ValidationResult Consistency', () => {
     test('Runtime Error: Invalid Plan should be caught and standardized', async () => {
@@ -33,7 +32,7 @@ describe('H6.4: Runtime Error → ValidationResult Consistency', () => {
                         steps: []
                     };
                     // Cast to any/Plan to bypass TS check for this test
-                    return { output: { plan: invalidPlan as unknown as Plan }, events: [] };
+                    return { output: { plan: invalidPlan }, events: [] };
                 }
             }
         });
@@ -73,8 +72,8 @@ describe('H6.4: Runtime Error → ValidationResult Consistency', () => {
 
         // 4. Dump for Python Validation
         // Path relative to this test file: ../../tests/cross-language/runtime/out/ts
-        // __dirname is .../V1.0-release/tests/runtime-compat
-        // We want .../V1.0-release/tests/cross-language/runtime/out/ts
+        // __dirname is .../<repo-root>/tests/runtime-compat
+        // We want .../<repo-root>/tests/cross-language/runtime/out/ts
         // So ../cross-language/runtime/out/ts
         const outDir = join(__dirname, '../cross-language/runtime/out/ts');
         if (!existsSync(outDir)) {

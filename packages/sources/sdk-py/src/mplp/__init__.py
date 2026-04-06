@@ -2,14 +2,27 @@
 # Governance: MPGC
 
 """
-MPLP SDK — Publish Source
+mplp-sdk — source-side mirror package surface
 
-This is the Python SDK for the MPLP Protocol (Agent OS Protocol).
-Protocol version: 1.0.0 (FROZEN)
+This source-side mirror currently ships a minimal protocol helper package for:
+- __version__
+- MPLP_PROTOCOL_VERSION
+- KERNEL_DUTIES / KERNEL_DUTY_IDS / KERNEL_DUTY_NAMES / KERNEL_DUTY_COUNT
+
+It does not currently ship generated models or runtime orchestration.
 """
 
-__version__ = "1.0.4"
-MPLP_PROTOCOL_VERSION = "1.0.0"
+from .kernel_duties import KERNEL_DUTIES, KERNEL_DUTY_IDS, KERNEL_DUTY_NAMES, KERNEL_DUTY_COUNT
 
-# Package is minimal placeholder for v1.0.4
-# Full implementation pending derivation from Truth Sources
+__version__ = "1.0.5"
+MPLP_PROTOCOL_VERSION = "1.0.0"
+__all__ = [
+    "__version__",
+    "MPLP_PROTOCOL_VERSION",
+    "KERNEL_DUTIES",
+    "KERNEL_DUTY_IDS",
+    "KERNEL_DUTY_NAMES",
+    "KERNEL_DUTY_COUNT",
+]
+
+# Source-side helper mirror for the published mplp-sdk package.

@@ -66,16 +66,20 @@ Before submitting a PR:
 # Install dependencies
 pnpm install
 
-# Build all packages
-pnpm -r build
+# Validate the canonical schema bundle
+pnpm verify:schemas
 
-# Run tests
+# Run package tests
 pnpm test
+
+# Run Golden Flow coverage
+pnpm test:golden
 ```
 
 **Critical Requirements**:
 - [ ] All Golden Tests (`tests/golden/`) MUST pass
-- [ ] All Schemas MUST validate (`scripts/validate-schemas.ts`)
+- [ ] All Schemas MUST validate (`pnpm verify:schemas`)
+- [ ] Docs/governance/config changes SHOULD pass `pnpm gate:cleanup-sweep`
 - [ ] No normative changes without RFC approval
 
 ## Repository Links

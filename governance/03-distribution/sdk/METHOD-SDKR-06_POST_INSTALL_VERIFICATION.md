@@ -53,7 +53,7 @@ npm install @mplp/core@{version} @mplp/schema@{version}
 ### Step 2: Import
 
 ```typescript
-import { Context, Plan, Trace } from 'mplp-sdk-ts';
+import { createContext, createPlan, appendTrace, MplpRuntimeClient } from '@mplp/sdk-ts';
 ```
 
 **Failure**: Import error or missing exports
@@ -61,19 +61,33 @@ import { Context, Plan, Trace } from 'mplp-sdk-ts';
 ### Step 3: Type Check
 
 ```typescript
-const ctx: Context = { /* minimal valid */ };
+const ctx = createContext({
+  title: "post-install-check",
+  root: { domain: "verification", environment: "test" }
+});
 ```
 
 **Failure**: Type mismatch
 
-### Step 4: Enum Validation
+### Step 4: Kernel Duty Baseline Check
 
 ```typescript
-import { CROSS_CUTTING_ENUM_VALUES } from 'mplp-sdk-ts';
-// Must have exactly 11 values
+import { KERNEL_DUTY_COUNT, KERNEL_DUTY_IDS } from '@mplp/sdk-ts';
+
+if (KERNEL_DUTY_COUNT !== 11) throw new Error('Kernel Duty count mismatch');
+if (KERNEL_DUTY_IDS.length !== 11) throw new Error('Kernel Duty ID list mismatch');
 ```
 
-**Failure**: Enum count mismatch
+**Failure**: Missing or incorrect Kernel Duty exports
+
+### Step 5: Runtime Client Availability
+
+```typescript
+const client = new MplpRuntimeClient();
+void client;
+```
+
+**Failure**: Missing runtime client export
 
 ---
 
@@ -82,7 +96,7 @@ import { CROSS_CUTTING_ENUM_VALUES } from 'mplp-sdk-ts';
 ### Step 1: Install
 
 ```bash
-pip install mplp=={version}
+pip install mplp-sdk=={version}
 ```
 
 **Failure**: Package not found or install error
@@ -90,28 +104,37 @@ pip install mplp=={version}
 ### Step 2: Import
 
 ```python
-from mplp.models import Context, Plan, Trace
-from mplp.generated.cross_cutting import CROSS_CUTTING_ENUM_VALUES
+import mplp
 ```
 
 **Failure**: Import error
 
-### Step 3: Instantiation
+### Step 3: Version Check
 
 ```python
-from mplp.models.common import Metadata
-m = Metadata(protocol_version="1.0.0", schema_version="2.0.0")
+assert mplp.__version__ == "{version}"
 ```
 
-**Failure**: Validation error
+**Failure**: Version mismatch or missing export
 
-### Step 4: Enum Validation
+### Step 4: Kernel Duty Baseline Check
 
 ```python
-assert len(CROSS_CUTTING_ENUM_VALUES) == 11
+assert mplp.KERNEL_DUTY_COUNT == 11
+assert len(mplp.KERNEL_DUTY_IDS) == 11
 ```
 
-**Failure**: Enum count mismatch
+**Failure**: Missing or incorrect Kernel Duty exports
+
+### Step 5: Protocol Binding Check
+
+```python
+assert mplp.MPLP_PROTOCOL_VERSION == "1.0.0"
+```
+
+**Failure**: Protocol binding mismatch
+
+> **Current Scope Note:** The public `mplp-sdk` PyPI package is currently a minimal protocol helper package surface. Post-install verification MUST verify the surface that is actually shipped, not a richer future Python SDK surface.
 
 ---
 
@@ -164,13 +187,13 @@ Verification MUST be executed in a clean environment:
 # TypeScript
 rm -rf node_modules package-lock.json
 npm cache clean --force
-npm install mplp-sdk-ts@{version}
+npm install @mplp/sdk-ts@{version}
 
 # Python
 rm -rf venv
 python -m venv venv
 source venv/bin/activate
-pip install --no-cache-dir mplp=={version}
+pip install --no-cache-dir mplp-sdk=={version}
 ```
 
 ### 6.2 Environment Violation = Invalid Verification

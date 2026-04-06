@@ -1,202 +1,175 @@
 ---
 sidebar_position: 5
 
-doc_type: normative
-normativity: normative
+doc_type: reference
+normativity: informative
 status: draft
-authority: MPGC
-description: "Drift Detection and Rollback Mechanisms for MPLP runtimes."
+authority: none
+description: "Non-authoritative runtime guide for drift detection and rollback patterns in MPLP runtimes."
 title: Drift and Rollback
 keywords: [MPLP, Drift Detection, Rollback, PSG, Runtime, Transaction]
 sidebar_label: Drift and Rollback
 
 ---
 
-
 # Drift and Rollback
 
+> **Status**: Draft runtime guide  
+> **Authority**: Non-authoritative documentation surface  
+> **Boundary**: This page describes runtime implementation patterns. It does not
+> define new protocol requirements or introduce new protocol event types.
 
 ## 1. Purpose
 
-This document specifies the **Drift Detection** and **Rollback** mechanisms for MPLP runtimes. These mechanisms ensure the Protocol State Graph (PSG) remains accurate and provide transactional safety for agent actions.
+This guide describes common runtime patterns for:
 
-**Related Crosscuts**:
-- **error-handling**: Failure detection and recovery
-- **transaction**: Atomicity and rollback support
-- **state-sync**: PSG consistency invariant
+- detecting divergence between expected MPLP state and observed external state
+- preserving traceability when a runtime compensates or reverts actions
+- organizing snapshot/restore behavior around PSG/VSL-oriented runtimes
 
-## 2. Non-Goals
+The canonical protocol baseline still lives in repository-backed schemas,
+invariants, taxonomy, and governance sources.
 
-This specification does not mandate:
-- Specific storage engine implementation
-- Enterprise-grade HA/DR patterns
-- Distributed consensus algorithms (2PC, saga)
+## 2. Scope
 
----
+This page is about **runtime guidance**, not protocol truth.
 
-## 3. Drift Detection
+It is appropriate for:
 
-### 3.1 Purpose
+- implementation teams designing runtime reconciliation behavior
+- runtime authors deciding how to snapshot, restore, or compensate state
+- readers who need a conceptual map between PSG/VSL and rollback patterns
 
-**Drift** occurs when the PSG state diverges from the actual state of external systems (file system, databases, APIs). Detection mechanisms ensure early identification of inconsistencies.
+It is **not** the place to define:
 
-### 3.2 Detection Strategies
+- new normative event names
+- a mandated storage engine
+- a single rollback algorithm
+- enterprise HA/DR architecture
+- a single vendor-specific runtime design
 
-| Strategy | Description | When Used |
+## 3. Drift in MPLP Terms
+
+In MPLP terms, **drift** is a runtime-observed discrepancy between:
+
+- the state a conformant runtime expects from its PSG/VSL-backed model
+- and the state actually observed in files, repositories, tools, or external systems
+
+PSG remains the logical state model. Runtime implementations are responsible for
+detecting when their observed world no longer matches that model.
+
+## 4. Detection Strategies
+
+Common runtime strategies include:
+
+| Strategy | Description | Typical Tradeoff |
 |:---|:---|:---|
-| **Passive** | Compare on read - detect divergence when data is accessed | Low overhead |
-| **Active** | Periodic polling of external state | Background reconciliation |
-| **Invariant-based** | Validate invariant rules on every PSG update | Real-time detection |
+| Passive detection | Detect divergence during normal reads or state refreshes | Lower overhead, slower discovery |
+| Active polling | Periodically compare expected vs observed state | Higher overhead, earlier discovery |
+| Invariant-triggered detection | Re-check relevant invariants during important state changes | Good semantic signal, narrower coverage |
 
-### 3.3 Drift Detection Events
+Runtimes may combine these strategies. MPLP does not require one single
+mechanism.
 
-| Event | Purpose | Conformance |
+## 5. What to Record When Drift Is Observed
+
+This guide does **not** mint new protocol event types such as
+`DriftDetectedEvent` or `RollbackInitiated`.
+
+Instead, runtimes should record drift and recovery using the protocol surfaces
+that already exist, for example:
+
+- `graph_update` evidence when the logical graph is reconciled
+- `pipeline_stage` evidence when a step or stage fails, pauses, resumes, or is aborted
+- `compensation_plan` reasoning when a runtime prepares or executes compensating actions
+- `trace` content that explains what happened, what was rolled back, and why
+
+If a product introduces local runtime-specific events beyond the current MPLP
+taxonomy, those should be clearly labeled as product/runtime-local rather than as
+protocol event-family truth.
+
+## 6. Rollback Patterns
+
+Rollback in MPLP runtime guidance means restoring a runtime to a coherent state
+after failure, rejection, or unsafe divergence.
+
+Common patterns include:
+
+| Pattern | Runtime Meaning | Boundary |
 |:---|:---|:---|
-| `DriftDetectedEvent` | Signals detected divergence | MUST emit |
-| `DriftResolvedEvent` | Signals drift has been corrected | SHOULD emit |
+| PSG snapshot/restore | Restore the runtime's logical state model to a known checkpoint | Runtime design choice |
+| VSL transaction rollback | Revert persisted state abstraction changes when the storage layer supports it | Runtime/storage choice |
+| External compensation | Attempt inverse actions for external side effects | Best-effort runtime behavior |
+| User-mediated recovery | Ask for confirm/review before continuing after divergence | Governance/runtime coordination |
 
-### 3.4 Invariant-Based Detection
+MPLP does not require every runtime to implement every pattern.
 
-**Conformance**: **REQUIRED** for v1.0
+## 7. Suggested Snapshot Boundary
 
-On every PSG update:
-1. Evaluate relevant invariants (SA, MAP, Observability)
-2. If violation detected:
-   - Emit `DriftDetectedEvent`
-   - Log violation details in Trace
-   - Trigger rollback if severity is HIGH
+Reasonable runtime checkpoints often include:
 
-**Example**:
-```
-on psg.update(node):
-  for invariant in applicable_invariants(node):
-    if not invariant.validate(node):
-      emit DriftDetectedEvent({
-        drift_type: "invariant_violation",
-        invariant_id: invariant.id,
-        node_id: node.id,
-        severity: invariant.severity
-      })
-```
+- before a high-risk plan step
+- at pipeline-stage boundaries
+- before applying external side effects
+- before a multi-step transactional sequence
 
----
+What gets snapshotted is implementation-defined. Typical candidates include:
 
-## 4. Rollback Mechanisms
+- PSG state
+- VSL state
+- relevant working files
+- external action manifests needed for compensation
 
-### 4.1 Purpose
+## 8. Trace Preservation
 
-**Rollback** provides transactional safety for agent actions. If a multi-step Plan fails midway, the system reverts to a consistent state, preventing a "broken build" scenario.
+A rollback or compensation path should remain visible in the trace story.
 
-### 4.2 Snapshot Mechanism
+Good runtime hygiene includes:
 
-**Conformance**: **REQUIRED** for v1.0
+- retaining the original failure evidence
+- appending recovery/compensation evidence rather than erasing prior state
+- making it possible to reconstruct what failed, what was reverted, and what remained
 
-Before executing a Plan, the Runtime MUST maintain **Snapshots**:
+This is a runtime guidance principle, not a new protocol object definition.
 
-#### 4.2.1 Snapshot Granularity
-- **Minimum**: At Pipeline Stage boundaries
-- **Recommended**: At Plan execution start
+## 9. Relationship to Runtime Glue
 
-#### 4.2.2 Snapshot Contents
+This page should be read together with:
 
-| Target | Snapshot Method |
-|:---|:---|
-| **PSG State** | Serialize graph to JSON checkpoint |
-| **File System (Git)** | Create temporary branch or stash |
-| **File System (Non-Git)** | Create backup copies |
-
-#### 4.2.3 Storage Options
-- Full copies (simple, more storage)
-- Delta logs (efficient, more complex)
-
-### 4.3 Rollback Triggers
-
-A rollback is triggered by:
-
-| Trigger | Source | Severity |
-|:---|:---|:---|
-| **Plan Failure** | Critical step fails, no recovery path | High |
-| **User Rejection** | User rejects outcome during Confirm | Medium |
-| **Policy Violation** | Safety violation detected | Critical |
-| **Manual Abort** | User explicitly cancels operation | Medium |
-| **Transaction Abort** | Failure in multi-step atomic operation | High |
-| **User Request** | Explicit `IntentEvent` to undo | Medium |
-
-### 4.4 Rollback Procedure
-
-<MermaidDiagram id="7ff3e2ed31e8415f" />
-
-### 4.5 Consistency Requirements
-
-**When performing rollback**:
-
-1. **Trace Integrity**: The Trace MUST NOT be deleted
-   - Rollback itself is an event appended to the Trace
-   - Preserves audit trail
-
-2. **PSG Reversion**: Restore to snapshot state
-   - `project_root` nodes
-   - `plans` nodes
-   - `context` nodes
-
-3. **Event Compensation**: Best-effort for external side-effects
-   - If external API calls were made, attempt inverse operations
-   - Example: `delete_repo` to undo `create_repo`
-   - If automatic compensation fails, alert user with action log
-
-### 4.6 Rollback Events
-
-A Rollback operation produces:
-
-| Event | Purpose |
-|:---|:---|
-| `RollbackInitiated` | Marks start of rollback |
-| `RollbackCompleted` | Marks successful completion |
-| New **Trace Span** | Represents re-execution path |
-
-### 4.7 Compensation Logic
-
-For side effects that cannot be simply reverted:
-
-```typescript
-interface CompensationAction {
-  original_action: string;
-  compensation_action: string;
-  status: 'pending' | 'completed' | 'failed';
-  error?: string;
-}
-
-// Example compensation registry
-const compensations: Record<string, string> = {
-  'create_file': 'delete_file',
-  'create_branch': 'delete_branch',
-  'api.create_resource': 'api.delete_resource'
-};
-```
-
----
-
-## 5. Conformance Summary
-
-| Requirement | Level | Description |
-|:---|:---|:---|
-| Invariant-based drift detection | **MUST** | Evaluate invariants on PSG updates |
-| PSG snapshots at stage boundaries | **MUST** | Enable rollback capability |
-| DriftDetectedEvent emission | **MUST** | Audit trail for detected drift |
-| Rollback event emission | **MUST** | Audit trail for rollback operations |
-| Trace preservation on rollback | **MUST** | Never delete trace history |
-| External compensation | **SHOULD** | Best-effort for side-effects |
-| Hybrid detection strategy | **SHOULD** | Passive + Active detection |
-
----
-
-## 6. Related Documents
-
-- [PSG Overview](psg.md)
 - [Runtime Glue Overview](runtime-glue-overview.md)
+- [PSG Overview](psg.md)
 - [Crosscut PSG Event Binding](crosscut-psg-event-binding.md)
+- [Value State Layer](vsl.md)
+
+Those pages define the broader runtime/specification context. This page narrows
+to drift and rollback patterns within that context.
+
+## 10. Non-Goals
+
+This guide does not define:
+
+- a canonical `DriftDetectedEvent`
+- a canonical `RollbackCompleted` event
+- a required transaction manager
+- a required compensation registry
+- a required storage snapshot format
+
+If a runtime needs those mechanisms, they belong either:
+
+- in runtime-local implementation code, or
+- in a future explicitly governed protocol/runtime artifact
+
+## 11. Implementation Reading
+
+The safest interpretation of this page is:
+
+- protocol truth defines the state model, invariants, and event families
+- runtimes decide how to detect divergence and how to recover
+- this page provides guidance for that runtime design space without upgrading
+  guidance into new normative protocol requirements
 
 ---
 
-**Detection**: Passive + Active + Invariant-based (hybrid)  
-**Rollback**: PSG snapshots + compensation logic
+**Final Boundary**: this page is an implementation-facing runtime guide. It is
+not a protocol truth source, not a normative release gate, and not a source of
+new protocol event definitions.

@@ -7,26 +7,28 @@ schema_bundle:
   path: "schemas/v2"
   
 evidence_baseline:
-  reference: "governance/04-records/baselines/FREEZE_EVIDENCE_BASELINE_v1.0.md"
+  reference: "governance/04-records/FREEZE_EVIDENCE_BASELINE_v1.0.md"
   version: "v1.0"
   digest: "sha256:78ea3511cee7cacebff416b5ad6179358032d5322e5991523b5f8d6257d10354"
 
 derivation:
-  method: "source_derivation"
-  description: "TypeScript SDK package derived from MPLP Truth Sources"
+  method: "schema_bundle_projection"
+  description: "Schema package derived from MPLP schema truth sources including the canonical Kernel Duty taxonomy"
   truth_sources:
     - "schemas/v2/*.schema.json"
-    - "governance/01-core/MPLP_CONSTITUTION.md"
+    - "schemas/v2/taxonomy/kernel-duties.yaml"
+    - "governance/05-specialized/entity.json"
 
 package:
   name: "@mplp/schema"
   ecosystem: "npm"
-  version: "1.0.5"
+  version: "1.0.6"
   category: "PUBLIC"
 
 verification:
-  protocol_conformance: "VERIFIED"
+  protocol_surface_aligned: true
   evidence_baseline_aligned: true
+  kernel_duty_baseline_carried: true
 
 governance:
   method: "METHOD-SDKR-08"

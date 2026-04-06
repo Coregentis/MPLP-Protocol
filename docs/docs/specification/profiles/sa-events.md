@@ -11,249 +11,125 @@ sidebar_position: 2
 # UI metadata (non-normative; excluded from protocol semantics)
 title: SA Events
 sidebar_label: SA Events
-description: "MPLP profile specification: SA Events. Defines conformance requirements for execution profiles."
+description: "Schema-anchored specification page for the frozen SA profile event surface."
 ---
 
 # SA Events Specification
 
 ## Scope
 
-This specification defines the mandatory and recommended events for the Single-Agent Profile.
+This page documents the frozen **SA profile-specific event surface** as declared
+by:
+
+- `schemas/v2/profiles/sa-profile.yaml`
+- `schemas/v2/events/mplp-sa-event.schema.json`
+- `schemas/v2/taxonomy/event-taxonomy.yaml`
+
+It does not define handler logic, derived event-family doctrine, or processing
+semantics beyond those sources.
 
 ## Non-Goals
 
-This specification does not define event processing logic or SDK implementations.
+This page does not define:
 
+- general observability event-family behavior
+- event-processing pipelines
+- trace-writing algorithms
+- learning extraction behavior
+- SDK event handlers
 
 ## 1. Purpose
 
-This document specifies the **mandatory and recommended events** for the Single-Agent (SA) Profile. These events enable observability, debugging, and learning sample extraction.
+The SA event surface is the frozen profile-specific event surface for the SA
+baseline.
 
-## 2. Event Families in Scope
+In the event taxonomy, profile-specific events are tracked separately from the
+12 general event families through the `sa_profile` profile-event entry pointing
+to `mplp-sa-event.schema.json`.
 
-The SA Profile utilizes the following Event Families:
+## 2. Frozen Event Baseline
 
-| Family | Usage | Primary Events |
-|:---|:---|:---|
-| `RuntimeExecutionEvent` | SA lifecycle | `SAInitialized`, `SAStepStarted`, etc. |
-| `GraphUpdateEvent` | State changes | Plan/Context status updates |
-| `TraceEvent` | Trace emission | `SATraceEmitted` |
-| `CostAndBudgetEvent` | Resource tracking | Token usage, cost |
+### 2.1 Profile Manifest Anchor
 
-## 3. Mandatory Events (Normative)
+From `schemas/v2/profiles/sa-profile.yaml`:
 
-**Requirement Level**: MUST emit
+- mandatory: `SAInitialized`, `SAContextLoaded`, `SAPlanEvaluated`,
+  `SAStepStarted`, `SAStepCompleted`, `SATraceEmitted`, `SACompleted`
+- recommended: `SAStepFailed`
 
-### 3.1 Event Matrix
+### 2.2 Event Schema Surface
 
-| Phase | Trigger | Event Type | Required Fields | Schema |
-|:---|:---|:---|:---|:---|
-| Initialize | SA created | `SAInitialized` | `sa_id`, `timestamp` | [sa-event.schema.json] |
-| LoadContext | Context bound | `SAContextLoaded` | `sa_id`, `context_id` | [sa-event.schema.json] |
-| EvaluatePlan | Plan parsed | `SAPlanEvaluated` | `sa_id`, `plan_id` | [sa-event.schema.json] |
-| ExecuteStep | Step starts | `SAStepStarted` | `sa_id`, `step_id` | [sa-event.schema.json] |
-| ExecuteStep | Step succeeds | `SAStepCompleted` | `sa_id`, `step_id`, `status` | [sa-event.schema.json] |
-| EmitTrace | Trace written | `SATraceEmitted` | `sa_id`, `trace_id` | [sa-event.schema.json] |
-| Complete | SA terminates | `SACompleted` | `sa_id`, `status` | [sa-event.schema.json] |
+From `schemas/v2/events/mplp-sa-event.schema.json`:
 
-### 3.2 Event Lifecycle Flow
+#### Required Top-Level Fields
 
-<MermaidDiagram id="372f3dfcf3e186ce" />
+- `event_id`
+- `event_type`
+- `timestamp`
+- `sa_id`
 
-## 4. Recommended Events (Normative - SHOULD)
+#### Optional Top-Level Fields
 
-**Requirement Level**: SHOULD emit
+- `context_id`
+- `plan_id`
+- `trace_id`
+- `payload`
 
-| Scenario | Event Type | Rationale |
-|:---|:---|:---|
-| Step failure | `SAStepFailed` | Debug and retry logic |
-| Token usage | `CostAndBudgetEvent` | LLM cost tracking |
-| Tool call | `ToolExecutionEvent` | Tool audit trail |
-| LLM call | `LLMCallEvent` | Model performance tracking |
+#### `event_type` Enum
 
-## 5. Event Schemas
+The schema enum contains:
 
-### 5.1 SAInitialized
+- `SAInitialized`
+- `SAContextLoaded`
+- `SAPlanEvaluated`
+- `SAStepStarted`
+- `SAStepCompleted`
+- `SAStepFailed`
+- `SATraceEmitted`
+- `SACompleted`
 
-```json
-{
-  "event_id": "550e8400-e29b-41d4-a716-446655440001",
-  "event_type": "SAInitialized",
-  "sa_id": "550e8400-e29b-41d4-a716-446655440000",
-  "timestamp": "2025-12-07T00:00:00.000Z",
-  "payload": {
-    "runtime_version": "1.0.0",
-    "capabilities": ["code.write", "code.review"]
-  }
-}
-```
+### 2.3 Payload Definitions Present In Schema
 
-### 5.2 SAContextLoaded
+The frozen schema includes named payload definitions for:
 
-```json
-{
-  "event_id": "550e8400-e29b-41d4-a716-446655440002",
-  "event_type": "SAContextLoaded",
-  "sa_id": "550e8400-e29b-41d4-a716-446655440000",
-  "timestamp": "2025-12-07T00:00:01.000Z",
-  "context_id": "550e8400-e29b-41d4-a716-446655440010",
-  "payload": {
-    "context_title": "Refactor Auth Service",
-    "context_status": "active"
-  }
-}
-```
+- `step_started_payload`
+- `step_completed_payload`
 
-### 5.3 SAPlanEvaluated
+These are schema-provided payload definitions. This page does not expand them
+into a larger event-processing contract.
 
-```json
-{
-  "event_id": "550e8400-e29b-41d4-a716-446655440003",
-  "event_type": "SAPlanEvaluated",
-  "sa_id": "550e8400-e29b-41d4-a716-446655440000",
-  "timestamp": "2025-12-07T00:00:02.000Z",
-  "plan_id": "550e8400-e29b-41d4-a716-446655440020",
-  "payload": {
-    "plan_title": "Fix Login Bug",
-    "step_count": 5
-  }
-}
-```
+## 3. What This Page Does Not Create
 
-### 5.4 SAStepStarted
+This page does not create any of the following as new protocol requirements:
 
-```json
-{
-  "event_id": "550e8400-e29b-41d4-a716-446655440004",
-  "event_type": "SAStepStarted",
-  "sa_id": "550e8400-e29b-41d4-a716-446655440000",
-  "timestamp": "2025-12-07T00:00:03.000Z",
-  "payload": {
-    "step_id": "550e8400-e29b-41d4-a716-446655440030",
-    "description": "Read error logs",
-    "agent_role": "debugger"
-  }
-}
-```
+- `TraceEvent` as a separate event family
+- `CostAndBudgetEvent` as an SA-profile-specific required event
+- `ToolExecutionEvent` or `LLMCallEvent` as SA event types
+- module-action/event binding rules beyond the frozen profile and schema files
+- event-handler patterns
 
-### 5.5 SAStepCompleted
+If a named event type is not present in the frozen SA profile manifest or the
+SA event schema enum, this page should not be read as creating it.
 
-```json
-{
-  "event_id": "550e8400-e29b-41d4-a716-446655440005",
-  "event_type": "SAStepCompleted",
-  "sa_id": "550e8400-e29b-41d4-a716-446655440000",
-  "timestamp": "2025-12-07T00:00:05.000Z",
-  "payload": {
-    "step_id": "550e8400-e29b-41d4-a716-446655440030",
-    "status": "completed",
-    "result": {
-      "output_summary": "Found NullPointerException in AuthService.java:125"
-    }
-  }
-}
-```
+## 4. Canonical Reading Path
 
-### 5.6 SAStepFailed
+Read SA events in this order:
 
-```json
-{
-  "event_id": "550e8400-e29b-41d4-a716-446655440006",
-  "event_type": "SAStepFailed",
-  "sa_id": "550e8400-e29b-41d4-a716-446655440000",
-  "timestamp": "2025-12-07T00:00:05.000Z",
-  "payload": {
-    "step_id": "550e8400-e29b-41d4-a716-446655440031",
-    "status": "failed",
-    "error_code": "TOOL_EXECUTION_ERROR",
-    "error_message": "Permission denied"
-  }
-}
-```
+1. [SA Profile](./sa-profile.md)
+2. `schemas/v2/profiles/sa-profile.yaml`
+3. `schemas/v2/events/mplp-sa-event.schema.json`
+4. [Observability Overview](/docs/specification/observability)
 
-### 5.7 SATraceEmitted
+## 5. References
 
-```json
-{
-  "event_id": "550e8400-e29b-41d4-a716-446655440007",
-  "event_type": "SATraceEmitted",
-  "sa_id": "550e8400-e29b-41d4-a716-446655440000",
-  "timestamp": "2025-12-07T00:00:10.000Z",
-  "trace_id": "550e8400-e29b-41d4-a716-446655440040",
-  "payload": {
-    "events_written": 5
-  }
-}
-```
-
-### 5.8 SACompleted
-
-```json
-{
-  "event_id": "550e8400-e29b-41d4-a716-446655440008",
-  "event_type": "SACompleted",
-  "sa_id": "550e8400-e29b-41d4-a716-446655440000",
-  "timestamp": "2025-12-07T00:05:00.000Z",
-  "payload": {
-    "status": "completed",
-    "steps_executed": 5,
-    "steps_succeeded": 5,
-    "steps_failed": 0
-  }
-}
-```
-
-## 6. Module Mapping
-
-| Module | Profile Action | Event Type |
-|:---|:---|:---|
-| Context | Bind Context | `SAContextLoaded` |
-| Plan | Evaluate Plan | `SAPlanEvaluated` |
-| Plan | Start Step | `SAStepStarted` |
-| Plan | Complete Step | `SAStepCompleted` |
-| Trace | Write Trace | `SATraceEmitted` |
-
-## 7. Event Processing
-
-### 7.1 Event Handler Pattern
-
-```typescript
-interface SAEventHandler {
-  handleSAInitialized(event: SAInitialized): Promise<void>;
-  handleSAStepCompleted(event: SAStepCompleted): Promise<void>;
-  handleSACompleted(event: SACompleted): Promise<void>;
-}
-
-class SAEventProcessor implements SAEventHandler {
-  async handleSAStepCompleted(event: SAStepCompleted): Promise<void> {
-    // Update trace
-    await this.trace.addSegment({
-      segment_id: uuidv4(),
-      label: `Step: ${event.payload.step_id}`,
-      status: event.payload.status,
-      result: event.payload.result // object per schema $defs
-    });
-    
-    // Extract learning sample if applicable
-    if (event.payload.status === 'completed') {
-      await this.learningCollector.captureStepSample(event);
-    }
-  }
-}
-```
-
-## 8. Related Documents
-
-**Profiles**:
-- [SA Profile](sa-profile.md) - Full profile specification
-- [MAP Events](map-events.md) - Multi-agent events
-
-**Schemas**:
+- `schemas/v2/profiles/sa-profile.yaml`
 - `schemas/v2/events/mplp-sa-event.schema.json`
-- `schemas/v2/events/mplp-event-core.schema.json`
+- `schemas/v2/taxonomy/event-taxonomy.yaml`
+- [SA Profile](./sa-profile.md)
+- [Observability Overview](/docs/specification/observability)
 
 ---
 
-**Profile**: SA Profile  
-**Mandatory Events**: 7  
-**Recommended Events**: 1
+**Final Boundary**: this page identifies the frozen SA profile event surface
+only. It does not create new event-family doctrine or runtime-processing
+semantics beyond the frozen sources.

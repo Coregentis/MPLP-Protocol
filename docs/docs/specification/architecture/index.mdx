@@ -10,7 +10,7 @@ doc_id: "DOC-ARCH-INDEX-001"
 title: Architecture
 sidebar_label: Architecture
 sidebar_position: 0
-description: "MPLP architecture documentation: Architecture. Defines structural requirements and layer responsibilities."
+description: "MPLP architecture documentation: Architecture. Layer-oriented reading path after the core specification baseline is clear."
 authority: Documentation Governance
 ---
 
@@ -25,7 +25,11 @@ Welcome to the MPLP Architecture documentation. This section covers the foundati
 
 ## Scope
 
-This index provides navigation to the **four-layer architecture** specifications that define MPLP's structural foundations.
+This index provides navigation to MPLP's **four-layer architecture** and related
+structural reference pages.
+
+Architecture pages explain how protocol families relate across layers. They are
+not the first place to establish formal object, profile, or event meaning.
 
 ## Non-Goals
 
@@ -33,20 +37,32 @@ This page does not contain normative requirements. All normative content is defi
 
 ---
 
-## Layer Specifications (Normative)
+## Canonical Reading Position
+
+For canonical-first reading:
+
+1. Read [Modules](/docs/specification/modules),
+   [Profiles](/docs/specification/profiles), and
+   [Observability](/docs/specification/observability) first.
+2. Use Architecture second, to understand how those formal families relate
+   across L1-L4.
+3. Do not read runtime-layer concepts as new protocol core objects.
+
+## Layer Documents
 
 | Layer | Document | Responsibility |
 |-------|----------|----------------|
-| **L1** | [L1 Core Protocol](./l1-core-protocol.md) | Data schemas, invariants, type system |
-| **L2** | [L2 Coordination & Governance](./l2-coordination-governance.md) | Module lifecycles, execution profiles |
-| **L3** | [L3 Execution & Orchestration](./l3-execution-orchestration.md) | Runtime execution, AEL/VSL/PSG |
-| **L4** | [L4 Integration Infrastructure](./l4-integration-infra.md) | External integrations, drift detection |
+| **L1** | [L1 Core Protocol](./l1-core-protocol.md) | Schema and invariant foundations |
+| **L2** | [L2 Coordination & Governance](./l2-coordination-governance.md) | Coordination and profile layer framing |
+| **L3** | [L3 Execution & Orchestration](./l3-execution-orchestration.md) | Runtime realization layer framing |
+| **L4** | [L4 Integration Infrastructure](./l4-integration-infra.md) | Integration-layer framing |
 
 ## Additional Resources
 
 - [L1-L4 Architecture Deep Dive](./l1-l4-architecture-deep-dive.md) — Technical deep dive (informative)
-- [Schema Conventions](./schema-conventions.md) — Schema design conventions (normative)
-- [Cross-Cutting Kernel Duties](/docs/specification/architecture/cross-cutting-kernel-duties) — Protocol-wide invariants (normative)
+- [Schema Conventions](./schema-conventions.md) — schema authoring and
+  structural conventions
+- [Cross-Cutting Kernel Duties](/docs/specification/architecture/cross-cutting-kernel-duties) — duty taxonomy and related architecture pages
 
 ---
 

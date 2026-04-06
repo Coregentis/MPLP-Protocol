@@ -271,7 +271,7 @@ schemas/v2/
 }
 ```
 
-**Best Practice**: Document state transitions in module docs (see `docs/02-modules/`)
+**Best Practice**: Document state transitions in module docs (see `docs/docs/specification/modules/`)
 
 ### 5.4 Metadata Block
 
@@ -579,7 +579,7 @@ if (!valid) {
 - [Architecture Overview](index.mdx) - Layer structure
 
 **Module Docs**:
-- `docs/02-modules/` - All 10 module specifications
+- `docs/docs/specification/modules/` - All 10 module specifications
 
 **Compliance**:
 - [Conformance Guide](/docs/guides/conformance-guide.md)

@@ -52,14 +52,14 @@ For Critical and Major incidents:
 
 | Action | Command | When |
 |:---|:---|:---|
-| Deprecate | `npm deprecate mplp-sdk-ts@{version}` | Prefer newer |
-| Unpublish (24h window) | `npm unpublish mplp-sdk-ts@{version}` | Critical only |
+| Deprecate | `npm deprecate @mplp/sdk-ts@{version}` | Prefer newer |
+| Unpublish (24h window) | `npm unpublish @mplp/sdk-ts@{version}` | Critical only |
 
 ### 4.2 PyPI (Python)
 
 | Action | Command | When |
 |:---|:---|:---|
-| Yank | `pip yank mplp=={version}` | Remove from default install |
+| Yank | `PyPI project yanking for mplp-sdk=={version}` | Remove from default install |
 | Delete (rare) | PyPI admin | Critical security only |
 
 ---

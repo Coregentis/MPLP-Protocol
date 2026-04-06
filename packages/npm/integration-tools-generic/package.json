@@ -1,7 +1,7 @@
 {
   "name": "@mplp/integration-tools-generic",
   "version": "1.0.5",
-  "description": "Generic tool integration for MPLP",
+  "description": "Runtime-level generic tool integration helper for MPLP v1.0.0. Not a direct protocol object mirror.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
@@ -19,12 +19,17 @@
     "protocolVersion": "1.0.0",
     "frozen": true,
     "governance": "MPGC",
-    "layer": "L4"
+    "layer": "L4",
+    "packageClass": "PUBLIC",
+    "publishSurface": true,
+    "publishScope": "public-npm",
+    "packageRole": "integration-helper",
+    "contractMode": "convenience-runtime-alias"
   },
-  "author": "Bangshi Beijing Network Technology Limited Company",
+  "author": "Coregentis AI",
   "copyright": "© 2026 Bangshi Beijing Network Technology Limited Company",
   "license": "Apache-2.0",
-  "homepage": "https://www.mplp.io",
+  "homepage": "https://www.mplp.io/what-is-mplp",
   "bugs": {
     "url": "https://github.com/Coregentis/MPLP-Protocol/issues"
   },
@@ -37,8 +42,7 @@
     "multi-agent",
     "protocol",
     "lifecycle",
-    "agent-os",
-    "agent-os-protocol"
+    "integration-helper"
   ],
   "exports": {
     ".": {

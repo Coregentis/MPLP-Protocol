@@ -11,7 +11,7 @@ protocol_version: "1.0.0"
 package:
   name: "mplp-sdk"
   ecosystem: "pypi"
-  version: "1.0.4"
+  version: "1.0.5"
   category: "PUBLIC"
 
 # Truth Source Bundle Reference
@@ -19,16 +19,23 @@ schema_bundle:
   path: "schemas/v2"
   
 evidence_baseline:
-  reference: "governance/freeze/FREEZE_EVIDENCE_BASELINE_v1.0.md"
+  reference: "governance/04-records/FREEZE_EVIDENCE_BASELINE_v1.0.md"
   version: "v1.0"
 
 # Derivation Process
 derivation:
-  method: "manual_implementation"
-  description: "Python SDK manually implemented to conform to MPLP protocol specification"
+  method: "publish_surface_mirror"
+  description: "Published PyPI protocol helper package mirrored from packages/sources/sdk-py"
   truth_sources:
     - "schemas/v2/*.schema.json"
-    - "governance/01-core/MPLP_CONSTITUTION.md"
+    - "schemas/v2/taxonomy/kernel-duties.yaml"
+    - "governance/05-specialized/entity.json"
+    - "governance/05-versioning/version-taxonomy-manifest.json"
+  immediate_source:
+    - "packages/sources/sdk-py/README.md"
+    - "packages/sources/sdk-py/pyproject.toml"
+    - "packages/sources/sdk-py/src/mplp/__init__.py"
+    - "packages/sources/sdk-py/src/mplp/kernel_duties.py"
   
   build_inputs:
     - path: "pyproject.toml"
@@ -40,17 +47,19 @@ derivation:
 python:
   dist:
     - type: sdist
-      filename: "mplp_sdk-1.0.4.tar.gz"
-      sha256: "f780cec91c3d2393c2cd111bed63386e7675ab08d1710f0579cee104f76766e4"
+      filename: "mplp_sdk-1.0.5.tar.gz"
+      sha256: "04f7a312cba6fe463ec3beba00a28f27fa63b1cca9ae3f3eaf568e625eaa434e"
     - type: wheel
-      filename: "mplp_sdk-1.0.4-py3-none-any.whl"
-      sha256: "c750540918f34dc690f1b31a4274f39ceedf845e3433c5ebe9d4b1ebf1576940"
+      filename: "mplp_sdk-1.0.5-py3-none-any.whl"
+      sha256: "9f795e35d374a7c774df9529a3bac541d660b362af9b3cdea7d5bd77529f95b2"
 
 # Verification Results
 verification:
-  protocol_conformance: "VERIFIED"
-  api_surface_aligned: true
-  pydantic_models: true
+  protocol_identity_aligned: true
+  placeholder_surface_only: false
+  runtime_surface: false
+  pydantic_models: false
+  kernel_duty_baseline_carried: true
 
 # Governance
 governance:

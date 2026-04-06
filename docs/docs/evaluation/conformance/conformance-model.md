@@ -10,157 +10,73 @@ doc_id: "DOC-EVAL-CONF-MODEL-001"
 # UI metadata (non-normative; excluded from protocol semantics)
 title: Conformance Model
 sidebar_label: Conformance Model
-description: "MPLP conformance evaluation: Conformance Model. Non-normative guidance for protocol conformance assessment."
-authority: none
+description: "Documentation-side orientation to MPLP conformance-related reading; not a protocol or adjudication constitution."
+authority: Documentation Governance
 ---
 
 # Conformance Model
 
+This page is a **docs-side orientation surface** for conformance-related
+reading. It does not establish a frozen class system, a final evaluation
+constitution, or an adjudication ownership model.
+
 ## 1. Purpose
 
-This document **mirrors the definition of** how MPLP maps a running system to a conformance-evaluable object.
+Use this page to understand the reading order for:
 
-The core question this answers:
+- evidence-oriented evaluation docs
+- repaired Validation Lab reference pages
+- the difference between protocol definition and evidence adjudication
 
-> "What exactly is being judged when we say 'this system is MPLP conformant'?"
+## 2. Conservative Baseline
 
-## 2. Conformance Object
+The strongest source-backed claims available here are:
 
-MPLP does **not** evaluate running processes directly. Instead, conformance is evaluated against an **Evidence Pack** — a static, exportable set of artifacts that represent one or more lifecycle executions.
+- conformance-related reading in docs is about **evidence artifacts**, not
+  direct inspection of a live running process
+- repaired Validation Lab reference pages describe adjudication against
+  versioned rulesets and evidence packs
+- repository-backed schemas, invariants, profiles, and taxonomy remain the
+  protocol truth source
 
-```
-┌─────────────────────────────────────────────────┐
-│                 Evidence Pack                   │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐        │
-│  │ Context  │ │   Plan   │ │  Trace   │  ...   │
-│  └──────────┘ └──────────┘ └──────────┘        │
-│                                                 │
-│  + Manifest (protocol version, export time)    │
-└─────────────────────────────────────────────────┘
-```
+This page should not be read as creating additional protocol-layer conformance
+doctrine beyond those sources.
 
-### 2.1 Why Evidence Pack?
+## 3. What This Page Does Not Define
 
-| Property | Benefit |
-|:---|:---|
-| **Static** | Can be archived, shared, audited |
-| **Self-describing** | Contains protocol version |
-| **Vendor-neutral** | Pure JSON, no runtime hooks |
-| **Replayable** | Trace can reconstruct timeline |
+This page does not define:
 
-## 3. Conformance Classes
+- a canonical `L1` / `L2` / `L3` conformance-class constitution
+- a final ladder of protocol maturity classes
+- a rule that passing a set of docs-defined flows yields a final conformance
+  grade
+- evaluation ownership independent of repaired Validation Lab reference pages
 
-MPLP v1.0.0 defines **three conformance classes**, corresponding to protocol layers:
+## 4. Reading Order
 
-| Class | Layer | Minimum Requirements |
-|:---|:---|:---|
-| **L1 Conformant** | Data | Valid Context, Plan, Trace schemas |
-| **L2 Conformant** | Coordination | L1 + Module interactions valid |
-| **L3 Conformant** | Execution | L2 + Runtime invariants hold |
+For conformance-related reading, use this order:
 
-### 3.1 L1 Conformant (Data)
+1. [Evidence Pack Contract](/docs/evaluation/validation-lab/evidence-pack-contract.mdx)
+2. [Validation Lab Overview](/docs/evaluation/validation-lab)
+3. [Ruleset Reference](/docs/evaluation/validation-lab/rulesets.mdx)
+4. [Lifecycle Guarantees Reference](/docs/evaluation/validation-lab/lifecycle-guarantees.mdx)
+5. [Evaluation Dimensions](./evaluation-dimensions.md)
+6. [Results & Status](./results-and-status.md)
 
-The system produces JSON objects that:
-- Pass schema validation against `schemas/v2/*.json`
-- Contain valid `meta.protocolVersion`
-- Use UUID v4 for all IDs
+## 5. Boundary
 
-### 3.2 L2 Conformant (Coordination)
+- protocol semantics come from repository-backed protocol sources
+- adjudication reality comes from Validation Lab authority surfaces and their
+  bound assets
+- this page is only a reading aid between those two
 
-The system additionally:
-- Maintains Plan → Context linkage
-- Records Confirm objects for gated actions
-- Produces Trace segments for executed steps
-- Follows module interaction contracts
+## 6. References
 
-### 3.3 L3 Conformant (Execution)
-
-The system additionally:
-- Emits runtime events (via Event Bus)
-- Supports drift detection
-- Provides snapshot/restore capability
-- Enforces lifecycle state transitions
-
-## 4. Protocol Version Binding
-
-Conformance is **always scoped to a protocol version**:
-
-```json
-{
-  "meta": {
-    "protocolVersion": "1.0.0",
-    "schemaVersion": "1.0.0"
-  }
-}
-```
-
-**Rule**: Evidence Pack version MUST match the protocol version being evaluated against.
-
-## 5. Conformance Outcomes
-
-Evaluation produces one of three outcomes:
-
-| Outcome | Meaning |
-|:---|:---|
-| **CONFORMANT** | Evidence satisfies all requirements for the claimed class |
-| **NON-CONFORMANT** | Evidence violates one or more requirements |
-| **INCOMPLETE-EVIDENCE** | Cannot determine; evidence is missing or invalid |
-
-### 5.1 Non-Binary Results
-
-MPLP does **not** produce:
-- Scores (0-100)
-- Grades (A/B/C)
-- Partial conformance percentages
-
-Conformance is **binary per class** — a system is L1 conformant or it is not.
-
-## 6. Evaluation Dimensions
-
-Conformance is judged across these dimensions:
-
-| Dimension | Question |
-|:---|:---|
-| **Schema Validity** | Do all objects pass JSON Schema validation? |
-| **Lifecycle Completeness** | Is the Plan → Trace chain complete? |
-| **Governance Gating** | Are high-risk actions gated by Confirm? |
-| **Trace Integrity** | Can execution be reconstructed from Trace? |
-| **Failure Bounding** | Do failures produce recoverable states? |
-| **Version Declaration** | Is protocol version correctly declared? |
-
-## 7. Relationship to Golden Flows
-
-**Golden Flows** define the **reference behavior** for conformance evaluation.
-
-| Golden Flow | Validates |
-|:---|:---|
-| FLOW-01 | Single Agent Lifecycle (L1/L2) |
-| FLOW-02 | Multi-Agent Coordination (L2) |
-| FLOW-03 | Human-in-the-Loop Gating (L2) |
-| FLOW-04 | Drift Detection & Recovery (L3) |
-| FLOW-05 | External Tool Integration (L3/L4) |
-
-A system that passes FLOW-01 through FLOW-05 is **L3 Conformant**.
-
-## 8. What Conformance Does NOT Guarantee
-
-Conformance to MPLP does **not** guarantee:
-
-- Correctness of the agent's decisions
-- Quality of the generated plans
-- Security of the underlying runtime
-- Legal compliance with regulations
-- Business suitability for any use case
-
-Conformance only guarantees: **The system follows the protocol's structural and behavioral contracts.**
-
-## 9. Related Documentation
-
-- [Evidence Model](./evidence-model.md) — What constitutes valid evidence
-- [Conformance Guide](/docs/guides/conformance-guide) — Practical evaluation steps
-- [Golden Flows](/docs/evaluation/golden-flows) — Reference behavior definitions
+- [Entry Points](/docs/reference/entrypoints)
+- [Validation Lab Overview](/docs/evaluation/validation-lab)
+- [Results & Status](./results-and-status.md)
 
 ---
 
-**Scope**: Defines conformance objects, classes, outcomes, dimensions  
-**Exclusions**: Certification, legal compliance, quality guarantees
+**Final Boundary**: this page is an orientation surface only. It does not
+create a new conformance doctrine for MPLP.

@@ -10,65 +10,42 @@ doc_id: "DOC-EVAL-GOV-TRUST-001"
 # UI metadata (non-normative; excluded from protocol semantics)
 title: External Governance & Trust Overview
 sidebar_label: External Trust Overview
-description: "MPLP governance documentation: External Governance & Trust Overview. Governance processes and policies."
+description: "Helper overview of MPLP non-goals, non-endorsement boundaries, and public-surface trust split."
 authority: none
 ---
 
 # External Governance & Trust Overview
 
-## What MPLP Is NOT
-
-Before evaluating MPLP, it is important to understand what the protocol explicitly **does not claim to be**:
+## What MPLP Is Not
 
 | MPLP Is NOT | Explanation |
 |:---|:---|
-| A Product | MPLP is a protocol specification, not a software product |
-| A Company | MPLP is governed by an open committee (MPGC), not a corporation |
-| A Certification Body | MPLP does not certify vendors or issue compliance badges |
-| A Vendor Lock-in | MPLP is vendor-neutral by design |
-| A Runtime | MPLP defines semantics, not implementations |
+| A product | MPLP is a protocol, not a software offering |
+| A company | MPLP is not a corporate entity |
+| A certification body | MPLP does not issue badges, certifications, or compliance marks |
+| A runtime | MPLP defines protocol semantics, not a mandatory execution engine |
 
-## What MPLP IS
+## Public-Surface Trust Split
 
-| MPLP IS | Explanation |
+| Surface | Trust Role |
 |:---|:---|
-| An Open Protocol | Freely available specification for AI agent lifecycle management |
-| Vendor-Neutral | Any vendor can implement without approval |
-| Governed | Changes require formal RFC and MPGC voting |
-| Versioned | Semantic versioning with frozen guarantees |
-| Observable | All agent actions are traceable by design |
+| Repository | protocol/source truth |
+| Documentation | reference/spec projection |
+| Website | discovery and positioning |
+| Validation Lab | evidence adjudication |
 
-## Trust Model
+No single downstream surface should be read as replacing repository truth.
 
-### Self-Declaration Model
+## External Reader Guidance
 
-MPLP uses a **self-declaration model** for conformance:
+If you are evaluating MPLP:
 
-1. **Implementers** declare their own conformance level
-2. **MPLP** provides validation tools (schema validators, invariant checkers)
-3. **Users** evaluate implementations using MPLP's published criteria
-4. **MPGC** does NOT audit, certify, or endorse implementations
+1. start with [Entry Points](/docs/reference/entrypoints)
+2. read the repaired primary spec/reference pages
+3. use Validation Lab references only for Lab-side adjudication context
 
-### No "MPLP Certified" Claims
-
-## Governance Transparency
-
-| Artifact | Location | Purpose |
-|:---|:---|:---|
-| Protocol Specification | This documentation site | Definitions |
-| Reference Implementation | GitHub repository | SDK and runtime examples |
-| Governance Policies | `/12-governance/` | Change processes |
-| RFC Archive | `/mips/` | Proposal history |
-
-## How to Evaluate MPLP
-
-For detailed evaluation criteria, see:
+## Related Docs Helpers
 
 - [Evaluation Guide](/docs/guides/evaluation-guide.md)
-- [Evidence Model](/docs/evaluation/conformance)
 - [Compatibility Matrix](./compatibility-matrix.md)
-
-## Related Documents
-
-- [Governance Constitution](./index.mdx) — Formal governance structure
-- [Protocol Governance](./protocol-governance.md) — Proposal submission process
+- [Governance Overview](./index.mdx)

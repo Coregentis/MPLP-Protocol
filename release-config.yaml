@@ -1,0 +1,127 @@
+# MPLP Protocol v1.0.0 — Frozen Specification
+# Freeze Date: 2025-12-03
+# Status: FROZEN (no breaking changes permitted)
+# Governance: MPLP Protocol Governance Committee (MPGC)
+# © 2026 Bangshi Beijing Network Technology Limited Company
+# License: Apache-2.0
+# Any normative change requires a new protocol version.
+
+# MPLP repository release bundle config
+#
+# Canonical outward-facing release meaning uses explicit version domains.
+# The bare `version` field below is retained only for build-release.js
+# compatibility and mirrors the frozen protocol line for this repository bundle.
+
+protocol_version: "1.0.0"
+schema_bundle_version: "2.0.0"
+invariant_bundle_version: "2.0.0"
+validation_ruleset_version: "ruleset-1.0"
+validation_lab_release_version: "1.0.1"
+docs_release_version: "1.0.0"
+website_release_version: "1.0.0"
+
+version: "1.0.0"
+
+include:
+  - "README.md"
+  - "CHANGELOG.md"
+  - "LICENSE.txt"
+  - "CODE_OF_CONDUCT.md"
+  - "CONTRIBUTING.md"
+  - "SECURITY.md"
+  - "MAINTAINERS.md"
+  - "RELEASE_NOTES.md"
+  - "VERSION.txt"
+  - "schemas/v2/**"
+  - "docs/**"  # Docs source only (build artifacts excluded below)
+  - "assets/**"
+  - "tests/**"  # All test suites: golden, cross-language, runtime-compat, schema-alignment
+  - "packages/**"  # Reference SDK sources
+  - "examples/**"
+  - ".github/ISSUE_TEMPLATE/**"
+  - ".github/PULL_REQUEST_TEMPLATE.md"
+  - ".github/workflows/deploy-docs.yml"
+  - ".github/workflows/codeql.yml"
+  # NOTE: Only deploy-docs.yml and codeql.yml allowed in OSS package
+  - ".eslintrc.json"
+  # Docs build dependency - only render-mermaid.mjs needed
+  - "scripts/03-docs/render-mermaid.mjs"
+  # NOTE: other scripts/ excluded from OSS - internal development tools
+  - ".codeql/**"  # CodeQL configuration
+  # ============================================================================
+  # PUBLIC GOVERNANCE (Layers 01-04) — Part of MPLP's Public Governance Contract
+  # These are normative protocol governance documents, publicly committed and stable.
+  # ============================================================================
+  - "governance/README.md"
+  - "governance/EXECUTION_ORDER.md"
+  # Layer 01: Constitutional (full public)
+  - "governance/01-constitutional/**"
+  # Layer 02: Methods (public - governance methods for consistency and auditability)
+  - "governance/02-methods/**"
+  # Layer 03: Distribution (public - version rules, release flow, manifest rules)
+  - "governance/03-distribution/**"
+  # Layer 04: Records (public - ratified/frozen/sealed records and indices)
+  - "governance/04-records/**"
+  # Active version-domain and alignment governance
+  - "governance/05-versioning/**"
+  - "governance/global-alignment-baseline.yaml"
+  - "governance/global-alignment-current.yaml"
+  # Active identity/disambiguation governance
+  - "governance/05-specialized/ENTITY_CANONICAL.yaml"
+  - "governance/05-specialized/entity.json"
+  - "governance/05-specialized/ENTITY_DISAMBIGUATION_POLICY.md"
+  - "governance/05-specialized/ECOSYSTEM_ANCHORS.json"
+  # NOTE: .github/workflows/** EXCLUDED - OSS workflows in .github/oss-workflows/ (manual sync)
+
+
+
+exclude:
+  # External repositories / submodules
+  - "MPLP_website/**"
+  - "Validation_Lab/**"
+  
+  # Build artifacts and caches (match directory names directly)
+  - "**/node_modules"
+  - "**/node_modules/**"
+  - "**/dist"
+  - "**/dist/**"
+  - "**/build"
+  - "**/build/**"
+  - "docs/.docusaurus"
+  - "docs/.docusaurus/**"
+  - "docs/.cache"
+  - "docs/.cache/**"
+  - "docs/static/mermaid"
+  - "docs/static/mermaid/**"  # Build-time generated SVGs (reproducible from source)
+  
+  # Version control
+  - ".git/**"
+  - ".github/workflows/codeql-db/**"
+  
+  # Development tools
+  - "tools/**"
+  - "reports/**"
+  - "scripts/release/**"
+  
+  # ============================================================================
+  # INTERNAL/OPERATIONAL GOVERNANCE — NOT Part of Public Governance Contract
+  # These are non-normative implementation support, subject to change without notice.
+  # ============================================================================
+  # Layer 06: Operations (tools, rules, allowlists, exports, artifacts)
+  - "governance/06-operations/**"
+  # Layer 05: Specialized - internal parts (entity, scripts, deprecation)
+  - "governance/05-specialized/DEPRECATION_PLAN.md"
+  - "governance/05-specialized/SCRIPT_*.md"
+  - "governance/05-specialized/website/**"
+  # Layer 99: Archive (legacy, deprecated)
+  - "governance/99-archive/**"
+  # Legacy governance patterns (if any remain at top level)
+  - "governance/*_AUDIT_REPORT.*"
+  - "governance/*_WAIVERS.yaml"
+  - "governance/*_FREEZE_RECORD_*.md"
+  
+  # Deprecated / backup directories
+  - "docs-upgrade-kit/**"
+  - "docs-backup-corrupted/**"
+  - ".archive/**"
+  - "internal/**"

@@ -10,79 +10,70 @@ doc_id: "DOC-SEMANTIC-MOD-DUTY-MATRIX-001"
 # UI metadata (non-normative; excluded from protocol semantics)
 title: Module to Kernel Duty Matrix
 sidebar_label: Module-Duty Matrix
-description: "MPLP specification: Module to Kernel Duty Matrix. Normative protocol requirements."
+description: "Boundary page explaining that no frozen module-to-duty mapping authority is established by docs."
 authority: Documentation Governance
 ---
 
 # Module to Kernel Duty Matrix
 
-**Purpose**: Resolves semantic relationships between 10 Modules and 11 Kernel Duties.
+This page exists to prevent over-reading module/duty relationships into a
+docs-side matrix.
+
+## Scope
+
+The frozen source set includes:
+
+- module schemas and their repaired documentation projections
+- the kernel-duty taxonomy in `schemas/v2/taxonomy/kernel-duties.yaml`
+
+It does **not** include a frozen canonical source that assigns primary or
+secondary kernel duties to each module.
+
+## What This Means
+
+Accordingly, this page should not create:
+
+- primary-duty assignments
+- secondary-duty assignments
+- exhaustive module-duty coverage claims
+- cross-cutting responsibility doctrine
+
+## Frozen Duty Taxonomy
+
+The frozen kernel-duty taxonomy defines these duty entries:
+
+| Duty ID | Duty Name |
+|:---|:---|
+| `KD-01` | Coordination |
+| `KD-02` | Error Handling |
+| `KD-03` | Event Bus |
+| `KD-04` | Learning Feedback |
+| `KD-05` | Observability |
+| `KD-06` | Orchestration |
+| `KD-07` | Performance |
+| `KD-08` | Protocol Versioning |
+| `KD-09` | Security |
+| `KD-10` | State Sync |
+| `KD-11` | Transaction |
+
+This taxonomy names duties only. It does not, by itself, assign them to module
+families.
+
+## How To Read Modules Against Duties
+
+If you need to reason about modules and duties:
+
+1. Read the repaired module pages first.
+2. Read the frozen kernel-duty taxonomy second.
+3. Treat any further relationship as interpretive unless a frozen source
+   explicitly establishes it.
+
+## References
+
+- [Modules Overview](/docs/specification/modules)
+- `schemas/v2/taxonomy/kernel-duties.yaml`
 
 ---
 
-## 1. Primary Responsibility Matrix
-
-| Module | Primary Duty | Secondary Duties |
-|:---|:---|:---|
-| CA-01 Context | KD-10 State Sync | KD-05 Observability |
-| CA-02 Plan | KD-06 Orchestration | KD-01 Coordination, KD-11 Transaction |
-| CA-03 Trace | KD-05 Observability | KD-03 Event Bus |
-| CA-04 Confirm | KD-09 Security | KD-06 Orchestration |
-| CA-05 Collab | KD-01 Coordination | KD-10 State Sync |
-| CA-06 Role | KD-09 Security | KD-01 Coordination |
-| CA-07 Dialog | KD-01 Coordination | KD-05 Observability |
-| CA-08 Extension | KD-08 Protocol Versioning | KD-06 Orchestration |
-| CA-09 Network | KD-01 Coordination | KD-09 Security |
-| CA-10 Event | KD-03 Event Bus | KD-05 Observability |
-
----
-
-## 2. Kernel Duty → Module Mapping
-
-| Kernel Duty | Primary Modules | Mapping Status |
-|:---|:---|:---:|
-| KD-01 Coordination | CA-05, CA-07, CA-09 | Mapped |
-| KD-02 Error Handling | All Modules | Mapped |
-| KD-03 Event Bus | CA-10 | Mapped |
-| KD-04 Learning & Feedback | Learning Events | Mapped |
-| KD-05 Observability | CA-03 | Mapped |
-| KD-06 Orchestration | CA-02, CA-04 | Mapped |
-| KD-07 Performance | All Modules | Mapped |
-| KD-08 Protocol Versioning | CA-08 | Mapped |
-| KD-09 Security | CA-04, CA-06 | Mapped |
-| KD-10 State Sync | CA-01, CA-05 | Mapped |
-| KD-11 Transaction | CA-02 | Mapped |
-
----
-
-## 3. Detailed Mapping Table
-
-| Module | KD-01 | KD-02 | KD-03 | KD-04 | KD-05 | KD-06 | KD-07 | KD-08 | KD-09 | KD-10 | KD-11 |
-|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| CA-01 Context | - | ✓ | - | - | ✓ | - | ✓ | - | - | **P** | - |
-| CA-02 Plan | ✓ | ✓ | - | - | - | **P** | ✓ | - | - | - | ✓ |
-| CA-03 Trace | - | ✓ | ✓ | - | **P** | - | ✓ | - | - | - | - |
-| CA-04 Confirm | - | ✓ | - | - | - | ✓ | ✓ | - | **P** | - | - |
-| CA-05 Collab | **P** | ✓ | - | - | - | - | ✓ | - | - | ✓ | - |
-| CA-06 Role | ✓ | ✓ | - | - | - | - | ✓ | - | **P** | - | - |
-| CA-07 Dialog | **P** | ✓ | - | - | ✓ | - | ✓ | - | - | - | - |
-| CA-08 Extension | - | ✓ | - | - | - | ✓ | ✓ | **P** | - | - | - |
-| CA-09 Network | **P** | ✓ | - | - | - | - | ✓ | - | ✓ | - | - |
-| CA-10 Event | - | ✓ | **P** | - | ✓ | - | ✓ | - | - | - | - |
-
-**Legend**: **P** = Primary Responsibility, ✓ = Secondary/Cross-cutting, - = Not Applicable
-
----
-
-## 4. Gap Analysis
-
-| Gap Category | Finding | Phase F Action |
-|:---|:---|:---|
-| KD-04 Learning | No dedicated Module | Learning handled via Events |
-| All Modules → KD-02 | Universal Error Handling | Cross-cutting concern |
-| All Modules → KD-07 | Universal Performance | Cross-cutting concern |
-
----
-
-**Phase**: D-2 (Cross-Directory Semantic Mapping)
-**Coverage**: 10 Modules × 11 Duties = 110 Cells (mapping declared)
+**Final Boundary**: there is no frozen docs-side authority here for assigning
+kernel duties to modules. This page exists to say so explicitly.

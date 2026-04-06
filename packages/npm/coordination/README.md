@@ -3,8 +3,8 @@
 **Protocol:** MPLP v1.0.0 (Frozen)
 **License:** Apache-2.0
 
-The **@mplp/coordination** package provides **L2 Coordination & Governance contracts** for the
-**Multi-Agent Lifecycle Protocol (MPLP)** — the Agent OS Protocol for AI agent systems.
+The **@mplp/coordination** package provides **coordination helper contracts** for MPLP.
+Its exported contracts are **derived helper constructs** built over protocol-aligned types; they are not direct mirrors of canonical protocol schemas or event definitions.
 
 ---
 
@@ -12,12 +12,13 @@ The **@mplp/coordination** package provides **L2 Coordination & Governance contr
 
 ### ✅ What this package provides
 
-* **Protocol-compliant interfaces** aligned with MPLP v1.0.0
-* **Strict version alignment** with the frozen MPLP protocol specification
+* **Derived helper contracts** aligned with MPLP v1.0.0
+* **Convenience coordination and governance helper types**
 * **Type-safe integration surface** for higher-level runtimes and tools
 
 ### ❌ What this package does NOT provide
 
+- ❌ Direct schema or event-family mirrors
 - ❌ Full execution runtime (LLM orchestration, tool execution)
 - ❌ Golden Flow execution engines (Flow-01 ~ Flow-05)
 - ❌ Observability pipelines or distributed tracing backends
@@ -36,11 +37,11 @@ npm install @mplp/coordination
 
 ---
 
-## Protocol Documentation (Authoritative)
+## Protocol Documentation
 
-* **Homepage:** [https://www.mplp.io](https://www.mplp.io)
-* **Specification & Docs:** [https://docs.mplp.io](https://docs.mplp.io)
-* **Source Repository:** [https://github.com/Coregentis/MPLP-Protocol](https://github.com/Coregentis/MPLP-Protocol)
+* **Homepage:** [https://www.mplp.io/what-is-mplp](https://www.mplp.io/what-is-mplp) — discovery and positioning only
+* **Docs Entry Surface:** [https://docs.mplp.io/docs/reference/entrypoints](https://docs.mplp.io/docs/reference/entrypoints) — authoritative documentation entry surface
+* **Source Repository:** [https://github.com/Coregentis/MPLP-Protocol](https://github.com/Coregentis/MPLP-Protocol) — repository truth source
 * **Issues:** [https://github.com/Coregentis/MPLP-Protocol/issues](https://github.com/Coregentis/MPLP-Protocol/issues)
 
 ---

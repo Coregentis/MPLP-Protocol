@@ -1,7 +1,7 @@
 {
   "name": "@mplp/compliance",
   "version": "1.0.5",
-  "description": "[LEGACY] Use @mplp/conformance instead. This package has been renamed for correct terminology alignment.",
+  "description": "[LEGACY] Deprecated public compatibility alias for MPLP conformance tooling. Use @mplp/conformance instead.",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
@@ -16,8 +16,7 @@
     "multi-agent",
     "protocol",
     "lifecycle",
-    "agent-os",
-    "agent-os-protocol"
+    "legacy-alias"
   ],
   "publishConfig": {
     "access": "public"
@@ -35,14 +34,20 @@
     "ts-node": "^10.9.1",
     "@types/node": "^20.0.0"
   },
-  "author": "Bangshi Beijing Network Technology Limited Company",
+  "author": "Coregentis AI",
   "copyright": "© 2026 Bangshi Beijing Network Technology Limited Company",
   "mplp": {
     "protocolVersion": "1.0.0",
     "frozen": true,
-    "governance": "MPGC"
+    "governance": "MPGC",
+    "packageClass": "PUBLIC",
+    "publishSurface": true,
+    "publishScope": "public-npm",
+    "packageRole": "legacy-compliance-alias",
+    "contractMode": "convenience-runtime-alias",
+    "deprecated": true
   },
-  "homepage": "https://www.mplp.io",
+  "homepage": "https://www.mplp.io/what-is-mplp",
   "bugs": {
     "url": "https://github.com/Coregentis/MPLP-Protocol/issues"
   },

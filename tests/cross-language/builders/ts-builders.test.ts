@@ -13,10 +13,10 @@
 import { describe, test, expect } from 'vitest';
 import * as fs from 'fs';
 import * as path from 'path';
-import { createContext } from '../../../packages/sdk-ts/src/builders/context-builder';
-import { createPlan } from '../../../packages/sdk-ts/src/builders/plan-builder';
-import { createConfirm } from '../../../packages/sdk-ts/src/builders/confirm-builder';
-import { appendTrace } from '../../../packages/sdk-ts/src/builders/trace-builder';
+import { createContext } from '../../../packages/sources/sdk-ts/dist/builders/context-builder';
+import { createPlan } from '../../../packages/sources/sdk-ts/dist/builders/plan-builder';
+import { createConfirm } from '../../../packages/sources/sdk-ts/dist/builders/confirm-builder';
+import { appendTrace } from '../../../packages/sources/sdk-ts/dist/builders/trace-builder';
 
 const FIXTURES_DIR = path.join(__dirname, 'fixtures');
 const OUT_DIR = path.join(__dirname, 'out/ts');

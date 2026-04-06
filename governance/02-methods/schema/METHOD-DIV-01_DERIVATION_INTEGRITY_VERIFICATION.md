@@ -92,7 +92,7 @@ Each generator must declare:
 
 | Path | Contents | Authority |
 |:---|:---|:---|
-| `schemas/v2/modules/` | 10 module JSON Schemas | MPGC |
+| `schemas/v2/` | Canonical MPLP schema bundle (10 module schemas + supporting schema assets) | MPGC |
 | `schemas/v2/common/` | 6 common JSON Schemas | MPGC |
 | `schemas/v2/events/` | 6 event JSON Schemas | MPGC |
 | `schemas/v2/integration/` | 4 integration JSON Schemas | MPGC |
@@ -110,9 +110,9 @@ Each generator must declare:
 
 | Path | Contents | Source | Generator |
 |:---|:---|:---|:---|
-| `packages/sdk-ts/src/generated/` | TypeScript interfaces | schemas/v2/ | json-schema-to-typescript |
-| `packages/sdk-py/src/mplp/generated/` | Pydantic models | schemas/v2/ | datamodel-codegen |
-| `docs/generated/` | Schema documentation | schemas/v2/ | docgen script |
+| `packages/sources/sdk-ts/dist/types/` | TypeScript consumer type surface | schemas/v2/ + package derivation pipeline | TypeScript build/package derivation |
+| `packages/sources/sdk-ts/schemas/` | Schema mirror bundle for the source-side SDK mirror | schemas/v2/ | schema sync pipeline |
+| `packages/npm/core/dist/` | Published core type/validator surface | schemas/v2/ + package derivation pipeline | package build derivation |
 
 **Invariant Rules**:
 - ✅ May ONLY be created/updated by designated generators
@@ -123,8 +123,8 @@ Each generator must declare:
 
 | Path | Contents | Rule |
 |:---|:---|:---|
-| `packages/sdk-ts/src/core/` | Hand-written SDK code | MUST import from `generated/`, MUST NOT copy |
-| `packages/sdk-py/src/mplp/core/` | Hand-written SDK code | MUST import from `generated/`, MUST NOT copy |
+| `packages/sources/sdk-ts/` | Source-side workspace mirror | MUST mirror published facade semantics, MUST NOT invent source-only protocol fields |
+| `packages/sources/sdk-py/src/mplp/` | Hand-written Python helper surface | MUST remain within helper-surface scope, MUST NOT imply full generated SDK parity |
 | `docs/docs/specification/` | Hand-written docs | MUST link/embed schemas, MUST NOT redefine |
 
 **Hybrid Anti-Copy Rules** (§5.5):
@@ -143,7 +143,7 @@ Each generator must declare:
 /**
  * @generated
  * Generator: mplp-codegen v1.0.0
- * Source: schemas/v2/modules/mplp-trace.schema.json
+ * Source: schemas/v2/mplp-trace.schema.json
  * Bundle Hash: sha256:abc123...
  * Generated At: 2026-01-04T00:00:00Z
  * DO NOT EDIT — Regenerate from source schema.
@@ -154,7 +154,7 @@ Each generator must declare:
 ```python
 # @generated
 # Generator: mplp-codegen v1.0.0
-# Source: schemas/v2/modules/mplp-trace.schema.json
+# Source: schemas/v2/mplp-trace.schema.json
 # Bundle Hash: sha256:abc123...
 # Generated At: 2026-01-04T00:00:00Z
 # DO NOT EDIT — Regenerate from source schema.
@@ -206,7 +206,7 @@ PASS if: hand-written file imports from ./generated/ or .generated
 Bundle hash covers ONLY Truth Source directories (§5.1):
 
 ```
-schemas/v2/modules/
+schemas/v2/
 schemas/v2/common/
 schemas/v2/events/
 schemas/v2/integration/
@@ -239,7 +239,7 @@ schemas/v2/profiles/
 ```
 schemas/v2/common/events.schema.json\0abc123...
 schemas/v2/common/identifiers.schema.json\0def456...
-schemas/v2/modules/mplp-context.schema.json\0ghi789...
+schemas/v2/mplp-context.schema.json\0ghi789...
 ...
 ```
 
@@ -272,7 +272,7 @@ Each generator must provide a contract file:
   
   "input": {
     "read_roots": [
-      "schemas/v2/modules/",
+      "schemas/v2/",
       "schemas/v2/common/"
     ],
     "forbidden_reads": [
@@ -283,11 +283,11 @@ Each generator must provide a contract file:
   
   "output": {
     "write_roots": [
-      "packages/sdk-ts/src/generated/"
+      "packages/sources/sdk-ts/dist/types/"
     ],
     "forbidden_writes": [
       "schemas/v2/",
-      "packages/sdk-ts/src/core/"
+      "packages/sources/sdk-ts/dist/core/"
     ]
   },
   
@@ -339,9 +339,9 @@ Each generator must provide a contract file:
   
   "outputs": [
     {
-      "path": "packages/sdk-ts/src/generated/types/trace.ts",
+      "path": "packages/sources/sdk-ts/dist/types/index.d.ts",
       "content_hash": "sha256:cccc...",
-      "source_schema": "schemas/v2/modules/mplp-trace.schema.json",
+      "source_schema": "schemas/v2/mplp-trace.schema.json",
       "has_marker": true
     }
   ],

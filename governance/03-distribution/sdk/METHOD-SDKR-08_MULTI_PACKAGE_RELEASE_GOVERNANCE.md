@@ -18,9 +18,9 @@ doc_id: "METHOD-SDKR-08_MULTI_PACKAGE_RELEASE_GOVERNANCE"
 
 ## 1. Purpose
 
-This method defines governance rules for releasing multiple packages under the `@mplp/*` namespace as a coordinated bundle.
+This method defines governance rules for releasing multiple packages under the `@mplp/*` namespace, together with the corresponding PyPI SDK surface, as a coordinated bundle.
 
-It extends METHOD-SDKR-01~07 to support the multi-package monorepo release model.
+It extends METHOD-SDKR-01~07 to support the multi-package monorepo release model, including the source-package mirror -> publish-surface split used in `packages/sources/*`, `packages/npm/*`, and `packages/pypi/*`.
 
 ---
 
@@ -41,6 +41,19 @@ All packages under `@mplp/*` MUST be classified into one of the following catego
 | `PUBLIC` | `"private": false` or absent |
 | `INTERNAL` | `"private": true` |
 | `CI-ONLY` | `"private": true` + `"mplp.ci_only": true` + `"mplp.publishBlocked": true` |
+
+### 2.2 Source Package Mirrors
+
+Source package mirrors are **not** Publish Set units.
+
+They exist to support build, workspace linking, or release preparation, and MUST NOT
+be treated as public publish targets even if they share a package name with a public
+surface.
+
+| Mirror | Role | Publish Allowed | Expected Target |
+|:---|:---|:---:|:---|
+| `packages/sources/sdk-ts` | Source workspace mirror | NO | `packages/npm/sdk-ts` |
+| `packages/sources/sdk-py` | Source-side PyPI mirror | NO | `packages/pypi/mplp-sdk` |
 
 ---
 
@@ -119,6 +132,7 @@ A coordinated set of Package Units that:
 | Set | Definition |
 |:---|:---|
 | **Workspace Set** | All packages in monorepo |
+| **Source Package Set** | Source/workspace mirrors used for build and release preparation; NEVER a publish target |
 | **Release Bundle Set** | Packages coordinated for this version (may include INTERNAL/CI-ONLY for verification) |
 | **Publish Set** | Packages to be published to npm/PyPI (MUST be PUBLIC only) |
 
@@ -152,7 +166,7 @@ The following conditions on **Publish Set** cause immediate failure:
 | Any `private: true` package in Publish Set | **IMMEDIATE FAIL** |
 | Any CI-ONLY or INTERNAL category package in Publish Set | **IMMEDIATE FAIL** |
 
-> **Note:** CI-ONLY and INTERNAL packages MAY exist in Release Bundle Set (for verification purposes) but MUST NOT enter Publish Set.
+> **Note:** CI-ONLY, INTERNAL, and SOURCE-MIRROR package surfaces MAY exist in the monorepo or Release Bundle Set, but MUST NOT enter Publish Set.
 
 ### 6.4 Automated Gate Script (REQUIRED)
 
@@ -427,7 +441,7 @@ Python packages in the `INTERNAL` or `CI-ONLY` categories MUST NOT be uploaded t
 
 | Package | Category | Layer | PyPI Name |
 |:---|:---|:---|:---|
-| `mplp-sdk` | PUBLIC | SDK + Runtime | `mplp-sdk` |
+| `mplp-sdk` | PUBLIC | Published placeholder Python package | `mplp-sdk` |
 
 ---
 
@@ -450,6 +464,7 @@ Each Python Package Unit included in a Release Bundle MUST satisfy all of the fo
    - `protocolVersion`
    - `frozen`
    - `governance`
+   - `publishSurface` or `sourcePackage`
 
 4. Successful build of at least:
    - one source distribution (`sdist`)

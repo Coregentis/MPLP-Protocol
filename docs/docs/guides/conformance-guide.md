@@ -5,39 +5,36 @@ doc_type: informative
 normativity: informative
 status: active
 authority: Documentation Governance
-description: "Step-by-step guide for achieving MPLP protocol conformance at L1, L2, and L3 levels."
+description: "Informative guide for reading MPLP conformance-related materials without creating a secondary conformance doctrine."
 title: Conformance Guide
 
 ---
 
-
-
 # Conformance Guide
 
+This guide helps readers navigate MPLP conformance-related materials.
 
-## 1. Purpose
+It does not define conformance classes, runtime obligations, or evaluator law.
 
-This guide defines what it means to be "MPLP Conformant". It establishes the criteria for runtimes, agents, and tools to claim compatibility with the MPLP v1.0 standard.
+## Reading Order
 
-## 2. Conformance Levels
+1. [Entry Points](/docs/reference/entrypoints)
+2. [Specification](/docs/specification)
+3. [Golden Flows](/docs/evaluation/golden-flows)
+4. [Validation Lab Overview](/docs/evaluation/validation-lab)
+5. [Reviewability](/docs/evaluation/conformance/reviewability)
 
-MPLP defines three levels of conformance:
+## What To Check
 
-### Level 1: Data Conformance
-*   **Requirement**: The system can read/write valid MPLP JSON objects (Context, Plan, Trace).
-*   **Validation**: Passes all L1 Schema validations (`schemas/v2/*.json`).
-*   **Target**: Reporting tools, Dashboards, simple scripts.
+Use this guide to confirm that you understand:
 
-### Level 2: Module Conformance
-*   **Requirement**: The system executes the logic defined by the 10 L2 Modules.
-*   **Validation**: Passes the "Golden Flow" test suite for module interactions.
-*   **Target**: Lightweight agent frameworks, specialized solvers.
+- where protocol truth lives
+- where Lab adjudication references live
+- how Flow naming differs from Lab guarantee naming
+- how version domains differ between protocol, docs, Lab, and packages
 
-### Level 3: Runtime Conformance (Full)
-*   **Requirement**: The system executes the full L3 Runtime specification (PSG, Event Bus, Drift Detection).
-*   **Validation**: Passes the full Golden Test Suite including edge cases, error handling, and concurrency.
-*   **Target**: Production-grade Agent Platforms.
+## Boundary
 
-## 3. Self-Verification
-
-MPLP v1.0 relies on **Self-Verification**. Vendors must publish a completed "Conformance Checklist" (see `conformance-checklist.md`) to claim support.
+This page is an evaluation-reading helper only.
+The repaired primary spec/reference layer and closed Validation Lab model
+prevail on meaning.

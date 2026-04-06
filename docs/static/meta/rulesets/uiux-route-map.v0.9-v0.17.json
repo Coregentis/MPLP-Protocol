@@ -1,0 +1,99 @@
+{
+    "release": "v1.0",
+    "series": "v0.9-v0.17",
+    "generated_at": "2026-01-25T23:37:00+08:00",
+    "routes": [
+        {
+            "route": "/validation",
+            "entry": "Lab",
+            "ui_surface": "Validation Dashboard",
+            "primary_anchor_ref": "/anchors/seal_v17_0_sha256",
+            "evidence_role": "dashboard",
+            "docs_projection": "https://docs.mplp.io/docs/evaluation/validation-lab",
+            "website_projection": "https://www.mplp.io/validation-lab",
+            "invariants": [
+                "NO_HASH_COPY",
+                "DYNAMIC_STATUS",
+                "SSOT_POINTER_ONLY"
+            ]
+        },
+        {
+            "route": "/validation/samples",
+            "entry": "Lab",
+            "ui_surface": "Evidence Gallery",
+            "primary_anchor_ref": "/anchors/sample_set_manifest_sha256",
+            "evidence_role": "gallery",
+            "docs_projection": "https://docs.mplp.io/docs/evaluation/conformance/evidence-model",
+            "website_projection": "",
+            "invariants": [
+                "STATIONARY_SAMPLES",
+                "LINK_ONLY"
+            ]
+        },
+        {
+            "route": "/rulesets/evolution",
+            "entry": "Lab",
+            "ui_surface": "Evolution Hub",
+            "primary_anchor_ref": "/anchors/ruleset_diff_index_sha256",
+            "evidence_role": "report",
+            "docs_projection": "https://docs.mplp.io/docs/evaluation/governance/versioning-policy",
+            "website_projection": "",
+            "invariants": [
+                "EXPLAINABLE_DIFF",
+                "NO_VERDICT_FLIPS"
+            ]
+        },
+        {
+            "route": "/adjudication",
+            "entry": "Lab",
+            "ui_surface": "Adjudication Proofs",
+            "primary_anchor_ref": "/anchors/cross_verified_report_sha256",
+            "evidence_role": "proof",
+            "docs_projection": "https://docs.mplp.io/docs/evaluation/conformance/reviewability",
+            "website_projection": "",
+            "invariants": [
+                "AUDIT_READY",
+                "CLOSED_POINTERS"
+            ]
+        },
+        {
+            "route": "/coverage",
+            "entry": "Lab",
+            "ui_surface": "Coverage Matrix",
+            "primary_anchor_ref": "/anchors/shipyard_v15/matrix_sha256",
+            "evidence_role": "matrix",
+            "docs_projection": "https://docs.mplp.io/docs/evaluation/conformance/conformance-model",
+            "website_projection": "https://www.mplp.io/conformance",
+            "invariants": [
+                "MATURITY_ONLY",
+                "NON_ENDORSEMENT"
+            ]
+        },
+        {
+            "route": "/policies/contract",
+            "entry": "Lab",
+            "ui_surface": "Evidence Pack Contract",
+            "primary_anchor_ref": "/anchors/integrity/audit_freeze_manifest_sha256",
+            "evidence_role": "policy",
+            "docs_projection": "https://docs.mplp.io/docs/evaluation/conformance/evidence-model",
+            "website_projection": "",
+            "invariants": [
+                "STABLE_CONTRACT",
+                "VERSIONED_PACK"
+            ]
+        },
+        {
+            "route": "/runs",
+            "entry": "Lab",
+            "ui_surface": "Curated Runs",
+            "primary_anchor_ref": "/anchors/integrity/audit_freeze_manifest_sha256",
+            "evidence_role": "run",
+            "docs_projection": "https://docs.mplp.io/docs/evaluation/tests/golden-flow-registry",
+            "website_projection": "",
+            "invariants": [
+                "FORENSIC_ACCURACY",
+                "REPRODUCIBLE"
+            ]
+        }
+    ]
+}

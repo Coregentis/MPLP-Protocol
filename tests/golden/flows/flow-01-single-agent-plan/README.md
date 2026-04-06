@@ -283,17 +283,15 @@ The TypeScript harness (`tests/golden/harness/ts/`) must:
 
 ### 6.2 Python Golden Harness
 
-The Python harness (`packages/sdk-py/tests/golden/harness/`) must:
-- Load identical fixtures
-- Validate using `mplp_sdk.validation` schemas
-  - Ensure schema validation produces identical error codes/paths as TypeScript
-- Apply identical invariants using `path_utils.py`
-  - Ensure wildcard expansion produces identical node paths
-- Compare outputs using `golden_validator.py`
-  - Ensure structural comparison uses identical ignore rules
-- Produce **structurally equivalent validation results** as TypeScript
+The current source-side Python package mirror (`packages/sources/sdk-py/`) does **not** ship an in-repository golden harness.
 
-**Current Status**: ✅ PASSING (test_golden_flow_01.py passes, 2/2 tests)
+For the current package surface, Python verification is limited to placeholder package smoke checks such as:
+
+```bash
+PYTHONPATH=packages/sources/sdk-py/src python3 -c "import mplp; print(mplp.__version__)"
+```
+
+**Current Status**: Placeholder package surface only; no active in-repo Python golden harness
 
 ### 6.3 Determinism Requirements
 
@@ -397,7 +395,7 @@ FLOW-01 is considered **successfully implemented and stable** when:
 
 3. **Cross-Language Alignment**:
    - TypeScript: `pnpm test:golden` reports "1/1 Passed"
-   - Python: `pytest packages/sdk-py/tests/golden/test_golden_flow_01.py` reports "2/2 passed"
+   - Python: placeholder package smoke only via `PYTHONPATH=packages/sources/sdk-py/src python3 -c "import mplp; print(mplp.__version__)"`
    - Both produce byte-for-byte identical validation results (no differences in error messages, paths, or codes)
 
 4. **No Regressions**:
@@ -427,7 +425,7 @@ FLOW-01 is considered **successfully implemented and stable** when:
 - [MPLP Spec v1.0 - Context Module](../../docs/00-spec/mplp-spec-v1.0.md#context-module)
 - [MPLP Spec v1.0 - Plan Module](../../docs/00-spec/mplp-spec-v1.0.md#plan-module)
 - [Path Utils (TS)](../harness/ts/path-utils.ts) - Wildcard expansion implementation
-- [Path Utils (Python)](../../packages/sdk-py/tests/golden/harness/path_utils.py) - Python equivalent
+- Python path-utils golden harness is not currently shipped in `packages/sources/sdk-py/`
 - [P7.3.D Completion Report](../../../../.gemini/antigravity/brain/f6c4e1f7-2980-409f-bd7c-f72de87f52c7/p7_3d_final_completion.md)
 - [P7.3.E Completion Report](../../../../.gemini/antigravity/brain/f6c4e1f7-2980-409f-bd7c-f72de87f52c7/p7_3e_final_completion.md)
 

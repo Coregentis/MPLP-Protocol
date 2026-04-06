@@ -1,9 +1,9 @@
 {
   "name": "@mplp/core",
   "version": "1.0.6",
-  "description": "L1 Core Protocol models and validators for MPLP Protocol v1.0.0 (Multi-Agent Lifecycle Protocol).",
+  "description": "Derived L1 core helper package for MPLP v1.0.0 models and validators.",
   "license": "Apache-2.0",
-  "author": "Bangshi Beijing Network Technology Limited Company",
+  "author": "Coregentis AI",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -11,7 +11,7 @@
     "README.md",
     "LICENSE.txt"
   ],
-  "homepage": "https://www.mplp.io",
+  "homepage": "https://www.mplp.io/what-is-mplp",
   "repository": {
     "type": "git",
     "url": "https://github.com/Coregentis/MPLP-Protocol.git"
@@ -24,8 +24,7 @@
     "multi-agent",
     "lifecycle",
     "protocol",
-    "agent-os",
-    "agent-os-protocol"
+    "ai-agent-lifecycle"
   ],
   "publishConfig": {
     "access": "public"
@@ -38,7 +37,12 @@
     "protocolVersion": "1.0.0",
     "frozen": true,
     "governance": "MPGC",
-    "layer": "L1"
+    "layer": "L1",
+    "packageClass": "PUBLIC",
+    "publishSurface": true,
+    "publishScope": "public-npm",
+    "packageRole": "core-derived-helper",
+    "contractMode": "derived-protocol-helper"
   },
   "exports": {
     ".": {

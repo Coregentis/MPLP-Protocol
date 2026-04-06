@@ -10,33 +10,37 @@ doc_id: "DOC-EVAL-GOV-DOC-PROJ-001"
 # UI metadata (non-normative; excluded from protocol semantics)
 title: Documentation Projection Governance
 sidebar_label: Documentation Projection
-description: "MPLP governance documentation: Documentation Projection Governance. Governance processes and policies."
+description: "Helper page describing how documentation remains subordinate to repository truth and repaired primary docs surfaces."
 authority: none
 ---
 
 # Documentation Projection Governance
 
-## 1. Authority & Scope
+## Purpose
 
-This document describes the **Documentation Projection Constraints** for the MPLP ecosystem.
-It is **NOT** part of the Protocol Governance itself, but describes how documentation projects the protocol.
+This page describes the **docs-side projection boundary** for MPLP.
 
-**Scope**: All content within `docs/` that is NOT part of the Protocol Specification (Layer 1).
-**Authority**: Documentation Maintainers, subject to Protocol Truth.
+It is a helper page only. It does not define protocol governance law and it
+does not introduce a new docs-side truth index.
 
-## 2. Core Principles
+## Core Constraints
 
-### 2.1 Derived Artifact Rule
-Documentation is a **Derived Artifact**. It possesses no independent truth.
-Every normative statement in documentation is traceable to the **Protocol Truth Source** (Schemas, Invariants).
+- Documentation is a projection of repository-backed truth.
+- Secondary docs helpers must remain subordinate to the repaired primary
+  specification/reference layer.
+- Docs pages may explain, route, and summarize, but must not create new
+  protocol semantics, new Lab semantics, or new version doctrine.
 
-### 2.2 Truth Precedence
-If documentation conflicts with the Protocol Specification, the documentation is **WRONG**.
-"Seeming reasonable" does NOT override Frozen truth.
+## Reading Order
 
-## 3. The Truth Index
+Use these surfaces in order:
 
-The **Truth Index** (`cca-truth-index.md`) is the canonical map of all protocol facts.
-It serves as the data source for verifying documentation alignment.
+1. [Entry Points](/docs/reference/entrypoints)
+2. [Specification](/docs/specification)
+3. [Validation Lab Overview](/docs/evaluation/validation-lab) when Lab-side
+   adjudication context is needed
 
-> **Note**: Internal audit procedures (CCA, PDG) are defined in the **Engineering Governance Framework** (`project-governance/`).
+## Conflict Rule
+
+If a docs projection conflicts with repository truth or the repaired primary
+docs layer, the projection is wrong and must be corrected.

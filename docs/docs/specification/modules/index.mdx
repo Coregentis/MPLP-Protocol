@@ -23,33 +23,51 @@ entry_surface: documentation
 
 ## What This Section Contains
 
-This section documents MPLP's **ten composable modules** — schema-defined building blocks that structure agent lifecycle artifacts. Each module page restates schema semantics for readability.
+This section documents MPLP's **ten protocol object families** as
+schema-centered specification projections.
+
+Read the repository-backed schema files as upstream truth. Read the module pages
+as the documentation projection layer that helps navigate those schemas.
 
 | Module | Schema File | Purpose |
 |--------|-------------|---------|
-| [Core](./core-module.md) | `mplp-core.schema.json` | Foundation types and identifiers |
-| [Plan](./plan-module.md) | `mplp-plan.schema.json` | Intent declaration before action |
-| [Confirm](./confirm-module.md) | `mplp-confirm.schema.json` | Authorization gates |
-| [Trace](./trace-module.md) | `mplp-trace.schema.json` | Execution recording |
-| [Context](./context-module.md) | `mplp-context.schema.json` | State management |
-| [Dialog](./dialog-module.md) | `mplp-dialog.schema.json` | Human interaction |
-| [Role](./role-module.md) | `mplp-role.schema.json` | Agent identity and capabilities |
-| [Collab](./collab-module.md) | `mplp-collab.schema.json` | Multi-agent coordination |
-| [Network](./network-module.md) | `mplp-network.schema.json` | External communication |
-| [Extension](./extension-module.md) | `mplp-extension.schema.json` | Custom extensions |
+| [Context](./context-module.md) | `mplp-context.schema.json` | Lifecycle scope anchor |
+| [Plan](./plan-module.md) | `mplp-plan.schema.json` | Structured task and step artifact |
+| [Confirm](./confirm-module.md) | `mplp-confirm.schema.json` | Approval and decision record |
+| [Trace](./trace-module.md) | `mplp-trace.schema.json` | Execution record artifact |
+| [Role](./role-module.md) | `mplp-role.schema.json` | Role and capability record |
+| [Dialog](./dialog-module.md) | `mplp-dialog.schema.json` | Conversation record |
+| [Collab](./collab-module.md) | `mplp-collab.schema.json` | Collaboration session record |
+| [Extension](./extension-module.md) | `mplp-extension.schema.json` | Extension registration record |
+| [Network](./network-module.md) | `mplp-network.schema.json` | Topology record |
+| [Core](./core-module.md) | `mplp-core.schema.json` | Protocol manifest anchor |
 
 ## Reading Path
 
-1. **Module Interactions**: [How modules compose](./module-interactions.md)
-2. **Evidence Chain**: [Plan](./plan-module.md) → [Confirm](./confirm-module.md) → [Trace](./trace-module.md)
-3. **Cross-Cutting Duties**: [Module-to-Duty Matrix](/docs/specification/module-to-duty-matrix)
+1. **Common lifecycle chain**
+   [Context](./context-module.md) →
+   [Plan](./plan-module.md) →
+   [Confirm](./confirm-module.md) →
+   [Trace](./trace-module.md)
+2. **Supporting protocol families**
+   [Role](./role-module.md),
+   [Dialog](./dialog-module.md),
+   [Collab](./collab-module.md),
+   [Extension](./extension-module.md),
+   [Network](./network-module.md)
+3. **Manifest and composition context**
+   [Core](./core-module.md) and
+   [Module Interactions](./module-interactions.md)
 
 ## Related Resources
 
 - [Architecture Overview](/docs/specification/architecture) — L1-L4 layer model
 - [Repository Schemas](https://github.com/Coregentis/MPLP-Protocol/tree/main/schemas/v2) — SSOT
-- [Validation Lab](https://lab.mplp.io) — Evidence adjudication (external)
+- [Profiles Overview](/docs/specification/profiles) — profile baselines
+- [Evaluation & Governance](/docs/evaluation) — conformance and evidence
+  surfaces
 
 ---
 
-> *Evaluation guidance here is reference-only. Live adjudication data and coverage metrics remain in the [Validation Lab](https://lab.mplp.io).*
+> *Use module pages to establish object-family meaning before reading runtime or
+> package guides.*

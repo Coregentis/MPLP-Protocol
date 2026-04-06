@@ -2,13 +2,58 @@
 
 > **Status**: Governance Record
 > **Authority**: MPGC
-> **Purpose**: Track all SDK releases with their protocol binding
+> **Purpose**: Track SDK and closely coupled public package releases with their protocol binding
 
 ---
 
 ## Released Versions
 
-releases: []
+releases:
+  - sdk_version: "1.0.7"
+    sdk_package: "@mplp/sdk-ts"
+    language: "ts"
+    package_role: "sdk_facade"
+    protocol_version: "1.0.0"
+    evidence_baseline_tag: "evidence-baseline-v1.0"
+    truth_source_bundle_hash: "sha256:78ea3511cee7cacebff416b5ad6179358032d5322e5991523b5f8d6257d10354"
+    release_date: "2026-04-01"
+    registry_url: "https://www.npmjs.com/package/@mplp/sdk-ts"
+  - sdk_version: "1.0.6"
+    sdk_package: "@mplp/schema"
+    language: "ts"
+    package_role: "schema"
+    protocol_version: "1.0.0"
+    evidence_baseline_tag: "evidence-baseline-v1.0"
+    truth_source_bundle_hash: "sha256:78ea3511cee7cacebff416b5ad6179358032d5322e5991523b5f8d6257d10354"
+    release_date: "2026-04-01"
+    registry_url: "https://www.npmjs.com/package/@mplp/schema"
+  - sdk_version: "1.0.5"
+    sdk_package: "mplp-sdk"
+    language: "py"
+    package_role: "python_protocol_helper"
+    protocol_version: "1.0.0"
+    evidence_baseline_tag: "evidence-baseline-v1.0"
+    truth_source_bundle_hash: "sha256:78ea3511cee7cacebff416b5ad6179358032d5322e5991523b5f8d6257d10354"
+    release_date: "2026-04-01"
+    registry_url: "https://pypi.org/project/mplp-sdk/"
+  - sdk_version: "1.0.6"
+    sdk_package: "@mplp/sdk-ts"
+    language: "ts"
+    package_role: "sdk_facade"
+    protocol_version: "1.0.0"
+    evidence_baseline_tag: "evidence-baseline-v1.0"
+    truth_source_bundle_hash: "sha256:78ea3511cee7cacebff416b5ad6179358032d5322e5991523b5f8d6257d10354"
+    release_date: "2026-01-05"
+    registry_url: "https://www.npmjs.com/package/@mplp/sdk-ts"
+  - sdk_version: "1.0.4"
+    sdk_package: "mplp-sdk"
+    language: "py"
+    package_role: "python_placeholder"
+    protocol_version: "1.0.0"
+    evidence_baseline_tag: "evidence-baseline-v1.0"
+    truth_source_bundle_hash: "sha256:78ea3511cee7cacebff416b5ad6179358032d5322e5991523b5f8d6257d10354"
+    release_date: "2026-01-05"
+    registry_url: "https://pypi.org/project/mplp-sdk/"
 
 ---
 
@@ -20,6 +65,7 @@ Each release entry MUST contain:
 - sdk_version: "{major}.{minor}.{patch}"
   sdk_package: "{package-name}"
   language: "ts|py"
+  package_role: "sdk_facade|schema|python_protocol_helper|..."
   protocol_version: "{protocol-version}"
   evidence_baseline_tag: "evidence-baseline-v{version}"
   truth_source_bundle_hash: "sha256:{hash}"
@@ -29,18 +75,13 @@ Each release entry MUST contain:
 
 ---
 
-## First Release (Placeholder)
+## Scope Note
 
-When the first SDK is released, add:
+This registry tracks **public publish surfaces only**.
 
-```yaml
-releases:
-  - sdk_version: "1.0.0"
-    sdk_package: "mplp-sdk-ts"
-    language: "ts"
-    protocol_version: "1.0.0"
-    evidence_baseline_tag: "evidence-baseline-v1.0"
-    truth_source_bundle_hash: "sha256:78ea3511cee7cacebff416b5ad6179358032d5322e5991523b5f8d6257d10354"
-    release_date: "2026-01-04"
-    registry_url: "https://www.npmjs.com/package/mplp-sdk-ts"
-```
+Source package mirrors such as:
+
+- `packages/sources/sdk-ts`
+- `packages/sources/sdk-py`
+
+are not release registry entries and MUST NOT be treated as public distribution records.

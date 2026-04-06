@@ -11,7 +11,7 @@ doc_id: "DOC-EVAL-VLAB-INDEX-001"
 # UI metadata (non-normative)
 title: Validation Lab Overview
 sidebar_label: Validation Lab
-description: "Evidence-based adjudication for MPLP Lifecycle Guarantees. Non-certifying, non-normative, no execution hosting, deterministic."
+description: "Validation Lab is a non-normative evidence adjudication lab for MPLP. It evaluates lifecycle guarantees and related invariants against versioned rulesets and evidence."
 keywords: [Validation Lab, MPLP, Evidence, Lifecycle Guarantees, Adjudication, Non-certification]
 ---
 
@@ -22,12 +22,15 @@ keywords: [Validation Lab, MPLP, Evidence, Lifecycle Guarantees, Adjudication, N
 >
 > This document is informative only.
 
-> **SSOT Reference**: This page is a Reference projection of [Validation Lab governance documents](https://github.com/Coregentis/MPLP-Validation-Lab).  
-> Authority: Lab rulesets and evidence contracts are versioned and governed in the Validation Lab repository.
+> **SSOT Reference**: This page is a Reference projection of the in-repository [`Validation_Lab/`](https://github.com/Coregentis/MPLP-Protocol/tree/main/Validation_Lab) governance, runtime projection artifacts, and public adjudication surface.  
+> Authority: Lab rulesets, runtime inventories, and evidence contracts are governed in the authoritative `Validation_Lab` surface of the MPLP repository and exposed publicly via `lab.mplp.io`.
 
 ## What is the Validation Lab?
 
-The **MPLP Validation Lab** is an evidence-based adjudication system for evaluating MPLP lifecycle guarantees. It provides:
+The **MPLP Validation Lab** is a **non-normative evidence adjudication lab for MPLP**.
+It evaluates lifecycle guarantees and related invariants against versioned rulesets and evidence.
+
+It provides:
 
 - **Evidence-based verdicts** for Lifecycle Guarantees (LG-01~05)
 - **Versioned rulesets** for deterministic, reproducible evaluation
@@ -37,7 +40,7 @@ The **MPLP Validation Lab** is an evidence-based adjudication system for evaluat
 1. **Non-Certifying** — Verdicts are evidence-based outputs, not official marks or endorsements
 2. **Non-Normative** — Lab does not define protocol semantics; see MPLP Docs for specifications
 3. **No Execution Hosting** — Lab does not accept uploads or run your code; you generate evidence locally
-4. **Deterministic Ruleset** — Same evidence + same ruleset version = same verdict hash
+4. **Deterministic Ruleset** — Same evidence + same `validation_ruleset_version` = same verdict hash
 :::
 
 ## Terminology Partition
@@ -54,37 +57,41 @@ These are distinct and should not be conflated. Flows are test scenarios; LGs ar
 | **Lifecycle Guarantee (LG)** | Adjudication target (LG-01~05) | What the Lab evaluates |
 | **Evidence Pack** | `manifest + artifacts + timeline + snapshots` | Input to adjudication |
 | **Ruleset** | Versioned evaluation rules | Deterministic decision basis |
-| **Verdict** | `PASS / FAIL / NOT_EVALUATED / NOT_ADMISSIBLE` | Output of adjudication |
+| **Verdict** | Adjudication output, see [Lab](https://lab.mplp.io) for canonical field list | Output of adjudication |
 | **Conformance** | Evidence meets versioned ruleset requirements | Evaluation conclusion (NOT certification) |
 
-## Four Entry Points
+## Public-Facing Surface Model
 
-MPLP uses a four-entry model. Each surface has a strict, non-overlapping role:
+MPLP exposes four public-facing surfaces under a 3+1 constitutional entry model. Validation Lab is an auxiliary public-facing adjudication surface, not a fourth protocol-defining primary.
 
-| Entry | Role | URL |
+| Surface | Role | URL |
 |:---|:---|:---|
 | **Website** | Discovery & Positioning | [mplp.io](https://www.mplp.io) |
 | **Documentation** | Specification & Reference | [docs.mplp.io](https://docs.mplp.io) |
 | **Repository** | Source of Truth | [GitHub](https://github.com/Coregentis/MPLP-Protocol) |
 | **Validation Lab** | Evidence Adjudication | [lab.mplp.io](https://lab.mplp.io) |
 
-## Version Taxonomy
+## Version Identity
 
-The Lab uses four distinct version prefixes:
+Teach the current Lab version model in this order:
 
-| Prefix | Name | Description |
+| Canonical Version Domain | Meaning | Current Public Baseline |
 |:---|:---|:---|
-| `site-v*` | Site Freeze | Website IA & public commitment |
-| `pack-v*` | Evidence Pack Format | Pack structure version |
-| `ruleset-*` | Ruleset Version | Adjudication rule version |
-| `rel-lab-*` | Release Seal | Governance freeze tag |
+| `protocol_version` | MPLP protocol baseline referenced by the Lab | `1.0.0` |
+| `validation_ruleset_version` | Adjudication ruleset identity | `ruleset-1.0` |
+| `validation_lab_release_version` | Published Lab release identity | `1.0.1` |
 
-:::tip
-When you see `v0.x` in Lab context:
-- In `/runs` page → refers to **pack format** (pack-v0.2~v0.4)
-- In Footer/Home → refers to **site freeze** (site-v0.5)
-- In `data/rulesets/` → refers to **ruleset version** (ruleset-1.0~1.2)
-:::
+### Historical Label Families (Secondary)
+
+The Lab also retains historical secondary label families:
+
+| Historical Label Family | Historical Use |
+|:---|:---|
+| `site-v*` | Historical site freeze / IA line |
+| `pack-v*` | Historical evidence-pack format line |
+| `rel-lab-*` | Historical governance seal line |
+
+`ruleset-*` remains the label family used inside the canonical `validation_ruleset_version` domain.
 
 ## What the Lab Provides
 
@@ -93,6 +100,11 @@ When you see `v0.x` in Lab context:
 ✅ Lifecycle Guarantee (LG-01~05) verdict generation  
 ✅ Schema validation utilities  
 ✅ Reproducible, auditable verdicts  
+
+:::info Current Public Guarantees Model
+This overview uses **LG-01~05** as the simplified entry view.
+The current public `/guarantees` surface in Validation Lab is the active **V1/V2 aggregate guarantees view**.
+:::
 
 ## What the Lab Does NOT Provide
 
@@ -108,4 +120,4 @@ When you see `v0.x` in Lab context:
 - [Ruleset Reference](./rulesets.mdx) — ruleset-1.0~1.2 specifications
 - [Evidence Pack Contract](./evidence-pack-contract.mdx) — Pack structure requirements
 - [Validation Lab Site](https://lab.mplp.io) — Live adjudication system
-- [Validation Lab Repository](https://github.com/Coregentis/MPLP-Validation-Lab) — SSOT
+- [Validation Lab Source Surface](https://github.com/Coregentis/MPLP-Protocol/tree/main/Validation_Lab) — in-repository authoritative Lab surface

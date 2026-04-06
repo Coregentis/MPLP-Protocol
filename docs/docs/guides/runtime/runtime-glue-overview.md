@@ -1,183 +1,79 @@
 ---
 sidebar_position: 1
 
-doc_type: normative
-normativity: normative
+doc_type: guide
+normativity: informative
 status: draft
-authority: MPGC
-description: "Runtime Glue Overview - L3 specification layer for MPLP."
+authority: Documentation Governance
+description: "Informative runtime guide for how implementation-side glue can sit between repaired MPLP specification surfaces and runtime artifacts."
 title: Runtime Glue Overview
-keywords: [MPLP, Runtime, L3, PSG, Glue Layer, Observability]
+keywords: [MPLP, Runtime, PSG, Glue Layer, Observability]
 sidebar_label: Runtime Glue Overview
-
 ---
-
 
 # Runtime Glue Overview
 
+> [!NOTE]
+> **Guide, Not Protocol Definition**
+>
+> This page describes an implementation-side runtime concept. It does not define
+> a frozen MPLP specification layer and it does not override repaired
+> specification/reference pages.
 
 ## 1. Purpose
 
-This document defines the **L3 Runtime Glue** specification layer for MPLP. Runtime Glue is the binding layer between:
+This guide explains how teams may think about **runtime glue** when connecting
+protocol artifacts to runtime behavior.
 
-- **L2 Modules** (Context, Plan, Trace, etc.)
-- **Protocol State Graph (PSG)**
-- **Observability Events**
-- **Learning Hooks**
+In this docs set, "runtime glue" is only a guide-level label for implementation
+coordination across concepts such as:
 
-**Key Principle**: Runtime Glue is a **specification layer**, not an implementation. Concrete implementations belong in SDKs and products.
+- protocol object artifacts
+- runtime-side state handling
+- runtime-side event emission
+- implementation-side recovery or adaptation logic
 
-## 2. Scope
+## 2. Boundary
 
-**Specifications for**:
-1. Read/write paths between L2 objects and PSG
-2. Event emission rules tied to PSG changes and pipeline stages
-3. Minimal drift detection behaviors (spec-level)
-4. Minimal rollback behaviors (spec-level)
-5. Crosscut concern bindings (coordination, error-handling, etc.)
+Runtime glue is downstream of the repaired protocol baseline:
 
-**Deliverables**:
-- Markdown documentation
-- YAML matrices/configurations
-- Pseudo-code examples (in docs)
+1. read [Modules Overview](/docs/specification/modules) first
+2. read [Profiles Overview](/docs/specification/profiles) next
+3. read [Observability Overview](/docs/specification/observability) next
+4. only then use runtime guides such as this page
 
-## 3. Non-Goals
+This page does **not** define:
 
-**NOT included**:
-1. Concrete runtime implementation details (framework, language)
-2. Storage engine choice for PSG (graph DB, document DB, file system)
-3. Full enterprise-grade rollback strategies (HA/DR, 2PC, saga patterns)
-4. Vendor-specific optimizations or extensions
-5. Actual executable code (`.ts`, `.py`, `.go` files)
+- PSG as a protocol core object
+- VSL or AEL as frozen protocol interfaces
+- drift or rollback as protocol-mandated algorithms
+- a required runtime architecture
 
-**Reason**: L3 is the **specification layer**, not implementation layer. Implementations belong in `@mplp/reference-runtime`, TracePilot, Coregentis, or other products.
+## 3. Guide-Level Use
 
----
+Teams may use a runtime-glue layer to:
 
-## 4. Core Responsibilities
+- connect protocol artifacts to runtime data structures
+- organize event emission around repaired observability sources
+- isolate implementation-specific coordination code from protocol artifacts
+- keep runtime-specific behavior subordinate to repaired protocol semantics
 
-### 4.1 Normalize Inputs
+## 4. Related Runtime Guides
 
-**Map L2 objects into PSG nodes and edges**
+- [PSG](/docs/guides/runtime/psg.md)
+- [VSL](/docs/guides/runtime/vsl.md)
+- [AEL](/docs/guides/runtime/ael.md)
+- [Module-PSG Paths](/docs/guides/runtime/module-psg-paths.md)
+- [CrossCut-PSG Event Binding](/docs/guides/runtime/crosscut-psg-event-binding.md)
+- [Drift and Rollback](/docs/guides/runtime/drift-and-rollback.md)
 
-Example: When a `Plan` object is created:
-1. Runtime reads `Plan.plan_id`, `Plan.context_id`, `Plan.steps[]`
-2. Creates PSG nodes:
-   - `psg.plans[plan_id]` with metadata
-   - `psg.plan_steps[step_id]` for each step
-3. Creates PSG edges:
-   - `psg.edges[context_id -> plan_id]` (context-to-plan binding)
-   - `psg.edges[step_i -> step_j]` (dependency chains)
+## 5. References
 
-### 4.2 Maintain Graph Consistency
-
-**Use GraphUpdateEvent for every structural change**
-
-**Conformance**: **REQUIRED** (from Phase 3 - Observability Duties)
-
-When PSG is modified:
-1. Determine `update_kind`: node_add, node_update, node_delete, edge_add, edge_update, edge_delete, bulk
-2. Compute `node_delta` and `edge_delta`
-3. Emit `GraphUpdateEvent` with:
-   - `graph_id`: PSG identifier
-   - `update_kind`, `node_delta`, `edge_delta`
-   - `source_module`: Which L2 module triggered the update
-
-### 4.3 Track Pipeline Execution
-
-**Use PipelineStageEvent for every pipeline stage transition**
-
-**Conformance**: **REQUIRED** (from Phase 3 - Observability Duties)
-
-When a pipeline stage changes state:
-1. Identify `pipeline_id`, `stage_id`, `stage_name`, `stage_order`
-2. Determine `stage_status`: pending → running → completed/failed/skipped
-3. Emit `PipelineStageEvent` with all fields
-
-### 4.4 Expose Learning Hooks
-
-**Optionally produce LearningSamples based on key decisions**
-
-**Conformance**: **RECOMMENDED** (from Phase 4 - Learning Feedback Duties)
-
-At recommended collection points:
-1. Identify sample family (intent_resolution, delta_impact, etc.)
-2. Extract `input`, `state`, `output`, `meta` from L2 objects and PSG
-3. Create LearningSample conforming to schemas
-4. Store or stream to training pipeline
+- [L3 Execution & Orchestration](/docs/specification/architecture/l3-execution-orchestration.md)
+- [Runtime Authority](/docs/guides/runtime/runtime-authority.md)
+- [Runtime Capability Matrix](/docs/guides/runtime/runtime-capability-matrix.md)
 
 ---
 
-## 5. Relationship to Protocol Phases
-
-| Phase | Contribution | Runtime Glue Integration |
-|:---|:---|:---|
-| **Phase 1: SA Profile** | Single-agent execution semantics | Defines how SA steps → PSG trace nodes |
-| **Phase 2: MAP Profile** | Multi-agent coordination semantics | Defines how MAP sessions → PSG collab nodes |
-| **Phase 3: Observability** | Event taxonomy + emission obligations | Specifies WHEN to emit which events |
-| **Phase 4: Learning** | LearningSample data formats | Specifies WHEN to collect which samples |
-| **Phase 5: Runtime Glue** | **Unifies all above into PSG-centric model** | You are here |
-
----
-
-## 6. Crosscut Bindings (Summary)
-
-See [Crosscut PSG Event Binding](crosscut-psg-event-binding.md) for complete bindings.
-
-**MPLP's 9 Crosscuts**:
-1. **coordination**: Collab sessions, MAP events
-2. **error-handling**: Failure nodes, PipelineStageEvent (failed)
-3. **event-bus**: All Observability events
-4. **orchestration**: Pipeline control, PipelineStageEvent
-5. **performance**: Timing metrics, CostAndBudgetEvent
-6. **protocol-version**: PSG version annotations
-7. **security**: Access control in PSG
-8. **state-sync**: PSG as sync target, GraphUpdateEvent
-9. **transaction**: Batch updates, GraphUpdateEvent (bulk)
-
----
-
-## 7. Conformance Requirements
-
-### 7.1 MUST Requirements (v1.0)
-
-Runtime implementations claiming "MPLP v1.0 conformant" **MUST**:
-
-1. Document their ModulePSG mapping (which PSG areas each module touches)
-2. Emit `GraphUpdateEvent` for all PSG structural changes
-3. Emit `PipelineStageEvent` for all pipeline stage transitions
-4. Use PSG as single source of truth (not scattered caches)
-
-### 7.2 SHOULD Requirements (v1.0)
-
-Runtime implementations **SHOULD**:
-
-- Implement minimal drift detection (compare PSG snapshots)
-- Support basic rollback (restore PSG snapshot)
-- Emit RuntimeExecutionEvent for agent/tool/LLM calls
-- Collect LearningSamples at recommended triggers
-
-### 7.3 NOT Required for v1.0
-
-- Specific PSG storage engine
-- Enterprise-grade HA/DR
-- ML-based drift prediction
-- Saga/2PC transaction patterns
-
----
-
-## 8. Related Documents
-
-- [Module PSG Paths](module-psg-paths.md)
-- [Crosscut PSG Event Binding](crosscut-psg-event-binding.md)
-- [PSG Overview](psg.md)
-- [Action Execution Layer](ael.md)
-- [Value State Layer](vsl.md)
-- [Drift and Rollback](drift-and-rollback.md)
-
----
-
-**Layer**: L3 (Specification)  
-**Key Events**: GraphUpdateEvent (REQUIRED), PipelineStageEvent (REQUIRED)
-
-*Runtime Glue establishes the specification layer for how MPLP protocol elements are realized through PSG-centric runtime implementations, ensuring consistency and interoperability across vendors while maintaining extensibility.*
+**Final Boundary**: runtime glue is an implementation-side guide concept only.
+It is not part of the frozen protocol SSOT.

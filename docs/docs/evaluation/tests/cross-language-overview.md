@@ -58,7 +58,7 @@ This suite:
 
 Refer to repository instructions:
 - TypeScript: `tests/cross-language/` test files
-- Python: `packages/sdk-py/tests/cross_language/`
+- Python: `packages/sources/sdk-py/` package sources together with `tests/cross-language/` fixtures
 
 ---
 

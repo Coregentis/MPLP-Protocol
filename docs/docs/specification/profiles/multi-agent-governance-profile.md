@@ -11,290 +11,117 @@ sidebar_position: 4
 # UI metadata (non-normative; excluded from protocol semantics)
 title: Multi-Agent Governance Profile
 sidebar_label: Multi-Agent Governance
-description: "MPLP profile specification: Multi-Agent Governance Profile. Defines conformance requirements for execution profiles."
+description: "Boundary page for MAP-adjacent governance meaning grounded in frozen MPLP profile, schema, and event sources."
 ---
 
 # Multi-Agent Governance Profile
 
 ## Scope
 
-This specification defines governance rules for maintaining order and safety in multi-agent systems.
+This page documents the **protocol-layer governance boundary** relevant to
+multi-agent profile surfaces.
+
+It is limited to the frozen sources that actually carry MAP-adjacent governance
+meaning:
+
+- `schemas/v2/profiles/map-profile.yaml`
+- `schemas/v2/invariants/map-invariants.yaml`
+- `schemas/v2/events/mplp-map-event.schema.json`
+- `schemas/v2/mplp-collab.schema.json`
+- the schema-backed [Confirm Module](/docs/specification/modules/confirm-module.md)
+- the schema-backed [Role Module](/docs/specification/modules/role-module.md)
 
 ## Non-Goals
 
-This specification does not define implementation algorithms or vendor-specific enforcement mechanisms.
+This page does not define:
 
+- centralized, federated, hierarchical, or autonomous governance models
+- policy engines
+- human-gate trigger doctrine
+- conflict-resolution strategies
+- role-ranking systems
+- runtime enforcement algorithms
 
 ## 1. Purpose
 
-The **Multi-Agent Governance Profile** defines rules and mechanisms for maintaining order, safety, and alignment in multi-agent systems. It addresses the risks of "agent swarms" by imposing structural constraints on their interactions.
+This page exists to prevent over-reading governance meaning into MAP-related
+docs surfaces.
 
-**Design Principle**: "Explicit authority, enforced boundaries, human oversight"
+At the frozen protocol layer, MAP-adjacent governance meaning is limited to the
+fields, event types, and invariant checks carried by the sources listed above.
 
-## 2. Governance Models
+## 2. Frozen Governance-Relevant Anchors
 
-MPLP supports multiple governance models:
+### 2.1 Collab and Participant Structure
 
-### 2.1 Model Comparison
+From the frozen Collab schema and MAP invariant file:
 
-| Model | Authority | Decision Process | Use Case |
-|:---|:---|:---|:---|
-| **Centralized** | Single root agent/human | Absolute authority | High-security tasks |
-| **Federated** | Committee of agents | Consensus voting | Complex decisions |
-| **Hierarchical** | Role-based ranks | Escalation chain | Enterprise workflows |
-| **Autonomous** | Self-governing swarm | Emergent consensus | Research exploration |
+- `Collab.mode` is constrained by the schema enum
+- `participants` are part of the session structure
+- participant `kind` is constrained by the schema enum
+- participant `role_id` is part of the frozen profile/invariant surface
 
-### 2.2 Centralized (Dictator)
+### 2.2 MAP Event Surface
 
-<MermaidDiagram id="b985fd791fbcb213" />
+From `schemas/v2/events/mplp-map-event.schema.json` and the MAP profile
+manifest:
 
-**Rules**:
-- Single "Root Agent" or Human has absolute authority
-- All plans MUST be approved by root
-- No lateral communication without root permission
+- session-start/session-complete events exist
+- role-assignment events exist
+- turn-dispatch/turn-complete events exist
+- broadcast and conflict events exist as profile-linked event types
 
-### 2.3 Federated (Committee)
+This page does not expand those event names into a larger governance doctrine.
 
-<MermaidDiagram id="7109580d1f77ebfc" />
+### 2.3 Confirm and Role as Separate Protocol Objects
 
-**Rules**:
-- Decisions require consensus (e.g., 2/3 majority)
-- All committee members have equal vote weight
-- Deadlock escalates to human
+The frozen protocol baseline already has separate objects for:
 
-### 2.4 Hierarchical
+- Confirm
+- Role
 
-<MermaidDiagram id="f676ffe4e91ae2bd" />
+Implementations may use those objects together with MAP-related artifacts, but
+this page does not create a new standalone governance profile object or policy
+schema by combining them.
 
-**Rules**:
-- Higher rank overrides lower rank
-- Escalation follows hierarchy
-- Scope limited by level
+## 3. Important Boundary
 
-## 3. Conflict Resolution
+There is **no standalone frozen schema or profile manifest** under `schemas/v2/`
+named "multi-agent-governance-profile".
 
-### 3.1 Resolution Strategies
+Accordingly, this page must not be read as introducing:
 
-When agents disagree (e.g., Agent A wants to delete a file, Agent B wants to keep it):
+- a new independent profile family
+- a new schema contract
+- a new policy language
+- a new set of governance models
 
-| Strategy | Mechanism | Priority |
-|:---|:---|:---|
-| **Hierarchy** | Higher-rank role wins | 1 (default) |
-| **Voting** | Majority vote wins | 2 |
-| **Timestamp** | Last-write-wins (LWW) | 3 |
-| **Escalation** | Human decides | 4 (fallback) |
+Its role is boundary control only: it points back to the actual frozen MAP,
+Collab, Confirm, and Role sources.
 
-### 3.2 Conflict Resolution Flow
+## 4. Canonical Reading Path
 
-<MermaidDiagram id="d99a12c6ff5589fb" />
+Read multi-agent governance meaning in this order:
 
-### 3.3 Implementation
+1. [MAP Profile](./map-profile.md)
+2. [Collab Module](/docs/specification/modules/collab-module.md)
+3. [Role Module](/docs/specification/modules/role-module.md)
+4. [Confirm Module](/docs/specification/modules/confirm-module.md)
+5. `schemas/v2/invariants/map-invariants.yaml`
+6. [MAP Events](./map-events.md)
 
-```typescript
-type ResolutionStrategy = 'hierarchy' | 'voting' | 'lww' | 'escalation';
+## 5. References
 
-interface Conflict {
-  conflict_id: string;
-  resource_type: string;
-  resource_id: string;
-  conflicting_roles: string[];
-  proposed_values: Record<string, any>;
-}
-
-async function resolveConflict(
-  conflict: Conflict,
-  session: Collab,
-  strategy: ResolutionStrategy
-): Promise<string> {
-  switch (strategy) {
-    case 'hierarchy':
-      return resolveByHierarchy(conflict, session);
-    case 'voting':
-      return resolveByVoting(conflict, session);
-    case 'lww':
-      return resolveByTimestamp(conflict);
-    case 'escalation':
-      return await escalateToHuman(conflict);
-  }
-}
-
-function resolveByHierarchy(conflict: Conflict, session: Collab): string {
-  // Get role ranks from Role module
-  let highestRank = -1;
-  let winner = '';
-  
-  for (const role_id of conflict.conflicting_roles) {
-    const role = getRoleById(role_id);
-    const rank = getRoleRank(role);
-    if (rank > highestRank) {
-      highestRank = rank;
-      winner = role_id;
-    }
-  }
-  
-  return winner;
-}
-```
-
-## 4. Policy Enforcement
-
-### 4.1 Policy Types
-
-| Policy Type | Description | Enforcement |
-|:---|:---|:---|
-| **Resource Limits** | Max tokens, steps, cost | Runtime check |
-| **Tool Whitelists** | Allowed tools | Pre-execution |
-| **Human Gates** | Required approvals | Confirm module |
-| **Scope Limits** | File/directory access | Pre-execution |
-
-### 4.2 Policy Schema
-
-```json
-{
-  "policy_id": "policy-safety-001",
-  "name": "Production Safety Policy",
-  "rules": [
-    {
-      "rule_id": "max_tokens",
-      "type": "resource_limit",
-      "resource": "tokens",
-      "max_value": 100000,
-      "scope": "session"
-    },
-    {
-      "rule_id": "no_delete",
-      "type": "tool_whitelist",
-      "action": "block",
-      "tools": ["rm", "del", "rmdir"],
-      "exception": "requires_confirm"
-    },
-    {
-      "rule_id": "human_gate_deploy",
-      "type": "human_gate",
-      "trigger": "action.type == 'deploy'",
-      "action": "require_confirm"
-    }
-  ]
-}
-```
-
-### 4.3 Policy Enforcement Code
-
-```typescript
-interface PolicyRule {
-  rule_id: string;
-  type: 'resource_limit' | 'tool_whitelist' | 'human_gate' | 'scope_limit';
-  action: 'allow' | 'block' | 'require_confirm';
-}
-
-async function enforcePolicy(
-  action: AgentAction,
-  policies: Policy[]
-): Promise<PolicyResult> {
-  for (const policy of policies) {
-    for (const rule of policy.rules) {
-      const result = await checkRule(action, rule);
-      
-      if (result.blocked) {
-        return {
-          allowed: false,
-          rule_id: rule.rule_id,
-          reason: result.reason
-        };
-      }
-      
-      if (result.requires_confirm) {
-        const confirm = await createConfirm({
-          target_type: 'extension',
-          target_id: action.action_id,
-          reason: `Policy ${rule.rule_id} requires approval`
-        });
-        
-        const decision = await waitForDecision(confirm.confirm_id);
-        if (decision.status !== 'approved') {
-          return { allowed: false, rule_id: rule.rule_id, reason: 'User rejected' };
-        }
-      }
-    }
-  }
-  
-  return { allowed: true };
-}
-```
-
-## 5. Human-in-the-Loop (HITL)
-
-### 5.1 HITL Triggers
-
-| Trigger | Condition | Action |
-|:---|:---|:---|
-| **High-Risk Action** | Destructive operations | Block + Confirm |
-| **Budget Exceeded** | Cost > threshold | Pause + Notify |
-| **Conflict Deadlock** | No resolution | Escalate |
-| **Policy Violation** | Rule triggered | Block + Confirm |
-
-### 5.2 HITL Flow
-
-<MermaidDiagram id="c3da52705df75d92" />
-
-## 6. Safety Examples
-
-### 6.1 Destructive Operation Blocking
-
-**Policy**: "No file deletion without Human Approval"
-
-```yaml
-- rule_id: no_delete_without_approval
-  type: tool_whitelist
-  tools: ["rm", "del", "rmdir", "shutil.rmtree"]
-  action: require_confirm
-  message: "Destructive operation requires human approval"
-```
-
-**Scenario**:
-1. Agent A proposes deleting `main.py`
-2. Runtime detects `rm` tool usage
-3. Policy blocks execution
-4. Confirm request created
-5. User approves/rejects
-6. Agent proceeds or aborts
-
-### 6.2 Budget Enforcement
-
-**Policy**: "Max $50/day spending"
-
-```yaml
-- rule_id: daily_budget
-  type: resource_limit
-  resource: cost_usd
-  max_value: 50.00
-  period: daily
-  on_exceed: suspend
-```
-
-**Scenario**:
-1. Agent executes LLM calls
-2. CostAndBudgetEvent tracks spending
-3. Cost reaches $50
-4. Runtime suspends execution
-5. Human notified
-
-## 7. Related Documents
-
-**Profiles**:
-- [MAP Profile](map-profile.md) - Base multi-agent profile
-- [SA Profile](sa-profile.md) - Single-agent base
-
-**Cross-Cutting**:
-- [Security](/docs/specification/architecture/cross-cutting-kernel-duties) - Security controls
-- [Coordination](/docs/specification/architecture/cross-cutting-kernel-duties) - Collaboration modes
-
-**Modules**:
-- [Confirm Module](../modules/confirm-module.md) - Approval workflow
-- [Role Module](../modules/role-module.md) - Permission model
+- `schemas/v2/profiles/map-profile.yaml`
+- `schemas/v2/invariants/map-invariants.yaml`
+- `schemas/v2/events/mplp-map-event.schema.json`
+- `schemas/v2/mplp-collab.schema.json`
+- [MAP Profile](./map-profile.md)
+- [Role Module](/docs/specification/modules/role-module.md)
+- [Confirm Module](/docs/specification/modules/confirm-module.md)
 
 ---
 
-**Governance Models**: Centralized, Federated, Hierarchical, Autonomous  
-**Conflict Strategies**: Hierarchy, Voting, LWW, Escalation  
-**Policy Types**: Resource Limits, Tool Whitelists, Human Gates, Scope Limits
+**Final Boundary**: this page does not define an independent governance-profile
+doctrine. It only marks the limits of governance meaning already present in
+frozen MAP-adjacent protocol artifacts.

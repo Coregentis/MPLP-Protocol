@@ -7,22 +7,35 @@ protocol_version: "1.0.0"
 doc_id: "DOC-EVAL-INDEX-001"
 
 # UI metadata (non-normative; excluded from protocol semantics)
-title: Evaluation & Governance
+title: Evaluation
 sidebar_position: 2
-description: "MPLP evaluation: Evaluation & Governance. Non-normative assessment guidance."
+description: "Secondary evaluation helper index routing readers into protocol-side test scenarios, Lab references, and conformance helpers."
 authority: none
 ---
 
-# Evaluation & Governance
+# Evaluation
 
-This section covers protocol evaluation, governance, and conformance documentation.
+This section is a **secondary evaluation/helper layer**.
 
-## Contents
+It does not redefine protocol semantics, public-surface authority, or
+Validation Lab truth. Use it to route into the repaired primary specification
+and current evaluation references.
 
-- [Golden Flows](/docs/evaluation/golden-flows) - 5 evaluation scenarios
-- [Governance](/docs/evaluation/governance) - Protocol governance model
-- [Conformance](/docs/evaluation/conformance) - Conformance evaluation
-- [Validation Lab Evidence Regime](/docs/evaluation/conformance/validation-lab-evidence-regime) - Reproducibility & Signed Proof (Non-Normative)
-- [Standards](/docs/evaluation/standards/positioning) - External standards alignment
-- [Tests](/docs/evaluation/tests/golden-test-suite-overview) - Test specifications
+## Start Here
 
+| Goal | Route |
+|:---|:---|
+| Read protocol-side evaluation scenarios | [Golden Flows](/docs/evaluation/golden-flows) |
+| Read Lab-side adjudication reference | [Validation Lab Overview](/docs/evaluation/validation-lab) |
+| Read conformance helper pages | [Conformance](/docs/evaluation/conformance) |
+| Read standards positioning | [Standards](/docs/evaluation/standards/positioning) |
+| Read test architecture | [Tests](/docs/evaluation/tests) |
+
+## Boundary Model
+
+- **Repository**: protocol truth and test/source artifacts
+- **Documentation**: reference projection and helper guidance
+- **Validation Lab**: evidence adjudication
+
+If an evaluation-side helper page conflicts with repository truth or the
+repaired primary docs layer, those upstream sources prevail.

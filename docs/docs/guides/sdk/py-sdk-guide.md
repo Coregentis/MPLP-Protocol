@@ -5,19 +5,19 @@ doc_type: reference
 normativity: informative
 status: active
 authority: Documentation Governance
-description: "Python SDK guide for mplp package including installation, usage, and API reference."
+description: "Guide to the current published mplp-sdk Python helper package surface."
 title: Python SDK Guide
-
 ---
-
-
 
 # Python SDK Guide
 
+## 1. Current Package State
 
-## 1. Purpose
+The published **`mplp-sdk`** package is currently a **minimal Python protocol
+helper surface**.
 
-The **MPLP Python SDK** (`mplp-sdk`) is the **Reference** implementation for Python. It provides a robust, schema-conformant implementation with full runtime support.
+It is installable from PyPI, version-bound to the frozen protocol line, and it
+does **not** present a full Python SDK or runtime.
 
 **PyPI Package**: [`mplp-sdk`](https://pypi.org/project/mplp-sdk/)
 
@@ -27,54 +27,64 @@ The **MPLP Python SDK** (`mplp-sdk`) is the **Reference** implementation for Pyt
 pip install mplp-sdk
 ```
 
-## 3. Features
+## 3. Current Published Surface
 
-- **Protocol Conformance**: Fully generated Pydantic v2 models from canonical JSON Schemas.
-- **Runtime Engine**: Flexible `ExecutionEngine` supporting SA and MAP execution modes.
-- **Observability**: **Full Alignment** with 12 Event Families (Truth Source). Built-in Validator and NDJSON Exporter.
-  - *Evidence*: See `project-governance/PDG_ALIGNMENT_EVIDENCE_REPORT_PY.md` (Internal).
-- **Golden Flows**: 5 verified protocol flows (Single Agent, Multi-Agent, Risk Confirm, Error Recovery, Network Transport).
+The current shipped package surface includes:
 
-## 4. Quick Start
+- `mplp.__version__`
+- `mplp.MPLP_PROTOCOL_VERSION`
+- `mplp.KERNEL_DUTIES`
+- `mplp.KERNEL_DUTY_IDS`
+- `mplp.KERNEL_DUTY_NAMES`
+- `mplp.KERNEL_DUTY_COUNT`
 
-### 4.1 Single Agent Execution
+Example:
 
 ```python
-import asyncio
-from mplp.model import Context, Plan
-from mplp.validation import validate_context, validate_plan
+import mplp
 
-
-context_data = {
-    "title": "My Project",
-    "domain": "code-assistance"
-}
-context = Context(**context_data)
-
-
-is_valid = validate_context(context_data)
-
-
-print(f"Context ID: {context.context_id}")
+print(mplp.__version__)
+print(mplp.MPLP_PROTOCOL_VERSION)
+print(mplp.KERNEL_DUTY_COUNT)
 ```
 
-## 5. Golden Flows
+## 4. Source and Publish Surfaces
 
-| Flow | Description | Test File |
+| Surface | Path | Role |
 |:---|:---|:---|
-| 01 | Single Agent | `tests/test_flows_01_single_agent.py` |
-| 02 | Multi-Agent | `tests/test_flows_02_multi_agent.py` |
-| 03 | Risk Confirmation | `tests/test_flows_03_risk_confirm.py` |
-| 04 | Error Recovery | `tests/test_flows_04_error_recovery.py` |
-| 05 | Network Transport | `tests/test_flows_05_network_transport.py` |
+| Source-side mirror | `packages/sources/sdk-py/` | Build/release preparation mirror |
+| Public PyPI package | `packages/pypi/mplp-sdk/` | Published helper package |
 
-## 6. Further Documentation
+## 5. Boundary
 
-- `packages/pypi/mplp-sdk/README.md`
-- `packages/sources/sdk-py/docs/RUNTIME.md`
-- `packages/sources/sdk-py/docs/OBSERVABILITY.md`
+The current Python package does **not** provide:
+
+- generated Python models
+- runtime orchestration APIs
+- validation/builders comparable to the TypeScript package family
+- a full Python SDK/runtime surface
+
+If that package surface expands in the future, the package metadata, published
+exports, and docs guidance must expand together.
+
+## 6. Kernel Duty Baseline
+
+The package now carries the 11-duty baseline as exported Python constants.
+
+Canonical upstream sources remain:
+
+- `schemas/v2/taxonomy/kernel-duties.yaml`
+- `governance/05-specialized/entity.json`
+
+The package is therefore a helper mirror of that baseline, not the source of
+truth for it.
 
 ## 7. Requirements
 
-- Python >= 3.10
-- pydantic >= 2.0, < 3.0
+- Python >= 3.9
+- no required runtime dependencies for the current helper surface
+
+---
+
+**Final Boundary**: `mplp-sdk` is currently a minimal published helper package,
+not a full SDK or runtime contract surface.

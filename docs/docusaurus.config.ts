@@ -211,8 +211,8 @@ const config: Config = {
 
         // Right side - External links
         {
-          href: 'https://www.mplp.io',
-          label: 'Protocol Overview',
+          href: 'https://www.mplp.io/what-is-mplp',
+          label: 'What is MPLP?',
           position: 'right',
           className: 'header-protocol-link',
         },
@@ -246,11 +246,11 @@ const config: Config = {
       style: 'dark',
       links: [
         {
-          // Column 1: PROTOCOL (T0 + Governance Root)
+          // Column 1: PROTOCOL (Website canonical anchors)
           title: 'Protocol',
           items: [
-            { label: 'Protocol Overview', href: 'https://www.mplp.io' },
-            { label: 'Governance', href: 'https://www.mplp.io/governance' },
+            { label: 'What is MPLP?', href: 'https://www.mplp.io/what-is-mplp' },
+            { label: 'Governance', href: 'https://www.mplp.io/governance/overview' },
             { label: 'Validation Lab', href: 'https://lab.mplp.io' },
             { label: 'FAQ', href: 'https://www.mplp.io/faq' },
             { label: 'References', href: 'https://www.mplp.io/references' },

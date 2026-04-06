@@ -11,24 +11,26 @@ protocol_version: "1.0.0"
 package:
   name: "mplp-sdk"
   ecosystem: "pypi"
-  version: "1.0.4"
-  category: "PUBLIC"
+  version: "1.0.5"
+  category: "SOURCE-MIRROR"
 
 # Truth Source Bundle Reference
 schema_bundle:
   path: "schemas/v2"
   
 evidence_baseline:
-  reference: "governance/freeze/FREEZE_EVIDENCE_BASELINE_v1.0.md"
+  reference: "governance/04-records/FREEZE_EVIDENCE_BASELINE_v1.0.md"
   version: "v1.0"
 
 # Derivation Process
 derivation:
-  method: "manual_implementation"
-  description: "Python SDK manually implemented to conform to MPLP protocol specification"
+  method: "source_package_mirror"
+  description: "Source-side mirror for the published mplp-sdk protocol helper package"
   truth_sources:
     - "schemas/v2/*.schema.json"
-    - "governance/01-core/MPLP_CONSTITUTION.md"
+    - "schemas/v2/taxonomy/kernel-duties.yaml"
+    - "governance/05-specialized/entity.json"
+    - "governance/05-versioning/version-taxonomy-manifest.json"
   
   build_inputs:
     - path: "pyproject.toml"
@@ -40,17 +42,19 @@ derivation:
 python:
   dist:
     - type: sdist
-      filename: "mplp_sdk-1.0.4.tar.gz"
-      sha256: "f780cec91c3d2393c2cd111bed63386e7675ab08d1710f0579cee104f76766e4"
+      filename: "mplp_sdk-1.0.5.tar.gz"
+      sha256: "c8ee808d77e129c8ecc9e9f08d319e341d338e1f2684bc826ebedd7ad5e02b4a"
     - type: wheel
-      filename: "mplp_sdk-1.0.4-py3-none-any.whl"
-      sha256: "c750540918f34dc690f1b31a4274f39ceedf845e3433c5ebe9d4b1ebf1576940"
+      filename: "mplp_sdk-1.0.5-py3-none-any.whl"
+      sha256: "980fa10a5c0f26fc62b31ba33a9249fff513c30bb2b87f4945aff7093e563b27"
 
 # Verification Results
 verification:
-  protocol_conformance: "VERIFIED"
-  api_surface_aligned: true
-  pydantic_models: true
+  protocol_identity_aligned: true
+  placeholder_surface_only: false
+  runtime_surface: false
+  pydantic_models: false
+  kernel_duty_baseline_carried: true
 
 # Governance
 governance:

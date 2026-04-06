@@ -38,5 +38,5 @@ All codegen MUST use the schemas in `schemas/v2/` as the single source of truth:
 
 | Language | Output Directory | Type |
 |:---------|:-----------------|:-------------|
-| TypeScript | `packages/sdk-ts/src/types/` | Interfaces & Enums |
-| Python | `packages/sdk-py/src/mplp/model/` | Pydantic v2 Classes |
+| TypeScript | `packages/sources/sdk-ts/dist/types/` | Generated interfaces and enums |
+| Python | `packages/pypi/mplp-sdk/` | Current published placeholder package surface (no generated model set shipped) |

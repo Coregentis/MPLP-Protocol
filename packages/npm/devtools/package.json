@@ -1,7 +1,7 @@
 {
   "name": "@mplp/devtools",
   "version": "1.0.5",
-  "description": "Developer tools and CLI for MPLP Protocol v1.0",
+  "description": "Public developer-tooling convenience package for MPLP v1.0.0. Aggregates schema and conformance utilities and CLI helpers; not a direct protocol object mirror.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
@@ -25,12 +25,17 @@
     "protocolVersion": "1.0.0",
     "frozen": true,
     "governance": "MPGC",
-    "layer": "Tools"
+    "layer": "Tools",
+    "packageClass": "PUBLIC",
+    "publishSurface": true,
+    "publishScope": "public-npm",
+    "packageRole": "developer-tooling-convenience",
+    "contractMode": "convenience-runtime-alias"
   },
-  "author": "Bangshi Beijing Network Technology Limited Company",
+  "author": "Coregentis AI",
   "copyright": "© 2026 Bangshi Beijing Network Technology Limited Company",
   "license": "Apache-2.0",
-  "homepage": "https://www.mplp.io",
+  "homepage": "https://www.mplp.io/what-is-mplp",
   "bugs": {
     "url": "https://github.com/Coregentis/MPLP-Protocol/issues"
   },
@@ -43,8 +48,7 @@
     "multi-agent",
     "protocol",
     "lifecycle",
-    "agent-os",
-    "agent-os-protocol"
+    "developer-tooling"
   ],
   "exports": {
     ".": {

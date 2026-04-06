@@ -12,34 +12,71 @@ lifecycle_status: stable
 
 Welcome to the **Multi-Agent Lifecycle Protocol (MPLP)** documentation. This section provides foundational context for understanding the protocol's purpose, scope, and design philosophy.
 
+> [!NOTE]
+> **Orientation Only**
+>
+> Introduction pages help readers enter the docs set, but they do not replace
+> schema-backed specification pages, repository truth sources, or the scoped
+> authority model described in [Entry Points](/docs/reference/entrypoints).
+
 ## What is MPLP?
 
-MPLP is a **vendor-neutral, schema-first specification** that defines how multi-agent systems should govern their lifecycle — from initialization through execution to completion and audit.
+MPLP is a **vendor-neutral, schema-first protocol** for representing lifecycle
+artifacts and constraints in agent workflows.
+
+Its formal baseline is anchored in repository-backed schemas, invariants, and
+approved governance records. This introduction explains the reading path into
+that baseline; it does not create an independent doctrine layer.
 
 > **MPLP is not a runtime, framework, or product.** It is a normative specification that enables interoperability across diverse agent implementations.
 
-## Documentation Structure
+## Canonical-First Reading Path
 
 | Document | Purpose |
 |----------|---------|
-| [Protocol Overview](/docs/introduction/mplp-v1.0-protocol-overview) | High-level introduction to MPLP concepts |
+| [Entry Points](/docs/reference/entrypoints) | Authority boundary and public-surface responsibilities |
+| [Specification](/docs/specification) | Formal reading path into modules, profiles, observability, and architecture |
+| [Protocol Overview](/docs/introduction/mplp-v1.0-protocol-overview) | Bounded orientation to the protocol reading order |
+| [Evaluation & Governance](/docs/evaluation) | Conformance, evidence, and Validation Lab reference surfaces |
+| [Guides](/docs/guides) | Runtime, SDK, and example guidance after the spec/reference baseline is clear |
+| [Docs Map](/docs/introduction/mplp-v1.0-docs-map) | Navigation guide for the documentation |
+| [Glossary](/docs/introduction/glossary) | Navigation glossary pointing to canonical pages |
+| [API Quick Reference](/docs/introduction/api-quick-reference) | Schema and endpoint summary |
+| [POSIX Analogy](/docs/introduction/posix-analogy-mapping) | Conceptual analogy only |
+
+## Canonical Distinctions
+
+The introduction pages reassert these distinctions:
+
+- **Protocol vs runtime**: protocol semantics are defined in formal sources;
+  runtimes realize those semantics.
+- **Protocol vs product**: MPLP is not a framework, product, or hosted system.
+- **Specification/reference vs guides**: specification/reference establishes the
+  baseline; guides follow it.
+- **Repository vs projection surfaces**: repository truth source first,
+  documentation projection second, website positioning third, Validation Lab
+  adjudication separate.
+
+## What This Section Contains
+
+| Document | Purpose |
+|----------|---------|
+| [Protocol Overview](/docs/introduction/mplp-v1.0-protocol-overview) | High-level orientation without restating the full spec |
 | [Docs Map](/docs/introduction/mplp-v1.0-docs-map) | Navigation guide for the documentation |
 | [API Quick Reference](/docs/introduction/api-quick-reference) | Schema and endpoint summary |
-| [Glossary](/docs/introduction/glossary) | Terminology definitions |
+| [Glossary](/docs/introduction/glossary) | Reading aid for key terms and where to read them first |
 | [POSIX Analogy](/docs/introduction/posix-analogy-mapping) | Conceptual mapping to familiar OS concepts |
-
-## Key Principles
-
-1. **Schema is Truth** — All behavior is defined by JSON schemas, not prose
-2. **Vendor Neutral** — No dependency on specific runtimes or frameworks
-3. **Audit-Ready** — Every lifecycle event is traceable and verifiable
-4. **Substrate Agnostic** — Works across LangChain, AutoGen, CrewAI, etc.
 
 ## Getting Started
 
-- Start with the [Protocol Overview](/docs/introduction/mplp-v1.0-protocol-overview) for conceptual grounding
-- Explore the [Specification](/docs/specification) for normative requirements
-- See [Examples](/docs/guides/examples) for practical implementations
+- Start with [Entry Points](/docs/reference/entrypoints) for surface roles and
+  authority boundaries.
+- Move next to [Specification](/docs/specification) for the canonical reading
+  path into formal docs surfaces.
+- Use [Protocol Overview](/docs/introduction/mplp-v1.0-protocol-overview) only
+  as an orientation bridge.
+- Use [Examples](/docs/guides/examples) only after the specification/reference
+  baseline is clear.
 
 ---
 

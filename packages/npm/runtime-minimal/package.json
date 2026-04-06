@@ -1,7 +1,7 @@
 {
   "name": "@mplp/runtime-minimal",
   "version": "1.0.5",
-  "description": "Vendor-neutral reference runtime (L3) for MPLP Protocol v1.0",
+  "description": "Public minimal runtime helper package for MPLP v1.0.0. Exposes runtime-level AEL/VSL/orchestrator artifacts, not protocol SSOT objects.",
   "license": "Apache-2.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -15,15 +15,21 @@
     "vitest": "^1.0.0",
     "@types/node": "^20.0.0"
   },
-  "author": "Bangshi Beijing Network Technology Limited Company",
+  "author": "Coregentis AI",
   "copyright": "© 2026 Bangshi Beijing Network Technology Limited Company",
   "mplp": {
     "protocolVersion": "1.0.0",
     "frozen": true,
     "governance": "MPGC",
-    "layer": "L3"
+    "layer": "L3",
+    "packageClass": "PUBLIC",
+    "publishSurface": true,
+    "publishScope": "public-npm",
+    "packageRole": "runtime-minimal",
+    "contractMode": "convenience-runtime-alias",
+    "kernelDutyBaselineCarried": false
   },
-  "homepage": "https://www.mplp.io",
+  "homepage": "https://www.mplp.io/what-is-mplp",
   "bugs": {
     "url": "https://github.com/Coregentis/MPLP-Protocol/issues"
   },
@@ -36,8 +42,7 @@
     "multi-agent",
     "protocol",
     "lifecycle",
-    "agent-os",
-    "agent-os-protocol"
+    "ai-agent-lifecycle"
   ],
   "exports": {
     ".": {

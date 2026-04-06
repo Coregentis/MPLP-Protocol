@@ -4,22 +4,21 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mplp-sdk"
-version = "1.0.4"
-description = "Python SDK and reference runtime for the MPLP Protocol (Agent OS Protocol)."
+version = "1.0.5"
+description = "Source-side mirror for the published mplp-sdk protocol helper package surface; not a public publish target."
 readme = "README.md"
 requires-python = ">=3.9"
-license = { text = "Apache-2.0" }
+license = "Apache-2.0"
 
 authors = [
   { name = "Coregentis AI" }
 ]
 
-keywords = ["mplp", "multi-agent", "lifecycle", "protocol", "agent-os", "AI agents", "runtime"]
+keywords = ["mplp", "multi-agent", "lifecycle", "protocol", "agent-os", "python", "source-mirror", "kernel-duties"]
 
 classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Developers",
-  "License :: OSI Approved :: Apache Software License",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
@@ -29,12 +28,10 @@ classifiers = [
   "Typing :: Typed"
 ]
 
-dependencies = [
-  "pydantic>=2.0,<3.0",
-]
+dependencies = []
 
 [project.urls]
-Homepage = "https://mplp.io"
+Homepage = "https://www.mplp.io"
 Documentation = "https://docs.mplp.io"
 Repository = "https://github.com/Coregentis/MPLP-Protocol"
 Issues = "https://github.com/Coregentis/MPLP-Protocol/issues"
@@ -43,6 +40,14 @@ Issues = "https://github.com/Coregentis/MPLP-Protocol/issues"
 protocolVersion = "1.0.0"
 frozen = true
 governance = "MPGC"
+packageClass = "SOURCE-MIRROR"
+sourcePackage = true
+publishBlocked = true
+publishScope = "source-package"
+targetPyPIPackage = "mplp-sdk"
+packageRole = "python-protocol-helper-source-mirror"
+kernelDutyBaselineCarried = true
+placeholderSurface = false
 
 [tool.setuptools]
 packages = ["mplp"]

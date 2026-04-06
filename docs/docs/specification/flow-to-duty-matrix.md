@@ -10,81 +10,69 @@ doc_id: "DOC-SEMANTIC-FLOW-DUTY-MATRIX-001"
 # UI metadata (non-normative; excluded from protocol semantics)
 title: Golden Flow to Kernel Duty Matrix
 sidebar_label: Flow-Duty Matrix
-description: "MPLP specification: Golden Flow to Kernel Duty Matrix. Normative protocol requirements."
+description: "Boundary page explaining that no frozen flow-to-duty mapping authority is established by docs."
 authority: Documentation Governance
 ---
 
 # Golden Flow to Kernel Duty Matrix
 
-**Purpose**: Resolves evaluation relationships between 5 Golden Flows and 11 Kernel Duties.
+This page exists to prevent over-reading golden-flow/duty relationships into a
+docs-side matrix.
+
+## Scope
+
+The frozen source set includes:
+
+- the kernel-duty taxonomy in `schemas/v2/taxonomy/kernel-duties.yaml`
+- the evaluation/golden-flow surfaces under `/docs/evaluation/golden-flows`
+
+It does **not** include a frozen canonical source that assigns primary or
+secondary kernel duties to each golden flow.
+
+## What This Means
+
+Accordingly, this page should not create:
+
+- primary-duty assignments for flows
+- secondary-duty assignments for flows
+- duty-coverage counts
+- coverage-gap doctrine derived from a docs-side matrix
+
+## Golden Flow Reference Surfaces
+
+These are evaluation/reference surfaces:
+
+| Flow Label | Read First |
+|:---|:---|
+| `FLOW-01` | [/docs/evaluation/golden-flows/gf-01](/docs/evaluation/golden-flows/gf-01) |
+| `FLOW-02` | [/docs/evaluation/golden-flows/gf-02](/docs/evaluation/golden-flows/gf-02) |
+| `FLOW-03` | [/docs/evaluation/golden-flows/gf-03](/docs/evaluation/golden-flows/gf-03) |
+| `FLOW-04` | [/docs/evaluation/golden-flows/gf-04](/docs/evaluation/golden-flows/gf-04) |
+| `FLOW-05` | [/docs/evaluation/golden-flows/gf-05](/docs/evaluation/golden-flows/gf-05) |
+
+These pages are not replaced by this matrix page.
+
+## Frozen Duty Taxonomy
+
+The duty taxonomy remains the canonical source for duty names:
+
+- `KD-01` through `KD-11` in `schemas/v2/taxonomy/kernel-duties.yaml`
+
+## How To Read Flows Against Duties
+
+If you need to reason about flows and duties:
+
+1. Read the frozen duty taxonomy separately.
+2. Read the golden-flow pages separately.
+3. Treat any relationship between them as interpretive unless a frozen source
+   explicitly establishes it.
+
+## References
+
+- [/docs/evaluation/golden-flows](/docs/evaluation/golden-flows)
+- `schemas/v2/taxonomy/kernel-duties.yaml`
 
 ---
 
-## 1. Primary Coverage Matrix
-
-| Golden Flow | Primary Duties | Evaluation Focus |
-|:---|:---|:---|
-| FLOW-01 SA Lifecycle | KD-06, KD-05, KD-10 | Context → Plan → Trace |
-| FLOW-02 MAP Coordination | KD-01, KD-10, KD-03 | Multi-agent handoffs |
-| FLOW-03 Drift Detection | KD-05, KD-02, KD-11 | Drift → Recovery |
-| FLOW-04 Delta Intent | KD-06, KD-11, KD-05 | Delta → Replan |
-| FLOW-05 Governance | KD-09, KD-06, KD-05 | Confirm gates |
-
----
-
-## 2. Detailed Flow × Duty Coverage
-
-| Golden Flow | KD-01 | KD-02 | KD-03 | KD-04 | KD-05 | KD-06 | KD-07 | KD-08 | KD-09 | KD-10 | KD-11 |
-|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| FLOW-01 SA Lifecycle | - | ✓ | - | - | **P** | **P** | - | - | - | **P** | - |
-| FLOW-02 MAP Coordination | **P** | ✓ | **P** | - | ✓ | - | - | - | - | **P** | - |
-| FLOW-03 Drift Detection | - | **P** | - | - | **P** | - | - | - | - | ✓ | **P** |
-| FLOW-04 Delta Intent | - | ✓ | - | - | **P** | **P** | - | - | - | - | **P** |
-| FLOW-05 Governance | - | ✓ | - | - | **P** | **P** | - | - | **P** | - | - |
-
-**Legend**: **P** = Primary, ✓ = Secondary, - = Not Covered
-
----
-
-## 3. Duty Coverage by Flow Count
-
-| Kernel Duty | Flow Coverage | Primary In |
-|:---|:---:|:---|
-| KD-01 Coordination | 1/5 | FLOW-02 |
-| KD-02 Error Handling | 5/5 | FLOW-03 |
-| KD-03 Event Bus | 1/5 | FLOW-02 |
-| KD-04 Learning & Feedback | 0/5 | - |
-| KD-05 Observability | 5/5 | FLOW-01, FLOW-03, FLOW-04, FLOW-05 |
-| KD-06 Orchestration | 3/5 | FLOW-01, FLOW-04, FLOW-05 |
-| KD-07 Performance | 0/5 | - |
-| KD-08 Protocol Versioning | 0/5 | - |
-| KD-09 Security | 1/5 | FLOW-05 |
-| KD-10 State Sync | 3/5 | FLOW-01, FLOW-02 |
-| KD-11 Transaction | 2/5 | FLOW-03, FLOW-04 |
-
----
-
-## 4. Gap Analysis
-
-| Duty | Coverage | Gap Type | Phase F Action |
-|:---|:---:|:---|:---|
-| KD-04 Learning & Feedback | 0/5 | INTENTIONAL | Not in v1.0 scope |
-| KD-07 Performance | 0/5 | INTENTIONAL | Non-functional, not evidence |
-| KD-08 Protocol Versioning | 0/5 | INTENTIONAL | Meta-level, not runtime |
-
----
-
-## 5. Flow → Module → Duty Chain
-
-| Golden Flow | Primary Modules | Primary Duties |
-|:---|:---|:---|
-| FLOW-01 | CA-01, CA-02, CA-03 | KD-05, KD-06, KD-10 |
-| FLOW-02 | CA-05, CA-06, CA-09 | KD-01, KD-03, KD-10 |
-| FLOW-03 | CA-03, CA-02 | KD-02, KD-05, KD-11 |
-| FLOW-04 | CA-02, CA-03 | KD-05, KD-06, KD-11 |
-| FLOW-05 | CA-04, CA-02, CA-03 | KD-05, KD-06, KD-09 |
-
----
-
-**Phase**: D-2 (Cross-Directory Semantic Mapping)
-**Coverage**: 5 Flows × 11 Duties = 55 Cells (mapping declared)
+**Final Boundary**: there is no frozen docs-side authority here for assigning
+kernel duties to golden flows. This page exists to say so explicitly.

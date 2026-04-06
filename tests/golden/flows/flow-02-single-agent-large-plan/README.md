@@ -120,12 +120,15 @@ The TypeScript harness (`tests/golden/harness/ts/`) must:
 
 ### 6.2 Python Golden Harness
 
-The Python harness (`packages/sdk-py/tests/golden/harness/`) must:
-- Load identical fixtures
-- Validate against `mplp_sdk.validation` schemas
-- Apply identical invariants using `path_utils.py` wildcard expansion
-- Compare outputs using `golden_validator.py`
-- Produce **structurally equivalent error reports** as TypeScript
+The current source-side Python package mirror (`packages/sources/sdk-py/`) does **not** ship an in-repository golden harness.
+
+For the current package surface, Python verification is limited to placeholder package smoke checks such as:
+
+```bash
+PYTHONPATH=packages/sources/sdk-py/src python3 -c "import mplp; print(mplp.__version__)"
+```
+
+It does not currently provide a golden harness comparable to the TypeScript harness for this flow.
 
 ### 6.3 Determinism Requirements
 
@@ -214,7 +217,7 @@ FLOW-02 is considered **successfully implemented** when:
 
 3. **Cross-Language Alignment**:
    - TypeScript: `pnpm test:golden` includes FLOW-02 and reports PASS
-   - Python: `pytest packages/sdk-py/tests/golden/` includes FLOW-02 and reports PASS
+   - Python: current source-side mirror is placeholder-only; no in-repo Python golden harness is shipped
    - Both produce structurally identical validation results
 
 4. **No Regressions**:
@@ -243,7 +246,7 @@ FLOW-02 is considered **successfully implemented** when:
 - [Golden Test Suite Overview](../../docs/08-tests/golden-test-suite-overview.md)
 - [MPLP Spec v1.0 - Plan Module](../../docs/00-spec/mplp-spec-v1.0.md#plan-module)
 - [Path Utils (TS)](../harness/ts/path-utils.ts) - Wildcard expansion implementation
-- [Path Utils (Python)](../../packages/sdk-py/tests/golden/harness/path_utils.py) - Python equivalent
+- Python golden harness path-utils are not currently shipped in `packages/sources/sdk-py/`
 
 ---
 

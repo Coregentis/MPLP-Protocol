@@ -4,172 +4,193 @@ sidebar_position: 1
 doc_type: reference
 normativity: informative
 status: active
-authority: Documentation Governance
-description: "Reference implementation guide for the MPLP TypeScript SDK."
+authority: none
+description: "Guide to the current published @mplp/sdk-ts facade surface and its boundary relative to runtime-minimal and schema packages."
 title: TypeScript SDK Guide
-keywords: [MPLP, TypeScript, SDK, NPM, Reference Implementation]
+keywords: [MPLP, TypeScript, SDK, NPM, Facade]
 sidebar_label: TypeScript SDK
 
 ---
 
-
-
 # TypeScript SDK Guide
 
-> **Protocol Version**: 1.0.0 (Frozen)
-> **SDK Line**: v1.x (evolving)
+> **Protocol Version**: `1.0.0` (Frozen)  
+> **Current Facade Package**: `@mplp/sdk-ts`  
+> **Document Role**: explanatory package guide, not protocol truth
 
 ## 1. Purpose
 
-The **MPLP TypeScript SDK** (`@mplp/sdk-ts`) is the **Reference Implementation** of MPLP v1.0.0. It provides full type safety and Ajv-based runtime validation.
+This page describes the **current published facade surface** of `@mplp/sdk-ts`.
 
-**NPM Package**: [`@mplp/sdk-ts`](https://www.npmjs.com/package/@mplp/sdk-ts)
+It does **not** define protocol truth, and it must not be read as a promise of
+unshipped APIs, a full runtime platform, or a reference implementation claim.
 
-## 2. Installation
+The authoritative truth source for MPLP remains the repository-backed schema,
+invariant, and governance baseline.
+
+## 2. Current Publish Surface
+
+The published root export surface of `@mplp/sdk-ts` is currently anchored to:
+
+- `packages/npm/sdk-ts/dist/index.d.ts`
+
+That root export surface currently includes:
+
+- re-exports from `@mplp/core`
+- Kernel Duty baseline re-exports
+- builder helpers:
+  - `createContext`
+  - `createPlan`
+  - `createConfirm`
+  - `appendTrace`
+- `MplpRuntimeClient`
+
+Low-level runtime artifacts are **not** part of the `@mplp/sdk-ts` root export
+surface. Those belong to `@mplp/runtime-minimal`.
+
+## 3. What This Package Is
+
+`@mplp/sdk-ts` is the **public TypeScript facade package** for MPLP v1.0.0.
+
+Its role is to provide a stable TypeScript-facing entry surface over selected
+published package artifacts. It is appropriate for:
+
+- importing builder helpers
+- accessing the current facade client export
+- consuming Kernel Duty constants
+- accessing the current `@mplp/core` re-export surface
+
+## 4. What This Package Is Not
+
+`@mplp/sdk-ts` must **not** be described as:
+
+- a reference implementation of the full protocol
+- a full runtime package
+- a production orchestrator platform
+- a bundled validator stack for complete schema-conformance guarantees
+- the root export location for low-level runtime primitives
+
+In particular, this guide does **not** claim that `@mplp/sdk-ts` currently ships:
+
+- `SchemaValidator`
+- `RuntimeOrchestrator`
+- root-exported `InMemoryVSL`
+- root-exported `InMemoryAEL`
+- root-exported `runSingleAgentFlow`
+
+Those names must not be presented as part of the current `@mplp/sdk-ts`
+publish reality unless and until the actual package exports change.
+
+## 5. Installation
 
 ```bash
 npm install @mplp/sdk-ts
 ```
 
-> [!IMPORTANT]
-> **Package Structure**
-> 
-> `@mplp/sdk-ts` is distributed as a **compiled package** (dist-only). This is the expected format for NPM consumption. Source code is available in the [GitHub repository](https://github.com/Coregentis/MPLP-Protocol).
+If you need the lower-level published runtime artifact surface as well:
 
-## 3. Import Policy
-
-> [!IMPORTANT]
-> **v1.x Import Stability**
-> 
-> - **Root import is stable**: `import { ... } from '@mplp/sdk-ts'`
-> - Subpath imports (e.g., `/core`, `/builders`) are **not currently exported**
-> - For modular imports, use the individual packages directly (see below)
-
-### 3.1 Recommended: Root Import
-
-```typescript
-import { 
-  createContext, 
-  createPlan, 
-  createTrace,
-  SchemaValidator 
-} from '@mplp/sdk-ts';
+```bash
+npm install @mplp/runtime-minimal
 ```
 
-### 3.2 Alternative: Individual Packages
+## 6. Import Policy
 
-For more granular control, install and import from individual packages:
+### 6.1 Recommended Facade Import
 
 ```typescript
-// Core types
-import { ContextFrame, PlanDocument } from '@mplp/core';
-
-// Schema validation
-import { SchemaValidator } from '@mplp/schema';
-
-// Multi-agent coordination
-import { CollabSession, RoleBinding } from '@mplp/coordination';
+import {
+  createContext,
+  createPlan,
+  createConfirm,
+  appendTrace,
+  MplpRuntimeClient,
+} from "@mplp/sdk-ts";
 ```
 
-## 4. Published Packages
+### 6.2 Low-Level Runtime Imports
 
-MPLP is distributed as a set of modular NPM packages. Packages may advance independently (non-breaking changes only).
+Use `@mplp/runtime-minimal` directly for runtime-layer artifacts such as:
 
-| Package | Purpose | Layer |
-|:---|:---|:---:|
-| **`@mplp/sdk-ts`** | Main SDK (recommended entry point) | Tools |
-| `@mplp/core` | Core type definitions and models | L1 |
-| `@mplp/schema` | JSON Schemas and validation logic | L1 |
-| `@mplp/modules` | Protocol module definitions | L2 |
-| `@mplp/coordination` | Multi-agent coordination primitives | L2 |
-| `@mplp/compliance` | Conformance and validation utilities | Tools |
-| `@mplp/devtools` | CLI and developer tools | Tools |
-| `@mplp/runtime-minimal` | Reference Action Execution Layer (AEL) | L3 |
-| `@mplp/integration-llm-http` | HTTP-based LLM integration | L4 |
-| `@mplp/integration-storage-fs` | Filesystem storage integration | L4 |
-| `@mplp/integration-storage-kv` | Key-Value storage integration | L4 |
-| `@mplp/integration-tools-generic` | Generic tool execution integration | L4 |
-
-> **Version Policy**: Protocol specification is **frozen** at v1.0.0. SDK packages follow semantic versioning and may advance independently for non-breaking improvements. See [Versioning Policy](/docs/evaluation/governance/versioning-policy).
-
-## 5. Quick Start
+- `runSingleAgentFlow`
+- `InMemoryVSL`
+- `InMemoryAEL`
 
 ```typescript
-import { createContext, createPlan, addStep } from '@mplp/sdk-ts';
-
-// Create a Context
-const context = createContext({
-  source: 'user',
-  initial_objectives: ['Fix the login bug'],
-  constraints: {
-    budget_limit_usd: 10.0
-  }
-});
-
-// Create a Plan linked to Context
-const plan = createPlan({
-  context_id: context.context_id,
-  title: 'Fix Login Bug',
-  status: 'draft'
-});
-
-// Add steps to the Plan
-addStep(plan, {
-  description: 'Read error logs',
-  agent_role: 'debugger',
-  status: 'pending'
-});
-
-console.log('Context ID:', context.context_id);
-console.log('Plan ID:', plan.plan_id);
-console.log('Steps:', plan.steps.length);
+import {
+  runSingleAgentFlow,
+  InMemoryVSL,
+  InMemoryAEL,
+} from "@mplp/runtime-minimal";
 ```
 
-## 6. Validation
+### 6.3 Subpath Boundary
 
-The SDK uses **Ajv** for JSON Schema validation:
+For the current `@mplp/sdk-ts` package line:
+
+- root import is the documented stable entrypoint
+- subpath imports are not the documented compatibility contract for this guide
+- if you need lower-level surfaces, use the individual published packages directly
+
+## 7. Validation Boundary
+
+For schema-conformance checking, use the dedicated `@mplp/schema` package and
+the canonical repository schemas.
 
 ```typescript
-import { SchemaValidator } from '@mplp/sdk-ts';
+import { validate, KERNEL_DUTY_COUNT, KERNEL_DUTIES } from "@mplp/schema";
 
-const validator = new SchemaValidator();
+const result = validate("mplp-context", myContextData);
 
-// Validate a Context object
-const result = validator.validate('mplp-context', myContextData);
+console.log(KERNEL_DUTY_COUNT); // 11
+console.log(KERNEL_DUTIES[0].name); // Coordination
 
 if (!result.valid) {
-  console.error('Validation errors:', result.errors);
+  console.error(result.errors);
 }
 ```
 
-## 7. Runtime Orchestration
+Important boundary:
 
-For full runtime execution, use the `RuntimeOrchestrator`:
+- repository schemas remain the truth source
+- `@mplp/schema` is the current package surface for package-level validation helpers
+- `@mplp/sdk-ts` may re-export `@mplp/core`, but this guide does **not** treat
+  the facade root as the canonical schema-validation surface
 
-```typescript
-import { RuntimeOrchestrator } from '@mplp/sdk-ts';
+## 8. Runtime Client Boundary
 
-const orchestrator = new RuntimeOrchestrator({
-  projectRoot: './my-project'
-});
+`MplpRuntimeClient` is part of the current `@mplp/sdk-ts` root export surface.
 
-// Initialize and run
-await orchestrator.initialize();
-const result = await orchestrator.executePlan(plan);
-```
+It should be described as a **convenience facade client**, not as:
 
-## 8. References
+- a full runtime implementation
+- a complete orchestrator surface
+- a proof that all runtime-layer behaviors are bundled into `@mplp/sdk-ts`
+
+If your use case depends on low-level execution primitives or runtime storage
+abstractions, use `@mplp/runtime-minimal` directly.
+
+## 9. Published Package Roles
+
+| Package | Role | Surface Boundary |
+|:---|:---|:---|
+| `@mplp/sdk-ts` | Public TypeScript facade entrypoint | Facade package, not full runtime |
+| `@mplp/runtime-minimal` | Minimal runtime artifact package | Runtime-layer package surface |
+| `@mplp/schema` | Schema bundle and validation-helper package | Validation/helper surface tied to schema bundle |
+| `@mplp/core` | Core protocol type/helper package | Low-level package surface re-exported by facade |
+
+## 10. References
 
 | Resource | Location |
 |:---|:---|
-| Source Code | `packages/sources/sdk-ts/` |
-| NPM Package | `packages/npm/sdk-ts/` |
-| Schemas | `schemas/v2/` |
-| Golden Tests | `tests/golden/` |
-| API Docs | Generated from TypeDoc |
+| Public facade package | `packages/npm/sdk-ts/` |
+| Source-side mirror | `packages/sources/sdk-ts/` |
+| Public runtime package | `packages/npm/runtime-minimal/` |
+| Schema/helper package | `packages/npm/schema/` |
+| Canonical schemas | `schemas/v2/` |
+| Version taxonomy | `governance/05-versioning/VERSION-TAXONOMY-MANIFEST.md` |
 
 ---
 
-**Protocol**: MPLP v1.0.0 (Frozen)  
-**SDK**: @mplp/sdk-ts v1.x  
-**Import Policy**: Root import is stable
+**Final Boundary**: `@mplp/sdk-ts` is the current public facade package for MPLP
+v1.0.0. It is not the protocol truth source, not the full runtime package, and
+not a safe place to infer unexported or future APIs.

@@ -83,7 +83,7 @@ Provides a reusable, evidence-based methodology to verify that **SDK APIs, runti
 
 ### Step 1: Canonical Use-site Extraction
 
-**Input**: 10 module schemas in `schemas/v2/modules/`
+**Input**: canonical MPLP schema bundle in `schemas/v2/`
 
 **Output**: `schemas/v2/_manifests/use-sites/<module>.use-sites.json`
 
@@ -183,9 +183,9 @@ A use-site is any point where a schema:
   "field_pointer": "#/properties/meta/properties/protocol_version",
   "schema_required": true,
   "api_exposed": false,
-  "injection_rule": "Runtime injects from SDK config at object creation",
-  "injection_point": "sdk-ts/src/core/factory.ts:42",
-  "test_file": "tests/integration/injection/protocol_version.test.ts",
+  "injection_rule": "Builder/runtime chain injects fixed protocol_version into meta at object construction",
+  "injection_point": "packages/npm/sdk-ts/dist/builders/trace-builder.js:13",
+  "test_file": "tests/runtime-compat/ts-runtime-to-ts-sdk.test.ts",
   "evidence": {
     "before_injection_valid": false,
     "after_injection_valid": true
@@ -283,7 +283,7 @@ A complete SUC verification produces:
 ```json
 {
   "module": "trace",
-  "schema": "schemas/v2/modules/mplp-trace.schema.json",
+  "schema": "schemas/v2/mplp-trace.schema.json",
   "extracted_at": "2026-01-04T00:00:00Z",
   
   "use_sites": [
@@ -372,13 +372,13 @@ A complete SUC verification produces:
   },
   
   "injection": {
-    "point": "packages/sdk-ts/src/core/factory.ts:42",
-    "rule": "SDK.config.protocolVersion injected at object creation",
-    "value_source": "SDK.config.protocolVersion || '1.0.0'"
+    "point": "packages/npm/sdk-ts/dist/builders/trace-builder.js:13",
+    "rule": "Builder chain injects fixed protocol_version at object creation",
+    "value_source": "builder constant '1.0.0'"
   },
   
   "evidence": {
-    "test_file": "tests/integration/injection/protocol_version.test.ts",
+    "test_file": "tests/runtime-compat/ts-runtime-to-ts-sdk.test.ts",
     "before_injection": {
       "input": {"trace_id": "...", "meta": {}},
       "valid": false,

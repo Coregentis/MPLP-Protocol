@@ -10,200 +10,49 @@ doc_id: "DOC-EVAL-CONF-EVIDENCE-001"
 # UI metadata (non-normative; excluded from protocol semantics)
 title: Evidence Model
 sidebar_label: Evidence Model
-description: "MPLP conformance evaluation: Evidence Model. Non-normative guidance for protocol conformance assessment."
+description: "Secondary helper page for reading MPLP evidence objects and evidence-pack context without creating a new evidence doctrine."
 authority: none
 ---
 
 # Evidence Model
 
-## 1. Purpose
+This page is a **reading aid** for understanding evidence-oriented MPLP
+artifacts.
 
-This document defines **what constitutes valid evidence** for MPLP conformance evaluation.
+It does not define a standalone evidence contract. For current evidence-pack and
+adjudication references, defer to the repaired Validation Lab reference set.
 
-The core question this answers:
+## Reading Order
 
-> "What artifacts do I need to export for my system to be evaluable?"
-
-## 2. Evidence Definition
-
-**Evidence** is any artifact that:
-1. Uses MPLP JSON Schema
-2. Contains protocol version metadata
-3. Is self-describing (no external context required)
-4. Is immutable after export
-
-### 2.1 Evidence vs. Implementation Details
-
-| Evidence (Evaluable) | NOT Evidence (Implementation) |
+| Need | Primary Surface |
 |:---|:---|
-| Exported JSON objects | Runtime memory state |
-| Schema-valid artifacts | Internal data structures |
-| Trace segments | Debug logs |
-| Confirm decisions | UI interactions |
+| Protocol object meaning | [Specification](/docs/specification) |
+| Protocol-side evaluation scenarios | [Golden Flows](/docs/evaluation/golden-flows) |
+| Evidence-pack input contract | [Evidence Pack Contract](/docs/evaluation/validation-lab/evidence-pack-contract) |
+| Lab-side adjudication context | [Validation Lab Overview](/docs/evaluation/validation-lab) |
+| Evidence recheck boundary | [Reviewability](/docs/evaluation/conformance/reviewability) |
 
-## 3. Evidence Types
+## Common Evidence Families
 
-### 3.1 Core Evidence (Required for Conformance)
+When reading MPLP evidence, you will usually encounter:
 
-| Type | Schema | Purpose |
-|:---|:---|:---|
-| **Context** | `mplp-context.schema.json` | Initial state and constraints |
-| **Plan** | `mplp-plan.schema.json` | Intent and step structure |
-| **Trace** | `mplp-trace.schema.json` | Execution history |
-| **Confirm** | `mplp-confirm.schema.json` | Governance gate records |
-
-### 3.2 Supporting Evidence (Recommended)
-
-| Type | Schema | Purpose |
-|:---|:---|:---|
-| **Events** | `mplp-*-event.schema.json` | Runtime observability |
-| **Snapshots** | Implementation-specific | State checkpoints |
-| **Manifest** | Export metadata | Version and timestamp |
-
-## 4. Evidence Pack Structure
-
-An Evidence Pack is a collection of evidence for one or more lifecycle executions:
-
-```
-evidence-pack/
-├── manifest.json           # Export metadata
-├── contexts/
-│   └── ctx-123.json
-├── plans/
-│   └── plan-456.json
-├── traces/
-│   └── trace-789.json
-├── confirms/
-│   └── confirm-abc.json
-└── events/                 # Optional
-    └── events.ndjson
-```
-
-### 4.1 Manifest Structure
-
-```json
-{
-  "manifest_version": "1.0.0",
-  "protocol_version": "1.0.0",
-  "exported_at": "2025-12-28T00:00:00Z",
-  "exporter": "mplp-sdk-ts@1.0.5",
-  "contents": {
-    "contexts": 1,
-    "plans": 1,
-    "traces": 1,
-    "confirms": 2,
-    "events": 150
-  }
-}
-```
-
-## 5. Evidence Validity Requirements
-
-### 5.1 Schema Validity
-
-All evidence MUST pass JSON Schema validation:
-
-```bash
-# Validate using MPLP validator
-mplp validate --schema mplp-plan ./plans/plan-456.json
-```
-
-### 5.2 Referential Integrity
-
-Evidence MUST maintain referential integrity:
-
-| Object | MUST Reference |
+| Family | Typical Role |
 |:---|:---|
-| Plan | Valid `context_id` |
-| Trace | Valid `context_id` and `plan_id` |
-| Confirm | Valid `target_id` (Plan or Step) |
-| Step | Valid `plan_id` |
+| Context | initial state and constraints |
+| Plan | intended work structure |
+| Confirm | gate / approval record |
+| Trace | execution history |
+| Events | observability detail |
+| Manifest | export / bundle metadata |
 
-### 5.3 Temporal Consistency
+## What Not To Infer
 
-Timestamps MUST be logically consistent:
+Do not infer from this page alone:
 
-- Trace `finished_at` ≥ `started_at`
-- Child segments within parent time bounds
-- Events ordered by timestamp
+- that a single pack structure is protocol law
+- that every runtime must export identical evidence layouts
+- that docs-side examples supersede current Lab contract surfaces
+- that package examples define canonical evidence exporters
 
-### 5.4 ID Uniqueness
-
-All IDs MUST be:
-- UUID v4 format
-- Unique within their type
-- Immutable after creation
-
-## 6. Evidence Chain
-
-Evidence forms a **chain of linked objects**:
-
-```
-Context
-   │
-   └──► Plan
-          │
-          ├──► Step 1 ──► Confirm (optional)
-          │
-          ├──► Step 2
-          │
-          └──► Step 3
-   │
-   └──► Trace
-          │
-          ├──► Segment 1
-          │
-          ├──► Segment 2
-          │
-          └──► Segment 3
-```
-
-**Chain Completeness Rule**: For L2 conformance, the chain from Context to Trace MUST be complete.
-
-## 7. What is NOT Evidence
-
-The following are **not valid evidence** for conformance:
-
-| Artifact | Why Not |
-|:---|:---|
-| Debug logs | Unstructured, implementation-specific |
-| Console output | Not schema-validated |
-| Screenshots | Not machine-readable |
-| Source code | Implementation, not behavior |
-| Configuration files | Implementation parameters |
-
-These may be useful for debugging but cannot be used for conformance evaluation.
-
-## 8. Evidence Export Requirements
-
-A conformant runtime SHOULD provide:
-
-1. **Export API**: Programmatic access to evidence
-2. **Bulk Export**: Ability to export complete Evidence Packs
-3. **Manifest Generation**: Automatic manifest creation
-4. **Validation**: Pre-export validation option
-
-### 8.1 Minimal Export Example
-
-```typescript
-import { exportEvidencePack } from '@mplp/sdk-ts';
-
-const pack = await exportEvidencePack({
-  contextId: 'ctx-123',
-  includeEvents: true,
-  outputPath: './evidence-pack'
-});
-
-console.log('Exported:', pack.manifest.contents);
-```
-
-## 9. Related Documentation
-
-- [Conformance Model](./conformance-model.md) — How MPLP defines conformance
-- [Evidence Authority](/docs/evaluation/governance) — Governance definition
-- [Schema Reference](/docs/introduction/api-quick-reference) — Schema definitions
-
----
-
-**Scope**: Defines evidence types, validity requirements, pack structure  
-**Exclusions**: Implementation details, debug artifacts
+Use this page only as a helper for orienting evidence reading across the
+repaired spec, evaluation, and Validation Lab reference pages.

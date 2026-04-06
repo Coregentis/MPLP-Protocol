@@ -17,41 +17,123 @@ external_standards:
 title: Core Module
 sidebar_label: Core Module
 sidebar_position: 1
-description: "MPLP module specification: Core Module. Defines schema requirements and invariants."
+description: "Schema-centered specification page for the MPLP Core module."
 ---
 
 # Core Module
 
 ## Scope
 
-This specification defines the normative schema requirements for the **Core module** (protocol-level manifest) as represented by `schemas/v2/mplp-core.schema.json`.
+This page documents the normative schema surface of the **Core module** as
+defined in `schemas/v2/mplp-core.schema.json`.
+
+It covers the protocol-manifest record carried by Core. It does not define
+runtime governance workflow, upgrade policy, or module-loading behavior.
 
 ## Non-Goals
 
-This specification does not define implementation details, runtime behavior beyond schema-defined obligations, or vendor/framework-specific integrations.
+This page does not define:
 
----
+- a runtime module registry implementation
+- enable/disable policy
+- upgrade sequencing
+- governance committee process
+- package initialization behavior
 
 ## 1. Purpose
 
-The Core Module represents the **protocol-level manifest** of an MPLP instance, declaring protocol version, enabled modules, and profile bindings. It is not a functional module but a **normative manifest anchor**.
+The Core module records the protocol-manifest anchor for a given instance.
 
-> [!NOTE]
-> **Manifest-Only Design**
-> 
-> Core Module intentionally contains minimal content. All schema definitions and invariants are specified in [L1 Core Protocol](/docs/specification/architecture/l1-core-protocol). This page serves as a structural anchor in the Modules directory.
+At minimum, a Core object carries:
 
-## 2. Related Documents
+- protocol metadata
+- a unique `core_id`
+- a `protocol_version`
+- a lifecycle `status`
+- one or more module descriptors in `modules`
 
-**Architecture**:
-- [Architecture Overview](/docs/specification/architecture)
-- [L1 Core Protocol](/docs/specification/architecture/l1-core-protocol)
+## 2. Canonical Schema
 
-**Schemas**:
+**Truth source**: `schemas/v2/mplp-core.schema.json`
+
+### Required Fields
+
+| Field | Type | Notes |
+|:---|:---|:---|
+| `meta` | object | Uses `common/metadata.schema.json` |
+| `core_id` | identifier | Canonical Core identifier |
+| `protocol_version` | string | Protocol version string |
+| `status` | enum | Core lifecycle field |
+| `modules` | array | Must contain at least one module descriptor |
+
+### Optional Fields
+
+| Field | Type |
+|:---|:---|
+| `governance` | object |
+| `trace` | object |
+| `events` | array |
+
+### Core `status` Enum
+
+`status` is constrained to:
+
+- `draft`
+- `active`
+- `deprecated`
+- `archived`
+
+### `core_module_descriptor`
+
+Each module descriptor requires:
+
+- `module_id`
+- `version`
+- `status`
+
+Optional descriptor fields:
+
+- `required`
+- `description`
+
+`module_id` is constrained to:
+
+- `context`
+- `plan`
+- `confirm`
+- `trace`
+- `role`
+- `extension`
+- `dialog`
+- `collab`
+- `core`
+- `network`
+
+Descriptor `status` is constrained to:
+
+- `enabled`
+- `disabled`
+- `experimental`
+- `deprecated`
+
+## 3. Boundary Notes
+
+- This page does not define which module combinations a product or runtime must
+  choose beyond the schema shape and any separate profile manifest.
+- This page does not define automatic module discovery or loading behavior.
+- This page does not define upgrade choreography or release policy.
+- Use profile manifests for required-profile module sets before inferring
+  requirements from a local Core record.
+
+## 4. References
+
 - `schemas/v2/mplp-core.schema.json`
+- `schemas/v2/profiles/sa-profile.yaml`
+- `schemas/v2/profiles/map-profile.yaml`
+- [L1 Core Protocol](/docs/specification/architecture/l1-core-protocol.md)
 
 ---
 
-**Required Fields**: meta, core_id, protocol_version, status, modules  
-**Available Modules** (10): context, plan, confirm, trace, role, extension, dialog, collab, core, network  
-**Status Enum**: draft → active → deprecated → archived
+**Final Boundary**: this page specifies the Core object shape as a
+protocol-manifest anchor. It does not define a runtime governance or module
+loading doctrine.

@@ -1,9 +1,9 @@
 {
   "name": "@mplp/sdk-ts",
-  "version": "1.0.6",
-  "description": "TypeScript SDK and reference runtime for the MPLP Protocol v1.0.0 (Multi-Agent Lifecycle Protocol).",
+  "version": "1.0.7",
+  "description": "Derived public TypeScript helper facade for MPLP v1.0.0; ships builders, runtime client helpers, schema mirrors, and Kernel Duty exports.",
   "license": "Apache-2.0",
-  "author": "Bangshi Beijing Network Technology Limited Company",
+  "author": "Coregentis AI",
   "repository": {
     "type": "git",
     "url": "https://github.com/Coregentis/MPLP-Protocol.git"
@@ -11,17 +11,17 @@
   "bugs": {
     "url": "https://github.com/Coregentis/MPLP-Protocol/issues"
   },
-  "homepage": "https://www.mplp.io",
+  "homepage": "https://www.mplp.io/what-is-mplp",
   "keywords": [
     "mplp",
     "multi-agent",
     "protocol",
     "ai agents",
     "lifecycle",
-    "runtime",
+    "sdk",
+    "facade",
     "typescript",
-    "agent-os",
-    "agent-os-protocol"
+    "ai-agent-lifecycle"
   ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -36,13 +36,24 @@
     "protocolVersion": "1.0.0",
     "frozen": true,
     "governance": "MPGC",
-    "layer": "Tools"
+    "layer": "Facade",
+    "packageClass": "PUBLIC",
+    "publishSurface": true,
+    "publishScope": "public-npm",
+    "packageRole": "typescript-facade-helper",
+    "contractMode": "derived-protocol-helper",
+    "sourcePackagePath": "packages/sources/sdk-ts",
+    "kernelDutyBaselineCarried": true
   },
   "scripts": {
     "build": "tsc",
     "test": "echo 'No tests yet'"
   },
   "dependencies": {
+    "@mplp/core": "^1.0.6",
+    "@mplp/coordination": "^1.0.6",
+    "@mplp/runtime-minimal": "^1.0.5",
+    "@mplp/schema": "^1.0.6",
     "ajv": "^8.12.0",
     "ajv-formats": "^2.1.1",
     "chalk": "^4.1.2",
@@ -62,6 +73,11 @@
       "require": "./dist/index.js",
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
+    },
+    "./kernel-duties": {
+      "require": "./dist/kernel-duties.js",
+      "import": "./dist/kernel-duties.js",
+      "types": "./dist/kernel-duties.d.ts"
     }
   },
   "sideEffects": false,

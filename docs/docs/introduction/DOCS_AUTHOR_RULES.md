@@ -14,7 +14,7 @@ title: "[DEPRECATED] Docs Author Rules"
 >
 > This document is superseded by **CONST-002** (Document Format Specification) v1.1 and **CONST-006** (Doc Type Outlines).
 > New documents MUST NOT follow rules defined here.
-> For authoritative frontmatter requirements, see [CONST-002](file:///Users/jasonwang/Documents/AI_Dev/V1.0_release/governance/01-constitutional/CONST-002_DOCUMENT_FORMAT_SPEC.md).
+> For authoritative frontmatter requirements, see [CONST-002](https://github.com/Coregentis/MPLP-Protocol/blob/main/governance/01-constitutional/CONST-002_DOCUMENT_FORMAT_SPEC.md).
 
 ## 1. Before You Write
 

@@ -1,4 +1,28 @@
+---
+entry_surface: repository
+entry_model_class: primary
+doc_type: attestation
+status: draft
+authority: none
+protocol_version: "1.0.0"
+doc_id: "MPGC-RECORD-2026-01-22-CROSS-ENTRY-PROJECTION-ALIGNMENT"
+title: "MPGC Record — Cross-Entry Projection Alignment"
+authority_scope:
+  - governance_source
+authority_basis:
+  - governance_record
+surface_role: canonical
+active_governance_class: active_record
+record_state: sealed
+---
+
 # MPGC Record: Cross-Entry Projection Alignment
+
+> [!NOTE]
+> This sealed record remains an active repository source record for
+> cross-entry alignment history.
+> Constitution version labels in the body refer to governance revision history,
+> not `protocol_version`.
 
 **Record ID**: MPGC-RECORD-2026-01-22-CROSS-ENTRY-PROJECTION-ALIGNMENT  
 **Date**: 2026-01-22  

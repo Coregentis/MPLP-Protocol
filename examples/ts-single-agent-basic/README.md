@@ -1,13 +1,14 @@
 # MPLP Single Agent Basic Example
 
-This project demonstrates a complete, runnable implementation of the **MPLP (Multi-Agent Lifecycle Protocol)** Single Agent Flow using the TypeScript Reference Runtime.
+This project demonstrates a complete, runnable implementation of the **MPLP (Multi-Agent Lifecycle Protocol)** Single Agent Flow using the current TypeScript SDK facade and minimal runtime surfaces.
 
 It showcases the core lifecycle of an MPLP execution: **Context → Plan → Confirm → Trace**.
 
 ## 🌟 Features
 
 -   **Full Protocol Compliance**: Generates valid L1 Protocol Objects (Context, Plan, Confirm, Trace).
--   **Reference Runtime**: Uses `@mplp/reference-runtime` to orchestrate the flow.
+-   **SDK Facade**: Uses `@mplp/sdk-ts` as the developer entry point.
+-   **Runtime Surface**: Relies on the minimal runtime artifacts exposed through the current package set.
 -   **In-Memory Execution**: Demonstrates the logic without requiring external databases or heavy infrastructure.
 -   **Persistence**: Uses `@mplp/integration-storage-fs` to log the startup state to the local filesystem.
 
@@ -141,7 +142,7 @@ Total Events: 8
 
 ## 🛠 Alternative: Using @mplp/sdk-ts
 
-The code in `src/index.ts` demonstrates the low-level usage of `@mplp/reference-runtime`. For a simplified experience, you can use the `@mplp/sdk-ts` package:
+The code in `src/index.ts` demonstrates the current package surface based on `@mplp/sdk-ts`. For lower-level runtime artifacts, use `@mplp/runtime-minimal`.
 
 ```typescript
 import { MplpRuntimeClient } from '@mplp/sdk-ts';

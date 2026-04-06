@@ -2,39 +2,66 @@
 sidebar_position: 8
 
 title: Runtime Reference Skeleton
-description: Interface-Level Contract for Profile-14-Golden Runtime
+description: Illustrative runtime skeleton for local guide use; not a protocol contract.
 status: draft
-doc_type: normative
-normativity: normative
-
+doc_type: guide
+normativity: informative
 authority: Documentation Governance
 ---
 
+# Runtime Reference Skeleton
 
-# Runtime Reference Skeleton (Profile-14-Golden)
-
-This directory contains the **Interface-Level Contract** for the MPLP Runtime under **Profile-14-Golden**.
+> [!NOTE]
+> **Illustrative Guide Material**
+>
+> This directory contains illustrative runtime-guide material only. It does not
+> define a protocol contract, a frozen profile, or a required implementation
+> shape.
 
 ## Purpose
 
-To provide a rigorous, type-safe definition of the Runtime's **Evidence Emission** responsibilities without mandating internal implementation details or execution logic.
+The files in this directory provide a lightweight skeleton for readers who want
+to sketch a runtime-oriented evidence path while staying subordinate to the
+repaired specification/reference surfaces.
 
 ## Scope
 
-*   **Profile**: 14-Golden (FLOW-01 ~ FLOW-05)
-*   **Nature**: Non-Executable (No model calls, no side effects)
-*   **Focus**: Evidence Schema Binding & Event Sinks
+This skeleton is:
+
+- illustrative
+- non-executable as published guide material
+- subordinate to repaired protocol pages
+- useful only as local implementation scaffolding
+
+The historical label `Profile-14-Golden` remains local guide wording here. It
+must not be read as a frozen MPLP profile identity.
 
 ## Contents
 
-*   [`runtime.ts`](./runtime.ts): The main Runtime class skeleton.
-*   [`events.ts`](./events.ts): Schema-bound event type definitions.
-*   [`sinks.ts`](./sinks.ts): Abstractions for evidence persistence.
-*   [`evidence-pack.ts`](./evidence-pack.ts): Artifact naming contracts.
+- [`runtime.ts`](./runtime.ts) — illustrative runtime scaffold
+- [`events.ts`](./events.ts) — illustrative event-shape helpers
+- [`sinks.ts`](./sinks.ts) — illustrative persistence/output helpers
+- [`evidence-pack.ts`](./evidence-pack.ts) — illustrative artifact naming helpers
 
 ## Non-Goals
 
-*   This skeleton does NOT implement a Pipeline Controller.
-*   This skeleton does NOT perform PSG mutations.
-*   This skeleton does NOT interact with Git or CI systems.
-*   This skeleton does NOT execute Rollback or Drift logic.
+This skeleton does not define:
+
+- a protocol profile
+- a conformance contract
+- a required evidence-emission model
+- a required runtime architecture
+
+## Read First
+
+Before using this guide material, read:
+
+1. [Modules Overview](/docs/specification/modules)
+2. [Profiles Overview](/docs/specification/profiles)
+3. [Observability Overview](/docs/specification/observability)
+4. [Runtime Guides Overview](/docs/guides/runtime)
+
+---
+
+**Final Boundary**: this skeleton is illustrative guide material only and is
+not part of frozen protocol doctrine.

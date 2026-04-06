@@ -48,7 +48,7 @@ SDK Release Governance is:
 
 * A **Post-Evidence governance system**
 * A **Derived Trusted Source distribution specification**
-* A **User-facing installation completeness guarantee**
+* A **public package release governance system**
 
 SDK Release Governance is **NOT**:
 
@@ -65,7 +65,9 @@ SDK Release Governance is **NOT**:
 |:---|:---|
 | Evidence Baseline | SDK Release requires frozen Evidence Baseline |
 | Verification Suite | SDK Release consumes verified Truth Sources |
-| Validation Lab | No relationship (separate system) |
+| Validation Lab | Separate auxiliary public surface; SDK release governance does not govern Lab adjudication semantics |
+| Website | Discovery/positioning surface; not a package release authority |
+| Documentation | Reference/spec projection; may point to SDK surfaces but does not define release law |
 | Protocol Specification | SDK does not define protocol meaning |
 
 ---
@@ -122,9 +124,19 @@ SDKs do not define protocol meaning. See Truth Sources for authoritative definit
 
 Any deviation from this template requires MPGC approval.
 
+## 8. Boundary Note
+
+This directory governs **public package release process and records only**.
+It does not replace the 3+1 public-surface split:
+
+- repository truth source
+- documentation reference/spec projection
+- website discovery/positioning
+- Validation Lab adjudication
+
 ---
 
-## 8. Additional Files
+## 9. Additional Files
 
 | File | Purpose |
 |:---|:---|

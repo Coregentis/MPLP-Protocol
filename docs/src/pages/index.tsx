@@ -60,7 +60,7 @@ function HomepageHeader() {
                 {/* Governance Statement */}
                 <p style={{ fontSize: '0.85rem', color: '#64748b', maxWidth: '600px', margin: '1.5rem auto', lineHeight: '1.6' }}>
                     Governed by MPGC. The specification is frozen at v1.0.0 — no breaking changes permitted.
-                    Reference SDKs and Golden Flows enable protocol conformance without vendor certification.
+                    Published SDK package surfaces and Golden Flows support protocol conformance without vendor certification.
                     Governance processes and constitutional records are maintained in the Repository <code>governance/</code> directory; this site provides pointers only.
                 </p>
 
@@ -113,10 +113,10 @@ const FeatureList = [
     },
     {
         title: 'Modules',
-        link: '/docs/specification/modules/core-module',
+        link: '/docs/specification/modules/module-interactions',
         description: (
             <>
-                Composable building blocks. <strong>Memory</strong>, <strong>Planning</strong>, <strong>Tools</strong>, and <strong>User Interaction</strong> standards.
+                Protocol object families. <strong>Context</strong>, <strong>Plan</strong>, <strong>Confirm</strong>, and <strong>Trace</strong> are read through schema-backed module interactions.
             </>
         ),
     },
@@ -134,7 +134,7 @@ const FeatureList = [
         link: '/docs/specification/observability/observability-overview',
         description: (
             <>
-                Full-stack visibility. <strong>Distributed Tracing</strong>, <strong>Event Bus</strong> specs, and <strong>Log Standards</strong>.
+                Event-centered reference. <strong>Event families</strong>, <strong>observability invariants</strong>, and <strong>trace/export references</strong>.
             </>
         ),
     },
@@ -153,7 +153,7 @@ const FeatureList = [
         link: '/docs/guides/sdk/ts-sdk-guide',
         description: (
             <>
-                Build faster. Official libraries for <strong>TypeScript</strong>, <strong>Python</strong>, and <strong>Go</strong>.
+                Public package guidance. Official SDK surfaces are documented for <strong>TypeScript</strong> and <strong>Python</strong>.
             </>
         ),
     },

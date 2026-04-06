@@ -56,7 +56,7 @@ The Bundle Manifest records all packages in a coordinated release and references
 | `protocol_version` | string | MPLP protocol version |
 | `evidence_baseline_tag` | string | Git tag of frozen baseline |
 | `truth_source_bundle_hash` | string | SHA256 of Truth Source bundle |
-| `sdk_package_name` | string | Package name (e.g., `mplp-sdk-ts`) |
+| `sdk_package_name` | string | Package name (e.g., `@mplp/sdk-ts` or `mplp-sdk`) |
 | `sdk_package_version` | string | Semantic version |
 | `generated_at` | string | ISO 8601 timestamp |
 | `generator_version` | string | Codegen tool version |
@@ -70,7 +70,7 @@ The Bundle Manifest records all packages in a coordinated release and references
   "protocol_version": "1.0.0",
   "evidence_baseline_tag": "evidence-baseline-v1.0",
   "truth_source_bundle_hash": "sha256:78ea3511...",
-  "sdk_package_name": "mplp-sdk-ts",
+  "sdk_package_name": "@mplp/sdk-ts",
   "sdk_package_version": "1.0.0",
   "generated_at": "2026-01-04T12:00:00Z",
   "generator_version": "1.0.0"
@@ -116,7 +116,7 @@ To prove derivation integrity, the manifest SHOULD include:
   "protocol_version": "1.0.0",
   "evidence_baseline_tag": "evidence-baseline-v1.0",
   "truth_source_bundle_hash": "sha256:78ea3511...",
-  "sdk_package_name": "mplp-sdk-ts",
+  "sdk_package_name": "@mplp/sdk-ts",
   "sdk_package_version": "1.0.0",
   "generated_at": "2026-01-04T12:00:00Z",
   "generator_version": "1.0.0",
@@ -130,6 +130,10 @@ To prove derivation integrity, the manifest SHOULD include:
 ```
 
 This enables post-publish verification that the SDK was derived from stated schemas.
+
+Source package mirrors in `packages/sources/*` are not Release Manifest units; only
+public publish surfaces in `packages/npm/*` and `packages/pypi/*` receive release
+manifests.
 
 ---
 

@@ -1,57 +1,35 @@
-﻿# Authority & Semantic Alignment — authority-alignment-v1
+# MPLP Release Notes
 
-**Date**: 2025-12-25
-**Protocol Version**: v1.0.0 (FROZEN) — unchanged
-**Release Type**: Semantic / Interpretive Layer
+This root file is the active release-notes index for the repository. Historical release narratives belong in [CHANGELOG.md](./CHANGELOG.md); they must not be read as current installation guidance.
 
-## 🎯 Authority Engineering
-Makes MPLP's definitional authority for "Agent OS Protocol" explicit for AI/search engines.
+## Current Release Baseline
 
-### Key Outcomes
-- Definitional authority anchored on mplp.io with semantic layering
-- Seven stable anchor pages for sitelinks extraction
-- DefinedTermSet JSON-LD establishes MPLP as source for "Agent OS Protocol"
-- 36 FAQ Q&A for AI citation guidance
-- CI semantic-lint gate prevents semantic drift
+| Version Domain | Current Value |
+|:---|:---|
+| `protocol_version` | `1.0.0` |
+| `schema_bundle_version` | `2.0.0` |
+| `invariant_bundle_version` | `2.0.0` |
+| `validation_ruleset_version` | `ruleset-1.0` |
+| `validation_lab_release_version` | `1.0.1` |
+| `docs_release_version` | `1.0.0` |
+| `website_release_version` | `1.0.0` |
+| `sdk_version` (`@mplp/sdk-ts`) | `1.0.7` |
+| `sdk_version` (`mplp-sdk`) | `1.0.5` |
 
-### Authority Split
-- **mplp.io**: Definitional authority surface
-- **docs.mplp.io**: Normative specification surface
+## Installation Guidance
 
-### What Did Not Change
-- No MPLP normative obligations modified
-- No certification/compliance language introduced
-- Protocol remains v1.0.0 (Frozen)
-
----
-# MPLP v1.1.0 Release Notes
-
-**Date**: 2025-12-22
-**Protocol Version**: v1.0.0 (FROZEN)
-**Release Type**: Feature Release (Documentation & UI/UX)
-
-## 馃専 World-Class Documentation Experience
-This release introduces a complete overhaul of the MPLP documentation site, elevating it to a "World-Class" standard comparable to industry leaders like Stripe and Vercel.
-
-### Key Improvements
-- **Visual Design**: A sophisticated "Slate" color palette, refined typography (Inter/JetBrains Mono), and polished component styling.
-- **Intuitive Navigation**: New `PathCard` components and "Next Steps" sections guide users through the protocol based on their role (Implementer, Enterprise, etc.).
-- **Standards Alignment**: Explicit mapping to ISO/IEC 42001, NIST AI RMF, and W3C standards.
-
-## 馃摝 SDK Updates
-- **TypeScript SDK**: `v1.0.5` - Updated documentation to match published `@mplp/sdk-ts` package.
-- **Python SDK**: `v1.0.3` - Updated documentation to match published `mplp-sdk` package.
-
-## 馃敡 Infrastructure
-- **CI/CD**: Optimized `deploy-docs` workflow for faster and more reliable builds.
-- **SEO**: Implemented a strategic SEO policy (DGP-12) to ensure clear separation between marketing and technical content.
-
-## Installation
 ```bash
-npm install @mplp/sdk-ts@latest
-pip install mplp-sdk==1.0.3
+npm install @mplp/sdk-ts@1.0.7
+pip install mplp-sdk==1.0.5
 ```
 
-## Resources
-- [**Documentation**](https://docs.mplp.io)
-- [**Protocol Overview**](https://www.mplp.io)
+## Current Guidance Sources
+
+- Repository overview: [README.md](./README.md)
+- Canonical version-domain mapping: [governance/05-versioning/VERSION-TAXONOMY-MANIFEST.md](./governance/05-versioning/VERSION-TAXONOMY-MANIFEST.md)
+- Machine-readable version mapping: [governance/05-versioning/version-taxonomy-manifest.json](./governance/05-versioning/version-taxonomy-manifest.json)
+- Historical release history: [CHANGELOG.md](./CHANGELOG.md)
+
+## Historical Note
+
+Older December 2025 documentation/UI release notes and superseded SDK install snippets were removed from this active root file because they were being misread as current release guidance. Historical release facts remain preserved in [CHANGELOG.md](./CHANGELOG.md).

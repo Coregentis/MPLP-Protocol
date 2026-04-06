@@ -6,13 +6,17 @@ sidebar_position: 2
 doc_type: reference
 normativity: informative
 status: active
-authority: Documentation Governance
+authority: none
 
-description: "MPLP runtime guide: Runtime Capability Matrix. Implementation guidance for runtime components."
+description: "Informative, profile-specific runtime evidence matrix. Not a generic protocol authority page."
 ---
 
 
 # Runtime Capability → Schema Matrix
+
+> **Scope Note**: This page is an informative matrix for a specific runtime
+> evidence profile. It is not a generic statement of what every MPLP runtime
+> must implement.
 
 This matrix defines the **MUST Schema** obligations for the **Profile-14-Golden** Runtime.
 
@@ -32,3 +36,9 @@ This matrix defines the **MUST Schema** obligations for the **Profile-14-Golden*
 
 The Runtime is responsible for **generating** these artifacts linked to a specific `run_id`.
 The Runtime is **NOT** responsible for evaluating whether these artifacts satisfy the Invariants.
+
+## Boundary
+
+- This page is profile-specific, not protocol-wide truth.
+- Repository-backed schemas and governance sources remain authoritative.
+- Runtime implementation scope still depends on the runtime profile and package surface actually being used.

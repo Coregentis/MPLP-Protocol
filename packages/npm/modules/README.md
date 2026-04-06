@@ -3,8 +3,8 @@
 **Protocol:** MPLP v1.0.0 (Frozen)
 **License:** Apache-2.0
 
-The **@mplp/modules** package provides **L2 Module definitions and interfaces** for the
-**Multi-Agent Lifecycle Protocol (MPLP)** — the Agent OS Protocol for AI agent systems.
+The **@mplp/modules** package provides a **module helper surface** for MPLP.
+It re-exports module-aligned types and also carries convenience profile and dependency helpers; it is not a direct schema mirror.
 
 ---
 
@@ -12,12 +12,13 @@ The **@mplp/modules** package provides **L2 Module definitions and interfaces** 
 
 ### ✅ What this package provides
 
-* **Protocol-compliant interfaces** aligned with MPLP v1.0.0
-* **Strict version alignment** with the frozen MPLP protocol specification
-* **Type-safe integration surface** for higher-level runtimes and tools
+* **Module-aligned type re-exports** aligned with MPLP v1.0.0
+* **Convenience profile helpers** for SA / MAP usage patterns
+* **Dependency helper data** for module composition
 
 ### ❌ What this package does NOT provide
 
+- ❌ Direct schema or invariant mirrors
 - ❌ Full execution runtime (LLM orchestration, tool execution)
 - ❌ Golden Flow execution engines (Flow-01 ~ Flow-05)
 - ❌ Observability pipelines or distributed tracing backends
@@ -36,11 +37,11 @@ npm install @mplp/modules
 
 ---
 
-## Protocol Documentation (Authoritative)
+## Protocol Documentation
 
-* **Homepage:** [https://www.mplp.io](https://www.mplp.io)
-* **Specification & Docs:** [https://docs.mplp.io](https://docs.mplp.io)
-* **Source Repository:** [https://github.com/Coregentis/MPLP-Protocol](https://github.com/Coregentis/MPLP-Protocol)
+* **Homepage:** [https://www.mplp.io/what-is-mplp](https://www.mplp.io/what-is-mplp) — discovery and positioning only
+* **Docs Entry Surface:** [https://docs.mplp.io/docs/reference/entrypoints](https://docs.mplp.io/docs/reference/entrypoints) — authoritative documentation entry surface
+* **Source Repository:** [https://github.com/Coregentis/MPLP-Protocol](https://github.com/Coregentis/MPLP-Protocol) — repository truth source
 * **Issues:** [https://github.com/Coregentis/MPLP-Protocol/issues](https://github.com/Coregentis/MPLP-Protocol/issues)
 
 ---

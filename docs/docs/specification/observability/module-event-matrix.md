@@ -11,189 +11,135 @@ doc_id: "DOC-OBS-MATRIX-001"
 title: Module Event Matrix
 sidebar_label: Module Event Matrix
 sidebar_position: 2
-description: "MPLP observability specification: Module Event Matrix. Defines event schemas and trace formats."
+description: "Schema-anchored specification page for the frozen MPLP module/event mapping matrix."
 ---
 
 # Module Event Matrix
 
 ## Scope
 
-This specification defines the module-to-event mapping for MPLP observability.
+This page documents the frozen MPLP module/event mapping as declared in:
+
+- `schemas/v2/taxonomy/module-event-matrix.yaml`
+
+It records the machine-readable module-to-family relationships carried by that
+file. It does not add emission doctrine, trigger algorithms, or runtime
+implementation rules beyond the frozen matrix.
 
 ## Non-Goals
 
-This specification does not define event processing logic or SDK implementations.
+This page does not define:
+
+- new module emission obligations
+- new trigger-point doctrine
+- event-bus implementations
+- SDK emitters
+- derived validation rules beyond the frozen matrix artifact
 
 ## 1. Purpose
 
-The **Module Event Matrix** defines which L2 Modules are responsible for emitting which Event Families. It serves as a guide for implementers to ensure complete observability coverage.
+The module-event matrix is the frozen mapping layer that relates L2 modules to
+general event families for observability coverage.
 
-## 2. Emission Matrix
+It records:
 
-### 2.1 Module Event Family Mapping
+- primary vs secondary family associations
+- machine-readable event-type examples and trigger labels
+- a compliance summary block
 
-| Module | Primary Events | Secondary Events | Notes |
-|:---|:---|:---|:---|
-| **Context** | `import_process`, `graph_update` | `intent` | Context initialization and state |
-| **Plan** | `pipeline_stage`, `graph_update` | `methodology`, `impact_analysis` | Plan lifecycle and DAG changes |
-| **Trace** | (Consumer - stores all events) | `cost_budget` | Central event persistence |
-| **Role** | `graph_update` | - | Role definitions and bindings |
-| **Confirm** | `pipeline_stage`, `graph_update` | `reasoning_graph` | Approval workflow events |
-| **Dialog** | `intent`, `delta_intent` | - | User interaction capture |
-| **Collab** | `pipeline_stage`, `runtime_execution` | `reasoning_graph` | Session lifecycle |
-| **Extension** | `runtime_execution`, `external_integration` | - | Plugin execution |
-| **Network** | `graph_update` | `runtime_execution` | Topology changes |
-| **Core** | `pipeline_stage` | `cost_budget`, `compensation_plan` | Protocol-level events |
+## 2. Frozen Module-to-Family Mapping
 
-### 2.2 Visual Matrix
+### 2.1 Primary and Secondary Family Associations
 
-<MermaidDiagram id="5968b52d0c6e020d" />
+From `schemas/v2/taxonomy/module-event-matrix.yaml`:
 
-## 3. Trigger Points
-
-### 3.1 Context Module
-
-| Trigger | Event Family | Event Type |
+| Module | Primary Families | Secondary Families |
 |:---|:---|:---|
-| Context created | `graph_update` | `context_created` |
-| Context activated | `pipeline_stage` | `context_activated` |
-| World state updated | `graph_update` | `world_state_updated` |
-| Project imported | `import_process` | `import_completed` |
+| `context` | `import_process`, `graph_update` | `intent` |
+| `plan` | `pipeline_stage`, `graph_update` | `methodology`, `impact_analysis` |
+| `trace` | none (consumer role) | `cost_budget` |
+| `role` | `graph_update` | none |
+| `confirm` | `pipeline_stage`, `graph_update` | `reasoning_graph` |
+| `dialog` | `intent`, `delta_intent` | none |
+| `collab` | `pipeline_stage`, `runtime_execution` | `reasoning_graph` |
+| `extension` | `runtime_execution`, `external_integration` | none |
+| `network` | `graph_update` | `runtime_execution` |
+| `core` | `pipeline_stage` | `cost_budget`, `compensation_plan` |
 
-### 3.2 Plan Module
+### 2.2 Trace Special Case
 
-| Trigger | Event Family | Event Type |
-|:---|:---|:---|
-| Plan created | `graph_update` | `plan_created` |
-| Plan status changed | `pipeline_stage` | `plan_status_changed` |
-| Step added | `graph_update` | `step_added` |
-| Step started | `pipeline_stage` | `step_started` |
-| Step completed | `pipeline_stage` | `step_completed` |
-| Step failed | `pipeline_stage` | `step_failed` |
-| DAG modified | `graph_update` | `dag_edge_added` |
+The frozen matrix marks `trace` with:
 
-### 3.3 Confirm Module
+- `role: "consumer"`
+- `primary_events: []`
 
-| Trigger | Event Family | Event Type |
-|:---|:---|:---|
-| Confirm created | `graph_update` | `confirm_created` |
-| Decision added | `pipeline_stage` | `confirm_decision_added` |
-| Confirm resolved | `pipeline_stage` | `confirm_resolved` |
+This page does not expand that into a broader persistence doctrine.
 
-### 3.4 Dialog Module
+## 3. Frozen Compliance Summary
 
-| Trigger | Event Family | Event Type |
-|:---|:---|:---|
-| Message received | `intent` | `user_message_received` |
-| Intent parsed | `intent` | `intent_extracted` |
-| Change requested | `delta_intent` | `modification_requested` |
+The matrix file includes this compliance summary:
 
-### 3.5 Collab Module
+### Required Event Families
 
-| Trigger | Event Family | Event Type |
-|:---|:---|:---|
-| Session started | `pipeline_stage` | `session_started` |
-| Turn dispatched | `runtime_execution` | `turn_dispatched` |
-| Turn completed | `runtime_execution` | `turn_completed` |
-| Session completed | `pipeline_stage` | `session_completed` |
+- `graph_update`
+- `pipeline_stage`
 
-### 3.6 Extension Module
+### Required Producers
 
-| Trigger | Event Family | Event Type |
-|:---|:---|:---|
-| Extension registered | `graph_update` | `extension_registered` |
-| Extension activated | `runtime_execution` | `extension_activated` |
-| Tool invoked | `runtime_execution` | `tool_execution_started` |
-| Tool completed | `runtime_execution` | `tool_execution_completed` |
-| External call | `external_integration` | `external_api_call` |
-
-## 4. Event Flow Example
-
-### 4.1 Plan Execution Flow
-
-<MermaidDiagram id="add665e10c0bdbf5" />
-
-## 5. Compliance Requirements
-
-### 5.1 Required Emissions
-
-Every MPLP-conformant module MUST emit:
-
-| Module | Required Events |
+| Family | Required Producers |
 |:---|:---|
-| Plan | `pipeline_stage` on status change, `graph_update` on DAG change |
-| Context | `graph_update` on state change |
-| Confirm | `pipeline_stage` on decision |
+| `graph_update` | `context`, `plan` |
+| `pipeline_stage` | `plan` |
 
-### 5.2 Recommended Emissions
+### Validation Rule Labels In Matrix
 
-Modules SHOULD emit for complete observability:
+The frozen matrix also includes:
 
-| Module | Recommended Events |
-|:---|:---|
-| Dialog | `intent` on user input |
-| Extension | `runtime_execution` on tool call |
-| Core | `cost_budget` on token usage |
+- `all_modules_emit_required`
+- `trace_receives_all`
 
-## 6. SDK Implementation
+These labels belong to the frozen machine-readable matrix artifact. This page
+does not expand them into an independent prose doctrine.
 
-```typescript
-class ModuleventEmitter {
-  constructor(
-    private moduleName: string,
-    private eventBus: EventBus
-  ) {}
-  
-  emitGraphUpdate(operation: string, nodeType: string, nodeId: string): void {
-    this.eventBus.emit({
-      event_id: uuidv4(),
-      event_type: `${nodeType}_${operation}`,
-      event_family: 'graph_update',
-      timestamp: new Date().toISOString(),
-      payload: {
-        module: this.moduleName,
-        operation,
-        node_type: nodeType,
-        node_id: nodeId
-      }
-    });
-  }
-  
-  emitPipelineStage(resourceType: string, resourceId: string, fromStatus: string, toStatus: string): void {
-    this.eventBus.emit({
-      event_id: uuidv4(),
-      event_type: `${resourceType}_status_changed`,
-      event_family: 'pipeline_stage',
-      timestamp: new Date().toISOString(),
-      payload: {
-        module: this.moduleName,
-        resource_type: resourceType,
-        resource_id: resourceId,
-        from_status: fromStatus,
-        to_status: toStatus
-      }
-    });
-  }
-}
+## 4. Relationship to Other Frozen Sources
 
-// Usage in Plan module
-const planEmitter = new ModuleventEmitter('plan', eventBus);
-planEmitter.emitGraphUpdate('create', 'plan', plan.plan_id);
-planEmitter.emitPipelineStage('plan', plan.plan_id, 'draft', 'proposed');
-```
+Use this page together with:
 
-## 7. Related Documents
+- `schemas/v2/taxonomy/event-taxonomy.yaml`
+- the referenced event schema files
+- `schemas/v2/invariants/observability-invariants.yaml`
 
-**Observability**:
-- [Observability Overview](observability-overview.md) - Architecture
-- [Event Taxonomy](event-taxonomy.md) - Family definitions
+This page should not be read as overriding any of those sources.
 
-**Modules**:
-- [Trace Module](../modules/trace-module.md) - Event consumer
-- [Module Interactions](../modules/module-interactions.md) - Module dependencies
+## 5. What This Page Does Not Create
+
+This page does not create any of the following as new protocol obligations:
+
+- “every module MUST emit X” rules beyond the frozen matrix summary
+- per-trigger lifecycle rules
+- event payload requirements beyond the referenced event schemas
+- implementation helper classes or emitter APIs
+
+If a specific obligation is not present in the frozen matrix, taxonomy, or
+event schemas, this page should not be read as creating it.
+
+## 6. Canonical Reading Path
+
+Read module/event meaning in this order:
+
+1. `schemas/v2/taxonomy/event-taxonomy.yaml`
+2. `schemas/v2/taxonomy/module-event-matrix.yaml`
+3. the relevant event schema file
+4. `schemas/v2/invariants/observability-invariants.yaml`
+
+## 7. References
+
+- `schemas/v2/taxonomy/module-event-matrix.yaml`
+- `schemas/v2/taxonomy/event-taxonomy.yaml`
+- `schemas/v2/invariants/observability-invariants.yaml`
+- [Event Taxonomy](./event-taxonomy.md)
 
 ---
 
-**Modules Covered**: 10  
-**Required Events**: graph_update, pipeline_stage  
-**Trigger Points Documented**: 25+
+**Final Boundary**: this page identifies the frozen module/event mapping only.
+It does not create new emission or trigger doctrine beyond the frozen matrix.

@@ -1,7 +1,7 @@
 ---
 sidebar_position: 0
 title: "Observability Overview"
-description: "Overview of MPLP observability: event taxonomy, trace formats, and schema references. This page is informative only."
+description: "Overview of MPLP observability surfaces and the canonical reading order for event and trace references."
 keywords: [MPLP Observability, Events, Tracing, Logging, Event Taxonomy]
 doc_type: reference
 normativity: informative
@@ -22,31 +22,44 @@ entry_surface: documentation
 
 ## What This Section Contains
 
-MPLP specifies **observability contracts** for agent system visibility. This section documents event taxonomies, trace formats, and schema references.
+MPLP specifies **observability contracts** for event and trace visibility.
+This section routes readers through the event, invariant, and trace references
+without creating a second observability doctrine layer.
 
 | Document | Purpose |
 |----------|---------|
-| [Observability Overview](./observability-overview.md) | High-level concepts |
-| [Event Taxonomy](./event-taxonomy.md) | Event type classification |
-| [Module-Event Matrix](./module-event-matrix.md) | Module to event mapping |
-| [Runtime Trace Format](./runtime-trace-format.md) | Trace structure specification |
+| [Event Taxonomy](./event-taxonomy.md) | Event family classification |
 | [Common Schemas Reference](./common-schemas-reference.md) | Shared schema elements |
 | [Physical Schemas Reference](./physical-schemas-reference.md) | Storage format schemas |
 | [Observability Invariants](./observability-invariants.md) | Correctness constraints |
+| [Module-Event Matrix](./module-event-matrix.md) | Module to event mapping |
+| [Runtime Trace Format](./runtime-trace-format.md) | Trace and export reference |
+| [Observability Overview](./observability-overview.md) | High-level orientation |
 
 ## Reading Path
 
-1. **Start with**: [Observability Overview](./observability-overview.md) — understand the model
-2. **Events**: [Event Taxonomy](./event-taxonomy.md) — event classification
-3. **Tracing**: [Runtime Trace Format](./runtime-trace-format.md) — trace structure
+1. **Start with**: [Event Taxonomy](./event-taxonomy.md)
+   Establish the event families first.
+2. **Then**: [Common Schemas Reference](./common-schemas-reference.md) and
+   [Physical Schemas Reference](./physical-schemas-reference.md)
+   Ground the event family model in the underlying schemas.
+3. **Then**: [Observability Invariants](./observability-invariants.md)
+   Read the observability correctness layer.
+4. **Then**: [Module-Event Matrix](./module-event-matrix.md)
+   Read module-to-event routing after the family and schema baseline is clear.
+5. **Last**: [Runtime Trace Format](./runtime-trace-format.md) and
+   [Observability Overview](./observability-overview.md)
+   Use these as downstream trace/export and orientation surfaces.
 
 ## Related Resources
 
 - [Architecture Overview](/docs/specification/architecture) — L1-L4 layer model
 - [Modules Overview](/docs/specification/modules) — Module definitions
 - [Repository Schemas](https://github.com/Coregentis/MPLP-Protocol/tree/main/schemas/v2/events) — SSOT
-- [Validation Lab](https://lab.mplp.io) — Evidence adjudication (external)
+- [`schemas/v2/taxonomy/event-taxonomy.yaml`](https://github.com/Coregentis/MPLP-Protocol/blob/main/schemas/v2/taxonomy/event-taxonomy.yaml) — machine-readable event taxonomy
+- [`schemas/v2/taxonomy/module-event-matrix.yaml`](https://github.com/Coregentis/MPLP-Protocol/blob/main/schemas/v2/taxonomy/module-event-matrix.yaml) — machine-readable module/event mapping
 
 ---
 
-> *Evaluation guidance here is reference-only. Live adjudication data and coverage metrics remain in the [Validation Lab](https://lab.mplp.io).*
+> *Establish event-family and schema meaning before reading trace/export
+> guidance.*

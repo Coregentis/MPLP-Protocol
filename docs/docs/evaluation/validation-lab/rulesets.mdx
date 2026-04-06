@@ -1,6 +1,7 @@
 ---
 sidebar_position: 3
 entry_surface: documentation
+entry_model_class: primary
 doc_type: informative
 normativity: informative
 status: draft
@@ -11,8 +12,8 @@ doc_id: "DOC-EVAL-VLAB-RULESET-001"
 # UI metadata (non-normative)
 title: Ruleset Reference
 sidebar_label: Rulesets
-description: "Versioned rulesets for deterministic evidence adjudication in the Validation Lab."
-keywords: [Ruleset, ruleset-1.0, MPLP, Validation Lab, Deterministic]
+description: "Current Validation Lab ruleset reference across the verified V1 manifest line and V2 bundle line."
+keywords: [Ruleset, ruleset-1.0, ruleset-1.3, ruleset-v2.0.0, ruleset-v2.0.1, MPLP, Validation Lab, Deterministic]
 ---
 
 # Ruleset Reference
@@ -22,66 +23,91 @@ keywords: [Ruleset, ruleset-1.0, MPLP, Validation Lab, Deterministic]
 >
 > This document is informative only.
 
-> **SSOT**: [`Validation_Lab/data/rulesets/*/manifest.yaml`](https://github.com/Coregentis/MPLP-Validation-Lab/tree/main/data/rulesets)  
-> This page is a Reference projection. Authority resides in the Validation Lab repository.
+> [!NOTE] Verified Source Model
+> This page is a Documentation-surface first projection of the same upstream source model currently bound to Validation Lab `/rulesets` and `/rulesets/[ruleset_id]`:
+>
+> - unified loader: [`Validation_Lab/lib/rulesets/loadRuleset.ts`](https://github.com/Coregentis/MPLP-Protocol/blob/main/Validation_Lab/lib/rulesets/loadRuleset.ts)
+> - V1 manifest line: [`Validation_Lab/data/rulesets/*/manifest.yaml`](https://github.com/Coregentis/MPLP-Protocol/tree/main/Validation_Lab/data/rulesets)
+> - V1 detail requirements: `Validation_Lab/data/rulesets/*/requirements/*.yaml`
+> - V2 index source: [`Validation_Lab/public/_data/v2/rulesets/index.json`](https://github.com/Coregentis/MPLP-Protocol/blob/main/Validation_Lab/public/_data/v2/rulesets/index.json)
+> - V2 detail bundles: [`Validation_Lab/public/_data/v2/rulesets/ruleset*.json`](https://github.com/Coregentis/MPLP-Protocol/tree/main/Validation_Lab/public/_data/v2/rulesets)
+>
+> The ruleset surface is therefore an **aggregate V1/V2 projection**, not a manifest-only page.
 
 ## What is a Ruleset?
 
-A **Ruleset** is a versioned set of evaluation rules that the Validation Lab uses to adjudicate evidence packs. Rulesets are:
+A **ruleset** is a versioned adjudication line used by Validation Lab to evaluate evidence packs.
+The current Lab ruleset surface has two verified source lines:
 
-- **Versioned** — Each ruleset has an independent version (e.g., `ruleset-1.0`)
-- **Deterministic** — Same evidence + same ruleset = same verdict hash
-- **Governed** — Changes follow Lab governance processes
+- a **V1 manifest line** under `data/rulesets/`
+- a **V2 bundle line** under `public/_data/v2/rulesets/`
 
 :::tip Key Principle
-**Same evidence + same ruleset version = same verdict hash.**
+**Same evidence + same ruleset identity = same verdict hash.**
 
-This determinism guarantee ensures reproducible adjudication that can be independently verified.
+That determinism claim is enforced by the Lab's ruleset and adjudication model, not by docs prose.
 :::
 
-## Ruleset Versioning
+## Current Version Domains
 
-The Lab uses the `ruleset-*` prefix for ruleset versions. This is distinct from other version prefixes:
+The ruleset surface currently exposes several distinct version domains:
 
-| Prefix | Type | Example |
+| Domain | Where It Appears | Current Verified Expression |
 |:---|:---|:---|
-| `ruleset-*` | Ruleset Version | `ruleset-1.0`, `ruleset-1.1` |
-| `pack-v*` | Evidence Pack Format | `pack-v0.2`, `pack-v0.4` |
-| `site-v*` | Site Freeze | `site-v0.5` |
-| `rel-lab-*` | Release Seal | `rel-lab-0.5` |
+| Ruleset identity | V1 manifests, V2 bundles | `ruleset-1.x`, `ruleset-v2.x.y` |
+| Ruleset compatibility | V1 manifests | `evidence_pack_contract`, `min_pack_version`, `max_pack_version` |
+| Protocol pin | V1 manifests | `protocol.version` |
+| Validation Lab release identity | broader Lab governance | separate from ruleset identity |
 
-## Current Rulesets
-
-The Validation Lab currently defines the following rulesets:
-
-| Ruleset | Status | LG Coverage | Strength |
-|:---|:---|:---|:---|
-| `ruleset-1.0` | Active | LG-01~05 | Presence-level |
-
-:::info Non-Normative Note
-**Presence-level** means the ruleset checks for artifact existence, not semantic correctness. Future rulesets may introduce deeper validation (e.g., state transition correctness, schema compliance).
+:::warning Legacy Label Note
+Older Lab materials may still mention `pack-v0.x` labels.
+For the current verified ruleset source model, the V1 manifests now express compatibility through `evidence_pack_contract`, `min_pack_version`, and `max_pack_version`.
 :::
 
-## Ruleset Compatibility
+## Current V1 Manifest Inventory
 
-Each ruleset defines compatibility ranges for evidence packs:
+The current V1 manifest line in `Validation_Lab/data/rulesets/` contains:
 
-- **Min Pack Version**: Minimum evidence pack format version
-- **Max Pack Version**: Maximum evidence pack format version
+| Ruleset | Status | Line | Declared Compatibility |
+|:---|:---|:---|:---|
+| `ruleset-1.0` | `active` | Legacy lifecycle guarantees | `evidence_pack_contract: 1.0`, `min_pack_version: 1.0`, `max_pack_version: 1.x` |
+| `ruleset-1.1` | `draft` | Four-domain adjudication | `evidence_pack_contract: 1.0`, `min_pack_version: 1.0`, `max_pack_version: 1.x` |
+| `ruleset-1.2` | `draft` | Semantic invariant adjudication | `evidence_pack_contract: 1.0`, `min_pack_version: 1.0`, `max_pack_version: 1.x` |
+| `ruleset-1.3` | `active` | Phased evolution line | `evidence_pack_contract: 1.0`, `min_pack_version: 1.0`, `max_pack_version: 1.x` |
 
-See the [SSOT manifest files](https://github.com/Coregentis/MPLP-Validation-Lab/tree/main/data/rulesets) for authoritative compatibility declarations.
+## Current V2 Bundle Inventory
 
-## Ruleset Governance
+The current V2 index in `Validation_Lab/public/_data/v2/rulesets/index.json` publishes:
 
-Ruleset changes follow the Lab's governance process:
+| Ruleset Bundle | Publication State in Current Index | Clause Count | Notes |
+|:---|:---|:---:|:---|
+| `ruleset-v2.0.0` | Indexed | 7 | Current bundle bound directly to the Lab `/guarantees` route |
+| `ruleset-v2.0.1` | Indexed | 8 | Later V2 bundle published in the current index |
 
-1. **Breaking Changes** — Require version bump and migration guidance
-2. **Non-Breaking Changes** — May be added within minor versions
-3. **Deprecation** — Old rulesets remain available for reproducibility
+The V2 line is bundle-backed rather than manifest-backed.
+When the Lab detail route resolves a V2 ruleset, it does so through the unified loader and the corresponding bundle file.
+
+## How to Read the Ruleset Surface
+
+Use the current source model this way:
+
+- Use the V1 manifest line when you need manifest-declared status, protocol pinning, and compatibility fields.
+- Use the V1 requirements files when you need the detailed legacy requirement set for a V1 ruleset.
+- Use the V2 index and bundle files when you need the current V2 bundle inventory and clause payloads.
+- Use [Lab Site: Rulesets](https://lab.mplp.io/rulesets) when you need the live aggregate projection as rendered by the Lab surface.
+
+## Ruleset Governance Boundary
+
+Ruleset governance remains in Validation Lab, not in the Docs surface.
+This page is a first projection of the verified ruleset assets; it does not supersede:
+
+- the unified ruleset loader,
+- the V1 manifest and requirements files,
+- or the V2 bundle files currently consumed by the Lab routes.
 
 ## Related Resources
 
-- [Validation Lab Overview](./) — Four Boundaries & terminology
-- [Lifecycle Guarantees](./lifecycle-guarantees.mdx) — LG-01~05 definitions
-- [Evidence Pack Contract](./evidence-pack-contract.mdx) — Pack structure
-- [Lab Site: Rulesets](https://lab.mplp.io/rulesets) — Live ruleset reference
+- [Validation Lab Overview](./) — Four boundaries and terminology
+- [Lifecycle Guarantees](./lifecycle-guarantees.mdx) — Current V1/V2 guarantees reference
+- [Evidence Pack Contract](./evidence-pack-contract.mdx) — Current public contract model
+- [Lab Site: Rulesets](https://lab.mplp.io/rulesets) — Live aggregate ruleset surface

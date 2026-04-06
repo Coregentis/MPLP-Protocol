@@ -137,7 +137,7 @@ Run with Golden Harness (TypeScript or Python):
 npx ts-node tests/golden/harness/ts/golden-runner.ts
 
 # Python
-python -m pytest packages/sdk-py/tests/golden/test_golden_flow_01.py -v
+PYTHONPATH=packages/sources/sdk-py/src python3 -c "import mplp; print(mplp.__version__)"  # placeholder package smoke only
 ```
 
 Expected result: ✅ PASS for map-flow-01-turn-taking

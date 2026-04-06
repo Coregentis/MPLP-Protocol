@@ -16,16 +16,17 @@ entry_surface: documentation
 > [!NOTE]
 > **Non-Normative Document**
 >
-> This page is informative only. SDK guides describe usage patterns for reference implementations.
+> This page is informative only. SDK guides describe usage patterns for published package surfaces and related helper/runtime packages.
 
 ## What This Section Contains
 
-This section documents **SDK usage guides** for MPLP reference implementations. SDKs are published to package registries.
+This section documents **SDK usage guides** for MPLP package surfaces published to standard registries.
+Guide pages may reference source-side mirrors for implementation context, but install and public-surface guidance is anchored to the published registry packages listed below.
 
 | Document | Language | Package |
 |----------|----------|---------|
-| [TypeScript SDK Guide](./ts-sdk-guide.md) | TypeScript | [@mplp/sdk-ts](https://www.npmjs.com/package/@mplp/sdk-ts) |
-| [Python SDK Guide](./py-sdk-guide.md) | Python | [mplp-sdk](https://pypi.org/project/mplp-sdk/) |
+| [TypeScript SDK Guide](./ts-sdk-guide.md) | TypeScript | [@mplp/sdk-ts](https://www.npmjs.com/package/@mplp/sdk-ts) facade + [`@mplp/runtime-minimal`](https://www.npmjs.com/package/@mplp/runtime-minimal) |
+| [Python SDK Guide](./py-sdk-guide.md) | Python | [mplp-sdk](https://pypi.org/project/mplp-sdk/) protocol helper package |
 | [Go SDK Guide](./go-sdk-guide.md) | Go | (planned) |
 | [Java SDK Guide](./java-sdk-guide.md) | Java | (planned) |
 
@@ -46,8 +47,10 @@ This section documents **SDK usage guides** for MPLP reference implementations. 
 ## Related Resources
 
 - [Repository Schemas](https://github.com/Coregentis/MPLP-Protocol/tree/main/schemas/v2) — Schema SSOT
-- [npm @mplp/sdk-ts](https://www.npmjs.com/package/@mplp/sdk-ts) — TypeScript SDK
-- [PyPI mplp-sdk](https://pypi.org/project/mplp-sdk/) — Python SDK
+- [npm @mplp/schema](https://www.npmjs.com/package/@mplp/schema) — canonical package-level Kernel Duty baseline
+- [npm @mplp/sdk-ts](https://www.npmjs.com/package/@mplp/sdk-ts) — TypeScript SDK facade
+- [npm @mplp/runtime-minimal](https://www.npmjs.com/package/@mplp/runtime-minimal) — minimal runtime package
+- [PyPI mplp-sdk](https://pypi.org/project/mplp-sdk/) — Python protocol helper package
 
 ---
 

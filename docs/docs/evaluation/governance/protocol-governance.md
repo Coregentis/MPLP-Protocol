@@ -8,59 +8,47 @@ protocol_version: "1.0.0"
 doc_id: "DOC-EVAL-GOV-MIP-001"
 
 # UI metadata (non-normative; excluded from protocol semantics)
-title: MIP Process
-sidebar_label: MIP Process
-description: "MPLP governance documentation: MIP Process. Governance processes and policies."
+title: Protocol Governance
+sidebar_label: Protocol Governance
+description: "High-level helper page for MPLP protocol change governance and current governance source routing."
 authority: none
 ---
 
-# MIP Process
+# Protocol Governance
 
+## Purpose
 
+This page gives a **high-level overview** of protocol change governance.
 
-## 1. Purpose
+It is not the authoritative governance record set.
 
-The MIP (MPLP Improvement Proposal) process is the primary mechanism for proposing new features, changes to the protocol specification, or community standards.
+## Current Governance Boundary
 
-## 2. MIP Types
+Protocol change authority remains repository-backed and MPGC-governed.
+This docs page should be read as a routing note, not as the source of
+constitutional process law.
 
-| Type | Description |
-|:---|:---|
-| **Standards Track** | Describes a new feature or implementation for the protocol |
-| **Informational** | Provides guidelines or information, does not propose a standard |
-| **Process** | Describes a process (or an event in a process) |
+## Current Reading Order
 
-## 3. MIP Status
+For current governance source records, use:
 
-<MermaidDiagram id="d460de40c79a91ba" />
+1. repository `governance/01-constitutional/`
+2. repository `governance/04-records/`
+3. repository `governance/05-versioning/`
 
-| Status | Description |
-|:---|:---|
-| **Draft** | The author is writing the proposal |
-| **Review** | Community is reviewing the proposal |
-| **Accepted** | Approved for implementation |
-| **Rejected** | Proposal denied |
-| **Final** | Implementation complete, part of the standard |
-| **Deferred** | Postponed for future consideration |
-| **Replaced** | Superseded by a newer MIP |
+## High-Level Change Path
 
-## 4. Contributing a MIP
+At a high level, protocol changes move through:
 
-1. Fork the repository
-2. Copy `mips/mip-template.md`
-3. Fill in the required sections:
-   - **Title**: Short descriptive title
-   - **Author**: Name/Email
-   - **Status**: Draft
-   - **Abstract**: Summary of the proposal
-   - **Motivation**: Why is this needed?
-   - **Specification**: Technical details
-   - **Backward Compatibility**: Impact on existing systems
-4. Submit a Pull Request to the `mips/` directory
+1. proposal and discussion
+2. governance review
+3. approval / record closure
+4. implementation and versioned release handling
 
-## 5. Review Process
+The exact governing source records remain in the repository governance tree.
 
-1. **Submission**: Author submits PR with MIP markdown file
-2. **Discussion**: Community discusses via GitHub Issues/PR comments
-3. **Voting**: MPGC members vote on acceptance
-4. **Decision**: MIP is accepted, rejected, or deferred
+## Related Docs Helpers
+
+- [Governance Overview](./index.mdx)
+- [Versioning Policy](./versioning-policy.md)
+- [Entry Points](/docs/reference/entrypoints)

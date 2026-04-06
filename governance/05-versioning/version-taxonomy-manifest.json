@@ -1,0 +1,86 @@
+{
+  "schema": "mplp-version-taxonomy-manifest.v1",
+  "generated_at": "2026-03-28",
+  "version_domains": [
+    "protocol_version",
+    "schema_bundle_version",
+    "invariant_bundle_version",
+    "validation_ruleset_version",
+    "validation_lab_release_version",
+    "docs_release_version",
+    "website_release_version",
+    "sdk_version"
+  ],
+  "canonical_rules": {
+    "require_explicit_domain_for_authority_bearing_version_references": true,
+    "bare_versions_prohibited_as_canonical_meaning": [
+      "v1",
+      "v2",
+      "current",
+      "latest"
+    ],
+    "historical_aliases_must_be_mapped_or_marked": true
+  },
+  "historical_alias_policy": {
+    "allowed_aliases": [
+      "v1",
+      "v2",
+      "current",
+      "latest",
+      "site-v*",
+      "pack-v*",
+      "rel-lab-*"
+    ],
+    "policy": "historical_or_mapped_only",
+    "notes": [
+      "Historical aliases may remain in filenames, archive labels, and explanatory text.",
+      "Historical aliases must not carry canonical version meaning without explicit domain mapping.",
+      "site-v*, pack-v*, and rel-lab-* remain legacy label families and are not promoted to first-class version domains in P1."
+    ]
+  },
+  "mappings": {
+    "current_values": {
+      "protocol_version": "1.0.0",
+      "schema_bundle_version": "2.0.0",
+      "invariant_bundle_version": "2.0.0",
+      "validation_ruleset_version": "ruleset-1.0",
+      "validation_lab_release_version": "1.0.1",
+      "docs_release_version": "1.0.0",
+      "website_release_version": "1.0.0",
+      "sdk_version": {
+        "@mplp/sdk-ts": "1.0.7",
+        "mplp-sdk": "1.0.5"
+      }
+    },
+    "historical_aliases": {
+      "protocol:frozen": {
+        "domain": "protocol_version",
+        "value": "1.0.0"
+      },
+      "schema:v2": {
+        "domain": "schema_bundle_version",
+        "value": "2.0.0"
+      },
+      "invariants:v2": {
+        "domain": "invariant_bundle_version",
+        "value": "2.0.0"
+      },
+      "lab:ruleset-current": {
+        "domain": "validation_ruleset_version",
+        "value": "ruleset-1.0"
+      },
+      "lab:published-current": {
+        "domain": "validation_lab_release_version",
+        "value": "1.0.1"
+      },
+      "docs:current": {
+        "domain": "docs_release_version",
+        "value": "1.0.0"
+      },
+      "website:current": {
+        "domain": "website_release_version",
+        "value": "1.0.0"
+      }
+    }
+  }
+}

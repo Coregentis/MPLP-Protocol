@@ -15,7 +15,7 @@ authority: none
 
 # Golden Flows — Informative (Non-Normative)
 
-Golden Flows are **evaluation scenarios** that describe expected behavior for MPLP implementations.
+Golden Flows are protocol-side evaluation scenarios in the main repository. They are distinct from Validation Lab Lifecycle Guarantees (LG-01~05), which are the Lab's adjudication targets.
 
 :::info Terminology Note — Flow vs LG
 - **Flow-01~05** = Protocol Test Scenarios (defined in this repository at `tests/golden/flows/`)
@@ -72,13 +72,14 @@ All Golden Flows are mapped to:
 
 ## Change Policy
 
-Golden Flows are **Normative**:
-- Semantic changes require MPGC approval
+Golden Flow source artifacts are governed and authoritative at `tests/golden/flows/`; this page is an informative reference projection and remains non-normative.
+
+- Semantic changes to Golden Flow source artifacts require MPGC approval
 - Test files in `tests/golden/flows/` are the source of truth
-- All downstream content must align with source of truth
+- All downstream content must align with source artifacts
 
 ---
 
-**Document Status**: Normative (Validation Scenarios)  
+**Document Status**: Informative Reference Projection  
 **Total Flows**: 9 (5 Core + 2 SA + 2 MAP)  
 **Source of Truth**: `tests/golden/flows/`

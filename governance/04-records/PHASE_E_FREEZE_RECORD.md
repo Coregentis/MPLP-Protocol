@@ -107,19 +107,18 @@ git clone <repo> && cd <repo>
 git checkout <frozen-commit-hash>
 
 # 2. Install dependencies
-npm install
+pnpm install
 
 # 3. Run validation sequence (in order)
-node scripts/validate-schemas.js
-node scripts/verify-fixtures-schema.js
-node scripts/verify-invariants.js
-node scripts/verify-repo-refs.js
+pnpm verify:schemas
+node scripts/02-verification/verify-fixtures-schema.js
+node scripts/02-verification/verify-invariants.js
+node scripts/02-verification/verify-repo-refs.js
 
 # 4. Verify results
-cat artifacts/schema-validation/report.md
-cat artifacts/fixtures-validation/report.md
-cat artifacts/invariants/report.md
-cat artifacts/repo-refs/report.md
+cat scripts/artifacts/fixtures-validation/report.md
+cat scripts/artifacts/invariants/report.md
+cat scripts/artifacts/repo-refs/report.md
 ```
 
 ---

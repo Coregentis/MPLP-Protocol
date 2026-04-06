@@ -17,275 +17,101 @@ external_standards:
 title: Role Module
 sidebar_label: Role Module
 sidebar_position: 5
-description: "MPLP module specification: Role Module. Defines schema requirements and invariants."
+description: "Schema-centered specification page for the MPLP Role module."
 ---
 
 # Role Module
 
 ## Scope
 
-This specification defines the normative schema requirements and lifecycle obligations for the **Role module** as represented by `schemas/v2/mplp-role.schema.json`.
+This page documents the normative schema surface of the **Role module** as
+defined in `schemas/v2/mplp-role.schema.json`.
+
+It covers the role record shape and the fields carried by that record. It does
+not define a canonical permission model, role hierarchy, or enforcement engine.
 
 ## Non-Goals
 
-This specification does not define implementation details, runtime behavior beyond schema-defined obligations, or vendor/framework-specific integrations.
+This page does not define:
 
----
+- a canonical capability taxonomy
+- wildcard semantics
+- RBAC algorithms
+- default role catalogs
+- SDK role helpers
 
 ## 1. Purpose
 
-The **Role Module** defines capability declarations, permission boundaries, and behavioral identities for agents in MPLP. It provides the RBAC (Role-Based Access Control) foundation for secure multi-agent systems.
+The Role module records a named role artifact and its associated descriptive
+fields.
 
-**Design Principle**: "Explicit capabilities, enforced boundaries"
+At minimum, a Role object carries:
+
+- protocol metadata
+- a unique `role_id`
+- a human-readable `name`
 
 ## 2. Canonical Schema
 
-**From**: `schemas/v2/mplp-role.schema.json`
+**Truth source**: `schemas/v2/mplp-role.schema.json`
 
-### 2.1 Required Fields
+### Required Fields
 
-| Field | Type | Description |
+| Field | Type | Notes |
 |:---|:---|:---|
-| **`meta`** | Object | Protocol metadata |
-| **`role_id`** | UUID v4 | Global unique identifier |
-| **`name`** | String | Human-readable role name |
+| `meta` | object | Uses `common/metadata.schema.json` |
+| `role_id` | identifier | Canonical role identifier |
+| `name` | string | Human-readable role name |
 
-### 2.2 Optional Fields
+### Optional Fields
 
-| Field | Type | Description |
-|:---|:---|:---|
-| `description` | String | Detailed role function description |
-| `capabilities` | Array[String] | Permission/capability tags |
-| `created_at` | ISO 8601 | Creation timestamp |
-| `updated_at` | ISO 8601 | Last modification timestamp |
-| `trace` | Object | Audit trace reference |
-| `events` | Array | Role lifecycle events |
-| `governance` | Object | Lifecycle phase and locking |
-
-## 3. Capabilities Model
-
-### 3.1 Capability Format
-
-Capabilities follow a **resource.action** pattern:
-
-```
-<resource>.<action>
-```
-
-**Examples**:
-- `plan.create` - Can create new Plans
-- `plan.execute` - Can execute Plans
-- `confirm.approve` - Can approve Confirm requests
-- `context.modify` - Can modify Context
-- `trace.read` - Can read Traces
-- `collab.join` - Can join collaboration sessions
-
-### 3.2 Standard Capabilities
-
-| Capability | Description |
+| Field | Type |
 |:---|:---|
-| `plan.create` | Create new Plans |
-| `plan.propose` | Submit Plans for approval |
-| `plan.execute` | Execute approved Plans |
-| `confirm.approve` | Approve approval requests |
-| `confirm.reject` | Reject approval requests |
-| `context.read` | Read Context data |
-| `context.modify` | Modify Context |
-| `trace.read` | Read execution traces |
-| `collab.join` | Join collaboration sessions |
-| `collab.orchestrate` | Act as session orchestrator |
+| `governance` | object |
+| `description` | string |
+| `capabilities` | array of strings |
+| `created_at` | date-time |
+| `updated_at` | date-time |
+| `trace` | object |
+| `events` | array |
 
-### 3.3 Capability Checking
+### `capabilities`
 
-```typescript
-class RoleManager {
-  async checkCapability(role_id: string, required: string): Promise<boolean> {
-    const role = await this.getRole(role_id);
-    
-    if (!role || !role.capabilities) {
-      return false;
-    }
-    
-    // Direct match
-    if (role.capabilities.includes(required)) {
-      return true;
-    }
-    
-    // Wildcard match (e.g., 'plan.*' matches 'plan.create')
-    const [resource] = required.split('.');
-    if (role.capabilities.includes(`${resource}.*`)) {
-      return true;
-    }
-    
-    // Super admin
-    if (role.capabilities.includes('*')) {
-      return true;
-    }
-    
-    return false;
-  }
-}
-```
+The schema models `capabilities` as an optional array of strings.
 
-## 4. Common Role Patterns
+This page does not impose a canonical grammar, wildcard format, hierarchy, or
+permission-evaluation rule beyond that schema shape.
 
-### 4.1 SA Profile Roles
+## 3. Cross-Object Context
 
-| Role | Name | Capabilities |
-|:---|:---|:---|
-| **Planner** | `planner` | `plan.create`, `plan.propose` |
-| **Executor** | `executor` | `plan.execute`, `trace.read` |
-| **Reviewer** | `reviewer` | `confirm.approve`, `confirm.reject`, `trace.read` |
-| **Architect** | `architect` | `plan.*`, `context.*` |
+Other schema surfaces may carry role-related fields, for example:
 
-### 4.2 MAP Profile Roles
+- `agent_role`
+- `requested_by_role`
+- `participants[*].role_id`
+- `owner_role`
 
-| Role | Name | Capabilities | MAP Function |
-|:---|:---|:---|:---|
-| **Orchestrator** | `orchestrator` | `collab.orchestrate`, `plan.*` | Controls session flow |
-| **Coder** | `coder` | `plan.execute`, `trace.read` | Code implementation |
-| **Tester** | `tester` | `plan.execute`, `trace.read` | Test execution |
-| **Human User** | `human_user` | `confirm.approve`, `plan.propose` | Final approval |
+The consuming schema and runtime determine how those fields are used. This page
+does not define a universal resolution or enforcement model for them.
 
-## 5. References from Other Modules
+## 4. Boundary Notes
 
-### 5.1 Usage in Context
+- This page does not define standard roles such as planner, reviewer, or
+  orchestrator as protocol requirements.
+- This page does not define `resource.action` as a mandatory capability
+  grammar.
+- This page does not define role inheritance, rank, or conflict resolution.
+- This page does not define a runtime authorization engine.
 
-```json
-{
-  "context_id": "ctx-123",
-  "owner_role": "role-architect-001"
-}
-```
+## 5. References
 
-### 5.2 Usage in Plan Steps
-
-```json
-{
-  "step_id": "s1",
-  "description": "Write authentication code",
-  "agent_role": "coder"
-}
-```
-
-### 5.3 Usage in Confirm
-
-```json
-{
-  "confirm_id": "confirm-001",
-  "requested_by_role": "role-planner-001"
-}
-```
-
-### 5.4 Usage in Collab
-
-```json
-{
-  "participant_id": "p1",
-  "role_id": "role-coder-001",
-  "kind": "agent"
-}
-```
-
-## 6. SDK Examples
-
-### 6.1 TypeScript
-
-```typescript
-import { v4 as uuidv4 } from 'uuid';
-
-interface Role {
-  meta: { protocolVersion: string };
-  role_id: string;
-  name: string;
-  description?: string;
-  capabilities?: string[];
-  created_at?: string;
-}
-
-function createRole(name: string, capabilities: string[]): Role {
-  return {
-    meta: { protocolVersion: '1.0.0' },
-    role_id: uuidv4(),
-    name,
-    capabilities,
-    created_at: new Date().toISOString()
-  };
-}
-
-// Create standard roles
-const planner = createRole('planner', ['plan.create', 'plan.propose']);
-const executor = createRole('executor', ['plan.execute', 'trace.read']);
-const reviewer = createRole('reviewer', ['confirm.approve', 'confirm.reject']);
-```
-
-### 6.2 Python
-
-```python
-from pydantic import BaseModel, Field
-from uuid import uuid4
-from datetime import datetime
-from typing import List, Optional
-
-class Role(BaseModel):
-    role_id: str = Field(default_factory=lambda: str(uuid4()))
-    name: str
-    description: Optional[str] = None
-    capabilities: List[str] = []
-    created_at: datetime = Field(default_factory=datetime.now)
-
-# Create standard roles
-planner = Role(
-    name='planner',
-    description='Creates and proposes execution plans',
-    capabilities=['plan.create', 'plan.propose']
-)
-```
-
-## 7. Complete JSON Example
-
-```json
-{
-  "meta": {
-    "protocolVersion": "1.0.0",
-    "source": "mplp-runtime"
-  },
-  "governance": {
-    "lifecyclePhase": "active",
-    "locked": false
-  },
-  "role_id": "role-architect-550e8400",
-  "name": "architect",
-  "description": "Senior agent responsible for system design and plan creation. Has full plan and context permissions.",
-  "capabilities": [
-    "plan.create",
-    "plan.propose",
-    "plan.execute",
-    "context.read",
-    "context.modify",
-    "confirm.approve",
-    "trace.read"
-  ],
-  "created_at": "2025-12-01T00:00:00.000Z",
-  "updated_at": "2025-12-07T00:00:00.000Z"
-}
-```
-
-**Schemas**:
 - `schemas/v2/mplp-role.schema.json`
-
-## 8. Related Documents
-
-**Architecture**:
-- [L1 Core Protocol](/docs/specification/architecture/l1-core-protocol)
-
-**Modules**:
-- [Context Module](context-module.md)
-- [Plan Module](plan-module.md)
-- [Confirm Module](confirm-module.md)
+- [Plan Module](/docs/specification/modules/plan-module.md)
+- [Confirm Module](/docs/specification/modules/confirm-module.md)
+- [Collab Module](/docs/specification/modules/collab-module.md)
 
 ---
 
-**Required Fields**: meta, role_id, name  
-**Capabilities Format**: `resource.action` (e.g., `plan.create`)  
-**Key Usage**: owner_role, agent_role, requested_by_role, participant.role_id
+**Final Boundary**: this page specifies the Role object shape and field-level
+surface only. It does not create a larger permission doctrine beyond the frozen
+schema.

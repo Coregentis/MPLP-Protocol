@@ -10,58 +10,51 @@ doc_id: "DOC-EVAL-GOV-COMPAT-001"
 # UI metadata (non-normative; excluded from protocol semantics)
 title: Compatibility Matrix
 sidebar_label: Compatibility Matrix
-description: "MPLP governance documentation: Compatibility Matrix. Governance processes and policies."
+description: "Helper matrix for reading MPLP version domains and package compatibility at a high level."
 authority: none
 ---
 
 # Compatibility Matrix
 
-## 1. Overview
+## Purpose
 
-This document defines compatibility between MPLP protocol versions, SDKs, and schema versions.
+This page is a **high-level compatibility helper**.
 
-## 2. Protocol Schema Compatibility
+It must be read through explicit version domains rather than a flat version
+ladder.
 
-| Protocol Version | Schema Directory | Schema Version | Status |
-|:---|:---|:---|:---|
-| v1.0.0 | `schemas/v2/` | 1.0.0 | **Current** |
-| v0.x (legacy) | `schemas/v1/` | 0.x | Deprecated |
+## Current Version Domains
 
-## 3. SDK Protocol Compatibility
+| Domain | Current Value |
+|:---|:---|
+| `protocol_version` | `1.0.0` |
+| `schema_bundle_version` | `2.0.0` |
+| `invariant_bundle_version` | `2.0.0` |
+| `validation_ruleset_version` | `ruleset-1.0` |
+| `validation_lab_release_version` | `1.0.1` |
+| `docs_release_version` | `1.0.0` |
+| `website_release_version` | `1.0.0` |
 
-| SDK | Version | Protocol v1.0.0 | Notes |
-|:---|:---|:---:|:---|
-| `@mplp/sdk-ts` | 1.0.x | ✅ | Reference implementation |
-| `mplp` (Python) | 1.0.x | ✅ | Full runtime support |
+## Public Package Surfaces
 
-## 4. Cross-Language Interoperability
-
-MPLP ensures protocol objects are compatible across language SDKs:
-
-| Source SDK | Target SDK | Compatibility |
-|:---|:---|:---:|
-| TypeScript | Python | ✅ JSON serialization |
-| Python | TypeScript | ✅ JSON serialization |
-
-## 5. Backward Compatibility Rules
-
-### 5.1 Schema Evolution
-
-| Change Type | Allowed in FROZEN? |
-|:---|:---:|
-| Add optional field | ✅ (Minor) |
-| Add new event type | ✅ (Minor) |
-| Remove field | ❌ (Breaking) |
-| Change field type | ❌ (Breaking) |
-| Rename field | ❌ (Breaking) |
-
-### 5.2 Runtime Compatibility
-
-MPLP runtimes aligned to v1.0.0 are expected to accept all v1.0.x messages without error.
-
-## 6. Version Support Policy
-
-| Version | Support Status | End of Support |
+| Package Surface | Current Public Version | Role |
 |:---|:---|:---|
-| v1.0.x | ✅ Supported | N/A (Ongoing) |
-| v0.x | ❌ Deprecated | 2025-12-03 |
+| `@mplp/schema` | `1.0.6` | direct schema/data mirror |
+| `@mplp/sdk-ts` | `1.0.7` | TypeScript facade helper |
+| `@mplp/runtime-minimal` | `1.0.5` | runtime-minimal helper |
+| `mplp-sdk` | `1.0.5` | Python protocol helper |
+
+## Boundary
+
+- Directory labels such as `schemas/v2/` are path labels, not standalone
+  version doctrine.
+- Public package compatibility must be read through package role plus explicit
+  version domains.
+- This helper page does not define compatibility law by itself.
+
+## Related References
+
+- [Entry Points](/docs/reference/entrypoints)
+- [Versioning Policy](./versioning-policy.md)
+- [TypeScript SDK Guide](/docs/guides/sdk/ts-sdk-guide)
+- [Python SDK Guide](/docs/guides/sdk/py-sdk-guide)

@@ -1,0 +1,45 @@
+{
+    "version": "1.0",
+    "updated_at": "2026-01-21",
+    "description": "Single Source of Truth for MPLP 3+1 public-surface anchors. All cross-domain links should derive from this file.",
+    "entrypoints": {
+        "website": "https://www.mplp.io",
+        "docs": "https://docs.mplp.io",
+        "lab": "https://lab.mplp.io",
+        "repo": "https://github.com/Coregentis/MPLP-Protocol"
+    },
+    "anchors": {
+        "website": {
+            "definition": "https://www.mplp.io/what-is-mplp",
+            "entity_manifest": "https://www.mplp.io/assets/geo/mplp-entity.json",
+            "posix_analogy": "https://www.mplp.io/posix-analogy",
+            "governance_overview": "https://www.mplp.io/governance/overview",
+            "architecture": "https://www.mplp.io/architecture",
+            "modules": "https://www.mplp.io/modules",
+            "golden_flows": "https://www.mplp.io/golden-flows",
+            "validation_lab": "https://www.mplp.io/validation-lab"
+        },
+        "docs": {
+            "entrypoints": "https://docs.mplp.io/docs/reference/entrypoints",
+            "spec": "https://docs.mplp.io/docs/specification",
+            "validation_lab_ref": "https://docs.mplp.io/docs/evaluation/validation-lab",
+            "conformance": "https://docs.mplp.io/docs/evaluation/conformance"
+        },
+        "lab": {
+            "home": "https://lab.mplp.io",
+            "validation": "https://lab.mplp.io/validation",
+            "evolution": "https://lab.mplp.io/rulesets/evolution",
+            "rulesets": "https://lab.mplp.io/rulesets",
+            "runs": "https://lab.mplp.io/runs",
+            "guarantees": "https://lab.mplp.io/guarantees",
+            "coverage": "https://lab.mplp.io/coverage",
+            "contract": "https://lab.mplp.io/policies/contract",
+            "methodology": "https://lab.mplp.io/methodology"
+        },
+        "repo": {
+            "schemas": "https://github.com/Coregentis/MPLP-Protocol/tree/main/schemas/v2",
+            "tests": "https://github.com/Coregentis/MPLP-Protocol/tree/main/tests/golden/flows",
+            "governance": "https://github.com/Coregentis/MPLP-Protocol/tree/main/governance"
+        }
+    }
+}

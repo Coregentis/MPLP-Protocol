@@ -4,42 +4,45 @@ doc_type: reference
 normativity: informative
 status: active
 authority: Documentation Governance
-description: "Quick reference for MPLP observability event families and invariant rules."
+description: "Quick routing reference into the repaired MPLP observability, invariants, and evaluation surfaces."
 title: API Quick Reference
 ---
 
-## 12 Observability Event Families
+# API Quick Reference
 
-Based on `schemas/v2/events/mplp-event-core.schema.json`:
+This page is a **helper surface only**.
 
-| Event Family | Schema | Schema-required? (derived) | Description |
-|:---|:---|:---|:---|
-| **pipeline_stage** | `schemas/v2/events/mplp-pipeline-stage-event.schema.json` | **YES** | Plan/Step lifecycle transitions |
-| **graph_update** | `schemas/v2/events/mplp-graph-update-event.schema.json` | **YES** | PSG structural changes |
-| **import_process** | Core event payload | No | Project initialization |
-| **intent** | Core event payload | No | User's original request |
-| **delta_intent** | Core event payload | No | Intent modifications |
-| **methodology** | Core event payload | No | Approach selection |
-| **reasoning_graph** | Core event payload | No | Chain-of-thought traces |
-| **runtime_execution** | `schemas/v2/events/mplp-runtime-execution-event.schema.json` | No | LLM/tool execution details |
-| **impact_analysis** | Core event payload | No | Change impact predictions |
-| **compensation_plan** | Core event payload | No | Rollback strategies |
-| **cost_budget** | Core event payload | No | Token/cost tracking |
-| **external_integration** | Core event payload | No | L4 system events |
+It does not define protocol semantics or replace the repaired primary
+specification/reference pages.
 
-## Invariant Reference
+## Canonical Reading Order
 
-| Invariant Source | Scope | Description |
-|:---|:---|:---|
-| `schemas/v2/invariants/sa-invariants.yaml` | SA Profile | 9 rules (context binding, plan structure, trace requirements) |
-| `schemas/v2/invariants/map-invariants.yaml` | MAP Profile | 9 rules (multi-participant requirements, role bindings) |
-| `schemas/v2/invariants/observability-invariants.yaml` | Events | Event structure and emission rules |
-| `schemas/v2/invariants/integration-invariants.yaml` | L4 Integration | External event validation |
-| `schemas/v2/invariants/learning-invariants.yaml` | Learning | Sample structure requirements |
+Use these pages first:
 
----
+| Need | Primary Surface |
+|:---|:---|
+| Public-surface roles and routing | [Entry Points](/docs/reference/entrypoints) |
+| Protocol object and schema meaning | [Specification](/docs/specification) |
+| Observability families and event structure | [Observability Overview](/docs/specification/observability) |
+| Event family taxonomy | [Event Taxonomy](/docs/specification/observability/event-taxonomy) |
+| Module-to-event relationships | [Module Event Matrix](/docs/specification/observability/module-event-matrix) |
+| Trace object and event linkage | [Runtime Trace Format](/docs/specification/observability/runtime-trace-format) |
+| Profile-linked invariant sets | [Profiles](/docs/specification/profiles) |
+| Lab-side ruleset and evidence references | [Validation Lab Overview](/docs/evaluation/validation-lab) |
 
-**For comprehensive documentation**, see:
-- [Protocol Overview](mplp-v1.0-protocol-overview.md)
-- [Glossary](glossary.md)
-- [Documentation Map](mplp-v1.0-docs-map.md)
+## Repository Truth Anchors
+
+If you need the repository-backed source artifacts directly:
+
+- `schemas/v2/events/`
+- `schemas/v2/invariants/`
+- `schemas/v2/taxonomy/`
+
+## Related Helper Pages
+
+- [Protocol Overview](/docs/introduction/mplp-v1.0-protocol-overview)
+- [Documentation Map](/docs/introduction/mplp-v1.0-docs-map)
+
+**Boundary**: this page is a navigation aid only. The repaired primary
+specification/reference pages and repository-backed source artifacts prevail on
+meaning.

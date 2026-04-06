@@ -10,147 +10,89 @@ doc_id: "DOC-SEMANTIC-COVERAGE-REPORT-001"
 # UI metadata (non-normative; excluded from protocol semantics)
 title: Normative Coverage Report
 sidebar_label: Coverage Report
-description: "MPLP specification: Normative Coverage Report. Normative protocol requirements."
+description: "Docs-side inventory of frozen MPLP source families and related repaired reference surfaces."
 authority: Documentation Governance
 ---
 
 # Normative Coverage Report
 
-**Purpose**: Tag gaps only, do not fill them. Provides Phase F work order.
+This page is a **docs-side inventory view**. It does not certify normative
+coverage, implementation completeness, evaluation completeness, or Validation
+Lab adjudication completeness.
 
----
+## Scope
 
-## 1. Module Coverage
+This page records only conservative inventory facts that can be read directly
+from frozen source families and repaired first-order docs surfaces.
 
-| Module | Anchor | DEFINED | REFERENCED | EVAL-MAPPED | GAP |
-|:---|:---|:---:|:---:|:---:|:---|
-| Context | CA-01 | ✅ | ✅ | ✅ | - |
-| Plan | CA-02 | ✅ | ✅ | ✅ | - |
-| Trace | CA-03 | ✅ | ✅ | ✅ | - |
-| Confirm | CA-04 | ✅ | ✅ | ✅ | - |
-| Collab | CA-05 | ✅ | ✅ | ⚠️ | Future: MAP coordination eval |
-| Role | CA-06 | ✅ | ✅ | ✅ | - |
-| Dialog | CA-07 | ✅ | ✅ | ⚠️ | Not in GF scope |
-| Extension | CA-08 | ✅ | ✅ | ⚠️ | Not in GF scope |
-| Network | CA-09 | ✅ | ✅ | ⚠️ | Not in GF scope |
-| Event | CA-10 | ✅ | ✅ | ✅ | - |
+## Non-Goals
 
-**Summary**: 10/10 DEFINED, 10/10 REFERENCED, 6/10 EVAL-MAPPED (runtime pending Phase E/F)
+This page does not provide:
 
----
+- a coverage verdict
+- a completeness proof
+- an evaluation-readiness certification
+- a runtime-validation status
+- a Validation Lab readiness determination
 
-## 2. Profile Coverage
+## 1. Frozen Source Families Present
 
-| Profile | Anchor | DEFINED | REFERENCED | EVAL-MAPPED | GAP |
-|:---|:---|:---:|:---:|:---:|:---|
-| SA Profile | PA-01 | ✅ | ✅ | ✅ | - |
-| MAP Profile | PA-02 | ✅ | ✅ | ✅ | - |
-
-**Summary**: 2/2 Mapped (runtime pending Phase E/F)
-
----
-
-## 3. Kernel Duty Coverage
-
-| Kernel Duty | Anchor | DEFINED | REFERENCED | EVAL-MAPPED | GAP |
-|:---|:---|:---:|:---:|:---:|:---|
-| Coordination | KD-01 | ✅ | ✅ | ✅ (FLOW-02) | - |
-| Error Handling | KD-02 | ✅ | ✅ | ✅ (FLOW-03) | - |
-| Event Bus | KD-03 | ✅ | ✅ | ✅ (FLOW-02) | - |
-| Learning & Feedback | KD-04 | ✅ | ✅ | ⚠️ | INTENTIONAL: Not in v1.0 scope |
-| Observability | KD-05 | ✅ | ✅ | ✅ (All GF) | - |
-| Orchestration | KD-06 | ✅ | ✅ | ✅ (FLOW-01,04,05) | - |
-| Performance | KD-07 | ✅ | ✅ | ⚠️ | INTENTIONAL: Non-functional |
-| Protocol Versioning | KD-08 | ✅ | ✅ | ⚠️ | INTENTIONAL: Meta-level |
-| Security | KD-09 | ✅ | ✅ | ✅ (FLOW-05) | - |
-| State Sync | KD-10 | ✅ | ✅ | ✅ (FLOW-01,02) | - |
-| Transaction | KD-11 | ✅ | ✅ | ✅ (FLOW-03,04) | - |
-
-**Summary**: 11/11 DEFINED, 11/11 REFERENCED, 8/11 EVAL-MAPPED (3 INTENTIONAL gaps, runtime pending)
-
----
-
-## 4. Architecture Layer Coverage
-
-| Layer | Anchor | DEFINED | REFERENCED | EVAL-MAPPED | GAP |
-|:---|:---|:---:|:---:|:---:|:---|
-| L1 Core Protocol | AA-01 | ✅ | ✅ | ✅ | - |
-| L2 Coordination | AA-02 | ✅ | ✅ | ✅ | - |
-| L3 Execution | AA-03 | ✅ | ✅ | ✅ | - |
-| L4 Integration | AA-04 | ✅ | ✅ | ✅ | - |
-
-**Summary**: 4/4 EVAL-MAPPED (runtime pending Phase E/F)
-
----
-
-## 5. Golden Flow Coverage
-
-| Golden Flow | Anchor | DEFINED | REFERENCED | EVALUATED | GAP |
-|:---|:---|:---:|:---:|:---:|:---|
-| FLOW-01 SA Lifecycle | FLOW-01 | ✅ | ✅ | ⏳ Phase F | Fixtures pending |
-| FLOW-02 MAP Coordination | FLOW-02 | ✅ | ✅ | ⏳ Phase F | Fixtures pending |
-| FLOW-03 Drift Detection | FLOW-03 | ✅ | ✅ | ⏳ Phase F | Fixtures pending |
-| FLOW-04 Delta Intent | FLOW-04 | ✅ | ✅ | ⏳ Phase F | Fixtures pending |
-| FLOW-05 Governance | FLOW-05 | ✅ | ✅ | ⏳ Phase F | Fixtures pending |
-
-**Summary**: 5/5 DEFINED, 5/5 REFERENCED, 0/5 Fixtures Ready (Phase F scope)
-
----
-
-## 6. Invariants Coverage
-
-| Invariants File | Rule Count | DEFINED | EVALUATED | GAP |
-|:---|:---:|:---:|:---:|:---|
-| sa-invariants.yaml | 9 | ✅ | ⏳ Phase E | Runtime validation pending |
-| map-invariants.yaml | 9 | ✅ | ⏳ Phase E | Runtime validation pending |
-| observability-invariants.yaml | 12 | ✅ | ⏳ Phase E | Runtime validation pending |
-| integration-invariants.yaml | 19 | ✅ | ⏳ Phase E | Runtime validation pending |
-| learning-invariants.yaml | 12 | ✅ | ⏳ Phase E | Runtime validation pending |
-
-**Summary**: 61 rules DEFINED, 0 runtime EVALUATED (Phase E scope)
-
----
-
-## 7. Gap Summary
-
-### 7.1 INTENTIONAL Gaps (by design)
-
-| Gap | Reason | Status |
+| Source Family | Frozen Artifact Basis | Notes |
 |:---|:---|:---|
-| KD-04 Learning not evaluated | v1.0 scope exclusion | FROZEN |
-| KD-07 Performance not evaluated | Non-functional concern | FROZEN |
-| KD-08 Versioning not evaluated | Meta-level concern | FROZEN |
-| Dialog/Extension/Network not in GF | Specialized modules | FROZEN |
+| Protocol object schemas | `schemas/v2/mplp-*.schema.json` | Object-family truth source |
+| Profile manifests | `schemas/v2/profiles/*.yaml` | SA and MAP profile baselines |
+| General event taxonomy | `schemas/v2/taxonomy/event-taxonomy.yaml` | 12 general event families |
+| Module/event matrix | `schemas/v2/taxonomy/module-event-matrix.yaml` | Machine-readable mapping artifact |
+| Kernel-duty taxonomy | `schemas/v2/taxonomy/kernel-duties.yaml` | 11 duty names/slugs |
+| Invariant files | `schemas/v2/invariants/*.yaml` | Frozen invariant families |
 
-### 7.2 PENDING Gaps (Phase E/F scope)
+## 2. Repaired First-Order Docs Surfaces Present
 
-| Gap | Owner | Status |
-|:---|:---|:---|
-| Golden Flow fixtures | Phase F | PENDING |
-| Invariant runtime validation | Phase E | PENDING |
-
-### 7.3 UNKNOWN Gaps
-
-| Gap | Investigation Needed |
+| Docs Surface Family | Read First |
 |:---|:---|
-| None | All gaps are classified |
+| Module pages | [/docs/specification/modules](/docs/specification/modules) |
+| Profile pages | [/docs/specification/profiles](/docs/specification/profiles) |
+| Observability pages | [/docs/specification/observability](/docs/specification/observability) |
+| Architecture layer boundary pages | [/docs/specification/architecture](/docs/specification/architecture) |
+| Validation Lab reference pages | [/docs/evaluation/validation-lab](/docs/evaluation/validation-lab) |
+
+## 3. What This Page Can Safely Say
+
+This page can safely say that:
+
+- the frozen source families listed above exist
+- repaired first-order docs surfaces exist for key specification/reference areas
+- downstream projection pages should remain subordinate to those sources and
+  repaired first-order pages
+
+## 4. What This Page Cannot Safely Say
+
+This page cannot safely claim:
+
+- that all protocol semantics are fully covered by evaluation
+- that all flows cover all duties
+- that all modules have canonical evaluation mappings
+- that runtime validation has been completed
+- that Phase E/F or Validation Lab coverage is complete
+
+Those claims belong to other workstreams and evidence-bearing surfaces, not to
+this docs-side inventory page.
+
+## 5. How To Use This Page
+
+Use this page only to:
+
+- understand which frozen source families exist
+- locate repaired first-order documentation surfaces
+- avoid treating docs-side matrices as proof of completeness
+
+## References
+
+- [Specification](/docs/specification)
+- [Evaluation](/docs/evaluation)
+- `schemas/v2/`
 
 ---
 
-## 8. Overall Coverage Statistics
-
-| Category | Total | Defined | Mapped |
-|:---|:---:|:---:|:---:|
-| Modules | 10 | 10 | 10 Mapped |
-| Profiles | 2 | 2 | 2 Mapped |
-| Kernel Duties | 11 | 11 | 11 Mapped |
-| Architecture Layers | 4 | 4 | 4 Mapped |
-| Golden Flows | 5 | 5 | 5 Declared |
-| Invariants | 61 | 61 | 61 Declared |
-
-**Evaluation Readiness**: Phase E/F dependent
-
----
-
-**Phase**: D-3 (Normative Coverage & Gap Tagging)
-**Gap Types**: 4 INTENTIONAL, 2 PENDING, 0 UNKNOWN
+**Final Boundary**: this page is an inventory projection only. It does not
+issue coverage verdicts or normative completeness claims.

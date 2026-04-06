@@ -49,8 +49,8 @@ We are proud to announce the release of **MPLP (Multi-Agent Lifecycle Protocol) 
 |:---|:---|:---|
 | **Schemas** | `schemas/v2/` | JSON Schema definitions |
 | **SDK (TypeScript)** | `packages/npm/sdk-ts/` | Reference implementation (NPM) |
-| **SDK (Python)** | `packages/pypi/` | Cross-language support (PyPI) |
-| **Source Code** | `packages/sources/` | Development source |
+| **SDK (Python)** | `packages/pypi/mplp-sdk/` | Published Python package surface (PyPI) |
+| **Source Mirrors** | `packages/sources/` | Source-side package mirrors for release/build workflows |
 | **Golden Tests** | `tests/golden/` | Compliance test fixtures |
 | **Documentation** | `docs/` | Protocol specification |
 
@@ -65,7 +65,7 @@ npm install @mplp/sdk-ts
 ### Python
 
 ```bash
-pip install mplp
+pip install mplp-sdk
 ```
 
 ## 5. Breaking Changes

@@ -67,10 +67,10 @@ Based on actual implementation in `schemas/v2/` and SDK validation layers:
     - **Integration Invariants**: 19 rules (L4 events)
     - **Learning Invariants**: 12 rules (learning samples)
 
-3.  **Type System** (implemented in SDKs):
-    - TypeScript interfaces (`packages/sdk-ts/src/core/index.ts`)
-    - Python Pydantic models (`packages/sdk-py/src/mplp/`)
-    - JSON Schema validation via AJV v8.12.0 (TypeScript) / Pydantic v2.0+ (Python)
+3.  **Type/System Surfaces** (projected into SDK/package layers):
+    - TypeScript package artifacts (`packages/npm/sdk-ts/dist/`, `packages/npm/runtime-minimal/dist/`)
+    - Python published placeholder package surface (`packages/pypi/mplp-sdk/`)
+    - JSON Schema validation via package-level schema tooling on the TypeScript side
 
 ### 2.2 L1 Explicitly Excludes
 
@@ -395,7 +395,7 @@ L1 enforces formal validation rules stored in `schemas/v2/invariants/` as YAML f
 
 ### 5.3 TypeScript SDK Implementation
 
-From `packages/sdk-ts/src/core/validators/index.ts`:
+Reference package artifact: `packages/sources/sdk-ts/dist/core/validators/`
 
 ```typescript
 import Ajv from 'ajv';
@@ -414,16 +414,13 @@ addFormats(ajv);
 
 ### 5.4 Python SDK Implementation
 
-From `packages/sdk-py/src/mplp/core/`:
+Current public Python package surface: `packages/pypi/mplp-sdk/`
 
 ```python
-from pydantic import BaseModel, Field, UUID4, validator
+import mplp
 
-class Context(BaseModel):
-    context_id: UUID4
-    root: dict
-    meta: Metadata
-    # Pydantic automatically validates against field types
+print(mplp.__version__)
+print(mplp.MPLP_PROTOCOL_VERSION)
 ```
 
 ## 6. L1 Compliance Checklist

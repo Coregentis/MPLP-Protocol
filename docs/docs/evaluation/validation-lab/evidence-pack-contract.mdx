@@ -1,6 +1,7 @@
 ---
 sidebar_position: 4
 entry_surface: documentation
+entry_model_class: primary
 doc_type: informative
 normativity: informative
 status: draft
@@ -11,8 +12,8 @@ doc_id: "DOC-EVAL-VLAB-PACK-001"
 # UI metadata (non-normative)
 title: Evidence Pack Contract
 sidebar_label: Evidence Pack
-description: "Structure and requirements for evidence packs submitted to the Validation Lab."
-keywords: [Evidence Pack, Contract, MPLP, Validation Lab, Manifest]
+description: "Current Validation Lab evidence-pack contract reference, anchored to the public contract surface and its supporting contract provenance."
+keywords: [Evidence Pack, Contract, MPLP, Validation Lab, Manifest, Export Contract]
 ---
 
 # Evidence Pack Contract
@@ -22,64 +23,104 @@ keywords: [Evidence Pack, Contract, MPLP, Validation Lab, Manifest]
 >
 > This document is informative only.
 
-> **SSOT**: [`Validation_Lab/governance/contracts/`](https://github.com/Coregentis/MPLP-Validation-Lab/tree/main/governance/contracts)  
-> This page is a Reference projection. Authority resides in the Validation Lab repository.
+> [!NOTE] Verified Source Model
+> This page is a Documentation-surface first projection of the current public contract model verified for Validation Lab:
+>
+> - public contract surface authority: [`Validation_Lab/app/policies/contract/page.tsx`](https://github.com/Coregentis/MPLP-Protocol/blob/main/Validation_Lab/app/policies/contract/page.tsx)
+> - supporting contract provenance: [`Validation_Lab/governance/contracts/`](https://github.com/Coregentis/MPLP-Protocol/tree/main/Validation_Lab/governance/contracts)
+> - supporting coverage provenance: [`Validation_Lab/governance/COVERAGE_GOVERNANCE_ADDENDUM.md`](https://github.com/Coregentis/MPLP-Protocol/blob/main/Validation_Lab/governance/COVERAGE_GOVERNANCE_ADDENDUM.md)
+>
+> This docs page does not replace the Lab public contract surface. It summarizes that verified source model.
+
+## Current Public Contract Model
+
+The current Validation Lab contract story is **not** a single markdown-file projection.
+It has two layers:
+
+| Layer | Verified Asset | Role |
+|:---|:---|:---|
+| Public contract authority | `Validation_Lab/app/policies/contract/page.tsx` | Current public contract surface for `/policies/contract` |
+| Supporting contract provenance | `Validation_Lab/governance/contracts/*.md` plus coverage addendum | Supporting governance references and provenance |
+
+That means this docs page should be read as a **reference projection of the current contract model**, not as the contract authority surface itself.
 
 ## What is an Evidence Pack?
 
-An **Evidence Pack** is the input to the Validation Lab's adjudication engine. It contains all artifacts, timeline events, and metadata required for the Lab to evaluate your implementation against Lifecycle Guarantees.
+An **evidence pack** is the input to the Validation Lab adjudication model.
+It contains the evidence artifacts, timeline material, and integrity data that a ruleset evaluates.
 
 :::warning No Execution Hosting
-The Lab does not run your code or accept uploads for execution. You generate evidence packs **locally** in your own environment, then the Lab evaluates the pack against versioned rulesets.
+Validation Lab does not run your code or accept uploads for execution.
+Evidence packs are generated in your own environment and then evaluated against versioned rulesets.
 :::
 
-## Pack Structure
+## Current Contract Components
 
-A valid evidence pack typically includes:
+The current supporting contract provenance includes:
+
+| Contract Asset | Current Role |
+|:---|:---|
+| `evidence-pack-contract-v1.0.md` | Core evidence-pack contract |
+| `evidence-pack-contract-v1.1.md` | Additive substrate metadata addendum |
+| `admission-criteria-v1.0.md` | Admission criteria before adjudication |
+| `ruleset-contract-v1.0.md` | Ruleset structure and compatibility model |
+| `pointer-contract-v1.0.md` | Evidence pointer structure for determinations |
+
+## Current Version Model
+
+The current contract and compatibility story is:
+
+| Domain | Current Verified Expression | Where It Comes From |
+|:---|:---|:---|
+| Evidence pack contract core | `1.0` | `evidence-pack-contract-v1.0.md` |
+| Additive substrate metadata addendum | `1.1` | `evidence-pack-contract-v1.1.md` |
+| Ruleset-declared contract compatibility | `evidence_pack_contract: 1.0` | `Validation_Lab/data/rulesets/*/manifest.yaml` |
+| Pack version compatibility range | `min_pack_version: 1.0`, `max_pack_version: 1.x` | `Validation_Lab/data/rulesets/*/manifest.yaml` |
+
+:::warning Legacy Label Note
+Older Lab materials may still mention `pack-v0.x` labels.
+For the current verified contract story, this page follows the contract and compatibility fields now declared in the supporting contract assets and current ruleset manifests.
+:::
+
+## Evidence-Pack Structure
+
+The core evidence-pack contract still centers on the same high-level input groups:
 
 | Component | Purpose |
 |:---|:---|
-| `manifest.json` | Pack metadata, version, and integrity checksums |
-| `artifacts/` | Context, Plan, Trace, and other module outputs |
-| `timeline/` | Event logs (e.g., `events.ndjson`) |
-| `snapshots/` | State snapshots for diff-based evaluation |
-| `integrity/` | Checksums and hash files |
+| `manifest.json` | Pack metadata, compatibility declarations, and integrity anchors |
+| `artifacts/` | Module outputs and other evidence artifacts |
+| `timeline/` | Event sequence material such as `events.ndjson` |
+| `snapshots/` | Optional state snapshots and diffs |
+| `integrity/` | Checksums and pack-level integrity files |
 
-:::info Non-Normative Note
-The exact structure and required fields depend on the **pack format version** (e.g., `pack-v0.2`, `pack-v0.4`). See the [SSOT contract documents](https://github.com/Coregentis/MPLP-Validation-Lab/tree/main/governance/contracts) for authoritative field definitions.
-:::
+For exact required fields and compatibility details, use the supporting contract assets listed above and the current public contract surface.
 
-## Pack Versioning
+## Export Contract Is Related, But Separate
 
-Evidence packs use the `pack-v*` prefix for format versioning:
+`export/curated-runs.json` belongs to the Lab **export contract surface**.
+It is related to evidence-pack adjudication, but it is **not itself the evidence-pack input contract**.
 
-| Version | Description |
-|:---|:---|
-| `pack-v0.2~v0.4` | Current active formats |
+So treat these as separate layers:
 
-Each ruleset declares which pack versions it is compatible with.
+- **Evidence-pack input contract**: what a producer must generate for adjudication
+- **Export contract surface**: what the Lab publishes outward for consumers after curation / adjudication
 
-## Portability & Recheck
+That separation matters because earlier docs drift mixed the input-pack story with the outward export surface.
 
-Evidence packs are designed to be:
+## How to Use This Page
 
-- **Portable** — Can be exported and reviewed outside the Lab
-- **Recheckable** — Same pack re-evaluated yields same verdict
-- **Auditable** — All evidence pointers are resolvable
+Use this page as a Documentation reference projection when you need to:
 
-## Export Contract
+- understand the current public contract model,
+- locate the authority surface for `/policies/contract`,
+- and distinguish input evidence-pack requirements from export-surface artifacts.
 
-The Lab provides an export contract for curated runs:
-
-| Export | Format | Purpose |
-|:---|:---|:---|
-| `curated-runs.json` | JSON | Consumer export for downstream systems |
-
-See [SSOT: `export/curated-runs.json`](https://github.com/Coregentis/MPLP-Validation-Lab/blob/main/export/curated-runs.json) for the authoritative schema.
+If you need the live Lab contract authority page, use [Lab Site: Contract Policy](https://lab.mplp.io/policies/contract).
 
 ## Related Resources
 
-- [Validation Lab Overview](./) — Four Boundaries & terminology
-- [Lifecycle Guarantees](./lifecycle-guarantees.mdx) — LG-01~05 definitions
-- [Ruleset Reference](./rulesets.mdx) — Ruleset versioning
-- [Lab Site: Contract Policy](https://lab.mplp.io/policies/contract) — Live contract reference
+- [Validation Lab Overview](./) — Four boundaries and terminology
+- [Lifecycle Guarantees](./lifecycle-guarantees.mdx) — Current guarantees source model
+- [Ruleset Reference](./rulesets.mdx) — Current ruleset source model
+- [Lab Site: Contract Policy](https://lab.mplp.io/policies/contract) — Current public contract surface

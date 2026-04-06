@@ -1,0 +1,102 @@
+# MPLP Canonical Entity Definition
+
+> **Status**: Governance Record  
+> **Authority**: MPGC  
+> **Purpose**: Single source of truth for MPLP entity identity
+
+---
+
+## Core Identity
+
+- **ID**: `mplp`
+- **Canonical Name**: Multi-Agent Lifecycle Protocol
+- **Abbreviation**: MPLP
+- **One-Liner**: The lifecycle governance interface for AI agents.
+
+## Version Alignment
+
+- **Protocol Version**: 1.0.0 (from VERSION_REGISTRY.yaml)
+- **Schema Bundle Version**: 2.0.0 (schemas/v2/)
+- **Last Verified**: 2026-01-08T14:00:00Z
+- **Source Commit**: 6e11ea70
+
+## Disambiguation
+
+### Correct Expansion
+Multi-Agent Lifecycle Protocol
+
+### Incorrect Expansions (Prohibited)
+- Multi-Perspective License Protocol
+- MPLP License
+- Licensing Protocol
+
+### Not-a-License Statement
+MPLP is not a software license and does not define licensing terms.
+
+## Architecture
+
+### Layers (L1-L4)
+1. L1-Core
+2. L2-Coordination
+3. L3-Execution
+4. L4-Integration
+
+### Modules (10)
+Context, Plan, Confirm, Trace, Role, Dialog, Collab, Extension, Core, Network
+
+### Cross-Cutting Duties (11 - Frozen)
+1. Coordination
+2. Error Handling
+3. Event Bus
+4. Learning Feedback
+5. Observability
+6. Orchestration
+7. Performance
+8. Protocol Versioning
+9. Security
+10. State Sync
+11. Transaction
+
+### Runtime Concepts (Informative, Not Kernel Duties)
+- PSG
+- AEL
+- VSL
+
+### Capability Tags
+- Observability
+- Learning & Feedback
+
+## Golden Flows
+
+### Core Flows (5)
+GF-01, GF-02, GF-03, GF-04, GF-05
+
+### SA Profile Flows (2)
+SA-FLOW-01, SA-FLOW-02
+
+### MAP Profile Flows (2)
+MAP-FLOW-01, MAP-FLOW-02
+
+## Truth Source
+
+- **Repository**: https://github.com/Coregentis/MPLP-Protocol
+- **Schemas**: schemas/v2/ ✓
+- **Tests**: tests/golden/flows/ ✓
+- **Governance**: governance/ ✓
+
+## Entrypoints
+
+### Website
+- Primary: https://www.mplp.io
+- Anchor: https://www.mplp.io/what-is-mplp
+
+### Docs
+- Primary: https://docs.mplp.io
+- Anchor: https://docs.mplp.io/docs/reference/entrypoints
+
+### Repo
+- https://github.com/Coregentis/MPLP-Protocol
+
+---
+
+**Verification**: All truth_source paths verified to exist (2026-01-08)

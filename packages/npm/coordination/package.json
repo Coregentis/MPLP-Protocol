@@ -1,9 +1,9 @@
 {
   "name": "@mplp/coordination",
   "version": "1.0.6",
-  "description": "L2 Coordination & Governance contracts for MPLP Protocol v1.0.0 (Multi-Agent Lifecycle Protocol).",
+  "description": "Derived coordination helper package for MPLP v1.0.0. Exposes convenience coordination and governance contracts over protocol-aligned types.",
   "license": "Apache-2.0",
-  "author": "Bangshi Beijing Network Technology Limited Company",
+  "author": "Coregentis AI",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -11,7 +11,7 @@
     "README.md",
     "LICENSE.txt"
   ],
-  "homepage": "https://www.mplp.io",
+  "homepage": "https://www.mplp.io/what-is-mplp",
   "repository": {
     "type": "git",
     "url": "https://github.com/Coregentis/MPLP-Protocol.git"
@@ -24,10 +24,9 @@
     "multi-agent",
     "lifecycle",
     "protocol",
-    "agent-os",
     "coordination",
     "governance",
-    "agent-os-protocol"
+    "ai-agent-lifecycle"
   ],
   "publishConfig": {
     "access": "public"
@@ -42,7 +41,12 @@
     "protocolVersion": "1.0.0",
     "frozen": true,
     "governance": "MPGC",
-    "layer": "L2"
+    "layer": "L2",
+    "packageClass": "PUBLIC",
+    "publishSurface": true,
+    "publishScope": "public-npm",
+    "packageRole": "coordination-helper",
+    "contractMode": "derived-protocol-helper"
   },
   "exports": {
     ".": {

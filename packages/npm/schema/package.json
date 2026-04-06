@@ -1,7 +1,7 @@
 {
   "name": "@mplp/schema",
-  "version": "1.0.5",
-  "description": "MPLP Protocol v1.0 JSON Schemas - All protocol schema definitions",
+  "version": "1.0.6",
+  "description": "Direct schema/data mirror package for MPLP v1.0.0 JSON Schema definitions, validator helpers, and canonical Kernel Duty baseline.",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
@@ -15,8 +15,7 @@
     "validation",
     "multi-agent",
     "lifecycle",
-    "agent-os",
-    "agent-os-protocol"
+    "ai-agent-lifecycle"
   ],
   "publishConfig": {
     "access": "public"
@@ -34,14 +33,20 @@
   "devDependencies": {
     "typescript": "^5.0.0"
   },
-  "author": "Bangshi Beijing Network Technology Limited Company",
+  "author": "Coregentis AI",
   "copyright": "© 2026 Bangshi Beijing Network Technology Limited Company",
   "mplp": {
     "protocolVersion": "1.0.0",
     "frozen": true,
-    "governance": "MPGC"
+    "governance": "MPGC",
+    "packageClass": "PUBLIC",
+    "publishSurface": true,
+    "publishScope": "public-npm",
+    "packageRole": "schema-data-mirror",
+    "contractMode": "direct-schema-data-mirror",
+    "kernelDutyBaselineCarried": true
   },
-  "homepage": "https://www.mplp.io",
+  "homepage": "https://www.mplp.io/what-is-mplp",
   "bugs": {
     "url": "https://github.com/Coregentis/MPLP-Protocol/issues"
   },
@@ -50,6 +55,11 @@
       "require": "./dist/index.js",
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
+    },
+    "./kernel-duties": {
+      "require": "./dist/kernel-duties.js",
+      "import": "./dist/kernel-duties.js",
+      "types": "./dist/kernel-duties.d.ts"
     }
   },
   "sideEffects": false,

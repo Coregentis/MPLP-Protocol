@@ -1,9 +1,10 @@
 {
   "name": "@mplp/sdk-ts",
-  "version": "1.0.6",
-  "description": "TypeScript SDK and reference runtime for the MPLP Protocol v1.0.0 (Multi-Agent Lifecycle Protocol).",
+  "private": true,
+  "version": "1.0.7",
+  "description": "Build-source workspace mirror for the published @mplp/sdk-ts facade package, including Kernel Duty exports (not a publish target).",
   "license": "Apache-2.0",
-  "author": "Bangshi Beijing Network Technology Limited Company",
+  "author": "Coregentis AI",
   "repository": {
     "type": "git",
     "url": "https://github.com/Coregentis/MPLP-Protocol.git"
@@ -18,8 +19,10 @@
     "protocol",
     "ai agents",
     "lifecycle",
-    "runtime",
     "typescript",
+    "sdk",
+    "facade",
+    "source-mirror",
     "agent-os",
     "agent-os-protocol"
   ],
@@ -36,13 +39,23 @@
     "protocolVersion": "1.0.0",
     "frozen": true,
     "governance": "MPGC",
-    "layer": "Tools"
+    "layer": "Build-Source",
+    "packageClass": "SOURCE-MIRROR",
+    "sourcePackage": true,
+    "publishBlocked": true,
+    "publishScope": "source-workspace",
+    "targetNpmPackage": "@mplp/sdk-ts",
+    "kernelDutyBaselineCarried": true
   },
   "scripts": {
     "build": "tsc",
     "test": "echo 'No tests yet'"
   },
   "dependencies": {
+    "@mplp/core": "^1.0.6",
+    "@mplp/coordination": "^1.0.6",
+    "@mplp/runtime-minimal": "^1.0.5",
+    "@mplp/schema": "^1.0.6",
     "ajv": "^8.12.0",
     "ajv-formats": "^2.1.1",
     "chalk": "^4.1.2",
@@ -62,6 +75,11 @@
       "require": "./dist/index.js",
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
+    },
+    "./kernel-duties": {
+      "require": "./dist/kernel-duties.js",
+      "import": "./dist/kernel-duties.js",
+      "types": "./dist/kernel-duties.d.ts"
     }
   },
   "sideEffects": false,

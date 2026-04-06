@@ -11,14 +11,13 @@
  */
 
 import { describe, test, expect } from 'vitest';
-import { MplpRuntimeClient } from '../../packages/sdk-ts/src';
+import { MplpRuntimeClient } from '../../packages/npm/sdk-ts/dist';
 import {
     validateContext,
     validatePlan,
     validateConfirm,
     validateTrace
-} from '../../packages/core-protocol/src/validators';
-import { Context, Plan, Confirm, Trace } from '../../packages/core-protocol/src/types';
+} from '../../packages/npm/core/dist/validators';
 
 describe('H6.1: TS Runtime → TS SDK Validation', () => {
     test('Happy Path: Single Agent Flow output should pass SDK validators', async () => {
@@ -47,10 +46,10 @@ describe('H6.1: TS Runtime → TS SDK Validation', () => {
 
         // Cast output to expected types
         const output = result.output as {
-            context: Context;
-            plan: Plan;
-            confirm: Confirm;
-            trace: Trace;
+            context: Record<string, unknown>;
+            plan: Record<string, unknown>;
+            confirm: Record<string, unknown>;
+            trace: Record<string, unknown>;
         };
 
         const { context, plan, confirm, trace } = output;

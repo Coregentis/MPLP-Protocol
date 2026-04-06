@@ -139,6 +139,4 @@ Recommended CI grep gates to prevent regression:
 
 ## Appendix: Related Artifacts
 
-- [Implementation Plan](file:///Users/jasonwang/.gemini/antigravity/brain/a77bee53-f0f7-42aa-80b1-b0cfd184bb18/implementation_plan.md)
-- [Task Checklist](file:///Users/jasonwang/.gemini/antigravity/brain/a77bee53-f0f7-42aa-80b1-b0cfd184bb18/task.md)
-- [Walkthrough](file:///Users/jasonwang/.gemini/antigravity/brain/a77bee53-f0f7-42aa-80b1-b0cfd184bb18/walkthrough.md)
+- Implementation plan, task checklist, and walkthrough were maintained as local working notes during execution and are not retained as repository artifacts.

@@ -27,21 +27,24 @@ Update your imports:
 
 The API is fully compatible - only the package name has changed.
 
+## Contract Mode
+
+This package remains a **deprecated public compatibility alias**.
+It is not a direct mirror of protocol objects and should not be treated as the preferred public contract surface.
+
 ---
 
 ## Why the rename?
 
-Per MPLP governance terminology standard, "**conformance**" is the correct term for protocol alignment verification. "Compliance" was used historically but has been deprecated in favor of the canonical terminology.
-
-See: [TERMINOLOGY_STANDARD_v1.0.md](https://docs.mplp.io/governance/terminology-standard)
+Per the current MPLP terminology baseline, "**conformance**" is the preferred external term for this package family. "Compliance" remains only as a legacy alias.
 
 ---
 
-## Protocol Documentation (Authoritative)
+## Protocol Documentation
 
-*   **Homepage:** [https://www.mplp.io](https://www.mplp.io)
-*   **Specification & Docs:** [https://docs.mplp.io](https://docs.mplp.io)
-*   **Source Repository:** [https://github.com/Coregentis/MPLP-Protocol](https://github.com/Coregentis/MPLP-Protocol)
+*   **Homepage:** [https://www.mplp.io/what-is-mplp](https://www.mplp.io/what-is-mplp) — discovery and positioning only
+*   **Docs Entry Surface:** [https://docs.mplp.io/docs/reference/entrypoints](https://docs.mplp.io/docs/reference/entrypoints) — authoritative documentation entry surface
+*   **Source Repository:** [https://github.com/Coregentis/MPLP-Protocol](https://github.com/Coregentis/MPLP-Protocol) — repository truth source
 
 ---
 

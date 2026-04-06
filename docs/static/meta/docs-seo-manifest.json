@@ -4,10 +4,14 @@
   "protocol_version": "1.0.0",
   "schema_bundle_version": "2.0.0",
   "tripod": {
-    "website_anchor": "https://www.mplp.io/what-is-mplp",
+    "website_anchor": "https://www.mplp.io/definition",
     "docs_anchor": "https://docs.mplp.io/docs/reference/entrypoints",
     "repo_anchor": "https://github.com/Coregentis/MPLP-Protocol"
   },
+  "boundaries": [
+    "BOUNDARY-NON-CERTIFICATION",
+    "BOUNDARY-VENDOR-NEUTRAL"
+  ],
   "total_pages": 180,
   "pages": [
     {

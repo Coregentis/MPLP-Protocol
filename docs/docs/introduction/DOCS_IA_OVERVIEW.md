@@ -4,70 +4,63 @@ doc_type: reference
 normativity: informative
 status: active
 authority: Documentation Governance
-description: "This page defines how to read and navigate the MPLP documentation site, with recommended reading paths for different audiences."
+description: "Informative overview of the current MPLP docs reading paths and section roles."
 canonical: /docs/introduction/DOCS_IA_OVERVIEW
 title: Docs Information Architecture Overview
 ---
 
-## Path A — Specification Path (Implementers)
+# Docs Information Architecture Overview
 
-**Audience**: Protocol implementers, SDK authors, runtime builders
-**Goal**: Correct, complete implementation of MPLP
+This page is a **structural helper** only.
 
-**Recommended Order**
-1. [Architecture](/docs/specification/architecture) — L1–L4 layer model
-2. [Core Modules](/docs/specification/modules/core-module) — 10 module specifications
-3. [Schemas](/docs/specification/architecture) — JSON Schema contracts
-4. Cross-Cutting Duties
-5. [Golden Flows](/docs/evaluation/golden-flows) — validation scenarios
+It does not define protocol semantics, public-surface authority, or a new docs
+governance model.
 
-**Normative Weight**: High
-**Change Sensitivity**: Protocol-level
+## Path A — Specification Path
 
-## Path B — Governance Path (Contributors & Maintainers)
-
-**Audience**: Project contributors, documentation maintainers, governance committee members
-**Goal**: Understand contribution rules, governance policies, and quality standards
+**Audience**: protocol implementers, SDK/package maintainers, runtime builders
 
 **Recommended Order**
-1. [Author Rules](/docs/introduction/DOCS_AUTHOR_RULES) — Documentation contribution guidelines
-2. Alignment Index (Coming Soon) — Docs-to-code mapping
-3. [Protocol Governance](/docs/evaluation/governance/protocol-governance) — MPGC policies
-4. [Standards Mapping](/docs/evaluation/standards/positioning) — External standard alignment
+1. [Entry Points](/docs/reference/entrypoints)
+2. [Specification](/docs/specification)
+3. [Modules](/docs/specification/modules)
+4. [Profiles](/docs/specification/profiles)
+5. [Observability](/docs/specification/observability)
 
-**Normative Weight**: Mixed
-**Change Sensitivity**: Governance-level
+## Path B — Evaluation Path
 
-## Path C — Builder Path (SDK & Runtime Users)
-
-**Audience**: Developers using MPLP libraries and runtimes
-**Goal**: Build systems on top of MPLP
+**Audience**: evaluators, auditors, governance reviewers
 
 **Recommended Order**
-1. [SDK Overview](/docs/guides/sdk/ts-sdk-guide) — Package structure
-2. [Runtime Concepts](/docs/guides/runtime/runtime-glue-overview) — AEL / VSL / PSG
-3. [Examples & Recipes](/docs/guides/examples/single-agent-flow) — Practical usage
-4. [Golden Flows](/docs/evaluation/golden-flows) — expected behavior
+1. [Entry Points](/docs/reference/entrypoints)
+2. [Golden Flows](/docs/evaluation/golden-flows)
+3. [Validation Lab Overview](/docs/evaluation/validation-lab)
+4. [Conformance](/docs/evaluation/conformance)
+5. [Evaluation Guide](/docs/guides/evaluation-guide)
 
-**Normative Weight**: Mixed
-**Change Sensitivity**: Implementation-level
+## Path C — Builder Path
 
-## Sidebar Organization
+**Audience**: users of published SDK and runtime helper surfaces
 
-| Section | Content Type | Path |
-|:--------|:-------------|:-----|
-| Reference | Overview, Glossary, API | `/docs/index` |
-| Architecture | L1–L4 specification | `/docs/architecture` |
-| Modules | 10 module specs | `/docs/modules` |
-| Profiles | SA / MAP | `/docs/profiles` |
-| Observability | Trace, Drift | `/docs/observability` |
-| Golden Flows | Validation scenarios | `/docs/evaluation/golden-flows/index` |
-| Runtime | AEL / VSL / PSG | `/docs/runtime` |
-| SDK | Package documentation | `/docs/sdk` |
-| Examples | Practical recipes | `/docs/examples` |
-| Governance | MPGC, policies | `/docs/governance` |
-| Standards | ISO, NIST, W3C mapping | `/docs/standards` |
+**Recommended Order**
+1. [Entry Points](/docs/reference/entrypoints)
+2. [SDK Guides](/docs/guides/sdk)
+3. [TypeScript SDK Guide](/docs/guides/sdk/ts-sdk-guide)
+4. [Python SDK Guide](/docs/guides/sdk/py-sdk-guide)
+5. [Runtime Guides](/docs/guides/runtime)
 
----
+## Section Roles
 
-This IA is **structural only** and does not modify any existing specification.
+| Section | Role |
+|:---|:---|
+| `/docs/specification` | Primary specification/reference projection |
+| `/docs/evaluation` | Secondary evaluation/reference helpers |
+| `/docs/guides` | Informative implementation guidance |
+| `/docs/meta` | FAQ, roadmap, and release/meta helpers |
+| `/docs/reference` | Entry and route helper surfaces |
+
+## Boundary
+
+Use this page to orient reading order only.
+For authority split and current public-surface routing, always defer to
+[Entry Points](/docs/reference/entrypoints).

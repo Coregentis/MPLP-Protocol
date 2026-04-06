@@ -76,7 +76,7 @@ This document serves as the **implementation guide** for MPLP runtime developers
 
 **Definition**: The runtime component that abstracts **action invocation** (LLM calls, tool execution, agent handoffs). Acts as the "CPU" of the MPLP runtime.
 
-**Reference Interface** (`packages/sources/sdk-ts/src/runtime-minimal/index.ts` lines 29-31):
+**Reference Interface** (`packages/npm/runtime-minimal/dist/ael/index.d.ts`):
 ```typescript
 export interface ActionExecutionLayer {
   execute(action: any): Promise<any>;
@@ -103,7 +103,7 @@ export class InMemoryAEL implements ActionExecutionLayer {
 
 **Definition**: The runtime component that abstracts **state persistence**. Acts as the "Memory" of the MPLP runtime.
 
-**Reference Interface** (`packages/sources/sdk-ts/src/runtime-minimal/index.ts` lines 24-27):
+**Reference Interface** (`packages/npm/runtime-minimal/dist/vsl/index.d.ts`):
 ```typescript
 export interface ValueStateLayer {
   get(key: string): Promise<any>;

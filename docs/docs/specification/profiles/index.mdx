@@ -1,7 +1,7 @@
 ---
 sidebar_position: 0
 title: "Profiles Overview"
-description: "Overview of MPLP agent profiles: Single-Agent (SA) and Multi-Agent Protocol (MAP). This page is informative only."
+description: "Overview of MPLP profile baselines and the canonical reading order for SA/MAP reference surfaces."
 keywords: [MPLP Profiles, SA Profile, MAP Profile, Single-Agent, Multi-Agent]
 doc_type: reference
 normativity: informative
@@ -22,34 +22,46 @@ entry_surface: documentation
 
 ## What This Section Contains
 
-MPLP defines **agent profiles** that specify capability requirements and event contracts for different agent complexity levels.
+MPLP defines **profile baselines** that constrain how protocol object families
+are used in single-agent and multi-agent settings.
 
 | Profile | Schema File | Description |
 |---------|-------------|-------------|
-| [Single-Agent (SA)](./sa-profile.md) | `sa-profile.schema.json` | Standalone agent lifecycle |
-| [Multi-Agent Protocol (MAP)](./map-profile.md) | `map-profile.schema.json` | Coordinated multi-agent systems |
-| [Multi-Agent Governance](./multi-agent-governance-profile.md) | — | Governance patterns for MAP |
+| [Single-Agent (SA)](./sa-profile.md) | `sa-profile.yaml` | Base profile baseline |
+| [Multi-Agent Protocol (MAP)](./map-profile.md) | `map-profile.yaml` | Multi-agent extension baseline |
 
-## Event Contracts
+## Profile-Linked Event References
 
-Each profile specifies required events:
+Profile pages are linked to profile-specific event surfaces:
 
 - [SA Events](./sa-events.md) — Single-Agent event taxonomy
 - [MAP Events](./map-events.md) — Multi-Agent event taxonomy
 
+## Secondary Governance-Oriented Reference
+
+- [Multi-Agent Governance](./multi-agent-governance-profile.md)
+  Read this after SA and MAP profile baselines. It is not the first place to
+  establish profile identity.
+
 ## Reading Path
 
-1. **Start with**: [SA Profile](./sa-profile.md) — understand single-agent lifecycle
-2. **Then**: [MAP Profile](./map-profile.md) — multi-agent coordination
-3. **Cross-reference**: [Module-Event Matrix](/docs/specification/observability/module-event-matrix)
+1. **Start with**: [SA Profile](./sa-profile.md)
+   Establish the base profile first.
+2. **Then**: [MAP Profile](./map-profile.md)
+   Read MAP as an extension of SA.
+3. **Then**: [SA Events](./sa-events.md) and [MAP Events](./map-events.md)
+   Read profile-linked event surfaces after the base profile pages.
+4. **Last**: [Multi-Agent Governance](./multi-agent-governance-profile.md)
+   Use only after the base profile surfaces are clear.
 
 ## Related Resources
 
-- [Architecture Overview](/docs/specification/architecture) — L1-L4 layer model
-- [Observability Overview](/docs/specification/observability) — Event taxonomy
+- [Modules Overview](/docs/specification/modules) — protocol object families
+- [Observability Overview](/docs/specification/observability) — event families
+  and trace references
 - [Repository Schemas](https://github.com/Coregentis/MPLP-Protocol/tree/main/schemas/v2/profiles) — SSOT
-- [Validation Lab](https://lab.mplp.io) — Evidence adjudication (external)
 
 ---
 
-> *Evaluation guidance here is reference-only. Live adjudication data and coverage metrics remain in the [Validation Lab](https://lab.mplp.io).*
+> *Use profile baselines before profile-linked event references or runtime
+> examples.*

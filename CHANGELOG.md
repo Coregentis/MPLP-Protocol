@@ -1,4 +1,35 @@
-﻿## [four-entry-seal-v1.2.2] — 2026-01-21
+﻿## [sdk-kernel-duty-propagation-2026-04-01] — 2026-04-01
+
+### 📦 SDK Kernel Duty Propagation Release
+
+#### Published
+- **npm**
+  - `@mplp/schema@1.0.6`
+  - `@mplp/sdk-ts@1.0.7`
+- **PyPI**
+  - `mplp-sdk@1.0.5`
+
+#### Functional Outcome
+- Introduced a canonical machine-readable 11-duty baseline at `schemas/v2/taxonomy/kernel-duties.yaml`
+- Added `KERNEL_DUTIES`, `KERNEL_DUTY_IDS`, `KERNEL_DUTY_NAMES`, and `KERNEL_DUTY_COUNT` to the published package surfaces
+- `@mplp/schema` now carries the baseline directly
+- `@mplp/sdk-ts` now re-exports the baseline
+- `mplp-sdk` now exposes the same 11-duty baseline as a Python helper surface
+
+#### Verification
+- `npm run verify:kernel-duty-propagation` ✅
+- `npm run verify:publish-scope` ✅
+- `npm run gate:publish-set` ✅
+- npm tarball install smoke (`@mplp/schema`, `@mplp/sdk-ts`) ✅
+- PyPI wheel install smoke (`mplp-sdk`) ✅
+
+#### Notes
+- Protocol version remains `1.0.0` (Frozen)
+- This release adds package-level access to an existing protocol baseline; it does not alter protocol semantics
+
+---
+
+## [four-entry-seal-v1.2.2] — 2026-01-21
 
 ### 🔒 Four-Entry Ecosystem Remediation SEALED
 
@@ -239,7 +270,7 @@
 - **Schemas**: Migrated and standardized v2 schemas to `schemas/v2`.
 - **Core Protocol**: Implemented `@mplp/core-protocol` with generated types and validators.
 - **Coordination**: Implemented `@mplp/coordination` with flow contracts and event definitions.
-- **Reference Runtime**: Implemented `@mplp/reference-runtime` with:
+- **Reference Runtime**: Implemented the runtime package line later published as `@mplp/runtime-minimal` (historical working name: `@mplp/reference-runtime`) with:
   - `RuntimeContext` and `RuntimeResult` types.
   - `InMemoryAEL` (Action Execution Layer) and `InMemoryVSL` (Value State Layer).
   - `runSingleAgentFlow` orchestrator.

@@ -1,13 +1,14 @@
 # Python Basic Flow Example
 
-This example demonstrates basic **MPLP (Multi-Agent Lifecycle Protocol)** usage with the Python SDK.
+This example demonstrates the **currently published Python package surface** for MPLP.
 
-It shows how to use the Builder API to construct valid protocol objects programmatically.
+At the moment, `mplp-sdk` is a placeholder package that exposes version and protocol
+binding metadata, not a full Python SDK builder/runtime API.
 
 ## Setup
 
 ```bash
-cd V1.0-release/packages/sdk-py
+cd packages/sources/sdk-py
 python -m venv .venv
 # Activate virtual environment
 # Windows:
@@ -15,65 +16,35 @@ python -m venv .venv
 # Linux/Mac:
 source .venv/bin/activate
 
-pip install -e .[dev]
+pip install -e .
 ```
 
 ## Running the Example
 
 ```python
-from mplp_sdk.builders import build_context, build_plan, build_confirm, build_trace
-from mplp_sdk.validation import validate_trace
+import mplp
 
-# Step 1: Create Context
-ctx = build_context(
-    title="My Project",
-    root={"domain": "my-domain", "environment": "development"}
-)
-print(f"Created Context: {ctx.context_id}")
-
-# Step 2: Create Plan
-plan = build_plan(
-    ctx,
-    title="Implementation Plan",
-    objective="Build the feature",
-    steps=[
-        {"description": "Design the architecture"},
-        {"description": "Implement core logic"},
-        {"description": "Write tests"}
-    ]
-)
-print(f"Created Plan: {plan.plan_id} with {len(plan.steps)} steps")
-
-# Step 3: Get Confirmation
-confirm = build_confirm(plan, status="approved", reviewer="lead-dev")
-print(f"Confirmation status: {confirm.status}")
-
-# Step 4: Create Trace
-trace = build_trace(ctx, plan, confirm)
-print(f"Created Trace: {trace.trace_id}")
-
-# Step 5: Validate
-ok, errors = validate_trace(trace)
-if ok:
-    print("✓ All validations passed!")
-else:
-    print(f"✗ Validation errors: {errors}")
+print("Package version:", mplp.__version__)
+print("Protocol binding:", mplp.MPLP_PROTOCOL_VERSION)
 ```
 
 ## Testing
 
 ```bash
-cd V1.0-release
-# Set PYTHONPATH to include the SDK source
+cd <repo-root>
+# Set PYTHONPATH to include the source-side mirror package
 # Windows (PowerShell):
-$env:PYTHONPATH="packages/sdk-py/src"
+$env:PYTHONPATH="packages/sources/sdk-py/src"
 # Linux/Mac:
-export PYTHONPATH="packages/sdk-py/src"
+export PYTHONPATH="packages/sources/sdk-py/src"
 
-pytest packages/sdk-py/tests
+python3 -c "import mplp; print(mplp.__version__)"
 ```
 
 ## Next Steps
+
+- For the currently published surface, use `import mplp` and verify package/version binding.
+- A richer Python SDK/runtime surface would require a future package release.
 
 
 ---

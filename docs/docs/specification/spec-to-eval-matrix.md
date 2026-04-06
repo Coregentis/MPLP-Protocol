@@ -10,94 +10,81 @@ doc_id: "DOC-SEMANTIC-SPEC-EVAL-MATRIX-001"
 # UI metadata (non-normative; excluded from protocol semantics)
 title: Specification to Evaluation Matrix
 sidebar_label: Spec-Eval Matrix
-description: "MPLP specification: Specification to Evaluation Matrix. Normative protocol requirements."
+description: "Cross-reference index between repaired specification pages and related evaluation/reference surfaces."
 authority: Documentation Governance
 ---
 
 # Specification to Evaluation Matrix
 
-**Purpose**: Resolves whether Specification and Evaluation documents describe the same concepts.
+This page is a **cross-reference index** between repaired specification surfaces
+and related evaluation/reference surfaces. It does not define canonical
+evaluation mappings, conformance doctrine, or adjudication coverage.
 
----
+## Scope
 
-## 1. Module → Conformance Mapping
+This page points readers from specification topics toward related evaluation
+reading.
 
-| Module (Specification) | Conformance Doc (Evaluation) | Evaluation Dimension |
+It does not certify:
+
+- which evaluation dimensions are canonically bound to each module
+- which flows fully cover which protocol surfaces
+- which Validation Lab outputs settle those relationships
+
+## 1. Module-Oriented Cross-References
+
+| Specification Surface | Related Evaluation Reading | Boundary |
 |:---|:---|:---|
-| [context-module](/docs/specification/modules/context-module) CA-01 | [conformance-model](/docs/evaluation/conformance/conformance-model) | Schema Validity |
-| [plan-module](/docs/specification/modules/plan-module) CA-02 | [conformance-model](/docs/evaluation/conformance/conformance-model) | Lifecycle Completeness |
-| [trace-module](/docs/specification/modules/trace-module) CA-03 | [evaluation-dimensions](/docs/evaluation/conformance/evaluation-dimensions) | Trace Integrity |
-| [confirm-module](/docs/specification/modules/confirm-module) CA-04 | [evaluation-dimensions](/docs/evaluation/conformance/evaluation-dimensions) | Governance Gating |
-| [collab-module](/docs/specification/modules/collab-module) CA-05 | [evaluation-dimensions](/docs/evaluation/conformance/evaluation-dimensions) | Multi-agent Coordination (Future) |
-| [role-module](/docs/specification/modules/role-module) CA-06 | [conformance-model](/docs/evaluation/conformance/conformance-model) | Schema Validity |
-| [dialog-module](/docs/specification/modules/dialog-module) CA-07 | [conformance-model](/docs/evaluation/conformance/conformance-model) | Schema Validity |
-| [extension-module](/docs/specification/modules/extension-module) CA-08 | [conformance-model](/docs/evaluation/conformance/conformance-model) | Schema Validity |
-| [network-module](/docs/specification/modules/network-module) CA-09 | [conformance-model](/docs/evaluation/conformance/conformance-model) | Schema Validity |
-| Observability Events CA-10 | [evidence-model](/docs/evaluation/conformance/evidence-model) | Evidence Validity |
+| [Context Module](/docs/specification/modules/context-module.md) | [Conformance](/docs/evaluation/conformance) | Related reading only; evaluation pages do not redefine Context semantics |
+| [Plan Module](/docs/specification/modules/plan-module.md) | [Conformance](/docs/evaluation/conformance), [Golden Flows](/docs/evaluation/golden-flows) | Related reading only |
+| [Trace Module](/docs/specification/modules/trace-module.md) | [Conformance](/docs/evaluation/conformance), [Validation Lab](/docs/evaluation/validation-lab) | Related reading only |
+| [Confirm Module](/docs/specification/modules/confirm-module.md) | [Conformance](/docs/evaluation/conformance), [Golden Flows](/docs/evaluation/golden-flows) | Related reading only |
+| [Collab Module](/docs/specification/modules/collab-module.md) | [Golden Flows](/docs/evaluation/golden-flows) | Related reading only |
+| [Role Module](/docs/specification/modules/role-module.md) | [Conformance](/docs/evaluation/conformance) | Related reading only |
+| [Dialog Module](/docs/specification/modules/dialog-module.md) | [Conformance](/docs/evaluation/conformance) | Related reading only |
+| [Extension Module](/docs/specification/modules/extension-module.md) | [Conformance](/docs/evaluation/conformance) | Related reading only |
+| [Network Module](/docs/specification/modules/network-module.md) | [Conformance](/docs/evaluation/conformance) | Related reading only |
+| [Core Module](/docs/specification/modules/core-module.md) | [Evaluation](/docs/evaluation) | Related reading only |
 
----
+## 2. Profile-Oriented Cross-References
 
-## 2. Architecture Layer → Evaluation Mapping
-
-| Layer (Specification) | Golden Flow (Evaluation) | Primary Evidence |
+| Specification Surface | Related Evaluation Reading | Boundary |
 |:---|:---|:---|
-| [L1 Core Protocol](/docs/specification/architecture/l1-core-protocol) AA-01 | All FLOW-01~05 | Schema Validation |
-| [L2 Coordination](/docs/specification/architecture/l2-coordination-governance) AA-02 | [FLOW-01](/docs/evaluation/golden-flows/gf-01), [FLOW-02](/docs/evaluation/golden-flows/gf-02) | Module Lifecycles |
-| [L3 Execution](/docs/specification/architecture/l3-execution-orchestration) AA-03 | [FLOW-03](/docs/evaluation/golden-flows/gf-03), [FLOW-04](/docs/evaluation/golden-flows/gf-04) | Trace Segments |
-| [L4 Integration](/docs/specification/architecture/l4-integration-infra) AA-04 | [FLOW-05](/docs/evaluation/golden-flows/gf-05) | Integration Events |
+| [SA Profile](/docs/specification/profiles/sa-profile.md) | [Golden Flows](/docs/evaluation/golden-flows), [Conformance](/docs/evaluation/conformance) | Related reading only |
+| [MAP Profile](/docs/specification/profiles/map-profile.md) | [Golden Flows](/docs/evaluation/golden-flows), [Validation Lab](/docs/evaluation/validation-lab) | Related reading only |
 
----
+## 3. Observability-Oriented Cross-References
 
-## 3. Profile → Golden Flow Mapping
-
-| Profile (Specification) | Primary Golden Flow | Secondary Golden Flows |
+| Specification Surface | Related Evaluation Reading | Boundary |
 |:---|:---|:---|
-| [SA Profile](/docs/specification/profiles/sa-profile) PA-01 | [FLOW-01: SA Lifecycle](/docs/evaluation/golden-flows/gf-01) | FLOW-03, FLOW-04, FLOW-05 |
-| [MAP Profile](/docs/specification/profiles/map-profile) PA-02 | [FLOW-02: MAP Coordination](/docs/evaluation/golden-flows/gf-02) | FLOW-03, FLOW-05 |
+| [Event Taxonomy](/docs/specification/observability/event-taxonomy.md) | [Conformance](/docs/evaluation/conformance) | Related reading only |
+| [Module Event Matrix](/docs/specification/observability/module-event-matrix.md) | [Golden Flows](/docs/evaluation/golden-flows) | Related reading only |
+| [Runtime Trace Format](/docs/specification/observability/runtime-trace-format.md) | [Validation Lab](/docs/evaluation/validation-lab) | Related reading only |
+
+## 4. How To Read This Matrix
+
+- Start with the repaired specification page first.
+- Use the linked evaluation page only as related downstream reading.
+- If an evaluation or Validation Lab reference page appears to say more than the
+  frozen specification baseline supports, the frozen specification baseline
+  prevails.
+
+## 5. What This Page Does Not Create
+
+This page does not create:
+
+- canonical module-to-dimension mappings
+- canonical profile-to-flow mappings
+- canonical architecture-to-evidence mappings
+- coverage or validation verdicts
+
+## 6. References
+
+- [Specification](/docs/specification)
+- [Evaluation](/docs/evaluation)
+- [Validation Lab Overview](/docs/evaluation/validation-lab)
 
 ---
 
-## 4. Invariants → Evaluation Dimensions Mapping
-
-| Invariants File | Evaluation Dimension | Rule Count |
-|:---|:---|:---:|
-| `sa-invariants.yaml` | Lifecycle Completeness | 9 |
-| `map-invariants.yaml` | Multi-agent Coordination | 9 |
-| `observability-invariants.yaml` | Trace Integrity | 12 |
-| `integration-invariants.yaml` | External Integration | 19 |
-| `learning-invariants.yaml` | Learning Evidence | 12 |
-
-**Total**: 61 invariant rules
-
-*Rule Count reflects the number of invariant entries defined in the corresponding `*-invariants.yaml` files.
-It does not imply runtime execution, validation, or coverage completion. Verification is scoped to Phase E/F.*
-
----
-
-## 5. Answer Matrix
-
-| Question | Specification Source | Evaluation Source |
-|:---|:---|:---|
-| **Who defines Context?** | CA-01 context-module | N/A (defined in Spec) |
-| **Who evaluates Context?** | N/A | conformance-model, evidence-model |
-| **Who adjudicates Context conformance?** | N/A | Validation Lab (Phase F) |
-| **Who defines SA Profile?** | PA-01 sa-profile | N/A |
-| **Who evaluates SA Profile?** | N/A | FLOW-01, conformance-model |
-| **Who defines Governance Gate?** | CA-04 confirm-module | N/A |
-| **Who evaluates Governance Gate?** | N/A | FLOW-05, evaluation-dimensions |
-
----
-
-## 6. Cross-Reference Integrity
-
-| Check | Status | Notes |
-|:---|:---:|:---|
-| All Modules have Evaluation mapping | Mapped | Via conformance-model (pending Phase E/F verification) |
-| All Profiles have Golden Flow mapping | Mapped | SA→FLOW-01, MAP→FLOW-02 (pending Phase E/F verification) |
-| All Layers have Evidence mapping | Mapped | Via Golden Flows (not runtime-validated) |
-| All Invariants have Dimension mapping | Declared | 61 rules → 6 dimensions (not runtime-validated) |
-
----
-
-**Phase**: D-2 (Cross-Directory Semantic Mapping)
-**Coverage**: Mapping declared (subject to Phase E/F verification)
+**Final Boundary**: this page is a cross-reference aid only. It is not a truth
+source for evaluation relationships.

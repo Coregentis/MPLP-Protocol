@@ -3,22 +3,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "dist",
-    "rootDir": "src",
-    "baseUrl": "../..",
-    "paths": {
-      "@mplp/core-protocol": [
-        "packages/core-protocol/src"
-      ],
-      "@mplp/coordination": [
-        "packages/coordination/src"
-      ],
-      "@mplp/reference-runtime": [
-        "packages/reference-runtime/src"
-      ],
-      "@mplp/integration-storage-fs": [
-        "packages/integration/storage-fs/src"
-      ]
-    }
+    "rootDir": "src"
   },
   "include": [
     "src"

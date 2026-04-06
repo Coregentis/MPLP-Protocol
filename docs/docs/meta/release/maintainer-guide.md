@@ -21,7 +21,7 @@ This guide is for maintainers of the MPLP Protocol repository.
 ## 2. Repository Structure
 
 ```
-V1.0-release/
+<repo-root>/
  docs/              # Protocol documentation
  schemas/v2/        # JSON Schema definitions (FROZEN)
  packages/          # SDK implementations

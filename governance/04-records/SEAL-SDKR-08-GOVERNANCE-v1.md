@@ -163,9 +163,9 @@ This freeze record certifies that:
 
 ## 8. References
 
-- [METHOD-SDKR-08](file:///Users/jasonwang/Documents/AI_Dev/V1.0_release/governance/03-distribution/sdk/METHOD-SDKR-08_MULTI_PACKAGE_RELEASE_GOVERNANCE.md)
-- [MPLP Constitution](file:///Users/jasonwang/Documents/AI_Dev/V1.0_release/governance/01-core/MPLP_CONSTITUTION.md)
-- [EXECUTION_ORDER](file:///Users/jasonwang/Documents/AI_Dev/V1.0_release/governance/EXECUTION_ORDER.md)
+- [METHOD-SDKR-08](../03-distribution/sdk/METHOD-SDKR-08_MULTI_PACKAGE_RELEASE_GOVERNANCE.md)
+- [MPLP Entry Model Specification](../01-constitutional/CONST-001_ENTRY_MODEL_SPEC.md)
+- [EXECUTION_ORDER](../EXECUTION_ORDER.md)
 
 ---
 

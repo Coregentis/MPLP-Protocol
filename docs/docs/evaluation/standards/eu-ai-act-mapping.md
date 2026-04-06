@@ -21,14 +21,16 @@ authority: none
 > [!IMPORTANT]
 > **Informative Only**
 > This document is **informative** and **non-normative**.
-> All mappings are illustrative only and do not imply certification, endorsement, or compliance with any external regulation.
+> All mappings are illustrative only. They do not imply certification.
+> They do not imply endorsement.
+> Regulatory alignment remains independent.
 
 ## Scope Limitation
 
 > [!WARNING]
 > **No Automatic Conformance**
-> Conformance with MPLP does **not** automatically guarantee conformance with the EU AI Act.
-> Organizations must independently verify their conformance with regulatory requirements.
+> MPLP adoption does **not** automatically satisfy the EU AI Act.
+> Organizations must independently verify legal and regulatory alignment.
 
 ---
 
@@ -52,7 +54,7 @@ This mapping covers **EU AI Act Chapter III, Section 2** — Requirements for Hi
 
 - Provider/deployer obligations beyond Articles 9–15 (e.g., quality management, post-market monitoring, incident reporting, conformity assessment)
 - Product/risk classification (Annex III applicability) and legal determinations
-- Any "certification", "badge", "endorsement", or "compliance score" framing
+- Any external-regulatory status or graded-framing language
 
 ---
 
@@ -234,7 +236,9 @@ We map each EU AI Act requirement to **MPLP evidence artifacts** produced by a s
 
 ## 5. Disclaimer
 
-This mapping is provided for **informational purposes only**. It does not constitute legal advice or certification.
+This mapping is provided for **informational purposes only**.
+It does not constitute certification.
+It does not constitute legal advice.
 
 Organizations seeking EU AI Act conformity should:
 1. Consult with qualified legal and regulatory professionals

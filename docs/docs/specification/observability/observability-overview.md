@@ -10,62 +10,112 @@ doc_id: "DOC-OBS-OVERVIEW-001"
 title: Observability Overview
 sidebar_label: Observability Overview
 sidebar_position: 1
-description: "MPLP observability specification: Observability Overview. Defines event schemas and trace formats."
-authority: protocol
+description: "Orientation page for frozen MPLP observability sources and reading order."
+authority: Documentation Governance
 ---
 
 # Observability Overview
 
-This page provides a navigational overview of MPLP observability specifications. It does not define normative requirements.
+This page provides an orientation to MPLP observability sources. It does not
+create a second observability doctrine layer.
 
+Frozen observability meaning remains anchored in:
 
-Observability in MPLP ensures that:
+- `schemas/v2/taxonomy/event-taxonomy.yaml`
+- `schemas/v2/taxonomy/module-event-matrix.yaml`
+- `schemas/v2/invariants/observability-invariants.yaml`
+- the relevant event schemas under `schemas/v2/events/`
+- `schemas/v2/mplp-trace.schema.json`
 
-- **All agent actions are traceable** — Every step, decision, and state change is recorded
-- **Lifecycle transitions are auditable** — Plan/Step status changes emit structured events
-- **Events are consistent across modules** — 12 Event Families with schema validation
-- **Runtime traces can be exported** — W3C Trace Context and OTLP compatibility
+## What This Section Covers
 
-**Design Principle**: "If it happened, it's in the trace"
+The observability section helps readers locate:
 
-## Normative Specifications
+- event-family classification
+- module-to-event mapping
+- observability invariant anchors
+- trace-object and segment-object references
 
-The following documents define the normative observability semantics:
+It does not define:
 
-| Document | Purpose |
-|:---|:---|
-| **[Event Taxonomy](event-taxonomy.md)** | Defines all 12 event families and their semantics |
-| **[Module–Event Matrix](module-event-matrix.md)** | Maps which modules emit which events |
-| **[Observability Invariants](observability-invariants.md)** | Defines 12 global observability correctness rules |
-| **[Runtime Trace Format](runtime-trace-format.md)** | Defines trace structure and OTLP compatibility |
+- runtime event buses
+- export transports
+- external observability platform contracts
+- implementation-specific trace pipelines
 
-## Reference Artifacts
+## Reading Order
 
-| Artifact | Type |
-|:---|:---|
-| [event-taxonomy.yaml](../../../../schemas/v2/taxonomy/event-taxonomy.yaml) | Machine-readable event definitions (Schema Truth Source) |
-| [module-event-matrix.yaml](../../../../schemas/v2/taxonomy/module-event-matrix.yaml) | Machine-readable module mapping (Schema Truth Source) |
-| [Common Schemas Reference](common-schemas-reference.md) | Shared schema components |
-| [Physical Schemas Reference](physical-schemas-reference.md) | Event schema details |
+Use the observability section in this order:
 
-## Required Events (Quick Reference)
+1. [Event Taxonomy](./event-taxonomy.md)
+   Establish the frozen event-family set first.
+2. [Observability Invariants](./observability-invariants.md)
+   Read the event-validation layer next.
+3. [Module Event Matrix](./module-event-matrix.md)
+   Read module/event relationships after the family set is clear.
+4. [Runtime Trace Format](./runtime-trace-format.md)
+   Read this last as a trace-object and export-boundary reference, not as a
+   universal runtime/export contract.
 
-| Event Family | Compliance | Schema |
-|:---|:---:|:---|
-| `pipeline_stage` | **REQUIRED** | `mplp-pipeline-stage-event.schema.json` |
-| `graph_update` | **REQUIRED** | `mplp-graph-update-event.schema.json` |
+## Frozen Source Summary
 
-See [Event Taxonomy](event-taxonomy.md) for all 12 families.
+### Event Taxonomy
 
-## Reading Path
+`schemas/v2/taxonomy/event-taxonomy.yaml` defines:
 
-1. **Start with [Event Taxonomy](event-taxonomy.md)** — Understand the 12 event families
-2. **Review [Module–Event Matrix](module-event-matrix.md)** — See which modules emit which events
-3. **Validate with [Observability Invariants](observability-invariants.md)** — Understand correctness rules
-4. **Implement export using [Runtime Trace Format](runtime-trace-format.md)** — Export to external tools
+- 12 general event families
+- compliance labels for those families
+- schema references for each family
+- profile-event entries for SA and MAP
+
+### Module Event Matrix
+
+`schemas/v2/taxonomy/module-event-matrix.yaml` defines:
+
+- module-to-family mappings
+- primary vs secondary family associations
+- machine-readable trigger and event-type examples
+- a compliance summary block for required families and required producers
+
+### Observability Invariants
+
+`schemas/v2/invariants/observability-invariants.yaml` defines the frozen
+observability invariant set.
+
+### Trace Artifact
+
+`schemas/v2/mplp-trace.schema.json` defines the Trace object and segment object
+shape at the protocol layer.
+
+## Required General Event Families
+
+The frozen taxonomy marks these general families as required:
+
+- `graph_update`
+- `pipeline_stage`
+
+Other family compliance levels should be read from the taxonomy itself.
+
+## Boundary Notes
+
+- The general event families are not the same thing as the profile-specific SA
+  and MAP event surfaces.
+- The trace schema is not, by itself, a universal external export contract.
+- If an explanatory observability page conflicts with the frozen taxonomy,
+  invariants, or event schemas, the frozen sources prevail.
+
+## References
+
+- `schemas/v2/taxonomy/event-taxonomy.yaml`
+- `schemas/v2/taxonomy/module-event-matrix.yaml`
+- `schemas/v2/invariants/observability-invariants.yaml`
+- `schemas/v2/mplp-trace.schema.json`
+- [Event Taxonomy](./event-taxonomy.md)
+- [Module Event Matrix](./module-event-matrix.md)
+- [Runtime Trace Format](./runtime-trace-format.md)
 
 ---
 
-**Required Events**: pipeline_stage, graph_update  
-**Total Event Families**: 12  
-**Export Formats**: JSON, JSONL, OTLP, Jaeger
+**Final Boundary**: this page is an orientation surface only. Formal
+observability meaning remains in the frozen taxonomy, invariant, schema, and
+trace artifacts.

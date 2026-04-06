@@ -10,58 +10,90 @@ doc_id: "DOC-EVAL-GOV-VERSION-001"
 # UI metadata (non-normative; excluded from protocol semantics)
 title: Versioning Policy
 sidebar_label: Versioning Policy
-description: "MPLP governance documentation: Versioning Policy. Governance processes and policies."
-authority: none
+description: "Reference view of MPLP version domains, anchored to the frozen version taxonomy manifest."
+authority: Documentation Governance
 ---
 
 # Versioning Policy
 
+This page is a **reference projection** of the frozen MPLP version taxonomy
+manifest. It does not define a competing version constitution.
 
-## 1. Overview
+## 1. Source Binding
 
-MPLP follows [Semantic Versioning 2.0.0](https://semver.org/) with extensions for protocol versioning.
+The controlling source for version-domain meaning is:
 
-## 2. Version Format
+- `governance/05-versioning/version-taxonomy-manifest.json`
 
-```
-MAJOR.MINOR.PATCH
-```
+If this page diverges from that manifest, the manifest prevails.
 
-| Component | Change Type | Example |
-|:---|:---|:---|
-| **MAJOR** | Breaking changes to schemas or APIs | 1.0.0 → 2.0.0 |
-| **MINOR** | Backward-compatible additions | 1.0.0 → 1.1.0 |
-| **PATCH** | Bug fixes, documentation updates | 1.0.0 → 1.0.1 |
+## 2. Version Domains
 
-## 3. Protocol Version Lifecycle
+The frozen manifest defines these version domains:
 
-| State | Description |
+- `protocol_version`
+- `schema_bundle_version`
+- `invariant_bundle_version`
+- `validation_ruleset_version`
+- `validation_lab_release_version`
+- `docs_release_version`
+- `website_release_version`
+- `sdk_version`
+
+## 3. Current Values
+
+From the frozen manifest:
+
+| Domain | Current Value |
 |:---|:---|
-| **Draft** | In development, subject to change |
-| **Release Candidate** | Feature complete, testing phase |
-| **Frozen** | No breaking changes permitted |
-| **Deprecated** | Superseded by newer version |
-| **Retired** | No longer supported |
+| `protocol_version` | `1.0.0` |
+| `schema_bundle_version` | `2.0.0` |
+| `invariant_bundle_version` | `2.0.0` |
+| `validation_ruleset_version` | `ruleset-1.0` |
+| `validation_lab_release_version` | `1.0.1` |
+| `docs_release_version` | `1.0.0` |
+| `website_release_version` | `1.0.0` |
+| `sdk_version["@mplp/sdk-ts"]` | `1.0.7` |
+| `sdk_version["mplp-sdk"]` | `1.0.5` |
 
-## 4. Current Versions
+## 4. Canonical Rules
 
-| Component | Location | Status |
-|:---|:---|:---|
-| Protocol Specification | `schemas/v2/` | **FROZEN** |
-| JSON Schemas | [`schemas/v2/`](https://github.com/mplp-protocol/mplp/tree/main/schemas/v2) | **FROZEN** |
-| TypeScript SDK | [`packages/sources/sdk-ts`](https://github.com/mplp-protocol/mplp/tree/main/packages/sources/sdk-ts) | Stable |
-| Python SDK | [`packages/sources/sdk-py`](https://github.com/mplp-protocol/mplp/tree/main/packages/sources/sdk-py) | Stable |
+The frozen manifest also states:
 
-## 5. Breaking Change Policy
+- authority-bearing version references must use an explicit domain
+- bare labels such as `v1`, `v2`, `current`, and `latest` are prohibited as
+  canonical meaning
+- historical aliases must be mapped or explicitly marked
 
-For FROZEN protocol versions:
+## 5. Historical Alias Policy
 
-- No changes to existing schema fields
-- No changes to required/optional status
-- No changes to enum values
-- Additive changes allowed (new optional fields)
-- Documentation updates allowed
+The frozen manifest allows historical aliases such as:
 
-## 6. Version Compatibility
+- `v1`
+- `v2`
+- `current`
+- `latest`
+- `site-v*`
+- `pack-v*`
+- `rel-lab-*`
 
-See [Compatibility Matrix](./compatibility-matrix.md) for cross-version compatibility details.
+Those may remain in historical or explanatory contexts, but they must not carry
+canonical meaning without explicit domain mapping.
+
+## 6. Reading Rule
+
+When version language appears in docs:
+
+1. identify the domain first
+2. check the frozen manifest if the meaning matters
+3. do not infer canonical meaning from a bare version label alone
+
+## 7. Related References
+
+- [Entry Points](/docs/reference/entrypoints)
+- [Validation Lab Overview](/docs/evaluation/validation-lab)
+
+---
+
+**Final Boundary**: this page is a reference projection of the frozen version
+taxonomy manifest only. It is not an independent version constitution.

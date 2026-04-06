@@ -4,61 +4,52 @@ doc_type: reference
 normativity: informative
 status: active
 authority: Documentation Governance
-description: "Quick reference map for all MPLP schemas, modules, events, and invariants with their file locations."
+description: "Current map of the MPLP docs reading path across specification, evaluation, guides, and meta surfaces."
 title: Documentation Map
 ---
 
-## Schema Quick Reference
+# Documentation Map
 
-All schemas located in `schemas/v2/`:
+This page is a **docs-side route helper**.
 
-### Core Modules
-- `mplp-context.schema.json`
-- `mplp-plan.schema.json`
-- `mplp-confirm.schema.json`
-- `mplp-trace.schema.json`
-- `mplp-role.schema.json`
-- `mplp-dialog.schema.json`
-- `mplp-collab.schema.json`
-- `mplp-extension.schema.json`
-- `mplp-core.schema.json`
-- `mplp-network.schema.json`
+It does not replace the repaired primary specification/reference layer and it
+does not define protocol structure independently.
 
-### Events
-- `events/mplp-event-core.schema.json` (base + 12 families)
-- `events/mplp-pipeline-stage-event.schema.json` (REQUIRED)
-- `events/mplp-graph-update-event.schema.json` (REQUIRED)
-- `events/mplp-runtime-execution-event.schema.json`
-- `events/mplp-sa-event.schema.json`
-- `events/mplp-map-event.schema.json`
+## Start Here
 
-### Integration (L4)
-- `integration/mplp-file-update-event.schema.json`
-- `integration/mplp-git-event.schema.json`
-- `integration/mplp-ci-event.schema.json`
-- `integration/mplp-tool-event.schema.json`
+| Goal | Route |
+|:---|:---|
+| Understand public-surface roles | [Entry Points](/docs/reference/entrypoints) |
+| Read protocol requirements | [Specification](/docs/specification) |
+| Read module families | [Modules](/docs/specification/modules) |
+| Read profile families | [Profiles](/docs/specification/profiles) |
+| Read observability families | [Observability](/docs/specification/observability) |
+| Read evaluation-side references | [Evaluation](/docs/evaluation) |
+| Read Lab-side reference projection | [Validation Lab](/docs/evaluation/validation-lab) |
+| Read implementation guidance | [Guides](/docs/guides) |
 
-### Common
-- `common/identifiers.schema.json` (UUID v4)
-- `common/metadata.schema.json` (protocol version, freeze status)
-- `common/trace-base.schema.json` (W3C trace context)
-- `common/common-types.schema.json`
-- `common/learning-sample.schema.json`
+## Section Map
 
-### Invariants
-- `invariants/sa-invariants.yaml` (9 SA rules)
-- `invariants/map-invariants.yaml` (9 MAP rules)
-- `invariants/observability-invariants.yaml`
-- `invariants/integration-invariants.yaml`
-- `invariants/learning-invariants.yaml`
+| Section | Role |
+|:---|:---|
+| `/docs/specification` | Primary specification/reference projection |
+| `/docs/evaluation` | Secondary evaluation/reference helpers |
+| `/docs/guides` | Informative implementation guidance |
+| `/docs/meta` | Docs-side FAQ, roadmap, and release/meta helpers |
+| `/docs/reference` | Entry and route helper surfaces |
 
----
+## Repository Truth Anchors
 
-## Version & Governance
+Use the repository directly when you need first-order source artifacts:
 
-- **Protocol Version**: 1.0.0 (Frozen as of 2025-12-03)
-- **Governance**: MPLP Protocol Governance Committee (MPGC)
-- **License**: Apache-2.0
-- **Repository**: [https://github.com/Coregentis/MPLP-Protocol](https://github.com/Coregentis/MPLP-Protocol)
+- `schemas/v2/`
+- `tests/golden/flows/`
+- `governance/`
 
-**For governance inquiries**, see [12-governance/protocol-governance.md](/docs/evaluation/governance/protocol-governance.md).
+## Version Context
+
+- `protocol_version`: `1.0.0`
+- `docs_release_version`: `1.0.0`
+
+Canonical version-domain meaning remains in the repository version taxonomy
+manifest and must not be inferred from helper-page filenames or old IA labels.
