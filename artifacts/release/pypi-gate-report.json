@@ -1,0 +1,29 @@
+{
+  "gate": "pypi-publish-gate",
+  "timestamp": "2026-04-06T03:38:10.665163+00:00",
+  "bundleVersion": "1.0.0",
+  "status": "PASS",
+  "checks": [
+    {
+      "id": "CLASSIFICATION",
+      "result": "PASS",
+      "message": "mplp-sdk is PUBLIC"
+    },
+    {
+      "id": "DERIVATION_PROOF",
+      "result": "PASS",
+      "message": "Found /Users/jasonwang/Documents/AI_Dev/V1.0_release/packages/pypi/mplp-sdk/DERIVATION_PROOF.yaml"
+    },
+    {
+      "id": "ARTIFACTS",
+      "result": "PASS",
+      "message": "Both wheel and sdist found"
+    },
+    {
+      "id": "VERSION_SYNC",
+      "result": "PASS",
+      "message": "Version 1.0.5 matches bundle 1.0.0"
+    }
+  ],
+  "violations": []
+}

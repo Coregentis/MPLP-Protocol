@@ -1,0 +1,67 @@
+[
+  {
+    "name": "@mplp/compliance",
+    "version": "1.0.5",
+    "path": "compliance"
+  },
+  {
+    "name": "@mplp/conformance",
+    "version": "1.0.0",
+    "path": "conformance"
+  },
+  {
+    "name": "@mplp/coordination",
+    "version": "1.0.6",
+    "path": "coordination"
+  },
+  {
+    "name": "@mplp/core",
+    "version": "1.0.6",
+    "path": "core"
+  },
+  {
+    "name": "@mplp/devtools",
+    "version": "1.0.5",
+    "path": "devtools"
+  },
+  {
+    "name": "@mplp/integration-llm-http",
+    "version": "1.0.5",
+    "path": "integration-llm-http"
+  },
+  {
+    "name": "@mplp/integration-storage-fs",
+    "version": "1.0.5",
+    "path": "integration-storage-fs"
+  },
+  {
+    "name": "@mplp/integration-storage-kv",
+    "version": "1.0.5",
+    "path": "integration-storage-kv"
+  },
+  {
+    "name": "@mplp/integration-tools-generic",
+    "version": "1.0.5",
+    "path": "integration-tools-generic"
+  },
+  {
+    "name": "@mplp/modules",
+    "version": "1.0.5",
+    "path": "modules"
+  },
+  {
+    "name": "@mplp/runtime-minimal",
+    "version": "1.0.5",
+    "path": "runtime-minimal"
+  },
+  {
+    "name": "@mplp/schema",
+    "version": "1.0.6",
+    "path": "schema"
+  },
+  {
+    "name": "@mplp/sdk-ts",
+    "version": "1.0.7",
+    "path": "sdk-ts"
+  }
+]

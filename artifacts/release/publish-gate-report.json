@@ -1,0 +1,78 @@
+{
+  "timestamp": "2026-04-06T03:38:10.657Z",
+  "gate": "METHOD-SDKR-08-6.4",
+  "summary": {
+    "totalPackages": 14,
+    "publishableCount": 13,
+    "blockedCount": 1,
+    "errorCount": 0,
+    "violationCount": 0
+  },
+  "publishSet": [
+    {
+      "name": "@mplp/compliance",
+      "version": "1.0.5"
+    },
+    {
+      "name": "@mplp/conformance",
+      "version": "1.0.0"
+    },
+    {
+      "name": "@mplp/coordination",
+      "version": "1.0.6"
+    },
+    {
+      "name": "@mplp/core",
+      "version": "1.0.6"
+    },
+    {
+      "name": "@mplp/devtools",
+      "version": "1.0.5"
+    },
+    {
+      "name": "@mplp/integration-llm-http",
+      "version": "1.0.5"
+    },
+    {
+      "name": "@mplp/integration-storage-fs",
+      "version": "1.0.5"
+    },
+    {
+      "name": "@mplp/integration-storage-kv",
+      "version": "1.0.5"
+    },
+    {
+      "name": "@mplp/integration-tools-generic",
+      "version": "1.0.5"
+    },
+    {
+      "name": "@mplp/modules",
+      "version": "1.0.5"
+    },
+    {
+      "name": "@mplp/runtime-minimal",
+      "version": "1.0.5"
+    },
+    {
+      "name": "@mplp/schema",
+      "version": "1.0.6"
+    },
+    {
+      "name": "@mplp/sdk-ts",
+      "version": "1.0.7"
+    }
+  ],
+  "blocked": [
+    {
+      "name": "@mplp/validator",
+      "reason": {
+        "isPrivate": true,
+        "isCiOnly": true,
+        "isPublishBlocked": true
+      }
+    }
+  ],
+  "violations": [],
+  "errors": [],
+  "status": "PASS"
+}
