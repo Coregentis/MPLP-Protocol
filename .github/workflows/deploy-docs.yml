@@ -45,10 +45,53 @@ jobs:
                   git config --global --add safe.directory "$GITHUB_WORKSPACE"
                   git -C "$GITHUB_WORKSPACE" fetch --force --tags origin
 
+            - name: Install git trace shim
+              run: |
+                  trace_bin="$RUNNER_TEMP/docs-git-trace-bin"
+                  trace_file="$GITHUB_WORKSPACE/docs-git-trace.log"
+                  real_git="$(command -v git)"
+
+                  mkdir -p "$trace_bin"
+                  : > "$trace_file"
+
+                  cat > "$trace_bin/git" <<EOF
+                  #!/usr/bin/env bash
+                  stamp=\$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+                  {
+                    echo "[\$stamp] CMD: git \$*"
+                    echo "[\$stamp] PWD: \$PWD"
+                    ppid=\$(ps -o ppid= -p \$\$ | tr -d ' ')
+                    echo "[\$stamp] PARENT_PID: \$ppid"
+                    ps -o pid=,ppid=,command= -p "\$ppid" 2>/dev/null || true
+                  } >> "$trace_file"
+                  "$real_git" "\$@"
+                  status=\$?
+                  echo "[\$stamp] EXIT: \$status" >> "$trace_file"
+                  echo "---" >> "$trace_file"
+                  exit \$status
+                  EOF
+
+                  chmod +x "$trace_bin/git"
+                  echo "$trace_bin" >> "$GITHUB_PATH"
+                  echo "DOCS_GIT_TRACE_FILE=$trace_file" >> "$GITHUB_ENV"
+
             - name: Build Docusaurus
               run: npm run build
               env:
                   NODE_OPTIONS: --max-old-space-size=4096
+
+            - name: Print git trace
+              if: always()
+              run: |
+                  if [ -s "$DOCS_GIT_TRACE_FILE" ]; then
+                    echo "::group::docs-git-trace"
+                    cat "$DOCS_GIT_TRACE_FILE"
+                    echo "::endgroup::"
+                  else
+                    echo "::group::docs-git-trace"
+                    echo "NO_GIT_TRACE_RECORDED"
+                    echo "::endgroup::"
+                  fi
 
             - name: Create CNAME
               run: echo "docs.mplp.io" > build/CNAME
