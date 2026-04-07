@@ -52,66 +52,68 @@ Repository/public protocol truth remains complete:
 
 ### Website
 
-- repo aligned: `YES`
-- push completed: `YES`
-- deploy mechanism identified: `YES`
-  - `Vercel`
-- local build: `PASS`
+- repo truth: `YES`
+- remote truth: `YES`
+- formal build truth: `YES`
+- deploy-chain-proof: `YES`
 - live truth aligned: `NO`
+- final classification:
+  - `CHAIN_PROVEN_BUT_LIVE_STALE`
 
 Current blocker:
 
-- production redeploy / production alias refresh is not executable in the
-  current environment because platform access is unavailable:
-  - no `vercel` CLI
-  - no `VERCEL_TOKEN`
-  - no `VERCEL_ORG_ID`
-  - no `VERCEL_PROJECT_ID`
+- live truth remains stale after repo truth, remote truth, formal build truth,
+  and deploy-chain-proof were already established
 
 Interpretation:
 
-- Website repo-side work is complete
-- Website live deployment remains blocked by external platform access
+- Website is no longer blocked at repo/build/deploy-chain-proof level
+- Website is now blocked strictly at downstream live/deployment-outcome
+  alignment level
 
 ### Docs
 
-- source aligned: `YES`
-- deploy aligned: `YES`
-- current batch blocker: `NO`
+- repo/source truth: `YES`
+- formal build/deploy-chain truth: `YES`
+- live truth aligned: `YES`
+- final classification:
+  - `CHAIN_PROVEN_AND_LIVE_ALIGNED`
 
 Interpretation:
 
-- docs may be treated as aligned for the current external batch status
+- Docs is closed at repo/source truth, build/deploy-chain truth, and live
+  alignment level
 
 ### Validation Lab
 
-- repo cleanup completed: `YES`
-- worktree clean: `YES`
-- push completed: `YES`
-  - `origin/main -> 8010b74b854b1128d89632c474a8844c924a43a2`
-- deploy completed: `NO`
+- repo truth: `YES`
+- remote truth: `YES`
+- deploy-chain-proof: `YES`
 - live truth aligned: `NO`
+- final classification:
+  - `CHAIN_PROVEN_BUT_LIVE_STALE`
 
 Current blocker:
 
-- deploy mechanism is not clearly executable from current repo assets / current
-  environment
-- live `lab.mplp.io` still shows stale governance/status strip state relative to
-  current public protocol truth
+- live truth remains stale after repo truth, remote truth, and deploy-chain
+  proof were already established
 
 Interpretation:
 
-- Validation Lab is now `PUSH_DONE`
-- Validation Lab remains `DEPLOY_BLOCKED`
+- Validation Lab is no longer blocked at repo/deploy-chain-proof level
+- Validation Lab is now blocked strictly at downstream
+  live/deployment-outcome alignment level
 
 ### Registry
 
 - npm: `BLOCKED`
 - pypi: `BLOCKED`
+- final classification:
+  - `CREDENTIALS_BLOCKED`
 
 Current blocker:
 
-- current environment has no verified publish credentials:
+- publication credentials are absent in the current environment:
   - `NPM_TOKEN` missing
   - `NODE_AUTH_TOKEN` missing
   - `TWINE_USERNAME` missing
@@ -120,7 +122,7 @@ Current blocker:
 
 Interpretation:
 
-- Registry publication still cannot be executed from the current environment
+- Registry is blocked strictly at publication-credentials level
 
 ## 4. Final External Consistency Audit
 
@@ -131,10 +133,10 @@ Final consistency audit result:
 Why:
 
 - repository truth is complete
-- docs appear aligned
-- website repo is aligned, but live website is not yet aligned
-- Validation Lab repo is now aligned and pushed, but live lab is not yet aligned
-- registry publication remains blocked
+- Website = `CHAIN_PROVEN_BUT_LIVE_STALE`
+- Docs = `CHAIN_PROVEN_AND_LIVE_ALIGNED`
+- Validation Lab = `CHAIN_PROVEN_BUT_LIVE_STALE`
+- Registry = `CREDENTIALS_BLOCKED`
 
 Therefore the user-facing 3+1 batch is still not externally coherent.
 
@@ -150,6 +152,8 @@ This means:
 
 ## 6. Next Exact Action
 
-- obtain and use the required external deploy/publication credentials to close
-  the remaining Website deploy, Validation Lab deploy, and Registry publication
-  blockers, starting with Website production redeploy access
+- freeze Website as CHAIN_PROVEN_BUT_LIVE_STALE and Validation Lab as
+  CHAIN_PROVEN_BUT_LIVE_STALE, keep Docs as CHAIN_PROVEN_AND_LIVE_ALIGNED,
+  keep Registry in CREDENTIALS_BLOCKED status; external 3+1 batch closure
+  remains forbidden until the Website live-truth blocker, the Validation Lab
+  live-truth blocker, and the Registry credentials blocker are all resolved.
