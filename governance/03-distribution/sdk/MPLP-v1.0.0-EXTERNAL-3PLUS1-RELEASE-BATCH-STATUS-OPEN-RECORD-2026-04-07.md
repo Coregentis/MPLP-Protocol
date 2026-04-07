@@ -157,3 +157,29 @@ This means:
   keep Registry in CREDENTIALS_BLOCKED status; external 3+1 batch closure
   remains forbidden until the Website live-truth blocker, the Validation Lab
   live-truth blocker, and the Registry credentials blocker are all resolved.
+
+## 7. Final Recheck After Refreeze
+
+After the open-record refreeze was absorbed into authoritative remote truth, a
+final read-only external 3+1 recheck was performed.
+
+Surface results:
+
+- Website = `CHAIN_PROVEN_BUT_LIVE_STALE`
+- Docs = `CHAIN_PROVEN_AND_LIVE_ALIGNED`
+- Validation Lab = `CHAIN_PROVEN_BUT_LIVE_STALE`
+- Registry = `CREDENTIALS_BLOCKED`
+
+Audit result:
+
+- `EXTERNAL_3PLUS1_INCONSISTENT`
+
+Batch verdict:
+
+- `EXTERNAL_3PLUS1_RELEASE_BATCH_STILL_OPEN`
+
+Stop condition:
+
+- No further repo-side work is justified in this pass; remaining blockers are
+  downstream live-alignment blockers for Website/Validation Lab and credentials
+  blockers for Registry.
