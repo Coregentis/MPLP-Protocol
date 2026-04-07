@@ -90,30 +90,30 @@ jobs:
                     cat "$DOCS_GIT_TRACE_FILE"
                     echo "::endgroup::"
                     python3 - <<'PY'
-import os
-from pathlib import Path
+                  import os
+                  from pathlib import Path
 
-trace_path = Path(os.environ["DOCS_GIT_TRACE_FILE"])
-content = trace_path.read_text().split('---\n')
+                  trace_path = Path(os.environ["DOCS_GIT_TRACE_FILE"])
+                  content = trace_path.read_text().split('---\n')
 
-def esc(value: str) -> str:
-    return value.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+                  def esc(value: str) -> str:
+                      return value.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
 
-for block in content:
-    block = [line for line in block.strip().splitlines() if line.strip()]
-    if not block:
-        continue
-    cmd = next((line.split('CMD: ', 1)[1] for line in block if 'CMD: ' in line), 'UNKNOWN')
-    pwd = next((line.split('PWD: ', 1)[1] for line in block if 'PWD: ' in line), 'UNKNOWN')
-    exit_code = next((line.split('EXIT: ', 1)[1] for line in block if 'EXIT: ' in line), 'UNKNOWN')
-    parent_index = next((i for i, line in enumerate(block) if 'PARENT_PID: ' in line), None)
-    parent = block[parent_index + 1].strip() if parent_index is not None and parent_index + 1 < len(block) else 'UNKNOWN'
-    message = esc(f"{cmd} | cwd={pwd} | exit={exit_code} | parent={parent}")
-    if exit_code != '0':
-        print(f"::warning title=docs-git-trace::{message}")
-    else:
-        print(f"::notice title=docs-git-trace::{message}")
-PY
+                  for block in content:
+                      block = [line for line in block.strip().splitlines() if line.strip()]
+                      if not block:
+                          continue
+                      cmd = next((line.split('CMD: ', 1)[1] for line in block if 'CMD: ' in line), 'UNKNOWN')
+                      pwd = next((line.split('PWD: ', 1)[1] for line in block if 'PWD: ' in line), 'UNKNOWN')
+                      exit_code = next((line.split('EXIT: ', 1)[1] for line in block if 'EXIT: ' in line), 'UNKNOWN')
+                      parent_index = next((i for i, line in enumerate(block) if 'PARENT_PID: ' in line), None)
+                      parent = block[parent_index + 1].strip() if parent_index is not None and parent_index + 1 < len(block) else 'UNKNOWN'
+                      message = esc(f"{cmd} | cwd={pwd} | exit={exit_code} | parent={parent}")
+                      if exit_code != '0':
+                          print(f"::warning title=docs-git-trace::{message}")
+                      else:
+                          print(f"::notice title=docs-git-trace::{message}")
+                  PY
                   else
                     echo "::group::docs-git-trace"
                     echo "NO_GIT_TRACE_RECORDED"
