@@ -2,7 +2,7 @@
 entry_surface: documentation
 doc_type: normative
 normativity: normative
-status: draft
+status: frozen
 authority: protocol
 protocol_version: "1.0.0"
 doc_id: "DOC-ARCH-L1-001"
@@ -20,6 +20,15 @@ sidebar_label: L1 Core (State)
 sidebar_position: 1
 description: "MPLP architecture documentation: L1 Core Protocol — Specification (v1.0.0 Frozen). Defines structural requirements and layer responsibilities."
 ---
+
+> **Frozen Specification**
+>
+> Protocol Version: 1.0.0
+> Freeze Date: 2025-12-03
+> Authority: MPGC
+>
+> This document is normative and frozen.
+> Changes require MPGC governance process.
 
 # L1 Core Protocol
 

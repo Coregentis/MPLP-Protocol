@@ -12,89 +12,43 @@ function HomepageHeader() {
     return (
         <header className={clsx('hero', styles.heroBanner)}>
             <div className="container">
-                {/* Primary Title - Protocol Name */}
                 <Heading as="h1" className={styles.heroTitlePrimary}>
                     MPLP Specification v1.0.0 (Frozen)
                 </Heading>
 
-                {/* Hero Definition - Specification Entry (elevated to main sentence) */}
                 <p className={styles.heroSubtitle}>
                     Authoritative definitions live in the Schemas (Source of Truth).<br />
                     This site provides structured specification navigation, references, and evaluation guidance for MPLP v1.0.0 (Frozen).
                 </p>
 
-                {/* Non-Goals Block (formal governance section) */}
-                <p style={{ fontSize: '0.85rem', color: '#64748b', fontWeight: 500, marginBottom: '0.75rem' }}>
-                    <strong style={{ color: '#475569' }}>Non-Goals:</strong> MPLP is not a framework, not a runtime, and not a platform.
-                </p>
-
-                {/* Positioning Analogy - Explicitly Non-Normative */}
-                <div style={{
-                    backgroundColor: 'rgba(148, 163, 184, 0.1)',
-                    borderRadius: '0.5rem',
-                    padding: '0.75rem 1rem',
-                    maxWidth: '500px',
-                    margin: '0 auto 1.5rem auto',
-                    border: '1px solid rgba(148, 163, 184, 0.2)'
-                }}>
-                    <p style={{ fontSize: '0.75rem', color: '#64748b', margin: 0, fontWeight: 600 }}>
-                        Positioning Analogy (Non-Normative)
-                    </p>
-                    <p style={{ fontSize: '0.8rem', color: '#94a3b8', margin: '0.25rem 0 0 0', fontStyle: 'italic' }}>
-                        Often described as "The Agent OS Protocol" — a conceptual analogy for lifecycle governance.
-                        This does not imply an execution runtime, operating system, or vendor platform.
+                <div className={styles.noticeBlock}>
+                    <p className={styles.noticeLabel}>Documentation Scope</p>
+                    <p className={styles.noticeText}>
+                        Docs is the specification and reference surface. It organizes repository-backed protocol material for reading, citation, and implementation guidance.
                     </p>
                 </div>
 
-                {/* Badges Section */}
-                <div className={styles.badges}>
-                    <img src="https://img.shields.io/badge/Protocol-v1.0.0(FROZEN)-blue?style=flat-square" alt="Protocol" />
-                    <img src="https://img.shields.io/badge/Governance-MPGC_Managed-blue?style=flat-square" alt="Governance" />
-                    <img src="https://img.shields.io/badge/License-Apache_2.0-green?style=flat-square" alt="License" />
-                    <img src="https://img.shields.io/badge/Schemas-v2_bundle_(Repo)-lightgrey?style=flat-square" alt="Schemas" />
-                    <a href="https://lab.mplp.io" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
-                        <img src="https://img.shields.io/badge/Validation_Lab_(External)-Evidence_Sealed-orange?style=flat-square" alt="Validation Lab (External)" />
-                    </a>
+                <div className={styles.noticeBlock}>
+                    <p className={styles.noticeLabel}>Non-Goals</p>
+                    <p className={styles.noticeText}>
+                        MPLP is not a framework, runtime, or platform. This homepage orients readers into the documentation set; it does not replace repository truth sources.
+                    </p>
                 </div>
 
-                {/* Governance Statement */}
-                <p style={{ fontSize: '0.85rem', color: '#64748b', maxWidth: '600px', margin: '1.5rem auto', lineHeight: '1.6' }}>
-                    Governed by MPGC. The specification is frozen at v1.0.0 — no breaking changes permitted.
-                    Published SDK package surfaces and Golden Flows support protocol conformance without vendor certification.
-                    Governance processes and constitutional records are maintained in the Repository <code>governance/</code> directory; this site provides pointers only.
-                </p>
-
-                <div className={styles.buttons}>
-                    <Link
-                        className="button button--secondary button--lg"
-                        to="/docs/introduction/mplp-v1.0-protocol-overview">
-                        Start Reading (Protocol Overview)
-                    </Link>
-                    <Link
-                        className="button button--info button--lg"
-                        style={{ marginLeft: '1rem', backgroundColor: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.2)', color: '#3b82f6' }}
-                        to="https://github.com/Coregentis/MPLP-Protocol/tree/main/schemas">
-                        Schemas (Source of Truth)
-                    </Link>
-                    <Link
-                        className="button button--outline button--lg"
-                        style={{ marginLeft: '1rem', color: '#64748b', borderColor: '#e2e8f0' }}
-                        to="/docs/evaluation/golden-flows">
-                        Golden Flows (Evaluation)
-                    </Link>
+                <div className={styles.noticeBlock}>
+                    <p className={styles.noticeLabel}>Reading Order</p>
+                    <p className={styles.noticeText}>
+                        Start with the protocol overview, then move into architecture, modules, profiles, observability, and evaluation material as needed.
+                    </p>
                 </div>
 
-                {/* Start Here - Reading Path */}
-                <div style={{ marginTop: '3rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-                    <p style={{ margin: 0, fontSize: '0.9rem', color: '#64748b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>Start Here</p>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', justifyContent: 'center', alignItems: 'center' }}>
-                        <ReadPathItem label="Protocol Overview" link="/docs/introduction/mplp-v1.0-protocol-overview" />
-                        <ReadPathItem label="Architecture (L1–L4)" link="/docs/specification/architecture" />
-                        <ReadPathItem label="Modules (L2)" link="/docs/specification/modules/module-interactions" />
-                        <ReadPathItem label="Profiles (SA/MAP)" link="/docs/specification/profiles/sa-profile" />
-                        <ReadPathItem label="Observability" link="/docs/specification/observability/observability-overview" />
-                        <ReadPathItem label="Golden Flows" link="/docs/evaluation/golden-flows" />
-                    </div>
+                <div className={styles.linkRow}>
+                    <ReadPathItem label="Protocol Overview" link="/docs/introduction/mplp-v1.0-protocol-overview" />
+                    <ReadPathItem label="Architecture" link="/docs/specification/architecture" />
+                    <ReadPathItem label="Modules" link="/docs/specification/modules/module-interactions" />
+                    <ReadPathItem label="Profiles" link="/docs/specification/profiles/sa-profile" />
+                    <ReadPathItem label="Observability" link="/docs/specification/observability/observability-overview" />
+                    <ReadPathItem label="Golden Flows" link="/docs/evaluation/golden-flows" />
                 </div>
             </div>
         </header>
@@ -175,11 +129,11 @@ const FeatureList = [
 function ReadPathItem({ label, link }) {
     return (
         <Link to={link} style={{
-            fontSize: '0.85rem',
+            fontSize: '0.82rem',
             color: '#475569',
             border: '1px solid #e2e8f0',
-            padding: '0.25rem 0.75rem',
-            borderRadius: '999px',
+            padding: '0.35rem 0.75rem',
+            borderRadius: '0.375rem',
             textDecoration: 'none',
             background: '#f8fafc'
         }}>
