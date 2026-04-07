@@ -56,20 +56,14 @@ Repository/public protocol truth remains complete:
 - remote truth: `YES`
 - formal build truth: `YES`
 - deploy-chain-proof: `YES`
-- live truth aligned: `NO`
+- live truth aligned: `YES`
 - final classification:
-  - `CHAIN_PROVEN_BUT_LIVE_STALE`
-
-Current blocker:
-
-- live truth remains stale after repo truth, remote truth, formal build truth,
-  and deploy-chain-proof were already established
+  - `CHAIN_PROVEN_AND_LIVE_ALIGNED`
 
 Interpretation:
 
-- Website is no longer blocked at repo/build/deploy-chain-proof level
-- Website is now blocked strictly at downstream live/deployment-outcome
-  alignment level
+- Website is closed at repo/build/deploy-chain-proof level and live alignment
+  level
 
 ### Docs
 
@@ -89,20 +83,14 @@ Interpretation:
 - repo truth: `YES`
 - remote truth: `YES`
 - deploy-chain-proof: `YES`
-- live truth aligned: `NO`
+- live truth aligned: `YES`
 - final classification:
-  - `CHAIN_PROVEN_BUT_LIVE_STALE`
-
-Current blocker:
-
-- live truth remains stale after repo truth, remote truth, and deploy-chain
-  proof were already established
+  - `CHAIN_PROVEN_AND_LIVE_ALIGNED`
 
 Interpretation:
 
-- Validation Lab is no longer blocked at repo/deploy-chain-proof level
-- Validation Lab is now blocked strictly at downstream
-  live/deployment-outcome alignment level
+- Validation Lab is closed at repo/deploy-chain-proof level and live alignment
+  level
 
 ### Registry
 
@@ -133,9 +121,9 @@ Final consistency audit result:
 Why:
 
 - repository truth is complete
-- Website = `CHAIN_PROVEN_BUT_LIVE_STALE`
+- Website = `CHAIN_PROVEN_AND_LIVE_ALIGNED`
 - Docs = `CHAIN_PROVEN_AND_LIVE_ALIGNED`
-- Validation Lab = `CHAIN_PROVEN_BUT_LIVE_STALE`
+- Validation Lab = `CHAIN_PROVEN_AND_LIVE_ALIGNED`
 - Registry = `CREDENTIALS_BLOCKED`
 
 Therefore the user-facing 3+1 batch is still not externally coherent.
@@ -149,14 +137,14 @@ This means:
 - root protocol publication closure remains valid
 - the external 3+1 release batch still cannot be truthfully described as fully
   complete
+- Registry credentials are now the sole remaining blocker
 
 ## 6. Next Exact Action
 
-- freeze Website as CHAIN_PROVEN_BUT_LIVE_STALE and Validation Lab as
-  CHAIN_PROVEN_BUT_LIVE_STALE, keep Docs as CHAIN_PROVEN_AND_LIVE_ALIGNED,
-  keep Registry in CREDENTIALS_BLOCKED status; external 3+1 batch closure
-  remains forbidden until the Website live-truth blocker, the Validation Lab
-  live-truth blocker, and the Registry credentials blocker are all resolved.
+- keep Website, Docs, and Validation_Lab frozen as
+  CHAIN_PROVEN_AND_LIVE_ALIGNED; keep Registry in CREDENTIALS_BLOCKED status;
+  external 3+1 batch closure remains forbidden until the Registry publication
+  credentials blocker is resolved.
 
 ## 7. Final Recheck After Refreeze
 
@@ -165,9 +153,9 @@ final read-only external 3+1 recheck was performed.
 
 Surface results:
 
-- Website = `CHAIN_PROVEN_BUT_LIVE_STALE`
+- Website = `CHAIN_PROVEN_AND_LIVE_ALIGNED`
 - Docs = `CHAIN_PROVEN_AND_LIVE_ALIGNED`
-- Validation Lab = `CHAIN_PROVEN_BUT_LIVE_STALE`
+- Validation Lab = `CHAIN_PROVEN_AND_LIVE_ALIGNED`
 - Registry = `CREDENTIALS_BLOCKED`
 
 Audit result:
@@ -181,5 +169,4 @@ Batch verdict:
 Stop condition:
 
 - No further repo-side work is justified in this pass; remaining blockers are
-  downstream live-alignment blockers for Website/Validation Lab and credentials
-  blockers for Registry.
+  publication-credentials blockers for Registry only.
