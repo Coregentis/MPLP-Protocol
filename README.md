@@ -125,7 +125,7 @@ Each public-facing surface has stable anchors for cross-referencing:
 
 **Validation Lab Anchors**:
 - [Lab Site](https://lab.mplp.io) — Evidence adjudication UI
-- [Validation_Lab](./Validation_Lab/) — In-repository Lab source and governance surface
+- [Coregentis/MPLP-Validation-Lab](https://github.com/Coregentis/MPLP-Validation-Lab) — Separate Validation Lab release-line repository
 
 **Disambiguation**: MPLP = Multi-Agent Lifecycle Protocol (not a license). MPLP is not POSIX (conceptual lens only).
 
@@ -142,7 +142,7 @@ Validation Lab does not define protocol truth; protocol truth remains anchored i
 | **Constitutional Class** | Auxiliary |
 | **Role** | Evidence-based adjudication under versioned Lab rulesets |
 | **Lab Site** | [https://lab.mplp.io](https://lab.mplp.io) |
-| **Lab Source Surface** | [Validation_Lab/](./Validation_Lab/) |
+| **Lab Repository** | [Coregentis/MPLP-Validation-Lab](https://github.com/Coregentis/MPLP-Validation-Lab) |
 
 ### Four Boundaries (Non-Negotiable)
 
@@ -154,11 +154,12 @@ Validation Lab does not define protocol truth; protocol truth remains anchored i
 ### Bounded Governance Chain
 
 > **Bounded Role**: Validation Lab rulesets, contract surfaces, and evidence
-> adjudication assets are governed in the in-repository
-> [Validation_Lab/](./Validation_Lab/) surface and exposed publicly via
-> [https://lab.mplp.io](https://lab.mplp.io). This bounded Lab role does not
-> supersede repository authority on protocol truth, schema truth, or invariant
-> truth.
+> adjudication assets are governed in the separate release-line repository
+> [Coregentis/MPLP-Validation-Lab](https://github.com/Coregentis/MPLP-Validation-Lab)
+> and exposed publicly via [https://lab.mplp.io](https://lab.mplp.io). The root
+> MPLP protocol repository links to that Lab surface but does not host it as an
+> in-repository public source surface. This bounded Lab role does not supersede
+> repository authority on protocol truth, schema truth, or invariant truth.
 
 ### Terminology Partition
 

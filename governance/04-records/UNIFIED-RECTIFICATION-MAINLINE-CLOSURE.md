@@ -55,7 +55,7 @@ This means future work MUST treat the following as baseline rather than open des
 - `4 public-facing surfaces`
 - scoped authority model
 - Validation Lab truth source = root protocol truth source for invariants
-- `Validation_Lab` as the only authoritative Lab home in this repository governance scope
+- `Coregentis/MPLP-Validation-Lab` as the authoritative Validation Lab release-line repository linked from the root repository
 - `Validation_Lab_V2` as non-authoritative `engineering_track`
 - explicit version-domain taxonomy
 - executable cleanup and governance gates
@@ -112,7 +112,7 @@ This means future work MUST treat the following as baseline rather than open des
 - `gate:v2-ownership-collapse`
 
 **Effect**:
-- `Validation_Lab` is now the only authoritative Lab home in this repository governance scope
+- `Coregentis/MPLP-Validation-Lab` is now the authoritative public-facing Validation Lab home linked from the root repository
 - `Validation_Lab_V2` is explicitly reduced to non-authoritative `engineering_track`
 
 ### 3.4 P1 Version Taxonomy Manifest

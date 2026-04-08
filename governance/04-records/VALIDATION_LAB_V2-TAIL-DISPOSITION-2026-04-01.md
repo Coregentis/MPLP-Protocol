@@ -34,7 +34,7 @@ mainline.
 The archived status of `Validation_Lab_V2` is already established by the active
 governance baseline:
 
-- `Validation_Lab` is the only authoritative Lab home in this repository scope.
+- `Coregentis/MPLP-Validation-Lab` is the authoritative public-facing Validation Lab home.
 - `Validation_Lab_V2` is not an independent MPLP surface.
 - `Validation_Lab_V2` has already been reduced to the non-authoritative role
   `engineering_track`.
@@ -75,7 +75,7 @@ This change is local archived-line dirt only.
 
 It does not alter:
 
-- the authoritative `Validation_Lab` home
+- the authoritative `Coregentis/MPLP-Validation-Lab` home
 - any A-line remediated docs or website surface
 - package publish reality
 - closure interpretation of the authoritative mainline

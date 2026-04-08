@@ -32,7 +32,7 @@ record_state: effective
 
 ## 1. Purpose
 
-This record designates the authoritative Validation Lab home within the current repository governance scope and defines the non-authoritative reduction of `Validation_Lab_V2`.
+This record designates the authoritative Validation Lab home for MPLP's public-facing release topology from the root repository governance surface and defines the non-authoritative reduction of `Validation_Lab_V2`.
 
 This record also documents the validation basis used to determine that the published Validation Lab repository has absorbed the core V2 governance, release, schema, projection, and gate assets needed for public-facing operation.
 
@@ -40,13 +40,16 @@ This record also documents the validation basis used to determine that the publi
 
 ## 2. Authority Home Designation
 
-Within this repository governance scope:
+Within the current MPLP repository-governance scope:
 
-- **Authoritative Lab home**: `Validation_Lab`
+- **Authoritative public-facing Lab home**: `Coregentis/MPLP-Validation-Lab`
+- **Root-repo representation mode**: link-only reference from `MPLP-Protocol`
 - **Non-authoritative line**: `Validation_Lab_V2`
 - **Reduction mode for `Validation_Lab_V2`**: `engineering_track`
 
-`Validation_Lab` is the only authoritative Lab home within this repository governance scope.
+`Coregentis/MPLP-Validation-Lab` is the only authoritative public-facing Validation Lab home for MPLP.
+
+The root `MPLP-Protocol` repository MUST reference that Lab surface by link/pointer only and MUST NOT present `Validation_Lab` as an in-repository public source surface.
 
 `Validation_Lab_V2` is not an independent MPLP surface and must not be treated as a second authoritative Lab home.
 
@@ -58,37 +61,22 @@ The following validation basis was used to support this designation.
 
 ### 3.1 Governance and Release Assets
 
-The published repository already contains the V2 governance and release asset sets required for ongoing public-facing and operational use:
+The published Validation Lab release-line repository and site provide the public-facing Lab home required for ongoing MPLP operation:
 
-- `Validation_Lab/governance/v2/`
-- `Validation_Lab/releases/v2/`
-- top-level V2 governance artifacts such as:
-  - `Validation_Lab/governance/v2-seal.md`
-  - `Validation_Lab/governance/v2-seal-rc2.md`
-  - `Validation_Lab/governance/v2-seal-rc3.md`
-  - `Validation_Lab/governance/scope-freeze-v2.md`
-  - `Validation_Lab/governance/dispute-freeze-v2.md`
-  - `Validation_Lab/governance/linkmap.v2.yaml`
-  - `Validation_Lab/governance/gates/gate-registry-v2.json`
+- repository: `https://github.com/Coregentis/MPLP-Validation-Lab`
+- site: `https://lab.mplp.io`
+
+Repository-facing references in `MPLP-Protocol` therefore do not need to present `Validation_Lab` as an in-repository public source surface.
 
 ### 3.2 Schema and Projection Assets
 
-The published repository already contains the V2 schema and projection assets needed for public-facing use:
+The published Validation Lab repository already absorbs the governance, release, schema, projection, and gate asset classes needed for public-facing operation.
 
-- `Validation_Lab/schemas/v2/`
-- `Validation_Lab/public/_data/v2/`
-
-These assets are present in the published Lab home and therefore do not require `Validation_Lab_V2` to remain a second authoritative surface.
+Those asset classes therefore do not require `Validation_Lab_V2` to remain a second authoritative surface, and they do not justify treating the root repository as the public source host for Validation Lab.
 
 ### 3.3 V2 Gate and Engineering Assets
 
-The published repository already contains the V2 gate and engineering entrypoints under:
-
-- `Validation_Lab/scripts/gates/v2/`
-- `Validation_Lab/app/v2/`
-- `Validation_Lab/lib/v2/`
-
-The published Lab home therefore already contains the in-repo engineering and projection structures necessary to continue V2-related work without relying on `Validation_Lab_V2` as a public-facing authority home.
+The published Validation Lab repository already contains the gate and engineering entrypoints needed to continue V2-related work without relying on `Validation_Lab_V2` as a public-facing authority home.
 
 ### 3.4 Route-Layer Absorption
 
@@ -100,10 +88,6 @@ V2 route-layer functionality has been absorbed into the published Lab home in tw
   - `/releases`
   - `/coverage`
   - `/policies`
-- retained internal V2 implementation assets under:
-  - `Validation_Lab/app/v2/`
-  - `Validation_Lab/public/_data/v2/`
-
 This means the published Validation Lab repository is the correct public-facing home even where V2 route concepts were renamed, merged, or internally retained rather than preserved as one-to-one public routes.
 
 ---
@@ -112,9 +96,9 @@ This means the published Validation Lab repository is the correct public-facing 
 
 The following duplication rules now apply:
 
-1. `Validation_Lab` remains authoritative.
+1. `Coregentis/MPLP-Validation-Lab` remains authoritative as the Validation Lab release-line repository.
 2. `Validation_Lab_V2` is non-authoritative and may only operate as an `engineering_track`.
-3. Duplicate V2 governance texts inside `Validation_Lab` must not remain simultaneously authoritative when a top-level authoritative file already exists.
+3. Duplicate V2 governance texts must not remain simultaneously authoritative when the release-line Validation Lab repository already carries the authoritative public-facing home.
 4. Duplicate or legacy mirrors must be reduced to one of:
    - pointer-only
    - non-authoritative mirror
@@ -139,7 +123,8 @@ This designation applies to the following duplicated or overlapping V2 asset cla
 
 From the effective date of this record forward:
 
-- all public-facing or governance-facing references must treat `Validation_Lab` as the authoritative Lab home;
+- all public-facing or governance-facing references must treat `Coregentis/MPLP-Validation-Lab` as the authoritative Lab home;
+- root-repository references to Validation Lab must remain link-only and must not present `Validation_Lab` as an in-repository public source surface;
 - `Validation_Lab_V2` must be described only as a non-authoritative `engineering_track` unless superseded by future MPGC action;
 - no document may present `Validation_Lab_V2` as:
   - a new MPLP surface,
@@ -163,7 +148,7 @@ This designation record does NOT:
 
 | Version | Date | Description |
 |:---|:---|:---|
-| v1.2.0 | 2026-03-28 | Designated `Validation_Lab` as the only authoritative Lab home and reduced `Validation_Lab_V2` to non-authoritative `engineering_track` status |
+| v1.2.0 | 2026-03-28 | Designated `Coregentis/MPLP-Validation-Lab` as the authoritative public-facing Lab home and reduced `Validation_Lab_V2` to non-authoritative `engineering_track` status |
 
 ---
 

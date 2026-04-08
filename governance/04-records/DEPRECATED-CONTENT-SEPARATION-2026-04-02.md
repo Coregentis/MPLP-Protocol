@@ -32,7 +32,7 @@ The active baseline for current MPLP guidance is:
 
 - repository root active documents
 - `docs/` active documentation source
-- `Validation_Lab/` authoritative in-repository Lab surface
+- `Coregentis/MPLP-Validation-Lab` separate Validation Lab release-line repository
 - `MPLP_website/` active website source
 - current governance, release, and closure records outside archive scopes
 
@@ -45,8 +45,7 @@ The following material classes are historical-only unless explicitly re-promoted
 by later governance:
 
 - `governance/99-archive/**`
-- `Validation_Lab/releases/archive/**`
-- `Validation_Lab/releases/v2/archive/**`
+- Validation Lab historical/archive materials retained in the separate `Coregentis/MPLP-Validation-Lab` repository
 - archived release reproduction notes that still mention `mplp_prerelease`
 - `Validation_Lab_V2/**` as a non-authoritative archived `engineering_track`
 
@@ -64,7 +63,7 @@ The following references are now deprecated in active guidance:
 Active guidance should instead bind to:
 
 - `https://github.com/Coregentis/MPLP-Protocol`
-- `Validation_Lab/` in-repository source surface
+- `https://github.com/Coregentis/MPLP-Validation-Lab`
 - `governance/05-specialized/entity.json`
 - `governance/05-specialized/ENTITY_CANONICAL.yaml`
 - `docs/static/assets/geo/mplp-entity.json`
@@ -77,7 +76,7 @@ As part of this separation pass:
   prerelease references
 - historical `mplp_prerelease` usage was downgraded to historical-only where it
   remains in archive-oriented materials
-- active gates/scripts were pointed at current in-repository paths
+- active gates/scripts were pointed at current repository and release-line references
 
 ## Effect
 
