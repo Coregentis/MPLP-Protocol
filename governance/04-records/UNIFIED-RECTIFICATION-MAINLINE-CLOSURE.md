@@ -2,8 +2,8 @@
 entry_surface: repository
 entry_model_class: primary
 doc_type: attestation
-status: draft
-authority: none
+status: draft # repository attestation lifecycle status per CONST-002
+authority: none # protocol authority only; governance authority is expressed through record basis
 protocol_version: "1.0.0"
 doc_id: "UNIFIED-RECTIFICATION-MAINLINE-CLOSURE"
 title: "Unified Rectification Mainline Closure"
@@ -18,7 +18,10 @@ record_state: final
 
 # Unified Rectification Mainline Closure
 
-**Status**: CLOSED  
+**Status**: Draft Repository Attestation  
+**Record State**: Final  
+**Authority**: None (protocol authority)  
+**Governance Authority Basis**: repository governance closure record  
 **Closure State**: BASELINE ESTABLISHED  
 **Closure Date**: 2026-03-28  
 **Scope**: Repository governance realignment baseline

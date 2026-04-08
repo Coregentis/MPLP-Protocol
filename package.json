@@ -1,7 +1,7 @@
 {
     "name": "mplp-protocol-oss",
     "version": "1.0.0",
-    "description": "MPLP Protocol v1.0 - Multi-agent Planning and Learning Protocol (OSS Package)",
+    "description": "MPLP Protocol v1.0 - Multi-Agent Lifecycle Protocol (OSS Package)",
     "repository": {
         "type": "git",
         "url": "https://github.com/Coregentis/MPLP-Protocol.git"

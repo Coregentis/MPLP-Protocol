@@ -1,5 +1,7 @@
 {
+  "version_domain": "protocol_version",
   "version": "1.0.0",
+  "protocol_version": "1.0.0",
   "generated": "2026-01-23T04:11:27.508Z",
   "fileCount": 822,
   "totalSizeBytes": 5237838,

@@ -2,8 +2,8 @@
 entry_surface: repository
 entry_model_class: primary
 doc_type: attestation
-status: draft
-authority: none
+status: draft # repository attestation lifecycle status per CONST-002
+authority: none # protocol authority only; governance authority is expressed below
 protocol_version: "1.0.0"
 doc_id: "MPGC-DESIGNATE-LAB-AUTHORITY-HOME"
 title: "MPGC Designation Record — Validation Lab Authority Home"
@@ -19,8 +19,10 @@ record_state: effective
 # MPGC Designation Record — Validation Lab Authority Home
 
 **Record ID**: MPGC-DESIGNATE-LAB-AUTHORITY-HOME  
-**Status**: Active Governance Record  
-**Authority**: MPGC  
+**Status**: Draft Repository Attestation  
+**Record State**: Effective  
+**Authority**: None (protocol authority)  
+**Governance Authority Basis**: MPGC designation record  
 **Effective Governance Revision**: v1.2.0  
 **Applicable Protocol Version**: 1.0.0  
 **Depends on**:

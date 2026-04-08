@@ -2,8 +2,8 @@
 entry_surface: repository
 entry_model_class: primary
 doc_type: attestation
-status: draft
-authority: none
+status: draft # repository attestation lifecycle status per CONST-002
+authority: none # protocol authority only; governance authority is expressed below
 protocol_version: "1.0.0"
 doc_id: "MPGC-RATIFY-ENTRY-MODEL-REALIGNMENT"
 title: "MPGC Ratification Record — Entry Model Realignment"
@@ -19,8 +19,10 @@ record_state: ratified
 # MPGC Ratification Record — Entry Model Realignment
 
 **Record ID**: MPGC-RATIFY-ENTRY-MODEL-REALIGNMENT  
-**Status**: Ratified Record  
-**Authority**: MPGC  
+**Status**: Draft Repository Attestation  
+**Record State**: Ratified  
+**Authority**: None (protocol authority)  
+**Governance Authority Basis**: MPGC ratification record  
 **Governance Revision**: v1.2.0  
 **Applicable Protocol Version**: 1.0.0  
 **Related Constitutional Documents**:
