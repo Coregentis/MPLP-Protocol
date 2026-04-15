@@ -1,4 +1,22 @@
-﻿## [sdk-kernel-duty-propagation-2026-04-01] — 2026-04-01
+﻿## [downstream-candidate-backlog-2026-04-15] — 2026-04-15
+
+### 📋 Downstream Candidate Backlog Governance Wave
+
+#### Added
+- downstream-driven candidate backlog governance pack under `governance/backlog/`
+- bounded candidate tracking for:
+  - `Delegation Envelope`
+  - `Delivery / Acceptance Contract Envelope`
+  - `Constraint / Stop Condition / Escalation Envelope`
+- explicit boundary and promotion-rule framing to keep downstream product/runtime pressure out of frozen protocol law by default
+
+#### Notes
+- no protocol schemas, invariants, or packages changed
+- no new protocol law is claimed by this wave
+
+---
+
+## [sdk-kernel-duty-propagation-2026-04-01] — 2026-04-01
 
 ### 📦 SDK Kernel Duty Propagation Release
 

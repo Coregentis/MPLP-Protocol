@@ -57,6 +57,10 @@ records.
 It is also not the primary place for package-specific implementation guidance or
 current release walkthroughs.
 
+Downstream-driven candidate tracking, when present, lives under
+`governance/backlog/` as non-normative governance only.
+Those backlog files do not alter frozen protocol core truth.
+
 ## Version Semantics
 
 MPLP uses version domains rather than a single undifferentiated version label.
