@@ -1,3 +1,18 @@
+## [downstream-candidate-closure-2026-04-16] — 2026-04-16
+
+### 📋 Downstream Candidate-Only Closure Wave
+
+#### Added
+- downstream candidate-only closure matrix under `governance/backlog/`
+- cross-repo non-promotion closure record for the current SoloCrew / `Cognitive_OS` line
+- formal candidate-only closure record under `governance/releases/`
+
+#### Notes
+- no schemas, invariants, packages, SDKs, or protocol law changed
+- this wave closes the current downstream candidate-only line only
+
+---
+
 ﻿## [downstream-candidate-backlog-2026-04-15] — 2026-04-15
 
 ### 📋 Downstream Candidate Backlog Governance Wave

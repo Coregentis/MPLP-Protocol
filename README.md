@@ -60,6 +60,9 @@ current release walkthroughs.
 Downstream-driven candidate tracking, when present, lives under
 `governance/backlog/` as non-normative governance only.
 Those backlog files do not alter frozen protocol core truth.
+Downstream candidate-only closure records may also be recorded under
+`governance/backlog/` and `governance/releases/` as non-normative governance
+only; they do not imply schema change, package change, or protocol promotion.
 
 ## Version Semantics
 
