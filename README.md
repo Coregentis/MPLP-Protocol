@@ -1,4 +1,4 @@
-﻿# MPLP — Multi-Agent Lifecycle Protocol
+# MPLP — Multi-Agent Lifecycle Protocol
 
 > **Repository Role:** Source of Truth  
 > **protocol_version:** `1.0.0` — FROZEN  
@@ -312,6 +312,24 @@ Primary packages include:
   - [`schemas/v2/taxonomy/kernel-duties.yaml`](./schemas/v2/taxonomy/kernel-duties.yaml)
 - Public package mirror artifacts include:
   - [`packages/npm/schema/schemas/kernel-duties.json`](./packages/npm/schema/schemas/kernel-duties.json)
+
+### Current Package/Tooling Posture (Repo-Local)
+
+Current checked-in package/tooling posture is intentionally bounded:
+
+- this repository does **not** currently expose one unified root type/build gate
+- many `packages/npm/*` manifests are publish-oriented and point to `dist/`
+  targets that are not present in checked-in repo contents
+- `packages/sources/*` are not one uniform family of locally buildable source
+  packages; some are clearer source-side packages than others
+- package/tooling posture should therefore be read from current repo contents and
+  governance records, not inferred from publish-oriented manifest targets alone
+
+For the bounded package/tooling closure records, see:
+
+- [`governance/audits/MPLP-PACKAGE-TRUTH-AND-TOOLING-REVIEW-v0.1.md`](./governance/audits/MPLP-PACKAGE-TRUTH-AND-TOOLING-REVIEW-v0.1.md)
+- [`governance/audits/MPLP-DIST-TARGET-REALITY-MATRIX-v0.1.md`](./governance/audits/MPLP-DIST-TARGET-REALITY-MATRIX-v0.1.md)
+- [`governance/releases/MPLP-TOOLING-POSTURE-CLOSURE-RECORD-v0.1.md`](./governance/releases/MPLP-TOOLING-POSTURE-CLOSURE-RECORD-v0.1.md)
 
 ---
 

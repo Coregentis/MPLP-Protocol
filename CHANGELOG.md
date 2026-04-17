@@ -1,3 +1,23 @@
+## [tooling-posture-closure-2026-04-17] — 2026-04-17
+
+### 📋 Package Truth and Tooling Posture Hardening
+
+#### Added
+- package-truth and tooling review records under `governance/audits/`
+- package-by-package `dist` target reality matrix under `governance/audits/`
+- formal tooling posture closure record under `governance/releases/`
+
+#### Changed
+- README wording to clarify current repo-local package/tooling posture
+- validator source `tsconfig.json` normalized to ordinary UTF-8 JSON
+- tracked empty `.!*` tooling artifacts removed and future recurrence ignored
+
+#### Notes
+- no schemas, invariants, packages, SDK semantics, or protocol law changed
+- this wave clarifies current package/tooling truth only
+
+---
+
 ## [downstream-candidate-closure-2026-04-16] — 2026-04-16
 
 ### 📋 Downstream Candidate-Only Closure Wave
