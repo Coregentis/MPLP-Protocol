@@ -1,3 +1,18 @@
+## [operational-v1-mapping-candidate-note-2026-04-20] — 2026-04-20
+
+### 📋 Operational V1 Mapping Candidate Governance Wave
+
+#### Added
+- Operational V1 mapping candidate note under `governance/backlog/`
+
+#### Notes
+- no schema change
+- no protocol law change
+- no new MPLP object
+- this wave records guide/profile/binding candidates only
+
+---
+
 ## [tooling-posture-closure-2026-04-17] — 2026-04-17
 
 ### 📋 Package Truth and Tooling Posture Hardening
