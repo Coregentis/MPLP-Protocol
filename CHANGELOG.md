@@ -1,15 +1,17 @@
-## [operational-v1-mapping-candidate-note-2026-04-20] — 2026-04-20
+## [downstream-evidence-lifecycle-governance-candidate-note-2026-04-20] — 2026-04-20
 
-### 📋 Operational V1 Mapping Candidate Governance Wave
+### Downstream Evidence Lifecycle Governance Candidate Note
 
 #### Added
-- Operational V1 mapping candidate note under `governance/backlog/`
+- downstream evidence lifecycle-governance candidate note under `governance/backlog/`
 
 #### Notes
 - no schema change
 - no protocol law change
 - no new MPLP object
-- this wave records guide/profile/binding candidates only
+- no runtime endorsement
+- no implementation dependency
+- records guide/profile/binding candidates only
 
 ---
 
@@ -39,7 +41,7 @@
 
 #### Added
 - downstream candidate-only closure matrix under `governance/backlog/`
-- cross-repo non-promotion closure record for the current SoloCrew / `Cognitive_OS` line
+- cross-repo non-promotion closure record for the current downstream runtime/product line
 - formal candidate-only closure record under `governance/releases/`
 
 #### Notes

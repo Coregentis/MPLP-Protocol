@@ -5,31 +5,34 @@ doc_type: governance
 status: draft
 authority: none
 protocol_version: "1.0.0"
-doc_id: "MPLP-OPERATIONAL-V1-MAPPING-CANDIDATE-NOTE-v0.1"
-title: "MPLP Operational V1 Mapping Candidate Note v0.1"
+doc_id: "MPLP-DOWNSTREAM-EVIDENCE-LIFECYCLE-GOVERNANCE-CANDIDATE-NOTE-v0.1"
+title: "MPLP Downstream Evidence Lifecycle Governance Candidate Note v0.1"
 surface_role: canonical
 ---
 
-# MPLP Operational V1 Mapping Candidate Note v0.1
+# MPLP Downstream Evidence Lifecycle Governance Candidate Note v0.1
 
 ## A. Purpose
 
-This note maps SoloCrew and `Cognitive_OS` Operational V1 patterns to possible
-MPLP guide, profile, or binding candidates.
+This note records lifecycle-governance candidates observed from downstream
+evidence. It does not name, endorse, require, or bind any implementation,
+runtime environment, product, application, vendor, or downstream repository.
 
 It is:
 
 - no schema change
 - no protocol law change
 - no new MPLP object
-- no founder / Secretary / portfolio product semantics
-- mapping candidate only
+- no runtime endorsement
+- no implementation dependency
+- no product / application semantics
+- non-normative downstream evidence only
 
 ## B. Mapping Table
 
 | Pattern | MPLP Target | Current Support | Recommended Action | Schema Impact | Notes |
 | --- | --- | --- | --- | --- | --- |
-| operator request intake | nearest surfaces would be `Context` / `Dialog` / `Role` only after heavy neutralization | no protocol object matches a product intake surface | `DO_NOT_UPSTREAM` | `NO_CHANGE` | current semantics remain product convenience, not protocol core |
+| downstream request-intake evidence | nearest surfaces would be `Context` / `Dialog` / `Role` only after heavy neutralization | no protocol object matches a downstream intake surface directly | `DO_NOT_UPSTREAM` | `NO_CHANGE` | current semantics remain downstream convenience, not protocol core |
 | non-executing recommendation envelope | `Confirm` guide or runtime guide note | `Confirm` exists; generic recommendation envelope does not | `GUIDE_MAPPING_CANDIDATE` | `NO_CHANGE` | likely best handled as guide-level relation between non-executing recommendation and confirmation posture |
 | evidence posture summary | `Trace`-adjacent evidence-binding guidance | strong Trace/evidence vocabulary exists, but not stale/insufficient posture summary | `BINDING_NOTE_CANDIDATE` | `NO_CHANGE` | may later become an evidence-posture-to-Trace note |
 | projection-safe state exposure | L3 runtime-glue guidance | runtime-glue space exists in docs; not protocol core | `RUNTIME_GLUE_CANDIDATE` | `NO_CHANGE` | this is runtime/projection handling, not L1/L2 law |
@@ -47,7 +50,7 @@ MPLP schemas/v2: NO_CHANGE
 
 Reason:
 
-Operational V1 patterns are runtime, product-projection, or governance patterns.
+These patterns are runtime, downstream-projection, or governance patterns.
 They are not yet stable enough or protocol-native enough for L1/L2 schema law.
 The candidate path is guide, profile, or binding-note first.
 
@@ -64,7 +67,7 @@ The following are appropriate future candidate tracks:
 
 ## E. Decision
 
-`MPLP_MAPPING_NOTE_READY_FOR_GUIDE_PROFILE_BACKLOG`
+`MPLP_DOWNSTREAM_EVIDENCE_NOTE_READY_FOR_GUIDE_PROFILE_BACKLOG`
 
 The current evidence supports guide/profile/binding-note backlog movement only.
 It does not support schema change or protocol-law widening.
