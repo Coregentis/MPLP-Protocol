@@ -1,3 +1,24 @@
+## [candidate-consolidation-2026-04-21] — 2026-04-21
+
+### Candidate Consolidation
+
+#### Added
+- canonical candidate backlog index under `governance/backlog/`
+- guide/profile/binding holding notes under `governance/backlog/`
+- research archive / duplicate closure note under `governance/backlog/`
+- candidate consolidation gate under `governance/gates/`
+
+#### Notes
+- no schema change
+- no protocol law change
+- no normative promotion
+- no runtime endorsement
+- no product endorsement
+- no implementation endorsement
+- no certification claim
+
+---
+
 ## [candidate-backlog-review-2026-04-21] — 2026-04-21
 
 ### Candidate Backlog Review
