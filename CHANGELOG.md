@@ -1,3 +1,26 @@
+## [candidate-backlog-review-2026-04-21] — 2026-04-21
+
+### Candidate Backlog Review
+
+#### Added
+- candidate backlog review inventory under `governance/audits/`
+- candidate disposition matrix under `governance/backlog/`
+- non-executing lifecycle revision candidate review under
+  `governance/backlog/`
+- candidate backlog consolidation plan under `governance/backlog/`
+- candidate backlog review gate under `governance/gates/`
+
+#### Notes
+- no schema change
+- no protocol law change
+- no normative promotion
+- no runtime endorsement
+- no product endorsement
+- no implementation endorsement
+- no certification claim
+
+---
+
 ## [downstream-evidence-lifecycle-governance-candidate-note-2026-04-20] — 2026-04-20
 
 ### Downstream Evidence Lifecycle Governance Candidate Note
