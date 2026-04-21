@@ -1,3 +1,28 @@
+## [mpgc-candidate-review-preparation-2026-04-21] — 2026-04-21
+
+### MPGC Candidate Review Preparation
+
+#### Added
+- review preparation index under `governance/mpgc-review/`
+- review agenda under `governance/mpgc-review/`
+- evidence summary packet under `governance/mpgc-review/`
+- review rubric under `governance/mpgc-review/`
+- risk matrix under `governance/mpgc-review/`
+- decision ballot template under `governance/mpgc-review/`
+- non-promotion audit under `governance/audits/`
+- review preparation gate under `governance/gates/`
+
+#### Notes
+- no MPGC decision
+- no RFC is opened in this wave
+- no candidate is accepted in this wave
+- no guide/profile/binding draft
+- no schema change
+- no protocol law change
+- no certification claim
+
+---
+
 ## [mpgc-candidate-intake-2026-04-21] — 2026-04-21
 
 ### MPGC Candidate Intake Dossiers
@@ -98,7 +123,7 @@
 - tracked empty `.!*` tooling artifacts removed and future recurrence ignored
 
 #### Notes
-- no schemas, invariants, packages, SDK semantics, or protocol law changed
+- no schemas, invariants, packages, SDK semantics, or protocol-law change
 - this wave clarifies current package/tooling truth only
 
 ---
@@ -113,7 +138,7 @@
 - formal candidate-only closure record under `governance/releases/`
 
 #### Notes
-- no schemas, invariants, packages, SDKs, or protocol law changed
+- no schemas, invariants, packages, SDKs, or protocol-law change
 - this wave closes the current downstream candidate-only line only
 
 ---
