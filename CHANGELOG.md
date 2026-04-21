@@ -1,3 +1,27 @@
+## [mpgc-candidate-intake-2026-04-21] — 2026-04-21
+
+### MPGC Candidate Intake Dossiers
+
+#### Added
+- MPGC candidate intake index under `governance/mpgc-intake/`
+- MPGC candidate intake dossiers for lifecycle governance, stop/escalation/revision posture, and evidence vocabulary consideration under `governance/mpgc-intake/`
+- MPGC candidate decision-needed matrix under `governance/mpgc-intake/`
+- MPGC candidate intake non-promotion audit under `governance/audits/`
+- MPGC candidate intake gate under `governance/gates/`
+
+#### Notes
+- added MPGC candidate intake dossiers for lifecycle governance,
+  stop/escalation/revision posture, and evidence vocabulary consideration as
+  pre-RFC, non-normative, not-accepted review materials only
+- no schema change
+- no protocol law change
+- no normative promotion
+- no guide/profile/binding draft
+- no MPGC acceptance
+- no certification claim
+
+---
+
 ## [candidate-consolidation-2026-04-21] — 2026-04-21
 
 ### Candidate Consolidation
