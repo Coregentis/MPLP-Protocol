@@ -76,7 +76,8 @@ Backlog entry is **not** acceptance.
   design
 - evidence that the concept can be expressed as interface obligation rather than
   product workflow packaging
-- successful validation in at least one setting beyond Cognitive/SoloCrew
+- successful validation in at least one setting beyond one downstream runtime /
+  product line
 
 ### 3.2 Delivery / Acceptance Contract Envelope
 

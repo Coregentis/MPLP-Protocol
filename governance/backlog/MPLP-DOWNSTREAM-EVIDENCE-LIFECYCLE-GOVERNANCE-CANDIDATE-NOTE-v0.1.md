@@ -23,7 +23,7 @@ It is:
 - no schema change
 - no protocol law change
 - no new MPLP object
-- no runtime endorsement
+- runtime is not endorsed
 - no implementation dependency
 - no product / application semantics
 - non-normative downstream evidence only
@@ -40,7 +40,7 @@ It is:
 | forbidden claim scan | governance guide | protocol repo already carries boundary and promotion governance | `GUIDE_MAPPING_CANDIDATE` | `NO_CHANGE` | could become a governance-facing release/evidence guard note |
 | release evidence pack | governance / evidence guide | evidence-pack and conformance framing already exist | `NO_CHANGE` | `NO_CHANGE` | current MPLP evidence model is already sufficient at this level |
 | seal / closure record | governance / release record guide | governance records already support closure/seal record patterns | `GUIDE_MAPPING_CANDIDATE` | `NO_CHANGE` | a guide note may help, but schema change is unwarranted |
-| disclosed gaps | governance / conformance note | bounded non-certification and evidence posture exist | `GUIDE_MAPPING_CANDIDATE` | `NO_CHANGE` | may later become disclosed-gap governance guidance |
+| disclosed gaps | governance / conformance note | bounded not-certified posture and evidence posture exist | `GUIDE_MAPPING_CANDIDATE` | `NO_CHANGE` | may later become disclosed-gap governance guidance |
 | runtime-private vs projection-safe boundary | protocol/runtime boundary guidance | this boundary already exists clearly in MPLP docs and backlog governance | `NO_CHANGE` | `NO_CHANGE` | no further protocol-core action needed now |
 | stop condition / escalation envelope | candidate profile or guide path | backlog already tracks constraint / stop condition / escalation envelope pressure | `PROFILE_CANDIDATE` | `NO_CHANGE` now | if stabilized later, this should begin as profile/backlog work, not schema law |
 

@@ -23,8 +23,8 @@ surface_role: canonical
 This note records the current bounded MPLP posture toward active downstream
 runtime/product pressure visible through:
 
-- `Cognitive_OS`
-- `SoloCrew`
+- a downstream runtime substrate
+- a downstream product
 
 Its purpose is narrow:
 
@@ -47,28 +47,29 @@ Current MPLP does **not** become authoritative over:
 
 - downstream runtime realization choices
 - downstream product operating-model choices
-- mother-runtime-private object families in `Cognitive_OS`
-- product projection surfaces in `SoloCrew`
+- mother-runtime-private object families in a downstream runtime substrate
+- product projection surfaces in a downstream product
 
 ## 3. Frozen Downstream Boundary Read
 
 The following remain outside active MPLP law now:
 
 - `Cell` / multi-cell semantics
-- `Portfolio` semantics
-- `Secretary` semantics
+- collection semantics
+- role-specific workflow semantics
 - `Business Pack` semantics
 - `Metrics Pack` semantics
 - product summary cards and product review packets
-- `Cognitive_OS` runtime-private management-object families as protocol object
+- downstream runtime substrate runtime-private management-object families as
+  protocol object
   law
 
 Current correct read:
 
 - some abstraction pressure remains visible as candidate-only material
 - other downstream concepts remain explicitly out of MPLP scope
-- concrete runtime-private `Cognitive_OS` objects do not become protocol law by
-  downstream usage
+- concrete runtime-private downstream runtime substrate objects do not become
+  protocol law by downstream usage
 
 ## 4. Candidate-Only Reminder
 
@@ -105,5 +106,5 @@ It should not be read as:
 
 - the owner of current downstream runtime semantics
 - the owner of current downstream product semantics
-- already widened to absorb `Cell`, `Portfolio`, `Secretary`, `Business Pack`,
-  or `Metrics Pack` into active protocol law
+- already widened to absorb `Cell`, collection, role-specific workflow,
+  `Business Pack`, or `Metrics Pack` into active protocol law

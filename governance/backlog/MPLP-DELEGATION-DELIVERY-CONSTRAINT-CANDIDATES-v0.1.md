@@ -30,8 +30,8 @@ pressure has made visible:
 Its job is to make candidate discussion more precise without confusing:
 
 - protocol-level envelope semantics
-- SoloCrew product contracts
-- `Cognitive_OS` runtime-private backing objects
+- downstream product contracts
+- downstream runtime substrate runtime-private backing objects
 
 ## 2. Boundary Distinction
 
@@ -40,14 +40,15 @@ Its job is to make candidate discussion more precise without confusing:
 At protocol level, an envelope candidate would mean only the narrowest
 vendor-neutral interface shape for portable expression and evidence.
 
-### 2.2 SoloCrew Product Contracts
+### 2.2 Downstream Product Contracts
 
-SoloCrew product contracts are downstream business and product structures.
+Downstream product contracts are downstream business and product structures.
 They may create pressure, but they are not protocol law.
 
-### 2.3 Cognitive_OS Runtime-Private Backing Objects
+### 2.3 Downstream Runtime-Private Backing Objects
 
-`Cognitive_OS` runtime-private objects and runtime-family drafts may support a
+Downstream runtime substrate runtime-private objects and runtime-family drafts
+may support a
 similar concern, but they are not protocol law either.
 
 MPLP must not absorb either downstream product contracts or runtime-private
@@ -88,8 +89,8 @@ If real, this could support:
 
 ### Explicitly Out Of Scope
 
-- SoloCrew `Cell` or management contracts
-- `Cognitive_OS` orchestration internals
+- downstream product `Cell`-like or management contracts
+- downstream runtime substrate orchestration internals
 - runtime dispatch logic
 - product UI or workflow packaging
 
@@ -127,7 +128,7 @@ If real, this could support:
 
 ### Explicitly Out Of Scope
 
-- SoloCrew `Delivery Return`
+- downstream delivery-return contracts
 - acceptance cards, dashboards, or operator consoles
 - runtime completion reports or workflow timelines
 - business-pack delivery semantics
@@ -167,9 +168,9 @@ If real, this could support:
 
 ### Explicitly Out Of Scope
 
-- SoloCrew `Approval Request`
-- `Cognitive_OS` `confirm-gate` or policy-service internals
-- Secretary queues
+- downstream approval-request contracts
+- downstream runtime substrate `confirm-gate` or policy-service internals
+- downstream product-specific role queues
 - business approval workflows
 - channel escalation routing
 
@@ -180,6 +181,6 @@ The correct current MPLP posture is:
 - keep these three families visible
 - keep them candidate-only
 - keep them separate from downstream product contracts
-- keep them separate from mother-runtime-private backing objects
+- keep them separate from downstream runtime-private backing objects
 - refuse protocol promotion until the promotion ladder and evidence rules are
   actually satisfied

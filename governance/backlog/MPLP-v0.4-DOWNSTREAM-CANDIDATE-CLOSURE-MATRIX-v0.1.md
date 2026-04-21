@@ -23,9 +23,10 @@ surface_role: canonical
 This matrix records how the currently closed downstream line relates to MPLP
 after:
 
-- SoloCrew `v0.1` through `v0.4`
-- `Cognitive_OS` `v0.4` runtime-private workforce line
-- the bounded SoloCrew <-> `Cognitive_OS` integration gate
+- downstream product `v0.1` through `v0.4`
+- downstream runtime substrate `v0.4` runtime-private workforce line
+- the bounded downstream product <-> downstream runtime substrate integration
+  gate
 
 Its job is narrow:
 
@@ -49,19 +50,19 @@ matrix it simply stays inside the broader `candidate_only` bucket.
 
 | Abstraction | Current Downstream Pressure Source | Current Maturity | Existing Backlog Status | Closure Bucket | Why It Sits Here Now | Future Promotion Would Require |
 | --- | --- | --- | --- | --- | --- | --- |
-| `Delegation Envelope` | SoloCrew bounded operator/product pressure and `Cognitive_OS` bounded runtime-pressure around handoff/delegation-like concerns | Early conceptual pressure only | `candidate_only` | `candidate_only` | Still plausible as a future protocol candidate, but no stable neutral kernel or repeated cross-runtime evidence exists yet | repeated pressure beyond one downstream line; stable vendor-neutral envelope meaning; explicit non-overlap with frozen MPLP core; schema-shape stability |
-| `Delivery / Acceptance Contract Envelope` | SoloCrew delivery/review/acceptance framing and `Cognitive_OS` delivery-return-like runtime-private pressure | Early and still close to business-operating wording | `candidate_but_not_ready` | `candidate_only` | Still worth tracking as a possible abstraction family, but current downstream material remains too realization-sensitive for protocol promotion | proof that delivery/acceptance semantics remain meaningful outside one product language; multiple independent implementations; stable neutral envelope shape |
-| `Constraint / Stop Condition / Escalation Envelope` | SoloCrew bounded review/escalation pressure and `Cognitive_OS` approval/constraint-like runtime-private pressure | Early-to-mid conceptual pressure | `candidate_but_not_ready` | `candidate_only` | This is the strongest candidate family conceptually, but it still overlaps too much with runtime policy and product decision handling to become protocol law now | repeated validation across independent runtimes; vendor-neutral posture semantics; stable schema candidate; proof that current MPLP modules cannot already host the need |
-| `Multi Cell` / `Cell` semantics | SoloCrew `v0.4-multi-cell-foundation` product line and `Cognitive_OS` cell-scope runtime-private preconditions | Real downstream usage, but product/runtime-specific | Not in MPLP backlog scope | `explicitly_out_of_mplp_scope` | These are product/runtime family semantics, not current MPLP protocol abstractions | a separate future argument would first need to show that any portable neutral kernel exists apart from product/runtime ownership; no such case exists now |
-| `Portfolio` / `Secretary` semantics | Future-facing SoloCrew product planning only | Not protocol-shaped today | Not in MPLP backlog scope | `explicitly_out_of_mplp_scope` | These are explicitly product operating-model semantics and must not be re-read as protocol law | not applicable at this time; these concepts remain outside MPLP scope unless their meaning changes radically |
-| runtime-private management-object-family semantics (`management-directive-record`, `delivery-return-record`, `approval-request-record`) | `Cognitive_OS` runtime-private workforce line, consumed in bounded downstream form by SoloCrew | Landed and machine-readable, but intentionally runtime-private and still partial/asymmetric as a family | Not in MPLP backlog scope as object law | `not_protocol_fit_at_this_time` | The current objects are concrete runtime-private records, not neutral MPLP envelopes; the abstract pressure they create is already tracked separately in candidate families above | strong proof that a narrower vendor-neutral envelope exists apart from these concrete runtime-private objects; cross-implementation evidence; non-product, non-runtime-private semantics |
+| `Delegation Envelope` | downstream product bounded operator/product pressure and downstream runtime substrate bounded runtime-pressure around handoff/delegation-like concerns | Early conceptual pressure only | `candidate_only` | `candidate_only` | Still plausible as a future protocol candidate, but no stable neutral kernel or repeated cross-runtime evidence exists yet | repeated pressure beyond one downstream line; stable vendor-neutral envelope meaning; explicit non-overlap with frozen MPLP core; schema-shape stability |
+| `Delivery / Acceptance Contract Envelope` | downstream product delivery/review/acceptance framing and downstream runtime substrate delivery-return-like runtime-private pressure | Early and still close to business-operating wording | `candidate_but_not_ready` | `candidate_only` | Still worth tracking as a possible abstraction family, but current downstream material remains too realization-sensitive for protocol promotion | proof that delivery/acceptance semantics remain meaningful outside one product language; multiple independent implementations; stable neutral envelope shape |
+| `Constraint / Stop Condition / Escalation Envelope` | downstream product bounded review/escalation pressure and downstream runtime substrate approval/constraint-like runtime-private pressure | Early-to-mid conceptual pressure | `candidate_but_not_ready` | `candidate_only` | This is the strongest candidate family conceptually, but it still overlaps too much with runtime policy and product decision handling to become protocol law now | repeated validation across independent runtimes; vendor-neutral posture semantics; stable schema candidate; proof that current MPLP modules cannot already host the need |
+| `Multi Cell` / `Cell` semantics | downstream product multi-cell foundation line and downstream runtime substrate cell-scope runtime-private preconditions | Real downstream usage, but product/runtime-specific | Not in MPLP backlog scope | `explicitly_out_of_mplp_scope` | These are product/runtime family semantics, not current MPLP protocol abstractions | a separate future argument would first need to show that any portable neutral kernel exists apart from product/runtime ownership; no such case exists now |
+| `Collection` / role-specific workflow semantics | Future-facing downstream product planning only | Not protocol-shaped today | Not in MPLP backlog scope | `explicitly_out_of_mplp_scope` | These are explicitly product operating-model semantics and must not be re-read as protocol law | not applicable at this time; these concepts remain outside MPLP scope unless their meaning changes radically |
+| runtime-private management-object-family semantics (`management-directive-record`, `delivery-return-record`, `approval-request-record`) | downstream runtime substrate runtime-private workforce line, consumed in bounded downstream form by a downstream product | Landed and machine-readable, but intentionally runtime-private and still partial/asymmetric as a family | Not in MPLP backlog scope as object law | `not_protocol_fit_at_this_time` | The current objects are concrete runtime-private records, not neutral MPLP envelopes; the abstract pressure they create is already tracked separately in candidate families above | strong proof that a narrower vendor-neutral envelope exists apart from these concrete runtime-private objects; cross-implementation evidence; non-product, non-runtime-private semantics |
 
 ## 4. Net Classification Result
 
 The correct current MPLP reading is:
 
 - three abstraction families remain `candidate_only`
-- current multi-cell, cell, portfolio, and secretary semantics remain
+- current multi-cell, cell, collection, and role-specific workflow semantics remain
   `explicitly_out_of_mplp_scope`
 - the concrete runtime-private management-object family is
   `not_protocol_fit_at_this_time`
@@ -70,9 +71,11 @@ The correct current MPLP reading is:
 
 No current downstream abstraction becomes MPLP law merely because:
 
-- SoloCrew now has multiple bounded `v0.4` surfaces
-- `Cognitive_OS` now has machine-readable runtime-private workforce records
-- the current SoloCrew <-> `Cognitive_OS` integration gate passed
+- the downstream product line now has multiple bounded `v0.4` surfaces
+- the downstream runtime substrate now has machine-readable runtime-private
+  workforce records
+- the current downstream product <-> downstream runtime substrate integration
+  gate passed
 
 The present closure result is therefore:
 

@@ -23,8 +23,8 @@ surface_role: canonical
 This backlog captures bounded downstream pressure that has now become visible
 after:
 
-- SoloCrew `v0.4-multi-cell-foundation`
-- Cognitive_OS `v0.4` runtime blocker intake and foundation refresh
+- a downstream product multi-cell foundation line
+- a downstream runtime substrate runtime blocker intake and foundation refresh
 
 Those downstream pressures do **not** automatically justify protocol promotion.
 
@@ -45,14 +45,14 @@ Only the following candidate families are in scope for this backlog wave:
 Everything else must stay out of MPLP for now, including:
 
 - `Cell`
-- `Portfolio`
-- `Secretary`
+- collection semantics
+- downstream product-specific role semantics
 - `Crew Compiler`
 - KPI, OKR, brand, or business data families
 - `Business Pack` or `Metrics Pack`
 - role/model/tool policy packaging
 - product cards or summary-projection objects
-- `Cognitive_OS` private runtime objects
+- downstream runtime substrate private runtime objects
 
 ## 3. Candidate Status Scale
 

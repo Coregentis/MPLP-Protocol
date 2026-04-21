@@ -38,7 +38,7 @@ operator clarification, or contract-blocked states.
 - no protocol law change
 - does not endorse any runtime
 - does not endorse any product
-- no certification
+- not certified
 - no implementation dependency
 - no normative status
 

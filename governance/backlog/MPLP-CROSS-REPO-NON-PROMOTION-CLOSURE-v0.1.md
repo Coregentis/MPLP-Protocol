@@ -15,7 +15,7 @@ surface_role: canonical
 > **Non-Normative Boundary Closure Only**
 >
 > This document records the non-promotion judgment for the current
-> SoloCrew / `Cognitive_OS` downstream line.
+> downstream product / downstream runtime substrate line.
 > It does **not** promote any schema, invariant, package, SDK, or protocol law.
 
 ## 1. Purpose
@@ -25,15 +25,16 @@ boundary explicitly.
 
 This document therefore records the net judgment that:
 
-- SoloCrew product usage does not imply MPLP promotion
-- `Cognitive_OS` runtime-private implementation does not imply MPLP promotion
+- downstream product usage does not imply MPLP promotion
+- downstream runtime substrate runtime-private implementation does not imply
+  MPLP promotion
 - current downstream `v0.4` multi-cell work does not silently create MPLP law
 
 ## 2. Current Cross-Repo Truth
 
-### 2.1 SoloCrew
+### 2.1 Downstream Product
 
-SoloCrew currently contributes:
+The downstream product currently contributes:
 
 - bounded product-projected surfaces
 - bounded read/inspect-only management and continuity visibility
@@ -43,9 +44,9 @@ SoloCrew currently contributes:
 These product surfaces may create downstream pressure.
 They are not MPLP objects.
 
-### 2.2 Cognitive_OS
+### 2.2 Downstream Runtime Substrate
 
-`Cognitive_OS` currently contributes:
+The downstream runtime substrate currently contributes:
 
 - bounded runtime-private workforce records
 - bounded downstream-consumable runtime-private inputs
@@ -67,8 +68,9 @@ MPLP has not adopted the current downstream abstractions into protocol law.
 
 The following statements are now closed as current truth:
 
-- SoloCrew product usage does not imply MPLP promotion.
-- `Cognitive_OS` runtime-private implementation does not imply MPLP promotion.
+- downstream product usage does not imply MPLP promotion.
+- downstream runtime substrate runtime-private implementation does not imply
+  MPLP promotion.
 - runtime-private workforce objects are not MPLP objects.
 - product-projected management or inspection surfaces are not MPLP objects.
 - no current `v0.4` multi-cell line should be read as frozen MPLP law.
@@ -82,7 +84,8 @@ The following readings are incorrect and must be rejected:
 
 Rejected because:
 
-- `cell-runtime-scope` is currently a `Cognitive_OS` runtime-private object
+- `cell-runtime-scope` is currently a downstream runtime substrate
+  runtime-private object
 - current Cell semantics belong to product/runtime layers, not MPLP core
 - MPLP has not adopted Cell semantics into schemas or invariants
 
@@ -94,11 +97,11 @@ Rejected because:
 - current approval/escalation pressure remains only candidate material
 - MPLP has no adopted approval-envelope schema family today
 
-### 4.3 "SoloCrew inspect surfaces prove protocol-level delegation or acceptance semantics exist"
+### 4.3 "Downstream product inspect surfaces prove protocol-level delegation or acceptance semantics exist"
 
 Rejected because:
 
-- SoloCrew surfaces are product projections
+- downstream product surfaces are product projections
 - product projections can reveal downstream pressure without defining protocol
   law
 - inspect-only product surfaces are not evidence of adopted protocol semantics
@@ -117,8 +120,8 @@ Rejected because:
 
 The correct current three-repo reading is:
 
-- SoloCrew remains a downstream product consumer
-- `Cognitive_OS` remains a mother-runtime provider of runtime-private truth
+- the downstream product remains a downstream product consumer
+- the downstream runtime substrate remains a provider of runtime-private truth
 - MPLP remains the frozen protocol core plus non-normative candidate backlog
 
 No boundary in the current line has collapsed those three roles into one.
