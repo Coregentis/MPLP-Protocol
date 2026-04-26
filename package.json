@@ -12,8 +12,8 @@
     "scripts": {
         "docs:dev": "cd docs && npm run start",
         "docs:build": "cd docs && npm run build",
-        "test": "echo 'No root tests configured'",
-        "lint": "echo 'No root linting configured'"
+        "test": "node scripts/04-build/root-verification.mjs",
+        "lint": "node scripts/04-build/root-verification.mjs --lint"
     },
     "devDependencies": {
         "js-yaml": "^4.1.0",

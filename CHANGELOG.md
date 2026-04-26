@@ -1,3 +1,22 @@
+## [root-verification-entry-2026-04-26] — 2026-04-26
+
+### Root Verification Entry Maintenance
+
+#### Changed
+- replaced empty root `npm test` / `npm run lint` echo scripts with a
+  dependency-free, read-only root verification gate under
+  `scripts/04-build/root-verification.mjs`
+
+#### Notes
+- no schema change
+- no protocol law change
+- no MPGC acceptance or RFC decision
+- no runtime endorsement
+- no product endorsement
+- no certification claim
+
+---
+
 ## [mpgc-candidate-review-preparation-2026-04-21] — 2026-04-21
 
 ### MPGC Candidate Review Preparation
