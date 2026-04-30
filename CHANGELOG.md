@@ -1,3 +1,19 @@
+## [downstream-review-loop-no-change-candidate-2026-04-30] — 2026-04-30
+
+### Downstream Review-Loop Evidence No-Change Decision
+
+#### Added
+- recorded downstream review-loop evidence no-change/candidate decision;
+  non-normative, no schema/spec/core law change
+
+#### Notes
+- no certification claim
+- no endorsement claim
+- no runtime endorsement
+- no product endorsement
+
+---
+
 ## [root-verification-entry-2026-04-26] — 2026-04-26
 
 ### Root Verification Entry Maintenance
