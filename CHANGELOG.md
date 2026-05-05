@@ -1,3 +1,18 @@
+## [mpgc-candidate-backlog-registration-2026-05-05] - 2026-05-05
+
+### MPGC Candidate Backlog Registration
+
+#### Added
+- registered MPGC non-normative candidate backlog from SoloCrew/Cognitive_OS
+  downstream evidence
+
+#### Notes
+- no schema/spec/core-law change
+- no profile/binding implementation
+- no conformance/certification/endorsement claim
+
+---
+
 ## [downstream-review-loop-no-change-candidate-2026-04-30] — 2026-04-30
 
 ### Downstream Review-Loop Evidence No-Change Decision
