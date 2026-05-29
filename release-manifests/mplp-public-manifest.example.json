@@ -1,0 +1,190 @@
+{
+  "manifest_id": "mplp-public-manifest-1.0.0-draft-650e5b2f",
+  "manifest_version": "0.1.0",
+  "generated_at": "2026-05-29T19:34:59+08:00",
+  "protocol_name": "MPLP",
+  "protocol_full_name": "Multi-Agent Lifecycle Protocol",
+  "protocol_version": "1.0.0",
+  "protocol_release_tag": null,
+  "protocol_commit_sha": "650e5b2f6754a7016d8c8184e54881b0fcef6683",
+  "copyright_holder": "Jearon Wong",
+  "trademark_notice": "Trademark notice pending owner approval. Downstream surfaces must not imply certification, endorsement, regulator approval, or protocol authority beyond this manifest.",
+  "license": "Apache-2.0",
+  "canonical_repository": "https://github.com/Coregentis/MPLP-Protocol",
+  "future_repository_target": "https://github.com/Multi-Agent-Lifecycle-Protocol/MPLP-Protocol",
+  "docs_url": "https://docs.mplp.io",
+  "website_url": "https://www.mplp.io",
+  "schema_manifest": {
+    "schema_bundle_version": "2.0.0",
+    "invariant_bundle_version": "2.0.0",
+    "schema_manifest_path": "schemas/v2/_manifests/",
+    "schema_manifest_url": "https://github.com/Coregentis/MPLP-Protocol/tree/main/schemas/v2/_manifests",
+    "schema_manifest_commit_sha": "650e5b2f6754a7016d8c8184e54881b0fcef6683"
+  },
+  "sdk_packages": [
+    {
+      "name": "@mplp/compliance",
+      "registry": "npm",
+      "current_version": "1.0.5",
+      "next_clean_version": "1.0.6",
+      "package_replacement_status": "planned_not_published"
+    },
+    {
+      "name": "@mplp/conformance",
+      "registry": "npm",
+      "current_version": "1.0.0",
+      "next_clean_version": "1.0.1",
+      "package_replacement_status": "planned_not_published"
+    },
+    {
+      "name": "@mplp/coordination",
+      "registry": "npm",
+      "current_version": "1.0.6",
+      "next_clean_version": "1.0.7",
+      "package_replacement_status": "planned_not_published"
+    },
+    {
+      "name": "@mplp/core",
+      "registry": "npm",
+      "current_version": "1.0.6",
+      "next_clean_version": "1.0.7",
+      "package_replacement_status": "planned_not_published"
+    },
+    {
+      "name": "@mplp/devtools",
+      "registry": "npm",
+      "current_version": "1.0.5",
+      "next_clean_version": "1.0.6",
+      "package_replacement_status": "planned_not_published"
+    },
+    {
+      "name": "@mplp/integration-llm-http",
+      "registry": "npm",
+      "current_version": "1.0.5",
+      "next_clean_version": "1.0.6",
+      "package_replacement_status": "planned_not_published"
+    },
+    {
+      "name": "@mplp/integration-storage-fs",
+      "registry": "npm",
+      "current_version": "1.0.5",
+      "next_clean_version": "1.0.6",
+      "package_replacement_status": "planned_not_published"
+    },
+    {
+      "name": "@mplp/integration-storage-kv",
+      "registry": "npm",
+      "current_version": "1.0.5",
+      "next_clean_version": "1.0.6",
+      "package_replacement_status": "planned_not_published"
+    },
+    {
+      "name": "@mplp/integration-tools-generic",
+      "registry": "npm",
+      "current_version": "1.0.5",
+      "next_clean_version": "1.0.6",
+      "package_replacement_status": "planned_not_published"
+    },
+    {
+      "name": "@mplp/modules",
+      "registry": "npm",
+      "current_version": "1.0.5",
+      "next_clean_version": "1.0.6",
+      "package_replacement_status": "planned_not_published"
+    },
+    {
+      "name": "@mplp/runtime-minimal",
+      "registry": "npm",
+      "current_version": "1.0.5",
+      "next_clean_version": "1.0.6",
+      "package_replacement_status": "planned_not_published"
+    },
+    {
+      "name": "@mplp/schema",
+      "registry": "npm",
+      "current_version": "1.0.6",
+      "next_clean_version": "1.0.7",
+      "package_replacement_status": "planned_not_published"
+    },
+    {
+      "name": "@mplp/sdk-ts",
+      "registry": "npm",
+      "current_version": "1.0.7",
+      "next_clean_version": "1.0.8",
+      "package_replacement_status": "planned_not_published"
+    }
+  ],
+  "pypi_packages": [
+    {
+      "name": "mplp-sdk",
+      "registry": "pypi",
+      "current_version": "1.0.5",
+      "next_clean_version": "1.0.6",
+      "package_replacement_status": "planned_not_published"
+    }
+  ],
+  "validation_lab_pointer": {
+    "validation_lab_repo": "https://github.com/Coregentis/MPLP-Validation-Lab",
+    "future_validation_lab_repo_target": "https://github.com/Multi-Agent-Lifecycle-Protocol/MPLP-Validation-Lab",
+    "validation_lab_commit_sha": null,
+    "validation_lab_release_tag": null,
+    "consumed_protocol_manifest_id": "mplp-public-manifest-1.0.0-draft-650e5b2f",
+    "ruleset_version": "ruleset-1.0",
+    "evidence_pack_version": null,
+    "lab_url": "https://lab.mplp.io",
+    "relation_status": "standalone_pointer_pending"
+  },
+  "validation_lab_boundary": {
+    "non_certifying": true,
+    "non_normative": true,
+    "evidence_based_verdicts_only": true,
+    "no_endorsement": true,
+    "no_certification": true,
+    "no_regulator_approval": true,
+    "no_protocol_truth_override": true,
+    "no_runtime_authority": true,
+    "no_sdk_authority": true
+  },
+  "website_boundary": {
+    "discovery_positioning_only": true,
+    "seo_geo_surface": true,
+    "protocol_truth_override_allowed": false,
+    "schema_truth_override_allowed": false,
+    "release_truth_override_allowed": false,
+    "package_publication_authority_allowed": false
+  },
+  "release_status": {
+    "state": "draft",
+    "public_release_ready": false,
+    "gates": {
+      "schema_validated": true,
+      "example_validated": true,
+      "website_consumption_verified": false,
+      "validation_lab_pointer_verified": false,
+      "submodule_removal_allowed": false
+    }
+  },
+  "forbidden_claims": [
+    "MPLP-certified",
+    "certified by MPLP",
+    "officially endorsed by MPLP",
+    "regulator approved",
+    "Website defines protocol truth",
+    "Validation Lab defines protocol truth",
+    "package version equals protocol version unless explicitly stated"
+  ],
+  "non_certification_notice": "MPLP Validation Lab outputs are evidence-based and non-certifying. They do not constitute endorsement, regulator approval, runtime authority, SDK authority, or protocol authority.",
+  "package_replacement_status": {
+    "status": "planned_not_published",
+    "clean_replacement_versions_defined": true,
+    "package_actions_executed": false
+  },
+  "repo_migration_status": {
+    "status": "reserved_future_org_not_migrated",
+    "current_org": "Coregentis",
+    "future_org": "Multi-Agent-Lifecycle-Protocol",
+    "migration_now": false,
+    "remotes_changed": false,
+    "package_repository_urls_changed": false
+  }
+}
