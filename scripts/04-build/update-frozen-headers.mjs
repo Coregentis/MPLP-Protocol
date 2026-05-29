@@ -19,11 +19,11 @@ const FROZEN_MD_BLOCK = `> [!FROZEN]
 const COPYRIGHT_FOOTER = `
 ---
 
-© 2025 Bangshi Beijing Network Technology Limited Company
+© 2026 Jearon Wong
 Licensed under the Apache License, Version 2.0.`;
 
 const SOURCE_HEADER = `/**
- * © 2025 Bangshi Beijing Network Technology Limited Company
+ * © 2026 Jearon Wong
  * Licensed under the Apache License, Version 2.0.
  *
  * This file is part of the MPLP reference implementation.
@@ -31,10 +31,10 @@ const SOURCE_HEADER = `/**
  */`;
 
 const YAML_HEADER = `# MPLP v1.0.0 FROZEN – Invariant Set
-# © 2025 Bangshi Beijing Network Technology Limited Company – Apache-2.0
+# © 2026 Jearon Wong – Apache-2.0
 # Governance: MPLP Protocol Governance Committee (MPGC)`;
 
-const JSON_COMMENT = "MPLP v1.0.0 FROZEN – © 2025 Bangshi Beijing Network Technology Limited Company – Apache-2.0 – Governance: MPGC";
+const JSON_COMMENT = "MPLP v1.0.0 FROZEN – © 2026 Jearon Wong – Apache-2.0 – Governance: MPGC";
 
 const JSON_META_BASE = {
   "protocolVersion": "1.0.0",
@@ -95,7 +95,7 @@ function processMarkdown(filePath) {
   } while (content !== prevContent);
 
   // 3. Remove ALL Existing Footers - IMPROVED: uses loop to remove ALL duplicates
-  const footerRegex = /([\r\n]+---)?[\r\n]+(©|&copy;|Copyright)?\s*2025 (邦士（北京）网络科技有限公司|Bangshi Beijing Network Technology Limited Company)[\s\S]*?Version 2\.0\.[\r\n]*/g;
+  const footerRegex = /([\r\n]+---)?[\r\n]+(©|&copy;|Copyright)?\s*2025 (邦士（北京）网络科技有限公司|Jearon Wong)[\s\S]*?Version 2\.0\.[\r\n]*/g;
   do {
     prevContent = content;
     content = content.replace(footerRegex, '');
@@ -219,8 +219,8 @@ function processPackageJson(filePath) {
     if (json.$comment) delete json.$comment;
 
     // Standard Fields
-    json.author = "Bangshi Beijing Network Technology Limited Company";
-    json.copyright = "© 2025 Bangshi Beijing Network Technology Limited Company";
+    json.author = "Jearon Wong";
+    json.copyright = "© 2026 Jearon Wong";
     if (!json.license) json.license = "Apache-2.0";
 
     // Custom MPLP Meta

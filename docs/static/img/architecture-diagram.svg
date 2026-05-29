@@ -8,8 +8,8 @@
       <rdf:Description>
         <dc:title>MPLP Four-Layer Architecture Diagram</dc:title>
         <dc:description>Visual representation of the MPLP Protocol's L1-L4 architecture stack for AI agent lifecycle management.</dc:description>
-        <dc:creator>Bangshi Beijing Network Technology Limited Company</dc:creator>
-        <dc:rights>Copyright 2025 Bangshi Beijing Network Technology Limited Company. Apache-2.0 License.</dc:rights>
+        <dc:creator>Jearon Wong</dc:creator>
+        <dc:rights>Copyright 2026 Jearon Wong. Apache-2.0 License.</dc:rights>
         <dc:subject>MPLP Architecture, L1 Core Protocol, L2 Modules, L3 Runtime Glue, L4 Integration, AEL, VSL, PSG</dc:subject>
       </rdf:Description>
     </rdf:RDF>

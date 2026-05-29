@@ -75,7 +75,7 @@ function main() {
         const suspicious =
             /©\s*\d{4}/.test(text) ||
             /Licensed under the Apache License/i.test(text) ||
-            /Bangshi Beijing Network Technology Limited Company/i.test(text);
+            /Jearon Wong/i.test(text);
 
         if (suspicious) {
             manualFooterHits.push(f);

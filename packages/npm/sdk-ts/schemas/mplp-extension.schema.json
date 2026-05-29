@@ -1,5 +1,5 @@
 {
-  "$comment": "MPLP v1.0.0 FROZEN – © 2026 Bangshi Beijing Network Technology Limited Company – Apache-2.0 – Governance: MPGC",
+  "$comment": "MPLP v1.0.0 FROZEN – © 2026 Jearon Wong – Apache-2.0 – Governance: MPGC",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://schemas.mplp.dev/v1.0/mplp-extension.schema.json",
   "title": "MPLP Extension Module – Core Protocol v1.0",

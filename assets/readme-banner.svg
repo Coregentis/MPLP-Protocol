@@ -8,8 +8,8 @@
       <rdf:Description>
         <dc:title>MPLP — The Agent OS Protocol Banner</dc:title>
         <dc:description>Official GitHub README banner for the Multi-Agent Lifecycle Protocol. The Lifecycle Protocol for AI Agents. Observable. Governed. Vendor-neutral.</dc:description>
-        <dc:creator>Bangshi Beijing Network Technology Limited Company</dc:creator>
-        <dc:rights>Copyright 2025 Bangshi Beijing Network Technology Limited Company. Apache-2.0 License.</dc:rights>
+        <dc:creator>Jearon Wong</dc:creator>
+        <dc:rights>Copyright 2026 Jearon Wong. Apache-2.0 License.</dc:rights>
         <dc:subject>MPLP, Agent OS, Multi-Agent Protocol, AI Agents, Lifecycle Protocol, Governance, Observability</dc:subject>
       </rdf:Description>
     </rdf:RDF>
