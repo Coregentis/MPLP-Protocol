@@ -9,6 +9,6 @@ This is a NORMATIVE-ORIENTED implementation designed for:
 - Language-neutral portability (Go / Rust can replicate)
 - Evidence chain completeness
 
-© 2025 Bangshi Beijing Network Technology Limited Company
+© 2026 Jearon Wong
 Licensed under the Apache License, Version 2.0.
 """

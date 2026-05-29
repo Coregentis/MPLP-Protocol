@@ -17,7 +17,7 @@
  *   0 = PASS (all packages in publish set are PUBLIC)
  *   1 = FAIL (blocked packages found in publish flow)
  * 
- * © 2025 Bangshi Beijing Network Technology Limited Company
+ * © 2026 Jearon Wong
  * Licensed under the Apache License, Version 2.0.
  */
 

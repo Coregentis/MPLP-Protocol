@@ -60,5 +60,5 @@ npm install @mplp/core
 
 Apache License, Version 2.0
 
-© 2026 **Bangshi Beijing Network Technology Limited Company**
+© 2026 **Jearon Wong**
 Coregentis AI

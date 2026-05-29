@@ -3,6 +3,8 @@ name: Deploy Docusaurus to GitHub Pages
 on:
     push:
         branches: ["main"]
+    pull_request:
+        branches: ["main"]
     workflow_dispatch:
 
 permissions:
@@ -132,6 +134,7 @@ jobs:
     deploy:
         name: Deploy to GitHub Pages
         needs: build
+        if: github.event_name == 'push'
         permissions:
             pages: write
             id-token: write

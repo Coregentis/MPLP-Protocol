@@ -390,7 +390,7 @@ Pull requests that introduce new protocol semantics, schema changes, or complian
 ## License
 
 Apache License 2.0  
-© 2026 Bangshi Beijing Network Technology Limited Company
+© 2026 Jearon Wong
 
 ---
 

@@ -17,7 +17,7 @@ Output:
     artifacts/release/pypi-set.json
     artifacts/release/pypi-gate-report.json
 
-© 2025 Bangshi Beijing Network Technology Limited Company
+© 2026 Jearon Wong
 Licensed under the Apache License, Version 2.0.
 """
 

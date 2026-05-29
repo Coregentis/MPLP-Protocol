@@ -15,7 +15,7 @@
  *   All website, docs, and lab UIs MUST reference this registry for flow names.
  *   Any name drift from this registry is a bug.
  * 
- * © 2026 Bangshi Beijing Network Technology Co., Ltd.
+ * © 2026 Jearon Wong
  * Licensed under Apache License 2.0. Governed by MPGC.
  */
 

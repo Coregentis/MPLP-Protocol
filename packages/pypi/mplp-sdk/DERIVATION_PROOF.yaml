@@ -3,7 +3,7 @@
 # This file proves that all package content is derived from MPLP Truth Sources.
 # Reference: METHOD-SDKR-02 (Derivation Rules), METHOD-SDKR-08 §8.1.3
 #
-# © 2026 Bangshi Beijing Network Technology Limited Company
+# © 2026 Jearon Wong
 
 protocol_version: "1.0.0"
 

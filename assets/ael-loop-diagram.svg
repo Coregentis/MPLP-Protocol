@@ -8,8 +8,8 @@
       <rdf:Description>
         <dc:title>MPLP AEL (Action Execution Layer) Loop Diagram</dc:title>
         <dc:description>The canonical execution loop for MPLP-compliant runtimes showing the six stages of action execution.</dc:description>
-        <dc:creator>Bangshi Beijing Network Technology Limited Company</dc:creator>
-        <dc:rights>Copyright 2025 Bangshi Beijing Network Technology Limited Company. Apache-2.0 License.</dc:rights>
+        <dc:creator>Jearon Wong</dc:creator>
+        <dc:rights>Copyright 2026 Jearon Wong. Apache-2.0 License.</dc:rights>
         <dc:subject>MPLP, AEL, Action Execution Layer, Runtime Loop, Governance, Trace, PSG</dc:subject>
       </rdf:Description>
     </rdf:RDF>
