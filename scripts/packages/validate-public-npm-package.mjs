@@ -65,6 +65,62 @@ function listFilesRecursive(relativePath) {
   return output.sort();
 }
 
+function normalizePackageTarget(target) {
+  return target.startsWith("./") ? target.slice(2) : target;
+}
+
+function validateTargetPath(label, target) {
+  if (typeof target !== "string") {
+    return;
+  }
+
+  const normalizedTarget = normalizePackageTarget(target);
+  if (normalizedTarget.includes("*")) {
+    const wildcardPrefix = normalizedTarget.slice(0, normalizedTarget.indexOf("*"));
+    const directoryPrefix = wildcardPrefix.endsWith("/")
+      ? wildcardPrefix.slice(0, -1)
+      : path.dirname(wildcardPrefix);
+
+    if (!hasFile(directoryPrefix)) {
+      fail(`${label} pattern target ${target} requires missing package path: ${directoryPrefix}`);
+    }
+    return;
+  }
+
+  if (!hasFile(normalizedTarget)) {
+    fail(`${label} target ${target} is missing from package artifact surface`);
+  }
+}
+
+function validateExportsTarget(exportKey, target) {
+  if (typeof target === "string") {
+    validateTargetPath(`exports.${exportKey}`, target);
+    return;
+  }
+
+  if (target && typeof target === "object") {
+    for (const [condition, conditionTarget] of Object.entries(target)) {
+      validateTargetPath(`exports.${exportKey}.${condition}`, conditionTarget);
+    }
+  }
+}
+
+function validateDeclaredEntrypoints() {
+  if (packageJson.main) {
+    validateTargetPath("main", packageJson.main);
+  }
+
+  if (packageJson.types) {
+    validateTargetPath("types", packageJson.types);
+  }
+
+  if (packageJson.exports && typeof packageJson.exports === "object") {
+    for (const [exportKey, target] of Object.entries(packageJson.exports)) {
+      validateExportsTarget(exportKey, target);
+    }
+  }
+}
+
 function validateCoreMetadata() {
   if (!packageName.startsWith("@mplp/")) {
     fail("package name must be under @mplp scope");
@@ -163,6 +219,26 @@ function validateSchemaDataPackage() {
       fail(`invalid JSON schema/data file ${schemaFile}: ${error.message}`);
     }
   }
+
+  const requiredSchemaDataAssets = [
+    "schemas/kernel-duties.json",
+    "schemas/taxonomy/event-taxonomy.yaml",
+    "schemas/taxonomy/integration-event-taxonomy.yaml",
+    "schemas/taxonomy/learning-taxonomy.yaml",
+    "schemas/taxonomy/module-event-matrix.yaml",
+    "schemas/profiles/map-profile.yaml",
+    "schemas/profiles/sa-profile.yaml",
+  ];
+
+  for (const requiredAsset of requiredSchemaDataAssets) {
+    if (!hasFile(requiredAsset)) {
+      fail(`schema/data package must include required public asset: ${requiredAsset}`);
+    }
+  }
+
+  if (packageJson.exports?.["./schemas/*"] !== "./schemas/*") {
+    fail("schema/data package must expose ./schemas/* for file-based asset consumers");
+  }
 }
 
 function validateWrapperPackage() {
@@ -176,19 +252,12 @@ function validateWrapperPackage() {
 }
 
 validateCoreMetadata();
+validateDeclaredEntrypoints();
 
 if (model === "schema_data_package") {
   validateSchemaDataPackage();
 } else {
   validateWrapperPackage();
-}
-
-if (packageJson.main?.startsWith("dist/") && !hasFile(packageJson.main)) {
-  note(`main target ${packageJson.main} is not checked into this repo; build model is ${model}`);
-}
-
-if (packageJson.types?.startsWith("dist/") && !hasFile(packageJson.types)) {
-  note(`types target ${packageJson.types} is not checked into this repo; build model is ${model}`);
 }
 
 if (failures.length > 0) {
