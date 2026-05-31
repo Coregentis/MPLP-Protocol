@@ -53,6 +53,6 @@
   },
   "sideEffects": false,
   "scripts": {
-    "build": "tsc -p tsconfig.json"
+    "build": "node ../../../scripts/packages/validate-public-npm-package.mjs --model wrapper_package"
   }
 }

@@ -53,7 +53,7 @@
   },
   "sideEffects": false,
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "node ../../../scripts/packages/validate-public-npm-package.mjs --model wrapper_package",
     "test": "echo 'Publish-only workspace: run unit tests in packages/sources/ instead'"
   }
 }
