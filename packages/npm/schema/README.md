@@ -2,7 +2,7 @@
 
 **Package Role:** Public npm schema and protocol-baseline package
 **Protocol:** MPLP v1.0.0 (Frozen)
-**sdk_version:** 1.0.6
+**sdk_version:** 1.0.7
 **License:** Apache-2.0
 
 The **@mplp/schema** package provides **JSON Schema definitions, validation utilities, and the canonical machine-readable Kernel Duty baseline** for the
@@ -68,7 +68,7 @@ Raw JSON is also shipped at:
 ## Versioning & Compatibility
 
 * **Protocol version:** MPLP v1.0.0 (Frozen)
-* **Schema package version:** 1.0.6
+* **Schema package version:** 1.0.7
 * **Kernel duty baseline:** 11/11 carried in package
 * **SDK compatibility:** Guaranteed for v1.0.0 only
 * Breaking changes require a new protocol version.

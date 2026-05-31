@@ -1,6 +1,6 @@
 {
   "name": "@mplp/devtools",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Public developer-tooling convenience package for MPLP v1.0.0. Aggregates schema and conformance utilities and CLI helpers; not a direct protocol object mirror.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

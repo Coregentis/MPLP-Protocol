@@ -22,7 +22,7 @@ derivation:
 package:
   name: "@mplp/schema"
   ecosystem: "npm"
-  version: "1.0.6"
+  version: "1.0.7"
   category: "PUBLIC"
 
 verification:

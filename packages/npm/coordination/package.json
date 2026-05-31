@@ -1,6 +1,6 @@
 {
   "name": "@mplp/coordination",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Derived coordination helper package for MPLP v1.0.0. Exposes convenience coordination and governance contracts over protocol-aligned types.",
   "license": "Apache-2.0",
   "author": "Coregentis AI",

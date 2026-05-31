@@ -2,7 +2,7 @@
 
 **Package Role:** Public npm facade package
 **Protocol:** MPLP v1.0.0 (Frozen)
-**sdk_version:** 1.0.7
+**sdk_version:** 1.0.8
 **License:** Apache-2.0
 
 The published `@mplp/sdk-ts` package is the **public TypeScript SDK facade**
@@ -97,7 +97,7 @@ Canonical upstream baseline remains in:
 ## Versioning & Compatibility
 
 - **Protocol version:** MPLP v1.0.0 (Frozen)
-- **Facade package version:** 1.0.7
+- **Facade package version:** 1.0.8
 - **Kernel duty baseline:** 11/11 re-exported from `@mplp/schema`
 - **SDK compatibility:** aligned to `protocol_version` v1.0.0 only
 - Breaking changes require a new protocol version.

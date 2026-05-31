@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mplp-sdk"
-version = "1.0.5"
+version = "1.0.6"
 description = "Published Python protocol helper mirror for MPLP v1.0.0 version identity and Kernel Duty baseline."
 readme = "README.md"
 requires-python = ">=3.9"

@@ -21,7 +21,7 @@ derivation:
 package:
   name: "@mplp/compliance"
   ecosystem: "npm"
-  version: "1.0.5"
+  version: "1.0.6"
   category: "PUBLIC"
 
 verification:

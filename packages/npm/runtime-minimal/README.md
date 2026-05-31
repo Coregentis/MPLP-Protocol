@@ -2,7 +2,7 @@
 
 **Package Role:** Public npm runtime package
 **Protocol:** MPLP v1.0.0 (Frozen)
-**runtime_package_version:** 1.0.5
+**runtime_package_version:** 1.0.6
 **License:** Apache-2.0
 
 The `@mplp/runtime-minimal` package provides the published **minimal runtime helper**

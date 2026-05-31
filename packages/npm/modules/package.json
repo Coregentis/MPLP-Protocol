@@ -1,6 +1,6 @@
 {
   "name": "@mplp/modules",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Derived module helper package for MPLP v1.0.0. Exposes module type re-exports plus convenience profiles and dependency helpers.",
   "license": "Apache-2.0",
   "repository": {
