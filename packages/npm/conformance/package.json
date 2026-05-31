@@ -27,7 +27,7 @@
     "@mplp/compliance": "^1.0.4",
     "typescript": "^5.9.3"
   },
-  "author": "Coregentis AI",
+  "author": "Jearon Wong",
   "copyright": "© 2026 Jearon Wong",
   "mplp": {
     "protocolVersion": "1.0.0",

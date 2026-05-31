@@ -9,9 +9,10 @@ description = "Published Python protocol helper mirror for MPLP v1.0.0 version i
 readme = "README.md"
 requires-python = ">=3.9"
 license = "Apache-2.0"
+license-files = ["LICENSE"]
 
 authors = [
-  { name = "Coregentis AI" }
+  { name = "Jearon Wong" }
 ]
 
 keywords = ["mplp", "multi-agent", "lifecycle", "protocol", "python", "kernel-duties"]

@@ -34,7 +34,7 @@
     "ts-node": "^10.9.1",
     "@types/node": "^20.0.0"
   },
-  "author": "Coregentis AI",
+  "author": "Jearon Wong",
   "copyright": "© 2026 Jearon Wong",
   "mplp": {
     "protocolVersion": "1.0.0",

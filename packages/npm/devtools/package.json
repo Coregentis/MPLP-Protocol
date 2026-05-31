@@ -32,7 +32,7 @@
     "packageRole": "developer-tooling-convenience",
     "contractMode": "convenience-runtime-alias"
   },
-  "author": "Coregentis AI",
+  "author": "Jearon Wong",
   "copyright": "© 2026 Jearon Wong",
   "license": "Apache-2.0",
   "homepage": "https://www.mplp.io/what-is-mplp",
