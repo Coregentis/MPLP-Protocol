@@ -28,7 +28,7 @@
   "devDependencies": {
     "typescript": "^5.0.0"
   },
-  "author": "Coregentis AI",
+  "author": "Jearon Wong",
   "copyright": "© 2026 Jearon Wong",
   "mplp": {
     "protocolVersion": "1.0.0",

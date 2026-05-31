@@ -138,6 +138,10 @@ function validateCoreMetadata() {
     fail("package license must be Apache-2.0");
   }
 
+  if (packageJson.author !== "Jearon Wong") {
+    fail("public package author must be Jearon Wong");
+  }
+
   const repositoryUrl =
     typeof packageJson.repository === "string"
       ? packageJson.repository

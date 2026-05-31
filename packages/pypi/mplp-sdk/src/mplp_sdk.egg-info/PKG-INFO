@@ -2,7 +2,7 @@ Metadata-Version: 2.4
 Name: mplp-sdk
 Version: 1.0.6
 Summary: Published Python protocol helper mirror for MPLP v1.0.0 version identity and Kernel Duty baseline.
-Author: Coregentis AI
+Author: Jearon Wong
 License-Expression: Apache-2.0
 Project-URL: Homepage, https://www.mplp.io/what-is-mplp
 Project-URL: Documentation, https://docs.mplp.io/docs/reference/entrypoints
@@ -20,6 +20,8 @@ Classifier: Topic :: Software Development :: Libraries :: Application Frameworks
 Classifier: Typing :: Typed
 Requires-Python: >=3.9
 Description-Content-Type: text/markdown
+License-File: LICENSE
+Dynamic: license-file
 
 # mplp-sdk
 

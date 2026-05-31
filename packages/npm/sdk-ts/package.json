@@ -3,7 +3,7 @@
   "version": "1.0.8",
   "description": "Derived public TypeScript helper facade for MPLP v1.0.0; ships builders, runtime client helpers, schema mirrors, and Kernel Duty exports.",
   "license": "Apache-2.0",
-  "author": "Coregentis AI",
+  "author": "Jearon Wong",
   "repository": {
     "type": "git",
     "url": "https://github.com/Coregentis/MPLP-Protocol.git"
