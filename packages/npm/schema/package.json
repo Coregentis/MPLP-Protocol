@@ -64,6 +64,6 @@
   },
   "sideEffects": false,
   "scripts": {
-    "build": "tsc -p tsconfig.json"
+    "build": "node ../../../scripts/packages/validate-public-npm-package.mjs --model schema_data_package"
   }
 }

@@ -46,7 +46,7 @@
     "kernelDutyBaselineCarried": true
   },
   "scripts": {
-    "build": "tsc",
+    "build": "node ../../../scripts/packages/validate-public-npm-package.mjs --model schema_data_package",
     "test": "echo 'No tests yet'"
   },
   "dependencies": {
