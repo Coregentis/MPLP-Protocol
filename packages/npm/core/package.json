@@ -1,6 +1,6 @@
 {
   "name": "@mplp/core",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Derived L1 core helper package for MPLP v1.0.0 models and validators.",
   "license": "Apache-2.0",
   "author": "Coregentis AI",

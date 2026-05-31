@@ -2,7 +2,7 @@
 
 **Package Role:** Published PyPI protocol helper package
 **Protocol:** MPLP v1.0.0 (Frozen)
-**sdk_version:** 1.0.5
+**sdk_version:** 1.0.6
 **License:** Apache-2.0
 
 The published `mplp-sdk` package currently provides a **minimal Python
@@ -93,7 +93,7 @@ Canonical upstream baseline remains in:
 ## Versioning & Compatibility
 
 - **Protocol version:** MPLP v1.0.0 (Frozen)
-- **Published package version:** 1.0.5
+- **Published package version:** 1.0.6
 - **Kernel duty baseline:** 11/11 carried in package exports
 - **Package compatibility:** aligned to `protocol_version` v1.0.0 only
 - Breaking changes require a new protocol version.

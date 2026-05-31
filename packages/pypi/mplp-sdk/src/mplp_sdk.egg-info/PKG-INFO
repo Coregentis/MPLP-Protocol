@@ -1,15 +1,15 @@
 Metadata-Version: 2.4
 Name: mplp-sdk
-Version: 1.0.5
-Summary: Published Python protocol helper package for MPLP v1.0.0 metadata, protocol binding, and Kernel Duty baseline.
+Version: 1.0.6
+Summary: Published Python protocol helper mirror for MPLP v1.0.0 version identity and Kernel Duty baseline.
 Author: Coregentis AI
 License-Expression: Apache-2.0
-Project-URL: Homepage, https://mplp.io
-Project-URL: Documentation, https://docs.mplp.io
+Project-URL: Homepage, https://www.mplp.io/what-is-mplp
+Project-URL: Documentation, https://docs.mplp.io/docs/reference/entrypoints
 Project-URL: Repository, https://github.com/Coregentis/MPLP-Protocol
 Project-URL: Issues, https://github.com/Coregentis/MPLP-Protocol/issues
-Keywords: mplp,multi-agent,lifecycle,protocol,agent-os,python,kernel-duties
-Classifier: Development Status :: 3 - Alpha
+Keywords: mplp,multi-agent,lifecycle,protocol,python,kernel-duties
+Classifier: Development Status :: 5 - Production/Stable
 Classifier: Intended Audience :: Developers
 Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3.10
@@ -25,12 +25,15 @@ Description-Content-Type: text/markdown
 
 **Package Role:** Published PyPI protocol helper package
 **Protocol:** MPLP v1.0.0 (Frozen)
-**sdk_version:** 1.0.5
+**sdk_version:** 1.0.6
 **License:** Apache-2.0
 
 The published `mplp-sdk` package currently provides a **minimal Python
 protocol helper surface** for MPLP package identity, protocol-version alignment,
 and the canonical 11 Kernel Duties.
+
+This package is the public **direct data/helper mirror** for the published
+Python surface currently in scope.
 
 Current shipped surface:
 
@@ -57,11 +60,9 @@ reference runtime implementation.
 
 ### What this package does NOT provide
 
+- Direct mirror coverage for the full schema bundle
 - Full Python SDK models
 - Pydantic model set
-- Reference runtime implementation
-- Golden Flow execution engines
-- Full Python SDK models
 - Reference runtime implementation
 - Golden Flow execution engines
 
@@ -75,11 +76,11 @@ pip install mplp-sdk
 
 ---
 
-## Protocol Documentation (Authoritative)
+## Protocol Documentation
 
-- **Homepage:** [https://www.mplp.io](https://www.mplp.io)
-- **Specification & Docs:** [https://docs.mplp.io](https://docs.mplp.io)
-- **Source Repository:** [https://github.com/Coregentis/MPLP-Protocol](https://github.com/Coregentis/MPLP-Protocol)
+- **Homepage:** [https://www.mplp.io/what-is-mplp](https://www.mplp.io/what-is-mplp) — discovery and positioning only
+- **Docs Entry Surface:** [https://docs.mplp.io/docs/reference/entrypoints](https://docs.mplp.io/docs/reference/entrypoints) — authoritative documentation entry surface
+- **Source Repository:** [https://github.com/Coregentis/MPLP-Protocol](https://github.com/Coregentis/MPLP-Protocol) — repository truth source
 - **Issues:** [https://github.com/Coregentis/MPLP-Protocol/issues](https://github.com/Coregentis/MPLP-Protocol/issues)
 
 ---
@@ -108,14 +109,14 @@ print(mplp.KERNEL_DUTIES[0])
 Canonical upstream baseline remains in:
 
 - `schemas/v2/taxonomy/kernel-duties.yaml`
-- `governance/05-specialized/entity.json`
+- the public mirror package `@mplp/schema`
 
 ---
 
 ## Versioning & Compatibility
 
 - **Protocol version:** MPLP v1.0.0 (Frozen)
-- **Published package version:** 1.0.5
+- **Published package version:** 1.0.6
 - **Kernel duty baseline:** 11/11 carried in package exports
 - **Package compatibility:** aligned to `protocol_version` v1.0.0 only
 - Breaking changes require a new protocol version.

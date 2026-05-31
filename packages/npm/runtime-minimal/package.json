@@ -1,6 +1,6 @@
 {
   "name": "@mplp/runtime-minimal",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Public minimal runtime helper package for MPLP v1.0.0. Exposes runtime-level AEL/VSL/orchestrator artifacts, not protocol SSOT objects.",
   "license": "Apache-2.0",
   "main": "dist/index.js",

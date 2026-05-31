@@ -11,7 +11,7 @@ protocol_version: "1.0.0"
 package:
   name: "mplp-sdk"
   ecosystem: "pypi"
-  version: "1.0.5"
+  version: "1.0.6"
   category: "PUBLIC"
 
 # Truth Source Bundle Reference

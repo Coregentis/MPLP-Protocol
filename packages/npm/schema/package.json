@@ -1,6 +1,6 @@
 {
   "name": "@mplp/schema",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Direct schema/data mirror package for MPLP v1.0.0 JSON Schema definitions, validator helpers, and canonical Kernel Duty baseline.",
   "license": "Apache-2.0",
   "repository": {

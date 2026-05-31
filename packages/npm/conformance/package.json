@@ -1,6 +1,6 @@
 {
   "name": "@mplp/conformance",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Public compatibility alias for MPLP conformance tooling under the preferred terminology. Re-exports the legacy @mplp/compliance surface.",
   "license": "Apache-2.0",
   "repository": {

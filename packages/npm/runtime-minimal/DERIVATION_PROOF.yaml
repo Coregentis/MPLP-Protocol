@@ -22,7 +22,7 @@ derivation:
 package:
   name: "@mplp/runtime-minimal"
   ecosystem: "npm"
-  version: "1.0.5"
+  version: "1.0.6"
   category: "PUBLIC"
 
 verification:
