@@ -60,7 +60,8 @@
       "require": "./dist/kernel-duties.js",
       "import": "./dist/kernel-duties.js",
       "types": "./dist/kernel-duties.d.ts"
-    }
+    },
+    "./schemas/*": "./schemas/*"
   },
   "sideEffects": false,
   "scripts": {
