@@ -4,7 +4,7 @@ This repository is part of the Coregentis MPLP / Cognitive OS / SoloCrew / Valid
 
 ## Repository Layer
 
-MPLP owns protocol objects, schemas, invariants, conformance vocabulary, and protocol documentation. Protocol core must stay product-neutral, runtime-neutral, vendor-neutral, and free of commercial validation claims. v1 references to v2 objects must remain pointer-only; do not inline product, runtime, or commercial semantics into protocol core.
+MPLP owns protocol objects, schemas, invariants, conformance vocabulary, and protocol documentation. The 10-module v1 baseline remains the protocol anchor. Protocol core must stay product-neutral, runtime-neutral, vendor-neutral, and free of product, commercial validation, certification, regulator-approval, legal-compliance proof, or vendor-ranking claims. v1 references to v2 objects must remain pointer-only; do not inline product, runtime, or commercial semantics into protocol core.
 
 ## Repo Truth First
 
@@ -27,9 +27,10 @@ Reuse existing assets before creating new files. Prefer updating an existing rul
 ## Hard Boundaries
 
 - Preserve protocol, runtime, product, validation, and publication boundaries.
-- Do not modify release tags, release seals, package versions, publish plans, public website copy, schemas/v2 protocol objects, core package implementation logic, product source code, Validation Lab runtime/evidence logic, or public legal/compliance claims unless the owner explicitly approves that scope.
-- Do not run `npm publish`, `npm deprecate`, PyPI upload, PyPI yank/delete, `git tag`, release seal creation, package version bump, or protocol schema primitive intake without owner approval.
-- Do not make public legal, compliance, certification, regulator-approval, vendor-ranking, or official-standard claims without owner approval.
+- Normal task-authorized changes may modify files within the explicitly scoped repository layer, including low-risk code or docs that the current task asks for.
+- Owner approval is required for high-risk or irreversible changes, including release mutation, registry mutation, public legal/compliance claims, package version changes, schema primitive intake, provider-send behavior, auth/payment/data-deletion flows, runtime authority changes, and merge/tag/seal actions.
+- Do not run `npm publish`, `npm deprecate`, npm dist-tag mutation, PyPI upload, PyPI yank/delete, `git tag`, release seal creation, package version bump, or protocol schema primitive intake without an explicit owner-approved wave.
+- Do not make public certification, regulator-approval, vendor-ranking, official-standard, or legal-compliance proof claims without owner approval.
 
 ## MPLP Schema v2 Discipline
 
@@ -54,6 +55,8 @@ v1.0 module references to v2 objects must be pointer-only. Do not inline v2 obje
 ## Standard Subagent Lanes
 
 Use `.codex/agents/*.toml` reviewers only when the parent task explicitly requests them. Relevant lanes include `package_surface_auditor`, `release_governance_reviewer`, `protocol_schema_reviewer`, `product_boundary_reviewer`, `runtime_binding_reviewer`, and `publication_claim_reviewer`.
+
+Default lane policy: use no subagent for trivial docs typos, one subagent for isolated repo-specific review, and multiple subagents for release, schema, runtime, publication, or cross-repo tasks. MPLP-Protocol defaults to `protocol_schema_reviewer`, with `release_governance_reviewer` and `package_surface_auditor` as secondary lanes when the task touches package surfaces, schema intake, conformance, or release planning.
 
 Subagents run review lanes only unless edits are explicitly authorized. They inherit sandbox and approval boundaries, must not publish, upload, tag, seal, bump versions, mutate registries, intake schema primitives, merge PRs, or change public claims, and must return P0/P1/P2 findings to the parent with files inspected and commands run.
 
