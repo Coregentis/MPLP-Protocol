@@ -1,6 +1,8 @@
 # Codex operating foundation for this repository.
 # This repository uses Codex through an API-key connected IDE workflow,
 # so local repo configuration must not assume app-only/cloud-only features.
+# Repository-scoped skills are mirrored under .agents/skills for Codex
+# discovery. .codex/skills is retained as the project-internal ops source.
 
 approval_policy = "on-request"
 sandbox_mode = "workspace-write"
@@ -8,7 +10,7 @@ sandbox_mode = "workspace-write"
 [features]
 goals = true
 
-[agents]
-max_threads = 4
-max_depth = 1
-job_max_runtime_seconds = 1800
+# Subagent policy guidance, not enforced by this config parser:
+# max_threads = 4
+# max_depth = 1
+# job_max_runtime_seconds = 1800
