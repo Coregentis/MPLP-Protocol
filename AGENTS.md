@@ -6,6 +6,27 @@ This repository is part of the Coregentis MPLP / Cognitive OS / SoloCrew / Valid
 
 MPLP owns protocol objects, schemas, invariants, conformance vocabulary, and protocol documentation. The 10-module v1 baseline remains the protocol anchor. Protocol core must stay product-neutral, runtime-neutral, vendor-neutral, and free of product, commercial validation, certification, regulator-approval, legal-compliance proof, or vendor-ranking claims. v1 references to v2 objects must remain pointer-only; do not inline product, runtime, or commercial semantics into protocol core.
 
+## Coregentis Workspace Authority
+
+The Coregentis canonical workspace root is
+`/Users/jasonwang/Documents/AI_Dev/Coregentis`.
+
+This repository is the MPLP public OSS projection. It is not MPLP protocol,
+package, or release Dev truth. MPLP-Protocol-Dev is protocol/package/release Dev truth:
+`/Users/jasonwang/Documents/AI_Dev/Coregentis/MPLP-Protocol-Dev`.
+
+V1.0_release is frozen as migration/evidence source. Do not treat
+V1.0_release as global MPLP SOT.
+V1.0_release is frozen as migration/evidence source; do not treat V1.0_release as global MPLP SOT.
+
+Do not perform package/source recovery, Dev-only package decisions, publish,
+upload, tag, seal, merge, or public projection push from this repo without an
+explicit public projection or release goal. Cross-repo sync requires an
+explicit migration, backport, or projection goal.
+
+Future Dev-side goals remain `DEV-HARNESS-BACKPORT-01` and
+`PACKAGE-DEV-TRUTH-SOURCE-RECOVERY-PLAN-01`; this repo grants no publish, no upload, no tag, no seal, and no merge authorization.
+
 ## Repo Truth First
 
 Before implementation, inspect repository truth:
