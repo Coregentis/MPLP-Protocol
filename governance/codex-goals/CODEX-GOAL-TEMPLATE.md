@@ -10,6 +10,67 @@ State the concrete objective and the verifiable stopping condition.
 
 Name the exact repository path and current branch. Do not assume cloud threads, marketplace features, app-only visibility, or cloud-only execution.
 
+## Coregentis Workspace Authority Check
+
+Declare:
+
+```yaml
+coregentis_workspace_authority:
+  canonical_workspace_root: /Users/jasonwang/Documents/AI_Dev/Coregentis
+  current_repo:
+  authoritative_repo:
+  current_remote:
+  authoritative_remote:
+  repo_role:
+  upstream_sot:
+  downstream_derivatives:
+  v1_status: frozen_migration_evidence_source
+  cross_repo_sync_in_scope: false
+```
+
+## SOT Classification
+
+Classify all touched surfaces before editing:
+
+| SOT Layer | Applies? | Surfaces | Authority |
+|:---|:---|:---|:---|
+| `L0 Protocol Truth` |  |  | MPLP-Protocol-Dev only unless explicitly authorized |
+| `L1 Projection Source` |  |  | repo-specific source or public projection |
+| `L2 Generated Artifact` |  |  | generated from declared source only |
+| `L3 Verification Evidence` |  |  | evidence, not authorization |
+| `L4 Publication Surface` |  |  | owner approval required for public claims |
+| `L5 Downstream Runtime/Product` |  |  | downstream only |
+| `L6 Codex Execution Governance` |  |  | AGENTS, config, skills, goal template |
+
+## Development Method Execution Table
+
+| Method | Required? | Evidence |
+|:---|:---|:---|
+| `SCTM` | yes | Goal model and SOT classification |
+| `GLFB` | yes | Governance/authorization decision matrix |
+| `ITCM` | yes | Repo, object, authority, and derivation topology |
+| `RBCT` | yes | Bounded stage plan and stop condition |
+| `VIM` | yes | Forbidden-action and risk matrix |
+| `PRM` | yes | Retrospective and hardening notes |
+
+## Methodology Separation Table
+
+| Repository Method | Applies? | Surface | Evidence |
+|:---|:---|:---|:---|
+| `DIV` |  | Generated/provenance surface | Derivation evidence |
+| `TSV` |  | Truth-source references | Reference closure |
+| `XCV` |  | Cross-surface consistency | Consistency evidence |
+| `SCV` |  | Projection completeness | Surface coverage |
+| `SUC` |  | SDK/API/runtime usage | Usage evidence |
+| `EVC` |  | Version/evolution transition | Compatibility evidence |
+
+## Two-Layer Governance Alignment Table
+
+| Layer | Required Declaration | Status |
+|:---|:---|:---|
+| Repository Governance | repo role, source/evidence/generated/publication surfaces, remote authority, wrong-authority blockers |  |
+| Codex Agentic Harness | required skill, Goal preflight, SOT layer, authorized mutations, forbidden mutations, final verdict |  |
+
 ## Branch
 
 Create or use a task branch from current `main` unless the owner instructs otherwise. Report whether the branch continues an existing Codex ops branch or is a follow-up branch.
@@ -21,6 +82,10 @@ State the PR URL, base branch, base SHA, head branch, head SHA, whether the base
 ## Required Skills
 
 List any required `.agents/skills/*/SKILL.md` workflows. `.agents/skills` is the Codex discovery path; `.codex/skills` is retained as the project-internal ops source and compatibility copy.
+
+Default required skill for non-trivial goals:
+
+- `agentic-harness-goal-preflight`
 
 ## Required Subagents Or Custom Agents
 
@@ -58,6 +123,20 @@ List surfaces that must not change, including package versions, registries, tags
 ## Forbidden Actions
 
 State forbidden publish, upload, deprecate, yank, delete, dist-tag mutation, tag, seal, package-version, schema-intake, product-behavior, runtime-behavior, public-claim, or broad-rewrite actions.
+
+## Forbidden Action Matrix
+
+| Action | Allowed? | Owner Authorization Required? | Evidence |
+|:---|:---|:---|:---|
+| No npm publish | no | yes |  |
+| No PyPI upload | no | yes |  |
+| No tag | no | yes |  |
+| No seal | no | yes |  |
+| No merge | no | yes |  |
+| Registry mutation | no | yes |  |
+| Package version change | no | yes |  |
+| L0 schema mutation | no | yes |  |
+| Cross-repo sync | no unless explicitly scoped | yes |  |
 
 ## Stopping Condition
 

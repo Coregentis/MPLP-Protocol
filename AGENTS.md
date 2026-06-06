@@ -45,6 +45,43 @@ Reuse existing assets before creating new files. Prefer updating an existing rul
 - `.codex/skills/*/SKILL.md` is retained as the project-internal ops source and compatibility copy.
 - Keep mirrored skills same-named and content-equivalent; do not create divergent SOPs.
 
+## Two-Layer Governance
+
+Every non-trivial Goal in this repo must satisfy both governance layers before
+implementation:
+
+- Layer A: Repository Governance. Declare this repo's public OSS projection
+  role, source surfaces, generated/evidence surfaces, release/publication
+  boundaries, authoritative remote, upstream Dev truth, downstream
+  projections, and forbidden authority misuse.
+- Layer B: Codex Agentic Harness. Use
+  `.agents/skills/agentic-harness-goal-preflight/SKILL.md` and
+  `governance/codex-goals/CODEX-GOAL-TEMPLATE.md` to execute `SCTM`, `GLFB`,
+  `ITCM`, `RBCT`, `VIM`, and `PRM` before and after the bounded Goal.
+
+Repository governance methods `DIV`, `TSV`, `XCV`, `SCV`, `SUC`, and `EVC`
+apply only when the task touches their relevant surfaces. Public OSS projection
+work must remain downstream of MPLP-Protocol-Dev truth and must not become
+package/source recovery, registry mutation, or L0 protocol authority.
+
+Required blocked verdicts for wrong-authority or owner-approval violations:
+
+- `BLOCKED_WORKSTREAM_AUTHORITY_MISMATCH`
+- `BLOCKED_LOCAL_REPO_AUTHORITY_MISMATCH`
+- `BLOCKED_REMOTE_AUTHORITY_MISMATCH`
+- `BLOCKED_CROSS_REPO_SYNC_NOT_AUTHORIZED`
+- `BLOCKED_OWNER_AUTHORIZATION_REQUIRED`
+- `BLOCKED_PUBLIC_PROJECTION_AUTHORIZATION_REQUIRED`
+- `BLOCKED_V1_USED_AS_GLOBAL_MPLP_SOT`
+- `BLOCKED_DEV_TRUTH_REQUIRED`
+- `BLOCKED_DOWNSTREAM_REPO_USED_AS_PROTOCOL_TRUTH`
+- `BLOCKED_SCHEMA_TRUTH_SOURCE_MISSING`
+- `BLOCKED_L0_MUTATION_WITHOUT_SCHEMA_INTAKE`
+- `BLOCKED_PACKAGE_RECOVERY_IN_PROJECTION_REPO`
+- `BLOCKED_PACKAGE_PREFLIGHT_FROM_STALE_PROJECTION`
+- `BLOCKED_PACKAGE_PUBLICATION_AUTHORIZATION_REQUIRED`
+- `BLOCKED_PACKAGE_ARTIFACT_PROVENANCE_MISSING`
+
 ## Hard Boundaries
 
 - Preserve protocol, runtime, product, validation, and publication boundaries.

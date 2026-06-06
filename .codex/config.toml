@@ -10,6 +10,18 @@ sandbox_mode = "workspace-write"
 [features]
 goals = true
 
+[coregentis_workspace_authority]
+canonical_workspace_root = "/Users/jasonwang/Documents/AI_Dev/Coregentis"
+repo_role = "PUBLIC_OSS_PROJECTION"
+authoritative_dev_truth = "/Users/jasonwang/Documents/AI_Dev/Coregentis/MPLP-Protocol-Dev"
+repo_governance_baseline = "governance/04-records/COREGENTIS-TWO-LAYER-GOVERNANCE-BASELINE-01.md"
+v1_status = "frozen_migration_evidence_source"
+
+[agentic_harness]
+preflight_skill = ".agents/skills/agentic-harness-goal-preflight/SKILL.md"
+goal_template = "governance/codex-goals/CODEX-GOAL-TEMPLATE.md"
+skill_mirror = ".codex/skills/agentic-harness-goal-preflight/SKILL.md"
+
 # Subagent policy guidance, not enforced by this config parser:
 # max_threads = 4
 # max_depth = 1
