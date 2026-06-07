@@ -6,6 +6,41 @@ Use this template for bounded Goal Mode tasks in this repository family. If `/go
 
 State the concrete objective and the verifiable stopping condition.
 
+## Task Governance Router Result
+
+This section is mandatory before direct file edits, substantive judgment,
+verification gates, release actions, publish/upload actions, tag, seal, merge,
+or cross-repo actions.
+
+Run or internally satisfy `TASK-GOVERNANCE-ROUTER-01` using
+`.agents/skills/task-governance-router/SKILL.md`.
+
+Declare:
+
+```yaml
+task_governance_router:
+  router_id: TASK-GOVERNANCE-ROUTER-01
+  router_skill: .agents/skills/task-governance-router/SKILL.md
+  router_run_before_substantive_work:
+  task_type:
+  selected_local_governance_baseline:
+  local_baseline_evidence_table:
+  sot_layer:
+  applicable_repo_governance_methods:
+  applicable_harness_methods:
+  applicable_agents_or_review_perspectives:
+  applicable_skills:
+  required_gates:
+  forbidden_actions:
+  stop_conditions:
+  evidence_outputs:
+  owner_decision_required:
+  final_verdict:
+```
+
+If this router result is missing, stop with
+`BLOCKED_TASK_GOVERNANCE_ROUTER_NOT_RUN`.
+
 ## Repository
 
 Name the exact repository path and current branch. Do not assume cloud threads, marketplace features, app-only visibility, or cloud-only execution.

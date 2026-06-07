@@ -64,6 +64,34 @@ echo "blocked_dynamic_selection_not_performed=BLOCKED_DYNAMIC_BASELINE_SELECTION
 echo "blocked_substantive_decision_without_evidence=BLOCKED_SUBSTANTIVE_DECISION_WITHOUT_LOCAL_EVIDENCE"
 echo
 
+echo "[task governance router]"
+echo "TASK_GOVERNANCE_ROUTER_REQUIRED=YES"
+echo "TASK_GOVERNANCE_ROUTER_ID=TASK-GOVERNANCE-ROUTER-01"
+if [ -f ".agents/skills/task-governance-router/SKILL.md" ]; then
+  echo "task_governance_router_skill=present .agents/skills/task-governance-router/SKILL.md"
+else
+  echo "task_governance_router_skill=missing .agents/skills/task-governance-router/SKILL.md"
+fi
+if [ -f ".codex/skills/task-governance-router/SKILL.md" ]; then
+  echo "task_governance_router_skill_mirror=present .codex/skills/task-governance-router/SKILL.md"
+else
+  echo "task_governance_router_skill_mirror=missing .codex/skills/task-governance-router/SKILL.md"
+fi
+if grep -q "TASK-GOVERNANCE-ROUTER-01" .codex/config.toml 2>/dev/null; then
+  echo "task_governance_router_config=present .codex/config.toml"
+else
+  echo "task_governance_router_config=missing .codex/config.toml"
+fi
+if grep -q "Task Governance Router Result" governance/codex-goals/CODEX-GOAL-TEMPLATE.md 2>/dev/null; then
+  echo "task_governance_router_goal_template=present governance/codex-goals/CODEX-GOAL-TEMPLATE.md"
+else
+  echo "task_governance_router_goal_template=missing governance/codex-goals/CODEX-GOAL-TEMPLATE.md"
+fi
+echo "blocked_router_not_run=BLOCKED_TASK_GOVERNANCE_ROUTER_NOT_RUN"
+echo "blocked_agent_selection_missing=BLOCKED_AGENT_SELECTION_NOT_PERFORMED"
+echo "blocked_gate_selection_missing=BLOCKED_REQUIRED_GATE_SELECTION_NOT_PERFORMED"
+echo
+
 echo "[top-level files]"
 find . -maxdepth 2 \
   -not -path './.git/*' \

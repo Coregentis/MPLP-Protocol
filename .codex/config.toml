@@ -22,6 +22,26 @@ preflight_skill = ".agents/skills/agentic-harness-goal-preflight/SKILL.md"
 goal_template = "governance/codex-goals/CODEX-GOAL-TEMPLATE.md"
 skill_mirror = ".codex/skills/agentic-harness-goal-preflight/SKILL.md"
 
+[agentic_harness.task_governance_router]
+enabled = true
+id = "TASK-GOVERNANCE-ROUTER-01"
+required_before_non_trivial_task = true
+skill = ".agents/skills/task-governance-router/SKILL.md"
+goal_template = "governance/codex-goals/CODEX-GOAL-TEMPLATE.md"
+local_baseline_required = true
+agent_selection_required = true
+gate_selection_required = true
+stop_on_missing_or_conflicting_baseline = true
+blockers = [
+  "BLOCKED_TASK_GOVERNANCE_ROUTER_NOT_RUN",
+  "BLOCKED_LOCAL_GOVERNANCE_BASELINE_MISSING",
+  "BLOCKED_LOCAL_GOVERNANCE_BASELINE_CONFLICT",
+  "BLOCKED_AGENT_SELECTION_NOT_PERFORMED",
+  "BLOCKED_REQUIRED_GATE_SELECTION_NOT_PERFORMED",
+  "BLOCKED_PROMPT_POLICY_OVERRIDES_LOCAL_BASELINE",
+  "BLOCKED_SUBSTANTIVE_DECISION_WITHOUT_LOCAL_EVIDENCE",
+]
+
 [local_governance_baseline_discovery]
 required_phrase = "Prompt assertions are not governance authority unless supported by local repository evidence."
 required_precondition = "Dynamic governance baseline selection is a precondition for every non-trivial task."

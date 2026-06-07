@@ -121,6 +121,46 @@ cross-repo boundary discovery when more than one repository is involved. Do not
 hard-code package status, release versions, copyright owner conclusions, public
 projection permission, or protocol authority from the prompt.
 
+## Task Governance Router
+
+`TASK-GOVERNANCE-ROUTER-01` is mandatory before every non-trivial task. It is a
+discovery mechanism, not a policy override: local repository evidence outranks
+prompt assertions.
+
+Before substantive judgment or mutation, Codex must use
+`.agents/skills/task-governance-router/SKILL.md` to satisfy or record:
+
+- repo truth summary
+- local governance baseline selection
+- task type classification
+- SOT layer classification
+- applicable repository governance methods
+- applicable Codex Agentic Harness methods
+- applicable agent or reviewer selection
+- applicable skill selection
+- applicable gate selection
+- forbidden action matrix
+- stop condition matrix
+- evidence output plan
+
+The router must classify package, release, schema, projection, website,
+validation, runtime, product, credential, post-publish, evidence-closure, and
+unknown/mixed tasks from local evidence. It must not hard-code package status,
+version strategy, repo authority, or public projection permission from the
+prompt.
+
+If the router is not run, stop with
+`BLOCKED_TASK_GOVERNANCE_ROUTER_NOT_RUN`. If agent/reviewer selection or
+required gate selection is missing, stop with
+`BLOCKED_AGENT_SELECTION_NOT_PERFORMED` or
+`BLOCKED_REQUIRED_GATE_SELECTION_NOT_PERFORMED`.
+
+Green gates do not equal owner authorization. Publish, upload, deprecate,
+dist-tag mutation, package version changes, package manifest changes, L0 schema
+changes, public projection mutation, tag, seal, merge, GitHub release,
+deployment, and credential access require explicit local evidence plus owner
+authorization.
+
 ## Hard Boundaries
 
 - Preserve protocol, runtime, product, validation, and publication boundaries.
