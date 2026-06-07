@@ -22,6 +22,15 @@ preflight_skill = ".agents/skills/agentic-harness-goal-preflight/SKILL.md"
 goal_template = "governance/codex-goals/CODEX-GOAL-TEMPLATE.md"
 skill_mirror = ".codex/skills/agentic-harness-goal-preflight/SKILL.md"
 
+[local_governance_baseline_discovery]
+required_phrase = "Prompt assertions are not governance authority unless supported by local repository evidence."
+required_precondition = "Dynamic governance baseline selection is a precondition for every non-trivial task."
+required_table = "local baseline evidence table"
+package_policy_discovery_required_when_package_related = true
+version_baseline_discovery_required_when_release_or_version_related = true
+copyright_baseline_discovery_required_when_legal_or_copyright_related = true
+cross_repo_boundary_discovery_required_when_cross_repo_related = true
+
 # Subagent policy guidance, not enforced by this config parser:
 # max_threads = 4
 # max_depth = 1

@@ -71,6 +71,50 @@ Classify all touched surfaces before editing:
 | Repository Governance | repo role, source/evidence/generated/publication surfaces, remote authority, wrong-authority blockers |  |
 | Codex Agentic Harness | required skill, Goal preflight, SOT layer, authorized mutations, forbidden mutations, final verdict |  |
 
+## Local Governance Baseline Evidence Table
+
+This section is mandatory for every non-trivial task before execution
+continues. Dynamic governance baseline selection is a precondition for every
+non-trivial task. The prompt may define the task and discovery procedure; it
+must not be used as policy authority when local governance baseline evidence
+exists.
+
+Required rule:
+
+`Prompt assertions are not governance authority unless supported by local repository evidence.`
+
+Produce this local baseline evidence table before any substantive decision,
+planning conclusion, edit, verification gate that depends on a policy
+classification, release action, publish/upload action, merge, tag, seal, or
+cross-repo action:
+
+| Decision Area | Local Evidence File | Evidence Signal | Derived Rule | Confidence | Conflict? | Action |
+| ------------- | ------------------- | --------------- | ------------ | ---------- | --------- | ------ |
+
+Allowed confidence values:
+
+- `HIGH_LOCAL_BASELINE_EXPLICIT`
+- `MEDIUM_LOCAL_BASELINE_DERIVED`
+- `LOW_LOCAL_BASELINE_INFERRED`
+- `CONFLICTING_BASELINE`
+- `MISSING_BASELINE`
+
+If confidence is `LOW_LOCAL_BASELINE_INFERRED`, `CONFLICTING_BASELINE`, or
+`MISSING_BASELINE` for a decision that affects mutation, stop before mutation.
+
+Required blocked verdicts:
+
+- `BLOCKED_LOCAL_GOVERNANCE_BASELINE_MISSING`
+- `BLOCKED_LOCAL_GOVERNANCE_BASELINE_CONFLICT`
+- `BLOCKED_PROMPT_POLICY_OVERRIDES_LOCAL_BASELINE`
+- `BLOCKED_DYNAMIC_BASELINE_SELECTION_NOT_PERFORMED`
+- `BLOCKED_SUBSTANTIVE_DECISION_WITHOUT_LOCAL_EVIDENCE`
+
+Use package policy discovery only when package-related, version baseline
+discovery only when release/version-related, copyright baseline discovery only
+when legal/copyright-related, and cross-repo boundary discovery when more than
+one repo is involved.
+
 ## Branch
 
 Create or use a task branch from current `main` unless the owner instructs otherwise. Report whether the branch continues an existing Codex ops branch or is a follow-up branch.

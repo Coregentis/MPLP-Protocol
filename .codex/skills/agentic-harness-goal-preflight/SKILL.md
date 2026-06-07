@@ -71,6 +71,9 @@ SOT layers:
 
 ## Required Execution Order
 
+0. Local governance baseline discovery: inspect local baseline sources, produce
+   the local baseline evidence table, and confirm that prompt assertions are not
+   governance authority unless supported by local repository evidence.
 1. `SCTM`: clarify task and model governed intent.
 2. `GLFB`: separate feasibility, permission, and owner authorization.
 3. `ITCM`: map repo topology, SOT layers, upstream/downstream dependencies, and constraints.
@@ -78,6 +81,44 @@ SOT layers:
 5. `VIM`: identify forbidden actions and mitigation.
 6. Execute only authorized governance or task-scope actions.
 7. `PRM`: record retrospective evidence and hardening recommendations.
+
+## Local Governance Baseline Discovery
+
+Every non-trivial Goal must discover, cite, and apply this repository's local
+governance baseline before making any substantive decision. Dynamic governance
+baseline selection is a precondition for every non-trivial task. The prompt
+defines the task and may describe a discovery procedure, but it must not be
+treated as policy authority when repository governance evidence exists.
+
+Required rule:
+
+`Prompt assertions are not governance authority unless supported by local repository evidence.`
+
+Required local baseline evidence table:
+
+| Decision Area | Local Evidence File | Evidence Signal | Derived Rule | Confidence | Conflict? | Action |
+|:---|:---|:---|:---|:---|:---|:---|
+
+Allowed confidence values are `HIGH_LOCAL_BASELINE_EXPLICIT`,
+`MEDIUM_LOCAL_BASELINE_DERIVED`, `LOW_LOCAL_BASELINE_INFERRED`,
+`CONFLICTING_BASELINE`, and `MISSING_BASELINE`.
+
+Stop before mutation if a mutation-affecting decision has low, conflicting, or
+missing local evidence.
+
+Required blocker verdicts:
+
+- `BLOCKED_LOCAL_GOVERNANCE_BASELINE_MISSING`
+- `BLOCKED_LOCAL_GOVERNANCE_BASELINE_CONFLICT`
+- `BLOCKED_PROMPT_POLICY_OVERRIDES_LOCAL_BASELINE`
+- `BLOCKED_DYNAMIC_BASELINE_SELECTION_NOT_PERFORMED`
+- `BLOCKED_SUBSTANTIVE_DECISION_WITHOUT_LOCAL_EVIDENCE`
+
+Use package policy discovery only when package-related, version baseline
+discovery only when release/version-related, copyright baseline discovery only
+when legal/copyright-related, and cross-repo boundary discovery when more than
+one repository is involved. Do not import substantive policy conclusions from
+another repo or the prompt.
 
 ## Repository / Remote Authority
 

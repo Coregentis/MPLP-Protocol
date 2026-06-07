@@ -82,6 +82,45 @@ Required blocked verdicts for wrong-authority or owner-approval violations:
 - `BLOCKED_PACKAGE_PUBLICATION_AUTHORIZATION_REQUIRED`
 - `BLOCKED_PACKAGE_ARTIFACT_PROVENANCE_MISSING`
 
+## Local Governance Baseline Discovery
+
+Every non-trivial Codex task must discover, cite, and apply this repository's
+local governance baseline before making any substantive decision or mutation.
+Dynamic governance baseline selection is a precondition for every non-trivial
+task.
+
+The user prompt and assistant prompt may define the requested task and discovery
+procedure, but they do not override local repository governance. Prompt
+assertions are not governance authority unless supported by local repository
+evidence. If prompt assertions conflict with local evidence, stop and report
+the conflict.
+
+Every non-trivial task must produce a local baseline evidence table before
+execution continues:
+
+| Decision Area | Local Evidence File | Evidence Signal | Derived Rule | Confidence | Conflict? | Action |
+|:---|:---|:---|:---|:---|:---|:---|
+
+Allowed confidence values are `HIGH_LOCAL_BASELINE_EXPLICIT`,
+`MEDIUM_LOCAL_BASELINE_DERIVED`, `LOW_LOCAL_BASELINE_INFERRED`,
+`CONFLICTING_BASELINE`, and `MISSING_BASELINE`. Stop before mutation when a
+mutation-affecting decision depends on low, conflicting, or missing evidence.
+
+Required local-baseline blocker verdicts:
+
+- `BLOCKED_LOCAL_GOVERNANCE_BASELINE_MISSING`
+- `BLOCKED_LOCAL_GOVERNANCE_BASELINE_CONFLICT`
+- `BLOCKED_PROMPT_POLICY_OVERRIDES_LOCAL_BASELINE`
+- `BLOCKED_DYNAMIC_BASELINE_SELECTION_NOT_PERFORMED`
+- `BLOCKED_SUBSTANTIVE_DECISION_WITHOUT_LOCAL_EVIDENCE`
+
+Use package policy discovery only when a task is package-related, version
+baseline discovery only when a task is release/version-related, copyright
+baseline discovery only when a task touches legal/copyright attribution, and
+cross-repo boundary discovery when more than one repository is involved. Do not
+hard-code package status, release versions, copyright owner conclusions, public
+projection permission, or protocol authority from the prompt.
+
 ## Hard Boundaries
 
 - Preserve protocol, runtime, product, validation, and publication boundaries.
