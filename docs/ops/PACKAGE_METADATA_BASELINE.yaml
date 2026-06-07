@@ -3,7 +3,7 @@
 # All publish sources MUST align to this baseline
 
 license: Apache-2.0
-author: Coregentis AI
+author: Jearon Wong
 copyright_line: "© 2026 Jearon Wong"
 
 urls:
@@ -23,7 +23,7 @@ keywords:
 # NPM-specific mappings
 npm:
   license: Apache-2.0
-  author: Coregentis AI
+  author: Jearon Wong
   homepage: https://www.mplp.io
   repository:
     type: git
@@ -41,7 +41,7 @@ npm:
 # PyPI-specific mappings
 pypi:
   license: Apache-2.0
-  author: Coregentis AI
+  author: Jearon Wong
   urls:
     Homepage: https://www.mplp.io
     Documentation: https://docs.mplp.io

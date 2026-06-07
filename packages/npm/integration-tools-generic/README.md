@@ -58,4 +58,3 @@ npm install @mplp/integration-tools-generic
 Apache License, Version 2.0
 
 © 2026 **Jearon Wong**
-Coregentis AI

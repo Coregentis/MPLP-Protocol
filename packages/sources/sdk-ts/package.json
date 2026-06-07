@@ -4,7 +4,7 @@
   "version": "1.0.7",
   "description": "Build-source workspace mirror for the published @mplp/sdk-ts facade package, including Kernel Duty exports (not a publish target).",
   "license": "Apache-2.0",
-  "author": "Coregentis AI",
+  "author": "Jearon Wong",
   "repository": {
     "type": "git",
     "url": "https://github.com/Coregentis/MPLP-Protocol.git"

@@ -59,4 +59,3 @@ npm install @mplp/coordination
 Apache License, Version 2.0
 
 © 2026 **Jearon Wong**
-Coregentis AI

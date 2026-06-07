@@ -2,7 +2,7 @@ Metadata-Version: 2.4
 Name: mplp-sdk
 Version: 1.0.5
 Summary: Source-side mirror for the published mplp-sdk protocol helper package surface; not a public publish target.
-Author: Coregentis AI
+Author: Jearon Wong
 License-Expression: Apache-2.0
 Project-URL: Homepage, https://mplp.io
 Project-URL: Documentation, https://docs.mplp.io
@@ -117,4 +117,3 @@ Canonical upstream baseline remains in:
 Apache License, Version 2.0
 
 © 2026 **Jearon Wong**
-Coregentis AI

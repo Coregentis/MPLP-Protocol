@@ -53,4 +53,3 @@ Per the current MPLP terminology baseline, "**conformance**" is the preferred ex
 Apache License, Version 2.0
 
 © 2026 **Jearon Wong**
-Coregentis AI
