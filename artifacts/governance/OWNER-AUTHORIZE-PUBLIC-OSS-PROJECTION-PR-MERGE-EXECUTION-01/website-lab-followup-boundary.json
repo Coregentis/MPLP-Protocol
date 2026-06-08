@@ -1,0 +1,9 @@
+{
+  "goal_id": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-PR-MERGE-EXECUTION-01",
+  "website_mutated": false,
+  "validation_lab_mutated": false,
+  "downstream_repos_mutated": false,
+  "website_followup_after_remote_main_merge": "WEBSITE-PROTOCOL-MANIFEST-POINTER-SYNC-01",
+  "validation_lab_followup_after_remote_main_merge": "VALIDATION-LAB-PROTOCOL-MANIFEST-POINTER-SYNC-01",
+  "verdict": "PASS_WEBSITE_LAB_FOLLOWUP_BOUNDARY_PRESERVED"
+}

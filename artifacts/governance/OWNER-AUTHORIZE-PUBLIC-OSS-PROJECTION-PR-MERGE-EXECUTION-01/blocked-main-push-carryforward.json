@@ -1,0 +1,14 @@
+{
+  "goal_id": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-PR-MERGE-EXECUTION-01",
+  "prior_goal_id": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-MERGE-EXECUTION-01",
+  "prior_final_verdict": "BLOCKED_MAIN_PUSH_REJECTED",
+  "prior_local_merge_commit": "abc8010df1e793320f3e7d3e4760fd71debc35c3",
+  "prior_local_evidence_head": "8e61175940f4bf4868da41c11093d2e6955c69f8",
+  "prior_origin_main_after_rejection": "574d13d20b829c0c8768bc7916186f01dcf5ff46",
+  "protected_branch_rejection_summary": [
+    "changes must be made through a pull request",
+    "required status check Build Docusaurus is expected"
+  ],
+  "carryforward_chain_verified": true,
+  "verdict": "PASS_BLOCKED_MAIN_PUSH_CARRYFORWARD"
+}

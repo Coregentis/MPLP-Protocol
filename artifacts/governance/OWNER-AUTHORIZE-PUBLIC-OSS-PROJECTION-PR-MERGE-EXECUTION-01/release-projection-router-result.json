@@ -1,0 +1,35 @@
+{
+  "goal_id": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-PR-MERGE-EXECUTION-01",
+  "router_id": "RELEASE-PROJECTION-GOVERNANCE-ROUTER-01",
+  "executed": true,
+  "workflow_type": [
+    "public_oss_projection",
+    "protected_branch_pr_path",
+    "protected_check_aware_merge_execution",
+    "no_direct_main_push",
+    "no_registry_mutation"
+  ],
+  "required_check_source": "prior GitHub protected branch rejection",
+  "required_check_name": "Build Docusaurus",
+  "allowed_mutations": [
+    "create PR source branch from blocked merge result",
+    "push PR source branch",
+    "create GitHub PR if permitted",
+    "inspect required checks",
+    "merge PR only if checks pass and governance permits",
+    "create lightweight PR-path governance evidence"
+  ],
+  "forbidden_actions": [
+    "direct main push",
+    "force push",
+    "branch protection bypass",
+    "check disabling",
+    "branch deletion",
+    "tag",
+    "seal",
+    "GitHub release",
+    "npm/PyPI/registry mutation",
+    "Website/Lab/downstream/Dev/V1 mutation"
+  ],
+  "verdict": "PASS_RELEASE_PROJECTION_ROUTER_APPLIED"
+}

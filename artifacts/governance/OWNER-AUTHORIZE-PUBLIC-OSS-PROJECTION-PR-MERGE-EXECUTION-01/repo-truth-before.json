@@ -1,0 +1,29 @@
+{
+  "goal_id": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-PR-MERGE-EXECUTION-01",
+  "captured_at_local": "2026-06-09T00:51:50+0800",
+  "captured_at_utc": "2026-06-08T16:51:50Z",
+  "canonical_workspace_root": "/Users/jasonwang/Documents/AI_Dev/Coregentis",
+  "public_repo": {
+    "path": "/Users/jasonwang/Documents/AI_Dev/Coregentis/MPLP-Protocol",
+    "role": "clean_public_oss_projection",
+    "starting_branch": "main",
+    "pr_source_branch": "codex/owner-authorize-public-oss-projection-pr-merge-execution-01",
+    "local_main_head_before_pr_branch": "8e61175940f4bf4868da41c11093d2e6955c69f8",
+    "origin_main_head": "574d13d20b829c0c8768bc7916186f01dcf5ff46",
+    "ahead_behind_against_origin_main": {
+      "behind": 0,
+      "ahead": 22
+    },
+    "status_before_new_pr_evidence": "clean",
+    "remote_origin": "https://github.com/Coregentis/MPLP-Protocol.git"
+  },
+  "dev_repo_read_only": {
+    "path": "/Users/jasonwang/Documents/AI_Dev/Coregentis/MPLP-Protocol-Dev",
+    "role": "protocol_package_release_dev_truth",
+    "branch": "codex/release-projection-governance-harness-codification-01",
+    "local_head": "93bcc881cc45e13d12dcc4d0ba26b8f11d996b23",
+    "origin_main_head": "00f57406005fe0a23f27c2e3e82a8c27e99dba6d",
+    "status": "clean_read_only"
+  },
+  "goal_tooling_note": "thread goal tool still contains the prior blocked goal and did not allow creating a second goal; this governance record carries the new owner-authorized PR path goal"
+}

@@ -1,0 +1,9 @@
+{
+  "goal_id": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-PR-MERGE-EXECUTION-01",
+  "branch_cleanup_authorized": false,
+  "branch_deletion_authorized": false,
+  "source_branch_deleted": false,
+  "pr_branch_deleted": false,
+  "required_future_authorization": "explicit owner-authorized branch cleanup goal",
+  "verdict": "PASS_BRANCH_CLEANUP_STILL_BLOCKED"
+}

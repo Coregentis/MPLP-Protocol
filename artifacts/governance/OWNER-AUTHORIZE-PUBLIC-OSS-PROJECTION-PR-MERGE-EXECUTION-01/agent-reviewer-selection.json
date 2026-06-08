@@ -1,0 +1,25 @@
+{
+  "goal_id": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-PR-MERGE-EXECUTION-01",
+  "actual_subagent_invocation": {
+    "attempted": false,
+    "reason": "prior thread agent limit was reached; local reviewer lanes applied"
+  },
+  "local_agent_files": [
+    ".codex/agents/package_surface_auditor.toml",
+    ".codex/agents/product_boundary_reviewer.toml",
+    ".codex/agents/protocol_schema_reviewer.toml",
+    ".codex/agents/publication_claim_reviewer.toml",
+    ".codex/agents/release_governance_reviewer.toml",
+    ".codex/agents/runtime_binding_reviewer.toml"
+  ],
+  "selected_review_perspectives": [
+    "governance_secretariat",
+    "release_governance_reviewer",
+    "projection_boundary_reviewer",
+    "security_no_secret_reviewer",
+    "branch_lifecycle_reviewer",
+    "website_boundary_reviewer",
+    "validation_lab_boundary_reviewer"
+  ],
+  "verdict": "PASS_REVIEWER_LANES_SELECTED_AND_APPLIED_LOCALLY"
+}

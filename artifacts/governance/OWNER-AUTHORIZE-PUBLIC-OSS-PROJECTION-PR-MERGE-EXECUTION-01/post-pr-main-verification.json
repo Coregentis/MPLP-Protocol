@@ -1,0 +1,8 @@
+{
+  "goal_id": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-PR-MERGE-EXECUTION-01",
+  "origin_main_before_pr_path": "574d13d20b829c0c8768bc7916186f01dcf5ff46",
+  "origin_main_after_pr_path": "pending",
+  "origin_main_contains_pr_head": false,
+  "public_manifest_validation_after_merge": "not_run_before_merge",
+  "verdict": "PENDING_PR_MERGE_OR_STOP"
+}

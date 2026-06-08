@@ -1,0 +1,22 @@
+{
+  "goal_id": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-PR-MERGE-EXECUTION-01",
+  "direct_origin_main_push": "NOT_PERFORMED",
+  "force_push": "NOT_PERFORMED",
+  "branch_protection_bypass": "NOT_PERFORMED",
+  "required_check_disabled": "NOT_PERFORMED",
+  "branch_deletion": "NOT_PERFORMED",
+  "branch_cleanup": "NOT_PERFORMED",
+  "tag": "NOT_PERFORMED",
+  "seal": "NOT_PERFORMED",
+  "github_release": "NOT_PERFORMED",
+  "npm_publish": "NOT_PERFORMED",
+  "pypi_upload": "NOT_PERFORMED",
+  "registry_mutation": "NOT_PERFORMED",
+  "website_deploy": "NOT_PERFORMED",
+  "validation_lab_publication": "NOT_PERFORMED",
+  "dev_repo_mutation": "NOT_PERFORMED",
+  "v1_mutation": "NOT_PERFORMED",
+  "downstream_sync": "NOT_PERFORMED",
+  "credential_value_access_or_output": "NOT_PERFORMED",
+  "verdict": "PASS_NO_FORBIDDEN_ACTION_COMPLIANCE_PRE_PR_PUSH"
+}

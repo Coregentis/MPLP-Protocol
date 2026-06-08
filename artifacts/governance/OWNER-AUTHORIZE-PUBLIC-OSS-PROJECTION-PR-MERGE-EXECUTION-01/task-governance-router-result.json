@@ -1,0 +1,61 @@
+{
+  "goal_id": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-PR-MERGE-EXECUTION-01",
+  "router_id": "TASK-GOVERNANCE-ROUTER-01",
+  "executed": true,
+  "task_type_classification": [
+    "owner_authorized_public_oss_projection_pr_path_execution",
+    "protected_branch_pr_creation",
+    "protected_check_aware_merge_execution",
+    "no_direct_main_push",
+    "no_tag_no_seal_no_github_release"
+  ],
+  "sot_layer_classification": [
+    "L1 Projection Source",
+    "L3 Verification Evidence",
+    "L4 Publication Surface",
+    "L6 Codex Execution Governance"
+  ],
+  "selected_local_governance_baseline": [
+    "AGENTS.md",
+    ".codex/config.toml",
+    ".agents/skills/task-governance-router/SKILL.md",
+    ".agents/skills/release-projection-governance-router/SKILL.md",
+    "governance/codex-goals/CODEX-GOAL-TEMPLATE.md",
+    "governance/release/MPLP-RELEASE-SOP.md",
+    "GOVERNANCE.md",
+    "CONTRIBUTING.md",
+    "release-config.yaml",
+    "governance/04-records/PUBLIC-OSS-BRANCH-RELEASE-PROPOSAL-GOVERNANCE-BASELINE-01.md",
+    "governance/04-records/OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-MERGE-EXECUTION-01.md"
+  ],
+  "forbidden_actions": [
+    "direct_origin_main_push",
+    "force_push",
+    "branch_protection_bypass",
+    "disable_required_checks",
+    "branch_deletion",
+    "branch_cleanup",
+    "tag",
+    "seal",
+    "GitHub release",
+    "npm publish",
+    "PyPI upload",
+    "registry mutation",
+    "website deploy",
+    "Validation Lab publication",
+    "Dev mutation",
+    "V1 mutation",
+    "downstream sync",
+    "credential exposure"
+  ],
+  "stop_conditions": [
+    "BLOCKED_LOCAL_MAIN_MERGE_RESULT_MISSING",
+    "BLOCKED_LOCAL_MAIN_HAS_UNEXPLAINED_COMMITS",
+    "BLOCKED_PR_SOURCE_BRANCH_PUSH_FAILED",
+    "PARTIAL_PR_CREATED_CHECKS_PENDING_NO_MERGE",
+    "PARTIAL_PR_CREATED_CHECKS_FAILED_NO_MERGE",
+    "PARTIAL_PR_CREATED_CHECKS_UNAVAILABLE_NO_MERGE",
+    "PARTIAL_PR_CREATED_MERGE_BLOCKED_BY_BRANCH_PROTECTION"
+  ],
+  "verdict": "PASS_TASK_GOVERNANCE_ROUTER_APPLIED"
+}

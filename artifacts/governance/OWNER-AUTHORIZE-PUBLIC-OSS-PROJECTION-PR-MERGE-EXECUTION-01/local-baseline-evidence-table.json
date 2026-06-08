@@ -1,0 +1,52 @@
+{
+  "goal_id": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-PR-MERGE-EXECUTION-01",
+  "rows": [
+    {
+      "decision_area": "public repo authority",
+      "local_evidence_file": "AGENTS.md",
+      "evidence_signal": "MPLP-Protocol is clean public OSS projection and Dev is package/release truth",
+      "derived_rule": "perform PR path only in public repo; keep Dev read-only",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "apply"
+    },
+    {
+      "decision_area": "protected branch PR path",
+      "local_evidence_file": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-MERGE-EXECUTION-01.md; main-push-rejection.json",
+      "evidence_signal": "direct main push rejected; changes must be made through PR and Build Docusaurus is required",
+      "derived_rule": "create PR source branch and PR; do not retry direct main push",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "apply"
+    },
+    {
+      "decision_area": "branch cleanup boundary",
+      "local_evidence_file": "PUBLIC-OSS-BRANCH-RELEASE-PROPOSAL-GOVERNANCE-BASELINE-01.md",
+      "evidence_signal": "branch existence is evidence only and cleanup requires explicit authorization",
+      "derived_rule": "do not delete source or PR branch in this goal",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "apply"
+    },
+    {
+      "decision_area": "release/tag/registry boundary",
+      "local_evidence_file": ".agents/skills/release-projection-governance-router/SKILL.md; owner authorization",
+      "evidence_signal": "tag, seal, GitHub release, publish/upload, dist-tag, deprecate, and registry mutation are forbidden without exact owner authorization",
+      "derived_rule": "do not perform any release or registry mutation",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "apply"
+    },
+    {
+      "decision_area": "Website and Validation Lab boundary",
+      "local_evidence_file": "website-lab-followup-boundary.json",
+      "evidence_signal": "Website/Lab pointer sync follows only after remote main merge",
+      "derived_rule": "do not mutate Website or Validation Lab in this goal",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "apply"
+    }
+  ],
+  "overall_confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+  "conflict": false
+}

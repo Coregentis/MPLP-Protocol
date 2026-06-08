@@ -1,0 +1,8 @@
+{
+  "goal_id": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-PR-MERGE-EXECUTION-01",
+  "local_main_realigned_to_origin_main": false,
+  "decision": "LOCAL_MAIN_AHEAD_PENDING_PR_MERGE",
+  "reason": "preserve blocked merge result locally until PR branch is pushed and the PR path outcome is known",
+  "destructive_reset_performed": false,
+  "verdict": "PASS_LOCAL_MAIN_REALIGNMENT_DEFERRED"
+}

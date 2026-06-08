@@ -1,0 +1,8 @@
+{
+  "goal_id": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-PR-MERGE-EXECUTION-01",
+  "merge_attempted": false,
+  "merge_permitted_only_if_required_checks_pass": true,
+  "merge_method": "pending",
+  "merge_commit": null,
+  "verdict": "PENDING_REQUIRED_CHECKS"
+}

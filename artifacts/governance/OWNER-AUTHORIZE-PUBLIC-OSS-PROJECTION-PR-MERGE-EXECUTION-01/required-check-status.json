@@ -1,0 +1,12 @@
+{
+  "goal_id": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-PR-MERGE-EXECUTION-01",
+  "required_check_name": "Build Docusaurus",
+  "check_inspection": "pending",
+  "check_status": "pending_pr_creation",
+  "check_conclusion": null,
+  "required_checks_passed": false,
+  "required_checks_pending": false,
+  "required_checks_failed": false,
+  "required_checks_unavailable": false,
+  "verdict": "PENDING_CHECK_INSPECTION"
+}

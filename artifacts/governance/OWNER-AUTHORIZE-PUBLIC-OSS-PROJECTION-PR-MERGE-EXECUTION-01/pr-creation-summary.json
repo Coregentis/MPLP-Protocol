@@ -1,0 +1,12 @@
+{
+  "goal_id": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-PR-MERGE-EXECUTION-01",
+  "gh_cli_available": true,
+  "gh_cli_version": "2.90.0",
+  "gh_auth_visible_without_token_value": true,
+  "existing_pr_before_creation": null,
+  "pr_creation": "pending",
+  "pr_number": null,
+  "pr_url": null,
+  "merge_performed_during_creation_step": false,
+  "verdict": "PENDING_PR_CREATION"
+}
