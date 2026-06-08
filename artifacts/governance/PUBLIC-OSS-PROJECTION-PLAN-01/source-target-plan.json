@@ -1,0 +1,18 @@
+{
+  "dev_source_commit": {
+    "type": "Dev origin/main authority snapshot",
+    "commit": "00f57406005fe0a23f27c2e3e82a8c27e99dba6d",
+    "note": "Use Dev origin/main for release-set/pypi-set and publish evidence authority. Dev local governance branch may inform router/policy only if merged or owner-authorized before execution."
+  },
+  "public_target": {
+    "repo": "Coregentis/MPLP-Protocol",
+    "current_plan_branch": "codex/public-oss-projection-plan-01",
+    "current_plan_head": "bb9d33c6a0576e9d04db648f03e879d5dd154abb",
+    "current_origin_main": "574d13d20b829c0c8768bc7916186f01dcf5ff46",
+    "future_execution_branch": "codex/public-oss-projection-execution-01",
+    "public_base_branch": "current public task stack or refreshed origin/main, to be revalidated at execution start",
+    "expected_start_head": "must equal latest approved public projection planning HEAD at execution time"
+  },
+  "no_direct_dev_main_merge": true,
+  "future_execution_method": "manual/automated file-level projection from exact allowlist only; no branch merge, no wholesale copy"
+}

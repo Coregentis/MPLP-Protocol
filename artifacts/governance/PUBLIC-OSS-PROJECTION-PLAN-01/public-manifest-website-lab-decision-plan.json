@@ -1,0 +1,35 @@
+{
+  "decision": "Option B",
+  "rationale": "Public SOP requires Website/Lab needed-or-not-needed decisions. Drift review shows Website/Lab vendored manifests are stale if Protocol manifest changes. Keeping Protocol projection and downstream pointer sync as separate immediate follow-up goals preserves repo boundaries and avoids blocking Protocol planning on sibling repo mutation authorization.",
+  "option_a": "Protocol only and leave Website/Lab for later: safe only if release window explicitly excludes downstream pointer freshness.",
+  "option_b": "Protocol projection, then separate immediate Website/Lab pointer-sync goals if manifest changes: selected default plan.",
+  "option_c": "Block Protocol projection until Website/Lab same-window sync planned: use only if owner declares Website/Lab pointer freshness part of the same public release completion criteria.",
+  "required_followup_if_manifest_changes": [
+    "WEBSITE-PROTOCOL-MANIFEST-POINTER-SYNC-01",
+    "VALIDATION-LAB-PROTOCOL-MANIFEST-POINTER-SYNC-01"
+  ],
+  "current_website_lab_state": {
+    "website": {
+      "repo": "Coregentis/MPLP-Official-Website",
+      "vendored_manifest_path": "lib/data/mplp-public-manifest.json",
+      "manifest_id": "mplp-public-manifest-1.0.0-draft-650e5b2f",
+      "protocol_commit_sha": "650e5b2f6754a7016d8c8184e54881b0fcef6683",
+      "package_statuses": [
+        "planned_not_published"
+      ],
+      "checksum_path": "lib/data/mplp-public-manifest.sha256",
+      "sync_needed_decision": "owner_decision_required_for_release_window; current vendored manifest is stale if public manifest is updated"
+    },
+    "validation_lab": {
+      "repo": "Coregentis/MPLP-Validation-Lab",
+      "vendored_manifest_path": "lib/data/mplp-public-manifest.json",
+      "manifest_id": "mplp-public-manifest-1.0.0-draft-650e5b2f",
+      "protocol_commit_sha": "650e5b2f6754a7016d8c8184e54881b0fcef6683",
+      "package_statuses": [
+        "planned_not_published"
+      ],
+      "checksum_path": "lib/data/mplp-public-manifest.sha256",
+      "sync_needed_decision": "owner_decision_required_for_release_window; current vendored manifest is stale if public manifest is updated"
+    }
+  }
+}

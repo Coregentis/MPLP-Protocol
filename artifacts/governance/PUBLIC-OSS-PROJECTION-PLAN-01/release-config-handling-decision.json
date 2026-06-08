@@ -1,0 +1,7 @@
+{
+  "decision": "PLAN_SPECIFIC_ALLOWLIST_DENYLIST_SUFFICIENT_FOR_NEXT_EXECUTION_PLAN",
+  "mutate_release_config_now": false,
+  "rationale": "release-config matches public/Dev and is useful bundle input, but not full redaction policy. The plan-level allowlist/denylist narrows broad governance/04-records/** and packages/** and blocks dist/raw evidence leakage.",
+  "future_config_amendment_needed": false,
+  "stop_if": "future owner wants broad automated projection semantics rather than exact allowlist execution; then amend release-config in separate goal first"
+}

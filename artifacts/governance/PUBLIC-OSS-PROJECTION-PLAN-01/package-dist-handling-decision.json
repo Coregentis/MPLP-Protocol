@@ -1,0 +1,6 @@
+{
+  "decision": "PACKAGE_DIST_REMAINS_REGISTRY_ARTIFACT_ONLY_FOR_PUBLIC_OSS_PROJECTION",
+  "rationale": "release-config excludes **/dist/** and drift review classified package dist as ambiguous. Public OSS projection should carry source/manifest/README surfaces; registry packages carry built dist artifacts after package gates and owner publish authorization.",
+  "future_dist_projection": "requires separate owner decision plus release-config amendment and package artifact provenance gate",
+  "current_goal_mutation": false
+}

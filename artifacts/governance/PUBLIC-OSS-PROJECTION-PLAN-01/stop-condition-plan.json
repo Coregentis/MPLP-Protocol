@@ -1,0 +1,30 @@
+{
+  "blockers": [
+    "BLOCKED_DEV_MAIN_TRUTH_DRIFT",
+    "BLOCKED_PUBLIC_ORIGIN_MAIN_DRIFT",
+    "BLOCKED_RELEASE_CONFIG_SCOPE_AMBIGUITY",
+    "BLOCKED_PROJECTION_ALLOWLIST_AMBIGUITY",
+    "BLOCKED_RAW_DEV_EVIDENCE_LEAKAGE",
+    "BLOCKED_LOCAL_PATH_LEAKAGE",
+    "BLOCKED_CREDENTIAL_LEAKAGE",
+    "BLOCKED_PACKAGE_GATE_FAILED",
+    "BLOCKED_MANIFEST_VALIDATION_FAILED",
+    "BLOCKED_IDENTITY_OWNER_SCAN_UNRESOLVED",
+    "BLOCKED_OVERCLAIM_SCAN_UNRESOLVED",
+    "BLOCKED_WEBSITE_LAB_SCOPE_AMBIGUITY",
+    "BLOCKED_PUBLIC_PACKAGE_DIST_SCOPE_UNCLEAR",
+    "BLOCKED_OWNER_AUTHORIZATION_REQUIRED",
+    "BLOCKED_TASK_GOVERNANCE_ROUTER_NOT_RUN",
+    "BLOCKED_DYNAMIC_RELEASE_WORKFLOW_DISCOVERY_NOT_PERFORMED"
+  ],
+  "stop_rules": {
+    "dev_main_truth_drift": "stop if Dev origin/main no longer equals authorized source commit",
+    "public_origin_main_drift": "stop if public start/base HEAD differs from owner-authorized baseline",
+    "release_config_conflict": "stop if requested files require config semantics not covered by allowlist/denylist",
+    "raw_dev_evidence_leakage": "stop on any raw Dev artifacts/governance or package-preflight content in projection diff",
+    "local_path_leakage": "stop on unexpected home-directory absolute path or temp path leakage outside explicit repo-truth record",
+    "credential_leakage": "stop on credential-looking content or credential files",
+    "package_gate_failure": "stop before commit if package gates fail for package mutations",
+    "owner_missing": "stop if execution mutation category, target files, or downstream scope lacks exact owner authorization"
+  }
+}

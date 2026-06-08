@@ -1,0 +1,85 @@
+{
+  "principle": "positive allowlist; every file must still pass suitability gates",
+  "exact_or_class_allowlist": [
+    {
+      "path": "release-manifests/mplp-public-manifest.example.json",
+      "action": "update_public_summary",
+      "condition": "update package status from planned to published using registry/Dev evidence; validate schema"
+    },
+    {
+      "path": "release-manifests/mplp-public-manifest.schema.json",
+      "action": "unchanged_unless_schema_needed",
+      "condition": "only if manifest schema field changes are explicitly planned and gate passes"
+    },
+    {
+      "path": "artifacts/release/publish-set.json",
+      "action": "update_summary",
+      "condition": "align to 11 npm release-set packages; exclude compliance/validator; handle devtools separately as optional tooling summary if owner approves"
+    },
+    {
+      "path": "artifacts/release/pypi-set.json",
+      "action": "update_summary",
+      "condition": "align mplp-sdk to 1.0.6 and remove V1 local path; use public-safe relative/pathless summary"
+    },
+    {
+      "path": "packages/npm/conformance/package.json",
+      "action": "candidate_update",
+      "condition": "package gates required; remove active compliance dependency drift"
+    },
+    {
+      "path": "packages/npm/conformance/README.md",
+      "action": "candidate_update",
+      "condition": "README/install smoke and consistency gates required"
+    },
+    {
+      "path": "packages/npm/conformance/src/**",
+      "action": "candidate_update",
+      "condition": "source/public safety gates required"
+    },
+    {
+      "path": "packages/npm/devtools/package.json",
+      "action": "candidate_update",
+      "condition": "owner decision required for public optional tooling inclusion; package gates required"
+    },
+    {
+      "path": "packages/npm/devtools/README.md",
+      "action": "candidate_update",
+      "condition": "standardize only with package gates; no publish implied"
+    },
+    {
+      "path": "packages/npm/devtools/src/**",
+      "action": "candidate_update",
+      "condition": "public tooling source only; no dist projection"
+    },
+    {
+      "path": "selected packages/npm/*/package.json and README.md",
+      "action": "candidate_update",
+      "condition": "only packages with drift and package gates; no wholesale packages/** copy"
+    },
+    {
+      "path": "selected docs source under docs/docs/** and docs/src/**",
+      "action": "candidate_update",
+      "condition": "docs/public claim/build gates; exclude generated docs"
+    },
+    {
+      "path": "schemas/v2/**",
+      "action": "unchanged_unless_new_drift",
+      "condition": "current review found no drift; include only if future preflight detects safe drift"
+    },
+    {
+      "path": "tests/** and examples/**",
+      "action": "unchanged_unless_new_drift",
+      "condition": "current review found no drift; include only if needed for public verification"
+    },
+    {
+      "path": "governance/04-records/PUBLIC-OSS-PROJECTION-EXECUTION-*.md",
+      "action": "create_public_safe_summary",
+      "condition": "execution goal creates public summary record only"
+    },
+    {
+      "path": "artifacts/governance/PUBLIC-OSS-PROJECTION-EXECUTION-*/*.json",
+      "action": "create_public_lightweight_evidence",
+      "condition": "public repo evidence only, no Dev raw evidence"
+    }
+  ]
+}
