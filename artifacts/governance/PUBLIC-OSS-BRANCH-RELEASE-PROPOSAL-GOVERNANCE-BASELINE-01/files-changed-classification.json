@@ -1,0 +1,24 @@
+{
+  "allowed_surface_classes": [
+    "governance baseline record",
+    "lightweight governance evidence JSON",
+    "Codex operating harness pointers"
+  ],
+  "forbidden_surface_classes": [
+    "package",
+    "source",
+    "schema",
+    "docs content",
+    "release manifest",
+    "release-set",
+    "pypi-set",
+    "Website",
+    "Validation Lab",
+    "Dev repo",
+    "V1 workspace"
+  ],
+  "classification_status": "verified_after_edits",
+  "changed_file_count": 23,
+  "protected_surface_scan": "PASS",
+  "forbidden_prefix_files": []
+}

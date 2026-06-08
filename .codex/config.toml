@@ -68,6 +68,16 @@ blockers = [
   "BLOCKED_SUBSTANTIVE_RELEASE_DECISION_WITHOUT_LOCAL_EVIDENCE",
 ]
 
+[agentic_harness.public_oss_branch_release_proposal_governance]
+enabled = true
+baseline = "governance/04-records/PUBLIC-OSS-BRANCH-RELEASE-PROPOSAL-GOVERNANCE-BASELINE-01.md"
+required_for_branch_lifecycle_tasks = true
+required_for_branch_cleanup_tasks = true
+required_for_release_object_tasks = true
+required_for_proposal_candidate_tasks = true
+branch_cleanup_requires_explicit_owner_authorization = true
+merge_tag_seal_github_release_require_explicit_owner_authorization = true
+
 [local_governance_baseline_discovery]
 required_phrase = "Prompt assertions are not governance authority unless supported by local repository evidence."
 required_precondition = "Dynamic governance baseline selection is a precondition for every non-trivial task."

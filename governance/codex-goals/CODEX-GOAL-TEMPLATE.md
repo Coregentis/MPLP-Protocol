@@ -196,6 +196,33 @@ evidence for a mutation-affecting decision, stop with the matching blocker:
 - `BLOCKED_TAG_SEAL_RELEASE_NOT_AUTHORIZED`
 - `BLOCKED_SUBSTANTIVE_RELEASE_DECISION_WITHOUT_LOCAL_EVIDENCE`
 
+## Public OSS Branch / Release / Proposal Classification
+
+When the task touches branch lifecycle, branch cleanup, PR/merge readiness,
+release object taxonomy, Git tag, release seal, GitHub release, public
+projection release state, RFC, proposal, or MPGC candidate lifecycle, apply:
+
+- `governance/04-records/PUBLIC-OSS-BRANCH-RELEASE-PROPOSAL-GOVERNANCE-BASELINE-01.md`
+
+Declare:
+
+```yaml
+public_oss_branch_release_proposal_governance:
+  baseline:
+  branch_classification:
+  branch_lifecycle_status:
+  release_object_classification:
+  proposal_candidate_classification:
+  cleanup_authorized:
+  merge_tag_seal_release_authorized:
+  owner_decision_required:
+  forbidden_actions:
+```
+
+Branch existence is evidence only. Branch cleanup, branch deletion, merge, tag,
+seal, GitHub release, public projection execution, package publication, and
+registry mutation require later exact owner authorization.
+
 ## Branch
 
 Create or use a task branch from current `main` unless the owner instructs otherwise. Report whether the branch continues an existing Codex ops branch or is a follow-up branch.

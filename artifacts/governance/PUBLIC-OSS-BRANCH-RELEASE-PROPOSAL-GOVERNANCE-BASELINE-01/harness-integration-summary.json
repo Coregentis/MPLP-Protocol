@@ -1,0 +1,22 @@
+{
+  "integration_type": "minimal pointers",
+  "files_intended_for_pointer_updates": [
+    "AGENTS.md",
+    ".codex/config.toml",
+    ".agents/skills/task-governance-router/SKILL.md",
+    ".codex/skills/task-governance-router/SKILL.md",
+    ".agents/skills/release-projection-governance-router/SKILL.md",
+    ".codex/skills/release-projection-governance-router/SKILL.md",
+    "governance/codex-goals/CODEX-GOAL-TEMPLATE.md"
+  ],
+  "not_authorized_by_integration": [
+    "branch cleanup",
+    "merge",
+    "tag",
+    "seal",
+    "GitHub release",
+    "public projection execution",
+    "package/source/schema/docs/release-manifest mutation",
+    "registry mutation"
+  ]
+}

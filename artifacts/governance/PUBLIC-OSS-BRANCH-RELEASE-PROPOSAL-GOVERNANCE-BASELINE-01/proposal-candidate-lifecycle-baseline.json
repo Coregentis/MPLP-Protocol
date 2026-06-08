@@ -1,0 +1,41 @@
+{
+  "rfc_lifecycle_supported_by_governance_md": [
+    "Draft",
+    "Review",
+    "Approval",
+    "Implementation"
+  ],
+  "candidate_states_and_outcomes_supported_by_local_records": [
+    "draft",
+    "pre_rfc",
+    "non_normative_candidate_backlog",
+    "review_preparation_ready",
+    "decision_needed",
+    "reject",
+    "defer",
+    "keep_backlog",
+    "open_rfc",
+    "request_more_evidence",
+    "accept_as_guide_work_item",
+    "accept_as_profile_work_item",
+    "accept_as_binding_work_item"
+  ],
+  "proposal_branch_rule": "proposal or candidate branches are editing vehicles only; proposal records, RFC issues, MPGC decision records, PRs, and release manifests carry authority",
+  "long_lived_proposal_branch_policy": "owner_decision_required",
+  "public_safe_surfaces": [
+    "RFC issues",
+    "public PR discussions",
+    "public candidate backlog records",
+    "public MPGC intake/review preparation records",
+    "public proposal decision records"
+  ],
+  "dev_private_or_owner_decision_required_surfaces": [
+    "raw Dev evidence",
+    "implementation-private evidence",
+    "local execution logs",
+    "credential/auth evidence",
+    "raw package preflight output",
+    "product/runtime-private traces",
+    "owner-private planning notes not prepared for public projection"
+  ]
+}

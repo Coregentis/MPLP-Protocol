@@ -1,0 +1,47 @@
+[
+  {
+    "decision_area": "public_repo_role",
+    "local_evidence_file": "AGENTS.md; .codex/config.toml; governance/release/MPLP-RELEASE-SOP.md",
+    "evidence_signal": "public repo is clean OSS projection; Dev repo is package/release Dev truth",
+    "derived_rule": "codify public lifecycle governance in public repo without back-driving Dev truth",
+    "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+    "conflict": false,
+    "action": "apply"
+  },
+  {
+    "decision_area": "branch_lifecycle",
+    "local_evidence_file": "governance/release/MPLP-RELEASE-SOP.md; current branch inventory",
+    "evidence_signal": "release work uses dedicated branches; many codex/governance branches exist",
+    "derived_rule": "classify branch roles and lifecycle state before cleanup or merge",
+    "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+    "conflict": false,
+    "action": "codify"
+  },
+  {
+    "decision_area": "branch_cleanup",
+    "local_evidence_file": "governance/release/MPLP-RELEASE-SOP.md; PR and containment evidence",
+    "evidence_signal": "records retained; no explicit deletion policy existed",
+    "derived_rule": "require inventory, lineage proof, record mapping, no unique commit loss, and owner authorization",
+    "confidence": "MEDIUM_LOCAL_BASELINE_DERIVED",
+    "conflict": false,
+    "action": "codify"
+  },
+  {
+    "decision_area": "release_object_separation",
+    "local_evidence_file": "GOVERNANCE.md; governance/05-versioning/version-taxonomy-manifest.json; release-manifests/mplp-public-manifest.schema.json",
+    "evidence_signal": "version domains and release manifest fields are separate",
+    "derived_rule": "do not collapse protocol version, package version, projection snapshot, tag, seal, and GitHub release",
+    "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+    "conflict": false,
+    "action": "apply"
+  },
+  {
+    "decision_area": "proposal_candidate_authority",
+    "local_evidence_file": "GOVERNANCE.md; CONTRIBUTING.md; .github/ISSUE_TEMPLATE/rfc.md; governance/candidates; governance/mpgc-intake; governance/mpgc-review",
+    "evidence_signal": "normative changes start as RFC issues; candidate files are pre-RFC and non-normative",
+    "derived_rule": "proposal records/issues are authority; branches are editing vehicles",
+    "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+    "conflict": false,
+    "action": "apply"
+  }
+]

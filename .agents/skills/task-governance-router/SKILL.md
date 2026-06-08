@@ -86,6 +86,10 @@ Classify at least one:
 - `credential_readiness`
 - `post_publish_verification`
 - `devtools_or_validator_or_compliance_status`
+- `branch_lifecycle_governance`
+- `branch_cleanup_planning`
+- `release_object_governance`
+- `proposal_candidate_lifecycle_governance`
 - `unknown_or_mixed`
 
 For each selected type, discover from local evidence:
@@ -99,6 +103,14 @@ For each selected type, discover from local evidence:
 - required agents, reviewers, and skills
 
 Do not hardcode package status, repo role, or authorization from the prompt.
+
+When the task touches public OSS branch lifecycle, branch cleanup, PR/merge
+readiness, release object taxonomy, Git tag, release seal, GitHub release,
+public projection release state, RFC, proposal, or MPGC candidate lifecycle,
+include
+`governance/04-records/PUBLIC-OSS-BRANCH-RELEASE-PROPOSAL-GOVERNANCE-BASELINE-01.md`
+in the selected local governance baseline. Branch existence is evidence only,
+not governance authority.
 
 ## Release-Like Workflow Delegation
 

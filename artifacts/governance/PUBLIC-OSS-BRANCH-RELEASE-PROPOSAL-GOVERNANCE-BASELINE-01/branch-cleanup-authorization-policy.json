@@ -1,0 +1,25 @@
+{
+  "cleanup_is_separate_mutation_category": true,
+  "cleanup_authorized_by_this_goal": false,
+  "required_before_remote_branch_deletion": [
+    "full local and remote branch inventory",
+    "current origin/main HEAD",
+    "branch SHA and upstream tracking state",
+    "ahead/behind count against origin/main",
+    "containment proof against origin/main",
+    "containment proof against active review/projection branch when relevant",
+    "mapped PR URL and PR state when available",
+    "mapped governance record path when available",
+    "proof that no unique unmerged commit would be lost",
+    "owner authorization naming exact branches to delete",
+    "final no-tag/no-merge/no-release/no-registry compliance record"
+  ],
+  "forbidden_in_baseline_goal": [
+    "remote branch deletion",
+    "local branch deletion",
+    "PR close",
+    "merge",
+    "tag",
+    "release"
+  ]
+}

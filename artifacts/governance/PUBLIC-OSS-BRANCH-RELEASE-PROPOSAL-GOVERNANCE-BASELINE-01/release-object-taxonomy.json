@@ -1,0 +1,74 @@
+[
+  {
+    "object": "protocol_semantic_release",
+    "meaning": "normative protocol/schema/specification version",
+    "owner_authorization_required": true,
+    "requires_public_main_merge_first": true,
+    "requires_tag_seal_github_release": "separate_authorization_required",
+    "requires_package_registry_publication": false
+  },
+  {
+    "object": "package_registry_release",
+    "meaning": "npm/PyPI package publication for exact package/version",
+    "owner_authorization_required": true,
+    "requires_public_main_merge_first": "not_automatic",
+    "requires_tag_seal_github_release": false,
+    "requires_package_registry_publication": true
+  },
+  {
+    "object": "public_projection_release",
+    "meaning": "public repo snapshot/projection of Dev-approved public-safe surfaces",
+    "owner_authorization_required": true,
+    "requires_public_main_merge_first": true,
+    "requires_tag_seal_github_release": "separate_authorization_required",
+    "requires_package_registry_publication": false
+  },
+  {
+    "object": "public_manifest_update",
+    "meaning": "release metadata contract for public consumers",
+    "owner_authorization_required": true,
+    "requires_public_main_merge_first": true,
+    "requires_tag_seal_github_release": false,
+    "requires_package_registry_publication": false
+  },
+  {
+    "object": "git_tag",
+    "meaning": "immutable Git ref marking release or frozen version state",
+    "owner_authorization_required": true,
+    "requires_public_main_merge_first": true,
+    "requires_tag_seal_github_release": "is_tag_action",
+    "requires_package_registry_publication": false
+  },
+  {
+    "object": "github_release",
+    "meaning": "public GitHub release object and announcement surface",
+    "owner_authorization_required": true,
+    "requires_public_main_merge_first": true,
+    "requires_tag_seal_github_release": "usually_references_tag",
+    "requires_package_registry_publication": false
+  },
+  {
+    "object": "release_seal",
+    "meaning": "governance closure/seal record",
+    "owner_authorization_required": true,
+    "requires_public_main_merge_first": "usually_after_gates",
+    "requires_tag_seal_github_release": "is_seal_action",
+    "requires_package_registry_publication": false
+  },
+  {
+    "object": "website_pointer_update",
+    "meaning": "Website consumption of public manifest or release pointer",
+    "owner_authorization_required": true,
+    "requires_public_main_merge_first": "depends_on_website_sync_goal",
+    "requires_tag_seal_github_release": false,
+    "requires_package_registry_publication": false
+  },
+  {
+    "object": "validation_lab_pointer_update",
+    "meaning": "Validation Lab consumption of public manifest or release pointer",
+    "owner_authorization_required": true,
+    "requires_public_main_merge_first": "depends_on_lab_sync_goal",
+    "requires_tag_seal_github_release": false,
+    "requires_package_registry_publication": false
+  }
+]

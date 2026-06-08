@@ -1,0 +1,24 @@
+{
+  "actual_subagent_invocation": {
+    "attempted": false,
+    "reason": "local reviewer perspectives were sufficient for baseline codification; no delegated mutation was authorized"
+  },
+  "selected_review_perspectives": [
+    "governance_secretariat",
+    "release_governance_reviewer",
+    "projection_boundary_reviewer",
+    "publication_claim_reviewer",
+    "security_no_secret_reviewer",
+    "protocol_schema_reviewer",
+    "package_surface_auditor"
+  ],
+  "local_agent_files": [
+    ".codex/agents/package_surface_auditor.toml",
+    ".codex/agents/product_boundary_reviewer.toml",
+    ".codex/agents/protocol_schema_reviewer.toml",
+    ".codex/agents/publication_claim_reviewer.toml",
+    ".codex/agents/release_governance_reviewer.toml",
+    ".codex/agents/runtime_binding_reviewer.toml"
+  ],
+  "applied_locally": true
+}

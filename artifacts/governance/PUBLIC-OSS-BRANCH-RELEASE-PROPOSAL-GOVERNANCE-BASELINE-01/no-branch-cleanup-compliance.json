@@ -1,0 +1,10 @@
+{
+  "branch_cleanup_executed": false,
+  "branch_deletion_executed": false,
+  "branch_creation_executed": [
+    "codex/public-oss-branch-release-proposal-governance-baseline-01"
+  ],
+  "branch_creation_authorized_by_goal": true,
+  "pr_close_executed": false,
+  "merge_executed": false
+}

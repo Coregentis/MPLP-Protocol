@@ -1,0 +1,26 @@
+{
+  "goal_id": "PUBLIC-OSS-BRANCH-RELEASE-PROPOSAL-GOVERNANCE-BASELINE-01",
+  "canonical_workspace_root": "/Users/jasonwang/Documents/AI_Dev/Coregentis",
+  "public_repo": {
+    "path": "/Users/jasonwang/Documents/AI_Dev/Coregentis/MPLP-Protocol",
+    "role": "PUBLIC_OSS_PROJECTION",
+    "starting_branch": "codex/public-oss-projection-execution-branch-review-01",
+    "task_branch": "codex/public-oss-branch-release-proposal-governance-baseline-01",
+    "starting_head": "d957615bc7ad1d686a23e68da4236ccc2aee5d8f",
+    "origin_main_head": "574d13d20b829c0c8768bc7916186f01dcf5ff46",
+    "worktree_state_before_edits": "clean",
+    "skill_mirror_drift_before_edits": "NO",
+    "tags_observed": [
+      "v1.0.0",
+      "protocol-v1.0.0"
+    ]
+  },
+  "dev_repo_read_only": {
+    "path": "/Users/jasonwang/Documents/AI_Dev/Coregentis/MPLP-Protocol-Dev",
+    "role": "PROTOCOL_PACKAGE_RELEASE_DEV_TRUTH",
+    "observed_branch": "codex/release-projection-governance-harness-codification-01",
+    "observed_head": "93bcc881cc45e13d12dcc4d0ba26b8f11d996b23",
+    "origin_main_head": "00f57406005fe0a23f27c2e3e82a8c27e99dba6d",
+    "worktree_state": "clean"
+  }
+}

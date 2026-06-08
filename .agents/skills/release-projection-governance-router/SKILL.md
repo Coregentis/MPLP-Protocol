@@ -31,6 +31,9 @@ Run this router before substantive work involving any of these surfaces:
   evidence publication
 - downstream release pointer or consumption updates in runtime/product repos
 - Git tag, release seal, GitHub release, merge-to-release, or deployment
+- public OSS branch lifecycle, branch cleanup planning, release object
+  taxonomy, or proposal/candidate lifecycle when those surfaces affect release,
+  projection, merge, tag, seal, or GitHub release decisions
 
 ## Required Discovery Table
 
@@ -52,6 +55,13 @@ Before any release-like action, complete this table from local files:
 
 If the table cannot be completed for a requested mutation, stop with a matching
 blocker instead of inventing a standard.
+
+For public OSS branch, release object, and proposal/candidate lifecycle
+classification, include
+`governance/04-records/PUBLIC-OSS-BRANCH-RELEASE-PROPOSAL-GOVERNANCE-BASELINE-01.md`
+as a standard source when present. The baseline is not authorization for branch
+cleanup, branch deletion, merge, tag, seal, GitHub release, projection
+execution, or registry mutation.
 
 ## Package Version Baseline Rule
 

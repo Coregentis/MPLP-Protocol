@@ -190,6 +190,22 @@ files, prior PRs, green gates, or historical artifacts are repo state or
 evidence only; they are not the authority baseline for deciding the next public
 package version.
 
+## Public OSS Branch / Release / Proposal Baseline
+
+For public OSS branch lifecycle, branch cleanup, PR/merge readiness,
+tag/seal/GitHub release, public projection release, public manifest release
+state, RFC, proposal, or MPGC candidate lifecycle tasks, apply
+`governance/04-records/PUBLIC-OSS-BRANCH-RELEASE-PROPOSAL-GOVERNANCE-BASELINE-01.md`
+after `TASK-GOVERNANCE-ROUTER-01` and, when release-like surfaces are involved,
+after `RELEASE-PROJECTION-GOVERNANCE-ROUTER-01`.
+
+Branch existence is not governance authority by itself. Governance state must
+be recorded in PRs, governance records, release manifests, RFC/proposal
+records, or MPGC candidate/decision records. Branch cleanup, branch deletion,
+merge, tag, seal, GitHub release, public projection execution, package
+publication, and registry mutation remain forbidden unless a later owner
+authorization names the exact action and target.
+
 ## Hard Boundaries
 
 - Preserve protocol, runtime, product, validation, and publication boundaries.

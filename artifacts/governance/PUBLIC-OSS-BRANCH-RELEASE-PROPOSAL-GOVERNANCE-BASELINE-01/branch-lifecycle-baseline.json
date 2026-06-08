@@ -1,0 +1,33 @@
+{
+  "branch_classes": [
+    "long_lived_public_branch",
+    "maintenance_branch_owner_decision_required",
+    "next_future_version_branch_owner_mpgc_decision_required",
+    "codex_task_branch",
+    "projection_execution_branch",
+    "projection_review_branch",
+    "release_branch",
+    "governance_branch",
+    "proposal_candidate_branch_editing_vehicle",
+    "abandoned_branch",
+    "superseded_branch",
+    "merged_delete_eligible_branch"
+  ],
+  "statuses": [
+    "LONG_LIVED_PUBLIC_MAIN",
+    "ACTIVE_REVIEW_BRANCH",
+    "ACTIVE_PROJECTION_BRANCH",
+    "ACTIVE_PLAN_BRANCH",
+    "MERGE_CANDIDATE",
+    "SUPERSEDED_CANDIDATE",
+    "MERGED_DELETE_ELIGIBLE_CANDIDATE",
+    "ABANDONED_REVIEW_REQUIRED",
+    "KEEP_TEMPORARILY_PENDING_OWNER_DECISION",
+    "UNKNOWN_REQUIRES_GOVERNANCE_DECISION"
+  ],
+  "ttl_policy": {
+    "time_based_ttl_defined": false,
+    "policy": "use lifecycle transitions rather than calendar TTL until future owner decision"
+  },
+  "authority_rule": "branch existence is not governance authority; PRs, governance records, release manifests, and proposal records carry authority"
+}
