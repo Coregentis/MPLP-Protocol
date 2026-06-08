@@ -7,7 +7,8 @@
   "contains_blocked_merge_commit": true,
   "contains_blocked_evidence_commit": true,
   "contains_authorized_source_commit": true,
-  "remote_push": "pending",
-  "remote_head_after_push": "pending",
-  "verdict": "PASS_LOCAL_PR_SOURCE_BRANCH_CREATED"
+  "initial_evidence_commit": "45f7a4d721df71b748f297256ce0ff82d618baeb",
+  "remote_push": "PASS",
+  "remote_head_after_initial_push": "45f7a4d721df71b748f297256ce0ff82d618baeb",
+  "verdict": "PASS_PR_SOURCE_BRANCH_PUSHED_AND_VERIFIED"
 }

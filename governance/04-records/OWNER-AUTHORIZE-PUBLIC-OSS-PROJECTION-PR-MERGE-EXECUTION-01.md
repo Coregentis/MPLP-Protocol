@@ -138,8 +138,17 @@ full carried-forward merge and evidence chain.
 
 ## PR Creation Summary
 
-PR creation and check state are recorded in evidence JSON after local gates and
-remote branch push.
+PR was created:
+
+- PR: `#10`
+- URL: `https://github.com/Coregentis/MPLP-Protocol/pull/10`
+- head branch:
+  `codex/owner-authorize-public-oss-projection-pr-merge-execution-01`
+- head SHA:
+  `45f7a4d721df71b748f297256ce0ff82d618baeb`
+- base branch: `main`
+- base SHA:
+  `574d13d20b829c0c8768bc7916186f01dcf5ff46`
 
 ## Required Check Status
 
@@ -147,14 +156,23 @@ Required check from protected branch rejection:
 
 - `Build Docusaurus`
 
-If required checks are pending, failing, missing, or unavailable, this goal
-stops without merge.
+Observed status:
+
+- workflow: `Deploy Docusaurus to GitHub Pages`
+- check: `Build Docusaurus`
+- state: `IN_PROGRESS`
+- bucket: `pending`
+- started at: `2026-06-08T16:56:45Z`
+
+Because the required check is pending, this goal stops without merge.
 
 ## PR Merge Execution Summary
 
 PR merge is permitted only if the PR exists, source branch HEAD is verified,
 `Build Docusaurus` passes, and local governance still permits merge in this
 goal.
+
+Merge was not attempted because the required check was pending.
 
 ## Local Main Realignment Decision
 
@@ -172,4 +190,4 @@ No branch deletion or cleanup is authorized.
 
 ## Final Verdict
 
-Pending PR creation and check inspection.
+`PARTIAL_PR_CREATED_CHECKS_PENDING_NO_MERGE`

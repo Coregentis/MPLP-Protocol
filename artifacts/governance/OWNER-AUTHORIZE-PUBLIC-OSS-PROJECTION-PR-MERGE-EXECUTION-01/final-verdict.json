@@ -2,11 +2,14 @@
   "goal_id": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-PR-MERGE-EXECUTION-01",
   "pr_source_branch": "codex/owner-authorize-public-oss-projection-pr-merge-execution-01",
   "pr_branch_head_before_initial_evidence_commit": "8e61175940f4bf4868da41c11093d2e6955c69f8",
-  "pr_number": null,
-  "pr_url": null,
+  "initial_pr_branch_head": "45f7a4d721df71b748f297256ce0ff82d618baeb",
+  "pr_number": 10,
+  "pr_url": "https://github.com/Coregentis/MPLP-Protocol/pull/10",
   "required_check": "Build Docusaurus",
-  "required_check_status": "pending_pr_creation",
+  "required_check_status": "IN_PROGRESS",
+  "required_check_bucket": "pending",
   "merge_attempted": false,
-  "recommended_next_goal": "pending_check_state",
-  "final_verdict": "PENDING_PR_CREATION_AND_CHECK_INSPECTION"
+  "origin_main_after_pr_creation": "574d13d20b829c0c8768bc7916186f01dcf5ff46",
+  "recommended_next_goal": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-PR-CHECK-CLOSURE-01",
+  "final_verdict": "PARTIAL_PR_CREATED_CHECKS_PENDING_NO_MERGE"
 }

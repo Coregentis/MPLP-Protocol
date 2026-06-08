@@ -1,12 +1,19 @@
 {
   "goal_id": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-PR-MERGE-EXECUTION-01",
   "required_check_name": "Build Docusaurus",
-  "check_inspection": "pending",
-  "check_status": "pending_pr_creation",
+  "check_inspection": "PASS_READ_ONLY_INSPECTION",
+  "pr_number": 10,
+  "pr_url": "https://github.com/Coregentis/MPLP-Protocol/pull/10",
+  "check_status": "IN_PROGRESS",
   "check_conclusion": null,
+  "workflow": "Deploy Docusaurus to GitHub Pages",
+  "bucket": "pending",
+  "started_at": "2026-06-08T16:56:45Z",
+  "completed_at": null,
+  "details_url": "https://github.com/Coregentis/MPLP-Protocol/actions/runs/27153463021/job/80150152866",
   "required_checks_passed": false,
-  "required_checks_pending": false,
+  "required_checks_pending": true,
   "required_checks_failed": false,
   "required_checks_unavailable": false,
-  "verdict": "PENDING_CHECK_INSPECTION"
+  "verdict": "PARTIAL_PR_CREATED_CHECKS_PENDING_NO_MERGE"
 }

@@ -18,5 +18,7 @@
   "v1_mutation": "NOT_PERFORMED",
   "downstream_sync": "NOT_PERFORMED",
   "credential_value_access_or_output": "NOT_PERFORMED",
-  "verdict": "PASS_NO_FORBIDDEN_ACTION_COMPLIANCE_PRE_PR_PUSH"
+  "pr_created": "PERFORMED_AUTHORIZED",
+  "pr_merge": "NOT_PERFORMED_REQUIRED_CHECK_PENDING",
+  "verdict": "PASS_NO_FORBIDDEN_ACTION_COMPLIANCE_PR_CREATED_NO_MERGE"
 }
