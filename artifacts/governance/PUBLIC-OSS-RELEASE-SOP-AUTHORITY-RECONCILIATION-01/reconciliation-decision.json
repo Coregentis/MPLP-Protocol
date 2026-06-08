@@ -1,0 +1,16 @@
+{
+  "goal_id": "PUBLIC-OSS-RELEASE-SOP-AUTHORITY-RECONCILIATION-01",
+  "decision": "reconcile_public_sop_authority_wording",
+  "old_meaning": "Dev described as historical internal line",
+  "new_meaning": "Dev is active Dev-side protocol/package/release truth; Public is clean public OSS projection and release subset",
+  "safety_boundaries_preserved": [
+    "No direct Dev main to public main merge",
+    "Dev-originated public candidates require owner-approved provenance/export/projection record",
+    "No projection execution authorization",
+    "No package publication authorization",
+    "No release-config mutation"
+  ],
+  "release_scope_changed": false,
+  "projection_scope_changed": false,
+  "package_scope_changed": false
+}

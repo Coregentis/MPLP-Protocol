@@ -1,0 +1,14 @@
+{
+  "goal_id": "PUBLIC-OSS-RELEASE-SOP-AUTHORITY-RECONCILIATION-01",
+  "selection_basis": "public repo .codex/agents/*.toml and .agents/skills/*",
+  "actual_subagent_invocation_attempted": true,
+  "actual_subagent_invocation_result": "blocked_by_thread_limit",
+  "reviewer_perspectives_applied": [
+    "release_governance_reviewer",
+    "publication_claim_reviewer",
+    "package_surface_auditor",
+    "protocol_schema_reviewer",
+    "security_no_secret_reviewer"
+  ],
+  "notes": "Reviewer perspectives were applied locally; no subagent edits were made."
+}

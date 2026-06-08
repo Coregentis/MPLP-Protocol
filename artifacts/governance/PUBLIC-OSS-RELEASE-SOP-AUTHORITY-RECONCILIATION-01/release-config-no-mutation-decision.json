@@ -1,0 +1,7 @@
+{
+  "goal_id": "PUBLIC-OSS-RELEASE-SOP-AUTHORITY-RECONCILIATION-01",
+  "release_config_path": "release-config.yaml",
+  "mutation_required": false,
+  "reason": "Authority wording reconciliation does not alter release bundle include/exclude scope, public manifest schema, package sets, or projection allowlist.",
+  "release_config_changed": false
+}

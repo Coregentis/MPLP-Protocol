@@ -1,0 +1,26 @@
+{
+  "goal_id": "PUBLIC-OSS-RELEASE-SOP-AUTHORITY-RECONCILIATION-01",
+  "dev_evidence": [
+    {
+      "file": "MPLP-Protocol-Dev/AGENTS.md",
+      "signal": "MPLP-Protocol-Dev is full Dev-side development and release-governance truth for package/release work."
+    },
+    {
+      "file": "MPLP-Protocol-Dev/governance/release/MPLP-DEV-PUBLIC-REPO-AUTHORITY-DOCTRINE-2026-06-02.md",
+      "signal": "Dev full-truth role and Public clean-projection role are explicit."
+    },
+    {
+      "file": "MPLP-Protocol-Dev/governance/release/MPLP-RELEASE-PROJECTION-POLICY.md",
+      "signal": "Dev repository is full development truth; Public OSS is clean public release subset."
+    },
+    {
+      "file": "MPLP-Protocol-Dev/governance/04-records/PUBLIC-OSS-PROJECTION-STANDARD-DISCOVERY-01.md",
+      "signal": "Public SOP older Dev authority wording recorded as governance drift/gap."
+    },
+    {
+      "file": "MPLP-Protocol-Dev/governance/04-records/RELEASE-PROJECTION-GOVERNANCE-HARNESS-CODIFICATION-01.md",
+      "signal": "Public SOP older Dev authority wording should be reconciled before projection execution."
+    }
+  ],
+  "dev_repo_mutated": false
+}

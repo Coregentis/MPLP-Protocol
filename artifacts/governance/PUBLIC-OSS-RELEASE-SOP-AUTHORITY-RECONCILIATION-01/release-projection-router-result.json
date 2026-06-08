@@ -1,0 +1,42 @@
+{
+  "router_id": "RELEASE-PROJECTION-GOVERNANCE-ROUTER-01",
+  "router_run_before_release_like_work": true,
+  "release_like_task": true,
+  "repo_role": "public_oss_projection",
+  "workflow_type": "release_sop_authority_language_reconciliation",
+  "local_standard_source_files": [
+    "AGENTS.md",
+    ".codex/config.toml",
+    "governance/release/MPLP-RELEASE-SOP.md",
+    "release-config.yaml",
+    "release-manifests/mplp-public-manifest.schema.json",
+    "release-manifests/mplp-public-manifest.example.json",
+    "scripts/semantic/validate-public-manifest.mjs"
+  ],
+  "required_gates": [
+    "repo-truth-first",
+    "skill mirror diff",
+    "TOML parse",
+    "JSON parse",
+    "frontmatter check",
+    "required phrase scan",
+    "no-secret scan",
+    "protected surface scan",
+    "release-config unchanged check",
+    "no projection execution scan"
+  ],
+  "required_owner_authorization": "not_required_for_SOP_authority_wording_reconciliation_within_this_goal_scope",
+  "allowed_mutations": [
+    "governance/release/MPLP-RELEASE-SOP.md authority wording",
+    "governance/04-records/PUBLIC-OSS-RELEASE-SOP-AUTHORITY-RECONCILIATION-01.md",
+    "artifacts/governance/PUBLIC-OSS-RELEASE-SOP-AUTHORITY-RECONCILIATION-01/*.json"
+  ],
+  "forbidden_actions": [
+    "projection execution",
+    "release-config mutation",
+    "package/source/dist/schema mutation",
+    "publish/upload",
+    "tag/seal/GitHub release/merge"
+  ],
+  "discovery_verdict": "PASS_RELEASE_PROJECTION_ROUTER_COMPLETED_FOR_SOP_AUTHORITY_RECONCILIATION"
+}
