@@ -1,6 +1,6 @@
 {
   "goal_id": "PUBLIC-OSS-RELEASE-SOP-AUTHORITY-RECONCILIATION-01",
-  "status": "complete_after_final_gates_pending_commit_push",
+  "status": "complete_committed_and_pushed",
   "final_verdict": "COMPLETE_PUBLIC_OSS_RELEASE_SOP_AUTHORITY_RECONCILED",
   "gates_run": {
     "git_diff_check": "PASS",
@@ -37,6 +37,14 @@
     "release_config_mutation": "not_performed",
     "tag_seal_github_release_merge": "not_performed",
     "credential_or_token_access": "not_performed"
+  },
+  "commit_push_verification": {
+    "public_branch": "codex/public-oss-release-sop-authority-reconciliation-01",
+    "public_remote": "origin",
+    "tracking_branch": "origin/codex/public-oss-release-sop-authority-reconciliation-01",
+    "local_remote_head_match": "PASS",
+    "merge_to_main": "not_performed",
+    "pull_request_created": "not_performed"
   },
   "remaining_gaps": [
     "Public release-set and pypi-set remain older projection artifacts and were intentionally not changed in this SOP-only goal."
