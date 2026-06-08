@@ -1,7 +1,13 @@
 {
   "goal_id": "PUBLIC-OSS-PROJECTION-EXECUTION-BRANCH-REVIEW-01",
-  "status": "review_evidence_created_pending_commit_push",
+  "status": "review_branch_pushed_verified_ready_for_protected_merge_decision",
   "final_verdict": "COMPLETE_PUBLIC_OSS_PROJECTION_BRANCH_REVIEW_READY_FOR_PROTECTED_MERGE_DECISION",
+  "branch_push_verification": {
+    "branch": "codex/public-oss-projection-execution-branch-review-01",
+    "tracking_branch": "origin/codex/public-oss-projection-execution-branch-review-01",
+    "verification_method": "git rev-parse HEAD, git rev-parse @{u}, and git ls-remote origin refs/heads/codex/public-oss-projection-execution-branch-review-01 match after push",
+    "result": "PASS_FINAL_BRANCH_HEAD_VERIFIED_AFTER_PUSH"
+  },
   "reviewed_target_branch": "codex/owner-authorize-public-oss-projection-execution-01",
   "reviewed_target_head": "98ab309dc00393efe7dc1f35d259b519a6c9bf93",
   "gates_run": {
