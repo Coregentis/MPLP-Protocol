@@ -1,0 +1,19 @@
+{
+  "decision": "ELIGIBLE_FOR_LATER_OWNER_AUTHORIZED_PROTECTED_MERGE_EXECUTION",
+  "merge_executed_by_this_goal": false,
+  "reviewed_target_branch": "codex/owner-authorize-public-oss-projection-execution-01",
+  "reviewed_target_head": "98ab309dc00393efe7dc1f35d259b519a6c9bf93",
+  "recommended_later_merge_source_branch": "codex/public-oss-projection-protected-merge-decision-01",
+  "recommended_later_merge_source_head": "final pushed HEAD of decision branch",
+  "recommended_later_merge_target_branch": "main",
+  "reason": "decision branch contains target execution branch, projection review record, branch/release/proposal baseline, and protected merge decision record",
+  "required_next_authorization": {
+    "must_name_source_branch": true,
+    "must_name_source_head": true,
+    "must_name_target_branch": true,
+    "must_name_repo": true,
+    "must_name_mutation_category": "merge_execution"
+  },
+  "remaining_blockers": [],
+  "recommended_next_goal": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-MERGE-EXECUTION-01"
+}

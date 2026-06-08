@@ -1,0 +1,20 @@
+{
+  "target_branch": "codex/owner-authorize-public-oss-projection-execution-01",
+  "target_branch_remote_head": "98ab309dc00393efe7dc1f35d259b519a6c9bf93",
+  "origin_main_head": "574d13d20b829c0c8768bc7916186f01dcf5ff46",
+  "review_branch": "codex/public-oss-projection-execution-branch-review-01",
+  "review_branch_head": "d957615bc7ad1d686a23e68da4236ccc2aee5d8f",
+  "baseline_branch": "codex/public-oss-branch-release-proposal-governance-baseline-01",
+  "baseline_branch_head": "e28ef5add9773d9600485135d7fb8bc1bfac8bbc",
+  "ahead_behind_vs_origin_main": {
+    "ahead": 14,
+    "behind": 0
+  },
+  "target_contains_origin_main": true,
+  "target_contained_in_origin_main": false,
+  "target_contained_in_review": true,
+  "review_contained_in_baseline": true,
+  "target_contained_in_baseline": true,
+  "no_merge_already_occurred": true,
+  "verdict": "PASS_BRANCH_LINEAGE_READY_FOR_MERGE_DECISION"
+}

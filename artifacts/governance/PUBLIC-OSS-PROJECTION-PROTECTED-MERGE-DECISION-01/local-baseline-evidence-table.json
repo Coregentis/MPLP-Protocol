@@ -1,0 +1,47 @@
+[
+  {
+    "decision_area": "public_repo_role",
+    "local_evidence_file": "AGENTS.md; .codex/config.toml; governance/release/MPLP-RELEASE-SOP.md",
+    "evidence_signal": "public repo is clean OSS projection; Dev is release/package truth",
+    "derived_rule": "decide merge readiness in public repo; do not mutate Dev",
+    "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+    "conflict": false,
+    "action": "apply"
+  },
+  {
+    "decision_area": "projection_execution_authority",
+    "local_evidence_file": "governance/04-records/OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-EXECUTION-01.md",
+    "evidence_signal": "branch-only projection executed; no merge/tag/seal/release authorized",
+    "derived_rule": "treat execution branch as reviewed candidate only",
+    "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+    "conflict": false,
+    "action": "apply"
+  },
+  {
+    "decision_area": "projection_review_closure",
+    "local_evidence_file": "governance/04-records/PUBLIC-OSS-PROJECTION-EXECUTION-BRANCH-REVIEW-01.md",
+    "evidence_signal": "review verified target branch payload and readiness for protected merge decision",
+    "derived_rule": "decision may mark eligible for later owner merge execution",
+    "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+    "conflict": false,
+    "action": "apply"
+  },
+  {
+    "decision_area": "branch_release_proposal_baseline",
+    "local_evidence_file": "governance/04-records/PUBLIC-OSS-BRANCH-RELEASE-PROPOSAL-GOVERNANCE-BASELINE-01.md",
+    "evidence_signal": "branch existence is evidence only; merge requires exact owner authorization",
+    "derived_rule": "this decision does not merge; later goal must name exact branch/SHA",
+    "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+    "conflict": false,
+    "action": "apply"
+  },
+  {
+    "decision_area": "sop_merge_path",
+    "local_evidence_file": "governance/release/MPLP-RELEASE-SOP.md",
+    "evidence_signal": "public release changes require protected PR path and merge evidence",
+    "derived_rule": "later merge execution must use protected path and record merge commit/post-merge HEAD",
+    "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+    "conflict": false,
+    "action": "apply"
+  }
+]

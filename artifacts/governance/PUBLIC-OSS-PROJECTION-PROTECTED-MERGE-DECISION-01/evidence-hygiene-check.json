@@ -1,0 +1,14 @@
+{
+  "credential_values_read_printed_copied_or_committed": false,
+  ".npmrc_contents_inspected_or_committed": false,
+  ".pypirc_contents_inspected_or_committed": false,
+  "raw_npm_pypi_stdout_stderr_copied": false,
+  "raw_dev_evidence_copied": false,
+  "internal_harness_files_copied_from_dev": false,
+  "node_modules_added": false,
+  "venv_added": false,
+  "wheels_sdists_tarballs_added": false,
+  "projected_package_release_manifest_content_modified": false,
+  "local_paths": "repo_truth_governance_evidence_only",
+  "verdict": "PASS_EVIDENCE_HYGIENE"
+}

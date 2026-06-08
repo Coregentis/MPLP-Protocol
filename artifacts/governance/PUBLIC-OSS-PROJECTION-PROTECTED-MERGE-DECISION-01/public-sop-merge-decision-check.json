@@ -1,0 +1,16 @@
+{
+  "sop_file": "governance/release/MPLP-RELEASE-SOP.md",
+  "checks": {
+    "dedicated_branch": true,
+    "public_main_not_pushed_directly": true,
+    "release_scope_recorded": true,
+    "protocol_manifest_status_recorded": true,
+    "website_lab_needed_decision_recorded": true,
+    "package_dry_run_or_replacement_status_recorded_if_in_scope": true,
+    "identity_and_forbidden_overclaim_scan_status_recorded": true,
+    "evidence_paths_recorded": true,
+    "merge_commit_recorded": "not_applicable_until_later_merge_execution",
+    "post_merge_head_recorded": "not_applicable_until_later_merge_execution"
+  },
+  "verdict": "PASS_SOP_REQUIREMENTS_SATISFIED_TO_DECISION_STAGE"
+}

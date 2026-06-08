@@ -1,0 +1,47 @@
+{
+  "router_id": "TASK-GOVERNANCE-ROUTER-01",
+  "router_skill": ".agents/skills/task-governance-router/SKILL.md",
+  "router_run_before_substantive_work": true,
+  "task_type": [
+    "public_oss_projection_protected_merge_decision",
+    "projection_branch_merge_readiness_decision",
+    "branch_release_proposal_baseline_applied",
+    "no_merge_no_tag_no_seal"
+  ],
+  "sot_layer": [
+    "L1 Projection Source merge-readiness decision",
+    "L3 Verification Evidence",
+    "L4 Publication Surface governance",
+    "L6 Codex Execution Governance"
+  ],
+  "selected_local_governance_baseline": [
+    "AGENTS.md",
+    ".codex/config.toml",
+    ".agents/skills/task-governance-router/SKILL.md",
+    "governance/codex-goals/CODEX-GOAL-TEMPLATE.md",
+    "governance/release/MPLP-RELEASE-SOP.md",
+    "governance/04-records/PUBLIC-OSS-PROJECTION-PLAN-01.md",
+    "governance/04-records/OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-EXECUTION-01.md",
+    "governance/04-records/PUBLIC-OSS-PROJECTION-EXECUTION-BRANCH-REVIEW-01.md",
+    "governance/04-records/PUBLIC-OSS-BRANCH-RELEASE-PROPOSAL-GOVERNANCE-BASELINE-01.md"
+  ],
+  "forbidden_actions": [
+    "merge",
+    "branch deletion",
+    "tag",
+    "seal",
+    "GitHub release",
+    "package publish/upload",
+    "registry mutation",
+    "projection payload mutation",
+    "public manifest mutation",
+    "package/source/schema/docs mutation",
+    "Dev/Website/Lab/downstream/V1 mutation",
+    "credential access"
+  ],
+  "evidence_outputs": [
+    "governance/04-records/PUBLIC-OSS-PROJECTION-PROTECTED-MERGE-DECISION-01.md",
+    "artifacts/governance/PUBLIC-OSS-PROJECTION-PROTECTED-MERGE-DECISION-01/*.json"
+  ],
+  "verdict": "ROUTER_APPLIED"
+}
