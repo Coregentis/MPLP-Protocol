@@ -144,11 +144,16 @@ PR was created:
 - URL: `https://github.com/Coregentis/MPLP-Protocol/pull/10`
 - head branch:
   `codex/owner-authorize-public-oss-projection-pr-merge-execution-01`
-- head SHA:
+- head SHA after initial PR creation:
   `45f7a4d721df71b748f297256ce0ff82d618baeb`
 - base branch: `main`
 - base SHA:
   `574d13d20b829c0c8768bc7916186f01dcf5ff46`
+
+This record includes a self-reference boundary: each additional evidence commit
+to the PR branch retriggers the required GitHub check. Therefore the final
+post-push check state is verified read-only after the final evidence push and
+reported in the execution report, not recursively committed again.
 
 ## Required Check Status
 
@@ -162,7 +167,8 @@ Observed status:
 - check: `Build Docusaurus`
 - state: `IN_PROGRESS`
 - bucket: `pending`
-- started at: `2026-06-08T16:56:45Z`
+- latest committed-evidence observation before the final evidence push:
+  `IN_PROGRESS`
 
 Because the required check is pending, this goal stops without merge.
 
