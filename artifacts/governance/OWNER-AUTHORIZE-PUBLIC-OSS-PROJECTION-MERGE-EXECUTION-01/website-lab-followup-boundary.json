@@ -5,7 +5,7 @@
   "downstream_repos_mutated": false,
   "website_followup_status": "separate_goal_required",
   "validation_lab_followup_status": "separate_goal_required",
-  "recommended_next_goal": "WEBSITE-PROTOCOL-MANIFEST-POINTER-SYNC-01",
+  "recommended_next_goal_after_remote_main_merge": "WEBSITE-PROTOCOL-MANIFEST-POINTER-SYNC-01",
   "validation_lab_goal_remains_followup": "VALIDATION-LAB-PROTOCOL-MANIFEST-POINTER-SYNC-01",
   "verdict": "PASS_WEBSITE_LAB_FOLLOWUP_BOUNDARY_PRESERVED"
 }

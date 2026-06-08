@@ -13,7 +13,8 @@
   "remote_main_contains_local_merge": false,
   "force_push_attempted": false,
   "retry_attempted": false,
-  "recommended_next_goal": "WEBSITE-PROTOCOL-MANIFEST-POINTER-SYNC-01",
+  "recommended_next_goal": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-PR-MERGE-EXECUTION-01",
+  "deferred_after_remote_main_merge_goal": "WEBSITE-PROTOCOL-MANIFEST-POINTER-SYNC-01",
   "final_verdict": "BLOCKED_MAIN_PUSH_REJECTED",
   "verification_note": "local merge and evidence are present on local main; remote origin/main rejected the push and remains at the pre-merge protected branch SHA"
 }

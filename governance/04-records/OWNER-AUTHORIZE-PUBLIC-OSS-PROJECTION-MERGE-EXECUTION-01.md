@@ -268,7 +268,7 @@ merge is not on remote `origin/main`.
 
 ## Recommended Next Goal
 
-`WEBSITE-PROTOCOL-MANIFEST-POINTER-SYNC-01`
+`OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-PR-MERGE-EXECUTION-01`
 
 ## Final Verdict
 
