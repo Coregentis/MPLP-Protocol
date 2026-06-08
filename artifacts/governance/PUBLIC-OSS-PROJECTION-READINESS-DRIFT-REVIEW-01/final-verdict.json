@@ -1,6 +1,6 @@
 {
   "goal_id": "PUBLIC-OSS-PROJECTION-READINESS-DRIFT-REVIEW-01",
-  "status": "complete_after_final_gates_pending_commit_push",
+  "status": "complete_committed_and_pushed",
   "final_verdict": "COMPLETE_PUBLIC_OSS_PROJECTION_DRIFT_REVIEW_READY_FOR_OWNER_PROJECTION_PLAN",
   "gates_run": {
     "repo_truth_first_public": "PASS",
@@ -25,5 +25,12 @@
     "public manifest and Website/Lab vendored manifests remain stale until future authorized projection",
     "package manifests/README/source drift requires package gates before mutation"
   ],
+  "commit_push_verification": {
+    "public_branch": "codex/public-oss-projection-readiness-drift-review-01",
+    "public_remote": "origin",
+    "tracking_branch": "origin/codex/public-oss-projection-readiness-drift-review-01",
+    "merge_to_main": "not_performed",
+    "pull_request_created": "not_performed"
+  },
   "recommended_next_goal": "PUBLIC-OSS-PROJECTION-PLAN-01"
 }
