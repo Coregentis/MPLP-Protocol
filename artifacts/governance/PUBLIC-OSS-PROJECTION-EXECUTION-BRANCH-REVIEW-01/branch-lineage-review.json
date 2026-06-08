@@ -1,0 +1,30 @@
+{
+  "target_execution_branch": "codex/owner-authorize-public-oss-projection-execution-01",
+  "target_execution_head": "98ab309dc00393efe7dc1f35d259b519a6c9bf93",
+  "expected_target_head": "98ab309dc00393efe7dc1f35d259b519a6c9bf93",
+  "target_head_matches_expected": true,
+  "public_origin_main": "574d13d20b829c0c8768bc7916186f01dcf5ff46",
+  "merge_base_with_origin_main": "574d13d20b829c0c8768bc7916186f01dcf5ff46",
+  "plan_bound_execution_start": "f35bed3d6f62c75a6e24d5a549b3d958d8525101",
+  "dev_authority_source_origin_main": "00f57406005fe0a23f27c2e3e82a8c27e99dba6d",
+  "lineage_commits_from_origin_main_to_target": [
+    "8d94198 governance: record Coregentis workspace authority",
+    "4a07000 governance: add Coregentis two-layer governance baseline",
+    "7630bd9 governance: propagate local baseline discovery mechanism",
+    "e7a5f69 governance: codify ownership baseline and close copyright surfaces",
+    "5865931 governance: add task governance router to Codex harness",
+    "d53e2d5 governance: codify release projection workflow router",
+    "16e5e41 governance: reconcile public OSS release SOP authority",
+    "20ecad2 governance: finalize public OSS SOP reconciliation evidence",
+    "9f2b55c governance: review public OSS projection readiness drift",
+    "bb9d33c governance: finalize public OSS projection drift evidence",
+    "b2df7ce governance: plan public OSS projection",
+    "f35bed3 governance: record public projection plan push evidence",
+    "715c9aa projection: apply owner-authorized public OSS projection",
+    "98ab309 governance: record public projection branch push verification"
+  ],
+  "full_branch_changed_file_count_against_origin_main": 112,
+  "execution_payload_changed_file_count_from_plan_start": 29,
+  "lineage_review_note": "The target branch is stacked on prior public governance baseline, SOP reconciliation, drift review, and projection plan commits. The projection execution payload is the 29-file delta from f35bed3 to 98ab309. Protected merge decision should review the full stacked lineage, not only the execution payload.",
+  "verdict": "PASS_BRANCH_HEAD_AND_LINEAGE_EXPLAINED"
+}

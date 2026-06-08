@@ -1,0 +1,15 @@
+{
+  "allowlist_compliance": "PASS",
+  "denylist_compliance": "PASS",
+  "redaction_rule_compliance": "PASS",
+  "release_config_handling_compliance": "PASS_RELEASE_CONFIG_UNCHANGED_IN_EXECUTION_PAYLOAD",
+  "package_dist_handling_compliance": "PASS_NO_DIST_MUTATION",
+  "public_manifest_handling_compliance": "PASS_PACKAGE_FACTS_UPDATED_DRAFT_BOUNDARY_PRESERVED",
+  "website_lab_downstream_boundary_compliance": "PASS_NO_DOWNSTREAM_MUTATION_FOLLOWUPS_RECORDED",
+  "no_merge_tag_seal_release_compliance": "PASS",
+  "no_registry_mutation_compliance": "PASS_REVIEW_USED_READ_ONLY_REGISTRY_QUERIES_ONLY",
+  "wholesale_dev_copy_avoided": true,
+  "raw_dev_evidence_leakage_avoided": true,
+  "internal_harness_leakage_avoided_in_execution_payload": true,
+  "verdict": "PASS_PROJECTION_PLAN_COMPLIANCE"
+}

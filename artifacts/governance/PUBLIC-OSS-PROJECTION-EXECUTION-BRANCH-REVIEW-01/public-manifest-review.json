@@ -1,0 +1,24 @@
+{
+  "validation_command": "node scripts/semantic/validate-public-manifest.mjs",
+  "validation_result": "PASS",
+  "package_level_registry_facts": {
+    "npm_11_release_set_visible": true,
+    "devtools_optional_tooling_visible": true,
+    "pypi_mplp_sdk_1_0_6_visible_and_latest": true,
+    "compliance_boundary": "skipped legacy alias at 1.0.5",
+    "validator_boundary": "not publicly published or projected"
+  },
+  "release_boundary": {
+    "release_status_state": "draft",
+    "public_release_ready": false,
+    "package_replacement_status": "planned_not_published",
+    "package_actions_executed": false,
+    "overclaims_final_release_completion": false
+  },
+  "overclaim_review": {
+    "certification_terms_present_only_as_negative_boundary": true,
+    "unsupported_endorsement_or_regulatory_claim": false
+  },
+  "website_lab_followup_recorded": true,
+  "verdict": "PASS_PUBLIC_MANIFEST_REVIEW"
+}

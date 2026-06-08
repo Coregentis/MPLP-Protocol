@@ -1,0 +1,11 @@
+{
+  "website_repo_mutated": false,
+  "validation_lab_repo_mutated": false,
+  "downstream_repos_mutated": false,
+  "manifest_pointer_followups_required": true,
+  "required_followup_goals": [
+    "WEBSITE-PROTOCOL-MANIFEST-POINTER-SYNC-01",
+    "VALIDATION-LAB-PROTOCOL-MANIFEST-POINTER-SYNC-01"
+  ],
+  "review_verdict": "PASS_FOLLOWUPS_REMAIN_REQUIRED_AND_OUT_OF_SCOPE"
+}

@@ -1,0 +1,120 @@
+{
+  "matrix_scope": {
+    "full_branch_against_origin_main": "112 changed files; all changes are explained by the stacked governance, readiness, plan, and execution lineage recorded in branch-lineage-review.json.",
+    "execution_payload_reviewed_in_detail": "29 changed files from f35bed3d6f62c75a6e24d5a549b3d958d8525101 to 98ab309dc00393efe7dc1f35d259b519a6c9bf93"
+  },
+  "unexplained_surface_found": false,
+  "entries": [
+    {
+      "path": "artifacts/release/publish-set.json",
+      "change_category": "PUBLIC_RELEASE_SET_PROJECTION",
+      "source_authority": "Dev release-set plus live npm registry facts",
+      "allowed_by_projection_plan": true,
+      "redaction_required": true,
+      "gates_required": ["JSON parse", "release-set alignment", "no local path", "no excluded package"],
+      "gates_run": ["PASS"],
+      "review_verdict": "PASS_PUBLIC_SAFE_11_PACKAGE_RELEASE_SET"
+    },
+    {
+      "path": "artifacts/release/pypi-set.json",
+      "change_category": "PUBLIC_PYPI_SET_PROJECTION",
+      "source_authority": "Dev pypi-set plus live PyPI registry facts",
+      "allowed_by_projection_plan": true,
+      "redaction_required": true,
+      "gates_required": ["JSON parse", "PyPI alignment", "repo-relative path"],
+      "gates_run": ["PASS"],
+      "review_verdict": "PASS_PUBLIC_SAFE_PYPI_SET"
+    },
+    {
+      "path": "release-manifests/mplp-public-manifest.example.json",
+      "change_category": "PUBLIC_MANIFEST_PROJECTION",
+      "source_authority": "public manifest plus registry and Dev evidence",
+      "allowed_by_projection_plan": true,
+      "redaction_required": true,
+      "gates_required": ["public manifest validation", "conservative boundary review", "overclaim scan"],
+      "gates_run": ["PASS"],
+      "review_verdict": "PASS_PACKAGE_FACTS_UPDATED_WITH_DRAFT_BOUNDARY_PRESERVED"
+    },
+    {
+      "path": "packages/npm/conformance/package.json",
+      "change_category": "PUBLIC_PACKAGE_SURFACE_PROJECTION",
+      "source_authority": "Dev origin/main same path",
+      "allowed_by_projection_plan": true,
+      "redaction_required": false,
+      "gates_required": ["package metadata gate", "active compliance scan"],
+      "gates_run": ["PASS"],
+      "review_verdict": "PASS_EXACT_DEV_MATCH"
+    },
+    {
+      "path": "packages/npm/conformance/README.md",
+      "change_category": "PUBLIC_PACKAGE_SURFACE_PROJECTION",
+      "source_authority": "Dev origin/main same path with public overclaim wording adjustment",
+      "allowed_by_projection_plan": true,
+      "redaction_required": true,
+      "gates_required": ["package metadata gate", "overclaim scan"],
+      "gates_run": ["PASS"],
+      "review_verdict": "PASS_PUBLIC_SAFE_WORDING_ADJUSTMENT"
+    },
+    {
+      "path": "packages/npm/conformance/src/index.ts",
+      "change_category": "PUBLIC_PACKAGE_SURFACE_PROJECTION",
+      "source_authority": "Dev origin/main same path",
+      "allowed_by_projection_plan": true,
+      "redaction_required": false,
+      "gates_required": ["package metadata gate", "active compliance scan"],
+      "gates_run": ["PASS"],
+      "review_verdict": "PASS_EXACT_DEV_MATCH"
+    },
+    {
+      "path": "packages/npm/conformance/package-lock.json",
+      "change_category": "PUBLIC_PACKAGE_SURFACE_PROJECTION",
+      "source_authority": "Dev origin/main same path",
+      "allowed_by_projection_plan": true,
+      "redaction_required": false,
+      "gates_required": ["JSON parse", "active compliance dependency removal"],
+      "gates_run": ["PASS"],
+      "review_verdict": "PASS_GATE_DRIVEN_PACKAGE_CONSISTENCY_SURFACE"
+    },
+    {
+      "path": "packages/npm/devtools/package.json",
+      "change_category": "PUBLIC_PACKAGE_SURFACE_PROJECTION",
+      "source_authority": "Dev origin/main same path",
+      "allowed_by_projection_plan": true,
+      "redaction_required": false,
+      "gates_required": ["package metadata gate", "conformance dependency review"],
+      "gates_run": ["PASS"],
+      "review_verdict": "PASS_EXACT_DEV_MATCH"
+    },
+    {
+      "path": "packages/npm/devtools/README.md",
+      "change_category": "PUBLIC_PACKAGE_SURFACE_PROJECTION",
+      "source_authority": "Dev origin/main same path with CLI smoke overclaim removal",
+      "allowed_by_projection_plan": true,
+      "redaction_required": true,
+      "gates_required": ["package metadata gate", "CLI claim boundary review"],
+      "gates_run": ["PASS"],
+      "review_verdict": "PASS_PUBLIC_SAFE_OPTIONAL_TOOLING_WORDING"
+    },
+    {
+      "path": "governance/04-records/OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-EXECUTION-01.md",
+      "change_category": "PUBLIC_GOVERNANCE_EXECUTION_RECORD",
+      "source_authority": "Owner authorization and local projection plan",
+      "allowed_by_projection_plan": true,
+      "redaction_required": true,
+      "gates_required": ["frontmatter", "required phrase scan", "no forbidden action compliance"],
+      "gates_run": ["PASS"],
+      "review_verdict": "PASS_PUBLIC_EXECUTION_SUMMARY_RECORD"
+    }
+  ],
+  "lightweight_evidence_entries": {
+    "paths": "artifacts/governance/OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-EXECUTION-01/*.json",
+    "count": 19,
+    "change_category": "PUBLIC_LIGHTWEIGHT_EVIDENCE",
+    "source_authority": "execution goal local evidence outputs",
+    "allowed_by_projection_plan": true,
+    "redaction_required": true,
+    "gates_required": ["JSON parse", "no raw Dev evidence", "no credential context"],
+    "gates_run": ["PASS"],
+    "review_verdict": "PASS_PUBLIC_LIGHTWEIGHT_EVIDENCE"
+  }
+}

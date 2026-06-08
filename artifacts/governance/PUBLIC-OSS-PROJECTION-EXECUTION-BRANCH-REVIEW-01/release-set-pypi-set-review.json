@@ -1,0 +1,39 @@
+{
+  "publish_set": {
+    "count": 11,
+    "packages": [
+      "@mplp/schema@1.0.7",
+      "@mplp/conformance@1.0.1",
+      "@mplp/core@1.0.7",
+      "@mplp/coordination@1.0.7",
+      "@mplp/integration-llm-http@1.0.6",
+      "@mplp/integration-storage-fs@1.0.6",
+      "@mplp/integration-storage-kv@1.0.6",
+      "@mplp/integration-tools-generic@1.0.6",
+      "@mplp/modules@1.0.6",
+      "@mplp/runtime-minimal@1.0.6",
+      "@mplp/sdk-ts@1.0.8"
+    ],
+    "excluded": [
+      "@mplp/compliance",
+      "@mplp/devtools",
+      "@mplp/validator"
+    ],
+    "public_safe": true
+  },
+  "pypi_set": {
+    "packages": [
+      "mplp-sdk@1.0.6"
+    ],
+    "path": "packages/pypi/mplp-sdk",
+    "uses_v1_path": false,
+    "uses_local_absolute_path": false,
+    "public_safe": true
+  },
+  "live_registry_review": {
+    "npm": "PASS_READ_ONLY_TARGET_VERSIONS_VISIBLE",
+    "pypi": "PASS_READ_ONLY_MPLP_SDK_1_0_6_VISIBLE_AND_LATEST",
+    "registry_mutation_performed": false
+  },
+  "verdict": "PASS_RELEASE_SET_PYPI_SET_REVIEW"
+}
