@@ -1,0 +1,24 @@
+{
+  "goal_id": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-MERGE-EXECUTION-01",
+  "source_branch": "codex/public-oss-projection-protected-merge-decision-01",
+  "expected_source_commit": "0741c5915ebc330013fbb4f85cbcb6878fc38d35",
+  "observed_remote_source_commit": "0741c5915ebc330013fbb4f85cbcb6878fc38d35",
+  "target_branch": "main",
+  "pre_merge_origin_main": "574d13d20b829c0c8768bc7916186f01dcf5ff46",
+  "source_vs_origin_main": {
+    "behind": 0,
+    "ahead": 18,
+    "contains_origin_main": true,
+    "already_merged_to_origin_main_before_execution": false
+  },
+  "required_ancestor_content": {
+    "contains_projection_execution_branch": true,
+    "projection_execution_branch_head": "98ab309dc00393efe7dc1f35d259b519a6c9bf93",
+    "contains_projection_execution_branch_review_record": true,
+    "projection_execution_branch_review_head": "d957615bc7ad1d686a23e68da4236ccc2aee5d8f",
+    "contains_branch_release_proposal_baseline": true,
+    "branch_release_proposal_baseline_head": "e28ef5add9773d9600485135d7fb8bc1bfac8bbc",
+    "contains_protected_merge_decision_record": true
+  },
+  "lineage_verdict": "PASS_SOURCE_LINEAGE_SAFE_FOR_OWNER_AUTHORIZED_MERGE"
+}

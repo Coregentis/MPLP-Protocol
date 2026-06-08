@@ -1,0 +1,12 @@
+{
+  "goal_id": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-MERGE-EXECUTION-01",
+  "local_merge_commit": "abc8010df1e793320f3e7d3e4760fd71debc35c3",
+  "expected_source_commit": "0741c5915ebc330013fbb4f85cbcb6878fc38d35",
+  "target_branch": "main",
+  "remaining_blockers_before_push": [],
+  "push_required": true,
+  "push_rejection_stop_condition": "BLOCKED_MAIN_PUSH_REJECTED",
+  "recommended_next_goal": "WEBSITE-PROTOCOL-MANIFEST-POINTER-SYNC-01",
+  "final_verdict": "COMPLETE_PUBLIC_OSS_PROJECTION_MERGED_TO_MAIN",
+  "verification_note": "final origin/main SHA is verified after this evidence commit is pushed and reported in the final execution report"
+}

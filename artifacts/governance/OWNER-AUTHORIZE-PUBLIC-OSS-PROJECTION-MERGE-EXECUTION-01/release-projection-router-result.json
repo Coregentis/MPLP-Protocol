@@ -1,0 +1,80 @@
+{
+  "goal_id": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-MERGE-EXECUTION-01",
+  "router_id": "RELEASE-PROJECTION-GOVERNANCE-ROUTER-01",
+  "executed": true,
+  "workflow_type": [
+    "public_oss_projection",
+    "merge_to_public_main",
+    "release_like_projection_governance",
+    "no_registry_mutation",
+    "no_tag_no_seal_no_github_release"
+  ],
+  "discovery_table": {
+    "repo_role": "public OSS projection downstream of MPLP-Protocol-Dev truth",
+    "local_standard_source_files": [
+      "AGENTS.md",
+      ".codex/config.toml",
+      ".agents/skills/task-governance-router/SKILL.md",
+      ".agents/skills/release-projection-governance-router/SKILL.md",
+      "governance/release/MPLP-RELEASE-SOP.md",
+      "release-config.yaml",
+      "governance/04-records/PUBLIC-OSS-BRANCH-RELEASE-PROPOSAL-GOVERNANCE-BASELINE-01.md",
+      "governance/04-records/PUBLIC-OSS-PROJECTION-PROTECTED-MERGE-DECISION-01.md"
+    ],
+    "required_gates": [
+      "repo_truth_first_public",
+      "repo_truth_first_dev_read_only",
+      "skill_mirror_diff",
+      "json_parse",
+      "frontmatter_check",
+      "public_manifest_validation",
+      "npm_test",
+      "npm_run_lint",
+      "no_secret_scan",
+      "no_local_path_scan_with_repo_truth_exception",
+      "no_raw_dev_evidence_leakage_scan",
+      "protected_surface_scan",
+      "final_main_upstream_verification"
+    ],
+    "required_reviewer_lanes": [
+      "governance_secretariat",
+      "release_governance_reviewer",
+      "projection_boundary_reviewer",
+      "security_no_secret_reviewer",
+      "package_surface_auditor",
+      "branch_lifecycle_reviewer",
+      "website_boundary_reviewer",
+      "validation_lab_boundary_reviewer"
+    ],
+    "external_baseline_checks": [
+      "npm visibility for 11 release-set packages and @mplp/devtools@1.0.6",
+      "PyPI visibility for mplp-sdk@1.0.6",
+      "excluded package boundary for @mplp/compliance and @mplp/validator"
+    ],
+    "required_owner_authorization": "exact public repo, source branch, source commit, target branch, mutation category, and forbidden actions",
+    "allowed_mutations": [
+      "merge authorized source branch into public main",
+      "create merge execution governance record",
+      "create lightweight merge execution evidence",
+      "push public main if origin/main has not drifted and gates pass"
+    ],
+    "forbidden_actions": [
+      "branch deletion",
+      "branch cleanup",
+      "tag",
+      "seal",
+      "GitHub release",
+      "npm publish",
+      "PyPI upload",
+      "registry mutation",
+      "website deploy",
+      "Validation Lab publication",
+      "Dev mutation",
+      "V1 mutation",
+      "downstream sync"
+    ]
+  },
+  "release_projection_baseline_conflict": false,
+  "dynamic_release_workflow_discovery_performed": true,
+  "verdict": "PASS_RELEASE_PROJECTION_ROUTER_APPLIED"
+}

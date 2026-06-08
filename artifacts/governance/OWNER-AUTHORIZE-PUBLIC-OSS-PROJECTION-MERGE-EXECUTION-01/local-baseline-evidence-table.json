@@ -1,0 +1,70 @@
+{
+  "goal_id": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-MERGE-EXECUTION-01",
+  "rows": [
+    {
+      "decision_area": "canonical workspace and repo authority",
+      "local_evidence_file": "AGENTS.md",
+      "evidence_signal": "Coregentis is canonical workspace root; MPLP-Protocol is public OSS projection; MPLP-Protocol-Dev is Dev/package/release truth",
+      "derived_rule": "perform only public projection merge in MPLP-Protocol and keep Dev read-only",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "apply"
+    },
+    {
+      "decision_area": "dynamic governance baseline selection",
+      "local_evidence_file": "AGENTS.md; .agents/skills/task-governance-router/SKILL.md",
+      "evidence_signal": "dynamic baseline selection is required before non-trivial tasks",
+      "derived_rule": "select and record public projection, branch lifecycle, release projection, and Dev comparison baselines",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "apply"
+    },
+    {
+      "decision_area": "release/projection workflow routing",
+      "local_evidence_file": ".agents/skills/release-projection-governance-router/SKILL.md",
+      "evidence_signal": "public OSS projection and merge-to-release workflows are release-like triggers",
+      "derived_rule": "run release projection router before merge execution",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "apply"
+    },
+    {
+      "decision_area": "branch/release/proposal baseline",
+      "local_evidence_file": "governance/04-records/PUBLIC-OSS-BRANCH-RELEASE-PROPOSAL-GOVERNANCE-BASELINE-01.md",
+      "evidence_signal": "branch existence is evidence only; merge requires exact owner authorization",
+      "derived_rule": "merge only the named branch and source SHA; do not delete or clean branches",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "apply"
+    },
+    {
+      "decision_area": "projection merge readiness",
+      "local_evidence_file": "governance/04-records/PUBLIC-OSS-PROJECTION-PROTECTED-MERGE-DECISION-01.md",
+      "evidence_signal": "decision verdict is ready for later owner merge execution",
+      "derived_rule": "owner-authorized merge execution may proceed if source SHA and origin/main boundary still match",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "apply"
+    },
+    {
+      "decision_area": "tag seal release and registry boundary",
+      "local_evidence_file": "AGENTS.md; .agents/skills/release-projection-governance-router/SKILL.md; owner authorization",
+      "evidence_signal": "tag, seal, GitHub release, npm/PyPI, and registry mutation require separate owner authorization",
+      "derived_rule": "do not perform any tag, seal, release, publish, upload, dist-tag, deprecate, or registry mutation",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "apply"
+    },
+    {
+      "decision_area": "Website and Validation Lab boundary",
+      "local_evidence_file": "PUBLIC-OSS-PROJECTION-PROTECTED-MERGE-DECISION-01.md; prior projection evidence",
+      "evidence_signal": "Website and Validation Lab pointer sync are follow-up only",
+      "derived_rule": "do not mutate Website, Validation Lab, or downstream consumers in this goal",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "apply"
+    }
+  ],
+  "overall_confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+  "conflict": false
+}

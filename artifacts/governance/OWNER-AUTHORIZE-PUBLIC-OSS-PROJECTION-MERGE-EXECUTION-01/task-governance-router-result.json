@@ -1,0 +1,93 @@
+{
+  "goal_id": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-MERGE-EXECUTION-01",
+  "router_id": "TASK-GOVERNANCE-ROUTER-01",
+  "executed": true,
+  "execution_order": [
+    "repo_truth_first_public",
+    "repo_truth_first_dev_read_only",
+    "dynamic_local_governance_baseline_selection",
+    "task_type_classification",
+    "release_projection_router_delegation",
+    "reviewer_lane_selection",
+    "gate_selection",
+    "evidence_output_plan"
+  ],
+  "task_type_classification": [
+    "owner_authorized_public_oss_projection_merge_execution",
+    "public_projection_merge_execution",
+    "protected_public_main_merge",
+    "branch_lifecycle_governance",
+    "no_tag_no_seal_no_github_release",
+    "no_branch_cleanup"
+  ],
+  "sot_layer_classification": [
+    "L1 Projection Source",
+    "L3 Verification Evidence",
+    "L4 Publication Surface",
+    "L6 Codex Execution Governance"
+  ],
+  "selected_local_governance_baseline": [
+    "AGENTS.md",
+    ".codex/config.toml",
+    ".agents/skills/task-governance-router/SKILL.md",
+    ".agents/skills/release-projection-governance-router/SKILL.md",
+    "governance/codex-goals/CODEX-GOAL-TEMPLATE.md",
+    "governance/release/MPLP-RELEASE-SOP.md",
+    "GOVERNANCE.md",
+    "CONTRIBUTING.md",
+    "release-config.yaml",
+    "governance/04-records/PUBLIC-OSS-RELEASE-SOP-AUTHORITY-RECONCILIATION-01.md",
+    "governance/04-records/PUBLIC-OSS-PROJECTION-READINESS-DRIFT-REVIEW-01.md",
+    "governance/04-records/PUBLIC-OSS-PROJECTION-PLAN-01.md",
+    "governance/04-records/OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-EXECUTION-01.md",
+    "governance/04-records/PUBLIC-OSS-PROJECTION-EXECUTION-BRANCH-REVIEW-01.md",
+    "governance/04-records/PUBLIC-OSS-BRANCH-RELEASE-PROPOSAL-GOVERNANCE-BASELINE-01.md",
+    "governance/04-records/PUBLIC-OSS-PROJECTION-PROTECTED-MERGE-DECISION-01.md"
+  ],
+  "applicable_repository_governance_methods": [
+    "TSV",
+    "XCV",
+    "SCV",
+    "EVC"
+  ],
+  "applicable_codex_harness_methods": [
+    "SCTM",
+    "GLFB",
+    "ITCM",
+    "RBCT",
+    "VIM",
+    "PRM",
+    "TASK-GOVERNANCE-ROUTER-01"
+  ],
+  "forbidden_action_matrix": {
+    "branch_deletion": "forbidden",
+    "branch_cleanup": "forbidden",
+    "tag": "forbidden",
+    "seal": "forbidden",
+    "github_release": "forbidden",
+    "npm_publish": "forbidden",
+    "pypi_upload": "forbidden",
+    "registry_mutation": "forbidden",
+    "website_deploy": "forbidden",
+    "validation_lab_publication": "forbidden",
+    "dev_repo_mutation": "forbidden",
+    "v1_mutation": "forbidden",
+    "downstream_sync": "forbidden",
+    "package_source_schema_docs_mutation_outside_reviewed_merge_content": "forbidden"
+  },
+  "stop_conditions": [
+    "BLOCKED_TASK_GOVERNANCE_ROUTER_NOT_RUN",
+    "BLOCKED_DYNAMIC_RELEASE_WORKFLOW_DISCOVERY_NOT_PERFORMED",
+    "BLOCKED_BRANCH_RELEASE_PROPOSAL_BASELINE_MISSING",
+    "BLOCKED_BRANCH_RELEASE_PROPOSAL_BASELINE_CONFLICT",
+    "BLOCKED_RELEASE_GOVERNANCE_BASELINE_MISSING",
+    "BLOCKED_RELEASE_GOVERNANCE_BASELINE_CONFLICT",
+    "BLOCKED_PUBLIC_MERGE_SOURCE_HEAD_DRIFT",
+    "BLOCKED_PUBLIC_ORIGIN_MAIN_DRIFT",
+    "BLOCKED_PUBLIC_PROJECTION_REVIEW_GAP",
+    "BLOCKED_EVIDENCE_HYGIENE_FAILURE",
+    "BLOCKED_MERGE_CONFLICT_NO_MAIN_PUSH",
+    "BLOCKED_MAIN_PUSH_REJECTED"
+  ],
+  "evidence_output_plan": "create the required governance record and JSON evidence bundle for merge execution only"
+}

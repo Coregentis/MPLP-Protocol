@@ -1,0 +1,36 @@
+{
+  "goal_id": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-MERGE-EXECUTION-01",
+  "authorization_status": "OWNER_AUTHORIZED",
+  "authorized_repository": "/Users/jasonwang/Documents/AI_Dev/Coregentis/MPLP-Protocol",
+  "authorized_action": "protected_public_oss_projection_merge_execution",
+  "authorized_source_branch": "codex/public-oss-projection-protected-merge-decision-01",
+  "authorized_source_commit": "0741c5915ebc330013fbb4f85cbcb6878fc38d35",
+  "authorized_target_branch": "main",
+  "authorized_push_target": "origin main",
+  "allowed_mutations": [
+    "merge authorized source into public main",
+    "create merge execution governance record",
+    "create lightweight merge execution evidence",
+    "push public main after gates pass"
+  ],
+  "forbidden_mutations": [
+    "branch deletion",
+    "branch cleanup",
+    "tag",
+    "seal",
+    "GitHub release",
+    "npm publish",
+    "PyPI upload",
+    "registry mutation",
+    "website deploy",
+    "Validation Lab publication",
+    "Cognitive_OS mutation",
+    "SoloCrew mutation",
+    "Dev repo mutation",
+    "V1 mutation",
+    "downstream sync",
+    "package/source/schema/docs mutation outside already-reviewed merge content"
+  ],
+  "credential_boundary": "no credential files or token values read, printed, copied, committed, or exposed",
+  "verdict": "PASS_OWNER_AUTHORIZATION_EXACT_FOR_MERGE_EXECUTION"
+}

@@ -1,0 +1,39 @@
+{
+  "goal_id": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-MERGE-EXECUTION-01",
+  "actual_subagent_invocation": {
+    "attempted": true,
+    "succeeded": false,
+    "reason": "active thread agent limit reached",
+    "fallback": "selected reviewer perspectives applied locally"
+  },
+  "local_agent_files": [
+    ".codex/agents/package_surface_auditor.toml",
+    ".codex/agents/product_boundary_reviewer.toml",
+    ".codex/agents/protocol_schema_reviewer.toml",
+    ".codex/agents/publication_claim_reviewer.toml",
+    ".codex/agents/release_governance_reviewer.toml",
+    ".codex/agents/runtime_binding_reviewer.toml"
+  ],
+  "selected_review_perspectives": [
+    "governance_secretariat",
+    "release_governance_reviewer",
+    "projection_boundary_reviewer",
+    "security_no_secret_reviewer",
+    "package_surface_auditor",
+    "branch_lifecycle_reviewer",
+    "proposal_candidate_governance_reviewer",
+    "website_boundary_reviewer",
+    "validation_lab_boundary_reviewer"
+  ],
+  "reviewer_lane_result": {
+    "governance_secretariat": "PASS_LOCAL_BASELINE_AND_RECORD_REQUIREMENTS_SELECTED",
+    "release_governance_reviewer": "PASS_NO_TAG_SEAL_RELEASE_REGISTRY_ACTION_AUTHORIZED_OR_PERFORMED",
+    "projection_boundary_reviewer": "PASS_PUBLIC_REPO_ONLY_WITH_DEV_READ_ONLY",
+    "security_no_secret_reviewer": "PASS_NO_CREDENTIAL_VALUE_ACCESS_OR_RECORDING",
+    "package_surface_auditor": "PASS_NO_PACKAGE_SURFACE_MUTATION_OUTSIDE_REVIEWED_MERGE",
+    "branch_lifecycle_reviewer": "PASS_NO_BRANCH_DELETE_OR_CLEANUP",
+    "proposal_candidate_governance_reviewer": "PASS_BRANCH_RELEASE_PROPOSAL_BASELINE_APPLIED",
+    "website_boundary_reviewer": "PASS_WEBSITE_FOLLOWUP_ONLY",
+    "validation_lab_boundary_reviewer": "PASS_VALIDATION_LAB_FOLLOWUP_ONLY"
+  }
+}

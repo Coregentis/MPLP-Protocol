@@ -1,0 +1,30 @@
+{
+  "goal_id": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-MERGE-EXECUTION-01",
+  "required_prior_records": {
+    "PUBLIC-OSS-PROJECTION-PLAN-01": "present",
+    "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-EXECUTION-01": "present",
+    "PUBLIC-OSS-PROJECTION-EXECUTION-BRANCH-REVIEW-01": "present",
+    "PUBLIC-OSS-BRANCH-RELEASE-PROPOSAL-GOVERNANCE-BASELINE-01": "present",
+    "PUBLIC-OSS-PROJECTION-PROTECTED-MERGE-DECISION-01": "present"
+  },
+  "prior_verdicts": {
+    "projection_branch_review": "COMPLETE_PUBLIC_OSS_PROJECTION_BRANCH_REVIEW_READY_FOR_PROTECTED_MERGE_DECISION",
+    "protected_merge_decision": "COMPLETE_PUBLIC_OSS_PROJECTION_MERGE_DECISION_READY_FOR_OWNER_MERGE_EXECUTION",
+    "projection_plan_compliance": "PASS_PROJECTION_PLAN_COMPLIANCE",
+    "leakage_safety_review": "PASS_LEAKAGE_SAFETY_REVIEW",
+    "branch_release_proposal_baseline": "COMPLETE_PUBLIC_OSS_BRANCH_RELEASE_PROPOSAL_GOVERNANCE_BASELINE_CODIFIED"
+  },
+  "fresh_public_projection_state_check": {
+    "npm_release_set_packages_visible": true,
+    "npm_devtools_1_0_6_visible": true,
+    "npm_compliance_legacy_visible_not_active_release_set": true,
+    "npm_validator_not_visible_internal_ci_only": true,
+    "pypi_mplp_sdk_1_0_6_visible": true,
+    "pypi_mplp_sdk_latest_is_1_0_6": true,
+    "pypi_mplp_sdk_wheel_and_sdist_visible": true,
+    "conformance_wrapper_present": true,
+    "devtools_wrapper_present": true
+  },
+  "website_lab_boundary": "followup_only_not_mutated",
+  "review_verdict": "PASS_PRE_MERGE_PROJECTION_REVIEW_CHECK"
+}

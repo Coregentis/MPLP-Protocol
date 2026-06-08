@@ -1,0 +1,23 @@
+{
+  "goal_id": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-MERGE-EXECUTION-01",
+  "merge_executed": true,
+  "merge_method": "git merge --no-ff",
+  "merge_message": "merge: consolidate public OSS projection",
+  "source_branch": "codex/public-oss-projection-protected-merge-decision-01",
+  "source_commit": "0741c5915ebc330013fbb4f85cbcb6878fc38d35",
+  "target_branch": "main",
+  "pre_merge_origin_main": "574d13d20b829c0c8768bc7916186f01dcf5ff46",
+  "merge_commit": "abc8010df1e793320f3e7d3e4760fd71debc35c3",
+  "merge_commit_parents": [
+    "574d13d20b829c0c8768bc7916186f01dcf5ff46",
+    "0741c5915ebc330013fbb4f85cbcb6878fc38d35"
+  ],
+  "conflict_status": "NO_CONFLICT",
+  "local_worktree_after_merge": "clean_before_evidence_files",
+  "source_branch_deleted": false,
+  "tag_created": false,
+  "seal_created": false,
+  "github_release_created": false,
+  "registry_mutation_performed": false,
+  "verdict": "PASS_LOCAL_MERGE_EXECUTION"
+}
