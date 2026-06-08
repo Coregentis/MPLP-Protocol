@@ -1,0 +1,47 @@
+{
+  "router_id": "TASK-GOVERNANCE-ROUTER-01",
+  "executed": true,
+  "task_type": [
+    "public_oss_projection_plan",
+    "owner_ready_projection_execution_planning",
+    "projection_allowlist_denylist_planning",
+    "release_process_governance",
+    "non_projection_execution"
+  ],
+  "sot_layer": [
+    "L1 Projection Source planning",
+    "L3 Verification Evidence",
+    "L4 Publication Surface planning",
+    "L6 Codex Execution Governance"
+  ],
+  "selected_public_baseline": [
+    "AGENTS.md",
+    ".codex/config.toml",
+    ".agents/skills/task-governance-router/SKILL.md",
+    "governance/codex-goals/CODEX-GOAL-TEMPLATE.md",
+    "governance/release/MPLP-RELEASE-SOP.md",
+    "release-config.yaml",
+    "PUBLIC-OSS-PROJECTION-READINESS-DRIFT-REVIEW-01"
+  ],
+  "selected_dev_comparison_baseline": [
+    "Dev origin/main 00f57406005fe0a23f27c2e3e82a8c27e99dba6d",
+    "Dev MPLP-RELEASE-PROJECTION-POLICY.md",
+    "Dev MPLP-DEV-PUBLIC-REPO-AUTHORITY-DOCTRINE-2026-06-02.md",
+    "Dev release evidence closure record",
+    "Dev publish-set/pypi-set",
+    "Dev package manifests/READMEs as read-only comparison"
+  ],
+  "forbidden_actions": [
+    "projection execution",
+    "copy/sync Dev files",
+    "release-config mutation",
+    "release-set/pypi-set mutation",
+    "release manifest mutation",
+    "package/source/dist/schema/docs mutation",
+    "registry mutation",
+    "tag/seal/GitHub release/merge",
+    "website/lab/downstream sync",
+    "credential access"
+  ],
+  "evidence_output_plan": "17 required JSON files plus public governance record"
+}

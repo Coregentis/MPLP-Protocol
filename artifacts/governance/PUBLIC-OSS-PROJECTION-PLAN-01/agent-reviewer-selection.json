@@ -1,0 +1,26 @@
+{
+  "actual_subagent_invocation": {
+    "attempted": true,
+    "result": "blocked_by_thread_limit",
+    "message": "agent thread limit reached"
+  },
+  "selected_review_perspectives": [
+    "governance_secretariat",
+    "release_governance_reviewer",
+    "projection_boundary_reviewer",
+    "security_no_secret_reviewer",
+    "package_surface_auditor",
+    "docs_projection_reviewer",
+    "website_boundary_reviewer",
+    "validation_lab_boundary_reviewer"
+  ],
+  "local_agent_files": [
+    ".codex/agents/package_surface_auditor.toml",
+    ".codex/agents/product_boundary_reviewer.toml",
+    ".codex/agents/protocol_schema_reviewer.toml",
+    ".codex/agents/publication_claim_reviewer.toml",
+    ".codex/agents/release_governance_reviewer.toml",
+    ".codex/agents/runtime_binding_reviewer.toml"
+  ],
+  "applied_locally": true
+}

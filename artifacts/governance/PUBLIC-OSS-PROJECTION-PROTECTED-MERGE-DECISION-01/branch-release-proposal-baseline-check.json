@@ -1,0 +1,25 @@
+{
+  "baseline_record": "governance/04-records/PUBLIC-OSS-BRANCH-RELEASE-PROPOSAL-GOVERNANCE-BASELINE-01.md",
+  "baseline_applies": true,
+  "classifications": {
+    "target_execution_branch": [
+      "ACTIVE_PROJECTION_BRANCH",
+      "MERGE_CANDIDATE"
+    ],
+    "review_branch": [
+      "ACTIVE_REVIEW_BRANCH",
+      "MERGE_CANDIDATE"
+    ],
+    "baseline_branch": [
+      "ACTIVE_REVIEW_BRANCH",
+      "governance_followup_branch_supporting_merge_readiness"
+    ],
+    "decision_branch": [
+      "MERGE_CANDIDATE_AFTER_PUSH_AND_REVIEW"
+    ]
+  },
+  "branch_cleanup_separate": true,
+  "branch_existence_is_not_authority": true,
+  "merge_requires_future_exact_owner_authorization": true,
+  "verdict": "PASS_BRANCH_RELEASE_PROPOSAL_BASELINE_APPLIED"
+}

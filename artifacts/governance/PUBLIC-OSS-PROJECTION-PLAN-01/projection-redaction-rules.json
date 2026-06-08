@@ -1,0 +1,46 @@
+{
+  "redaction_required_for": [
+    "local absolute paths",
+    "registry execution summaries",
+    "publish evidence summaries",
+    "owner/copyright records",
+    "Devtools README issue",
+    "compliance legacy/deprecation boundary",
+    "validator internal boundary",
+    "Website/Lab pointer status"
+  ],
+  "rules": [
+    {
+      "surface": "local absolute paths",
+      "rule": "replace machine paths with repo-relative paths or named repo labels; no home-directory absolute paths in public projected artifacts except governance records that explicitly document local repo truth"
+    },
+    {
+      "surface": "registry execution summaries",
+      "rule": "summarize package/version/result only; omit command stdout/stderr and credential readiness detail"
+    },
+    {
+      "surface": "publish evidence summaries",
+      "rule": "state published/verified package versions and links/registry facts; do not include auth context, local temp paths, raw npm/twine logs, or token references"
+    },
+    {
+      "surface": "owner/copyright records",
+      "rule": "project only public owner identity/current copyright conclusions; keep private owner decision evidence out"
+    },
+    {
+      "surface": "Devtools README issue",
+      "rule": "state public optional tooling package and required README/package gate harmonization; do not imply republish without owner authorization"
+    },
+    {
+      "surface": "compliance legacy/deprecation boundary",
+      "rule": "describe @mplp/compliance as legacy alias boundary/excluded from current release-set; no deprecation action unless separately authorized"
+    },
+    {
+      "surface": "validator internal boundary",
+      "rule": "describe @mplp/validator as internal CI-only and absent from npm; do not include in publish set"
+    },
+    {
+      "surface": "Website/Lab pointer status",
+      "rule": "state stale/not-needed/needed decision and follow-up goal; do not mutate downstream repos in Protocol projection execution unless owner scopes it"
+    }
+  ]
+}

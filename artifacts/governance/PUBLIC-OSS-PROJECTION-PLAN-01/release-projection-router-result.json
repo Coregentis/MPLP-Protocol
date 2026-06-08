@@ -1,0 +1,47 @@
+{
+  "router_id": "RELEASE-PROJECTION-GOVERNANCE-ROUTER-01",
+  "executed": true,
+  "workflow_type": [
+    "public OSS projection execution planning",
+    "non projection execution"
+  ],
+  "local_standard_source_files": [
+    "AGENTS.md",
+    ".codex/config.toml",
+    ".agents/skills/release-projection-governance-router/SKILL.md",
+    "governance/release/MPLP-RELEASE-SOP.md",
+    "release-config.yaml",
+    "release-manifests/mplp-public-manifest.example.json",
+    "scripts/semantic/validate-public-manifest.mjs",
+    "PUBLIC-OSS-PROJECTION-READINESS-DRIFT-REVIEW-01",
+    "Dev MPLP-RELEASE-PROJECTION-POLICY.md"
+  ],
+  "owner_authorization_required_for_future_mutation": true,
+  "allowed_now": [
+    "public projection plan record",
+    "public lightweight evidence"
+  ],
+  "required_future_gates": [
+    "repo-truth-first public and Dev",
+    "task router",
+    "release projection router",
+    "allowlist/denylist conformance",
+    "public manifest validation",
+    "identity/legal scan",
+    "forbidden-overclaim scan",
+    "no-secret scan",
+    "no-local-path scan",
+    "package gates if package surfaces mutate",
+    "docs gates if docs mutate",
+    "Website/Lab needed-not-needed decision",
+    "post-projection diff review",
+    "final HEAD verification"
+  ],
+  "blockers": [
+    "BLOCKED_DEV_MAIN_TRUTH_DRIFT",
+    "BLOCKED_PUBLIC_ORIGIN_MAIN_DRIFT",
+    "BLOCKED_PROJECTION_ALLOWLIST_AMBIGUITY",
+    "BLOCKED_RAW_DEV_EVIDENCE_LEAKAGE",
+    "BLOCKED_OWNER_AUTHORIZATION_REQUIRED"
+  ]
+}

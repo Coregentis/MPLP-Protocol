@@ -1,0 +1,134 @@
+{
+  "classification_values": [
+    "PUBLIC_PROJECTION_CANDIDATE",
+    "PUBLIC_SUMMARY_ONLY_CANDIDATE",
+    "DEV_PRIVATE_DO_NOT_PROJECT",
+    "INTERNAL_HARNESS_DO_NOT_PROJECT",
+    "CONDITIONALLY_PROJECTABLE_WITH_REDACTION",
+    "BLOCKED_BY_RELEASE_CONFIG_AMBIGUITY",
+    "BLOCKED_BY_OWNER_DECISION",
+    "UNKNOWN_LOCAL_STANDARD_GAP"
+  ],
+  "matrix": [
+    {
+      "surface": "release-config.yaml",
+      "classification": "BLOCKED_BY_OWNER_DECISION",
+      "evidence": "config matches Dev/Public, but prior discovery says release-config alone is not authorization or full redaction policy; later plan must decide whether to narrow broad includes"
+    },
+    {
+      "surface": "release-manifests/*",
+      "classification": "PUBLIC_PROJECTION_CANDIDATE",
+      "evidence": "public manifest validates but package statuses and commit SHA are stale versus registry/Dev release closure; Dev origin/main lacks release-manifests so update requires public-side manifest generation plan"
+    },
+    {
+      "surface": "artifacts/release/publish-set.json",
+      "classification": "PUBLIC_SUMMARY_ONLY_CANDIDATE",
+      "evidence": "public set stale; Dev set has 11 npm release packages; artifact is evidence/summary, not registry authority"
+    },
+    {
+      "surface": "artifacts/release/pypi-set.json",
+      "classification": "PUBLIC_SUMMARY_ONLY_CANDIDATE",
+      "evidence": "public set points V1 path and 1.0.5; Dev/PyPI are 1.0.6; should be updated only through projection plan"
+    },
+    {
+      "surface": "governance/release/*",
+      "classification": "PUBLIC_SUMMARY_ONLY_CANDIDATE",
+      "evidence": "Dev has canonical projection policy and authority doctrine; public has SOP only; public may need summary/policy projection but not all Dev release records"
+    },
+    {
+      "surface": "governance/04-records/*",
+      "classification": "BLOCKED_BY_RELEASE_CONFIG_AMBIGUITY",
+      "evidence": "release-config includes governance/04-records/** broadly, but Dev contains private owner/publish/credential records; needs allowlist or summary-only plan"
+    },
+    {
+      "surface": "artifacts/package-preflight/*",
+      "classification": "DEV_PRIVATE_DO_NOT_PROJECT",
+      "evidence": "raw package execution/preflight evidence can include local paths and operational detail; use summary only"
+    },
+    {
+      "surface": "artifacts/governance/*",
+      "classification": "DEV_PRIVATE_DO_NOT_PROJECT",
+      "evidence": "raw Dev evidence is explicitly not projected; public may create its own lightweight evidence"
+    },
+    {
+      "surface": "package manifests",
+      "classification": "PUBLIC_PROJECTION_CANDIDATE",
+      "evidence": "public manifests partly version-aligned but dependency/readme drift exists; requires package gates before projection mutation"
+    },
+    {
+      "surface": "package README",
+      "classification": "PUBLIC_PROJECTION_CANDIDATE",
+      "evidence": "README drift observed in package surface; requires consistency and public wording gates"
+    },
+    {
+      "surface": "package dist",
+      "classification": "BLOCKED_BY_RELEASE_CONFIG_AMBIGUITY",
+      "evidence": "release-config excludes **/dist/** while package registry artifacts may need dist; decide OSS source vs registry artifact channel"
+    },
+    {
+      "surface": "package source",
+      "classification": "PUBLIC_PROJECTION_CANDIDATE",
+      "evidence": "public source drift exists for conformance and other packages; requires package/source gates and redaction scan"
+    },
+    {
+      "surface": "schemas/v2/**",
+      "classification": "PUBLIC_PROJECTION_CANDIDATE",
+      "evidence": "hash comparison shows no current drift; remains public projectable if future drift appears"
+    },
+    {
+      "surface": "docs/**",
+      "classification": "PUBLIC_PROJECTION_CANDIDATE",
+      "evidence": "source-level docs drift exists after excluding generated docs artifacts; docs build/claim gates required"
+    },
+    {
+      "surface": "examples/**",
+      "classification": "PUBLIC_PROJECTION_CANDIDATE",
+      "evidence": "no source drift after excluding node_modules; remains public projectable"
+    },
+    {
+      "surface": "tests/**",
+      "classification": "PUBLIC_PROJECTION_CANDIDATE",
+      "evidence": "no current drift; tests are public verification surfaces"
+    },
+    {
+      "surface": "scripts/semantic/**",
+      "classification": "PUBLIC_PROJECTION_CANDIDATE",
+      "evidence": "public manifest validator exists; some Dev semantic scripts are internal-only or package-only; select by public need"
+    },
+    {
+      "surface": "scripts/codex/**",
+      "classification": "INTERNAL_HARNESS_DO_NOT_PROJECT",
+      "evidence": "Codex harness is local execution governance; project only if public repo harness goal authorizes"
+    },
+    {
+      "surface": ".codex/**",
+      "classification": "CONDITIONALLY_PROJECTABLE_WITH_REDACTION",
+      "evidence": "repo-local Codex config/skills can be public harness evidence but must avoid private Dev-only gates/credentials"
+    },
+    {
+      "surface": ".agents/**",
+      "classification": "CONDITIONALLY_PROJECTABLE_WITH_REDACTION",
+      "evidence": "mirrored skills useful for public harness; Dev package gates not automatically public"
+    },
+    {
+      "surface": "AGENTS.md",
+      "classification": "CONDITIONALLY_PROJECTABLE_WITH_REDACTION",
+      "evidence": "public AGENTS is already public role-specific; do not copy Dev AGENTS wholesale"
+    },
+    {
+      "surface": "CODEX-GOAL-TEMPLATE.md",
+      "classification": "CONDITIONALLY_PROJECTABLE_WITH_REDACTION",
+      "evidence": "public has role-specific template; Dev template drift does not imply wholesale projection"
+    },
+    {
+      "surface": "Website manifest pointer surfaces",
+      "classification": "PUBLIC_SUMMARY_ONLY_CANDIDATE",
+      "evidence": "Website vendored manifest is stale planned_not_published and same SHA as public manifest; update needs separate Website goal if release window includes Website"
+    },
+    {
+      "surface": "Validation Lab manifest pointer surfaces",
+      "classification": "PUBLIC_SUMMARY_ONLY_CANDIDATE",
+      "evidence": "Lab vendored manifest is stale planned_not_published and same SHA as public manifest; update needs separate Lab goal if release window includes Lab"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "principle": "denylist overrides broad release-config include; no raw Dev evidence",
+  "denylist": [
+    "raw Dev artifacts/governance/**",
+    "raw Dev artifacts/package-preflight/**",
+    "credential/auth readiness raw evidence",
+    "local path execution logs",
+    "private owner decision records not public-safe",
+    "Dev .codex/** wholesale copy",
+    "Dev .agents/** wholesale copy",
+    "Dev scripts/codex/** wholesale copy",
+    "Dev governance/codex-goals/CODEX-GOAL-TEMPLATE.md wholesale copy",
+    "raw npm/PyPI execution stdout/stderr",
+    "package dist files under **/dist/**",
+    "node_modules/**",
+    "venv/**",
+    "*.whl",
+    "*.tar.gz",
+    "*.tgz",
+    "sdist/wheel/tarball staging directories",
+    "MPLP_website/**",
+    "Validation_Lab/**",
+    "Cognitive_OS/**",
+    "SoloCrew/**",
+    "V1.0_release content",
+    "secrets or env files",
+    ".npmrc",
+    ".pypirc",
+    ".env*",
+    ".DS_Store",
+    "docs/build/**",
+    "docs/.docusaurus/**",
+    "docs/.cache/**"
+  ],
+  "policy_overrides": [
+    "Do not project governance/04-records/** wholesale even though release-config includes it broadly.",
+    "Do not project packages/** wholesale; use selected package surfaces only.",
+    "Do not project dist even if package registry artifacts contain dist."
+  ]
+}

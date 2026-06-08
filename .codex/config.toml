@@ -10,6 +10,83 @@ sandbox_mode = "workspace-write"
 [features]
 goals = true
 
+[coregentis_workspace_authority]
+canonical_workspace_root = "/Users/jasonwang/Documents/AI_Dev/Coregentis"
+repo_role = "PUBLIC_OSS_PROJECTION"
+authoritative_dev_truth = "/Users/jasonwang/Documents/AI_Dev/Coregentis/MPLP-Protocol-Dev"
+repo_governance_baseline = "governance/04-records/COREGENTIS-TWO-LAYER-GOVERNANCE-BASELINE-01.md"
+v1_status = "frozen_migration_evidence_source"
+
+[agentic_harness]
+preflight_skill = ".agents/skills/agentic-harness-goal-preflight/SKILL.md"
+goal_template = "governance/codex-goals/CODEX-GOAL-TEMPLATE.md"
+skill_mirror = ".codex/skills/agentic-harness-goal-preflight/SKILL.md"
+
+[agentic_harness.task_governance_router]
+enabled = true
+id = "TASK-GOVERNANCE-ROUTER-01"
+required_before_non_trivial_task = true
+skill = ".agents/skills/task-governance-router/SKILL.md"
+goal_template = "governance/codex-goals/CODEX-GOAL-TEMPLATE.md"
+local_baseline_required = true
+agent_selection_required = true
+gate_selection_required = true
+stop_on_missing_or_conflicting_baseline = true
+blockers = [
+  "BLOCKED_TASK_GOVERNANCE_ROUTER_NOT_RUN",
+  "BLOCKED_LOCAL_GOVERNANCE_BASELINE_MISSING",
+  "BLOCKED_LOCAL_GOVERNANCE_BASELINE_CONFLICT",
+  "BLOCKED_AGENT_SELECTION_NOT_PERFORMED",
+  "BLOCKED_REQUIRED_GATE_SELECTION_NOT_PERFORMED",
+  "BLOCKED_PROMPT_POLICY_OVERRIDES_LOCAL_BASELINE",
+  "BLOCKED_SUBSTANTIVE_DECISION_WITHOUT_LOCAL_EVIDENCE",
+]
+
+[agentic_harness.release_projection_governance_router]
+enabled = true
+id = "RELEASE-PROJECTION-GOVERNANCE-ROUTER-01"
+required_for_release_like_tasks = true
+skill = ".agents/skills/release-projection-governance-router/SKILL.md"
+goal_template = "governance/codex-goals/CODEX-GOAL-TEMPLATE.md"
+workflow_discovery_table_required = true
+published_registry_version_baseline_required = true
+owner_authorization_required_for_mutation = true
+stop_on_missing_or_conflicting_release_baseline = true
+blockers = [
+  "BLOCKED_RELEASE_GOVERNANCE_BASELINE_MISSING",
+  "BLOCKED_RELEASE_GOVERNANCE_BASELINE_CONFLICT",
+  "BLOCKED_DYNAMIC_RELEASE_WORKFLOW_DISCOVERY_NOT_PERFORMED",
+  "BLOCKED_PUBLISHED_VERSION_BASELINE_MISSING",
+  "BLOCKED_REGISTRY_BASELINE_DRIFT",
+  "BLOCKED_PACKAGE_GATE_FAILED",
+  "BLOCKED_CREDENTIAL_READINESS_FAILED",
+  "BLOCKED_PUBLIC_PROJECTION_STANDARD_MISSING",
+  "BLOCKED_PUBLIC_PROJECTION_STANDARD_CONFLICT",
+  "BLOCKED_CROSS_REPO_PROJECTION_NOT_AUTHORIZED",
+  "BLOCKED_TAG_SEAL_RELEASE_NOT_AUTHORIZED",
+  "BLOCKED_PROMPT_POLICY_OVERRIDES_LOCAL_RELEASE_BASELINE",
+  "BLOCKED_SUBSTANTIVE_RELEASE_DECISION_WITHOUT_LOCAL_EVIDENCE",
+]
+
+[agentic_harness.public_oss_branch_release_proposal_governance]
+enabled = true
+baseline = "governance/04-records/PUBLIC-OSS-BRANCH-RELEASE-PROPOSAL-GOVERNANCE-BASELINE-01.md"
+required_for_branch_lifecycle_tasks = true
+required_for_branch_cleanup_tasks = true
+required_for_release_object_tasks = true
+required_for_proposal_candidate_tasks = true
+branch_cleanup_requires_explicit_owner_authorization = true
+merge_tag_seal_github_release_require_explicit_owner_authorization = true
+
+[local_governance_baseline_discovery]
+required_phrase = "Prompt assertions are not governance authority unless supported by local repository evidence."
+required_precondition = "Dynamic governance baseline selection is a precondition for every non-trivial task."
+required_table = "local baseline evidence table"
+package_policy_discovery_required_when_package_related = true
+version_baseline_discovery_required_when_release_or_version_related = true
+copyright_baseline_discovery_required_when_legal_or_copyright_related = true
+cross_repo_boundary_discovery_required_when_cross_repo_related = true
+
 # Subagent policy guidance, not enforced by this config parser:
 # max_threads = 4
 # max_depth = 1

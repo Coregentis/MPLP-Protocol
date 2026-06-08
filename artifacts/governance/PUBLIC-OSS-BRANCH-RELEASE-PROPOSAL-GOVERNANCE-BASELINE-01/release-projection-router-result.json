@@ -1,0 +1,50 @@
+{
+  "router_id": "RELEASE-PROJECTION-GOVERNANCE-ROUTER-01",
+  "router_skill": ".agents/skills/release-projection-governance-router/SKILL.md",
+  "router_run_before_release_like_work": true,
+  "release_like_task": true,
+  "workflow_type": [
+    "branch lifecycle governance",
+    "release object taxonomy codification",
+    "proposal/candidate lifecycle codification",
+    "non-release-execution baseline"
+  ],
+  "repo_role": "PUBLIC_OSS_PROJECTION",
+  "local_standard_source_files": [
+    "AGENTS.md",
+    ".codex/config.toml",
+    ".agents/skills/release-projection-governance-router/SKILL.md",
+    "governance/release/MPLP-RELEASE-SOP.md",
+    "GOVERNANCE.md",
+    "CONTRIBUTING.md",
+    "release-manifests/mplp-public-manifest.schema.json"
+  ],
+  "external_baseline_checks": {
+    "npm": "not_applicable_baseline_only_no_package_version_or_publish_decision",
+    "pypi": "not_applicable_baseline_only_no_package_version_or_publish_decision",
+    "github_pr_state": "read_only_gh_pr_list_used"
+  },
+  "required_owner_authorization": {
+    "baseline_codification": "authorized_by_goal_prompt",
+    "branch_cleanup": "required_future_exact_branch_authorization",
+    "merge": "required_future_exact_pr_authorization",
+    "tag_seal_github_release": "required_future_exact_action_authorization",
+    "package_registry_action": "required_future_exact_package_version_registry_authorization"
+  },
+  "allowed_mutations": [
+    "public repo governance baseline record",
+    "public repo lightweight evidence JSON",
+    "minimal public repo harness/config/template/router pointers"
+  ],
+  "forbidden_actions": [
+    "registry mutation",
+    "release execution",
+    "tag",
+    "seal",
+    "GitHub release",
+    "merge",
+    "branch deletion",
+    "public projection execution"
+  ],
+  "discovery_verdict": "RELEASE_PROJECTION_WORKFLOW_DISCOVERY_PERFORMED"
+}

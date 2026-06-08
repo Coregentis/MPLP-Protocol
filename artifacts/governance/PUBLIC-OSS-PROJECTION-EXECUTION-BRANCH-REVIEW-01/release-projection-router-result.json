@@ -1,0 +1,51 @@
+{
+  "router_id": "RELEASE-PROJECTION-GOVERNANCE-ROUTER-01",
+  "applied": true,
+  "workflow_type": "public_oss_projection_execution_branch_review",
+  "repo_role": "PUBLIC_OSS_PROJECTION",
+  "local_standard_source_files": [
+    "AGENTS.md",
+    ".codex/config.toml",
+    ".agents/skills/task-governance-router/SKILL.md",
+    ".agents/skills/release-projection-governance-router/SKILL.md",
+    "governance/codex-goals/CODEX-GOAL-TEMPLATE.md",
+    "governance/release/MPLP-RELEASE-SOP.md",
+    "governance/04-records/PUBLIC-OSS-RELEASE-SOP-AUTHORITY-RECONCILIATION-01.md",
+    "governance/04-records/PUBLIC-OSS-PROJECTION-READINESS-DRIFT-REVIEW-01.md",
+    "governance/04-records/PUBLIC-OSS-PROJECTION-PLAN-01.md",
+    "governance/04-records/OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-EXECUTION-01.md"
+  ],
+  "dev_authority_comparison_baseline": {
+    "repo": "Coregentis/MPLP-Protocol-Dev",
+    "source_ref": "origin/main",
+    "source_commit": "00f57406005fe0a23f27c2e3e82a8c27e99dba6d"
+  },
+  "required_owner_authorization": "Review branch only. No merge, tag, seal, publish, upload, registry mutation, or downstream sync authorized.",
+  "external_baseline_checks": [
+    "read-only npm registry version visibility",
+    "read-only PyPI registry version visibility"
+  ],
+  "allowed_mutations": [
+    "public repo review governance record",
+    "public repo review evidence JSON"
+  ],
+  "forbidden_actions": [
+    "merge",
+    "tag",
+    "seal",
+    "GitHub release",
+    "npm publish",
+    "PyPI upload",
+    "registry mutation",
+    "downstream mutation",
+    "projected content mutation"
+  ],
+  "stop_conditions": [
+    "BLOCKED_TASK_GOVERNANCE_ROUTER_NOT_RUN",
+    "BLOCKED_DYNAMIC_RELEASE_WORKFLOW_DISCOVERY_NOT_PERFORMED",
+    "BLOCKED_RELEASE_GOVERNANCE_BASELINE_MISSING",
+    "PARTIAL_PUBLIC_OSS_PROJECTION_REVIEW_BLOCKED_BY_UNEXPLAINED_SURFACE",
+    "PARTIAL_PUBLIC_OSS_PROJECTION_REVIEW_BLOCKED_BY_PLAN_NONCOMPLIANCE",
+    "PARTIAL_PUBLIC_OSS_PROJECTION_REVIEW_BLOCKED_BY_LEAKAGE_FINDING"
+  ]
+}

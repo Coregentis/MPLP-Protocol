@@ -1,0 +1,50 @@
+{
+  "rows": [
+    {
+      "decision_area": "workspace and repo authority",
+      "local_evidence_file": "AGENTS.md; .codex/config.toml",
+      "evidence_signal": "Coregentis is canonical workspace; MPLP-Protocol is public OSS projection; MPLP-Protocol-Dev is Dev truth.",
+      "derived_rule": "Review in public repo; inspect Dev repo read-only.",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "apply"
+    },
+    {
+      "decision_area": "projection review workflow",
+      "local_evidence_file": ".agents/skills/task-governance-router/SKILL.md; .agents/skills/release-projection-governance-router/SKILL.md",
+      "evidence_signal": "Task router and release/projection router required before substantive review.",
+      "derived_rule": "Run both routers and record selected baselines, gates, reviewers, forbidden actions, and evidence outputs.",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "apply"
+    },
+    {
+      "decision_area": "projection plan authority",
+      "local_evidence_file": "governance/04-records/PUBLIC-OSS-PROJECTION-PLAN-01.md; artifacts/governance/PUBLIC-OSS-PROJECTION-PLAN-01/*.json",
+      "evidence_signal": "Plan defines allowlist, denylist, redaction rules, dist boundary, release-config boundary, and follow-up requirements.",
+      "derived_rule": "Review execution payload against the plan-bound start commit f35bed3.",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "apply"
+    },
+    {
+      "decision_area": "target execution branch",
+      "local_evidence_file": "artifacts/governance/OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-EXECUTION-01/final-verdict.json",
+      "evidence_signal": "Target execution branch pushed and verified at 98ab309.",
+      "derived_rule": "Review target branch at 98ab309 without mutating projected content.",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "apply"
+    },
+    {
+      "decision_area": "review mutation boundary",
+      "local_evidence_file": "User authorization; AGENTS.md",
+      "evidence_signal": "Review goal permits only review record and lightweight evidence.",
+      "derived_rule": "Do not modify package, release, manifest, docs, schema, dist, or downstream surfaces.",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "apply"
+    }
+  ],
+  "low_or_conflicting_baseline_used": false
+}

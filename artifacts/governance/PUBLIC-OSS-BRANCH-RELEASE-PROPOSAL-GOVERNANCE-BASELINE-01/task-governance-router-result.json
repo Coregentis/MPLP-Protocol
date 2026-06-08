@@ -1,0 +1,78 @@
+{
+  "router_id": "TASK-GOVERNANCE-ROUTER-01",
+  "router_skill": ".agents/skills/task-governance-router/SKILL.md",
+  "router_run_before_substantive_work": true,
+  "task_type": [
+    "public_oss_branch_release_proposal_governance_baseline",
+    "branch_lifecycle_governance",
+    "release_object_governance",
+    "proposal_candidate_lifecycle_governance",
+    "non_cleanup_non_merge_non_release_execution"
+  ],
+  "sot_layer": [
+    "L1 Projection Source governance",
+    "L3 Verification Evidence",
+    "L4 Publication Surface governance",
+    "L6 Codex Execution Governance"
+  ],
+  "selected_local_governance_baseline": [
+    "AGENTS.md",
+    ".codex/config.toml",
+    ".agents/skills/task-governance-router/SKILL.md",
+    "governance/codex-goals/CODEX-GOAL-TEMPLATE.md",
+    "governance/release/MPLP-RELEASE-SOP.md",
+    "GOVERNANCE.md",
+    "CONTRIBUTING.md",
+    "release-manifests/mplp-public-manifest.schema.json",
+    "current public branch/tag/PR state"
+  ],
+  "applicable_repo_governance_methods": [
+    "TSV",
+    "XCV",
+    "SCV",
+    "EVC"
+  ],
+  "applicable_harness_methods": [
+    "SCTM",
+    "GLFB",
+    "ITCM",
+    "RBCT",
+    "VIM",
+    "PRM",
+    "TASK-GOVERNANCE-ROUTER-01"
+  ],
+  "required_gates": [
+    "repo-truth-first public",
+    "repo-truth-first Dev read-only",
+    "skill mirror diff",
+    "TOML parse",
+    "JSON parse",
+    "frontmatter check",
+    "required phrase scan",
+    "no-secret scan",
+    "protected surface scan",
+    "forbidden action compliance scans",
+    "final git status",
+    "final upstream branch verification after push"
+  ],
+  "forbidden_actions": [
+    "branch deletion",
+    "merge",
+    "tag",
+    "release seal",
+    "GitHub release",
+    "public projection execution",
+    "package publish/upload",
+    "registry mutation",
+    "package/source/schema/docs/release-manifest mutation",
+    "Website/Lab/downstream mutation",
+    "Dev repo mutation",
+    "V1 mutation",
+    "credential access"
+  ],
+  "evidence_outputs": [
+    "governance/04-records/PUBLIC-OSS-BRANCH-RELEASE-PROPOSAL-GOVERNANCE-BASELINE-01.md",
+    "artifacts/governance/PUBLIC-OSS-BRANCH-RELEASE-PROPOSAL-GOVERNANCE-BASELINE-01/*.json"
+  ],
+  "verdict": "ROUTER_APPLIED"
+}

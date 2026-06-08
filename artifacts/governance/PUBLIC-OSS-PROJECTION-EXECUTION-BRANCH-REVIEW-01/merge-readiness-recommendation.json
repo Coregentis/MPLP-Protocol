@@ -1,0 +1,11 @@
+{
+  "target_execution_branch": "codex/owner-authorize-public-oss-projection-execution-01",
+  "target_execution_head": "98ab309dc00393efe7dc1f35d259b519a6c9bf93",
+  "projection_execution_payload_ready_for_protected_merge_decision": true,
+  "merge_authorized_by_this_goal": false,
+  "protected_merge_decision_required": true,
+  "stacked_lineage_condition": "The target branch includes 112 files against origin/main because it is stacked on prior governance, SOP reconciliation, readiness, and projection plan commits. Protected merge decision must validate or intentionally include that stacked lineage.",
+  "remaining_blockers": [],
+  "recommended_next_goal": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-PROTECTED-MERGE-DECISION-01",
+  "verdict": "READY_FOR_PROTECTED_MERGE_DECISION_NO_MERGE_PERFORMED"
+}

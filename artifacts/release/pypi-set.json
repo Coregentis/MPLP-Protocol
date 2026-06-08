@@ -3,8 +3,8 @@
   "packages": [
     {
       "name": "mplp-sdk",
-      "version": "1.0.5",
-      "path": "/Users/jasonwang/Documents/AI_Dev/V1.0_release/packages/pypi/mplp-sdk",
+      "version": "1.0.6",
+      "path": "packages/pypi/mplp-sdk",
       "category": "PUBLIC"
     }
   ]

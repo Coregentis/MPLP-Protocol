@@ -1,0 +1,46 @@
+{
+  "release_config": {
+    "includes": [
+      "packages/**",
+      "schemas/v2/**",
+      "docs/**",
+      "tests/**",
+      "examples/**",
+      "governance/04-records/**",
+      "governance/03-distribution/**",
+      "selected workflows and scripts/03-docs/render-mermaid.mjs"
+    ],
+    "excludes": [
+      "MPLP_website/**",
+      "Validation_Lab/**",
+      "**/node_modules/**",
+      "**/dist/**",
+      "**/build/**",
+      "docs/.docusaurus/**",
+      "docs/.cache/**",
+      "governance/06-operations/**",
+      "scripts/release/**",
+      "internal/**"
+    ],
+    "unchanged_between_public_and_dev": true
+  },
+  "sop": {
+    "authority_consistent_after_prior_reconciliation": true,
+    "requires_public_manifest_gate": true,
+    "requires_website_lab_needed_not_needed_decisions": true,
+    "package_release_gates_required_only_when_packages_in_scope": true
+  },
+  "consistency_decisions": {
+    "projection_policy_narrows_release_config": "YES: release-config is bundle input, not full redaction policy or authorization",
+    "governance_04_records_broad_include": "unsafe_without_allowlist_or_summary_policy",
+    "dist_exclusion": "blocks package dist projection in OSS bundle; registry package artifacts should be treated as separate package-publication channel",
+    "release_set_pypi_set_alignment": "can be planned as public summary artifacts without copying Dev-private raw evidence",
+    "release_config_mutation_needed_now": false
+  },
+  "blockers_for_future_projection_plan": [
+    "allowlist governance/04-records or define summary-only projection",
+    "decide artifacts/release/* public summary update mechanism",
+    "decide package dist channel",
+    "run package gates before package surface mutation"
+  ]
+}

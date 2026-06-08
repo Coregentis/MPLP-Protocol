@@ -1,0 +1,50 @@
+{
+  "goal_id": "PUBLIC-OSS-RELEASE-SOP-AUTHORITY-RECONCILIATION-01",
+  "rows": [
+    {
+      "decision_area": "public repo role",
+      "local_evidence_file": "AGENTS.md",
+      "evidence_signal": "This repository is the MPLP public OSS projection and not Dev truth.",
+      "derived_rule": "Public repo can reconcile public SOP wording but cannot become Dev release-planning authority.",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "applied"
+    },
+    {
+      "decision_area": "Dev authority comparison",
+      "local_evidence_file": "MPLP-Protocol-Dev/AGENTS.md",
+      "evidence_signal": "MPLP-Protocol-Dev is protocol/package/release Dev truth.",
+      "derived_rule": "Use Dev as read-only authority comparison baseline.",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "applied read-only"
+    },
+    {
+      "decision_area": "SOP stale wording",
+      "local_evidence_file": "governance/release/MPLP-RELEASE-SOP.md",
+      "evidence_signal": "SOP says MPLP-Protocol-Dev remains a historical internal line.",
+      "derived_rule": "Wording conflicts with current Dev/Public evidence and should be reconciled.",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": true,
+      "action": "corrected"
+    },
+    {
+      "decision_area": "projection execution boundary",
+      "local_evidence_file": ".agents/skills/release-projection-governance-router/SKILL.md",
+      "evidence_signal": "Public projection execution requires explicit owner authorization.",
+      "derived_rule": "No projection, sync, copy, publish, tag, seal, or merge in this goal.",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "enforced"
+    },
+    {
+      "decision_area": "release-config mutation",
+      "local_evidence_file": "release-config.yaml and goal scope",
+      "evidence_signal": "SOP wording reconciliation does not require bundle allowlist or denylist changes.",
+      "derived_rule": "Do not mutate release-config.yaml.",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "unchanged"
+    }
+  ]
+}

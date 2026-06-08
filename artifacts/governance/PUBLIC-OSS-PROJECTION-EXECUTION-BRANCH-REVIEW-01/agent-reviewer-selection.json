@@ -1,0 +1,26 @@
+{
+  "actual_subagent_invocation": {
+    "attempted": true,
+    "result": "UNAVAILABLE_THREAD_LIMIT_REACHED",
+    "note": "multi_agent_v1.spawn_agent returned agent thread limit reached. Review lanes were applied locally as mandatory perspectives."
+  },
+  "selected_reviewer_perspectives": [
+    "governance_secretariat",
+    "release_governance_reviewer",
+    "projection_boundary_reviewer",
+    "security_no_secret_reviewer",
+    "package_surface_auditor",
+    "docs_projection_reviewer",
+    "website_boundary_reviewer",
+    "validation_lab_boundary_reviewer",
+    "publication_claim_reviewer"
+  ],
+  "local_reviewer_evidence": [
+    ".codex/agents/package_surface_auditor.toml",
+    ".codex/agents/publication_claim_reviewer.toml",
+    ".codex/agents/release_governance_reviewer.toml",
+    ".agents/skills/release-projection-governance-router/SKILL.md",
+    ".agents/skills/task-governance-router/SKILL.md"
+  ],
+  "verdict": "PASS_REVIEWER_SELECTION_PERFORMED_WITH_LOCAL_LANES"
+}

@@ -31,10 +31,18 @@ supporting records only where they do not conflict with this SOP.
 Protocol artifacts, schemas, public release manifests, governance records, SDK
 source surfaces, and public package preparation.
 
-`Coregentis/MPLP-Protocol-Dev` remains a historical internal line. Do not merge
-Dev `main` into public `main`. Any future Dev-originated candidate must be
-handled through a dedicated owner-approved provenance and export record, not by
-direct branch merge.
+`Coregentis/MPLP-Protocol-Dev` is the active Dev-side protocol/package/release
+truth line for MPLP release-governance and package planning. This public repo
+is the clean public OSS projection and public release subset; it is not a
+substitute for Dev truth and must not be used as Dev package release-planning
+authority. Do not merge Dev `main` directly into public `main`. Any
+Dev-originated public candidate must be handled through a dedicated
+owner-approved provenance, export, and projection record, not by direct branch
+merge.
+
+This authority wording alignment does not authorize public projection
+execution, package publication, registry mutation, release-config mutation,
+tagging, sealing, GitHub release creation, or merge.
 
 Public OSS release changes must move through the protected PR path on
 `Coregentis/MPLP-Protocol`. Direct public `main` pushes are not part of the

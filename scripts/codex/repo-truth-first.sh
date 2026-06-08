@@ -48,6 +48,50 @@ else
 fi
 echo
 
+echo "[local governance baseline discovery]"
+echo "LOCAL_BASELINE_DISCOVERY_REQUIRED=YES"
+echo "DYNAMIC_GOVERNANCE_BASELINE_SELECTION_PRECONDITION=Dynamic governance baseline selection is a precondition for every non-trivial task."
+echo "required_phrase=Prompt assertions are not governance authority unless supported by local repository evidence."
+echo "required_table=local baseline evidence table"
+echo "package_policy_discovery=required_when_package_related"
+echo "version_baseline_discovery=required_when_release_or_version_related"
+echo "copyright_baseline_discovery=required_when_legal_or_copyright_related"
+echo "cross_repo_boundary_discovery=required_when_cross_repo_related"
+echo "blocked_local_baseline_missing=BLOCKED_LOCAL_GOVERNANCE_BASELINE_MISSING"
+echo "blocked_local_baseline_conflict=BLOCKED_LOCAL_GOVERNANCE_BASELINE_CONFLICT"
+echo "blocked_prompt_overrides_local_baseline=BLOCKED_PROMPT_POLICY_OVERRIDES_LOCAL_BASELINE"
+echo "blocked_dynamic_selection_not_performed=BLOCKED_DYNAMIC_BASELINE_SELECTION_NOT_PERFORMED"
+echo "blocked_substantive_decision_without_evidence=BLOCKED_SUBSTANTIVE_DECISION_WITHOUT_LOCAL_EVIDENCE"
+echo
+
+echo "[task governance router]"
+echo "TASK_GOVERNANCE_ROUTER_REQUIRED=YES"
+echo "TASK_GOVERNANCE_ROUTER_ID=TASK-GOVERNANCE-ROUTER-01"
+if [ -f ".agents/skills/task-governance-router/SKILL.md" ]; then
+  echo "task_governance_router_skill=present .agents/skills/task-governance-router/SKILL.md"
+else
+  echo "task_governance_router_skill=missing .agents/skills/task-governance-router/SKILL.md"
+fi
+if [ -f ".codex/skills/task-governance-router/SKILL.md" ]; then
+  echo "task_governance_router_skill_mirror=present .codex/skills/task-governance-router/SKILL.md"
+else
+  echo "task_governance_router_skill_mirror=missing .codex/skills/task-governance-router/SKILL.md"
+fi
+if grep -q "TASK-GOVERNANCE-ROUTER-01" .codex/config.toml 2>/dev/null; then
+  echo "task_governance_router_config=present .codex/config.toml"
+else
+  echo "task_governance_router_config=missing .codex/config.toml"
+fi
+if grep -q "Task Governance Router Result" governance/codex-goals/CODEX-GOAL-TEMPLATE.md 2>/dev/null; then
+  echo "task_governance_router_goal_template=present governance/codex-goals/CODEX-GOAL-TEMPLATE.md"
+else
+  echo "task_governance_router_goal_template=missing governance/codex-goals/CODEX-GOAL-TEMPLATE.md"
+fi
+echo "blocked_router_not_run=BLOCKED_TASK_GOVERNANCE_ROUTER_NOT_RUN"
+echo "blocked_agent_selection_missing=BLOCKED_AGENT_SELECTION_NOT_PERFORMED"
+echo "blocked_gate_selection_missing=BLOCKED_REQUIRED_GATE_SELECTION_NOT_PERFORMED"
+echo
+
 echo "[top-level files]"
 find . -maxdepth 2 \
   -not -path './.git/*' \

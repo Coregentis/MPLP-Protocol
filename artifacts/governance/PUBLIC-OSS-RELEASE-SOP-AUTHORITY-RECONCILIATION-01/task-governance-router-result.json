@@ -1,0 +1,41 @@
+{
+  "router_id": "TASK-GOVERNANCE-ROUTER-01",
+  "router_run_before_substantive_mutation": true,
+  "task_type": [
+    "public_oss_release_sop_authority_reconciliation",
+    "projection_governance_authority_alignment",
+    "release_process_governance",
+    "non_projection_execution"
+  ],
+  "sot_layer": ["L4 Publication Surface", "L6 Codex Execution Governance"],
+  "selected_public_repo_baseline": [
+    "AGENTS.md",
+    ".codex/config.toml",
+    ".agents/skills/task-governance-router/SKILL.md",
+    ".agents/skills/release-projection-governance-router/SKILL.md",
+    "governance/codex-goals/CODEX-GOAL-TEMPLATE.md",
+    "governance/release/MPLP-RELEASE-SOP.md"
+  ],
+  "selected_dev_comparison_baseline": [
+    "MPLP-Protocol-Dev/AGENTS.md",
+    "MPLP-Protocol-Dev/governance/release/MPLP-DEV-PUBLIC-REPO-AUTHORITY-DOCTRINE-2026-06-02.md",
+    "MPLP-Protocol-Dev/governance/release/MPLP-RELEASE-PROJECTION-POLICY.md",
+    "MPLP-Protocol-Dev/governance/04-records/PUBLIC-OSS-PROJECTION-STANDARD-DISCOVERY-01.md",
+    "MPLP-Protocol-Dev/governance/04-records/RELEASE-PROJECTION-GOVERNANCE-HARNESS-CODIFICATION-01.md"
+  ],
+  "forbidden_actions": [
+    "public projection execution",
+    "Dev-to-public sync or copy",
+    "package release",
+    "publish or upload",
+    "registry mutation",
+    "tag",
+    "seal",
+    "GitHub release",
+    "merge",
+    "release-config mutation",
+    "package/source/dist/schema mutation",
+    "credential access"
+  ],
+  "verdict": "PASS_TASK_GOVERNANCE_ROUTER_COMPLETED_FOR_PUBLIC_SOP_AUTHORITY_RECONCILIATION"
+}

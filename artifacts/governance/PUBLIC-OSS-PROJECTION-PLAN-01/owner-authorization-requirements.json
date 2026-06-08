@@ -1,0 +1,27 @@
+{
+  "next_required_authorization": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-EXECUTION-01",
+  "must_include": [
+    "exact Dev source commit",
+    "exact public base/start HEAD",
+    "exact public branch name",
+    "exact allowlisted files/path classes",
+    "explicit release-config handling decision",
+    "package dist exclusion confirmation",
+    "Website/Lab same-window or follow-up decision",
+    "package surface mutation permission if package manifests/READMEs/source included",
+    "docs mutation permission if docs included",
+    "confirmation no registry/tag/seal/merge/deploy/publish/upload"
+  ],
+  "not_authorized_by_this_plan": [
+    "projection execution",
+    "Dev copy/sync",
+    "package publish/upload",
+    "registry mutation",
+    "tag/seal/GitHub release",
+    "merge",
+    "Website/Lab sync",
+    "package version bump",
+    "release-config mutation"
+  ],
+  "recommended_authorization_text_summary": "Authorize public projection execution only for the allowlisted public files under PUBLIC-OSS-PROJECTION-PLAN-01, from Dev origin/main commit 00f57406005fe0a23f27c2e3e82a8c27e99dba6d to public branch codex/public-oss-projection-execution-01, with no direct merge and no forbidden registry/tag/seal/deploy actions."
+}

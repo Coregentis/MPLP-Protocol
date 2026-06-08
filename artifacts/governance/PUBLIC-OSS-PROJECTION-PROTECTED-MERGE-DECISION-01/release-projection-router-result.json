@@ -1,0 +1,39 @@
+{
+  "router_id": "RELEASE-PROJECTION-GOVERNANCE-ROUTER-01",
+  "router_skill": ".agents/skills/release-projection-governance-router/SKILL.md",
+  "router_run_before_release_like_work": true,
+  "release_like_task": true,
+  "workflow_type": [
+    "protected merge decision",
+    "public OSS projection merge-readiness decision",
+    "no merge execution"
+  ],
+  "local_standard_source_files": [
+    "AGENTS.md",
+    ".codex/config.toml",
+    ".agents/skills/release-projection-governance-router/SKILL.md",
+    "governance/release/MPLP-RELEASE-SOP.md",
+    "governance/04-records/PUBLIC-OSS-PROJECTION-EXECUTION-BRANCH-REVIEW-01.md",
+    "governance/04-records/PUBLIC-OSS-BRANCH-RELEASE-PROPOSAL-GOVERNANCE-BASELINE-01.md"
+  ],
+  "required_owner_authorization": {
+    "merge_decision_record": "authorized_by_goal",
+    "merge_execution": "required_future_exact_owner_authorization",
+    "tag_seal_github_release": "required_future_exact_owner_authorization",
+    "registry_action": "required_future_exact_owner_authorization"
+  },
+  "allowed_mutations": [
+    "public repo governance decision record",
+    "public repo lightweight evidence JSON"
+  ],
+  "forbidden_actions": [
+    "merge execution",
+    "tag",
+    "seal",
+    "GitHub release",
+    "registry mutation",
+    "public projection execution",
+    "branch cleanup"
+  ],
+  "discovery_verdict": "RELEASE_PROJECTION_WORKFLOW_DISCOVERY_PERFORMED"
+}

@@ -1,0 +1,20 @@
+{
+  "goal_id": "PUBLIC-OSS-RELEASE-SOP-AUTHORITY-RECONCILIATION-01",
+  "public_projection_executed": false,
+  "dev_to_public_sync_or_copy_executed": false,
+  "package_release_executed": false,
+  "npm_publish_executed": false,
+  "pypi_upload_executed": false,
+  "registry_mutation_executed": false,
+  "release_config_mutated": false,
+  "publish_set_or_pypi_set_mutated": false,
+  "package_source_dist_schema_mutated": false,
+  "website_deploy_executed": false,
+  "validation_lab_publication_executed": false,
+  "tag_created": false,
+  "seal_created": false,
+  "github_release_created": false,
+  "merge_executed": false,
+  "credential_or_token_accessed": false,
+  "v1_mutated": false
+}

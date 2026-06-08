@@ -1,0 +1,10 @@
+{
+  "local_absolute_paths_removed_from_pypi_set": true,
+  "raw_registry_stdout_stderr_included": false,
+  "raw_dev_evidence_included": false,
+  "credential_auth_context_included": false,
+  "compliance_boundary_summary_only": true,
+  "validator_boundary_internal_only": true,
+  "package_dist_projected": false,
+  "verdict": "PASS_REDACTION_APPLIED"
+}

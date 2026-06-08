@@ -1,0 +1,13 @@
+{
+  "goal_id": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-EXECUTION-01",
+  "canonical_workspace_root": "/Users/jasonwang/Documents/AI_Dev/Coregentis",
+  "public_repo": "/Users/jasonwang/Documents/AI_Dev/Coregentis/MPLP-Protocol",
+  "public_branch": "codex/owner-authorize-public-oss-projection-execution-01",
+  "public_head_before_mutation": "f35bed3d6f62c75a6e24d5a549b3d958d8525101",
+  "public_origin_main": "574d13d20b829c0c8768bc7916186f01dcf5ff46",
+  "public_worktree_clean_before_mutation": true,
+  "dev_repo_read_only": "/Users/jasonwang/Documents/AI_Dev/Coregentis/MPLP-Protocol-Dev",
+  "dev_origin_main": "00f57406005fe0a23f27c2e3e82a8c27e99dba6d",
+  "dev_origin_main_matches_plan": true,
+  "execution_branch_created": true
+}

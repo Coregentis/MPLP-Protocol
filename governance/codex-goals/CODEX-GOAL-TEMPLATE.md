@@ -6,9 +6,222 @@ Use this template for bounded Goal Mode tasks in this repository family. If `/go
 
 State the concrete objective and the verifiable stopping condition.
 
+## Task Governance Router Result
+
+This section is mandatory before direct file edits, substantive judgment,
+verification gates, release actions, publish/upload actions, tag, seal, merge,
+or cross-repo actions.
+
+Run or internally satisfy `TASK-GOVERNANCE-ROUTER-01` using
+`.agents/skills/task-governance-router/SKILL.md`.
+
+Declare:
+
+```yaml
+task_governance_router:
+  router_id: TASK-GOVERNANCE-ROUTER-01
+  router_skill: .agents/skills/task-governance-router/SKILL.md
+  router_run_before_substantive_work:
+  task_type:
+  selected_local_governance_baseline:
+  local_baseline_evidence_table:
+  sot_layer:
+  applicable_repo_governance_methods:
+  applicable_harness_methods:
+  applicable_agents_or_review_perspectives:
+  applicable_skills:
+  required_gates:
+  forbidden_actions:
+  stop_conditions:
+  evidence_outputs:
+  owner_decision_required:
+  final_verdict:
+```
+
+If this router result is missing, stop with
+`BLOCKED_TASK_GOVERNANCE_ROUTER_NOT_RUN`.
+
 ## Repository
 
 Name the exact repository path and current branch. Do not assume cloud threads, marketplace features, app-only visibility, or cloud-only execution.
+
+## Coregentis Workspace Authority Check
+
+Declare:
+
+```yaml
+coregentis_workspace_authority:
+  canonical_workspace_root: /Users/jasonwang/Documents/AI_Dev/Coregentis
+  current_repo:
+  authoritative_repo:
+  current_remote:
+  authoritative_remote:
+  repo_role:
+  upstream_sot:
+  downstream_derivatives:
+  v1_status: frozen_migration_evidence_source
+  cross_repo_sync_in_scope: false
+```
+
+## SOT Classification
+
+Classify all touched surfaces before editing:
+
+| SOT Layer | Applies? | Surfaces | Authority |
+|:---|:---|:---|:---|
+| `L0 Protocol Truth` |  |  | MPLP-Protocol-Dev only unless explicitly authorized |
+| `L1 Projection Source` |  |  | repo-specific source or public projection |
+| `L2 Generated Artifact` |  |  | generated from declared source only |
+| `L3 Verification Evidence` |  |  | evidence, not authorization |
+| `L4 Publication Surface` |  |  | owner approval required for public claims |
+| `L5 Downstream Runtime/Product` |  |  | downstream only |
+| `L6 Codex Execution Governance` |  |  | AGENTS, config, skills, goal template |
+
+## Development Method Execution Table
+
+| Method | Required? | Evidence |
+|:---|:---|:---|
+| `SCTM` | yes | Goal model and SOT classification |
+| `GLFB` | yes | Governance/authorization decision matrix |
+| `ITCM` | yes | Repo, object, authority, and derivation topology |
+| `RBCT` | yes | Bounded stage plan and stop condition |
+| `VIM` | yes | Forbidden-action and risk matrix |
+| `PRM` | yes | Retrospective and hardening notes |
+
+## Methodology Separation Table
+
+| Repository Method | Applies? | Surface | Evidence |
+|:---|:---|:---|:---|
+| `DIV` |  | Generated/provenance surface | Derivation evidence |
+| `TSV` |  | Truth-source references | Reference closure |
+| `XCV` |  | Cross-surface consistency | Consistency evidence |
+| `SCV` |  | Projection completeness | Surface coverage |
+| `SUC` |  | SDK/API/runtime usage | Usage evidence |
+| `EVC` |  | Version/evolution transition | Compatibility evidence |
+
+## Two-Layer Governance Alignment Table
+
+| Layer | Required Declaration | Status |
+|:---|:---|:---|
+| Repository Governance | repo role, source/evidence/generated/publication surfaces, remote authority, wrong-authority blockers |  |
+| Codex Agentic Harness | required skill, Goal preflight, SOT layer, authorized mutations, forbidden mutations, final verdict |  |
+
+## Local Governance Baseline Evidence Table
+
+This section is mandatory for every non-trivial task before execution
+continues. Dynamic governance baseline selection is a precondition for every
+non-trivial task. The prompt may define the task and discovery procedure; it
+must not be used as policy authority when local governance baseline evidence
+exists.
+
+Required rule:
+
+`Prompt assertions are not governance authority unless supported by local repository evidence.`
+
+Produce this local baseline evidence table before any substantive decision,
+planning conclusion, edit, verification gate that depends on a policy
+classification, release action, publish/upload action, merge, tag, seal, or
+cross-repo action:
+
+| Decision Area | Local Evidence File | Evidence Signal | Derived Rule | Confidence | Conflict? | Action |
+| ------------- | ------------------- | --------------- | ------------ | ---------- | --------- | ------ |
+
+Allowed confidence values:
+
+- `HIGH_LOCAL_BASELINE_EXPLICIT`
+- `MEDIUM_LOCAL_BASELINE_DERIVED`
+- `LOW_LOCAL_BASELINE_INFERRED`
+- `CONFLICTING_BASELINE`
+- `MISSING_BASELINE`
+
+If confidence is `LOW_LOCAL_BASELINE_INFERRED`, `CONFLICTING_BASELINE`, or
+`MISSING_BASELINE` for a decision that affects mutation, stop before mutation.
+
+Required blocked verdicts:
+
+- `BLOCKED_LOCAL_GOVERNANCE_BASELINE_MISSING`
+- `BLOCKED_LOCAL_GOVERNANCE_BASELINE_CONFLICT`
+- `BLOCKED_PROMPT_POLICY_OVERRIDES_LOCAL_BASELINE`
+- `BLOCKED_DYNAMIC_BASELINE_SELECTION_NOT_PERFORMED`
+- `BLOCKED_SUBSTANTIVE_DECISION_WITHOUT_LOCAL_EVIDENCE`
+
+Use package policy discovery only when package-related, version baseline
+discovery only when release/version-related, copyright baseline discovery only
+when legal/copyright-related, and cross-repo boundary discovery when more than
+one repo is involved.
+
+## Release / Projection Workflow Discovery
+
+This section is mandatory when the task touches or could touch release-like
+surfaces. Run or internally satisfy
+`RELEASE-PROJECTION-GOVERNANCE-ROUTER-01` using
+`.agents/skills/release-projection-governance-router/SKILL.md` after
+repo-truth-first and `TASK-GOVERNANCE-ROUTER-01`, before substantive judgment,
+edits, gates, release actions, publish/upload actions, projection, deploy,
+merge, tag, or seal.
+
+Declare:
+
+```yaml
+release_projection_governance_router:
+  router_id: RELEASE-PROJECTION-GOVERNANCE-ROUTER-01
+  router_skill: .agents/skills/release-projection-governance-router/SKILL.md
+  router_run_before_release_like_work:
+  release_like_task:
+  repo_role:
+  workflow_type:
+  local_standard_source_files:
+  required_gates:
+  required_agents_or_review_perspectives:
+  external_baseline_checks:
+  required_owner_authorization:
+  allowed_mutations:
+  forbidden_actions:
+  stop_conditions:
+  evidence_outputs:
+  discovery_verdict:
+```
+
+If release-like workflow discovery is skipped or cannot be completed from local
+evidence for a mutation-affecting decision, stop with the matching blocker:
+
+- `BLOCKED_DYNAMIC_RELEASE_WORKFLOW_DISCOVERY_NOT_PERFORMED`
+- `BLOCKED_RELEASE_GOVERNANCE_BASELINE_MISSING`
+- `BLOCKED_RELEASE_GOVERNANCE_BASELINE_CONFLICT`
+- `BLOCKED_PUBLISHED_VERSION_BASELINE_MISSING`
+- `BLOCKED_REGISTRY_BASELINE_DRIFT`
+- `BLOCKED_PUBLIC_PROJECTION_STANDARD_MISSING`
+- `BLOCKED_PUBLIC_PROJECTION_STANDARD_CONFLICT`
+- `BLOCKED_CROSS_REPO_PROJECTION_NOT_AUTHORIZED`
+- `BLOCKED_TAG_SEAL_RELEASE_NOT_AUTHORIZED`
+- `BLOCKED_SUBSTANTIVE_RELEASE_DECISION_WITHOUT_LOCAL_EVIDENCE`
+
+## Public OSS Branch / Release / Proposal Classification
+
+When the task touches branch lifecycle, branch cleanup, PR/merge readiness,
+release object taxonomy, Git tag, release seal, GitHub release, public
+projection release state, RFC, proposal, or MPGC candidate lifecycle, apply:
+
+- `governance/04-records/PUBLIC-OSS-BRANCH-RELEASE-PROPOSAL-GOVERNANCE-BASELINE-01.md`
+
+Declare:
+
+```yaml
+public_oss_branch_release_proposal_governance:
+  baseline:
+  branch_classification:
+  branch_lifecycle_status:
+  release_object_classification:
+  proposal_candidate_classification:
+  cleanup_authorized:
+  merge_tag_seal_release_authorized:
+  owner_decision_required:
+  forbidden_actions:
+```
+
+Branch existence is evidence only. Branch cleanup, branch deletion, merge, tag,
+seal, GitHub release, public projection execution, package publication, and
+registry mutation require later exact owner authorization.
 
 ## Branch
 
@@ -21,6 +234,11 @@ State the PR URL, base branch, base SHA, head branch, head SHA, whether the base
 ## Required Skills
 
 List any required `.agents/skills/*/SKILL.md` workflows. `.agents/skills` is the Codex discovery path; `.codex/skills` is retained as the project-internal ops source and compatibility copy.
+
+Default required skill for non-trivial goals:
+
+- `agentic-harness-goal-preflight`
+- `release-projection-governance-router` when release-like surfaces are in scope
 
 ## Required Subagents Or Custom Agents
 
@@ -58,6 +276,20 @@ List surfaces that must not change, including package versions, registries, tags
 ## Forbidden Actions
 
 State forbidden publish, upload, deprecate, yank, delete, dist-tag mutation, tag, seal, package-version, schema-intake, product-behavior, runtime-behavior, public-claim, or broad-rewrite actions.
+
+## Forbidden Action Matrix
+
+| Action | Allowed? | Owner Authorization Required? | Evidence |
+|:---|:---|:---|:---|
+| No npm publish | no | yes |  |
+| No PyPI upload | no | yes |  |
+| No tag | no | yes |  |
+| No seal | no | yes |  |
+| No merge | no | yes |  |
+| Registry mutation | no | yes |  |
+| Package version change | no | yes |  |
+| L0 schema mutation | no | yes |  |
+| Cross-repo sync | no unless explicitly scoped | yes |  |
 
 ## Stopping Condition
 

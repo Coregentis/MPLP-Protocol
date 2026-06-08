@@ -1,0 +1,115 @@
+{
+  "branch": "codex/public-oss-projection-readiness-drift-review-01",
+  "head": "20ecad2ee28116d92310111dbc64de3593b50ce3",
+  "origin_main": "574d13d20b829c0c8768bc7916186f01dcf5ff46",
+  "public_manifest": {
+    "manifest_id": "mplp-public-manifest-1.0.0-draft-650e5b2f",
+    "protocol_commit_sha": "650e5b2f6754a7016d8c8184e54881b0fcef6683",
+    "generated_at": "2026-05-29T19:34:59+08:00",
+    "sdk_statuses": [
+      "planned_not_published"
+    ],
+    "pypi_statuses": [
+      "planned_not_published"
+    ],
+    "manifest_gate": "PASS_node_scripts_semantic_validate_public_manifest_mjs"
+  },
+  "release_artifacts": {
+    "publish_set": [
+      {
+        "name": "@mplp/compliance",
+        "version": "1.0.5",
+        "path": "compliance"
+      },
+      {
+        "name": "@mplp/conformance",
+        "version": "1.0.0",
+        "path": "conformance"
+      },
+      {
+        "name": "@mplp/coordination",
+        "version": "1.0.6",
+        "path": "coordination"
+      },
+      {
+        "name": "@mplp/core",
+        "version": "1.0.6",
+        "path": "core"
+      },
+      {
+        "name": "@mplp/devtools",
+        "version": "1.0.5",
+        "path": "devtools"
+      },
+      {
+        "name": "@mplp/integration-llm-http",
+        "version": "1.0.5",
+        "path": "integration-llm-http"
+      },
+      {
+        "name": "@mplp/integration-storage-fs",
+        "version": "1.0.5",
+        "path": "integration-storage-fs"
+      },
+      {
+        "name": "@mplp/integration-storage-kv",
+        "version": "1.0.5",
+        "path": "integration-storage-kv"
+      },
+      {
+        "name": "@mplp/integration-tools-generic",
+        "version": "1.0.5",
+        "path": "integration-tools-generic"
+      },
+      {
+        "name": "@mplp/modules",
+        "version": "1.0.5",
+        "path": "modules"
+      },
+      {
+        "name": "@mplp/runtime-minimal",
+        "version": "1.0.5",
+        "path": "runtime-minimal"
+      },
+      {
+        "name": "@mplp/schema",
+        "version": "1.0.6",
+        "path": "schema"
+      },
+      {
+        "name": "@mplp/sdk-ts",
+        "version": "1.0.7",
+        "path": "sdk-ts"
+      }
+    ],
+    "pypi_set": {
+      "ecosystem": "pypi",
+      "packages": [
+        {
+          "name": "mplp-sdk",
+          "version": "1.0.5",
+          "path": "/Users/jasonwang/Documents/AI_Dev/V1.0_release/packages/pypi/mplp-sdk",
+          "category": "PUBLIC"
+        }
+      ]
+    }
+  },
+  "sop_authority_consistency": "PASS_AFTER_PUBLIC_OSS_RELEASE_SOP_AUTHORITY_RECONCILIATION_01",
+  "package_manifest_selected_findings": [
+    {
+      "package": "@mplp/conformance",
+      "finding": "public package.json still depends on @mplp/compliance while Dev package.json depends on @mplp/schema",
+      "classification": "PUBLIC_PROJECTION_CANDIDATE_WITH_PACKAGE_SURFACE_GATES"
+    },
+    {
+      "package": "@mplp/devtools",
+      "finding": "public package.json still depends on @mplp/compliance while Dev package.json depends on @mplp/conformance",
+      "classification": "PUBLIC_PROJECTION_CANDIDATE_WITH_PACKAGE_SURFACE_GATES"
+    },
+    {
+      "package": "@mplp/compliance",
+      "finding": "public release-set includes compliance; Dev release-set excludes it; registry latest remains 1.0.5",
+      "classification": "BLOCKED_BY_OWNER_DECISION_OR_DEPRECATION_POLICY"
+    }
+  ]
+}

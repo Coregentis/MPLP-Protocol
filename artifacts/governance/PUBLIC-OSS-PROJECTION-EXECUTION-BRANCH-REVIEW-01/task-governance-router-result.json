@@ -1,0 +1,52 @@
+{
+  "router_id": "TASK-GOVERNANCE-ROUTER-01",
+  "executed": true,
+  "prompt_assertions_are_not_governance_authority": true,
+  "task_type_classification": [
+    "public_oss_projection_execution_branch_review",
+    "projection_plan_compliance_review",
+    "public_release_boundary_review",
+    "no_merge_no_tag_no_seal"
+  ],
+  "sot_layer_classification": [
+    "L1 Projection Source review",
+    "L3 Verification Evidence",
+    "L4 Publication Surface review",
+    "L6 Codex Execution Governance"
+  ],
+  "applicable_repository_governance_methods": [
+    "TSV",
+    "XCV",
+    "SCV",
+    "EVC",
+    "package_surface_review",
+    "projection_boundary_review",
+    "public_claim_boundary_review"
+  ],
+  "applicable_codex_harness_methods": [
+    "SCTM",
+    "GLFB",
+    "ITCM",
+    "RBCT",
+    "VIM",
+    "PRM",
+    "TASK-GOVERNANCE-ROUTER-01"
+  ],
+  "allowed_mutation": [
+    "governance/04-records/PUBLIC-OSS-PROJECTION-EXECUTION-BRANCH-REVIEW-01.md",
+    "artifacts/governance/PUBLIC-OSS-PROJECTION-EXECUTION-BRANCH-REVIEW-01/*.json"
+  ],
+  "forbidden_mutation": [
+    "projected package content",
+    "release manifests",
+    "release-set or pypi-set",
+    "release-config.yaml",
+    "Dev repo",
+    "Website repo",
+    "Validation Lab repo",
+    "Cognitive_OS",
+    "SoloCrew",
+    "V1.0_release"
+  ],
+  "evidence_output_plan": "Create one public governance review record plus 16 lightweight JSON evidence files."
+}

@@ -1,0 +1,38 @@
+{
+  "pre_execution_gates": [
+    "repo-truth-first public",
+    "repo-truth-first Dev",
+    "confirm Dev source commit equals authorized commit",
+    "confirm public origin/main/start HEAD equals authorized baseline",
+    "TASK-GOVERNANCE-ROUTER-01",
+    "RELEASE-PROJECTION-GOVERNANCE-ROUTER-01",
+    "plan allowlist/denylist conformance",
+    "public manifest validation before and after if manifest changes",
+    "release-config unchanged or owner-authorized config amendment present",
+    "identity/legal scan",
+    "forbidden-overclaim scan",
+    "no-secret scan",
+    "no-local-path scan",
+    "package README/install smoke if package surfaces mutate",
+    "package consistency release gate if package surfaces mutate",
+    "docs build/lint if docs mutate",
+    "Website/Lab needed-or-not-needed decision gate"
+  ],
+  "post_projection_gates": [
+    "git diff --check",
+    "JSON parse all evidence/manifests",
+    "frontmatter check governance records",
+    "public manifest validation",
+    "protected surface review against allowlist",
+    "package gates for any package surface mutation",
+    "docs gates for any docs mutation",
+    "no raw Dev evidence leakage scan",
+    "no credential/token scan",
+    "no local path scan",
+    "forbidden-overclaim scan",
+    "release-config unchanged check unless authorized",
+    "final repo-truth-first",
+    "local/remote HEAD verification after push"
+  ],
+  "package_release_gates_in_plan_only": "NOT_RUN_NOW; required later only if package surfaces mutate"
+}

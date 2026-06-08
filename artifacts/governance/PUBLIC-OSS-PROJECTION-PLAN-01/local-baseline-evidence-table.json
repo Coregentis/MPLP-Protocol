@@ -1,0 +1,58 @@
+{
+  "rows": [
+    {
+      "decision_area": "repo authority",
+      "local_evidence_file": "AGENTS.md; .codex/config.toml",
+      "evidence_signal": "public repo is clean public OSS projection; Dev repo is authoritative Dev truth",
+      "derived_rule": "plan in public; compare Dev read-only",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "apply"
+    },
+    {
+      "decision_area": "projection standard",
+      "local_evidence_file": "Dev MPLP-RELEASE-PROJECTION-POLICY.md; public SOP; drift review",
+      "evidence_signal": "Dev-to-public projection uses allowlist/denylist and protected PR; no direct Dev main merge",
+      "derived_rule": "future execution must use exact allowlist and no direct merge",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "apply"
+    },
+    {
+      "decision_area": "release-config ambiguity",
+      "local_evidence_file": "release-config.yaml; drift review release-config consistency evidence",
+      "evidence_signal": "config is bundle input, not full redaction policy; broad governance include and dist exclude exist",
+      "derived_rule": "plan-specific allowlist/denylist can proceed; no config mutation in plan-only goal",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "plan_allowlist"
+    },
+    {
+      "decision_area": "package dist boundary",
+      "local_evidence_file": "release-config.yaml excludes **/dist/**; drift review classification",
+      "evidence_signal": "dist excluded from public OSS release bundle",
+      "derived_rule": "treat package dist as registry artifact only unless owner separately authorizes dist projection/config amendment",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "block_dist_projection"
+    },
+    {
+      "decision_area": "Website/Lab scope",
+      "local_evidence_file": "SOP sections 5-6; Website/Lab vendored manifest evidence",
+      "evidence_signal": "Website/Lab are standalone pointer consumers and stale if manifest changes",
+      "derived_rule": "choose Option B: protocol projection first, immediate follow-up pointer-sync goals if manifest changes",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "plan_followups"
+    },
+    {
+      "decision_area": "package policy",
+      "local_evidence_file": "Dev publish evidence; drift review; registry snapshot",
+      "evidence_signal": "11 npm + PyPI released; Devtools released separate; compliance legacy; validator internal absent",
+      "derived_rule": "align public summaries; compliance/validator remain excluded; devtools included as optional tooling summary",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "plan"
+    }
+  ]
+}

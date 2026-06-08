@@ -1,0 +1,17 @@
+{
+  "actual_subagent_invocation": {
+    "attempted": false,
+    "reason": "thread limit previously reached; local reviewer perspectives applied"
+  },
+  "selected_review_perspectives": [
+    "governance_secretariat",
+    "release_governance_reviewer",
+    "projection_boundary_reviewer",
+    "security_no_secret_reviewer",
+    "package_surface_auditor",
+    "docs_projection_reviewer",
+    "website_boundary_reviewer",
+    "validation_lab_boundary_reviewer"
+  ],
+  "applied_locally": true
+}

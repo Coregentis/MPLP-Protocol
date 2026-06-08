@@ -4,7 +4,7 @@
     "private": true,
     "description": "MPLP Protocol Validator CLI - CI-only internal tool for schema validation and Golden Flow verification. NOT FOR EXTERNAL PUBLICATION.",
     "license": "Apache-2.0",
-    "author": "Coregentis AI",
+    "author": "Jearon Wong",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "bin": {

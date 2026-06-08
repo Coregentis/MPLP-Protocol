@@ -1,0 +1,13 @@
+{
+  "public_projection_execution": false,
+  "git_tag": false,
+  "release_seal": false,
+  "github_release": false,
+  "npm_publish": false,
+  "pypi_upload": false,
+  "registry_mutation": false,
+  "website_sync": false,
+  "validation_lab_sync": false,
+  "downstream_sync": false,
+  "credential_access": false
+}

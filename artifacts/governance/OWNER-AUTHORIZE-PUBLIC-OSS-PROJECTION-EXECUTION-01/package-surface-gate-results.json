@@ -1,0 +1,37 @@
+{
+  "gates": [
+    {
+      "command": "node ../../../scripts/packages/validate-public-npm-package.mjs --model wrapper_package",
+      "cwd": "packages/npm/conformance",
+      "result": "PASS"
+    },
+    {
+      "command": "node ../../../scripts/packages/validate-public-npm-package.mjs --model wrapper_package",
+      "cwd": "packages/npm/devtools",
+      "result": "PASS"
+    },
+    {
+      "command": "package active compliance dependency/import/export scan",
+      "result": "PASS"
+    },
+    {
+      "command": "package dist projection scan",
+      "result": "PASS_NO_DIST_MUTATION"
+    },
+    {
+      "command": "npm pack --dry-run --json",
+      "cwd": "packages/npm/conformance",
+      "result": "PASS_INVENTORY_ONLY",
+      "note": "pack inventory produced no file outside local package artifact surface; dist was not projected or regenerated"
+    },
+    {
+      "command": "npm pack --dry-run --json",
+      "cwd": "packages/npm/devtools",
+      "result": "PASS_INVENTORY_WITH_DIST_BOUNDARY_NOTE",
+      "note": "public repo package inventory lacks Dev origin/main CLI dist files because package dist projection is forbidden; no CLI smoke claim is made from this branch"
+    }
+  ],
+  "package_lock_inclusion": "packages/npm/conformance/package-lock.json included as gate-driven package consistency surface for allowlisted conformance package; dist remains excluded",
+  "dist_boundary": "Package dist remains registry artifact only for this public OSS projection. Local public repo pack inventory is not treated as published-registry tarball evidence.",
+  "verdict": "PASS_PACKAGE_SURFACE_GATES"
+}

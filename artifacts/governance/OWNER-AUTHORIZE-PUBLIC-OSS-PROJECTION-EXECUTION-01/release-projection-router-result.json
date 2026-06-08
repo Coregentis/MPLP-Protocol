@@ -1,0 +1,26 @@
+{
+  "router_id": "RELEASE-PROJECTION-GOVERNANCE-ROUTER-01",
+  "executed": true,
+  "workflow_type": "owner_authorized_public_oss_projection_execution_branch_only",
+  "local_standard_source_files": [
+    "AGENTS.md",
+    "release-config.yaml",
+    "governance/release/MPLP-RELEASE-SOP.md",
+    "governance/04-records/PUBLIC-OSS-PROJECTION-PLAN-01.md",
+    "artifacts/governance/PUBLIC-OSS-PROJECTION-PLAN-01/*.json"
+  ],
+  "owner_authorization_required": true,
+  "owner_authorization_present": true,
+  "allowed_mutations": [
+    "artifacts/release/publish-set.json",
+    "artifacts/release/pypi-set.json",
+    "packages/npm/conformance/README.md",
+    "packages/npm/conformance/package-lock.json",
+    "packages/npm/conformance/package.json",
+    "packages/npm/conformance/src/index.ts",
+    "packages/npm/devtools/README.md",
+    "packages/npm/devtools/package.json",
+    "release-manifests/mplp-public-manifest.example.json"
+  ],
+  "forbidden_action_boundary_preserved": true
+}

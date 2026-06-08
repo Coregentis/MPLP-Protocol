@@ -1,0 +1,18 @@
+{
+  "goal_id": "PUBLIC-OSS-RELEASE-SOP-AUTHORITY-RECONCILIATION-01",
+  "changed_files": [
+    {
+      "path": "governance/release/MPLP-RELEASE-SOP.md",
+      "classification": "allowed_public_governance_release_sop_authority_wording"
+    },
+    {
+      "path": "governance/04-records/PUBLIC-OSS-RELEASE-SOP-AUTHORITY-RECONCILIATION-01.md",
+      "classification": "allowed_public_governance_record"
+    },
+    {
+      "path": "artifacts/governance/PUBLIC-OSS-RELEASE-SOP-AUTHORITY-RECONCILIATION-01/*.json",
+      "classification": "allowed_lightweight_evidence"
+    }
+  ],
+  "forbidden_surfaces_changed": false
+}

@@ -1,0 +1,26 @@
+{
+  "goal_id": "PUBLIC-OSS-PROJECTION-PROTECTED-MERGE-DECISION-01",
+  "canonical_workspace_root": "/Users/jasonwang/Documents/AI_Dev/Coregentis",
+  "public_repo": {
+    "path": "/Users/jasonwang/Documents/AI_Dev/Coregentis/MPLP-Protocol",
+    "role": "PUBLIC_OSS_PROJECTION",
+    "decision_branch": "codex/public-oss-projection-protected-merge-decision-01",
+    "starting_branch": "codex/public-oss-branch-release-proposal-governance-baseline-01",
+    "starting_head": "e28ef5add9773d9600485135d7fb8bc1bfac8bbc",
+    "origin_main_head": "574d13d20b829c0c8768bc7916186f01dcf5ff46",
+    "target_execution_branch": "codex/owner-authorize-public-oss-projection-execution-01",
+    "target_execution_branch_head": "98ab309dc00393efe7dc1f35d259b519a6c9bf93",
+    "review_branch": "codex/public-oss-projection-execution-branch-review-01",
+    "review_branch_head": "d957615bc7ad1d686a23e68da4236ccc2aee5d8f",
+    "branch_release_proposal_baseline_branch": "codex/public-oss-branch-release-proposal-governance-baseline-01",
+    "branch_release_proposal_baseline_head": "e28ef5add9773d9600485135d7fb8bc1bfac8bbc"
+  },
+  "dev_repo_read_only": {
+    "path": "/Users/jasonwang/Documents/AI_Dev/Coregentis/MPLP-Protocol-Dev",
+    "role": "PROTOCOL_PACKAGE_RELEASE_DEV_TRUTH",
+    "observed_branch": "codex/release-projection-governance-harness-codification-01",
+    "observed_head": "93bcc881cc45e13d12dcc4d0ba26b8f11d996b23",
+    "origin_main_head": "00f57406005fe0a23f27c2e3e82a8c27e99dba6d",
+    "mutation_performed": false
+  }
+}

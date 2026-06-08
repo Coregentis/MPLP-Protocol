@@ -1,0 +1,16 @@
+{
+  "no_credential_values": "PASS",
+  "no_npmrc_pypirc": "PASS",
+  "no_env_values": "PASS",
+  "no_raw_npm_pypi_stdout_stderr": "PASS",
+  "no_raw_dev_package_preflight": "PASS",
+  "no_raw_dev_governance_evidence": "PASS",
+  "no_forbidden_local_absolute_paths": "PASS_WITH_REPO_TRUTH_PATHS_ALLOWED_ONLY_IN_REVIEW_EVIDENCE",
+  "no_codex_agents_scripts_projection_in_execution_payload": "PASS",
+  "no_goal_template_projection_in_execution_payload": "PASS",
+  "no_package_dist_mutation": "PASS",
+  "no_node_modules_venv_wheels_sdists_tarballs": "PASS",
+  "identity_legacy_string_scan": "PASS",
+  "overclaim_scan": "PASS_NEGATIVE_BOUNDARY_TERMS_ONLY",
+  "verdict": "PASS_LEAKAGE_SAFETY_REVIEW"
+}

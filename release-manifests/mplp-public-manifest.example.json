@@ -1,12 +1,12 @@
 {
   "manifest_id": "mplp-public-manifest-1.0.0-draft-650e5b2f",
   "manifest_version": "0.1.0",
-  "generated_at": "2026-05-29T19:34:59+08:00",
+  "generated_at": "2026-06-08T00:00:00Z",
   "protocol_name": "MPLP",
   "protocol_full_name": "Multi-Agent Lifecycle Protocol",
   "protocol_version": "1.0.0",
   "protocol_release_tag": null,
-  "protocol_commit_sha": "650e5b2f6754a7016d8c8184e54881b0fcef6683",
+  "protocol_commit_sha": "f35bed3d6f62c75a6e24d5a549b3d958d8525101",
   "copyright_holder": "Jearon Wong",
   "trademark_notice": "Trademark notice pending owner approval. Downstream surfaces must not imply certification, endorsement, regulator approval, or protocol authority beyond this manifest.",
   "license": "Apache-2.0",
@@ -19,108 +19,108 @@
     "invariant_bundle_version": "2.0.0",
     "schema_manifest_path": "schemas/v2/_manifests/",
     "schema_manifest_url": "https://github.com/Coregentis/MPLP-Protocol/tree/main/schemas/v2/_manifests",
-    "schema_manifest_commit_sha": "650e5b2f6754a7016d8c8184e54881b0fcef6683"
+    "schema_manifest_commit_sha": "f35bed3d6f62c75a6e24d5a549b3d958d8525101"
   },
   "sdk_packages": [
     {
       "name": "@mplp/compliance",
       "registry": "npm",
       "current_version": "1.0.5",
-      "next_clean_version": "1.0.6",
-      "package_replacement_status": "planned_not_published"
+      "next_clean_version": "1.0.5",
+      "package_replacement_status": "skipped"
     },
     {
       "name": "@mplp/conformance",
       "registry": "npm",
-      "current_version": "1.0.0",
+      "current_version": "1.0.1",
       "next_clean_version": "1.0.1",
-      "package_replacement_status": "planned_not_published"
+      "package_replacement_status": "published"
     },
     {
       "name": "@mplp/coordination",
       "registry": "npm",
-      "current_version": "1.0.6",
+      "current_version": "1.0.7",
       "next_clean_version": "1.0.7",
-      "package_replacement_status": "planned_not_published"
+      "package_replacement_status": "published"
     },
     {
       "name": "@mplp/core",
       "registry": "npm",
-      "current_version": "1.0.6",
+      "current_version": "1.0.7",
       "next_clean_version": "1.0.7",
-      "package_replacement_status": "planned_not_published"
+      "package_replacement_status": "published"
     },
     {
       "name": "@mplp/devtools",
       "registry": "npm",
-      "current_version": "1.0.5",
+      "current_version": "1.0.6",
       "next_clean_version": "1.0.6",
-      "package_replacement_status": "planned_not_published"
+      "package_replacement_status": "published"
     },
     {
       "name": "@mplp/integration-llm-http",
       "registry": "npm",
-      "current_version": "1.0.5",
+      "current_version": "1.0.6",
       "next_clean_version": "1.0.6",
-      "package_replacement_status": "planned_not_published"
+      "package_replacement_status": "published"
     },
     {
       "name": "@mplp/integration-storage-fs",
       "registry": "npm",
-      "current_version": "1.0.5",
+      "current_version": "1.0.6",
       "next_clean_version": "1.0.6",
-      "package_replacement_status": "planned_not_published"
+      "package_replacement_status": "published"
     },
     {
       "name": "@mplp/integration-storage-kv",
       "registry": "npm",
-      "current_version": "1.0.5",
+      "current_version": "1.0.6",
       "next_clean_version": "1.0.6",
-      "package_replacement_status": "planned_not_published"
+      "package_replacement_status": "published"
     },
     {
       "name": "@mplp/integration-tools-generic",
       "registry": "npm",
-      "current_version": "1.0.5",
+      "current_version": "1.0.6",
       "next_clean_version": "1.0.6",
-      "package_replacement_status": "planned_not_published"
+      "package_replacement_status": "published"
     },
     {
       "name": "@mplp/modules",
       "registry": "npm",
-      "current_version": "1.0.5",
+      "current_version": "1.0.6",
       "next_clean_version": "1.0.6",
-      "package_replacement_status": "planned_not_published"
+      "package_replacement_status": "published"
     },
     {
       "name": "@mplp/runtime-minimal",
       "registry": "npm",
-      "current_version": "1.0.5",
+      "current_version": "1.0.6",
       "next_clean_version": "1.0.6",
-      "package_replacement_status": "planned_not_published"
+      "package_replacement_status": "published"
     },
     {
       "name": "@mplp/schema",
       "registry": "npm",
-      "current_version": "1.0.6",
+      "current_version": "1.0.7",
       "next_clean_version": "1.0.7",
-      "package_replacement_status": "planned_not_published"
+      "package_replacement_status": "published"
     },
     {
       "name": "@mplp/sdk-ts",
       "registry": "npm",
-      "current_version": "1.0.7",
+      "current_version": "1.0.8",
       "next_clean_version": "1.0.8",
-      "package_replacement_status": "planned_not_published"
+      "package_replacement_status": "published"
     }
   ],
   "pypi_packages": [
     {
       "name": "mplp-sdk",
       "registry": "pypi",
-      "current_version": "1.0.5",
+      "current_version": "1.0.6",
       "next_clean_version": "1.0.6",
-      "package_replacement_status": "planned_not_published"
+      "package_replacement_status": "published"
     }
   ],
   "validation_lab_pointer": {
