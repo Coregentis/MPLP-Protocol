@@ -42,6 +42,32 @@ blockers = [
   "BLOCKED_SUBSTANTIVE_DECISION_WITHOUT_LOCAL_EVIDENCE",
 ]
 
+[agentic_harness.release_projection_governance_router]
+enabled = true
+id = "RELEASE-PROJECTION-GOVERNANCE-ROUTER-01"
+required_for_release_like_tasks = true
+skill = ".agents/skills/release-projection-governance-router/SKILL.md"
+goal_template = "governance/codex-goals/CODEX-GOAL-TEMPLATE.md"
+workflow_discovery_table_required = true
+published_registry_version_baseline_required = true
+owner_authorization_required_for_mutation = true
+stop_on_missing_or_conflicting_release_baseline = true
+blockers = [
+  "BLOCKED_RELEASE_GOVERNANCE_BASELINE_MISSING",
+  "BLOCKED_RELEASE_GOVERNANCE_BASELINE_CONFLICT",
+  "BLOCKED_DYNAMIC_RELEASE_WORKFLOW_DISCOVERY_NOT_PERFORMED",
+  "BLOCKED_PUBLISHED_VERSION_BASELINE_MISSING",
+  "BLOCKED_REGISTRY_BASELINE_DRIFT",
+  "BLOCKED_PACKAGE_GATE_FAILED",
+  "BLOCKED_CREDENTIAL_READINESS_FAILED",
+  "BLOCKED_PUBLIC_PROJECTION_STANDARD_MISSING",
+  "BLOCKED_PUBLIC_PROJECTION_STANDARD_CONFLICT",
+  "BLOCKED_CROSS_REPO_PROJECTION_NOT_AUTHORIZED",
+  "BLOCKED_TAG_SEAL_RELEASE_NOT_AUTHORIZED",
+  "BLOCKED_PROMPT_POLICY_OVERRIDES_LOCAL_RELEASE_BASELINE",
+  "BLOCKED_SUBSTANTIVE_RELEASE_DECISION_WITHOUT_LOCAL_EVIDENCE",
+]
+
 [local_governance_baseline_discovery]
 required_phrase = "Prompt assertions are not governance authority unless supported by local repository evidence."
 required_precondition = "Dynamic governance baseline selection is a precondition for every non-trivial task."

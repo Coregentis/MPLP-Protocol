@@ -161,6 +161,35 @@ changes, public projection mutation, tag, seal, merge, GitHub release,
 deployment, and credential access require explicit local evidence plus owner
 authorization.
 
+## Release / Projection Governance Router
+
+For any task that touches or could touch release-like surfaces, run
+`.agents/skills/release-projection-governance-router/SKILL.md` after
+repo-truth-first and `TASK-GOVERNANCE-ROUTER-01`, before substantive judgment,
+edits, gates, or irreversible action.
+
+Release-like surfaces include npm/PyPI publication, package version or manifest
+changes, publish-set or pypi-set changes, registry baselines, credential
+readiness, post-publish verification, release evidence closure, public OSS
+projection, website deploy or release notice, Validation Lab publication,
+downstream release pointer changes, cross-repo sync/projection, Git tag,
+release seal, GitHub release, and merge-to-release workflows.
+
+The release/projection router must complete a local evidence table for repo
+role, workflow type, local standard source files, required gates, reviewer
+lanes, external baselines, owner authorization, allowed mutations, forbidden
+actions, stop conditions, and evidence outputs. If the table cannot be
+completed from local evidence for a mutation-affecting decision, stop with the
+matching release/projection blocker.
+
+For version-bump planning, owner-approved version implementation, publish
+planning, or publish execution, the version baseline is the latest published
+npm or PyPI registry version for each exact package name. Current local
+`package.json`, `pyproject.toml`, generated dist, release-set files, pypi-set
+files, prior PRs, green gates, or historical artifacts are repo state or
+evidence only; they are not the authority baseline for deciding the next public
+package version.
+
 ## Hard Boundaries
 
 - Preserve protocol, runtime, product, validation, and publication boundaries.

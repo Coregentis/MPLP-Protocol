@@ -100,6 +100,25 @@ For each selected type, discover from local evidence:
 
 Do not hardcode package status, repo role, or authorization from the prompt.
 
+## Release-Like Workflow Delegation
+
+If a task is release-like, also run or internally satisfy
+`RELEASE-PROJECTION-GOVERNANCE-ROUTER-01` using
+`.agents/skills/release-projection-governance-router/SKILL.md` before
+substantive judgment, edits, gates, release action, publish/upload, projection,
+deploy, merge, tag, or seal.
+
+Release-like surfaces include package publish/upload, version or manifest
+changes, publish-set or pypi-set changes, registry baselines, credential
+readiness, post-publish verification, release evidence closure, public OSS
+projection, website deploy or release notice, Validation Lab publication,
+downstream release pointer changes, cross-repo sync/projection, GitHub release,
+Git tag, release seal, and merge-to-release workflows.
+
+The release/projection router must complete the local workflow discovery table.
+If it cannot be completed from local evidence for a mutation-affecting decision,
+stop with the matching release/projection blocker.
+
 ## SOT Layer Classifier
 
 Classify touched surfaces:

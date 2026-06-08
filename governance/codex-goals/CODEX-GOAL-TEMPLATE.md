@@ -150,6 +150,52 @@ discovery only when release/version-related, copyright baseline discovery only
 when legal/copyright-related, and cross-repo boundary discovery when more than
 one repo is involved.
 
+## Release / Projection Workflow Discovery
+
+This section is mandatory when the task touches or could touch release-like
+surfaces. Run or internally satisfy
+`RELEASE-PROJECTION-GOVERNANCE-ROUTER-01` using
+`.agents/skills/release-projection-governance-router/SKILL.md` after
+repo-truth-first and `TASK-GOVERNANCE-ROUTER-01`, before substantive judgment,
+edits, gates, release actions, publish/upload actions, projection, deploy,
+merge, tag, or seal.
+
+Declare:
+
+```yaml
+release_projection_governance_router:
+  router_id: RELEASE-PROJECTION-GOVERNANCE-ROUTER-01
+  router_skill: .agents/skills/release-projection-governance-router/SKILL.md
+  router_run_before_release_like_work:
+  release_like_task:
+  repo_role:
+  workflow_type:
+  local_standard_source_files:
+  required_gates:
+  required_agents_or_review_perspectives:
+  external_baseline_checks:
+  required_owner_authorization:
+  allowed_mutations:
+  forbidden_actions:
+  stop_conditions:
+  evidence_outputs:
+  discovery_verdict:
+```
+
+If release-like workflow discovery is skipped or cannot be completed from local
+evidence for a mutation-affecting decision, stop with the matching blocker:
+
+- `BLOCKED_DYNAMIC_RELEASE_WORKFLOW_DISCOVERY_NOT_PERFORMED`
+- `BLOCKED_RELEASE_GOVERNANCE_BASELINE_MISSING`
+- `BLOCKED_RELEASE_GOVERNANCE_BASELINE_CONFLICT`
+- `BLOCKED_PUBLISHED_VERSION_BASELINE_MISSING`
+- `BLOCKED_REGISTRY_BASELINE_DRIFT`
+- `BLOCKED_PUBLIC_PROJECTION_STANDARD_MISSING`
+- `BLOCKED_PUBLIC_PROJECTION_STANDARD_CONFLICT`
+- `BLOCKED_CROSS_REPO_PROJECTION_NOT_AUTHORIZED`
+- `BLOCKED_TAG_SEAL_RELEASE_NOT_AUTHORIZED`
+- `BLOCKED_SUBSTANTIVE_RELEASE_DECISION_WITHOUT_LOCAL_EVIDENCE`
+
 ## Branch
 
 Create or use a task branch from current `main` unless the owner instructs otherwise. Report whether the branch continues an existing Codex ops branch or is a follow-up branch.
@@ -165,6 +211,7 @@ List any required `.agents/skills/*/SKILL.md` workflows. `.agents/skills` is the
 Default required skill for non-trivial goals:
 
 - `agentic-harness-goal-preflight`
+- `release-projection-governance-router` when release-like surfaces are in scope
 
 ## Required Subagents Or Custom Agents
 
