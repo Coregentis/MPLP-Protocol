@@ -1,6 +1,6 @@
 {
   "goal_id": "PUBLIC-OSS-PROJECTION-PLAN-01",
-  "status": "final_gates_passed_pending_commit_push",
+  "status": "post_push_verified_with_followup_evidence_update",
   "final_verdict": "COMPLETE_PUBLIC_OSS_PROJECTION_PLAN_READY_FOR_OWNER_EXECUTION_AUTHORIZATION",
   "planning_decisions": {
     "release_config": "plan-specific allowlist/denylist; no config mutation now",
@@ -33,6 +33,15 @@
     "governance/04-records/PUBLIC-OSS-PROJECTION-PLAN-01.md",
     "artifacts/governance/PUBLIC-OSS-PROJECTION-PLAN-01/*.json"
   ],
+  "commit_push_verification": {
+    "planning_commit": "b2df7ce2b1cf789a918d74cac6d2489226f70d8f",
+    "planning_commit_message": "governance: plan public OSS projection",
+    "remote_branch": "origin/codex/public-oss-projection-plan-01",
+    "post_push_local_head_observed_before_followup_evidence_update": "b2df7ce2b1cf789a918d74cac6d2489226f70d8f",
+    "post_push_remote_head_observed_before_followup_evidence_update": "b2df7ce2b1cf789a918d74cac6d2489226f70d8f",
+    "pr_create_url": "https://github.com/Coregentis/MPLP-Protocol/pull/new/codex/public-oss-projection-plan-01",
+    "note": "This follow-up evidence update records the first post-push verification. Final local/remote HEAD equality must be rechecked after this evidence-only commit is pushed."
+  },
   "forbidden_action_compliance": {
     "projection_execution": "NOT_PERFORMED",
     "dev_to_public_copy_or_sync": "NOT_PERFORMED",
