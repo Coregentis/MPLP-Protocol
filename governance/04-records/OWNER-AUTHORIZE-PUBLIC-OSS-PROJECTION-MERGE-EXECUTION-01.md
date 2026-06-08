@@ -240,14 +240,31 @@ package/source/schema/docs mutation was performed.
 
 ## Commit / Push
 
-This record is committed after local merge gates pass, then public `main` is
-pushed to `origin` if `origin/main` has not drifted. If the push is rejected,
-the required outcome is `BLOCKED_MAIN_PUSH_REJECTED`; no force push is
-authorized.
+The local merge and evidence commits were created after local gates passed.
+Before push, public `origin/main` still matched the expected pre-merge SHA:
+
+- `574d13d20b829c0c8768bc7916186f01dcf5ff46`
+
+The ordinary `git push origin main` attempt was rejected by GitHub protected
+branch policy:
+
+- protected branch update failed for `refs/heads/main`
+- changes must be made through a pull request
+- required status check `Build Docusaurus` is expected
+
+No force push, bypass, retry, branch deletion, branch cleanup, tag, seal,
+GitHub release, registry mutation, Website/Lab sync, or downstream mutation was
+performed after the rejection.
 
 ## Remaining Blockers
 
-None at local merge execution record creation time.
+Remote `main` push is blocked by protected branch policy. Public `origin/main`
+therefore remains:
+
+- `574d13d20b829c0c8768bc7916186f01dcf5ff46`
+
+Local `main` contains the authorized merge and local evidence commits, but the
+merge is not on remote `origin/main`.
 
 ## Recommended Next Goal
 
@@ -255,4 +272,4 @@ None at local merge execution record creation time.
 
 ## Final Verdict
 
-`COMPLETE_PUBLIC_OSS_PROJECTION_MERGED_TO_MAIN`
+`BLOCKED_MAIN_PUSH_REJECTED`

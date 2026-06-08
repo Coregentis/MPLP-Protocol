@@ -1,0 +1,22 @@
+{
+  "goal_id": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-MERGE-EXECUTION-01",
+  "push_attempted": true,
+  "push_target": "origin main",
+  "origin_main_before_push": "574d13d20b829c0c8768bc7916186f01dcf5ff46",
+  "local_main_head_attempted": "100d3c33bcb73cf23cc077e11b4bd0ef4d4a2457",
+  "push_result": "REJECTED_BY_PROTECTED_BRANCH_POLICY",
+  "remote_error_summary": [
+    "GH006 Protected branch update failed for refs/heads/main",
+    "Changes must be made through a pull request",
+    "Required status check Build Docusaurus is expected"
+  ],
+  "origin_main_after_rejection": "574d13d20b829c0c8768bc7916186f01dcf5ff46",
+  "remote_source_branch_after_rejection": "0741c5915ebc330013fbb4f85cbcb6878fc38d35",
+  "force_push_attempted": false,
+  "push_retry_attempted": false,
+  "protected_branch_bypass_attempted": false,
+  "branch_cleanup_attempted": false,
+  "tag_or_release_attempted": false,
+  "registry_mutation_attempted": false,
+  "required_stop_verdict": "BLOCKED_MAIN_PUSH_REJECTED"
+}

@@ -28,7 +28,20 @@
     "remote_source_branch_present": "PASS",
     "origin_main_drift_check": "PASS_NO_DRIFT"
   },
-  "remote_push_verification": "performed_after_evidence_commit_push_and_reported_in_final_execution_report",
+  "remote_push_verification": {
+    "attempted": true,
+    "push_command_class": "git push origin main",
+    "result": "REJECTED_BY_PROTECTED_BRANCH_POLICY",
+    "remote_error_summary": [
+      "GH006 Protected branch update failed for refs/heads/main",
+      "Changes must be made through a pull request",
+      "Required status check Build Docusaurus is expected"
+    ],
+    "force_push_attempted": false,
+    "retry_attempted": false,
+    "origin_main_after_rejection": "574d13d20b829c0c8768bc7916186f01dcf5ff46",
+    "remote_main_contains_local_merge": false
+  },
   "self_referential_commit_sha_note": "the evidence commit cannot record its own final SHA without changing that SHA",
-  "verdict": "PASS_POST_MERGE_LOCAL_VERIFICATION_READY_FOR_GATES_AND_PUSH"
+  "verdict": "PARTIAL_POST_MERGE_LOCAL_VERIFICATION_BLOCKED_BY_MAIN_PUSH_REJECTION"
 }

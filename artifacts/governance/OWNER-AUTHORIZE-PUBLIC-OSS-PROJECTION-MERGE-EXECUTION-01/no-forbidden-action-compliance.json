@@ -19,6 +19,13 @@
     "out_of_scope_package_source_schema_docs_mutation": "NOT_PERFORMED",
     "credential_value_access_or_output": "NOT_PERFORMED"
   },
+  "after_push_rejection": {
+    "force_push": "NOT_PERFORMED",
+    "push_retry": "NOT_PERFORMED",
+    "protected_branch_bypass": "NOT_PERFORMED",
+    "pull_request_created": "NOT_PERFORMED",
+    "branch_created_for_bypass": "NOT_PERFORMED"
+  },
   "tags_observed_after_local_merge_before_push": [
     "protocol-v1.0.0",
     "v1.0.0"
