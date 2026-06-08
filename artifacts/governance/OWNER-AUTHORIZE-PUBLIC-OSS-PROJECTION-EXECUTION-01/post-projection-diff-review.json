@@ -1,0 +1,20 @@
+{
+  "changed_files": [
+    "artifacts/release/publish-set.json",
+    "artifacts/release/pypi-set.json",
+    "packages/npm/conformance/README.md",
+    "packages/npm/conformance/package-lock.json",
+    "packages/npm/conformance/package.json",
+    "packages/npm/conformance/src/index.ts",
+    "packages/npm/devtools/README.md",
+    "packages/npm/devtools/package.json",
+    "release-manifests/mplp-public-manifest.example.json"
+  ],
+  "allowed_changed_files": true,
+  "release_config_changed": false,
+  "dist_changed": false,
+  "docs_changed": false,
+  "schemas_changed": false,
+  "downstream_changed": false,
+  "verdict": "PASS_POST_PROJECTION_DIFF_REVIEW"
+}

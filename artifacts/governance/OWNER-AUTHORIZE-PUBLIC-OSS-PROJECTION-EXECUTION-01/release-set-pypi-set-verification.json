@@ -1,0 +1,34 @@
+{
+  "publish_set_count": 11,
+  "publish_set": [
+    "@mplp/schema@1.0.7",
+    "@mplp/conformance@1.0.1",
+    "@mplp/coordination@1.0.7",
+    "@mplp/core@1.0.7",
+    "@mplp/integration-llm-http@1.0.6",
+    "@mplp/integration-storage-fs@1.0.6",
+    "@mplp/integration-storage-kv@1.0.6",
+    "@mplp/integration-tools-generic@1.0.6",
+    "@mplp/modules@1.0.6",
+    "@mplp/runtime-minimal@1.0.6",
+    "@mplp/sdk-ts@1.0.8"
+  ],
+  "excluded_from_publish_set": [
+    "@mplp/compliance",
+    "@mplp/devtools",
+    "@mplp/validator"
+  ],
+  "pypi_set": [
+    "mplp-sdk@1.0.6"
+  ],
+  "pypi_paths_public_safe": true,
+  "legacy_gate_publish_set_not_committed_reason": "scripts/semantic/gate-publish-set.mjs scans all public packages and is not aligned with owner-authorized 11-package projection release-set; running it was treated as non-applicable and output not retained",
+  "live_registry_fact_check": {
+    "npm": "PASS_TARGET_VERSIONS_VISIBLE_FOR_11_RELEASE_SET_PACKAGES_AND_DEVTOOLS_OPTIONAL_TOOLING",
+    "pypi": "PASS_MPLP_SDK_1_0_6_VISIBLE_AND_LATEST_WITH_WHEEL_AND_SDIST",
+    "excluded_package_boundary": "PASS_COMPLIANCE_REMAINS_1_0_5_AND_VALIDATOR_NOT_PUBLICLY_PUBLISHED",
+    "registry_mutation_performed": false,
+    "raw_registry_stdout_stderr_committed": false
+  },
+  "verdict": "PASS_RELEASE_SET_PYPI_SET_PUBLIC_SAFE"
+}

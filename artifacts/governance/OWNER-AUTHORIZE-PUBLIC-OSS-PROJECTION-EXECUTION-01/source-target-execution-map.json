@@ -1,0 +1,54 @@
+{
+  "source": {
+    "dev_origin_main": "00f57406005fe0a23f27c2e3e82a8c27e99dba6d",
+    "read_method": "git show origin/main:path plus public registry checks"
+  },
+  "target_branch": "codex/owner-authorize-public-oss-projection-execution-01",
+  "mappings": [
+    {
+      "target": "artifacts/release/publish-set.json",
+      "source": "Dev release-set plus live npm registry facts",
+      "handling": "public-safe 11-package release-set; compliance/devtools/validator excluded from main release-set"
+    },
+    {
+      "target": "artifacts/release/pypi-set.json",
+      "source": "Dev pypi-set plus live PyPI registry facts",
+      "handling": "public-safe relative path; no V1 or local absolute path"
+    },
+    {
+      "target": "release-manifests/mplp-public-manifest.example.json",
+      "source": "public manifest plus registry/Dev facts",
+      "handling": "package entries updated; top-level draft boundary preserved by local gate"
+    },
+    {
+      "target": "packages/npm/conformance/package.json",
+      "source": "Dev origin/main same path",
+      "handling": "exact projection"
+    },
+    {
+      "target": "packages/npm/conformance/README.md",
+      "source": "Dev origin/main same path plus public overclaim gate wording adjustment",
+      "handling": "public-safe minimal wording change"
+    },
+    {
+      "target": "packages/npm/conformance/src/index.ts",
+      "source": "Dev origin/main same path",
+      "handling": "exact projection"
+    },
+    {
+      "target": "packages/npm/conformance/package-lock.json",
+      "source": "Dev origin/main same path",
+      "handling": "gate-driven package consistency inclusion for allowed conformance package surface"
+    },
+    {
+      "target": "packages/npm/devtools/package.json",
+      "source": "Dev origin/main same path",
+      "handling": "exact projection"
+    },
+    {
+      "target": "packages/npm/devtools/README.md",
+      "source": "Dev origin/main same path",
+      "handling": "exact projection"
+    }
+  ]
+}

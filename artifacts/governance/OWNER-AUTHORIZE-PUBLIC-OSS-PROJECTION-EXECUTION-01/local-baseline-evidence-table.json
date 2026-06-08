@@ -1,0 +1,49 @@
+{
+  "rows": [
+    {
+      "decision_area": "repo authority",
+      "local_evidence_file": "AGENTS.md; PUBLIC-OSS-PROJECTION-PLAN-01.md",
+      "evidence_signal": "public repo is clean OSS projection and Dev is read-only source",
+      "derived_rule": "mutate public execution branch only",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "apply"
+    },
+    {
+      "decision_area": "source commit",
+      "local_evidence_file": "source-target-plan.json; repo-truth-before.json",
+      "evidence_signal": "Dev origin/main 00f57406005fe0a23f27c2e3e82a8c27e99dba6d",
+      "derived_rule": "use Dev origin/main exact source snapshot",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "apply"
+    },
+    {
+      "decision_area": "allowlist",
+      "local_evidence_file": "projection-allowlist.json",
+      "evidence_signal": "release sets, manifest, conformance/devtools package surfaces, public summary/evidence allowed",
+      "derived_rule": "project only changed allowlisted files",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "apply"
+    },
+    {
+      "decision_area": "denylist",
+      "local_evidence_file": "projection-denylist.json",
+      "evidence_signal": "raw Dev evidence, dist, credentials, harness, downstream repos denied",
+      "derived_rule": "scan and exclude",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "apply"
+    },
+    {
+      "decision_area": "legacy publish gate",
+      "local_evidence_file": "scripts/semantic/gate-publish-set.mjs; PUBLIC-OSS-PROJECTION-PLAN-01.md",
+      "evidence_signal": "legacy gate rewrites all public packages and conflicts with 11-package owner release-set",
+      "derived_rule": "do not commit legacy gate output; use custom release-set projection check",
+      "confidence": "MEDIUM_LOCAL_BASELINE_DERIVED",
+      "conflict": false,
+      "action": "record_not_applicable"
+    }
+  ]
+}

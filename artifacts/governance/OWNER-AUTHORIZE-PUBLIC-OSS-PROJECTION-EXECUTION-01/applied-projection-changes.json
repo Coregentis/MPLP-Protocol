@@ -1,0 +1,21 @@
+{
+  "changed_files": [
+    "artifacts/release/publish-set.json",
+    "artifacts/release/pypi-set.json",
+    "packages/npm/conformance/README.md",
+    "packages/npm/conformance/package-lock.json",
+    "packages/npm/conformance/package.json",
+    "packages/npm/conformance/src/index.ts",
+    "packages/npm/devtools/README.md",
+    "packages/npm/devtools/package.json",
+    "release-manifests/mplp-public-manifest.example.json"
+  ],
+  "allowed_changed_files": true,
+  "summary": {
+    "publish_set": "updated to 11 npm release-set packages and versions",
+    "pypi_set": "updated mplp-sdk to 1.0.6 with repo-relative path",
+    "public_manifest": "updated package entries to registry-published facts while preserving top-level draft/no-release-completion boundary",
+    "conformance": "projected forward conformance surface and removed active compliance dependency/import",
+    "devtools": "projected optional tooling dependency/readme status to conformance surface"
+  }
+}

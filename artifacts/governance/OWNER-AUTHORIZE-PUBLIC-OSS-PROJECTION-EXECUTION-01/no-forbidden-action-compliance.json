@@ -1,0 +1,23 @@
+{
+  "merge_to_public_main": false,
+  "tag": false,
+  "seal": false,
+  "github_release": false,
+  "npm_publish": false,
+  "pypi_upload": false,
+  "twine_upload": false,
+  "registry_mutation": false,
+  "dist_tag_mutation": false,
+  "deprecate": false,
+  "dev_repo_mutation": false,
+  "website_repo_mutation": false,
+  "validation_lab_repo_mutation": false,
+  "cognitive_os_mutation": false,
+  "solocrew_mutation": false,
+  "v1_mutation": false,
+  "deploy": false,
+  "branch_deletion": false,
+  "credential_or_token_access": false,
+  "wholesale_dev_sync": false,
+  "verdict": "PASS_FORBIDDEN_ACTION_COMPLIANCE"
+}

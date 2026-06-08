@@ -1,0 +1,8 @@
+{
+  "raw_dev_artifacts_governance_copied": false,
+  "raw_dev_package_preflight_copied": false,
+  "raw_npm_pypi_stdout_stderr_copied": false,
+  "internal_harness_files_copied": false,
+  "dev_files_used_only_as_source_for_allowlisted_public_surfaces": true,
+  "verdict": "PASS_NO_RAW_DEV_EVIDENCE_LEAKAGE"
+}

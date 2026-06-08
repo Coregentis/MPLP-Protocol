@@ -1,0 +1,40 @@
+{
+  "router_id": "TASK-GOVERNANCE-ROUTER-01",
+  "executed": true,
+  "task_type": [
+    "owner_authorized_public_oss_projection_execution",
+    "public_projection_execution_branch_only",
+    "post_dev_release_public_projection",
+    "no_merge_no_tag_no_seal"
+  ],
+  "sot_layer": [
+    "L1 Projection Source execution",
+    "L3 Verification Evidence",
+    "L4 Publication Surface",
+    "L6 Codex Execution Governance"
+  ],
+  "selected_public_baseline": [
+    "AGENTS.md",
+    ".agents/skills/task-governance-router/SKILL.md",
+    "governance/release/MPLP-RELEASE-SOP.md",
+    "governance/04-records/PUBLIC-OSS-PROJECTION-PLAN-01.md"
+  ],
+  "selected_dev_authority_source_baseline": [
+    "Dev origin/main 00f57406005fe0a23f27c2e3e82a8c27e99dba6d",
+    "Dev release evidence closure record",
+    "Dev published-package matrix",
+    "Dev package surfaces read via git show origin/main:path"
+  ],
+  "forbidden_actions": [
+    "merge",
+    "tag",
+    "seal",
+    "GitHub release",
+    "npm publish",
+    "PyPI upload",
+    "registry mutation",
+    "downstream repo mutation",
+    "raw Dev evidence copy",
+    "wholesale sync"
+  ]
+}

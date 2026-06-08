@@ -1,0 +1,19 @@
+{
+  "goal_id": "OWNER-AUTHORIZE-PUBLIC-OSS-PROJECTION-EXECUTION-01",
+  "authorized_write_target": "Coregentis/MPLP-Protocol",
+  "read_only_authority_source": "Coregentis/MPLP-Protocol-Dev",
+  "execution_branch": "codex/owner-authorize-public-oss-projection-execution-01",
+  "commit_message": "projection: apply owner-authorized public OSS projection",
+  "authorization_bound_to_plan": "PUBLIC-OSS-PROJECTION-PLAN-01",
+  "forbidden_actions": [
+    "merge",
+    "tag",
+    "seal",
+    "GitHub release",
+    "npm publish",
+    "PyPI upload",
+    "registry mutation",
+    "downstream mutation",
+    "wholesale Dev sync"
+  ]
+}

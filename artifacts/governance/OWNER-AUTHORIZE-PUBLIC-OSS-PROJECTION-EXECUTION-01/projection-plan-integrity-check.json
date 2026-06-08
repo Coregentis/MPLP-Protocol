@@ -1,0 +1,8 @@
+{
+  "plan_record_present": true,
+  "required_plan_evidence_present": true,
+  "dev_origin_main_matches_plan": true,
+  "public_plan_head_used_as_start": true,
+  "allowlist_denylist_redaction_gate_stop_decisions_present": true,
+  "verdict": "PASS_PROJECTION_PLAN_INTEGRITY"
+}

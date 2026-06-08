@@ -1,0 +1,13 @@
+{
+  "website_repo_mutated": false,
+  "validation_lab_repo_mutated": false,
+  "cognitive_os_mutated": false,
+  "solocrew_mutated": false,
+  "v1_mutated": false,
+  "manifest_changed": true,
+  "followup_goals_if_manifest_changes": [
+    "WEBSITE-PROTOCOL-MANIFEST-POINTER-SYNC-01",
+    "VALIDATION-LAB-PROTOCOL-MANIFEST-POINTER-SYNC-01"
+  ],
+  "selected_plan_option": "Option B"
+}
