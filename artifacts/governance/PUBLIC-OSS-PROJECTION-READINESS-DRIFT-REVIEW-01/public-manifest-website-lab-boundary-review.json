@@ -1,0 +1,33 @@
+{
+  "protocol_public_manifest": {
+    "schema_exists": true,
+    "example_exists": true,
+    "validation_command": "node scripts/semantic/validate-public-manifest.mjs",
+    "validation_result": "PASS",
+    "current_state": "draft planned_not_published package status stale against registry"
+  },
+  "website": {
+    "repo": "/Users/jasonwang/Documents/AI_Dev/Coregentis/MPLP-Official-Website",
+    "vendored_manifest_path": "/Users/jasonwang/Documents/AI_Dev/Coregentis/MPLP-Official-Website/lib/data/mplp-public-manifest.json",
+    "manifest_id": "mplp-public-manifest-1.0.0-draft-650e5b2f",
+    "protocol_commit_sha": "650e5b2f6754a7016d8c8184e54881b0fcef6683",
+    "package_statuses": [
+      "planned_not_published"
+    ],
+    "checksum_path": "/Users/jasonwang/Documents/AI_Dev/Coregentis/MPLP-Official-Website/lib/data/mplp-public-manifest.sha256",
+    "sync_needed_decision": "owner_decision_required_for_release_window; current vendored manifest is stale if public manifest is updated"
+  },
+  "validation_lab": {
+    "repo": "/Users/jasonwang/Documents/AI_Dev/Coregentis/MPLP-Validation-Lab",
+    "vendored_manifest_path": "/Users/jasonwang/Documents/AI_Dev/Coregentis/MPLP-Validation-Lab/lib/data/mplp-public-manifest.json",
+    "manifest_id": "mplp-public-manifest-1.0.0-draft-650e5b2f",
+    "protocol_commit_sha": "650e5b2f6754a7016d8c8184e54881b0fcef6683",
+    "package_statuses": [
+      "planned_not_published"
+    ],
+    "checksum_path": "/Users/jasonwang/Documents/AI_Dev/Coregentis/MPLP-Validation-Lab/lib/data/mplp-public-manifest.sha256",
+    "sync_needed_decision": "owner_decision_required_for_release_window; current vendored manifest is stale if public manifest is updated"
+  },
+  "in_scope_now": false,
+  "later_goal_needed": "owner_decision_required_for Website/Lab pointer sync if projection window includes manifest update"
+}

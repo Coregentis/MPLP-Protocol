@@ -1,0 +1,19 @@
+{
+  "forbidden_actions": {
+    "public_projection_execution": "not_performed",
+    "dev_to_public_sync_or_copy": "not_performed",
+    "dev_repo_mutation": "not_performed",
+    "package_source_dist_schema_docs_release_manifest_mutation": "not_performed",
+    "release_set_or_pypi_set_mutation": "not_performed",
+    "release_config_mutation": "not_performed",
+    "publish_upload_registry_mutation": "not_performed",
+    "tag_seal_github_release_merge": "not_performed",
+    "website_lab_downstream_mutation": "not_performed",
+    "credential_or_token_access": "not_performed",
+    "v1_mutation": "not_performed"
+  },
+  "changed_files_expected": [
+    "governance/04-records/PUBLIC-OSS-PROJECTION-READINESS-DRIFT-REVIEW-01.md",
+    "artifacts/governance/PUBLIC-OSS-PROJECTION-READINESS-DRIFT-REVIEW-01/*.json"
+  ]
+}

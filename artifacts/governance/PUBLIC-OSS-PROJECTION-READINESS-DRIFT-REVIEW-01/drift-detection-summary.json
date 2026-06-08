@@ -1,0 +1,684 @@
+{
+  "comparison_basis": {
+    "public_head": "20ecad2ee28116d92310111dbc64de3593b50ce3",
+    "dev_origin_main": "00f57406005fe0a23f27c2e3e82a8c27e99dba6d",
+    "dev_local_governance_branch": "93bcc881cc45e13d12dcc4d0ba26b8f11d996b23",
+    "registry_snapshot_used": true
+  },
+  "file_surface_summary": [
+    {
+      "surface": "release-config.yaml",
+      "public_count": 1,
+      "dev_count": 1,
+      "common_count": 1,
+      "modified_count": 0,
+      "public_only_count": 0,
+      "dev_only_count": 0,
+      "modified_sample": [],
+      "public_only_sample": [],
+      "dev_only_sample": []
+    },
+    {
+      "surface": "release-manifests",
+      "public_count": 2,
+      "dev_count": 0,
+      "common_count": 0,
+      "modified_count": 0,
+      "public_only_count": 2,
+      "dev_only_count": 0,
+      "modified_sample": [],
+      "public_only_sample": [
+        "release-manifests/mplp-public-manifest.example.json",
+        "release-manifests/mplp-public-manifest.schema.json"
+      ],
+      "dev_only_sample": []
+    },
+    {
+      "surface": "artifacts/release",
+      "public_count": 4,
+      "dev_count": 4,
+      "common_count": 4,
+      "modified_count": 4,
+      "public_only_count": 0,
+      "dev_only_count": 0,
+      "modified_sample": [
+        "artifacts/release/publish-gate-report.json",
+        "artifacts/release/publish-set.json",
+        "artifacts/release/pypi-gate-report.json",
+        "artifacts/release/pypi-set.json"
+      ],
+      "public_only_sample": [],
+      "dev_only_sample": []
+    },
+    {
+      "surface": "governance/release",
+      "public_count": 1,
+      "dev_count": 29,
+      "common_count": 0,
+      "modified_count": 0,
+      "public_only_count": 1,
+      "dev_only_count": 29,
+      "modified_sample": [],
+      "public_only_sample": [
+        "governance/release/MPLP-RELEASE-SOP.md"
+      ],
+      "dev_only_sample": [
+        "governance/release/MPLP-CROSS-REPO-SOT-AUTHORITY-BASELINE-ALIGNMENT-WAVE-01.md",
+        "governance/release/MPLP-DERIVATION-PROOF-METADATA-CORRECTION-POST-ASSESSMENT-GOAL-01.md",
+        "governance/release/MPLP-DEV-MAIN-PACKAGE-RELEASE-STATE-ASSESSMENT-WAVE-01.md",
+        "governance/release/MPLP-DEV-PUBLIC-REPO-AUTHORITY-DOCTRINE-2026-06-02.md",
+        "governance/release/MPLP-DOCUMENTATION-INVENTORY-AND-RETENTION-PLAN-WAVE-01.md",
+        "governance/release/MPLP-DOCUMENTATION-RETENTION-OWNER-DECISION-WAVE-01.md",
+        "governance/release/MPLP-DOCUMENTATION-ROLLUP-AND-AUTHORITY-INDEX-WAVE-01.md",
+        "governance/release/MPLP-PACKAGE-ADDRESS-README-AND-USER-INSTALL-SMOKE-AUDIT-GOAL-01.md",
+        "governance/release/MPLP-PACKAGE-CONFORMANCE-COPYRIGHT-REMEDIATION-OWNER-DECISION-WAVE-01.md",
+        "governance/release/MPLP-PACKAGE-CONFORMANCE-FORWARD-SURFACE-REMEDIATION-IMPLEMENTATION-WAVE-01.md",
+        "governance/release/MPLP-PACKAGE-CONFORMANCE-FORWARD-SURFACE-REMEDIATION-PLANNING-WAVE-01.md",
+        "governance/release/MPLP-PACKAGE-CONSISTENCY-GATE-AND-CORE-SMOKE-BLOCKER-REMEDIATION-GOAL-01.md",
+        "governance/release/MPLP-PACKAGE-COPYRIGHT-RESIDUE-AUDIT-WAVE-01.md",
+        "governance/release/MPLP-PACKAGE-DERIVATION-PROOF-CORRECTION-OWNER-DECISION-GOAL-01.md",
+        "governance/release/MPLP-PACKAGE-DERIVATION-PROOF-STALENESS-AUDIT-GOAL-01.md",
+        "governance/release/MPLP-PACKAGE-OWNER-APPROVAL-AND-PUBLISH-EXECUTION-PLAN-WAVE-01.md",
+        "governance/release/MPLP-PACKAGE-OWNER-APPROVED-VERSION-BUMP-IMPLEMENTATION-WAVE-01.md",
+        "governance/release/MPLP-PACKAGE-OWNER-APPROVED-VERSION-BUMP-PLANNING-WAVE-01.md",
+        "governance/release/MPLP-PACKAGE-OWNER-STATEMENT-REPLACEMENT-AUDIT-WAVE-01.md",
+        "governance/release/MPLP-PACKAGE-PUBLIC-REGISTRY-EXTERNAL-VALIDATION-AUDIT-WAVE-01.md",
+        "governance/release/MPLP-PACKAGE-PUBLISH-BLOCKER-REMEDIATION-GOAL-01.md",
+        "governance/release/MPLP-PACKAGE-PUBLISH-EXECUTION-AUTHORIZATION-PREPARATION-GOAL-01.md",
+        "governance/release/MPLP-PACKAGE-PUBLISH-EXECUTION-OWNER-DECISION-GOAL-01.md",
+        "governance/release/MPLP-PACKAGE-PUBLISH-PLAN-REGENERATION-GOAL-01.md",
+        "governance/release/MPLP-PACKAGE-REGISTRY-VERSION-CONFLICT-OWNER-DECISION-WAVE-01.md"
+      ]
+    },
+    {
+      "surface": "governance/04-records",
+      "public_count": 30,
+      "dev_count": 74,
+      "common_count": 27,
+      "modified_count": 6,
+      "public_only_count": 3,
+      "dev_only_count": 47,
+      "modified_sample": [
+        "governance/04-records/DEPRECATED-CONTENT-SEPARATION-2026-04-02.md",
+        "governance/04-records/MPGC-DESIGNATE-LAB-AUTHORITY-HOME.md",
+        "governance/04-records/MPGC-RATIFY-ENTRY-MODEL-REALIGNMENT.md",
+        "governance/04-records/TASK-GOVERNANCE-ROUTER-01.md",
+        "governance/04-records/UNIFIED-RECTIFICATION-MAINLINE-CLOSURE.md",
+        "governance/04-records/VALIDATION_LAB_V2-TAIL-DISPOSITION-2026-04-01.md"
+      ],
+      "public_only_sample": [
+        "governance/04-records/CONST-007-CROSS-SURFACE-CLOSURE-RECORD-2026-04-08.md",
+        "governance/04-records/COREGENTIS-TWO-LAYER-GOVERNANCE-BASELINE-01.md",
+        "governance/04-records/PUBLIC-OSS-RELEASE-SOP-AUTHORITY-RECONCILIATION-01.md"
+      ],
+      "dev_only_sample": [
+        "governance/04-records/AGENTIC-HARNESS-TWO-LAYER-GOVERNANCE-BASELINE-01.md",
+        "governance/04-records/CODEX-REGISTRY-CREDENTIAL-DELEGATION-DECISION-01.md",
+        "governance/04-records/COPYRIGHT-OWNER-SURFACE-CLOSURE-02.md",
+        "governance/04-records/COREGENTIS-ALL-REPOS-TWO-LAYER-GOVERNANCE-CLOSURE-01.md",
+        "governance/04-records/COREGENTIS-WORKSPACE-AUTHORITY-BASELINE-01.md",
+        "governance/04-records/COREGENTIS-WORKSPACE-CANONICALIZATION-WAVE-01.md",
+        "governance/04-records/CORRECTED-PACKAGE-HARNESS-PATCH-01.md",
+        "governance/04-records/CREDENTIAL-READINESS-CHECK-01.md",
+        "governance/04-records/DEV-RELEASE-CONSOLIDATION-AND-PROJECTION-CANDIDATE-PLANNING-01.md",
+        "governance/04-records/DEV-RELEASE-CONSOLIDATION-PR-01.md",
+        "governance/04-records/DEV-RELEASE-CONSOLIDATION-PR-REVIEW-01.md",
+        "governance/04-records/DEV-RELEASE-CONSOLIDATION-PROTECTED-MERGE-DECISION-01.md",
+        "governance/04-records/DEV-RELEASE-CONSOLIDATION-REVIEW-BLOCKER-RESOLUTION-01.md",
+        "governance/04-records/DEVTOOLS-PUBLIC-PACKAGE-STATUS-DECISION-01.md",
+        "governance/04-records/DIST_AS_TRACKED_SOURCE_EXCEPTION-DECISION-01.md",
+        "governance/04-records/DYNAMIC-GOVERNANCE-BASELINE-SELECTION-AND-PUBLISHED-VERSION-BASELINE-01.md",
+        "governance/04-records/LOCAL-GOVERNANCE-BASELINE-DISCOVERY-MECHANISM-01.md",
+        "governance/04-records/LOCAL-GOVERNANCE-BASELINE-DISCOVERY-PROPAGATION-02.md",
+        "governance/04-records/NPM-AUTHENTICATION-READINESS-RECHECK-01.md",
+        "governance/04-records/NPM-PYPI-PREFLIGHT-RERUN-01.md",
+        "governance/04-records/OWNER-AUTHORIZE-DEV-RELEASE-CONSOLIDATION-MERGE-EXECUTION-01.md",
+        "governance/04-records/OWNER-AUTHORIZE-DEVTOOLS-NPM-PUBLISH-01.md",
+        "governance/04-records/OWNER-AUTHORIZE-NPM-PYPI-PUBLISH-EXECUTION-01.md",
+        "governance/04-records/OWNER-AUTHORIZE-NPM-PYPI-PUBLISH-EXECUTION-02.md",
+        "governance/04-records/OWNER-AUTHORIZE-NPM-PYPI-PUBLISH-EXECUTION-03.md"
+      ]
+    },
+    {
+      "surface": "artifacts/governance",
+      "public_count": 19,
+      "dev_count": 176,
+      "common_count": 0,
+      "modified_count": 0,
+      "public_only_count": 19,
+      "dev_only_count": 176,
+      "modified_sample": [],
+      "public_only_sample": [
+        "artifacts/governance/PUBLIC-OSS-PROJECTION-READINESS-DRIFT-REVIEW-01/agent-reviewer-selection.json",
+        "artifacts/governance/PUBLIC-OSS-PROJECTION-READINESS-DRIFT-REVIEW-01/dev-main-authority-snapshot.json",
+        "artifacts/governance/PUBLIC-OSS-PROJECTION-READINESS-DRIFT-REVIEW-01/local-baseline-evidence-table.json",
+        "artifacts/governance/PUBLIC-OSS-PROJECTION-READINESS-DRIFT-REVIEW-01/public-repo-current-state.json",
+        "artifacts/governance/PUBLIC-OSS-PROJECTION-READINESS-DRIFT-REVIEW-01/release-projection-router-result.json",
+        "artifacts/governance/PUBLIC-OSS-PROJECTION-READINESS-DRIFT-REVIEW-01/repo-truth.json",
+        "artifacts/governance/PUBLIC-OSS-PROJECTION-READINESS-DRIFT-REVIEW-01/task governance router result JSON",
+        "artifacts/governance/PUBLIC-OSS-RELEASE-SOP-AUTHORITY-RECONCILIATION-01/agent-reviewer-selection.json",
+        "artifacts/governance/PUBLIC-OSS-RELEASE-SOP-AUTHORITY-RECONCILIATION-01/dev-authority-comparison-evidence.json",
+        "artifacts/governance/PUBLIC-OSS-RELEASE-SOP-AUTHORITY-RECONCILIATION-01/files-changed-classification.json",
+        "artifacts/governance/PUBLIC-OSS-RELEASE-SOP-AUTHORITY-RECONCILIATION-01/final-verdict.json",
+        "artifacts/governance/PUBLIC-OSS-RELEASE-SOP-AUTHORITY-RECONCILIATION-01/local-baseline-evidence-table.json",
+        "artifacts/governance/PUBLIC-OSS-RELEASE-SOP-AUTHORITY-RECONCILIATION-01/no-projection-execution-compliance.json",
+        "artifacts/governance/PUBLIC-OSS-RELEASE-SOP-AUTHORITY-RECONCILIATION-01/public-sop-authority-language-audit.json",
+        "artifacts/governance/PUBLIC-OSS-RELEASE-SOP-AUTHORITY-RECONCILIATION-01/reconciliation-decision.json",
+        "artifacts/governance/PUBLIC-OSS-RELEASE-SOP-AUTHORITY-RECONCILIATION-01/release-config-no-mutation-decision.json",
+        "artifacts/governance/PUBLIC-OSS-RELEASE-SOP-AUTHORITY-RECONCILIATION-01/release-projection-router-result.json",
+        "artifacts/governance/PUBLIC-OSS-RELEASE-SOP-AUTHORITY-RECONCILIATION-01/repo-truth.json",
+        "artifacts/governance/PUBLIC-OSS-RELEASE-SOP-AUTHORITY-RECONCILIATION-01/task governance router result JSON"
+      ],
+      "dev_only_sample": [
+        "artifacts/governance/COPYRIGHT-OWNER-SURFACE-CLOSURE-02/cross-repo-boundary.json",
+        "artifacts/governance/COPYRIGHT-OWNER-SURFACE-CLOSURE-02/final-verdict.json",
+        "artifacts/governance/COPYRIGHT-OWNER-SURFACE-CLOSURE-02/local-baseline-evidence-table.json",
+        "artifacts/governance/COPYRIGHT-OWNER-SURFACE-CLOSURE-02/mutation-authorization-matrix.json",
+        "artifacts/governance/COPYRIGHT-OWNER-SURFACE-CLOSURE-02/no-release-compliance.json",
+        "artifacts/governance/COPYRIGHT-OWNER-SURFACE-CLOSURE-02/occurrence-classification-after.json",
+        "artifacts/governance/COPYRIGHT-OWNER-SURFACE-CLOSURE-02/occurrence-classification-before.json",
+        "artifacts/governance/COPYRIGHT-OWNER-SURFACE-CLOSURE-02/post-remediation-remaining-owner-scan.json",
+        "artifacts/governance/COPYRIGHT-OWNER-SURFACE-CLOSURE-02/preserved-occurrences.json",
+        "artifacts/governance/COPYRIGHT-OWNER-SURFACE-CLOSURE-02/raw-occurrence-counts.json",
+        "artifacts/governance/COPYRIGHT-OWNER-SURFACE-CLOSURE-02/raw-occurrence-scan.json",
+        "artifacts/governance/COPYRIGHT-OWNER-SURFACE-CLOSURE-02/remediation-actions.json",
+        "artifacts/governance/COPYRIGHT-OWNER-SURFACE-CLOSURE-02/replacement-authority.json",
+        "artifacts/governance/COPYRIGHT-OWNER-SURFACE-CLOSURE-02/repo-to-project-owner-map.json",
+        "artifacts/governance/COPYRIGHT-OWNER-SURFACE-CLOSURE-02/repo-truth-current.json",
+        "artifacts/governance/DEV-RELEASE-CONSOLIDATION-AND-PROJECTION-CANDIDATE-PLANNING-01/agent-reviewer-selection.json",
+        "artifacts/governance/DEV-RELEASE-CONSOLIDATION-AND-PROJECTION-CANDIDATE-PLANNING-01/branch-commit-inventory.json",
+        "artifacts/governance/DEV-RELEASE-CONSOLIDATION-AND-PROJECTION-CANDIDATE-PLANNING-01/dev-consolidation-candidate-matrix.json",
+        "artifacts/governance/DEV-RELEASE-CONSOLIDATION-AND-PROJECTION-CANDIDATE-PLANNING-01/devtools-readme-deferred-issue.json",
+        "artifacts/governance/DEV-RELEASE-CONSOLIDATION-AND-PROJECTION-CANDIDATE-PLANNING-01/final-verdict.json",
+        "artifacts/governance/DEV-RELEASE-CONSOLIDATION-AND-PROJECTION-CANDIDATE-PLANNING-01/local-baseline-evidence-table.json",
+        "artifacts/governance/DEV-RELEASE-CONSOLIDATION-AND-PROJECTION-CANDIDATE-PLANNING-01/no-mutation-compliance.json",
+        "artifacts/governance/DEV-RELEASE-CONSOLIDATION-AND-PROJECTION-CANDIDATE-PLANNING-01/origin-main-containment-check.json",
+        "artifacts/governance/DEV-RELEASE-CONSOLIDATION-AND-PROJECTION-CANDIDATE-PLANNING-01/projection-surface-inventory.json",
+        "artifacts/governance/DEV-RELEASE-CONSOLIDATION-AND-PROJECTION-CANDIDATE-PLANNING-01/public-projection-candidate-plan.json"
+      ]
+    },
+    {
+      "surface": "packages",
+      "public_count": 258,
+      "dev_count": 245,
+      "common_count": 244,
+      "modified_count": 72,
+      "public_only_count": 14,
+      "dev_only_count": 1,
+      "modified_sample": [
+        "packages/npm/compliance/DERIVATION_PROOF.yaml",
+        "packages/npm/compliance/package.json",
+        "packages/npm/conformance/DERIVATION_PROOF.yaml",
+        "packages/npm/conformance/README.md",
+        "packages/npm/conformance/package-lock.json",
+        "packages/npm/conformance/package.json",
+        "packages/npm/conformance/src/index.ts",
+        "packages/npm/coordination/DERIVATION_PROOF.yaml",
+        "packages/npm/coordination/README.md",
+        "packages/npm/coordination/package.json",
+        "packages/npm/core/DERIVATION_PROOF.yaml",
+        "packages/npm/core/README.md",
+        "packages/npm/core/package.json",
+        "packages/npm/devtools/DERIVATION_PROOF.yaml",
+        "packages/npm/devtools/README.md",
+        "packages/npm/devtools/package.json",
+        "packages/npm/integration-llm-http/DERIVATION_PROOF.yaml",
+        "packages/npm/integration-llm-http/README.md",
+        "packages/npm/integration-llm-http/package.json",
+        "packages/npm/integration-storage-fs/DERIVATION_PROOF.yaml",
+        "packages/npm/integration-storage-fs/README.md",
+        "packages/npm/integration-storage-fs/package.json",
+        "packages/npm/integration-storage-kv/DERIVATION_PROOF.yaml",
+        "packages/npm/integration-storage-kv/README.md",
+        "packages/npm/integration-storage-kv/package.json"
+      ],
+      "public_only_sample": [
+        "packages/npm/schema/schemas/profiles/map-profile.yaml",
+        "packages/npm/schema/schemas/profiles/sa-profile.yaml",
+        "packages/npm/schema/schemas/taxonomy/event-taxonomy.yaml",
+        "packages/npm/schema/schemas/taxonomy/integration-event-taxonomy.yaml",
+        "packages/npm/schema/schemas/taxonomy/learning-taxonomy.yaml",
+        "packages/npm/schema/schemas/taxonomy/module-event-matrix.yaml",
+        "packages/npm/sdk-ts/schemas/profiles/map-profile.yaml",
+        "packages/npm/sdk-ts/schemas/profiles/sa-profile.yaml",
+        "packages/npm/sdk-ts/schemas/taxonomy/event-taxonomy.yaml",
+        "packages/npm/sdk-ts/schemas/taxonomy/integration-event-taxonomy.yaml",
+        "packages/npm/sdk-ts/schemas/taxonomy/learning-taxonomy.yaml",
+        "packages/npm/sdk-ts/schemas/taxonomy/module-event-matrix.yaml",
+        "packages/pypi/mplp-sdk/LICENSE",
+        "packages/sources/sdk-py/src/mplp_sdk.egg-info/requires.txt"
+      ],
+      "dev_only_sample": [
+        "packages/sources/sdk-ts/scripts/verify-dist-surface.mjs"
+      ]
+    },
+    {
+      "surface": "schemas/v2",
+      "public_count": 74,
+      "dev_count": 74,
+      "common_count": 74,
+      "modified_count": 0,
+      "public_only_count": 0,
+      "dev_only_count": 0,
+      "modified_sample": [],
+      "public_only_sample": [],
+      "dev_only_sample": []
+    },
+    {
+      "surface": "docs",
+      "public_count": 261,
+      "dev_count": 261,
+      "common_count": 261,
+      "modified_count": 12,
+      "public_only_count": 0,
+      "dev_only_count": 0,
+      "modified_sample": [
+        "docs/docs/evaluation/governance/license-governance.md",
+        "docs/docs/reference/audit-route/v1.0-route-a.md",
+        "docs/docs/reference/uiux-projections/UIUX-DIFF-v0.17.md",
+        "docs/docs/reference/uiux-projections/UIUX-DIFF-v0.9-v0.17.md",
+        "docs/docs/reference/uiux-projections/UIUX-MAP-v0.9-v0.17.md",
+        "docs/docs/reference/uiux-projections/how-to-use-projection-map.md",
+        "docs/docs/specification/architecture/l1-core-protocol.md",
+        "docs/docs/validation-lab/index.md",
+        "docs/docusaurus.config.ts",
+        "docs/ops/README_CANONICAL_TEMPLATE_v1.0.md",
+        "docs/src/pages/index.module.css",
+        "docs/src/pages/index.tsx"
+      ],
+      "public_only_sample": [],
+      "dev_only_sample": []
+    },
+    {
+      "surface": "examples",
+      "public_count": 19,
+      "dev_count": 19,
+      "common_count": 19,
+      "modified_count": 0,
+      "public_only_count": 0,
+      "dev_only_count": 0,
+      "modified_sample": [],
+      "public_only_sample": [],
+      "dev_only_sample": []
+    },
+    {
+      "surface": "tests",
+      "public_count": 117,
+      "dev_count": 117,
+      "common_count": 117,
+      "modified_count": 0,
+      "public_only_count": 0,
+      "dev_only_count": 0,
+      "modified_sample": [],
+      "public_only_sample": [],
+      "dev_only_sample": []
+    },
+    {
+      "surface": "scripts/semantic",
+      "public_count": 8,
+      "dev_count": 10,
+      "common_count": 7,
+      "modified_count": 0,
+      "public_only_count": 1,
+      "dev_only_count": 3,
+      "modified_sample": [],
+      "public_only_sample": [
+        "scripts/semantic/validate-public-manifest.mjs"
+      ],
+      "dev_only_sample": [
+        "scripts/semantic/package-preflight-harness.mjs",
+        "scripts/semantic/verify-kernel-duty-propagation.mjs",
+        "scripts/semantic/verify-publish-only.mjs"
+      ]
+    },
+    {
+      "surface": "scripts/codex",
+      "public_count": 1,
+      "dev_count": 3,
+      "common_count": 1,
+      "modified_count": 1,
+      "public_only_count": 0,
+      "dev_only_count": 2,
+      "modified_sample": [
+        "scripts/codex/repo-truth-first.sh"
+      ],
+      "public_only_sample": [],
+      "dev_only_sample": [
+        "scripts/codex/package-consistency-release-gate.sh",
+        "scripts/codex/package-readme-install-smoke-gate.sh"
+      ]
+    },
+    {
+      "surface": ".codex",
+      "public_count": 15,
+      "dev_count": 19,
+      "common_count": 10,
+      "modified_count": 8,
+      "public_only_count": 5,
+      "dev_only_count": 9,
+      "modified_sample": [
+        ".codex/agents/package_surface_auditor.toml",
+        ".codex/agents/protocol_schema_reviewer.toml",
+        ".codex/agents/publication_claim_reviewer.toml",
+        ".codex/agents/release_governance_reviewer.toml",
+        ".codex/config.toml",
+        ".codex/skills/agentic-harness-goal-preflight/SKILL.md",
+        ".codex/skills/release-gate-and-seal-discipline/SKILL.md",
+        ".codex/skills/repo-truth-first-audit/SKILL.md"
+      ],
+      "public_only_sample": [
+        ".codex/agents/product_boundary_reviewer.toml",
+        ".codex/agents/runtime_binding_reviewer.toml",
+        ".codex/skills/cross-repo-boundary-guard/SKILL.md",
+        ".codex/skills/docs-minimalism-governance/SKILL.md",
+        ".codex/skills/mplp-schema-v2-invariant-intake/SKILL.md"
+      ],
+      "dev_only_sample": [
+        ".codex/agents/documentation_governance_reviewer.toml",
+        ".codex/agents/package_consistency_reviewer.toml",
+        ".codex/agents/package_readme_install_smoke_reviewer.toml",
+        ".codex/skills/documentation-governance-audit/SKILL.md",
+        ".codex/skills/package-consistency-release-gate/SKILL.md",
+        ".codex/skills/package-readme-and-install-smoke-audit/SKILL.md",
+        ".codex/skills/package-surface-audit/SKILL.md",
+        ".codex/skills/protocol-schema-boundary-review/SKILL.md",
+        ".codex/skills/public-claim-boundary-review/SKILL.md"
+      ]
+    },
+    {
+      "surface": ".agents",
+      "public_count": 8,
+      "dev_count": 11,
+      "common_count": 5,
+      "modified_count": 3,
+      "public_only_count": 3,
+      "dev_only_count": 6,
+      "modified_sample": [
+        ".agents/skills/agentic-harness-goal-preflight/SKILL.md",
+        ".agents/skills/release-gate-and-seal-discipline/SKILL.md",
+        ".agents/skills/repo-truth-first-audit/SKILL.md"
+      ],
+      "public_only_sample": [
+        ".agents/skills/cross-repo-boundary-guard/SKILL.md",
+        ".agents/skills/docs-minimalism-governance/SKILL.md",
+        ".agents/skills/mplp-schema-v2-invariant-intake/SKILL.md"
+      ],
+      "dev_only_sample": [
+        ".agents/skills/documentation-governance-audit/SKILL.md",
+        ".agents/skills/package-consistency-release-gate/SKILL.md",
+        ".agents/skills/package-readme-and-install-smoke-audit/SKILL.md",
+        ".agents/skills/package-surface-audit/SKILL.md",
+        ".agents/skills/protocol-schema-boundary-review/SKILL.md",
+        ".agents/skills/public-claim-boundary-review/SKILL.md"
+      ]
+    }
+  ],
+  "package_release_set_drift": [
+    {
+      "name": "@mplp/compliance",
+      "public_release_set_version": "1.0.5",
+      "dev_release_set_version": null,
+      "npm_registry_latest": "1.0.5",
+      "classification": "BLOCKED_BY_OWNER_DECISION",
+      "evidence": "public artifacts/release/publish-set.json vs Dev artifacts/release/publish-set.json and npm registry latest"
+    },
+    {
+      "name": "@mplp/conformance",
+      "public_release_set_version": "1.0.0",
+      "dev_release_set_version": "1.0.1",
+      "npm_registry_latest": "1.0.1",
+      "classification": "PUBLIC_PROJECTION_CANDIDATE",
+      "evidence": "public artifacts/release/publish-set.json vs Dev artifacts/release/publish-set.json and npm registry latest"
+    },
+    {
+      "name": "@mplp/coordination",
+      "public_release_set_version": "1.0.6",
+      "dev_release_set_version": "1.0.7",
+      "npm_registry_latest": "1.0.7",
+      "classification": "PUBLIC_PROJECTION_CANDIDATE",
+      "evidence": "public artifacts/release/publish-set.json vs Dev artifacts/release/publish-set.json and npm registry latest"
+    },
+    {
+      "name": "@mplp/core",
+      "public_release_set_version": "1.0.6",
+      "dev_release_set_version": "1.0.7",
+      "npm_registry_latest": "1.0.7",
+      "classification": "PUBLIC_PROJECTION_CANDIDATE",
+      "evidence": "public artifacts/release/publish-set.json vs Dev artifacts/release/publish-set.json and npm registry latest"
+    },
+    {
+      "name": "@mplp/devtools",
+      "public_release_set_version": "1.0.5",
+      "dev_release_set_version": null,
+      "npm_registry_latest": "1.0.6",
+      "classification": "BLOCKED_BY_OWNER_DECISION",
+      "evidence": "public artifacts/release/publish-set.json vs Dev artifacts/release/publish-set.json and npm registry latest"
+    },
+    {
+      "name": "@mplp/integration-llm-http",
+      "public_release_set_version": "1.0.5",
+      "dev_release_set_version": "1.0.6",
+      "npm_registry_latest": "1.0.6",
+      "classification": "PUBLIC_PROJECTION_CANDIDATE",
+      "evidence": "public artifacts/release/publish-set.json vs Dev artifacts/release/publish-set.json and npm registry latest"
+    },
+    {
+      "name": "@mplp/integration-storage-fs",
+      "public_release_set_version": "1.0.5",
+      "dev_release_set_version": "1.0.6",
+      "npm_registry_latest": "1.0.6",
+      "classification": "PUBLIC_PROJECTION_CANDIDATE",
+      "evidence": "public artifacts/release/publish-set.json vs Dev artifacts/release/publish-set.json and npm registry latest"
+    },
+    {
+      "name": "@mplp/integration-storage-kv",
+      "public_release_set_version": "1.0.5",
+      "dev_release_set_version": "1.0.6",
+      "npm_registry_latest": "1.0.6",
+      "classification": "PUBLIC_PROJECTION_CANDIDATE",
+      "evidence": "public artifacts/release/publish-set.json vs Dev artifacts/release/publish-set.json and npm registry latest"
+    },
+    {
+      "name": "@mplp/integration-tools-generic",
+      "public_release_set_version": "1.0.5",
+      "dev_release_set_version": "1.0.6",
+      "npm_registry_latest": "1.0.6",
+      "classification": "PUBLIC_PROJECTION_CANDIDATE",
+      "evidence": "public artifacts/release/publish-set.json vs Dev artifacts/release/publish-set.json and npm registry latest"
+    },
+    {
+      "name": "@mplp/modules",
+      "public_release_set_version": "1.0.5",
+      "dev_release_set_version": "1.0.6",
+      "npm_registry_latest": "1.0.6",
+      "classification": "PUBLIC_PROJECTION_CANDIDATE",
+      "evidence": "public artifacts/release/publish-set.json vs Dev artifacts/release/publish-set.json and npm registry latest"
+    },
+    {
+      "name": "@mplp/runtime-minimal",
+      "public_release_set_version": "1.0.5",
+      "dev_release_set_version": "1.0.6",
+      "npm_registry_latest": "1.0.6",
+      "classification": "PUBLIC_PROJECTION_CANDIDATE",
+      "evidence": "public artifacts/release/publish-set.json vs Dev artifacts/release/publish-set.json and npm registry latest"
+    },
+    {
+      "name": "@mplp/schema",
+      "public_release_set_version": "1.0.6",
+      "dev_release_set_version": "1.0.7",
+      "npm_registry_latest": "1.0.7",
+      "classification": "PUBLIC_PROJECTION_CANDIDATE",
+      "evidence": "public artifacts/release/publish-set.json vs Dev artifacts/release/publish-set.json and npm registry latest"
+    },
+    {
+      "name": "@mplp/sdk-ts",
+      "public_release_set_version": "1.0.7",
+      "dev_release_set_version": "1.0.8",
+      "npm_registry_latest": "1.0.8",
+      "classification": "PUBLIC_PROJECTION_CANDIDATE",
+      "evidence": "public artifacts/release/publish-set.json vs Dev artifacts/release/publish-set.json and npm registry latest"
+    }
+  ],
+  "pypi_release_set_drift": {
+    "public": {
+      "ecosystem": "pypi",
+      "packages": [
+        {
+          "name": "mplp-sdk",
+          "version": "1.0.5",
+          "path": "/Users/jasonwang/Documents/AI_Dev/V1.0_release/packages/pypi/mplp-sdk",
+          "category": "PUBLIC"
+        }
+      ]
+    },
+    "dev": {
+      "ecosystem": "pypi",
+      "packages": [
+        {
+          "name": "mplp-sdk",
+          "version": "1.0.6",
+          "path": "/Users/jasonwang/Documents/AI_Dev/Coregentis/MPLP-Protocol-Dev/packages/pypi/mplp-sdk",
+          "category": "PUBLIC"
+        }
+      ]
+    },
+    "pypi_registry": {
+      "mplp-sdk": "1.0.6",
+      "target_1_0_6_exists": true,
+      "file_types": [
+        "bdist_wheel",
+        "sdist"
+      ]
+    },
+    "classification": "PUBLIC_PROJECTION_CANDIDATE"
+  },
+  "manifest_drift": {
+    "package_statuses": "planned_not_published_but_registry_versions_exist",
+    "stale_package_entries": [
+      {
+        "name": "@mplp/conformance",
+        "current_version": "1.0.0",
+        "next_clean_version": "1.0.1",
+        "status": "planned_not_published",
+        "registry_latest": "1.0.1",
+        "stale_status": true
+      },
+      {
+        "name": "@mplp/coordination",
+        "current_version": "1.0.6",
+        "next_clean_version": "1.0.7",
+        "status": "planned_not_published",
+        "registry_latest": "1.0.7",
+        "stale_status": true
+      },
+      {
+        "name": "@mplp/core",
+        "current_version": "1.0.6",
+        "next_clean_version": "1.0.7",
+        "status": "planned_not_published",
+        "registry_latest": "1.0.7",
+        "stale_status": true
+      },
+      {
+        "name": "@mplp/devtools",
+        "current_version": "1.0.5",
+        "next_clean_version": "1.0.6",
+        "status": "planned_not_published",
+        "registry_latest": "1.0.6",
+        "stale_status": true
+      },
+      {
+        "name": "@mplp/integration-llm-http",
+        "current_version": "1.0.5",
+        "next_clean_version": "1.0.6",
+        "status": "planned_not_published",
+        "registry_latest": "1.0.6",
+        "stale_status": true
+      },
+      {
+        "name": "@mplp/integration-storage-fs",
+        "current_version": "1.0.5",
+        "next_clean_version": "1.0.6",
+        "status": "planned_not_published",
+        "registry_latest": "1.0.6",
+        "stale_status": true
+      },
+      {
+        "name": "@mplp/integration-storage-kv",
+        "current_version": "1.0.5",
+        "next_clean_version": "1.0.6",
+        "status": "planned_not_published",
+        "registry_latest": "1.0.6",
+        "stale_status": true
+      },
+      {
+        "name": "@mplp/integration-tools-generic",
+        "current_version": "1.0.5",
+        "next_clean_version": "1.0.6",
+        "status": "planned_not_published",
+        "registry_latest": "1.0.6",
+        "stale_status": true
+      },
+      {
+        "name": "@mplp/modules",
+        "current_version": "1.0.5",
+        "next_clean_version": "1.0.6",
+        "status": "planned_not_published",
+        "registry_latest": "1.0.6",
+        "stale_status": true
+      },
+      {
+        "name": "@mplp/runtime-minimal",
+        "current_version": "1.0.5",
+        "next_clean_version": "1.0.6",
+        "status": "planned_not_published",
+        "registry_latest": "1.0.6",
+        "stale_status": true
+      },
+      {
+        "name": "@mplp/schema",
+        "current_version": "1.0.6",
+        "next_clean_version": "1.0.7",
+        "status": "planned_not_published",
+        "registry_latest": "1.0.7",
+        "stale_status": true
+      },
+      {
+        "name": "@mplp/sdk-ts",
+        "current_version": "1.0.7",
+        "next_clean_version": "1.0.8",
+        "status": "planned_not_published",
+        "registry_latest": "1.0.8",
+        "stale_status": true
+      }
+    ],
+    "pypi_current": [
+      {
+        "name": "mplp-sdk",
+        "registry": "pypi",
+        "current_version": "1.0.5",
+        "next_clean_version": "1.0.6",
+        "package_replacement_status": "planned_not_published"
+      }
+    ],
+    "classification": "PUBLIC_PROJECTION_CANDIDATE"
+  },
+  "expected_projection_lag": [
+    "Dev governance records absent from public by design or summary-only",
+    "artifacts/governance raw Dev evidence absent from public by design",
+    "release-config identical but not sufficient alone"
+  ],
+  "unsafe_to_project": [
+    "Dev raw artifacts/governance/**",
+    "artifacts/package-preflight/** raw execution logs",
+    "node_modules/dist/build caches",
+    "embedded Website/Lab source",
+    "credential/security/token records or local path evidence"
+  ],
+  "owner_decision_required": [
+    "whether to narrow governance/04-records/** allowlist before projection",
+    "whether artifacts/release/* should be updated directly or replaced by public summary records",
+    "whether package dist is excluded from OSS projection and handled only through registry packages",
+    "whether @mplp/compliance public package gets deprecation action or historical boundary only"
+  ]
+}

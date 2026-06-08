@@ -1,0 +1,47 @@
+{
+  "router_id": "RELEASE-PROJECTION-GOVERNANCE-ROUTER-01",
+  "executed": true,
+  "workflow_type": [
+    "public OSS projection readiness drift review",
+    "non projection execution",
+    "future owner projection plan input"
+  ],
+  "local_standard_source_files": [
+    "AGENTS.md",
+    ".codex/config.toml",
+    ".agents/skills/release-projection-governance-router/SKILL.md",
+    "governance/release/MPLP-RELEASE-SOP.md",
+    "release-config.yaml",
+    "release-manifests/mplp-public-manifest.example.json",
+    "scripts/semantic/validate-public-manifest.mjs",
+    "Dev governance/release/MPLP-RELEASE-PROJECTION-POLICY.md",
+    "Dev governance/release/MPLP-DEV-PUBLIC-REPO-AUTHORITY-DOCTRINE-2026-06-02.md",
+    "Dev governance/04-records/PUBLIC-OSS-PROJECTION-STANDARD-DISCOVERY-01.md"
+  ],
+  "required_gates": [
+    "repo-truth-first public",
+    "repo-truth-first Dev read-only",
+    "skill mirror diff",
+    "TOML structural parse",
+    "JSON parse",
+    "frontmatter check",
+    "required phrase scan",
+    "no-secret scan changed files",
+    "protected surface scan",
+    "release-config unchanged",
+    "no projection execution scan",
+    "public manifest validation"
+  ],
+  "owner_authorization_required_for_future_mutation": true,
+  "allowed_mutations": [
+    "governance/04-records/PUBLIC-OSS-PROJECTION-READINESS-DRIFT-REVIEW-01.md",
+    "artifacts/governance/PUBLIC-OSS-PROJECTION-READINESS-DRIFT-REVIEW-01/*.json"
+  ],
+  "stop_conditions": [
+    "BLOCKED_TASK_GOVERNANCE_ROUTER_NOT_RUN",
+    "BLOCKED_DYNAMIC_RELEASE_WORKFLOW_DISCOVERY_NOT_PERFORMED",
+    "BLOCKED_RELEASE_GOVERNANCE_BASELINE_MISSING",
+    "BLOCKED_RELEASE_GOVERNANCE_BASELINE_CONFLICT",
+    "PARTIAL_BLOCKED_BY_OWNER_DECISION_REQUIRED"
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "rows": [
+    {
+      "decision_area": "workspace and repo authority",
+      "local_evidence_file": "AGENTS.md; .codex/config.toml",
+      "evidence_signal": "Coregentis root; public repo is PUBLIC_OSS_PROJECTION; authoritative_dev_truth points to MPLP-Protocol-Dev",
+      "derived_rule": "write only public review evidence; read Dev as authority source",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "apply"
+    },
+    {
+      "decision_area": "task routing",
+      "local_evidence_file": ".agents/skills/task-governance-router/SKILL.md",
+      "evidence_signal": "router mandatory before non-trivial task",
+      "derived_rule": "record router result before evidence mutation",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "apply"
+    },
+    {
+      "decision_area": "release/projection workflow",
+      "local_evidence_file": ".agents/skills/release-projection-governance-router/SKILL.md; MPLP-RELEASE-SOP.md",
+      "evidence_signal": "public OSS projection is release-like; router required",
+      "derived_rule": "run projection router and forbid projection execution without owner authorization",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "apply"
+    },
+    {
+      "decision_area": "projection standard",
+      "local_evidence_file": "Dev PUBLIC-OSS-PROJECTION-STANDARD-DISCOVERY-01; Dev MPLP-RELEASE-PROJECTION-POLICY",
+      "evidence_signal": "release-config is not complete redaction policy; broad surfaces require review",
+      "derived_rule": "classify surfaces and owner-decision gaps rather than copying Dev",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "apply"
+    },
+    {
+      "decision_area": "package version facts",
+      "local_evidence_file": "npm registry; PyPI JSON; Dev publish records",
+      "evidence_signal": "public registry latest differs from public manifest/artifacts",
+      "derived_rule": "mark release-set/pypi-set and manifest stale; no registry mutation",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "record_only"
+    },
+    {
+      "decision_area": "Website/Lab boundary",
+      "local_evidence_file": "MPLP-RELEASE-SOP.md sections 5-6; Website/Lab vendored manifests",
+      "evidence_signal": "Website/Lab consume vendored manifest and remain standalone surfaces",
+      "derived_rule": "record pointer sync needed but out of scope for this goal",
+      "confidence": "HIGH_LOCAL_BASELINE_EXPLICIT",
+      "conflict": false,
+      "action": "record_only"
+    }
+  ]
+}

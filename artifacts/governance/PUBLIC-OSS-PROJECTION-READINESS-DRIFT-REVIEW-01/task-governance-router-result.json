@@ -1,0 +1,60 @@
+{
+  "router_id": "TASK-GOVERNANCE-ROUTER-01",
+  "executed": true,
+  "prompt_assertions_are_not_authority": true,
+  "task_type": [
+    "public_oss_projection_readiness_drift_review",
+    "public_projection_boundary_review",
+    "release_process_governance",
+    "non_projection_execution"
+  ],
+  "sot_layer": [
+    "L1 Projection Source review",
+    "L3 Verification Evidence",
+    "L4 Publication Surface",
+    "L6 Codex Execution Governance"
+  ],
+  "repository_methods": [
+    "TSV",
+    "XCV",
+    "SCV",
+    "EVC",
+    "projection boundary review",
+    "no-secret review"
+  ],
+  "codex_harness_methods": [
+    "SCTM",
+    "GLFB",
+    "ITCM",
+    "RBCT",
+    "VIM",
+    "PRM",
+    "TASK-GOVERNANCE-ROUTER-01"
+  ],
+  "selected_baseline": [
+    "AGENTS.md",
+    ".codex/config.toml",
+    ".agents/skills/task-governance-router/SKILL.md",
+    "governance/codex-goals/CODEX-GOAL-TEMPLATE.md",
+    "governance/release/MPLP-RELEASE-SOP.md",
+    "release-config.yaml",
+    "prior PUBLIC-OSS-RELEASE-SOP-AUTHORITY-RECONCILIATION-01 evidence",
+    "Dev MPLP-RELEASE-PROJECTION-POLICY",
+    "Dev PUBLIC-OSS-PROJECTION-STANDARD-DISCOVERY-01",
+    "Dev RELEASE-EVIDENCE-CLOSURE-AND-PUBLIC-PROJECTION-PLAN-01"
+  ],
+  "forbidden_actions": [
+    "projection execution",
+    "Dev-to-public sync/copy",
+    "release-config mutation",
+    "release-set or pypi-set mutation",
+    "package/source/dist/schema/docs/release manifest mutation",
+    "registry mutation",
+    "tag",
+    "seal",
+    "GitHub release",
+    "merge",
+    "credential access"
+  ],
+  "evidence_output_plan": "14 required lightweight JSON files plus governance record in public repo"
+}
