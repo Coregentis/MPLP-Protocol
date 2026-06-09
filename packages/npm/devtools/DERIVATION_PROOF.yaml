@@ -7,16 +7,34 @@ schema_bundle:
   path: "schemas/v2"
   
 evidence_baseline:
-  reference: "governance/04-records/baselines/FREEZE_EVIDENCE_BASELINE_v1.0.md"
+  reference: "governance/04-records/FREEZE_EVIDENCE_BASELINE_v1.0.md"
   version: "v1.0"
   digest: "sha256:78ea3511cee7cacebff416b5ad6179358032d5322e5991523b5f8d6257d10354"
 
 derivation:
-  method: "source_derivation"
-  description: "TypeScript SDK package derived from MPLP Truth Sources"
+  method: "developer_tooling_convenience_projection"
+  description: >
+    Public npm developer-tooling convenience package evidence. This proof
+    metadata records current package posture and release-candidate readiness
+    only; publish execution still requires explicit owner authorization.
   truth_sources:
     - "schemas/v2/*.schema.json"
-    - "governance/01-core/MPLP_CONSTITUTION.md"
+    - "schemas/v2/taxonomy/kernel-duties.yaml"
+    - "schemas/v2/common/metadata.schema.json"
+    - "governance/05-specialized/entity.json"
+    - "governance/05-versioning/version-taxonomy-manifest.json"
+  immediate_source:
+    - "packages/npm/devtools/dist"
+    - "packages/npm/devtools/README.md"
+    - "packages/npm/devtools/package.json"
+  package_posture:
+    source_flow_class: "developer-tooling-convenience"
+    release_surface_status: "devtools_only_public_optional_tooling_candidate"
+    compliance_dependency_present: false
+    conformance_dependency_present: true
+    dependency_remediation_authorized: "PACKAGE-COMPLIANCE-DEPRECATION-COPYRIGHT-SOT-REMEDIATION-01"
+    tracked_artifact_exception: "DIST_AS_TRACKED_RELEASE_ARTIFACT_REMEDIATION_EXCEPTION"
+    publish_authorization: "owner_authorization_required"
 
 package:
   name: "@mplp/devtools"
@@ -25,9 +43,12 @@ package:
   category: "PUBLIC"
 
 verification:
-  protocol_conformance: "VERIFIED"
+  proof_metadata_corrected: true
   evidence_baseline_aligned: true
+  compliance_deprecation_remediated: true
+  release_planning_reliance: "allowed_for_devtools_only_follow_up_after_no_publish_reverification"
 
 governance:
   method: "METHOD-SDKR-08"
   frozen: true
+  evidence_only_no_release_or_publish_authorization: true

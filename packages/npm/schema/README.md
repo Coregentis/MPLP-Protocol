@@ -1,39 +1,30 @@
 # @mplp/schema
 
-**Package Role:** Public npm schema and protocol-baseline package
+**Package Role:** Public npm schema and protocol-baseline mirror package
 **Protocol:** MPLP v1.0.0 (Frozen)
-**sdk_version:** 1.0.7
+**Package version:** 1.0.7
 **License:** Apache-2.0
 
-The **@mplp/schema** package provides **JSON Schema definitions, validation utilities, and the canonical machine-readable Kernel Duty baseline** for the
-**Multi-Agent Lifecycle Protocol (MPLP)**, a vendor-neutral lifecycle protocol for AI agent systems.
+The `@mplp/schema` package provides the public schema/data mirror surface for MPLP v1.0.0 JSON Schema artifacts, validator helpers, and the machine-readable Kernel Duty baseline.
 
-This package is the public **direct schema/data mirror** surface for the protocol schema bundle and the public Kernel Duty baseline.
+It mirrors package-facing schema data. It does not replace the Dev repository L0 schema source of truth.
 
----
+## Scope & Guarantees
 
-## Scope & Guarantees (Important)
+This package is a public npm release surface for the package role above. It is package evidence and user-facing distribution content, not authorization to publish, mutate registries, create tags, create release seals, or change protocol truth.
 
-### ✅ What this package provides
+## What This Package Provides
 
-* **Direct schema/data mirror surface** aligned with MPLP `protocol_version` v1.0.0
-* **Strict version alignment** with the frozen MPLP protocol specification
-* **Type-safe integration surface** for higher-level runtimes and tools
-* **11-duty baseline export** via `KERNEL_DUTIES`, `KERNEL_DUTY_IDS`, `KERNEL_DUTY_NAMES`, and `KERNEL_DUTY_COUNT`
+- JSON Schema package artifacts for MPLP v1.0.0 consumers.
+- Validator helper entry points such as `loadSchema`, `createValidator`, and `validate`.
+- The canonical 11-duty baseline export via `KERNEL_DUTIES`, `KERNEL_DUTY_IDS`, `KERNEL_DUTY_NAMES`, and `KERNEL_DUTY_COUNT`.
 
-### ❌ What this package does NOT provide
+## What This Package Does NOT Provide
 
-- ❌ Invariant bundles as public package contract
-- ❌ Profile bundles as public package contract
-- ❌ Full execution runtime (LLM orchestration, tool execution)
-- ❌ Golden Flow execution engines (Flow-01 ~ Flow-05)
-- ❌ Observability pipelines or distributed tracing backends
-- ❌ Production agent orchestration
-
-> These capabilities belong to **reference runtimes and products built *on top of* MPLP**,
-> not to the protocol SDK itself.
-
----
+- Authority to change protocol schemas.
+- Invariant or profile bundles as the package contract.
+- Full execution runtime or agent orchestration.
+- Certification, regulator approval, legal compliance proof, or official-standard status.
 
 ## Installation
 
@@ -41,43 +32,39 @@ This package is the public **direct schema/data mirror** surface for the protoco
 npm install @mplp/schema
 ```
 
-## Kernel Duty Exports
+## Minimal User Smoke Usage Snippet
 
-```typescript
-import { KERNEL_DUTIES, KERNEL_DUTY_COUNT } from '@mplp/schema';
-
-console.log(KERNEL_DUTY_COUNT); // 11
-console.log(KERNEL_DUTIES[0]);  // { id: 'KD-01', name: 'Coordination', slug: 'coordination' }
+```javascript
+const schema = require('@mplp/schema');
+console.log(schema.KERNEL_DUTY_COUNT);
+console.log(schema.KERNEL_DUTIES[0]);
 ```
 
-Raw JSON is also shipped at:
+## Protocol Documentation Links
 
-- `schemas/kernel-duties.json`
+- **Homepage:** [https://www.mplp.io/what-is-mplp](https://www.mplp.io/what-is-mplp) - discovery and positioning only
+- **Docs Entry Surface:** [https://docs.mplp.io/docs/reference/entrypoints](https://docs.mplp.io/docs/reference/entrypoints) - authoritative documentation entry surface
+- **Source Repository:** [https://github.com/Coregentis/MPLP-Protocol](https://github.com/Coregentis/MPLP-Protocol) - public source projection
+- **Issues:** [https://github.com/Coregentis/MPLP-Protocol/issues](https://github.com/Coregentis/MPLP-Protocol/issues)
 
----
+## Package Provenance
 
-## Protocol Documentation
-
-* **Homepage:** [https://www.mplp.io/what-is-mplp](https://www.mplp.io/what-is-mplp) — discovery and positioning only
-* **Docs Entry Surface:** [https://docs.mplp.io/docs/reference/entrypoints](https://docs.mplp.io/docs/reference/entrypoints) — authoritative documentation entry surface
-* **Source Repository:** [https://github.com/Coregentis/MPLP-Protocol](https://github.com/Coregentis/MPLP-Protocol) — repository truth source
-* **Issues:** [https://github.com/Coregentis/MPLP-Protocol/issues](https://github.com/Coregentis/MPLP-Protocol/issues)
-
----
+- **Package address:** [https://www.npmjs.com/package/@mplp/schema](https://www.npmjs.com/package/@mplp/schema)
+- Public npm surface: `packages/npm/schema`.
+- L0 schema truth remains in `schemas/v2/**` and taxonomy records.
+- This package is a release surface mirror, not the authority that changes schemas.
 
 ## Versioning & Compatibility
 
-* **Protocol version:** MPLP v1.0.0 (Frozen)
-* **Schema package version:** 1.0.7
-* **Kernel duty baseline:** 11/11 carried in package
-* **SDK compatibility:** Guaranteed for v1.0.0 only
-* Breaking changes require a new protocol version.
-
----
+- **Protocol version:** MPLP v1.0.0 (Frozen)
+- **Package version:** 1.0.7
+- **Compatibility:** aligned to MPLP protocol_version v1.0.0 only
+- Breaking changes require a new protocol version or a separately approved package release decision.
 
 ## License
 
 Apache License, Version 2.0
 
-© 2026 **Jearon Wong**
-Coregentis AI
+## Copyright
+
+© 2026 Jearon Wong

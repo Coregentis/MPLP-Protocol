@@ -3,8 +3,6 @@ name: Deploy Docusaurus to GitHub Pages
 on:
     push:
         branches: ["main"]
-    pull_request:
-        branches: ["main"]
     workflow_dispatch:
 
 permissions:
@@ -16,9 +14,6 @@ concurrency:
     group: "pages"
     cancel-in-progress: false
 
-env:
-    FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
-
 jobs:
     build:
         name: Build Docusaurus
@@ -28,12 +23,12 @@ jobs:
                 working-directory: ./docs
         steps:
             - name: Checkout
-              uses: actions/checkout@v5
+              uses: actions/checkout@v4
               with:
                   fetch-depth: 0
 
             - name: Setup Node.js
-              uses: actions/setup-node@v5
+              uses: actions/setup-node@v4
               with:
                   node-version: 20
                   cache: npm
@@ -42,99 +37,22 @@ jobs:
             - name: Install dependencies
               run: npm ci
 
-            - name: Normalize git context
-              run: |
-                  git config --global --add safe.directory "$GITHUB_WORKSPACE"
-                  git -C "$GITHUB_WORKSPACE" fetch --force --tags origin
-
-            - name: Prepare git trace shim
-              run: |
-                  trace_bin="$RUNNER_TEMP/docs-git-trace-bin"
-                  trace_file="$GITHUB_WORKSPACE/docs-git-trace.log"
-                  real_git="$(command -v git)"
-
-                  mkdir -p "$trace_bin"
-                  : > "$trace_file"
-
-                  cat > "$trace_bin/git" <<EOF
-                  #!/usr/bin/env bash
-                  stamp=\$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-                  {
-                    echo "[\$stamp] CMD: git \$*"
-                    echo "[\$stamp] PWD: \$PWD"
-                    ppid=\$(ps -o ppid= -p \$\$ | tr -d ' ')
-                    echo "[\$stamp] PARENT_PID: \$ppid"
-                    ps -o pid=,ppid=,command= -p "\$ppid" 2>/dev/null || true
-                  } >> "$trace_file"
-                  "$real_git" "\$@"
-                  status=\$?
-                  echo "[\$stamp] EXIT: \$status" >> "$trace_file"
-                  echo "---" >> "$trace_file"
-                  exit \$status
-                  EOF
-
-                  chmod +x "$trace_bin/git"
-                  echo "DOCS_GIT_TRACE_BIN=$trace_bin" >> "$GITHUB_ENV"
-                  echo "DOCS_GIT_TRACE_FILE=$trace_file" >> "$GITHUB_ENV"
-                  echo "DOCS_REAL_GIT=$real_git" >> "$GITHUB_ENV"
-
             - name: Build Docusaurus
-              run: |
-                  PATH="$DOCS_GIT_TRACE_BIN:$PATH" REAL_GIT="$DOCS_REAL_GIT" GIT_TRACE_CAPTURE="$DOCS_GIT_TRACE_FILE" npm run build
+              run: npm run build
               env:
                   NODE_OPTIONS: --max-old-space-size=4096
-
-            - name: Print git trace summary
-              if: always()
-              run: |
-                  if [ -s "$DOCS_GIT_TRACE_FILE" ]; then
-                    echo "::group::docs-git-trace"
-                    cat "$DOCS_GIT_TRACE_FILE"
-                    echo "::endgroup::"
-                    python3 - <<'PY'
-                  import os
-                  from pathlib import Path
-
-                  trace_path = Path(os.environ["DOCS_GIT_TRACE_FILE"])
-                  content = trace_path.read_text().split('---\n')
-
-                  def esc(value: str) -> str:
-                      return value.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
-
-                  for block in content:
-                      block = [line for line in block.strip().splitlines() if line.strip()]
-                      if not block:
-                          continue
-                      cmd = next((line.split('CMD: ', 1)[1] for line in block if 'CMD: ' in line), 'UNKNOWN')
-                      pwd = next((line.split('PWD: ', 1)[1] for line in block if 'PWD: ' in line), 'UNKNOWN')
-                      exit_code = next((line.split('EXIT: ', 1)[1] for line in block if 'EXIT: ' in line), 'UNKNOWN')
-                      parent_index = next((i for i, line in enumerate(block) if 'PARENT_PID: ' in line), None)
-                      parent = block[parent_index + 1].strip() if parent_index is not None and parent_index + 1 < len(block) else 'UNKNOWN'
-                      message = esc(f"{cmd} | cwd={pwd} | exit={exit_code} | parent={parent}")
-                      if exit_code != '0':
-                          print(f"::warning title=docs-git-trace::{message}")
-                      else:
-                          print(f"::notice title=docs-git-trace::{message}")
-                  PY
-                  else
-                    echo "::group::docs-git-trace"
-                    echo "NO_GIT_TRACE_RECORDED"
-                    echo "::endgroup::"
-                    echo "::notice title=docs-git-trace::NO_GIT_TRACE_RECORDED"
-                  fi
 
             - name: Create CNAME
               run: echo "docs.mplp.io" > build/CNAME
 
             - name: Upload artifact
-              uses: actions/upload-pages-artifact@v4
+              uses: actions/upload-pages-artifact@v3
               with:
                   path: ./docs/build
 
     deploy:
         name: Deploy to GitHub Pages
         needs: build
-        if: github.event_name == 'push'
         permissions:
             pages: write
             id-token: write
@@ -145,4 +63,4 @@ jobs:
         steps:
             - name: Deploy to GitHub Pages
               id: deployment
-              uses: actions/deploy-pages@v5
+              uses: actions/deploy-pages@v4

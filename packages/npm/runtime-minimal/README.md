@@ -1,38 +1,30 @@
 # @mplp/runtime-minimal
 
-**Package Role:** Public npm runtime package
+**Package Role:** Public npm minimal runtime helper package
 **Protocol:** MPLP v1.0.0 (Frozen)
-**runtime_package_version:** 1.0.6
+**Package version:** 1.0.6
 **License:** Apache-2.0
 
-The `@mplp/runtime-minimal` package provides the published **minimal runtime helper**
-surface for MPLP.
+The `@mplp/runtime-minimal` package provides a minimal runtime helper surface for MPLP v1.0.0 consumers.
 
-It ships runtime interfaces and orchestrator artifacts, but it is not a full
-execution platform and it does not replace the `@mplp/sdk-ts` facade.
+It ships runtime-level helper concepts and orchestrator artifacts. It is not a full execution platform and it does not replace `@mplp/sdk-ts`.
 
-Its exported AEL / VSL / orchestrator artifacts are **runtime-level helper concepts**.
-They must not be read as protocol SSOT objects.
+## Scope & Guarantees
 
----
+This package is a public npm release surface for the package role above. It is package evidence and user-facing distribution content, not authorization to publish, mutate registries, create tags, create release seals, or change protocol truth.
 
-## Scope & Guarantees (Important)
+## What This Package Provides
 
-### What this package provides
+- Minimal runtime interfaces and orchestrator helper artifacts aligned with MPLP v1.0.0.
+- Runtime-level helper exports such as `InMemoryAEL`, `InMemoryVSL`, and flow runner helpers.
+- A runtime-focused package surface separated from the SDK facade.
 
-- Minimal runtime interfaces and orchestrator artifacts aligned with MPLP v1.0.0
-- AEL/VSL/runtime context artifacts in the published package
-- Runtime-focused package surface separated from the `@mplp/sdk-ts` facade
+## What This Package Does NOT Provide
 
-### What this package does NOT provide
-
-- Direct protocol object mirrors for runtime concepts
-- Full execution runtime (LLM orchestration, tool execution)
-- Golden Flow execution engines (Flow-01 ~ Flow-05)
-- Canonical registry of all 11 Kernel Duties
-- Production agent orchestration
-
----
+- A full execution platform for LLM orchestration or tool execution.
+- A replacement for `@mplp/sdk-ts`.
+- A canonical registry of all 11 Kernel Duties.
+- Protocol schema source-of-truth authority.
 
 ## Installation
 
@@ -40,50 +32,38 @@ They must not be read as protocol SSOT objects.
 npm install @mplp/runtime-minimal
 ```
 
----
+## Minimal User Smoke Usage Snippet
 
-## Protocol Documentation
+```javascript
+const runtime = require('@mplp/runtime-minimal');
+console.log(typeof runtime.runSingleAgentFlow);
+```
 
-- **Homepage:** [https://www.mplp.io/what-is-mplp](https://www.mplp.io/what-is-mplp) — discovery and positioning only
-- **Docs Entry Surface:** [https://docs.mplp.io/docs/reference/entrypoints](https://docs.mplp.io/docs/reference/entrypoints) — authoritative documentation entry surface
-- **Source Repository:** [https://github.com/Coregentis/MPLP-Protocol](https://github.com/Coregentis/MPLP-Protocol) — repository truth source
+## Protocol Documentation Links
+
+- **Homepage:** [https://www.mplp.io/what-is-mplp](https://www.mplp.io/what-is-mplp) - discovery and positioning only
+- **Docs Entry Surface:** [https://docs.mplp.io/docs/reference/entrypoints](https://docs.mplp.io/docs/reference/entrypoints) - authoritative documentation entry surface
+- **Source Repository:** [https://github.com/Coregentis/MPLP-Protocol](https://github.com/Coregentis/MPLP-Protocol) - public source projection
 - **Issues:** [https://github.com/Coregentis/MPLP-Protocol/issues](https://github.com/Coregentis/MPLP-Protocol/issues)
-
----
 
 ## Package Provenance
 
-- **Public npm surface:** `packages/npm/runtime-minimal/`
-- **Related facade package:** `packages/npm/sdk-ts/`
-
-This package is the published minimal runtime artifact surface. It is not the
-protocol truth source and it does not replace the SDK facade package.
-
----
-
-## Kernel Duty Baseline
-
-This package does **not** ship a standalone machine-readable registry of the
-11 MPLP Kernel Duties.
-
-The canonical duty baseline remains in:
-
-- `schemas/v2/taxonomy/kernel-duties.yaml`
-- the public mirror package `@mplp/schema`
-
----
+- **Package address:** [https://www.npmjs.com/package/@mplp/runtime-minimal](https://www.npmjs.com/package/@mplp/runtime-minimal)
+- Public npm surface: `packages/npm/runtime-minimal`.
+- Related facade package: `packages/npm/sdk-ts`.
+- Runtime helper package, not protocol truth and not a full execution product.
 
 ## Versioning & Compatibility
 
 - **Protocol version:** MPLP v1.0.0 (Frozen)
-- **Package compatibility:** aligned to `protocol_version` v1.0.0 only
-- Breaking changes require a new protocol version.
-
----
+- **Package version:** 1.0.6
+- **Compatibility:** aligned to MPLP protocol_version v1.0.0 only
+- Breaking changes require a new protocol version or a separately approved package release decision.
 
 ## License
 
 Apache License, Version 2.0
 
-© 2026 **Jearon Wong**
-Coregentis AI
+## Copyright
+
+© 2026 Jearon Wong

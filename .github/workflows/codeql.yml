@@ -12,6 +12,7 @@ on:
 jobs:
   analyze:
     name: Analyze (${{ matrix.language }})
+    if: ${{ !github.event.repository.private || vars.CODEQL_PRIVATE_ENABLED == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       security-events: write

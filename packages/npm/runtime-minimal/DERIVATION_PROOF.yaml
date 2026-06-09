@@ -13,11 +13,34 @@ evidence_baseline:
 
 derivation:
   method: "publish_surface_projection"
-  description: "Published minimal runtime package aligned to MPLP truth sources and runtime artifact chain"
+  description: >
+    Public minimal runtime helper package surface aligned to MPLP truth sources
+    and runtime artifact evidence. This proof is metadata evidence only and
+    does not authorize release or publish execution.
   truth_sources:
     - "schemas/v2/*.schema.json"
     - "governance/05-specialized/entity.json"
     - "governance/05-versioning/version-taxonomy-manifest.json"
+  immediate_source:
+    - "packages/npm/runtime-minimal/dist"
+    - "packages/npm/runtime-minimal/README.md"
+    - "packages/npm/runtime-minimal/package.json"
+  projection_boundary:
+    source_flow_class: "runtime-minimal-convenience-surface"
+    package_role: "runtime-minimal"
+    generated_artifacts_are_evidence_only: true
+    publish_authorization: "not_authorized_by_this_proof"
+  pack_boundary:
+    includes:
+      - "dist/**"
+      - "README.md"
+      - "LICENSE.txt"
+      - "CHANGELOG.md"
+      - "package.json"
+    excludes:
+      - "tests/**"
+      - "tsconfig.json"
+      - "DERIVATION_PROOF.yaml"
 
 package:
   name: "@mplp/runtime-minimal"
@@ -30,7 +53,9 @@ verification:
   evidence_baseline_aligned: true
   package_role: "runtime_minimal"
   kernel_duty_baseline_carried: false
+  release_authorization: "not_authorized_by_this_proof"
 
 governance:
   method: "METHOD-SDKR-08"
   frozen: true
+  evidence_only_no_release_or_publish_authorization: true

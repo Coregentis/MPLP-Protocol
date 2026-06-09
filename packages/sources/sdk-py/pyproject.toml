@@ -4,14 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mplp-sdk"
-version = "1.0.5"
+version = "1.0.6"
 description = "Source-side mirror for the published mplp-sdk protocol helper package surface; not a public publish target."
 readme = "README.md"
 requires-python = ">=3.9"
 license = "Apache-2.0"
 
 authors = [
-  { name = "Coregentis AI" }
+  { name = "Jearon Wong" }
 ]
 
 keywords = ["mplp", "multi-agent", "lifecycle", "protocol", "agent-os", "python", "source-mirror", "kernel-duties"]

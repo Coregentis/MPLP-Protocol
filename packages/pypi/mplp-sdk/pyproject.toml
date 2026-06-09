@@ -5,11 +5,10 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "mplp-sdk"
 version = "1.0.6"
-description = "Published Python protocol helper mirror for MPLP v1.0.0 version identity and Kernel Duty baseline."
+description = "Public Python protocol helper package for MPLP v1.0.0 metadata, protocol binding, and Kernel Duty baseline."
 readme = "README.md"
 requires-python = ">=3.9"
 license = "Apache-2.0"
-license-files = ["LICENSE"]
 
 authors = [
   { name = "Jearon Wong" }

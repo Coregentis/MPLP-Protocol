@@ -57,7 +57,7 @@
   },
   "sideEffects": false,
   "scripts": {
-    "build": "node ../../../scripts/packages/validate-public-npm-package.mjs --model wrapper_package"
+    "build": "tsc -p tsconfig.json"
   },
   "copyright": "© 2026 Jearon Wong"
 }

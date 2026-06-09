@@ -1,3 +1,20 @@
+---
+entry_surface: repository
+entry_model_class: primary
+doc_type: governance
+status: draft
+authority: none
+protocol_version: "1.0.0"
+doc_id: "GOV-EXEC-ORDER"
+title: "Governance Execution Order"
+authority_scope:
+  - governance_source
+authority_basis:
+  - projection_only
+surface_role: canonical
+active_governance_class: active_index_or_router
+---
+
 # Governance Execution Order
 
 **Document ID**: GOV-EXEC-ORDER  
@@ -6,6 +23,10 @@
 **Effective**: v1.0.0
 
 ---
+
+> [!NOTE]
+> `status: draft` in frontmatter reflects repository lifecycle only.
+> This file remains the active execution-routing guide for governance work.
 
 ## 1. Purpose
 
@@ -26,30 +47,30 @@ Phase 0: Constitutional Reference (01-constitutional/)
          Read foundation rules. Do not modify.
               │
               ▼
-Phase 1-3: Truth Source Verification (02-methods/verification/)
+Phase 1-3: Truth Source Verification (02-methods/schema/)
          ├── TSV-01: $ref Closure Verification
          ├── XCV-01: Cross-Consistency Verification
          ├── SCV-01: Schema Surface Completeness
          └── SUC-01: Schema Usage Conformance
               │
               ▼
-Phase 4-7: Evolution Verification (02-methods/evolution/)
+Phase 4-7: Evolution Verification (02-methods/schema/)
          ├── DIV-01: Derivation Integrity Verification
          └── EVC-01: Evolution Compatibility Verification
               │
               ▼
-Phase 8: Freeze Evidence Baseline (04-records/baselines/)
-         Create FREEZE_EVIDENCE_BASELINE_v*.md
+Phase 8: Freeze Evidence Baseline (04-records/)
+         Create the current freeze baseline and addendum records
               │
               ▼
 Phase 9+: SDK Release (03-distribution/sdk/)
-         ├── Execute SDKR-01 through SDKR-07
+         ├── Execute SDKR-01 through SDKR-09
          ├── Complete CHECKLIST-SDK-RELEASE.md
          └── Obtain MPGC approval
               │
               ▼
-Record: Phase Completion (04-records/phases/)
-         Document phase exit criteria and results
+Record: Closure / Source Records (04-records/)
+         Document baseline, closure, and release governance outcomes
 ```
 
 ---
@@ -96,8 +117,8 @@ Record: Phase Completion (04-records/phases/)
 
 | Action | Location |
 |:---|:---|
-| Create freeze record | `04-records/baselines/FREEZE_*.md` |
-| Create governance addendum | `04-records/baselines/GOV-ADDENDUM-*.md` |
+| Create freeze record | `04-records/FREEZE_*.md` |
+| Create governance addendum | `04-records/GOV-ADDENDUM-*.md` |
 | Tag in Git | `evidence-baseline-v*` |
 
 **Output**: Frozen baseline with evidence artifacts
@@ -116,6 +137,7 @@ Record: Phase Completion (04-records/phases/)
 | Verification | `03-distribution/sdk/METHOD-SDKR-06_*.md` |
 | Incident | `03-distribution/sdk/METHOD-SDKR-07_*.md` |
 | Multi-Package | `03-distribution/sdk/METHOD-SDKR-08_*.md` |
+| Readiness | `03-distribution/sdk/METHOD-SDKR-09_*.md` |
 | Checklist | `03-distribution/sdk/CHECKLIST-SDK-RELEASE.md` |
 | Approval | `03-distribution/sdk/MPGC_APPROVAL_*.md` |
 

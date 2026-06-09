@@ -7,16 +7,30 @@ schema_bundle:
   path: "schemas/v2"
   
 evidence_baseline:
-  reference: "governance/04-records/baselines/FREEZE_EVIDENCE_BASELINE_v1.0.md"
+  reference: "governance/04-records/FREEZE_EVIDENCE_BASELINE_v1.0.md"
   version: "v1.0"
   digest: "sha256:78ea3511cee7cacebff416b5ad6179358032d5322e5991523b5f8d6257d10354"
 
 derivation:
-  method: "source_derivation"
-  description: "TypeScript SDK package derived from MPLP Truth Sources"
+  method: "derived_protocol_helper_projection"
+  description: >
+    Public npm core helper package surface aligned to current MPLP schema and
+    governance authority references. This proof is metadata evidence only and
+    does not authorize release or publish execution.
   truth_sources:
     - "schemas/v2/*.schema.json"
-    - "governance/01-core/MPLP_CONSTITUTION.md"
+    - "schemas/v2/taxonomy/kernel-duties.yaml"
+    - "schemas/v2/common/metadata.schema.json"
+    - "governance/05-specialized/entity.json"
+    - "governance/05-versioning/version-taxonomy-manifest.json"
+  immediate_source:
+    - "packages/npm/core/dist"
+    - "packages/npm/core/README.md"
+    - "packages/npm/core/package.json"
+  package_surface:
+    source_flow_class: "derived-protocol-helper"
+    package_role: "core-derived-helper"
+    publish_authorization: "not_authorized_by_this_proof"
 
 package:
   name: "@mplp/core"
@@ -25,9 +39,11 @@ package:
   category: "PUBLIC"
 
 verification:
-  protocol_conformance: "VERIFIED"
+  protocol_surface_aligned: true
   evidence_baseline_aligned: true
+  release_authorization: "not_authorized_by_this_proof"
 
 governance:
   method: "METHOD-SDKR-08"
   frozen: true
+  evidence_only_no_release_or_publish_authorization: true

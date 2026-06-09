@@ -1,5 +1,5 @@
 """
-Canonical Kernel Duty baseline exposed by the published mplp-sdk package.
+Canonical Kernel Duty baseline exposed by the public mplp-sdk package surface.
 """
 
 KERNEL_DUTIES = [

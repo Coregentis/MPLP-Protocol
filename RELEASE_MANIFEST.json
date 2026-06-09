@@ -1,13 +1,11 @@
 {
-  "version_domain": "protocol_version",
   "version": "1.0.0",
-  "protocol_version": "1.0.0",
-  "generated": "2026-01-23T04:11:27.508Z",
-  "fileCount": 822,
-  "totalSizeBytes": 5237838,
-  "totalSizeMB": "5.00",
+  "generated": "2026-06-09T09:42:27.703Z",
+  "fileCount": 767,
+  "totalSizeBytes": 4828823,
+  "totalSizeMB": "4.61",
   "buildInfo": {
-    "node": "v25.2.1",
+    "node": "v22.22.2",
     "platform": "darwin",
     "arch": "arm64"
   }

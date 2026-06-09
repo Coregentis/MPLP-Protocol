@@ -20,6 +20,11 @@
   "publishConfig": {
     "access": "public"
   },
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE.txt"
+  ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
@@ -54,6 +59,6 @@
   },
   "sideEffects": false,
   "scripts": {
-    "build": "node ../../../scripts/packages/validate-public-npm-package.mjs --model wrapper_package"
+    "build": "tsc -p tsconfig.json"
   }
 }

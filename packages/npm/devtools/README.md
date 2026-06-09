@@ -6,6 +6,8 @@
 The **@mplp/devtools** package provides a **developer-tooling convenience surface** for MPLP.
 Its public package contract aggregates schema and conformance utilities alongside CLI helpers; it is not a direct protocol object mirror.
 
+**Package version:** 1.0.6
+
 ---
 
 ## Scope & Guarantees (Important)
@@ -15,6 +17,7 @@ Its public package contract aggregates schema and conformance utilities alongsid
 * **CLI and developer tooling helpers** aligned with MPLP v1.0.0
 * **Convenience aggregation** over schema and conformance utilities
 * **Version-aligned package surface** for developer workflows
+* **CLI command:** `mplp conformance`
 
 ### ❌ What this package does NOT provide
 
@@ -35,6 +38,11 @@ Its public package contract aggregates schema and conformance utilities alongsid
 npm install @mplp/devtools
 ```
 
+```bash
+npx mplp --help
+npx mplp conformance
+```
+
 ---
 
 ## Protocol Documentation
@@ -49,6 +57,7 @@ npm install @mplp/devtools
 ## Versioning & Compatibility
 
 * **Protocol version:** MPLP v1.0.0 (Frozen)
+* **Package version:** 1.0.6
 * **SDK compatibility:** Guaranteed for v1.0.0 only
 * Breaking changes require a new protocol version.
 
@@ -59,4 +68,3 @@ npm install @mplp/devtools
 Apache License, Version 2.0
 
 © 2026 **Jearon Wong**
-Coregentis AI
