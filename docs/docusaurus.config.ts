@@ -53,7 +53,7 @@ const config: Config = {
           editUrl: 'https://github.com/Coregentis/MPLP-Protocol/tree/main/docs/',
           // Docs at /docs/ to allow Landing Page at /
           routeBasePath: 'docs',
-          showLastUpdateTime: false,
+          showLastUpdateTime: true,
           // Enable breadcrumbs
           breadcrumbs: true,
           // Preserve numeric prefixes in URLs/DocIDs

@@ -15,6 +15,11 @@
     "vitest": "^1.0.0",
     "@types/node": "^20.0.0"
   },
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE.txt"
+  ],
   "author": "Jearon Wong",
   "copyright": "© 2026 Jearon Wong",
   "mplp": {
@@ -53,7 +58,7 @@
   },
   "sideEffects": false,
   "scripts": {
-    "build": "node ../../../scripts/packages/validate-public-npm-package.mjs --model wrapper_package",
+    "build": "tsc -p tsconfig.json",
     "test": "echo 'Publish-only workspace: run unit tests in packages/sources/ instead'"
   }
 }

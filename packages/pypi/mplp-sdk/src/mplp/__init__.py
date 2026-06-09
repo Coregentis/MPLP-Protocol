@@ -2,9 +2,9 @@
 # Governance: MPGC
 
 """
-mplp-sdk — published protocol helper package surface
+mplp-sdk — public protocol helper package surface
 
-This published package currently ships a minimal protocol helper surface for:
+This public package surface ships a minimal protocol helper surface for:
 - __version__
 - MPLP_PROTOCOL_VERSION
 - KERNEL_DUTIES / KERNEL_DUTY_IDS / KERNEL_DUTY_NAMES / KERNEL_DUTY_COUNT
@@ -25,4 +25,4 @@ __all__ = [
     "KERNEL_DUTY_COUNT",
 ]
 
-# Published protocol helper package for mplp-sdk v1.0.6.
+# Public protocol helper package for mplp-sdk v1.0.6.

@@ -1,0 +1,13 @@
+# Current Global Alignment Pointer
+# Points to the active, sealed baseline for v1.0 maintenance
+
+version: "1.0.0"
+status: "active"
+effective_baseline: "global-alignment-baseline.yaml"
+current_series: "v0.17.0"
+current_protocol: "1.0.0"
+current_schema_bundle: "2.0.0"
+
+# Metadata
+last_updated: "2026-01-25T23:58:00+08:00"
+updated_by: "Antigravity (Audit Closure)"

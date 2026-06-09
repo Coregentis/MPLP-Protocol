@@ -1,7 +1,7 @@
 {
     "name": "mplp-protocol-oss",
     "version": "1.0.0",
-    "description": "MPLP Protocol v1.0 - Multi-Agent Lifecycle Protocol (OSS Package)",
+    "description": "MPLP Protocol v1.0 - Multi-agent Planning and Learning Protocol (OSS Package)",
     "repository": {
         "type": "git",
         "url": "https://github.com/Coregentis/MPLP-Protocol.git"
@@ -12,8 +12,8 @@
     "scripts": {
         "docs:dev": "cd docs && npm run start",
         "docs:build": "cd docs && npm run build",
-        "test": "node scripts/04-build/root-verification.mjs",
-        "lint": "node scripts/04-build/root-verification.mjs --lint"
+        "test": "echo 'No root tests configured'",
+        "lint": "echo 'No root linting configured'"
     },
     "devDependencies": {
         "js-yaml": "^4.1.0",

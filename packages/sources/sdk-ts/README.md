@@ -2,7 +2,7 @@
 
 **Package Role:** Source workspace mirror (not a public publish target)
 **Protocol:** MPLP v1.0.0 (Frozen)
-**sdk_version:** 1.0.7
+**sdk_version:** 1.0.8
 **License:** Apache-2.0
 
 This directory is the **source-side workspace mirror** for the published
@@ -92,4 +92,3 @@ Canonical baseline source:
 Apache License, Version 2.0
 
 © 2026 **Jearon Wong**
-Coregentis AI

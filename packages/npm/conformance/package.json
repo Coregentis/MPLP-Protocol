@@ -1,11 +1,11 @@
 {
   "name": "@mplp/conformance",
   "version": "1.0.1",
-  "description": "Public compatibility alias for MPLP conformance tooling under the preferred terminology. Re-exports the legacy @mplp/compliance surface.",
+  "description": "Forward public package surface for MPLP conformance validation helpers.",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Coregentis/MPLP-Protocol.git"
+    "url": "git+https://github.com/Coregentis/MPLP-Protocol.git"
   },
   "keywords": [
     "mplp",
@@ -23,8 +23,15 @@
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "dependencies": {
-    "@mplp/compliance": "^1.0.4",
+    "@mplp/schema": "^1.0.6"
+  },
+  "devDependencies": {
     "typescript": "^5.9.3"
   },
   "author": "Jearon Wong",
@@ -36,9 +43,8 @@
     "packageClass": "PUBLIC",
     "publishSurface": true,
     "publishScope": "public-npm",
-    "packageRole": "conformance-compatibility-alias",
-    "contractMode": "convenience-runtime-alias",
-    "legacyAliasOf": "@mplp/compliance"
+    "packageRole": "conformance-forward-surface",
+    "contractMode": "direct-conformance-facade"
   },
   "homepage": "https://www.mplp.io/what-is-mplp",
   "bugs": {
@@ -53,6 +59,6 @@
   },
   "sideEffects": false,
   "scripts": {
-    "build": "node ../../../scripts/packages/validate-public-npm-package.mjs --model wrapper_package"
+    "build": "tsc -p tsconfig.json"
   }
 }

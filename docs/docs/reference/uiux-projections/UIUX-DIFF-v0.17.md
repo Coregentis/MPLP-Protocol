@@ -1,3 +1,7 @@
+---
+normativity: non-normative
+---
+
 # UI/UX Evolution Report (v0.9 → v0.17)
 
 This report documents the structural evolution of the Validation Lab's user interface and its relationship to the underlying protocol SSOT.

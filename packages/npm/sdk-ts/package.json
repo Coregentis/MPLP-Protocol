@@ -46,7 +46,7 @@
     "kernelDutyBaselineCarried": true
   },
   "scripts": {
-    "build": "node ../../../scripts/packages/validate-public-npm-package.mjs --model schema_data_package",
+    "build": "tsc",
     "test": "echo 'No tests yet'"
   },
   "dependencies": {
@@ -78,8 +78,7 @@
       "require": "./dist/kernel-duties.js",
       "import": "./dist/kernel-duties.js",
       "types": "./dist/kernel-duties.d.ts"
-    },
-    "./schemas/*": "./schemas/*"
+    }
   },
   "sideEffects": false,
   "copyright": "© 2026 Jearon Wong"

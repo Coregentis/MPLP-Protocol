@@ -51,7 +51,7 @@ Under Apache-2.0, you are free to:
 
 ## 5. Trademark Notice
 
-"MPLP" and "Multi-Agent Lifecycle Protocol" are marks associated with Jearon Wong. Trademark registration and ownership notices may be updated as application or registration status changes.
+"MPLP" and "Multi-Agent Lifecycle Protocol" are trademarks of Jearon Wong.
 
 Use of these marks does NOT imply endorsement. See [External Trust Overview](./EXTERNAL_TRUST_OVERVIEW) for permitted claims.
 

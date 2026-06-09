@@ -1,3 +1,7 @@
+---
+normativity: non-normative
+---
+
 # UI/UX SSOT Projection Map (v0.9–v0.17)
 
 This table provides the human-readable mapping between Validation Lab routes and their authoritative manifest anchors.

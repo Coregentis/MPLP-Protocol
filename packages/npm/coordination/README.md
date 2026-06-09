@@ -1,33 +1,30 @@
 # @mplp/coordination
 
+**Package Role:** Public npm coordination helper package
 **Protocol:** MPLP v1.0.0 (Frozen)
+**Package version:** 1.0.7
 **License:** Apache-2.0
 
-The **@mplp/coordination** package provides **coordination helper contracts** for MPLP.
-Its exported contracts are **derived helper constructs** built over protocol-aligned types; they are not direct mirrors of canonical protocol schemas or event definitions.
+The `@mplp/coordination` package provides coordination-oriented helper contracts and event utilities for MPLP v1.0.0 consumers.
 
----
+It is a derived helper package over protocol-aligned types, not a standalone runtime or protocol authority.
 
-## Scope & Guarantees (Important)
+## Scope & Guarantees
 
-### ✅ What this package provides
+This package is a public npm release surface for the package role above. It is package evidence and user-facing distribution content, not authorization to publish, mutate registries, create tags, create release seals, or change protocol truth.
 
-* **Derived helper contracts** aligned with MPLP v1.0.0
-* **Convenience coordination and governance helper types**
-* **Type-safe integration surface** for higher-level runtimes and tools
+## What This Package Provides
 
-### ❌ What this package does NOT provide
+- Coordination helper contracts for single-agent and multi-agent lifecycle flows.
+- Convenience exports such as `SingleAgentFlowContract` and `createMplpEvent`.
+- A package-facing integration surface aligned to MPLP v1.0.0.
 
-- ❌ Direct schema or event-family mirrors
-- ❌ Full execution runtime (LLM orchestration, tool execution)
-- ❌ Golden Flow execution engines (Flow-01 ~ Flow-05)
-- ❌ Observability pipelines or distributed tracing backends
-- ❌ Production agent orchestration
+## What This Package Does NOT Provide
 
-> These capabilities belong to **reference runtimes and products built *on top of* MPLP**,
-> not to the protocol SDK itself.
-
----
+- Full execution runtime or hosted orchestration.
+- Protocol schema source-of-truth authority.
+- Golden Flow execution engines.
+- Registry, release, certification, or compliance authority.
 
 ## Installation
 
@@ -35,28 +32,38 @@ Its exported contracts are **derived helper constructs** built over protocol-ali
 npm install @mplp/coordination
 ```
 
----
+## Minimal User Smoke Usage Snippet
 
-## Protocol Documentation
+```javascript
+const coordination = require('@mplp/coordination');
+console.log(typeof coordination.createMplpEvent);
+```
 
-* **Homepage:** [https://www.mplp.io/what-is-mplp](https://www.mplp.io/what-is-mplp) — discovery and positioning only
-* **Docs Entry Surface:** [https://docs.mplp.io/docs/reference/entrypoints](https://docs.mplp.io/docs/reference/entrypoints) — authoritative documentation entry surface
-* **Source Repository:** [https://github.com/Coregentis/MPLP-Protocol](https://github.com/Coregentis/MPLP-Protocol) — repository truth source
-* **Issues:** [https://github.com/Coregentis/MPLP-Protocol/issues](https://github.com/Coregentis/MPLP-Protocol/issues)
+## Protocol Documentation Links
 
----
+- **Homepage:** [https://www.mplp.io/what-is-mplp](https://www.mplp.io/what-is-mplp) - discovery and positioning only
+- **Docs Entry Surface:** [https://docs.mplp.io/docs/reference/entrypoints](https://docs.mplp.io/docs/reference/entrypoints) - authoritative documentation entry surface
+- **Source Repository:** [https://github.com/Coregentis/MPLP-Protocol](https://github.com/Coregentis/MPLP-Protocol) - public source projection
+- **Issues:** [https://github.com/Coregentis/MPLP-Protocol/issues](https://github.com/Coregentis/MPLP-Protocol/issues)
+
+## Package Provenance
+
+- **Package address:** [https://www.npmjs.com/package/@mplp/coordination](https://www.npmjs.com/package/@mplp/coordination)
+- Public npm surface: `packages/npm/coordination`.
+- Derived package helper surface for coordination consumers.
+- Canonical protocol truth remains in Dev-side schema and governance records.
 
 ## Versioning & Compatibility
 
-* **Protocol version:** MPLP v1.0.0 (Frozen)
-* **SDK compatibility:** Guaranteed for v1.0.0 only
-* Breaking changes require a new protocol version.
-
----
+- **Protocol version:** MPLP v1.0.0 (Frozen)
+- **Package version:** 1.0.7
+- **Compatibility:** aligned to MPLP protocol_version v1.0.0 only
+- Breaking changes require a new protocol version or a separately approved package release decision.
 
 ## License
 
 Apache License, Version 2.0
 
-© 2026 **Jearon Wong**
-Coregentis AI
+## Copyright
+
+© 2026 Jearon Wong

@@ -1,3 +1,7 @@
+---
+normativity: non-normative
+---
+
 # Validation Lab (Route Helper)
 
 This path is a **legacy helper route** only.

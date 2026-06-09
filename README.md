@@ -57,13 +57,6 @@ records.
 It is also not the primary place for package-specific implementation guidance or
 current release walkthroughs.
 
-Downstream-driven candidate tracking, when present, lives under
-`governance/backlog/` as non-normative governance only.
-Those backlog files do not alter frozen protocol core truth.
-Downstream candidate-only closure records may also be recorded under
-`governance/backlog/` and `governance/releases/` as non-normative governance
-only; they do not imply schema change, package change, or protocol promotion.
-
 ## Version Semantics
 
 MPLP uses version domains rather than a single undifferentiated version label.
@@ -97,8 +90,8 @@ MPLP uses a **3+1 constitutional entry model** and exposes **four public-facing 
 |---------|----------------------|------|---------|
 | **Website** | Primary | Discovery & Positioning | Establish MPLP's public framing and discovery path |
 | **Documentation** | Primary | Specification & Reference | Explain how the protocol works and project normative requirements |
-| **Validation Lab** | Auxiliary | Evidence Adjudication | Evidence-based verdicts under versioned Lab rulesets |
 | **Repository (this)** | Primary | Source of Truth | Schemas, code, tests, governance sources |
+| **Validation Lab** | Auxiliary | Evidence Adjudication | Evidence-based verdicts under versioned Lab rulesets |
 
 Validation Lab is a public-facing surface, but it is **not** a protocol-defining primary surface.
 The Repository alone remains authoritative for protocol truth; the other three
@@ -125,14 +118,14 @@ Each public-facing surface has stable anchors for cross-referencing:
 - [Specification](https://docs.mplp.io/docs/specification) — Normative requirements
 - [Validation Lab Reference](https://docs.mplp.io/docs/evaluation/validation-lab) — Lab overview & terminology
 
-**Validation Lab Anchors**:
-- [Lab Site](https://lab.mplp.io) — Evidence adjudication UI
-- [Coregentis/MPLP-Validation-Lab](https://github.com/Coregentis/MPLP-Validation-Lab) — Separate Validation Lab release-line repository
-
 **Repository Anchors**:
 - [Schemas](./schemas/v2/) — Repository truth-source anchor for JSON Schema definitions
 - [Tests](./tests/golden/flows/) — Golden flows & validators
 - [Entity Definition](./governance/05-specialized/entity.json) — Canonical machine-readable entity package
+
+**Validation Lab Anchors**:
+- [Lab Site](https://lab.mplp.io) — Evidence adjudication UI
+- [Validation_Lab](./Validation_Lab/) — In-repository Lab source and governance surface
 
 **Disambiguation**: MPLP = Multi-Agent Lifecycle Protocol (not a license). MPLP is not POSIX (conceptual lens only).
 
@@ -149,7 +142,7 @@ Validation Lab does not define protocol truth; protocol truth remains anchored i
 | **Constitutional Class** | Auxiliary |
 | **Role** | Evidence-based adjudication under versioned Lab rulesets |
 | **Lab Site** | [https://lab.mplp.io](https://lab.mplp.io) |
-| **Lab Repository** | [Coregentis/MPLP-Validation-Lab](https://github.com/Coregentis/MPLP-Validation-Lab) |
+| **Lab Source Surface** | [Validation_Lab/](./Validation_Lab/) |
 
 ### Four Boundaries (Non-Negotiable)
 
@@ -161,12 +154,11 @@ Validation Lab does not define protocol truth; protocol truth remains anchored i
 ### Bounded Governance Chain
 
 > **Bounded Role**: Validation Lab rulesets, contract surfaces, and evidence
-> adjudication assets are governed in the separate release-line repository
-> [Coregentis/MPLP-Validation-Lab](https://github.com/Coregentis/MPLP-Validation-Lab)
-> and exposed publicly via [https://lab.mplp.io](https://lab.mplp.io). The root
-> MPLP protocol repository links to that Lab surface but does not host it as an
-> in-repository public source surface. This bounded Lab role does not supersede
-> repository authority on protocol truth, schema truth, or invariant truth.
+> adjudication assets are governed in the in-repository
+> [Validation_Lab/](./Validation_Lab/) surface and exposed publicly via
+> [https://lab.mplp.io](https://lab.mplp.io). This bounded Lab role does not
+> supersede repository authority on protocol truth, schema truth, or invariant
+> truth.
 
 ### Terminology Partition
 
@@ -312,24 +304,6 @@ Primary packages include:
   - [`schemas/v2/taxonomy/kernel-duties.yaml`](./schemas/v2/taxonomy/kernel-duties.yaml)
 - Public package mirror artifacts include:
   - [`packages/npm/schema/schemas/kernel-duties.json`](./packages/npm/schema/schemas/kernel-duties.json)
-
-### Current Package/Tooling Posture (Repo-Local)
-
-Current checked-in package/tooling posture is intentionally bounded:
-
-- this repository does **not** currently expose one unified root type/build gate
-- many `packages/npm/*` manifests are publish-oriented and point to `dist/`
-  targets that are not present in checked-in repo contents
-- `packages/sources/*` are not one uniform family of locally buildable source
-  packages; some are clearer source-side packages than others
-- package/tooling posture should therefore be read from current repo contents and
-  governance records, not inferred from publish-oriented manifest targets alone
-
-For the bounded package/tooling closure records, see:
-
-- [`governance/audits/MPLP-PACKAGE-TRUTH-AND-TOOLING-REVIEW-v0.1.md`](./governance/audits/MPLP-PACKAGE-TRUTH-AND-TOOLING-REVIEW-v0.1.md)
-- [`governance/audits/MPLP-DIST-TARGET-REALITY-MATRIX-v0.1.md`](./governance/audits/MPLP-DIST-TARGET-REALITY-MATRIX-v0.1.md)
-- [`governance/releases/MPLP-TOOLING-POSTURE-CLOSURE-RECORD-v0.1.md`](./governance/releases/MPLP-TOOLING-POSTURE-CLOSURE-RECORD-v0.1.md)
 
 ---
 
