@@ -1,9 +1,9 @@
 {
   "version": "1.0.0",
-  "generated": "2026-06-09T09:57:50.881Z",
-  "fileCount": 767,
-  "totalSizeBytes": 4832676,
-  "totalSizeMB": "4.61",
+  "generated": "2026-06-09T14:39:53.255Z",
+  "fileCount": 766,
+  "totalSizeBytes": 4821706,
+  "totalSizeMB": "4.60",
   "buildInfo": {
     "node": "v22.22.2",
     "platform": "darwin",
