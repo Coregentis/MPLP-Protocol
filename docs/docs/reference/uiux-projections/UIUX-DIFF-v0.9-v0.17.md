@@ -1,3 +1,7 @@
+---
+normativity: non-normative
+---
+
 # UI/UX Evolution Report: v0.9 -> v0.17 (Non-Normative)
 
 This report details the major UI/UX shifts and navigational evolution of the Validation Lab. These changes are "Projections" and do not affect the stationary adjudication logic or bit-identical evidence.

@@ -12,17 +12,30 @@ evidence_baseline:
   digest: "sha256:78ea3511cee7cacebff416b5ad6179358032d5322e5991523b5f8d6257d10354"
 
 derivation:
-  method: "publish_surface_mirror"
-  description: "Public npm facade package mirrored from packages/sources/sdk-ts and aligned to MPLP truth sources"
+  method: "publish_surface_projection"
+  description: >
+    Public npm facade package projected from the source workspace mirror and
+    package-specific release surface. The public package is not a byte-identical
+    source mirror, and this proof does not authorize release or publish
+    execution.
   truth_sources:
     - "schemas/v2/*.schema.json"
     - "governance/05-specialized/entity.json"
     - "governance/05-versioning/version-taxonomy-manifest.json"
+  source_mirror_evidence:
+    path: "packages/sources/sdk-ts"
+    publish_target: false
+    role: "source_workspace_mirror"
   immediate_source:
-    - "packages/sources/sdk-ts/dist/**"
-    - "packages/sources/sdk-ts/schemas/**"
-    - "packages/sources/sdk-ts/README.md"
-    - "packages/sources/sdk-ts/package.json"
+    - "packages/npm/sdk-ts/dist"
+    - "packages/npm/sdk-ts/schemas"
+    - "packages/npm/sdk-ts/README.md"
+    - "packages/npm/sdk-ts/package.json"
+  projection_boundary:
+    source_public_byte_identical: false
+    package_role: "typescript-facade-helper"
+    source_mirror_authority: "evidence_only_not_publish_target"
+    publish_authorization: "not_authorized_by_this_proof"
 
 package:
   name: "@mplp/sdk-ts"
@@ -35,7 +48,9 @@ verification:
   evidence_baseline_aligned: true
   package_role: "sdk_facade"
   kernel_duty_baseline_carried: true
+  release_authorization: "not_authorized_by_this_proof"
 
 governance:
   method: "METHOD-SDKR-08"
   frozen: true
+  evidence_only_no_release_or_publish_authorization: true

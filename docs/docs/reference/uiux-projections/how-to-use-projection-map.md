@@ -1,3 +1,7 @@
+---
+normativity: informative
+---
+
 # How to Use the UI/UX SSOT Projection Map
 
 The [UI/UX SSOT Projection Map](/docs/reference/uiux-projections/UIUX-MAP-v0.9-v0.17.md) is a non-normative tool designed to help auditors navigate the Validation Lab's evolution and locate key evidence pointers.

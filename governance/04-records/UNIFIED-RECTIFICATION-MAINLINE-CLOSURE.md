@@ -2,8 +2,8 @@
 entry_surface: repository
 entry_model_class: primary
 doc_type: attestation
-status: draft # repository attestation lifecycle status per CONST-002
-authority: none # protocol authority only; governance authority is expressed through record basis
+status: draft
+authority: none
 protocol_version: "1.0.0"
 doc_id: "UNIFIED-RECTIFICATION-MAINLINE-CLOSURE"
 title: "Unified Rectification Mainline Closure"
@@ -18,10 +18,7 @@ record_state: final
 
 # Unified Rectification Mainline Closure
 
-**Status**: Draft Repository Attestation  
-**Record State**: Final  
-**Authority**: None (protocol authority)  
-**Governance Authority Basis**: repository governance closure record  
+**Status**: CLOSED  
 **Closure State**: BASELINE ESTABLISHED  
 **Closure Date**: 2026-03-28  
 **Scope**: Repository governance realignment baseline
@@ -58,7 +55,7 @@ This means future work MUST treat the following as baseline rather than open des
 - `4 public-facing surfaces`
 - scoped authority model
 - Validation Lab truth source = root protocol truth source for invariants
-- `Coregentis/MPLP-Validation-Lab` as the authoritative Validation Lab release-line repository linked from the root repository
+- `Validation_Lab` as the only authoritative Lab home in this repository governance scope
 - `Validation_Lab_V2` as non-authoritative `engineering_track`
 - explicit version-domain taxonomy
 - executable cleanup and governance gates
@@ -115,7 +112,7 @@ This means future work MUST treat the following as baseline rather than open des
 - `gate:v2-ownership-collapse`
 
 **Effect**:
-- `Coregentis/MPLP-Validation-Lab` is now the authoritative public-facing Validation Lab home linked from the root repository
+- `Validation_Lab` is now the only authoritative Lab home in this repository governance scope
 - `Validation_Lab_V2` is explicitly reduced to non-authoritative `engineering_track`
 
 ### 3.4 P1 Version Taxonomy Manifest

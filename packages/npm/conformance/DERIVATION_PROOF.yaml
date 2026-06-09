@@ -7,16 +7,49 @@ schema_bundle:
   path: "schemas/v2"
   
 evidence_baseline:
-  reference: "governance/04-records/baselines/FREEZE_EVIDENCE_BASELINE_v1.0.md"
+  reference: "governance/04-records/FREEZE_EVIDENCE_BASELINE_v1.0.md"
   version: "v1.0"
   digest: "sha256:78ea3511cee7cacebff416b5ad6179358032d5322e5991523b5f8d6257d10354"
 
 derivation:
-  method: "source_derivation"
-  description: "TypeScript SDK package derived from MPLP Truth Sources"
-  truth_sources:
+  method: "l3_direct_conformance_facade"
+  description: >
+    @mplp/conformance is a bounded L3 package-surface facade. Its source is
+    not generated from packages/sources/* and not copied from a schema-derived
+    source mirror. It owns a local helper implementation that consumes L0
+    schema truth through @mplp/schema.
+  semantic_truth:
     - "schemas/v2/*.schema.json"
-    - "governance/01-core/MPLP_CONSTITUTION.md"
+    - "schemas/v2/taxonomy/kernel-duties.yaml"
+    - "schemas/v2/common/metadata.schema.json"
+  consumed_via:
+    package: "@mplp/schema"
+    version_range: "^1.0.6"
+  source_mirror:
+    required: false
+    path: null
+    reason: >
+      No conformance L2 source mirror or projection script exists in the
+      current repository. This package is explicitly classified as an L3 direct
+      facade exception for this remediation.
+  l3_source:
+    path: "packages/npm/conformance/src/index.ts"
+    provenance: "handwritten_direct_facade"
+  l4_dist:
+    path: "packages/npm/conformance/dist"
+    generated_from: "packages/npm/conformance/src/index.ts"
+    command: "npm run build"
+  pack_boundary:
+    includes:
+      - "LICENSE"
+      - "README.md"
+      - "dist/**"
+      - "package.json"
+    excludes:
+      - "src/**"
+      - "package-lock.json"
+      - "node_modules/**"
+      - "DERIVATION_PROOF.yaml"
 
 package:
   name: "@mplp/conformance"
@@ -25,9 +58,13 @@ package:
   category: "PUBLIC"
 
 verification:
-  protocol_conformance: "VERIFIED"
+  schema_truth_consumed_via_package: true
+  no_schema_primitive_intake: true
+  no_normative_protocol_change: true
+  l3_direct_facade_exception_recorded: true
   evidence_baseline_aligned: true
 
 governance:
   method: "METHOD-SDKR-08"
-  frozen: true
+  protocol_baseline_frozen: true
+  evidence_record_mutable_for_corrections: true

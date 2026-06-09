@@ -1,0 +1,64 @@
+# Global Alignment Baseline
+# SSOT for cross-entry consistency governance
+# Machine-read by GLOB-GATE-01/02/03
+
+version: "1.0.0"
+status: "sealed"
+sealed_at: "2026-01-24T20:06:53+08:00"
+
+# Canonical names (frozen)
+canonical_names:
+  full: "Multi-Agent Lifecycle Protocol"
+  short: "MPLP"
+  slogan: "MPLP — The Agent OS Protocol."
+  technical_subtitle: "The Lifecycle Protocol for AI Agents."
+  enterprise_subtitle: "Observable. Governed. Vendor-neutral."
+
+# Canonical versions (must match across entries)
+canonical_versions:
+  protocol: "1.0.0"
+  schema_bundle: "2.0.0"
+  lab_series: "v0.17.0"
+
+# Canonical anchors (tripod + lab)
+canonical_anchors:
+  website_definition: "https://www.mplp.io/definition"
+  docs_entrypoints: "https://docs.mplp.io/docs/reference/entrypoints"
+  repo_root: "https://github.com/Coregentis/MPLP-Protocol"
+  lab_root: "https://lab.mplp.io"
+  lab_policies: "https://lab.mplp.io/policies"
+
+# Allowed domains for cross-link validation
+allowed_domains:
+  - "mplp.io"
+  - "www.mplp.io"
+  - "docs.mplp.io"
+  - "lab.mplp.io"
+  - "github.com"
+
+# Required boundary statement IDs (ID-based, not text-based)
+# Each entry must declare these in their manifest
+required_boundaries:
+  - id: "BOUNDARY-NON-CERTIFICATION"
+    description: "This is not a certification or auditing service"
+    applies_to: ["website", "docs", "lab"]
+  
+  - id: "BOUNDARY-NON-ENDORSEMENT"
+    description: "MPLP does not endorse or recommend specific implementations"
+    applies_to: ["website", "lab"]
+  
+  - id: "BOUNDARY-VENDOR-NEUTRAL"
+    description: "The protocol is vendor-neutral and framework-agnostic"
+    applies_to: ["website", "docs", "lab"]
+
+# Entry definitions (for gate validation)
+entries:
+  website:
+    manifest_path: "MPLP_website/public/website-seo-manifest.json"
+    required_fields: ["version", "pages"]
+  docs:
+    manifest_path: "docs/static/meta/docs-seo-manifest.json"
+    required_fields: ["protocol_version", "schema_bundle_version", "tripod"]
+  lab:
+    manifest_path: "Validation_Lab/public/_meta/lab-manifest.json"
+    required_fields: ["protocol_version", "lab_series", "tripod", "boundaries"]

@@ -15,6 +15,11 @@
   "publishConfig": {
     "access": "public"
   },
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE.txt"
+  ],
   "mplp": {
     "protocolVersion": "1.0.0",
     "frozen": true,
@@ -53,7 +58,7 @@
   },
   "sideEffects": false,
   "scripts": {
-    "build": "node ../../../scripts/packages/validate-public-npm-package.mjs --model wrapper_package",
+    "build": "tsc -p tsconfig.json",
     "test": "vitest run"
   }
 }

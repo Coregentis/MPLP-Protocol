@@ -1,6 +1,6 @@
 # DERIVATION_PROOF.yaml for mplp-sdk (Python)
 #
-# This file proves that all package content is derived from MPLP Truth Sources.
+# This file records package derivation metadata against MPLP Truth Sources.
 # Reference: METHOD-SDKR-02 (Derivation Rules), METHOD-SDKR-08 §8.1.3
 #
 # © 2026 Jearon Wong
@@ -24,34 +24,63 @@ evidence_baseline:
 
 # Derivation Process
 derivation:
-  method: "publish_surface_mirror"
-  description: "Published PyPI protocol helper package mirrored from packages/sources/sdk-py"
+  method: "publish_surface_projection"
+  description: >
+    Public PyPI protocol helper package projected from the source-side mirror
+    and package-specific public surface. The public package is not a
+    byte-identical source mirror, and this proof does not authorize upload,
+    release, or publish execution.
   truth_sources:
     - "schemas/v2/*.schema.json"
     - "schemas/v2/taxonomy/kernel-duties.yaml"
     - "governance/05-specialized/entity.json"
     - "governance/05-versioning/version-taxonomy-manifest.json"
+  source_mirror_evidence:
+    path: "packages/sources/sdk-py"
+    publish_target: false
+    role: "source_package_mirror"
   immediate_source:
-    - "packages/sources/sdk-py/README.md"
-    - "packages/sources/sdk-py/pyproject.toml"
-    - "packages/sources/sdk-py/src/mplp/__init__.py"
-    - "packages/sources/sdk-py/src/mplp/kernel_duties.py"
+    - "packages/pypi/mplp-sdk/README.md"
+    - "packages/pypi/mplp-sdk/pyproject.toml"
+    - "packages/pypi/mplp-sdk/src/mplp"
+    - "packages/pypi/mplp-sdk/src/mplp_sdk.egg-info/PKG-INFO"
+  projection_boundary:
+    source_public_byte_identical: false
+    package_role: "python-protocol-helper-publish-surface"
+    source_mirror_authority: "evidence_only_not_publish_target"
+    upload_authorization: "not_authorized_by_this_proof"
+    current_distribution_artifacts: "validated_by_disposable_clean_build_only"
+    checked_in_dist_authority: "historical_generated_evidence_not_current_publish_source"
   
   build_inputs:
-    - path: "pyproject.toml"
+    - path: "packages/pypi/mplp-sdk/pyproject.toml"
       description: "Package configuration"
-    - path: "src/mplp/**/*.py"
-      description: "Source code"
+    - path: "packages/pypi/mplp-sdk/README.md"
+      description: "Long-description source"
+    - path: "packages/pypi/mplp-sdk/src/mplp"
+      description: "Package source files"
 
 # Python Distribution Artifacts
 python:
-  dist:
-    - type: sdist
-      filename: "mplp_sdk-1.0.5.tar.gz"
-      sha256: "04f7a312cba6fe463ec3beba00a28f27fa63b1cca9ae3f3eaf568e625eaa434e"
-    - type: wheel
-      filename: "mplp_sdk-1.0.5-py3-none-any.whl"
-      sha256: "9f795e35d374a7c774df9529a3bac541d660b362af9b3cdea7d5bd77529f95b2"
+  current_publish_candidate:
+    generated_in_repo: false
+    validation_mode: "disposable_clean_build"
+    expected_files:
+      - type: sdist
+        filename: "mplp_sdk-1.0.6.tar.gz"
+      - type: wheel
+        filename: "mplp_sdk-1.0.6-py3-none-any.whl"
+  historical_checked_in_dist:
+    publish_target: false
+    current_publish_source: false
+    reason: "Pre-existing checked-in dist artifacts remain historical evidence only and are not the source for any future mplp-sdk 1.0.6 upload."
+    files:
+      - type: sdist
+        filename: "mplp_sdk-1.0.5.tar.gz"
+        sha256: "04f7a312cba6fe463ec3beba00a28f27fa63b1cca9ae3f3eaf568e625eaa434e"
+      - type: wheel
+        filename: "mplp_sdk-1.0.5-py3-none-any.whl"
+        sha256: "9f795e35d374a7c774df9529a3bac541d660b362af9b3cdea7d5bd77529f95b2"
 
 # Verification Results
 verification:
@@ -60,9 +89,11 @@ verification:
   runtime_surface: false
   pydantic_models: false
   kernel_duty_baseline_carried: true
+  upload_authorization: "not_authorized_by_this_proof"
 
 # Governance
 governance:
   method: "METHOD-SDKR-08"
   profile: "§8.1 Python"
   frozen: true
+  evidence_only_no_release_or_upload_authorization: true
